@@ -38,14 +38,3 @@ void apply(Step & step_p)
 }
 
 } // namespace game_engine
-
-std::ostream &streamCsvEntity(std::ostream &os_p, game_engine::Step const &step_p)
-{
-	os_p<<"x,y,r"<<std::endl;
-	for(game_engine::EntityStep *ent_l: step_p.getEntityStep())
-	{
-		streamCsvPos(os_p, *ent_l->_ent) << std::endl;
-	}
-	return os_p;
-}
-

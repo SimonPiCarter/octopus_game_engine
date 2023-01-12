@@ -44,6 +44,7 @@ find_package(Boost 1.75.0 REQUIRED)
 
 
 add_library(game_engine
+	src/game_engine/command/EntityWaitCommand.cc
 	src/game_engine/command/EntityMoveCommand.cc
 	src/game_engine/entity/Entity.cc
 	src/game_engine/entity/EntityStep.cc

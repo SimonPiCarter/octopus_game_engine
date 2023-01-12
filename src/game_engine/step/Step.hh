@@ -27,6 +27,4 @@ namespace game_engine
 	void apply(Step &step_p);
 }
 
-std::ostream &streamCsvEntity(std::ostream &os_p, game_engine::Step const &step_p);
-
 #endif
