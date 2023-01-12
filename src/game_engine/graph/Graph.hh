@@ -46,6 +46,9 @@ private:
 /// eg : (0,0) (1,0) (2,0) (3,1) (4,2) (5,3) would become (0,0) (2,0) (5,3)
 void trimPath(std::list<GridNode const *> &path_p);
 
+/// @brief transorm a path of GridNode to way points for further command
+std::list<Vector> toWaypoints(std::list<GridNode const *> &path_p);
+
 } // namespace game_engine
 
 #endif

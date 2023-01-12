@@ -223,5 +223,15 @@ void trimPath(std::list<GridNode const *> &path_p)
 	}
 }
 
+std::list<Vector> toWaypoints(std::list<GridNode const *> &path_p)
+{
+	std::list<Vector> waypoints_l;
+	for(GridNode const *node_l : path_p)
+	{
+		waypoints_l.push_back(node_l->getPosition());
+	}
+	return waypoints_l;
+}
+
 } // namespace game_engine
 
