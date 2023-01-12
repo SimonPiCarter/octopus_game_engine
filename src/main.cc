@@ -87,6 +87,7 @@ int main()
 		}
 
 		game_engine::updateStepFromConflictPosition(step_l);
+		game_engine::compact(step_l);
 		game_engine::apply(step_l);
 
 		std::ofstream file_l("step/step_"+std::to_string(i)+".csv");

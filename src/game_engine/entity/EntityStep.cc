@@ -20,5 +20,10 @@ EntityStep createEntityStep(Entity &ent_p, Vector const &target_p, double stepSp
 	return EntityStep { &ent_p, ent_p._pos + move_l };
 }
 
+bool isEntityStepNoOp(EntityStep const &step_p)
+{
+	return square_length(step_p._ent->_pos - step_p._newPosition) < 1e-3;
+}
+
 } // namespace game_engine
 
