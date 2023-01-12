@@ -1,6 +1,6 @@
 #include "GridNode.hh"
 
-namespace game_engine
+namespace octopus
 {
 
 GridNode::GridNode(Vector const &pos_p):  _position(pos_p)

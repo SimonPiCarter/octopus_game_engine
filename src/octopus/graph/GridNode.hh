@@ -3,7 +3,7 @@
 
 #include "entity/Vector.hh"
 
-namespace game_engine
+namespace octopus
 {
 
 /// @brief represent a node in the Grid
@@ -21,6 +21,6 @@ private:
 	bool _free {true};
 };
 
-} // namespace game_engine
+} // namespace octopus
 
 #endif

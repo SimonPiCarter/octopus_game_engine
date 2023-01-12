@@ -4,7 +4,7 @@
 #include "step/Step.hh"
 #include "entity/EntityStep.hh"
 
-namespace game_engine
+namespace octopus
 {
 
 EntityWaitCommand::EntityWaitCommand(Entity &ent_p)
@@ -19,5 +19,5 @@ bool EntityWaitCommand::registerCommand(Step & step_p)
 	return false;
 }
 
-} // namespace game_engine
+} // namespace octopus
 

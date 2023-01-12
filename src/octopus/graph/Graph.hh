@@ -7,7 +7,7 @@
 
 #include "GridNode.hh"
 
-namespace game_engine
+namespace octopus
 {
 
 /// @brief This class represent a graph based on a grid of nodes
@@ -49,6 +49,6 @@ void trimPath(std::list<GridNode const *> &path_p);
 /// @brief transorm a path of GridNode to way points for further command
 std::list<Vector> toWaypoints(std::list<GridNode const *> &path_p);
 
-} // namespace game_engine
+} // namespace octopus
 
 #endif

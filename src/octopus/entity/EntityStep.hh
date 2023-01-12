@@ -4,7 +4,7 @@
 #include "Entity.hh"
 #include "Vector.hh"
 
-namespace game_engine
+namespace octopus
 {
 	class EntityStep
 	{

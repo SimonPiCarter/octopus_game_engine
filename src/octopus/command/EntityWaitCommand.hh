@@ -1,23 +1,20 @@
-#ifndef __EntityMoveCommand__
-#define __EntityMoveCommand__
+#ifndef __EntityWaitCommand__
+#define __EntityWaitCommand__
 
 #include "Command.hh"
-
 #include "entity/Entity.hh"
-#include "entity/Vector.hh"
-#include <list>
 
 
-namespace game_engine
+namespace octopus
 {
 
 /// @brief Basic class that ensure move command with waypoints or not
 /// Entity will be moved along all waypoints and command will terminate
 /// when last one is reached
-class EntityMoveCommand : public Command
+class EntityWaitCommand : public Command
 {
 public:
-	EntityMoveCommand(Entity &ent_p, std::list<Vector> waypoints_p);
+	EntityWaitCommand(Entity &ent_p);
 
 	/// @brief check if _ent is close to the waypoint, if so
 	/// remove reached waypoint and create a step to the next waypoint
@@ -26,10 +23,9 @@ public:
 	virtual bool registerCommand(Step & step_p) override;
 private:
 	Entity & _ent;
-	std::list<Vector> _waypoints;
 };
 
-} // namespace game_engine
+} // namespace octopus
 
 
 #endif

@@ -4,7 +4,7 @@
 #include "GridNode.hh"
 #include "Graph.hh"
 
-namespace game_engine
+namespace octopus
 {
 
 /// @brief This class aims at representing the world on a grid
@@ -38,6 +38,6 @@ private:
 	Graph _graph;
 };
 
-} // namespace game_engine
+} // namespace octopus
 
 #endif

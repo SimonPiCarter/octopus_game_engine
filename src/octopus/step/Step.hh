@@ -4,7 +4,7 @@
 #include <list>
 #include <iostream>
 
-namespace game_engine
+namespace octopus
 {
 	class EntityStep;
 

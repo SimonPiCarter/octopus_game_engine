@@ -4,7 +4,7 @@
 #include "step/Step.hh"
 #include "entity/EntityStep.hh"
 
-namespace game_engine
+namespace octopus
 {
 
 EntityMoveCommand::EntityMoveCommand(Entity &ent_p, std::list<Vector> waypoints_p)
@@ -51,5 +51,5 @@ bool EntityMoveCommand::registerCommand(Step & step_p)
 	return false;
 }
 
-} // namespace game_engine
+} // namespace octopus
 

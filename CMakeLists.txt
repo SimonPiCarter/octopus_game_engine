@@ -42,34 +42,15 @@ find_package(Boost 1.75.0 REQUIRED)
 # Game Engine configuration
 # ============================================================================
 
-
-add_library(game_engine
-	src/game_engine/command/EntityWaitCommand.cc
-	src/game_engine/command/EntityMoveCommand.cc
-	src/game_engine/entity/Entity.cc
-	src/game_engine/entity/EntityStep.cc
-	src/game_engine/entity/Vector.cc
-	src/game_engine/step/ConflictPositionSolver.cc
-	src/game_engine/step/Step.cc
-	src/game_engine/graph/Graph.cc
-	src/game_engine/graph/Grid.cc
-	src/game_engine/graph/GridNode.cc
-)
-
-target_link_libraries(game_engine PRIVATE Boost::graph)
+add_subdirectory(src/octopus)
 
 # ============================================================================
 # Game configuration
 # ============================================================================
 
-target_include_directories(game_engine
-	PUBLIC
-	$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src/game_engine/>
-)
+add_executable(game src/game/main.cc)
 
-add_executable(game src/main.cc)
-
-target_link_libraries(game PRIVATE game_engine)
+target_link_libraries(game PRIVATE octopus)
 
 # ============================================================================
 # Installation

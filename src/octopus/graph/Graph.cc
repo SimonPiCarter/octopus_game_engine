@@ -4,7 +4,7 @@
 
 #include <boost/graph/astar_search.hpp>
 
-namespace game_engine
+namespace octopus
 {
 
 /// @brief check that all row have the same size
@@ -233,5 +233,5 @@ std::list<Vector> toWaypoints(std::list<GridNode const *> &path_p)
 	return waypoints_l;
 }
 
-} // namespace game_engine
+} // namespace octopus
 

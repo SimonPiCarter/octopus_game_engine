@@ -3,7 +3,7 @@
 #include "entity/EntityStep.hh"
 #include "entity/Vector.hh"
 
-namespace game_engine
+namespace octopus
 {
 
 
@@ -59,4 +59,4 @@ void compact(Step & step_p)
 	}
 }
 
-} // namespace game_engine
+} // namespace octopus

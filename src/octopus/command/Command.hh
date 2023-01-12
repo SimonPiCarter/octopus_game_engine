@@ -1,7 +1,7 @@
 #ifndef __Command__
 #define __Command__
 
-namespace game_engine
+namespace octopus
 {
 class Step;
 
@@ -13,7 +13,7 @@ public:
 	virtual bool registerCommand(Step & step_p) = 0;
 };
 
-} // namespace game_engine
+} // namespace octopus
 
 
 #endif

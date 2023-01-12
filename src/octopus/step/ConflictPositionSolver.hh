@@ -2,7 +2,7 @@
 #define __CONFLICT_POSITION_SOLVER__
 
 
-namespace game_engine
+namespace octopus
 {
 	class Step;
 

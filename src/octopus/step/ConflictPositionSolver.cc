@@ -8,7 +8,7 @@
 #include "entity/Vector.hh"
 #include "step/Step.hh"
 
-namespace game_engine
+namespace octopus
 {
 bool collision(EntityStep const *entA_p, EntityStep const *entB_p)
 {
@@ -49,7 +49,7 @@ void updateStepFromConflictPosition(Step &step_p)
 				double distance_l = entA_l->_ent->_ray + entB_l->_ent->_ray - length_l;
 				if(distance_l < 0.)
 				{
-					throw std::logic_error("game_engine :: Error collision but no distance to fix");
+					throw std::logic_error("octopus :: Error collision but no distance to fix");
 				}
 
 				Vector normalizedAxis_l { 0., 1.};
@@ -88,5 +88,5 @@ void updateStepFromConflictPosition(Step &step_p)
 	}
 }
 
-} // namespace game_engine
+} // namespace octopus
 

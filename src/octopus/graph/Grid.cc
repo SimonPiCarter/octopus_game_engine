@@ -1,6 +1,6 @@
 #include "Grid.hh"
 
-namespace game_engine
+namespace octopus
 {
 
 std::vector<std::vector<GridNode *> > setUpGrid(size_t sizeX_p, size_t sizeY_p, double stepX_p, double stepY_p)
