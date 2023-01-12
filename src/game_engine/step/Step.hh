@@ -1,7 +1,7 @@
 #ifndef __STEP__
 #define __STEP__
 
-#include <vector>
+#include <list>
 #include <iostream>
 
 namespace game_engine
@@ -11,9 +11,19 @@ namespace game_engine
 	class Step
 	{
 		public:
-			std::vector<EntityStep *> _vecEntityStep;
+			~Step();
+
+			/// @brief add step and keep ownership
+			void addEntityStep(EntityStep * step_p);
+
+			std::list<EntityStep *> const &getEntityStep() const;
+		private:
+			std::list<EntityStep *> _listEntityStep;
 	};
 
+	/// @brief apply the step and reverse it
+	/// two consecutive apply of the same step should
+	/// do nothing!
 	void apply(Step &step_p);
 }
 

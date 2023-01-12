@@ -26,10 +26,10 @@ void updateStepFromConflictPosition(Step &step_p)
 {
 	std::unordered_map<EntityStep *, Vector> mapCorrection_l;
 	// check every entity with one another
-	for(EntityStep *entA_l: step_p._vecEntityStep)
+	for(EntityStep *entA_l: step_p.getEntityStep())
 	{
 		// check every entity with one another
-		for(EntityStep *entB_l : step_p._vecEntityStep)
+		for(EntityStep *entB_l : step_p.getEntityStep())
 		{
 			// break if same
 			if(entB_l == entA_l)
@@ -82,7 +82,7 @@ void updateStepFromConflictPosition(Step &step_p)
 			}
 		}
 	}
-	for(EntityStep *ent_l: step_p._vecEntityStep)
+	for(EntityStep *ent_l: step_p.getEntityStep())
 	{
 		ent_l->_newPosition = ent_l->_newPosition + mapCorrection_l[ent_l] * 0.9;
 	}

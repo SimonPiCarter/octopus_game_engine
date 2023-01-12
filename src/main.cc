@@ -76,7 +76,7 @@ int main()
 		}
 		for(game_engine::EntityStep &ent_l : vecEntityStep_l)
 		{
-			step_l._vecEntityStep.push_back(&ent_l);
+			step_l.addEntityStep(new game_engine::EntityStep(ent_l));
 		}
 		if(i == 1)
 		{
