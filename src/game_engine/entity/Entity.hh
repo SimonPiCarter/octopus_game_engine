@@ -11,8 +11,11 @@ namespace game_engine
 		public:
 			Vector _pos;
 			double _ray {1.};
+
 			/// @brief cannot move
 			bool _frozen {false};
+
+			double _stepSpeed {1.};
 	};
 }
 
