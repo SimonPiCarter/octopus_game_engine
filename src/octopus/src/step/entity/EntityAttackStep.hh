@@ -8,7 +8,7 @@
 
 namespace octopus
 {
-	/// @brief this is aimed at dmgi
+	/// @brief this is aimed at dmg or heal on enitites
 	class EntityAttackStep : public Steppable
 	{
 		public:

@@ -8,6 +8,8 @@
 #include "command/Commandable.hh"
 #include "logger/Logger.hh"
 
+#include "step/TickingStep.hh"
+
 namespace octopus
 {
 BufferedState::~BufferedState()
@@ -82,6 +84,7 @@ bool Controller::loop_body()
 		Logger::getDebug() << "step back state on step "<< _backState->_stepHandled << " " <<_backState->_state<< std::endl;
 		// increment iterator to step
 		_backState->_steps.push_back(new Step());
+		_backState->_steps.back()->addSteppable(new TickingStep());
 		// increment number of step hadled
 		++_backState->_stepHandled;
 
