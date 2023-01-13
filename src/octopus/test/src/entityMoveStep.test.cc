@@ -11,7 +11,7 @@
 
 using namespace octopus;
 
-TEST(entityStepTest, simple)
+TEST(entityMoveStepTest, simple)
 {
 	State state_l;
 
@@ -33,7 +33,7 @@ TEST(entityStepTest, simple)
 	EXPECT_NEAR(3., state_l.getEntity(0)->_pos.y, 1e-5);
 }
 
-TEST(entityStepTest, simple_two)
+TEST(entityMoveStepTest, simple_two)
 {
 	State state_l;
 

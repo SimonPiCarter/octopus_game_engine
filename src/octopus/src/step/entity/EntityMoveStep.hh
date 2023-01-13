@@ -1,5 +1,5 @@
-#ifndef __ENTITY_STEP__
-#define __ENTITY_STEP__
+#ifndef __ENTITY_MOVE_STEP__
+#define __ENTITY_MOVE_STEP__
 
 #include "state/entity/Entity.hh"
 #include "state/Handle.hh"
@@ -11,7 +11,7 @@ namespace octopus
 	class EntityMoveStep : public Steppable
 	{
 		public:
-			EntityMoveStep(Handle handle_p, Vector move_p) : _handle(handle_p), _move(move_p) {}
+			EntityMoveStep(Handle const &handle_p, Vector const &move_p) : _handle(handle_p), _move(move_p) {}
 
 			virtual void apply(State &state_p) const override;
 			virtual void revert(State &state_p) const override;

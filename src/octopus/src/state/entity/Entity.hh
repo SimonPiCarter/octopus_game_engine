@@ -20,6 +20,9 @@ namespace octopus
 			double _stepSpeed {0.25};
 
 			Handle _handle {0};
+
+			/// @brief is alive in the state
+			bool _alive {false};
 	};
 }
 

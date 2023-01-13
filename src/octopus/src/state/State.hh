@@ -16,12 +16,13 @@ public:
 	State();
 	~State();
 
+	bool hasEntity(Handle const &handle_p) const;
 	Entity *getEntity(Handle const &handle_p);
 	Entity const *getEntity(Handle const &handle_p) const;
 
 	/// @brief add entity to state (keep ownership)
 	/// @warning handle will be modified!
-	void addEntity(Entity * ent_p);
+	Handle addEntity(Entity * ent_p);
 
 	std::vector<Entity *> const &getEntities() const;
 
