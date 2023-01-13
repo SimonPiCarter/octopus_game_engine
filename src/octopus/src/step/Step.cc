@@ -63,7 +63,7 @@ void revert(Step const & step_p, State &state_p)
 void compact(Step & step_p)
 {
 	// remove no op steppables (warning only remove in global list)
-	for(auto it_l = step_p.getSteppable().begin(); it_l != step_p.getSteppable().end() ; ++it_l)
+	for(auto it_l = step_p.getSteppable().begin(); it_l != step_p.getSteppable().end() ; )
 	{
 		// remove if no op
 		if((*it_l)->isNoOp())
