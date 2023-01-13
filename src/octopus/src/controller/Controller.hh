@@ -54,7 +54,8 @@ public:
 	Controller(std::list<Steppable *> const &initSteppables_p, std::list<Command *> const &initCommands_p, double timePerStep_p);
 	~Controller();
 
-	void loop_body();
+	/// @brief returns true once buffer and back states are up to date
+	bool loop_body();
 
 	/// @brief increment ongoing step if necessary
 	/// increment back buffer for as much as required

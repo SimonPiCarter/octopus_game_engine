@@ -72,11 +72,13 @@ Controller::~Controller()
 }
 
 
-void Controller::loop_body()
+bool Controller::loop_body()
 {
+	bool upToDate_l = true;
 	// go as far as handling the step before the ongoing one
 	if(_backState->_stepHandled < _ongoingStep - 1)
 	{
+		upToDate_l = false;
 		Logger::getDebug() << "step back state" << " "<<_backState->_state<< std::endl;
 		// increment iterator to step
 		_backState->_steps.push_back(new Step());
@@ -121,8 +123,11 @@ void Controller::loop_body()
 		{
 			Logger::getDebug() << "swap state" << " "<<_backState->_state<< std::endl;
 			std::swap(_bufferState, _backState);
+			upToDate_l = false;
 		}
 	}
+	Logger::getDebug() << "up to date " << " "<<upToDate_l<< std::endl;
+	return upToDate_l;
 }
 
 /// @brief increment ongoing step if necessary
