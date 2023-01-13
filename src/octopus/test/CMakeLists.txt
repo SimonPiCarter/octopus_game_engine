@@ -25,7 +25,7 @@ target_sources (unit_tests
 	src/controller.test.cc
 	src/entityMoveStep.test.cc
 	src/entitySpawnStep.test.cc
-	src/moveCommande.test.cc
+	src/moveCommand.test.cc
 )
 
 target_link_libraries (unit_tests
