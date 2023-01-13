@@ -21,6 +21,7 @@ EntityAttackCommand::EntityAttackCommand(Handle const &commandHandle_p, Handle c
 
 bool EntityAttackCommand::applyCommand(Step & step_p, State const &state_p)
 {
+	Logger::getDebug() << "EntityAttackCommand:: apply Command "<<_source << " -> " <<_target<<std::endl;
 	// target disappeared or is dead
 	bool targetMissing_l = checkTarget(state_p);
 	if(targetMissing_l)
@@ -42,8 +43,9 @@ bool EntityAttackCommand::applyCommand(Step & step_p, State const &state_p)
 
 	// If not in range we move to the target
 	// if windup started we skip this
-	if(!inRange(state_p) || _windup > 0)
+	if(!inRange(state_p) && _windup == 0)
 	{
+		Logger::getDebug() << "\tEntityAttackCommand:: not in range"<<std::endl;
 		// direction (source -> target)
 		Vector dir_l = entTarget_l->_pos - entSource_l->_pos;
 		// square distances
@@ -64,18 +66,20 @@ bool EntityAttackCommand::applyCommand(Step & step_p, State const &state_p)
 	}
 	else if(entSource_l->_stats._reload >= entSource_l->_stats._fullReload )
 	{
+		_windup += 1;
+		Logger::getDebug() << "\tEntityAttackCommand:: in range (winding up)"<<std::endl;
 		// If in range we trigger the attack (delay may be applied for animation)
 		if(_windup >= entSource_l->_stats._windup)
 		{
+			Logger::getDebug() << "\tEntityAttackCommand:: in range (attack)"<<std::endl;
 			// reset wind up
 			_windup = 0;
 
 			// add damage
-			step_p.addSteppable(new EntityHitPointChangeStep(_target, entSource_l->_stats._damage - entTarget_l->_stats._armor));
+			step_p.addSteppable(new EntityHitPointChangeStep(_target, std::min(-1., entTarget_l->_stats._armor - entSource_l->_stats._damage)));
 			// reset reload time
 			step_p.addSteppable(new EntityAttackStep(_source, entSource_l->_stats._reload));
 		}
-		_windup += 1;
 	}
 
 	return false;
@@ -84,7 +88,7 @@ bool EntityAttackCommand::applyCommand(Step & step_p, State const &state_p)
 bool EntityAttackCommand::checkTarget(State const &state_p) const
 {
 	Entity const * entTarget_l = state_p.getEntity(_target);
-	return entTarget_l->_alive;
+	return !entTarget_l->_alive;
 }
 
 bool EntityAttackCommand::lookUpNewTarget(State const &state_p) const
