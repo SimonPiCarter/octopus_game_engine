@@ -11,7 +11,7 @@ class State;
 class Command
 {
 public:
-	Command(Handle const &handle_p) : _handle(handle_p) {}
+	Command(Handle const &handle_p) : _handleCommand(handle_p) {}
 
 	void registerCommand(State &state_p);
 
@@ -21,7 +21,7 @@ public:
 
 private:
 	/// @brief the commandable handle for the executor of this command
-	Handle const _handle {0};
+	Handle const _handleCommand {0};
 
 	/// @brief if set to true the command will be queued up
 	bool _queued { false };

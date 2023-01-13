@@ -9,9 +9,9 @@
 namespace octopus
 {
 
-EntityMoveCommand::EntityMoveCommand(Handle const &commandHandle_p, Handle const &handle_p, std::list<Vector> waypoints_p)
+EntityMoveCommand::EntityMoveCommand(Handle const &commandHandle_p, Handle const &source_p, std::list<Vector> waypoints_p)
 	: Command(commandHandle_p)
-	, _handle(handle_p)
+	, _source(source_p)
 	, _waypoints(waypoints_p)
 {}
 
@@ -24,7 +24,7 @@ bool EntityMoveCommand::applyCommand(Step & step_p, State const &state_p)
 		return true;
 	}
 
-	Entity const * ent_l = state_p.getEntity(_handle);
+	Entity const * ent_l = state_p.getEntity(_source);
 
 	///
 	/// Update waypoints based on current position

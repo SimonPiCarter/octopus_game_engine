@@ -14,12 +14,12 @@ namespace octopus
 class EntityWaitCommand : public Command
 {
 public:
-	EntityWaitCommand(Handle const &commandHandle_p, Handle const &handle_p);
+	EntityWaitCommand(Handle const &commandHandle_p, Handle const &source_p);
 
 	/// @brief
 	virtual bool applyCommand(Step & step_p, State const &state_p) override;
 private:
-	Handle const _handle;
+	Handle const _source;
 };
 
 } // namespace octopus

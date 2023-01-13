@@ -8,15 +8,15 @@
 namespace octopus
 {
 
-EntityWaitCommand::EntityWaitCommand(Handle const &commandHandle_p, Handle const& handle_p)
+EntityWaitCommand::EntityWaitCommand(Handle const &commandHandle_p, Handle const& source_p)
 	: Command(commandHandle_p)
-	, _handle(handle_p)
+	, _source(source_p)
 {}
 
 bool EntityWaitCommand::applyCommand(Step & step_p, State const &state_p)
 {
 	// Use
-	step_p.addEntityMoveStep(new EntityMoveStep(createEntityMoveStep(*state_p.getEntity(_handle))));
+	step_p.addEntityMoveStep(new EntityMoveStep(createEntityMoveStep(*state_p.getEntity(_source))));
 
 	return false;
 }
