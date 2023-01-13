@@ -19,6 +19,7 @@ Step::~Step()
 void Step::addEntityStep(EntityStep * step_p)
 {
 	_listEntityStep.push_back(step_p);
+	_listSteppable.push_back(step_p);
 }
 
 std::list<EntityStep *> &Step::getEntityStep()

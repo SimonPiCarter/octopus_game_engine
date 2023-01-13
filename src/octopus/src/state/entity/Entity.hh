@@ -19,7 +19,7 @@ namespace octopus
 
 			double _stepSpeed {0.25};
 
-			Handle _handle;
+			Handle _handle {0};
 	};
 }
 
