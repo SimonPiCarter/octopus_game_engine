@@ -10,6 +10,9 @@ namespace octopus
 	public:
 		static std::ostream &getNormal();
 		static std::ostream &getDebug();
+
+	private:
+		static bool _debug;
 	};
 }
 
