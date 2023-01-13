@@ -6,6 +6,7 @@
 #include "command/Commandable.hh"
 #include "utils/Vector.hh"
 #include "state/Handle.hh"
+#include "state/stats/Stats.hh"
 
 namespace octopus
 {
@@ -26,6 +27,8 @@ namespace octopus
 
 			/// @brief is alive in the state
 			bool _alive {false};
+
+			Stats _stats;
 	};
 }
 
