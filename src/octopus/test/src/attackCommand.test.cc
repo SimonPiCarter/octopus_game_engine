@@ -70,13 +70,36 @@ TEST(attackCommandTest, simple)
 	EXPECT_NEAR(10., state_l->getEntity(1)->_stats._hp, 1e-5);
 
 
-	// update time to 3 seconds
+	// update time to 1 second
 	controller_l.update(1.);
 	// updated until synced up
 	while(!controller_l.loop_body()) {}
 
 	state_l = controller_l.queryState();
 
-	// wind up should just be over but no damage still
+	// damage has been done
 	EXPECT_NEAR(7., state_l->getEntity(1)->_stats._hp, 1e-5);
+
+	// Next damage should be -> reload time + windup
+	// 10 + 3 (13)
+
+	// update time to 12 seconds
+	controller_l.update(12.);
+	// updated until synced up
+	while(!controller_l.loop_body()) {}
+
+	state_l = controller_l.queryState();
+
+	// damage has not be done yet
+	EXPECT_NEAR(7., state_l->getEntity(1)->_stats._hp, 1e-5);
+
+	// update time to 1 second
+	controller_l.update(1.);
+	// updated until synced up
+	while(!controller_l.loop_body()) {}
+
+	state_l = controller_l.queryState();
+
+	// damage has not be done yet
+	EXPECT_NEAR(4., state_l->getEntity(1)->_stats._hp, 1e-5);
 }
