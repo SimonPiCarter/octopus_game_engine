@@ -5,7 +5,8 @@
 namespace octopus
 {
 
-State::State() {}
+State::State() : _id(0) {}
+State::State(unsigned long id_p) : _id(id_p) {}
 State::~State()
 {
 	for(Entity * ent_l : _entities)

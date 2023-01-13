@@ -14,7 +14,7 @@ namespace octopus
 /// @brief Basic class that ensure move command with waypoints or not
 /// Entity will be moved along all waypoints and command will terminate
 /// when last one is reached
-class EntityMoveCommand : public Command
+class EntityMoveCommand : public CommandWithData<std::list<Vector>>
 {
 public:
 	EntityMoveCommand(Handle const &commandHandle_p, Handle const &source_p, std::list<Vector> waypoints_p);
@@ -26,7 +26,6 @@ public:
 	virtual bool applyCommand(Step & step_p, State const &state_p) override;
 private:
 	Handle const _source;
-	std::list<Vector> _waypoints;
 };
 
 } // namespace octopus

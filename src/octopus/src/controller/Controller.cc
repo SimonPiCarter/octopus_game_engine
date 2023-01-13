@@ -27,9 +27,9 @@ Controller::Controller(
 {
 	std::lock_guard<std::mutex> lock_l(_mutex);
 
-	_backState = new BufferedState { 0, {}, new State() };
-	_bufferState = new BufferedState { 0, {}, new State() };
-	_frontState = new BufferedState { 0, {}, new State() };
+	_backState = new BufferedState { 0, {}, new State(0) };
+	_bufferState = new BufferedState { 0, {}, new State(1) };
+	_frontState = new BufferedState { 0, {}, new State(2) };
 
 	_ongoingStep = 1;
 

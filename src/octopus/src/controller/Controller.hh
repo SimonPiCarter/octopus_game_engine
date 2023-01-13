@@ -90,6 +90,8 @@ private:
 	std::vector<std::list<Command *> *> _commitedCommands;
 	/// @brief initial step
 	Step _initialStep;
+	/// @brief all steps queued
+	std::list<Step *> _steps;
 
 
 	/// @brief mutex for multi threading handling

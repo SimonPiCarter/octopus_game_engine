@@ -14,7 +14,7 @@ namespace octopus
 {
 
 EntityAttackCommand::EntityAttackCommand(Handle const &commandHandle_p, Handle const &source_p, Handle const &target_p)
-	: Command(commandHandle_p)
+	: CommandWithData(commandHandle_p, 0)
 	, _source(source_p)
 	, _target(target_p)
 {}
@@ -27,7 +27,7 @@ bool EntityAttackCommand::applyCommand(Step & step_p, State const &state_p)
 	if(targetMissing_l)
 	{
 		// reset wind up
-		_windup = 0;
+		getMetaData(state_p) = 0;
 		// If target is dead we look for another target in range
 		bool newTarget_l = lookUpNewTarget(state_p);
 
@@ -43,7 +43,7 @@ bool EntityAttackCommand::applyCommand(Step & step_p, State const &state_p)
 
 	// If not in range we move to the target
 	// if windup started we skip this
-	if(!inRange(state_p) && _windup == 0)
+	if(!inRange(state_p) && getMetaData(state_p) == 0)
 	{
 		Logger::getDebug() << "\tEntityAttackCommand:: not in range"<<std::endl;
 		// direction (source -> target)
@@ -62,18 +62,18 @@ bool EntityAttackCommand::applyCommand(Step & step_p, State const &state_p)
 		step_p.addEntityMoveStep(new EntityMoveStep(createEntityMoveStep(*entSource_l, closest_l, entSource_l->_stepSpeed)));
 
 		// reset wind up (time before attack)
-		_windup = 0;
+		getMetaData(state_p) = 0;
 	}
 	else if(entSource_l->_stats._reload >= entSource_l->_stats._fullReload )
 	{
-		_windup += 1;
+		getMetaData(state_p) += 1;
 		Logger::getDebug() << "\tEntityAttackCommand:: in range (winding up)"<<std::endl;
 		// If in range we trigger the attack (delay may be applied for animation)
-		if(_windup >= entSource_l->_stats._windup)
+		if(getMetaData(state_p) >= entSource_l->_stats._windup)
 		{
 			Logger::getDebug() << "\tEntityAttackCommand:: in range (attack)"<<std::endl;
 			// reset wind up
-			_windup = 0;
+			getMetaData(state_p) = 0;
 
 			// add damage
 			step_p.addSteppable(new EntityHitPointChangeStep(_target, std::min(-1., entTarget_l->_stats._armor - entSource_l->_stats._damage)));

@@ -1,7 +1,9 @@
 #ifndef __Command__
 #define __Command__
 
+#include <array>
 #include "state/Handle.hh"
+#include "state/State.hh"
 
 namespace octopus
 {
@@ -26,6 +28,25 @@ private:
 	/// @brief if set to true the command will be queued up
 	bool _queued { false };
 };
+
+
+template<typename data>
+class CommandWithData : public Command
+{
+public:
+	CommandWithData(Handle const &handle_p, data const &data_p) : Command(handle_p), _metaData({data_p, data_p, data_p}) {}
+
+protected:
+	data & getMetaData(State const &state_p)
+	{
+		return _metaData.at(state_p._id);
+	}
+
+private:
+	/// @brief meta data
+	std::array<data, 3> _metaData;
+};
+
 
 } // namespace octopus
 

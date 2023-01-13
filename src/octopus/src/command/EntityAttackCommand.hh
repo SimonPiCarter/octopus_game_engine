@@ -14,7 +14,7 @@ namespace octopus
 /// @brief This command will move in range of the target then attack it
 /// it targets die will search for new targets in a radius of aggression
 /// Will move to the closest point in range of the target when moving
-class EntityAttackCommand : public Command
+class EntityAttackCommand : public CommandWithData<unsigned long>
 {
 public:
 	EntityAttackCommand(Handle const &commandHandle_p, Handle const &source_p, Handle const &target_p);
@@ -24,10 +24,6 @@ public:
 private:
 	Handle const _source;
 	Handle _target;
-
-	unsigned long _windup {0};
-	unsigned long _reload {0};
-
 
 	bool checkTarget(State const &state_p) const;
 	bool lookUpNewTarget(State const &state_p) const;

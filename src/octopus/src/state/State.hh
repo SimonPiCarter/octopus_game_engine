@@ -15,6 +15,7 @@ class State
 {
 public:
 	State();
+	explicit State(unsigned long id_p);
 	~State();
 
 	bool hasEntity(Handle const &handle_p) const;
@@ -32,6 +33,7 @@ public:
 	std::vector<Entity *> const &getEntities() const;
 	std::vector<Commandable *> const &getCommandables() const;
 
+	unsigned long const _id;
 private:
 	/// @brief vector of all entities
 	std::vector<Entity *> _entities;
