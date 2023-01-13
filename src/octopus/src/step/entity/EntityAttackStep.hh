@@ -1,5 +1,5 @@
-#ifndef __EntityHitPointChangeStep__
-#define __EntityHitPointChangeStep__
+#ifndef __EntityAttackStep__
+#define __EntityAttackStep__
 
 #include "state/entity/Entity.hh"
 #include "state/Handle.hh"
@@ -9,10 +9,11 @@
 namespace octopus
 {
 	/// @brief this is aimed at dmgi
-	class EntityHitPointChangeStep : public Steppable
+	class EntityAttackStep : public Steppable
 	{
 		public:
-			EntityHitPointChangeStep(Handle const &handle_p, double delta_p) : _handle(handle_p), _delta(delta_p) {}
+			EntityAttackStep(Handle const &handle_p, unsigned long timeSinceLastAttack_p)
+				: _handle(handle_p) , _timeSinceLastAttack(timeSinceLastAttack_p){}
 
 			virtual void apply(State &state_p) const override;
 			virtual void revert(State &state_p) const override;
@@ -20,7 +21,7 @@ namespace octopus
 			virtual bool isNoOp() const override;
 
 			Handle _handle {0};
-			double _delta;
+			unsigned long _timeSinceLastAttack {0};
 	};
 }
 
