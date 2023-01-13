@@ -37,7 +37,7 @@ TEST(controlerTest, simple)
 	EXPECT_EQ(b, controller_l.getBufferState());
 	EXPECT_EQ(c, controller_l.getFrontState());
 
-	controller_l.loop_body();
+	EXPECT_TRUE(controller_l.loop_body());
 
 	// controller internals :
 	// back : 1 (a)
@@ -57,7 +57,7 @@ TEST(controlerTest, simple)
 	controller_l.update(1.);
 
 	// Here back state should have been updated and swapped with buffered state
-	controller_l.loop_body();
+	EXPECT_FALSE(controller_l.loop_body());
 
 	// controller internals :
 	// back : 1 (b)
@@ -83,7 +83,7 @@ TEST(controlerTest, simple)
 
 	// update time to 1second
 	controller_l.update(1.);
-	controller_l.loop_body();
+	EXPECT_FALSE(controller_l.loop_body());
 
 	// controller internals :
 	// back : 1 (c)
@@ -107,7 +107,7 @@ TEST(controlerTest, simple)
 	EXPECT_NEAR(4., state_l->getEntity(0)->_pos.x, 1e-5);
 	EXPECT_NEAR(3., state_l->getEntity(0)->_pos.y, 1e-5);
 
-	controller_l.loop_body();
+	EXPECT_FALSE(controller_l.loop_body());
 
 	// controller internals :
 	// back : 2 (c)
@@ -131,7 +131,7 @@ TEST(controlerTest, simple)
 	EXPECT_NEAR(4., state_l->getEntity(0)->_pos.x, 1e-5);
 	EXPECT_NEAR(3., state_l->getEntity(0)->_pos.y, 1e-5);
 
-	controller_l.loop_body();
+	EXPECT_FALSE(controller_l.loop_body());
 
 	// controller internals :
 	// back : 2 (b)
