@@ -1,6 +1,7 @@
 
 #include "EntityMoveCommand.hh"
 
+#include "logger/Logger.hh"
 #include "state/State.hh"
 #include "step/Step.hh"
 #include "step/entity/EntityMoveStep.hh"
@@ -18,6 +19,7 @@ bool EntityMoveCommand::registerCommand(Step & step_p, State const &state_p)
 	// No waypoint -> terminate
 	if(_waypoints.empty())
 	{
+		Logger::getDebug() << "no waypoint (entry)" << std::endl;
 		return true;
 	}
 
@@ -45,8 +47,10 @@ bool EntityMoveCommand::registerCommand(Step & step_p, State const &state_p)
 	// No waypoint -> terminate
 	if(_waypoints.empty())
 	{
+		Logger::getDebug() << "no waypoint" << std::endl;
 		return true;
 	}
+	Logger::getDebug() << "Adding move step target = "<<next_l<<" step speed = " << ent_l->_stepSpeed << std::endl;
 
 	// Use next waypoint as target
 	step_p.addEntityMoveStep(new EntityMoveStep(createEntityMoveStep(*ent_l, next_l, ent_l->_stepSpeed)));

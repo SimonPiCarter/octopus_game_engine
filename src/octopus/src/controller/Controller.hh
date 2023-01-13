@@ -10,6 +10,7 @@ namespace octopus
 
 class Command;
 class Step;
+class Steppable;
 class State;
 
 /// @brief simple structure aggregating usefull info for triple buffering
@@ -49,7 +50,7 @@ class Controller
 {
 
 public:
-	Controller(Step * initialStep_p, double timePerStep_p);
+	Controller(std::list<Steppable *> const &initSteppables_p, std::list<Command *> const &initCommands_p, double timePerStep_p);
 	~Controller();
 
 	void loop_body();
@@ -61,10 +62,14 @@ public:
 
 	/// @brief update and return the front state
 	/// only swap the buffer and front state if buffer state is more advanced than front state
-	BufferedState * queryState();
+	State const * queryState();
 
 	/// @brief commit commands on the ongoing step
 	void commitCommand(Command * command_p);
+
+	State const * getBackState() const;
+	State const * getBufferState() const;
+	State const * getFrontState() const;
 private:
 
 	BufferedState * _backState {nullptr};
@@ -77,6 +82,8 @@ private:
 	double _overTime {0.};
 	/// @brief ongoing step, all command received are aggregated into this step
 	unsigned long _ongoingStep {0};
+	/// @brief last handled step, all commands for steps after this one have not been processed
+	unsigned long _lastHandledStep {0};
 	/// @brief list of commit commands for every step
 	std::vector<std::list<Command *> > _commitedCommands;
 	/// @brief list of steps
@@ -85,6 +92,8 @@ private:
 
 	/// @brief mutex for multi threading handling
 	std::mutex _mutex;
+
+	void updateCommitedCommand();
 };
 
 } // namespace octopus

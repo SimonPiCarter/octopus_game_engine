@@ -12,6 +12,7 @@ cmake_minimum_required (VERSION 3.14.0)
 add_library(octopus
 	${CMAKE_CURRENT_SOURCE_DIR}/src/command/EntityWaitCommand.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/command/EntityMoveCommand.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/src/logger/Logger.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/controller/Controller.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/state/State.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/state/entity/Entity.cc
