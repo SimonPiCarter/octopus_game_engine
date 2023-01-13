@@ -23,16 +23,16 @@ TEST(moveCommandTest, simple)
 {
 	State state_l;
 
-	state_l.addEntity(new Entity { { 3, 3. }, 0.9, false, 1., 0});
+	state_l.addEntity(new Entity { { 3, 3. }, 0.9, false, 1.});
 
-	EntityMoveCommand command_l(0, { {4, 3}, {4, 4}});
+	EntityMoveCommand command_l(0, 0, { {4, 3}, {4, 4}});
 
 	///
 	/// Step 1
 	///
 	Step step_l;
 
-	bool terminated_l = command_l.registerCommand(step_l, state_l);
+	bool terminated_l = command_l.applyCommand(step_l, state_l);
 	EXPECT_FALSE(terminated_l);
 
 	ASSERT_EQ(1u, step_l.getEntityMoveStep().size());
@@ -54,7 +54,7 @@ TEST(moveCommandTest, simple)
 	///
 	Step step2_l;
 
-	terminated_l = command_l.registerCommand(step2_l, state_l);
+	terminated_l = command_l.applyCommand(step2_l, state_l);
 	EXPECT_FALSE(terminated_l);
 
 	ASSERT_EQ(1u, step2_l.getEntityMoveStep().size());
@@ -76,7 +76,7 @@ TEST(moveCommandTest, simple)
 	///
 	Step step3_l;
 
-	terminated_l = command_l.registerCommand(step3_l, state_l);
+	terminated_l = command_l.applyCommand(step3_l, state_l);
 	EXPECT_TRUE(terminated_l);
 
 	ASSERT_EQ(0u, step3_l.getEntityMoveStep().size());

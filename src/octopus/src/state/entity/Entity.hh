@@ -3,14 +3,17 @@
 
 #include <iostream>
 #include <vector>
+#include "command/Commandable.hh"
 #include "utils/Vector.hh"
 #include "state/Handle.hh"
 
 namespace octopus
 {
-	class Entity
+	class Entity : public Commandable
 	{
 		public:
+			Entity(Vector const &pos_p, double ray_p, bool frozen_p, double stepSpeed_p=0.25);
+
 			Vector _pos;
 			double _ray {1.};
 

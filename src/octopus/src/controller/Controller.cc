@@ -4,8 +4,8 @@
 #include <thread>
 
 #include "state/State.hh"
-#include "step/Step.hh"
 #include "command/Command.hh"
+#include "command/Commandable.hh"
 #include "logger/Logger.hh"
 
 namespace octopus
@@ -13,6 +13,10 @@ namespace octopus
 BufferedState::~BufferedState()
 {
 	delete _state;
+	for(Step * step_l : _steps)
+	{
+		delete step_l;
+	}
 }
 
 Controller::Controller(
@@ -23,29 +27,27 @@ Controller::Controller(
 {
 	std::lock_guard<std::mutex> lock_l(_mutex);
 
-	_steps.push_back(new Step());
-	_backState = new BufferedState { 1, _steps.begin(), new State() };
-	_bufferState = new BufferedState { 1, _steps.begin(), new State() };
-	_frontState = new BufferedState { 1, _steps.begin(), new State() };
+	_backState = new BufferedState { 0, {}, new State() };
+	_bufferState = new BufferedState { 0, {}, new State() };
+	_frontState = new BufferedState { 0, {}, new State() };
 
-	_lastHandledStep = 1;
-	_ongoingStep = 2;
+	_ongoingStep = 1;
 
 	// add steppable
 	for(Steppable * steppable_l : initSteppables_p)
 	{
-		_steps.back()->getSteppable().push_back(steppable_l);
+		_initialStep.getSteppable().push_back(steppable_l);
 	}
 	// init step (does not matter which state we use here since they are identical)
 	for(Command *cmd_l : initCommands_p)
 	{
-		cmd_l->registerCommand(*_steps.back(), *_backState->_state);
+		cmd_l->applyCommand(_initialStep, *_backState->_state);
 	}
 
 	// apply step
-	apply(*_steps.back(), *_backState->_state);
-	apply(*_steps.back(), *_bufferState->_state);
-	apply(*_steps.back(), *_frontState->_state);
+	apply(_initialStep, *_backState->_state);
+	apply(_initialStep, *_bufferState->_state);
+	apply(_initialStep, *_frontState->_state);
 }
 
 Controller::~Controller()
@@ -53,17 +55,15 @@ Controller::~Controller()
 	delete _backState;
 	delete _bufferState;
 	delete _frontState;
-	for(Step * step_l : _steps)
-	{
-		delete step_l;
-	}
 	std::set<Command const *> setCommand_l;
-	for(std::list<Command *> const &cmds_l : _commitedCommands)
+	for(std::list<Command *> const *cmds_l : _commitedCommands)
 	{
-		for(Command const *cmd_l : cmds_l)
+		for(Command const *cmd_l : *cmds_l)
 		{
 			setCommand_l.insert(cmd_l);
 		}
+
+		delete cmds_l;
 	}
 	for(Command const *cmd_l : setCommand_l)
 	{
@@ -77,42 +77,41 @@ void Controller::loop_body()
 	// go as far as handling the step before the ongoing one
 	if(_backState->_stepHandled < _ongoingStep - 1)
 	{
-		Logger::getDebug() << "step back state" << std::endl;
+		Logger::getDebug() << "step back state" << " "<<_backState->_state<< std::endl;
 		// increment iterator to step
-		++_backState->_it;
+		_backState->_steps.push_back(new Step());
 		// increment number of step hadled
 		++_backState->_stepHandled;
 
 		// if step was not handled already
-		if(_backState->_stepHandled > _lastHandledStep)
-		{
-			Logger::getDebug() << "handle commands" << std::endl;
-			{
-				// lock to avoid swap during commiting
-				std::lock_guard<std::mutex> lock_l(_mutex);
+		Logger::getDebug() << "handle commands" << " "<<_backState->_state<< std::endl;
 
-				updateCommitedCommand();
-			}
-			for(Command * cmd_l : _commitedCommands[_backState->_stepHandled-1])
-			{
-				Logger::getDebug() << "\thandling a command" << std::endl;
-				// if command is not over propagate it to the next step
-				if(!cmd_l->registerCommand(**_backState->_it, *_backState->_state))
-				{
-					// lock to avoid swap during commiting
-					std::lock_guard<std::mutex> lock_l(_mutex);
-					_commitedCommands.at(_backState->_stepHandled).push_back(cmd_l);
-				}
-			}
+		std::list<Command *> * commands_l = nullptr;
+		{
+			// lock to avoid overlap
+			std::lock_guard<std::mutex> lock_l(_mutex);
+			commands_l = _commitedCommands.at(_backState->_stepHandled-1);
 		}
 
-		Logger::getDebug() << "apply step" << std::endl;
+		// push new commands
+		for(Command * cmd_l : *commands_l)
+		{
+			Logger::getDebug() << "\tregister a command" << " "<<_backState->_state<< std::endl;
+			cmd_l->registerCommand(*_backState->_state);
+		}
+
+		// apply all commands
+		for(Commandable * cmdable_l : _backState->_state->getCommandables())
+		{
+			cmdable_l->runCommands(*_backState->_steps.back(), *_backState->_state);
+		}
+
+		Logger::getDebug() << "apply step" << " "<<_backState->_state<< std::endl;
 		// apply step
-		apply(**_backState->_it, *_backState->_state);
+		apply(*_backState->_steps.back(), *_backState->_state);
 
 		// update last handled step
-		_lastHandledStep = std::max(_lastHandledStep, _backState->_stepHandled);
-		Logger::getDebug() << "last handled step = " << _lastHandledStep << std::endl;
+		Logger::getDebug() << "last handled step = " << _backState->_stepHandled << " "<<_backState->_state<< std::endl;
 	}
 
 	{
@@ -120,7 +119,7 @@ void Controller::loop_body()
 		std::lock_guard<std::mutex> lock_l(_mutex);
 		if(_backState->_stepHandled > _bufferState->_stepHandled)
 		{
-			Logger::getDebug() << "swap state" << std::endl;
+			Logger::getDebug() << "swap state" << " "<<_backState->_state<< std::endl;
 			std::swap(_bufferState, _backState);
 		}
 	}
@@ -140,7 +139,7 @@ void Controller::update(double elapsedTime_p)
 	{
 		_overTime -= _timePerStep;
 		++_ongoingStep;
-		_steps.push_back(new Step());
+		updateCommitedCommand();
 	}
 }
 
@@ -165,7 +164,7 @@ void Controller::commitCommand(Command * command_p)
 	std::lock_guard<std::mutex> lock_l(_mutex);
 
 	updateCommitedCommand();
-	_commitedCommands.at(_ongoingStep-1).push_back(command_p);
+	_commitedCommands.at(_ongoingStep-1)->push_back(command_p);
 }
 
 State const * Controller::getBackState() const
@@ -185,7 +184,7 @@ void Controller::updateCommitedCommand()
 {
 	while(_commitedCommands.size() < _ongoingStep)
 	{
-		_commitedCommands.push_back(std::list<Command *>());
+		_commitedCommands.push_back(new std::list<Command *>());
 	}
 }
 

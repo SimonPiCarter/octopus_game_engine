@@ -9,12 +9,13 @@
 namespace octopus
 {
 
-EntityMoveCommand::EntityMoveCommand(Handle const &handle_p, std::list<Vector> waypoints_p)
-	: _handle(handle_p)
+EntityMoveCommand::EntityMoveCommand(Handle const &commandHandle_p, Handle const &handle_p, std::list<Vector> waypoints_p)
+	: Command(commandHandle_p)
+	, _handle(handle_p)
 	, _waypoints(waypoints_p)
 {}
 
-bool EntityMoveCommand::registerCommand(Step & step_p, State const &state_p)
+bool EntityMoveCommand::applyCommand(Step & step_p, State const &state_p)
 {
 	// No waypoint -> terminate
 	if(_waypoints.empty())
@@ -50,7 +51,7 @@ bool EntityMoveCommand::registerCommand(Step & step_p, State const &state_p)
 		Logger::getDebug() << "no waypoint" << std::endl;
 		return true;
 	}
-	Logger::getDebug() << "Adding move step target = "<<next_l<<" step speed = " << ent_l->_stepSpeed << std::endl;
+	Logger::getDebug() << "Adding move step orig = "<<ent_l->_pos<<" target = "<<next_l<<" step speed = " << ent_l->_stepSpeed << std::endl;
 
 	// Use next waypoint as target
 	step_p.addEntityMoveStep(new EntityMoveStep(createEntityMoveStep(*ent_l, next_l, ent_l->_stepSpeed)));

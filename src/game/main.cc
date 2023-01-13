@@ -60,11 +60,11 @@ int main()
 	state_l.addEntity(new octopus::Entity { { 6.5, 2.6 }, 1., false});
 
 	std::vector<octopus::Command *> vecCommands_l;
-	vecCommands_l.push_back(new octopus::EntityMoveCommand(0, octopus::toWaypoints(path_l)));
+	vecCommands_l.push_back(new octopus::EntityMoveCommand(0, 0, octopus::toWaypoints(path_l)));
 
 	for(size_t i = 1 ; i < state_l.getEntities().size() ; ++i)
 	{
-		vecCommands_l.push_back(new octopus::EntityWaitCommand(i));
+		vecCommands_l.push_back(new octopus::EntityWaitCommand(i, i));
 	}
 
 	std::list<octopus::Step *> allSteps_l;
@@ -78,7 +78,7 @@ int main()
 
 		for(octopus::Command * cmd_l : vecCommands_l)
 		{
-			cmd_l->registerCommand(step_l, state_l);
+			cmd_l->applyCommand(step_l, state_l);
 		}
 
 		if(i == 1)

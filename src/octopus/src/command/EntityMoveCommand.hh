@@ -17,13 +17,13 @@ namespace octopus
 class EntityMoveCommand : public Command
 {
 public:
-	EntityMoveCommand(Handle const &handle_p, std::list<Vector> waypoints_p);
+	EntityMoveCommand(Handle const &commandHandle_p, Handle const &handle_p, std::list<Vector> waypoints_p);
 
 	/// @brief check if _ent is close to the waypoint, if so
 	/// remove reached waypoint and create a step to the next waypoint
 	/// multiple waypoint may be removed at once last waypoint
 	/// is removed terminate
-	virtual bool registerCommand(Step & step_p, State const &state_p) override;
+	virtual bool applyCommand(Step & step_p, State const &state_p) override;
 private:
 	Handle const _handle;
 	std::list<Vector> _waypoints;

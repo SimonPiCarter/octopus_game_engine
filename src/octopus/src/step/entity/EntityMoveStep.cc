@@ -1,16 +1,19 @@
 #include "EntityMoveStep.hh"
 
 #include "state/State.hh"
+#include "logger/Logger.hh"
 
 namespace octopus
 {
 void EntityMoveStep::apply(State &state_p) const
 {
+	Logger::getDebug() << "EntityMoveStep :: " << state_p.getEntity(this->_handle)->_pos << " + "<<this->_move<<std::endl;
 	state_p.getEntity(this->_handle)->_pos += this->_move;
 }
 
 void EntityMoveStep::revert(State &state_p) const
 {
+	Logger::getDebug() << "EntityMoveStep :: " << state_p.getEntity(this->_handle)->_pos << " - "<<this->_move<<std::endl;
 	state_p.getEntity(this->_handle)->_pos -= this->_move;
 }
 

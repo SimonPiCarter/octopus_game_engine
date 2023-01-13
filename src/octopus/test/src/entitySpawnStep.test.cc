@@ -16,7 +16,7 @@ TEST(entityStepTest, simple)
 {
 	State state_l;
 
-	EntitySpawnStep step_l(Entity { { 3, 4. }, 1., false, 0});
+	EntitySpawnStep step_l(Entity { { 3, 4. }, 1., false});
 
 	EXPECT_EQ(0u, state_l.getEntities().size());
 

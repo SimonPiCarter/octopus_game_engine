@@ -5,11 +5,12 @@
 #include <list>
 #include <vector>
 
+#include "step/Step.hh"
+
 namespace octopus
 {
 
 class Command;
-class Step;
 class Steppable;
 class State;
 
@@ -20,7 +21,7 @@ struct BufferedState
 
 	unsigned long _stepHandled {0};
 	/// @brief iterator to the last handled step
-	std::list<Step *>::iterator _it;
+	std::list<Step *> _steps;;
 	State * _state {nullptr};
 };
 
@@ -85,9 +86,9 @@ private:
 	/// @brief last handled step, all commands for steps after this one have not been processed
 	unsigned long _lastHandledStep {0};
 	/// @brief list of commit commands for every step
-	std::vector<std::list<Command *> > _commitedCommands;
-	/// @brief list of steps
-	std::list<Step *> _steps;
+	std::vector<std::list<Command *> *> _commitedCommands;
+	/// @brief initial step
+	Step _initialStep;
 
 
 	/// @brief mutex for multi threading handling
