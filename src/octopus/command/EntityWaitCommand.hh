@@ -2,7 +2,7 @@
 #define __EntityWaitCommand__
 
 #include "Command.hh"
-#include "entity/Entity.hh"
+#include "state/entity/Entity.hh"
 
 
 namespace octopus

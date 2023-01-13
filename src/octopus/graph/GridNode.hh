@@ -1,7 +1,7 @@
 #ifndef __GRID_NODE__
 #define __GRID_NODE__
 
-#include "entity/Vector.hh"
+#include "utils/Vector.hh"
 
 namespace octopus
 {

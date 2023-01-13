@@ -1,7 +1,7 @@
 #include "Step.hh"
 
-#include "entity/EntityStep.hh"
-#include "entity/Vector.hh"
+#include "step/entity/EntityStep.hh"
+#include "utils/Vector.hh"
 
 namespace octopus
 {

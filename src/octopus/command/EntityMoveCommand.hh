@@ -3,8 +3,8 @@
 
 #include "Command.hh"
 
-#include "entity/Entity.hh"
-#include "entity/Vector.hh"
+#include "state/entity/Entity.hh"
+#include "utils/Vector.hh"
 #include <list>
 
 

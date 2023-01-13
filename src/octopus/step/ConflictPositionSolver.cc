@@ -4,8 +4,8 @@
 #include <unordered_map>
 #include <iostream>
 
-#include "entity/EntityStep.hh"
-#include "entity/Vector.hh"
+#include "step/entity/EntityStep.hh"
+#include "utils/Vector.hh"
 #include "step/Step.hh"
 
 namespace octopus

@@ -1,8 +1,8 @@
 #ifndef __ENTITY_STEP__
 #define __ENTITY_STEP__
 
-#include "Entity.hh"
-#include "Vector.hh"
+#include "state/entity/Entity.hh"
+#include "utils/Vector.hh"
 
 namespace octopus
 {

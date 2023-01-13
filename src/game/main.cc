@@ -3,8 +3,8 @@
 
 #include "command/EntityMoveCommand.hh"
 #include "command/EntityWaitCommand.hh"
-#include "entity/Entity.hh"
-#include "entity/EntityStep.hh"
+#include "state/entity/Entity.hh"
+#include "step/entity/EntityStep.hh"
 #include "step/ConflictPositionSolver.hh"
 #include "step/Step.hh"
 

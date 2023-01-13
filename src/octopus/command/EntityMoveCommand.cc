@@ -2,7 +2,7 @@
 #include "EntityMoveCommand.hh"
 
 #include "step/Step.hh"
-#include "entity/EntityStep.hh"
+#include "step/entity/EntityStep.hh"
 
 namespace octopus
 {

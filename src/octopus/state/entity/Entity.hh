@@ -3,7 +3,8 @@
 
 #include <iostream>
 #include <vector>
-#include "Vector.hh"
+#include "utils/Vector.hh"
+#include "state/Handle.hh"
 
 namespace octopus
 {
@@ -17,6 +18,8 @@ namespace octopus
 			bool _frozen {false};
 
 			double _stepSpeed {0.25};
+
+			Handle _handle;
 	};
 }
 
