@@ -17,6 +17,8 @@ namespace octopus
 
 			/// @brief add step and keep ownership
 			void addEntityMoveStep(EntityMoveStep * step_p);
+			/// @brief add step and keep ownership
+			void addSteppable(Steppable * step_p);
 
 			std::list<EntityMoveStep *> &getEntityMoveStep();
 			std::list<EntityMoveStep *> const &getEntityMoveStep() const;
