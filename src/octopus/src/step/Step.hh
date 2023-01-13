@@ -6,7 +6,7 @@
 
 namespace octopus
 {
-	class EntityStep;
+	class EntityMoveStep;
 	class State;
 	class Steppable;
 
@@ -16,15 +16,15 @@ namespace octopus
 			~Step();
 
 			/// @brief add step and keep ownership
-			void addEntityStep(EntityStep * step_p);
+			void addEntityMoveStep(EntityMoveStep * step_p);
 
-			std::list<EntityStep *> &getEntityStep();
-			std::list<EntityStep *> const &getEntityStep() const;
+			std::list<EntityMoveStep *> &getEntityMoveStep();
+			std::list<EntityMoveStep *> const &getEntityMoveStep() const;
 
 			std::list<Steppable *> &getSteppable();
 			std::list<Steppable *> const &getSteppable() const;
 		private:
-			std::list<EntityStep *> _listEntityStep;
+			std::list<EntityMoveStep *> _listEntityMoveStep;
 
 			std::list<Steppable *> _listSteppable;
 	};
@@ -36,7 +36,7 @@ namespace octopus
 	void revert(Step const &step_p, State &state_p);
 
 	/// @brief compact the step to avoid useles steps
-	/// for example : remove all EntityStep with no noticeable difference
+	/// for example : remove all EntityMoveStep with no noticeable difference
 	/// between pos and new pos
 	void compact(Step &step_p);
 }

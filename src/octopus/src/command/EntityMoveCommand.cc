@@ -3,7 +3,7 @@
 
 #include "state/State.hh"
 #include "step/Step.hh"
-#include "step/entity/EntityStep.hh"
+#include "step/entity/EntityMoveStep.hh"
 
 namespace octopus
 {
@@ -49,7 +49,7 @@ bool EntityMoveCommand::registerCommand(Step & step_p, State const &state_p)
 	}
 
 	// Use next waypoint as target
-	step_p.addEntityStep(new EntityStep(createEntityStep(*ent_l, next_l, ent_l->_stepSpeed)));
+	step_p.addEntityMoveStep(new EntityMoveStep(createEntityMoveStep(*ent_l, next_l, ent_l->_stepSpeed)));
 
 	return false;
 }

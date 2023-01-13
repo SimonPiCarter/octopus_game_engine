@@ -11,8 +11,6 @@
 namespace octopus
 {
 
-class State;
-
 /// @brief Basic class that ensure move command with waypoints or not
 /// Entity will be moved along all waypoints and command will terminate
 /// when last one is reached

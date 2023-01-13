@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 
 #include <command/EntityMoveCommand.hh>
-#include <step/entity/EntityStep.hh>
+#include <step/entity/EntityMoveStep.hh>
 #include <step/Step.hh>
 #include <state/State.hh>
 #include <utils/Vector.hh>
@@ -35,9 +35,9 @@ TEST(moveCommandTest, simple)
 	bool terminated_l = command_l.registerCommand(step_l, state_l);
 	EXPECT_FALSE(terminated_l);
 
-	ASSERT_EQ(1u, step_l.getEntityStep().size());
+	ASSERT_EQ(1u, step_l.getEntityMoveStep().size());
 
-	EntityStep * entStep_l = *step_l.getEntityStep().begin();
+	EntityMoveStep * entStep_l = *step_l.getEntityMoveStep().begin();
 
 	Vector expected_l {1., 0};
 	EXPECT_TRUE(expected_l == entStep_l->_move) << "expected : "<<expected_l<<" real : "<<entStep_l->_move;
@@ -57,9 +57,9 @@ TEST(moveCommandTest, simple)
 	terminated_l = command_l.registerCommand(step2_l, state_l);
 	EXPECT_FALSE(terminated_l);
 
-	ASSERT_EQ(1u, step2_l.getEntityStep().size());
+	ASSERT_EQ(1u, step2_l.getEntityMoveStep().size());
 
-	EntityStep * entStep2_l = *step2_l.getEntityStep().begin();
+	EntityMoveStep * entStep2_l = *step2_l.getEntityMoveStep().begin();
 
 	Vector expected2_l {0., 1};
 	EXPECT_TRUE(expected2_l == entStep2_l->_move) << "expected : "<<expected2_l<<" real : "<<entStep2_l->_move;
@@ -79,5 +79,5 @@ TEST(moveCommandTest, simple)
 	terminated_l = command_l.registerCommand(step3_l, state_l);
 	EXPECT_TRUE(terminated_l);
 
-	ASSERT_EQ(0u, step3_l.getEntityStep().size());
+	ASSERT_EQ(0u, step3_l.getEntityMoveStep().size());
 }

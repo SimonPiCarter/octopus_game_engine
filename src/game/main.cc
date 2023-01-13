@@ -5,7 +5,7 @@
 #include "command/EntityWaitCommand.hh"
 #include "state/entity/Entity.hh"
 #include "state/State.hh"
-#include "step/entity/EntityStep.hh"
+#include "step/entity/EntityMoveStep.hh"
 #include "step/ConflictPositionSolver.hh"
 #include "step/Step.hh"
 

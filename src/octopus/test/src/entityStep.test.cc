@@ -1,10 +1,10 @@
 #include <gtest/gtest.h>
 
-#include <step/entity/EntityStep.hh>
+#include <step/entity/EntityMoveStep.hh>
 #include <state/State.hh>
 
 ///
-/// This test suite aims at checking that EntityStep works properly
+/// This test suite aims at checking that EntityMoveStep works properly
 /// - Move an entity in a step
 /// - Is correctly undone
 ///
@@ -17,7 +17,7 @@ TEST(entityStepTest, simple)
 
 	state_l.addEntity(new Entity { { 3, 3. }, 1., false, 0});
 
-	EntityStep step_l(0, {1, 2});
+	EntityMoveStep step_l(0, {1, 2});
 
 	EXPECT_NEAR(3., state_l.getEntity(0)->_pos.x, 1e-5);
 	EXPECT_NEAR(3., state_l.getEntity(0)->_pos.y, 1e-5);
@@ -39,8 +39,8 @@ TEST(entityStepTest, simple_two)
 
 	state_l.addEntity(new Entity { { 3, 3. }, 1., false, 0});
 
-	EntityStep step_l(0, {1, 2});
-	EntityStep step2_l(0, {5, 7});
+	EntityMoveStep step_l(0, {1, 2});
+	EntityMoveStep step2_l(0, {5, 7});
 
 	EXPECT_NEAR(3., state_l.getEntity(0)->_pos.x, 1e-5);
 	EXPECT_NEAR(3., state_l.getEntity(0)->_pos.y, 1e-5);

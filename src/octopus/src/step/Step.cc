@@ -1,7 +1,7 @@
 #include "Step.hh"
 
 #include "state/State.hh"
-#include "step/entity/EntityStep.hh"
+#include "step/entity/EntityMoveStep.hh"
 #include "utils/Vector.hh"
 
 namespace octopus
@@ -10,26 +10,26 @@ namespace octopus
 
 Step::~Step()
 {
-	for(EntityStep * step_l : _listEntityStep)
+	for(EntityMoveStep * step_l : _listEntityMoveStep)
 	{
 		delete step_l;
 	}
 }
 
-void Step::addEntityStep(EntityStep * step_p)
+void Step::addEntityMoveStep(EntityMoveStep * step_p)
 {
-	_listEntityStep.push_back(step_p);
+	_listEntityMoveStep.push_back(step_p);
 	_listSteppable.push_back(step_p);
 }
 
-std::list<EntityStep *> &Step::getEntityStep()
+std::list<EntityMoveStep *> &Step::getEntityMoveStep()
 {
-	return _listEntityStep;
+	return _listEntityMoveStep;
 }
 
-std::list<EntityStep *> const &Step::getEntityStep() const
+std::list<EntityMoveStep *> const &Step::getEntityMoveStep() const
 {
-	return _listEntityStep;
+	return _listEntityMoveStep;
 }
 
 std::list<Steppable *> &Step::getSteppable()

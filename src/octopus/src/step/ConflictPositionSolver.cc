@@ -6,13 +6,13 @@
 
 #include "state/entity/Entity.hh"
 #include "state/State.hh"
-#include "step/entity/EntityStep.hh"
+#include "step/entity/EntityMoveStep.hh"
 #include "step/Step.hh"
 #include "utils/Vector.hh"
 
 namespace octopus
 {
-bool collision(Entity const * entA_p, EntityStep const *stepA_p, Entity const * entB_p, EntityStep const *stepB_p)
+bool collision(Entity const * entA_p, EntityMoveStep const *stepA_p, Entity const * entB_p, EntityMoveStep const *stepB_p)
 {
 	// repulsion against axis between both (from B to A)
 	Vector axis_l = (entA_p->_pos + stepA_p->_move) - (entB_p->_pos + stepB_p->_move);
@@ -26,12 +26,12 @@ bool collision(Entity const * entA_p, EntityStep const *stepA_p, Entity const * 
 
 void updateStepFromConflictPosition(Step &step_p, State const &state_p)
 {
-	std::unordered_map<EntityStep *, Vector> mapCorrection_l;
+	std::unordered_map<EntityMoveStep *, Vector> mapCorrection_l;
 	// check every entity with one another
-	for(EntityStep *stepA_l: step_p.getEntityStep())
+	for(EntityMoveStep *stepA_l: step_p.getEntityMoveStep())
 	{
 		// check every entity with one another
-		for(EntityStep *stepB_l : step_p.getEntityStep())
+		for(EntityMoveStep *stepB_l : step_p.getEntityMoveStep())
 		{
 			// break if same
 			if(stepB_l == stepA_l)
@@ -86,7 +86,7 @@ void updateStepFromConflictPosition(Step &step_p, State const &state_p)
 			}
 		}
 	}
-	for(EntityStep *ent_l: step_p.getEntityStep())
+	for(EntityMoveStep *ent_l: step_p.getEntityMoveStep())
 	{
 		ent_l->_move = ent_l->_move + mapCorrection_l[ent_l] * 0.9;
 	}

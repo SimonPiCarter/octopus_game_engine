@@ -16,7 +16,7 @@ add_library(octopus
 	${CMAKE_CURRENT_SOURCE_DIR}/src/state/entity/Entity.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/step/ConflictPositionSolver.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/step/Step.cc
-	${CMAKE_CURRENT_SOURCE_DIR}/src/step/entity/EntityStep.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/src/step/entity/EntityMoveStep.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/graph/Graph.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/graph/Grid.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/graph/GridNode.cc
