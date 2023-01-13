@@ -1,18 +1,19 @@
 
 #include "EntityMoveCommand.hh"
 
+#include "state/State.hh"
 #include "step/Step.hh"
 #include "step/entity/EntityStep.hh"
 
 namespace octopus
 {
 
-EntityMoveCommand::EntityMoveCommand(Entity &ent_p, std::list<Vector> waypoints_p)
-	: _ent(ent_p)
+EntityMoveCommand::EntityMoveCommand(Handle const &handle_p, std::list<Vector> waypoints_p)
+	: _handle(handle_p)
 	, _waypoints(waypoints_p)
 {}
 
-bool EntityMoveCommand::registerCommand(Step & step_p)
+bool EntityMoveCommand::registerCommand(Step & step_p, State const &state_p)
 {
 	// No waypoint -> terminate
 	if(_waypoints.empty())
@@ -20,14 +21,16 @@ bool EntityMoveCommand::registerCommand(Step & step_p)
 		return true;
 	}
 
+	Entity const * ent_l = state_p.getEntity(_handle);
+
 	///
 	/// Update waypoints based on current position
 	/// Waypoint must be within ray to stop
 	///
 	Vector next_l = _waypoints.front();
-	Vector delta_l = _ent._pos - next_l;
+	Vector delta_l = ent_l->_pos - next_l;
 	// Check entity position
-	while(square_length(delta_l) < _ent._ray*_ent._ray)
+	while(square_length(delta_l) < ent_l->_ray*ent_l->_ray)
 	{
 		// pop front
 		_waypoints.pop_front();
@@ -36,7 +39,7 @@ bool EntityMoveCommand::registerCommand(Step & step_p)
 			break;
 		}
 		next_l = _waypoints.front();
-		delta_l = _ent._pos - next_l;
+		delta_l = ent_l->_pos - next_l;
 	}
 
 	// No waypoint -> terminate
@@ -46,7 +49,7 @@ bool EntityMoveCommand::registerCommand(Step & step_p)
 	}
 
 	// Use next waypoint as target
-	step_p.addEntityStep(new EntityStep(createEntityStep(_ent, next_l, _ent._stepSpeed)));
+	step_p.addEntityStep(new EntityStep(createEntityStep(*ent_l, next_l, ent_l->_stepSpeed)));
 
 	return false;
 }

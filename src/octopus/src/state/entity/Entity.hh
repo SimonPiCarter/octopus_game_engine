@@ -27,6 +27,6 @@ std::ostream &operator<<(std::ostream &os_p, octopus::Entity const &ent_p);
 
 std::ostream &streamCsvPos(std::ostream &os_p, octopus::Entity const &ent_p);
 
-std::ostream &streamCsvEntity(std::ostream &os_p, std::vector<octopus::Entity> const &vec_p);
+std::ostream &streamCsvEntity(std::ostream &os_p, std::vector<octopus::Entity*> const &vec_p);
 
 #endif

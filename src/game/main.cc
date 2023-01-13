@@ -4,6 +4,7 @@
 #include "command/EntityMoveCommand.hh"
 #include "command/EntityWaitCommand.hh"
 #include "state/entity/Entity.hh"
+#include "state/State.hh"
 #include "step/entity/EntityStep.hh"
 #include "step/ConflictPositionSolver.hh"
 #include "step/Step.hh"
@@ -44,26 +45,26 @@ int main()
 		std::cout<<node_l->getPosition()<<std::endl;
 	}
 
+	octopus::State state_l;
 	///
 	/// Create entities and command
 	///
-	std::vector<octopus::Entity> vecEntity_l;
-	vecEntity_l.emplace_back(octopus::Entity { { 3.6, 3. }, 1., true});
-	vecEntity_l.emplace_back(octopus::Entity { { 5.1, 3.1 }, 1., false});
-	vecEntity_l.emplace_back(octopus::Entity { { 6.5, 3. }, 1., false});
-	vecEntity_l.emplace_back(octopus::Entity { { 3.5, 3.6 }, 1., false});
-	vecEntity_l.emplace_back(octopus::Entity { { 5., 3.4 }, 1., false});
-	vecEntity_l.emplace_back(octopus::Entity { { 6.4, 3.5 }, 1., false});
-	vecEntity_l.emplace_back(octopus::Entity { { 3.2, 2.4 }, 1., false});
-	vecEntity_l.emplace_back(octopus::Entity { { 5.1, 2.5 }, 1., false});
-	vecEntity_l.emplace_back(octopus::Entity { { 6.5, 2.6 }, 1., false});
+	state_l.addEntity(new octopus::Entity { { 3.6, 3. }, 1., false, 0});
+	state_l.addEntity(new octopus::Entity { { 5.1, 3.1 }, 1., true, 0});
+	state_l.addEntity(new octopus::Entity { { 6.5, 3. }, 1., false, 0});
+	state_l.addEntity(new octopus::Entity { { 3.5, 3.6 }, 1., false, 0});
+	state_l.addEntity(new octopus::Entity { { 5., 3.4 }, 1., false, 0});
+	state_l.addEntity(new octopus::Entity { { 6.4, 3.5 }, 1., false, 0});
+	state_l.addEntity(new octopus::Entity { { 3.2, 2.4 }, 1., false, 0});
+	state_l.addEntity(new octopus::Entity { { 5.1, 2.5 }, 1., false, 0});
+	state_l.addEntity(new octopus::Entity { { 6.5, 2.6 }, 1., false, 0});
 
 	std::vector<octopus::Command *> vecCommands_l;
-	vecCommands_l.push_back(new octopus::EntityMoveCommand(vecEntity_l.at(0), octopus::toWaypoints(path_l)));
+	vecCommands_l.push_back(new octopus::EntityMoveCommand(0, octopus::toWaypoints(path_l)));
 
-	for(size_t i = 1 ; i < vecEntity_l.size() ; ++i)
+	for(size_t i = 1 ; i < state_l.getEntities().size() ; ++i)
 	{
-		vecCommands_l.push_back(new octopus::EntityWaitCommand(vecEntity_l.at(i)));
+		vecCommands_l.push_back(new octopus::EntityWaitCommand(i));
 	}
 
 	std::list<octopus::Step *> allSteps_l;
@@ -77,30 +78,30 @@ int main()
 
 		for(octopus::Command * cmd_l : vecCommands_l)
 		{
-			cmd_l->registerCommand(step_l);
+			cmd_l->registerCommand(step_l, state_l);
 		}
 
 		if(i == 1)
 		{
 			std::ofstream file_l("step/step_0.csv");
-			streamCsvEntity(file_l, vecEntity_l);
+			streamCsvEntity(file_l, state_l.getEntities());
 		}
 
-		octopus::updateStepFromConflictPosition(step_l);
+		octopus::updateStepFromConflictPosition(step_l, state_l);
 		octopus::compact(step_l);
-		octopus::apply(step_l);
+		octopus::apply(step_l, state_l);
 
 		std::ofstream file_l("step/step_"+std::to_string(i)+".csv");
-		streamCsvEntity(file_l, vecEntity_l);
+		streamCsvEntity(file_l, state_l.getEntities());
 	}
 
 	// Reverse all steps
 	for(auto it_l = allSteps_l.rbegin(); it_l != allSteps_l.rend(); ++it_l)
 	{
-		octopus::apply(**it_l);
+		octopus::revert(**it_l, state_l);
 
 		std::ofstream file_l("step/step_"+std::to_string(i++)+".csv");
-		streamCsvEntity(file_l, vecEntity_l);
+		streamCsvEntity(file_l, state_l.getEntities());
 	}
 
 	for(octopus::Command * cmd_l : vecCommands_l)

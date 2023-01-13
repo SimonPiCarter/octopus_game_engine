@@ -4,49 +4,53 @@
 #include <unordered_map>
 #include <iostream>
 
+#include "state/entity/Entity.hh"
+#include "state/State.hh"
 #include "step/entity/EntityStep.hh"
-#include "utils/Vector.hh"
 #include "step/Step.hh"
+#include "utils/Vector.hh"
 
 namespace octopus
 {
-bool collision(EntityStep const *entA_p, EntityStep const *entB_p)
+bool collision(Entity const * entA_p, EntityStep const *stepA_p, Entity const * entB_p, EntityStep const *stepB_p)
 {
 	// repulsion against axis between both (from B to A)
-	Vector axis_l = entA_p->_newPosition - entB_p->_newPosition;
+	Vector axis_l = (entA_p->_pos + stepA_p->_move) - (entB_p->_pos + stepB_p->_move);
 
 	// lenght between positions
 	double squareLength_l = square_length(axis_l);
-	double squareRay_l = (entA_p->_ent->_ray + entB_p->_ent->_ray)*(entA_p->_ent->_ray + entB_p->_ent->_ray);
+	double squareRay_l = (entA_p->_ray + entB_p->_ray)*(entA_p->_ray + entB_p->_ray);
 
 	return squareLength_l < squareRay_l;
 }
 
-void updateStepFromConflictPosition(Step &step_p)
+void updateStepFromConflictPosition(Step &step_p, State const &state_p)
 {
 	std::unordered_map<EntityStep *, Vector> mapCorrection_l;
 	// check every entity with one another
-	for(EntityStep *entA_l: step_p.getEntityStep())
+	for(EntityStep *stepA_l: step_p.getEntityStep())
 	{
 		// check every entity with one another
-		for(EntityStep *entB_l : step_p.getEntityStep())
+		for(EntityStep *stepB_l : step_p.getEntityStep())
 		{
 			// break if same
-			if(entB_l == entA_l)
+			if(stepB_l == stepA_l)
 			{
 				break;
 			}
+			Entity const * entA_l = state_p.getEntity(stepA_l->_handle);
+			Entity const * entB_l = state_p.getEntity(stepB_l->_handle);
 			// check collision
-			if(collision(entA_l, entB_l))
+			if(collision(entA_l, stepA_l, entB_l, stepB_l))
 			{
 				// repulsion against axis between both (from B to A)
-				Vector axis_l = entA_l->_newPosition - entB_l->_newPosition;
+				Vector axis_l = (entA_l->_pos + stepA_l->_move) - (entB_l->_pos + stepB_l->_move);
 
 				// lenght between positions
 				double length_l = length(axis_l);
 
 				// collision distance (distance missing to avoid collision)
-				double distance_l = entA_l->_ent->_ray + entB_l->_ent->_ray - length_l;
+				double distance_l = entA_l->_ray + entB_l->_ray - length_l;
 				if(distance_l < 0.)
 				{
 					throw std::logic_error("octopus :: Error collision but no distance to fix");
@@ -61,30 +65,30 @@ void updateStepFromConflictPosition(Step &step_p)
 
 				double coefA_l = 0.5;
 				double coefB_l = 0.5;
-				if(entA_l->_ent->_frozen && entB_l->_ent->_frozen)
+				if(entA_l->_frozen && entB_l->_frozen)
 				{
 					coefA_l = 0.;
 					coefB_l = 0.;
 				}
-				if(entA_l->_ent->_frozen)
+				if(entA_l->_frozen)
 				{
 					coefA_l = 0.;
 					coefB_l = 1.;
 				}
-				else if(entB_l->_ent->_frozen)
+				else if(entB_l->_frozen)
 				{
 					coefA_l = 1.;
 					coefB_l = 0.;
 				}
 				// updated steps, both doing half distance
-				mapCorrection_l[entA_l] += normalizedAxis_l * distance_l * coefA_l;
-				mapCorrection_l[entB_l] -= normalizedAxis_l * distance_l * coefB_l;
+				mapCorrection_l[stepA_l] += normalizedAxis_l * distance_l * coefA_l;
+				mapCorrection_l[stepB_l] -= normalizedAxis_l * distance_l * coefB_l;
 			}
 		}
 	}
 	for(EntityStep *ent_l: step_p.getEntityStep())
 	{
-		ent_l->_newPosition = ent_l->_newPosition + mapCorrection_l[ent_l] * 0.9;
+		ent_l->_move = ent_l->_move + mapCorrection_l[ent_l] * 0.9;
 	}
 }
 

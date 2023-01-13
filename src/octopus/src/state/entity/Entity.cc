@@ -10,12 +10,12 @@ std::ostream &streamCsvPos(std::ostream &os_p, octopus::Entity const &ent_p)
 	return os_p<<ent_p._pos.x<<","<<ent_p._pos.y<<","<<ent_p._ray;
 }
 
-std::ostream &streamCsvEntity(std::ostream &os_p, std::vector<octopus::Entity> const &vec_p)
+std::ostream &streamCsvEntity(std::ostream &os_p, std::vector<octopus::Entity *> const &vec_p)
 {
 	os_p<<"x,y,r"<<std::endl;
-	for(octopus::Entity const &ent_l : vec_p)
+	for(octopus::Entity const *ent_l : vec_p)
 	{
-		streamCsvPos(os_p, ent_l) << std::endl;
+		streamCsvPos(os_p, *ent_l) << std::endl;
 	}
 	return os_p;
 }

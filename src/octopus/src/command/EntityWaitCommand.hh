@@ -2,7 +2,7 @@
 #define __EntityWaitCommand__
 
 #include "Command.hh"
-#include "state/entity/Entity.hh"
+#include "state/Handle.hh"
 
 
 namespace octopus
@@ -14,15 +14,12 @@ namespace octopus
 class EntityWaitCommand : public Command
 {
 public:
-	EntityWaitCommand(Entity &ent_p);
+	EntityWaitCommand(Handle const &handle_p);
 
-	/// @brief check if _ent is close to the waypoint, if so
-	/// remove reached waypoint and create a step to the next waypoint
-	/// multiple waypoint may be removed at once last waypoint
-	/// is removed terminate
-	virtual bool registerCommand(Step & step_p) override;
+	/// @brief
+	virtual bool registerCommand(Step & step_p, State const &state_p) override;
 private:
-	Entity & _ent;
+	Handle const _handle;
 };
 
 } // namespace octopus
