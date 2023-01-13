@@ -49,15 +49,15 @@ int main()
 	///
 	/// Create entities and command
 	///
-	state_l.addEntity(new octopus::Entity { { 3.6, 3. }, 1., false, 0});
-	state_l.addEntity(new octopus::Entity { { 5.1, 3.1 }, 1., true, 0});
-	state_l.addEntity(new octopus::Entity { { 6.5, 3. }, 1., false, 0});
-	state_l.addEntity(new octopus::Entity { { 3.5, 3.6 }, 1., false, 0});
-	state_l.addEntity(new octopus::Entity { { 5., 3.4 }, 1., false, 0});
-	state_l.addEntity(new octopus::Entity { { 6.4, 3.5 }, 1., false, 0});
-	state_l.addEntity(new octopus::Entity { { 3.2, 2.4 }, 1., false, 0});
-	state_l.addEntity(new octopus::Entity { { 5.1, 2.5 }, 1., false, 0});
-	state_l.addEntity(new octopus::Entity { { 6.5, 2.6 }, 1., false, 0});
+	state_l.addEntity(new octopus::Entity { { 3.6, 3. }, 1., false});
+	state_l.addEntity(new octopus::Entity { { 5.1, 3.1 }, 1., true});
+	state_l.addEntity(new octopus::Entity { { 6.5, 3. }, 1., false});
+	state_l.addEntity(new octopus::Entity { { 3.5, 3.6 }, 1., false});
+	state_l.addEntity(new octopus::Entity { { 5., 3.4 }, 1., false});
+	state_l.addEntity(new octopus::Entity { { 6.4, 3.5 }, 1., false});
+	state_l.addEntity(new octopus::Entity { { 3.2, 2.4 }, 1., false});
+	state_l.addEntity(new octopus::Entity { { 5.1, 2.5 }, 1., false});
+	state_l.addEntity(new octopus::Entity { { 6.5, 2.6 }, 1., false});
 
 	std::vector<octopus::Command *> vecCommands_l;
 	vecCommands_l.push_back(new octopus::EntityMoveCommand(0, octopus::toWaypoints(path_l)));
