@@ -3,6 +3,7 @@
 
 #include <cmath>
 
+#include "command/data/AttackMoveData.hh"
 #include "logger/Logger.hh"
 #include "state/State.hh"
 #include "step/Step.hh"
@@ -23,7 +24,7 @@ EntityAttackCommand::EntityAttackCommand(Handle const &commandHandle_p, Handle c
 bool EntityAttackCommand::applyCommand(Step & step_p, State const &state_p, CommandData const *data_p) const
 {
 	Logger::getDebug() << "EntityAttackCommand:: apply Command "<<_source << " -> " <<_target<<std::endl;
-	long windup_l = static_cast<CommandDataWithData<long> const *>(data_p)->_data;
+	long windup_l = static_cast<CommandDataWithData<AttackMoveData> const *>(data_p)->_data._windup;
 	// target disappeared or is dead
 	bool targetMissing_l = checkTarget(state_p);
 	if(targetMissing_l)

@@ -1,6 +1,7 @@
 
 #include "EntityMoveCommand.hh"
 
+#include "command/data/AttackMoveData.hh"
 #include "logger/Logger.hh"
 #include "state/State.hh"
 #include "step/Step.hh"
@@ -18,7 +19,7 @@ EntityMoveCommand::EntityMoveCommand(Handle const &commandHandle_p, Handle const
 
 bool EntityMoveCommand::applyCommand(Step & step_p, State const &state_p, CommandData const *data_p) const
 {
-	std::list<Vector> const &waypoints_l =  static_cast<CommandDataWithData<std::list<Vector>> const *>(data_p)->_data;
+	std::list<Vector> const &waypoints_l =  static_cast<CommandDataWithData<AttackMoveData> const *>(data_p)->_data._waypoints;
 	// No waypoint -> terminate
 	if(waypoints_l.empty())
 	{

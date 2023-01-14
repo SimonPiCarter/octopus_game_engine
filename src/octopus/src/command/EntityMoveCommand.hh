@@ -3,6 +3,7 @@
 
 #include "Command.hh"
 
+#include "data/AttackMoveData.hh"
 #include "state/Handle.hh"
 #include "utils/Vector.hh"
 #include <list>
@@ -25,7 +26,7 @@ public:
 	/// is removed terminate
 	virtual bool applyCommand(Step & step_p, State const &state_p, CommandData const *data_p) const override;
 
-	virtual CommandData * newData() const override { return new CommandDataWithData<std::list<Vector>>(_waypoints); }
+	virtual CommandData * newData() const override { return new CommandDataWithData<AttackMoveData>({0, _waypoints}); }
 private:
 	Handle const _source;
 	std::list<Vector> const _waypoints;

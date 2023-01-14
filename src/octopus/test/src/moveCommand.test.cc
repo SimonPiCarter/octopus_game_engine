@@ -29,8 +29,8 @@ TEST(moveCommandTest, simple)
 	EntityMoveCommand command_l(0, 0, { {4, 3}, {4, 4}});
 
 	state_l.getEntity(0)->enqueue(&command_l, false);
-	CommandDataWithData<std::list<Vector>> *data_l =
-		dynamic_cast<CommandDataWithData<std::list<Vector>> *>(state_l.getEntity(0)->getFrontQueue()._data);
+	CommandDataWithData<AttackMoveData> *data_l =
+		dynamic_cast<CommandDataWithData<AttackMoveData> *>(state_l.getEntity(0)->getFrontQueue()._data);
 	EXPECT_NE(nullptr, data_l);
 
 	///
