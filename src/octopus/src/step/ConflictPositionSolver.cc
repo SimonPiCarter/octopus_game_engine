@@ -26,6 +26,23 @@ bool collision(Entity const * entA_p, EntityMoveStep const *stepA_p, Entity cons
 
 void updateStepFromConflictPosition(Step &step_p, State const &state_p)
 {
+	/// map to access move step from entity
+	std::unordered_map<Entity const *, EntityMoveStep *> mapMoveStep_l;
+
+	for(EntityMoveStep *step_l: step_p.getEntityMoveStep())
+	{
+		mapMoveStep_l[state_p.getEntity(step_l->_handle)] = step_l;
+	}
+	// fill up move steps when missing
+	for(Entity const * ent_l : state_p.getEntities())
+	{
+		if(mapMoveStep_l[ent_l] == nullptr)
+		{
+			step_p.addEntityMoveStep(new EntityMoveStep(ent_l->_handle, {0, 0}));
+		}
+	}
+
+	/// map to access correction from step
 	std::unordered_map<EntityMoveStep *, Vector> mapCorrection_l;
 	// check every entity with one another
 	for(EntityMoveStep *stepA_l: step_p.getEntityMoveStep())

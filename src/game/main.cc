@@ -15,12 +15,12 @@
 
 int main()
 {
-	octopus::Entity target_l { { -10., 15. }, 5., false};
-	target_l._stats._hp = 1000;
+	octopus::Entity target_l { { -10., 15. }, 5., true};
+	target_l._stats._hp = 250;
 	std::list<octopus::Steppable *> spawners_l =
 	{
 		new octopus::EntitySpawnStep(octopus::Entity { { 3.6, 3. }, 1., false}),
-		new octopus::EntitySpawnStep(octopus::Entity { { 5.1, 3.1 }, 1., true}),
+		new octopus::EntitySpawnStep(octopus::Entity { { 5.1, 3.1 }, 1., false}),
 		new octopus::EntitySpawnStep(octopus::Entity { { 6.5, 3. }, 1., false}),
 		new octopus::EntitySpawnStep(octopus::Entity { { 3.5, 3.6 }, 1., false}),
 		new octopus::EntitySpawnStep(octopus::Entity { { 5., 3.4 }, 1., false}),
@@ -31,20 +31,27 @@ int main()
 		new octopus::EntitySpawnStep(target_l)
 	};
 
-	spawners_l.push_back(new octopus::CommandSpawnStep(new octopus::EntityMoveCommand(0, 0, {{2, 2}, {2, 5}, {10, 5}})));
 	for(unsigned long i = 1 ; i < 9 ; ++ i)
 	{
 		spawners_l.push_back(new octopus::CommandSpawnStep(new octopus::EntityAttackCommand(i, i, 9)));
 	}
-
-	octopus::EntityAttackCommand *cmd_l = new octopus::EntityAttackCommand(0, 0, 9);
-	cmd_l->setQueued(true);
-	spawners_l.push_back(new octopus::CommandSpawnStep(cmd_l));
+	{
+		spawners_l.push_back(new octopus::CommandSpawnStep(new octopus::EntityMoveCommand(0, 0, {{2, 2}, {2, 5}, {10, 5}})));
+		octopus::EntityAttackCommand *cmd_l = new octopus::EntityAttackCommand(0, 0, 9);
+		cmd_l->setQueued(true);
+		spawners_l.push_back(new octopus::CommandSpawnStep(cmd_l));
+	}
+	for(unsigned long i = 0 ; i < 9 ; ++ i)
+	{
+		octopus::EntityMoveCommand * cmd_l = new octopus::EntityMoveCommand(i, i, {{0, 0}});
+		cmd_l->setQueued(true);
+		spawners_l.push_back(new octopus::CommandSpawnStep(cmd_l));
+	}
 
 	octopus::Controller controller_l(spawners_l, 1.);
 
 	size_t i = 1;
-	for( ; i < 240 ; ++ i)
+	for( ; i < 300 ; ++ i)
 	{
 		if(i == 1)
 		{
