@@ -28,7 +28,10 @@ std::ostream &streamCsvEntity(std::ostream &os_p, std::vector<octopus::Entity *>
 	os_p<<"x,y,r,hp"<<std::endl;
 	for(octopus::Entity const *ent_l : vec_p)
 	{
-		streamCsvPos(os_p, *ent_l) << std::endl;
+		if(ent_l->_alive)
+		{
+			streamCsvPos(os_p, *ent_l) << std::endl;
+		}
 	}
 	return os_p;
 }
