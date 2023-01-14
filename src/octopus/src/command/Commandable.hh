@@ -2,6 +2,7 @@
 #define __Commandable__
 
 #include "state/Handle.hh"
+#include "CommandQueue.hh"
 #include <list>
 
 namespace octopus
@@ -11,11 +12,6 @@ class State;
 class Command;
 class CommandData;
 
-struct CommandBundle
-{
-	Command * _cmd;
-	CommandData * _data;
-};
 
 /// @brief This class handle commandles :
 /// everything that can take commands
