@@ -4,6 +4,8 @@
 
 #include <boost/graph/astar_search.hpp>
 
+#include "logger/Logger.hh"
+
 namespace octopus
 {
 
@@ -173,17 +175,17 @@ std::list<GridNode const *> Graph::getPath(GridNode const * from_p, GridNode con
 			if (p[v] == v)
 				break;
 		}
-		std::cout << "Shortest path from " << _vecNodes[start_l]->getPosition() << " to " << _vecNodes[goal_l]->getPosition()
+		Logger::getDebug() << "Shortest path from " << _vecNodes[start_l]->getPosition() << " to " << _vecNodes[goal_l]->getPosition()
 			 << ": ";
 		std::list< GridNode const * >::iterator spi = shortest_path_l.begin();
-		std::cout << _vecNodes[start_l];
+		Logger::getDebug() << _vecNodes[start_l];
 		for (++spi; spi != shortest_path_l.end(); ++spi)
-			std::cout << " -> " << (*spi)->getPosition();
-		std::cout << std::endl << "Total travel time: " << d[goal_l] << std::endl;
+			Logger::getDebug() << " -> " << (*spi)->getPosition();
+		Logger::getDebug() << std::endl << "Total travel time: " << d[goal_l] << std::endl;
 		return shortest_path_l;
 	}
 
-	std::cout << "Didn't find a path from " << _vecNodes[start_l]->getPosition() << "to" << _vecNodes[goal_l]->getPosition()
+	Logger::getDebug() << "Didn't find a path from " << _vecNodes[start_l]->getPosition() << "to" << _vecNodes[goal_l]->getPosition()
 		 << "!" << std::endl;
 	return {};
 }

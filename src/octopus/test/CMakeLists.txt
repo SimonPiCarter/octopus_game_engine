@@ -26,6 +26,7 @@ target_sources (unit_tests
 	src/controller.test.cc
 	src/entityMoveStep.test.cc
 	src/entitySpawnStep.test.cc
+	src/grid.test.cc
 	src/moveCommand.test.cc
 )
 

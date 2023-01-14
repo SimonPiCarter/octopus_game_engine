@@ -8,6 +8,7 @@
 #include "command/Commandable.hh"
 #include "logger/Logger.hh"
 
+#include "step/ConflictPositionSolver.hh"
 #include "step/TickingStep.hh"
 
 namespace octopus
@@ -23,7 +24,6 @@ BufferedState::~BufferedState()
 
 Controller::Controller(
 	std::list<Steppable *> const &initSteppables_p,
-	std::list<Command *> const &initCommands_p,
 	double timePerStep_p)
 	: _timePerStep(timePerStep_p)
 {
@@ -40,11 +40,9 @@ Controller::Controller(
 	{
 		_initialStep.getSteppable().push_back(steppable_l);
 	}
-	// init step (does not matter which state we use here since they are identical)
-	for(Command *cmd_l : initCommands_p)
-	{
-		cmd_l->applyCommand(_initialStep, *_backState->_state);
-	}
+
+	octopus::updateStepFromConflictPosition(_initialStep, *_backState->_state);
+	octopus::compact(_initialStep);
 
 	// apply step
 	apply(_initialStep, *_backState->_state);
@@ -112,6 +110,10 @@ bool Controller::loop_body()
 		}
 
 		Logger::getDebug() << "apply step" << " "<<_backState->_state<< std::endl;
+
+		octopus::updateStepFromConflictPosition(*_backState->_steps.back(), *_backState->_state);
+		octopus::compact(*_backState->_steps.back());
+
 		// apply step
 		apply(*_backState->_steps.back(), *_backState->_state);
 

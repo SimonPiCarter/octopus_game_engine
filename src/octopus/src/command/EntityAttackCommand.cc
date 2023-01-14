@@ -6,6 +6,7 @@
 #include "logger/Logger.hh"
 #include "state/State.hh"
 #include "step/Step.hh"
+#include "step/command/CommandDataLongStep.hh"
 #include "step/entity/EntityAttackStep.hh"
 #include "step/entity/EntityHitPointChangeStep.hh"
 #include "step/entity/EntityMoveStep.hh"
@@ -14,20 +15,21 @@ namespace octopus
 {
 
 EntityAttackCommand::EntityAttackCommand(Handle const &commandHandle_p, Handle const &source_p, Handle const &target_p)
-	: CommandWithData(commandHandle_p, 0)
+	: Command(commandHandle_p)
 	, _source(source_p)
 	, _target(target_p)
 {}
 
-bool EntityAttackCommand::applyCommand(Step & step_p, State const &state_p)
+bool EntityAttackCommand::applyCommand(Step & step_p, State const &state_p, CommandData const *data_p) const
 {
 	Logger::getDebug() << "EntityAttackCommand:: apply Command "<<_source << " -> " <<_target<<std::endl;
+	long windup_l = static_cast<CommandDataWithData<long> const *>(data_p)->_data;
 	// target disappeared or is dead
 	bool targetMissing_l = checkTarget(state_p);
 	if(targetMissing_l)
 	{
 		// reset wind up
-		getMetaData(state_p) = 0;
+		step_p.addSteppable(new CommandDataLongDiffStep(_handleCommand, - windup_l));
 		// If target is dead we look for another target in range
 		bool newTarget_l = lookUpNewTarget(state_p);
 
@@ -43,7 +45,7 @@ bool EntityAttackCommand::applyCommand(Step & step_p, State const &state_p)
 
 	// If not in range we move to the target
 	// if windup started we skip this
-	if(!inRange(state_p) && getMetaData(state_p) == 0)
+	if(!inRange(state_p) && windup_l == 0)
 	{
 		Logger::getDebug() << "\tEntityAttackCommand:: not in range"<<std::endl;
 		// direction (source -> target)
@@ -60,20 +62,18 @@ bool EntityAttackCommand::applyCommand(Step & step_p, State const &state_p)
 
 		// add move command
 		step_p.addEntityMoveStep(new EntityMoveStep(createEntityMoveStep(*entSource_l, closest_l, entSource_l->_stepSpeed)));
-
-		// reset wind up (time before attack)
-		getMetaData(state_p) = 0;
 	}
 	else if(entSource_l->_stats._reload >= entSource_l->_stats._fullReload )
 	{
-		getMetaData(state_p) += 1;
+		step_p.addSteppable(new CommandDataLongDiffStep(_handleCommand, 1));
 		Logger::getDebug() << "\tEntityAttackCommand:: in range (winding up)"<<std::endl;
 		// If in range we trigger the attack (delay may be applied for animation)
-		if(getMetaData(state_p) >= entSource_l->_stats._windup)
+		// + 1 to take into account steppable added just before
+		if(windup_l +1 >= entSource_l->_stats._windup)
 		{
 			Logger::getDebug() << "\tEntityAttackCommand:: in range (attack)"<<std::endl;
-			// reset wind up
-			getMetaData(state_p) = 0;
+			// reset wind up (remove value + 1 because step +1 will be applied before resetting)
+			step_p.addSteppable(new CommandDataLongDiffStep(_handleCommand, - windup_l - 1));
 
 			// add damage
 			step_p.addSteppable(new EntityHitPointChangeStep(_target, std::min(-1., entTarget_l->_stats._armor - entSource_l->_stats._damage)));

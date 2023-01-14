@@ -13,7 +13,7 @@ EntityWaitCommand::EntityWaitCommand(Handle const &commandHandle_p, Handle const
 	, _source(source_p)
 {}
 
-bool EntityWaitCommand::applyCommand(Step & step_p, State const &state_p)
+bool EntityWaitCommand::applyCommand(Step & step_p, State const &state_p, CommandData const *) const
 {
 	// Use
 	step_p.addEntityMoveStep(new EntityMoveStep(createEntityMoveStep(*state_p.getEntity(_source))));

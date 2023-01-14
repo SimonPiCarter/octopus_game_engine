@@ -1,5 +1,6 @@
 #include <gtest/gtest.h>
 
+#include <command/CommandData.hh>
 #include <command/EntityMoveCommand.hh>
 #include <step/entity/EntityMoveStep.hh>
 #include <step/Step.hh>
@@ -27,12 +28,17 @@ TEST(moveCommandTest, simple)
 
 	EntityMoveCommand command_l(0, 0, { {4, 3}, {4, 4}});
 
+	state_l.getEntity(0)->enqueue(&command_l, false);
+	CommandDataWithData<std::list<Vector>> *data_l =
+		dynamic_cast<CommandDataWithData<std::list<Vector>> *>(state_l.getEntity(0)->getFrontQueue()._data);
+	EXPECT_NE(nullptr, data_l);
+
 	///
 	/// Step 1
 	///
 	Step step_l;
 
-	bool terminated_l = command_l.applyCommand(step_l, state_l);
+	bool terminated_l = command_l.applyCommand(step_l, state_l, data_l);
 	EXPECT_FALSE(terminated_l);
 
 	ASSERT_EQ(1u, step_l.getEntityMoveStep().size());
@@ -54,7 +60,7 @@ TEST(moveCommandTest, simple)
 	///
 	Step step2_l;
 
-	terminated_l = command_l.applyCommand(step2_l, state_l);
+	terminated_l = command_l.applyCommand(step2_l, state_l, data_l);
 	EXPECT_FALSE(terminated_l);
 
 	ASSERT_EQ(1u, step2_l.getEntityMoveStep().size());
@@ -76,7 +82,7 @@ TEST(moveCommandTest, simple)
 	///
 	Step step3_l;
 
-	terminated_l = command_l.applyCommand(step3_l, state_l);
+	terminated_l = command_l.applyCommand(step3_l, state_l, data_l);
 	EXPECT_TRUE(terminated_l);
 
 	ASSERT_EQ(0u, step3_l.getEntityMoveStep().size());

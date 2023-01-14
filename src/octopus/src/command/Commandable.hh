@@ -9,6 +9,13 @@ namespace octopus
 class Step;
 class State;
 class Command;
+class CommandData;
+
+struct CommandBundle
+{
+	Command * _cmd;
+	CommandData * _data;
+};
 
 /// @brief This class handle commandles :
 /// everything that can take commands
@@ -18,6 +25,8 @@ class Command;
 class Commandable
 {
 public:
+	~Commandable();
+
 	/// @brief add the command to the queue
 	/// @param cmd_p
 	/// @param enqueue_p if true the cmd is added on top of the queue else it overrides it
@@ -26,13 +35,13 @@ public:
 	/// @brief run the commands in queue and pop them if terminated
 	void runCommands(Step & step_p, State const &state_p);
 
-	std::list<Command *> &getQueue();
-	std::list<Command *> const &getQueue() const;
+	CommandBundle & getFrontQueue();
+	std::list<CommandBundle> &getQueue();
+	std::list<CommandBundle> const &getQueue() const;
 
 	Handle _commandableHandle {0};
 private:
-	std::list<Command *> _queue;
-
+	std::list<CommandBundle> _queue;
 };
 
 } // namespace octopus

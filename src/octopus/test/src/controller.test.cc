@@ -19,7 +19,7 @@ TEST(controlerTest, simple)
 	EntitySpawnStep * spawn_l = new EntitySpawnStep(Entity { { 3, 3. }, 1., false, 1});
 	EntityMoveCommand * command_l = new EntityMoveCommand(0, 0, { {4, 3}, {4, 4}});
 
-	Controller controller_l({spawn_l}, {}, 1.);
+	Controller controller_l({spawn_l}, 1.);
 
 	State const *a = controller_l.getBackState();
 	State const *b = controller_l.getBufferState();

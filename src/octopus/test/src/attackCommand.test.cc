@@ -22,7 +22,7 @@ TEST(attackCommandTest, simple)
 	// entity 0 attack entity 1
 	EntityAttackCommand * command_l = new EntityAttackCommand(0, 0, 1);
 
-	Controller controller_l({spawn0_l, spawn1_l}, {}, 1.);
+	Controller controller_l({spawn0_l, spawn1_l}, 1.);
 
 	State const *a = controller_l.getBackState();
 	State const *b = controller_l.getBufferState();
@@ -36,7 +36,7 @@ TEST(attackCommandTest, simple)
 	EXPECT_NEAR(3., state_l->getEntity(0)->_pos.x, 1e-5);
 	EXPECT_NEAR(3., state_l->getEntity(0)->_pos.y, 1e-5);
 
-	// update time to 1second
+	// update time to 1second (1)
 	controller_l.update(1.);
 
 	// updated until synced up
@@ -47,7 +47,7 @@ TEST(attackCommandTest, simple)
 	EXPECT_NEAR(4., state_l->getEntity(0)->_pos.x, 1e-5);
 	EXPECT_NEAR(3., state_l->getEntity(0)->_pos.y, 1e-5);
 
-	// update time to 2 seconds
+	// update time to 2 seconds (3)
 	controller_l.update(2.);
 
 	// updated until synced up
@@ -59,7 +59,7 @@ TEST(attackCommandTest, simple)
 	EXPECT_NEAR(3., state_l->getEntity(0)->_pos.y, 1e-5);
 	EXPECT_NEAR(10., state_l->getEntity(1)->_stats._hp, 1e-5);
 
-	// update time to 2 seconds
+	// update time to 2 seconds (5)
 	controller_l.update(2.);
 	// updated until synced up
 	while(!controller_l.loop_body()) {}
@@ -70,7 +70,7 @@ TEST(attackCommandTest, simple)
 	EXPECT_NEAR(10., state_l->getEntity(1)->_stats._hp, 1e-5);
 
 
-	// update time to 1 second
+	// update time to 1 second (6)
 	controller_l.update(1.);
 	// updated until synced up
 	while(!controller_l.loop_body()) {}
@@ -83,7 +83,7 @@ TEST(attackCommandTest, simple)
 	// Next damage should be -> reload time + windup
 	// 10 + 3 (13)
 
-	// update time to 12 seconds
+	// update time to 12 seconds (18)
 	controller_l.update(12.);
 	// updated until synced up
 	while(!controller_l.loop_body()) {}
@@ -93,7 +93,7 @@ TEST(attackCommandTest, simple)
 	// damage has not be done yet
 	EXPECT_NEAR(7., state_l->getEntity(1)->_stats._hp, 1e-5);
 
-	// update time to 1 second
+	// update time to 1 second (19)
 	controller_l.update(1.);
 	// updated until synced up
 	while(!controller_l.loop_body()) {}
