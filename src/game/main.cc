@@ -3,6 +3,7 @@
 
 #include "command/EntityMoveCommand.hh"
 #include "command/EntityWaitCommand.hh"
+#include "command/EntityAttackCommand.hh"
 #include "graph/Grid.hh"
 #include "logger/Logger.hh"
 #include "state/entity/Entity.hh"
@@ -14,6 +15,8 @@
 
 int main()
 {
+	octopus::Entity target_l { { -10., 15. }, 5., false};
+	target_l._stats._hp = 1000;
 	std::list<octopus::Steppable *> spawners_l =
 	{
 		new octopus::EntitySpawnStep(octopus::Entity { { 3.6, 3. }, 1., false}),
@@ -24,19 +27,24 @@ int main()
 		new octopus::EntitySpawnStep(octopus::Entity { { 6.4, 3.5 }, 1., false}),
 		new octopus::EntitySpawnStep(octopus::Entity { { 3.2, 2.4 }, 1., false}),
 		new octopus::EntitySpawnStep(octopus::Entity { { 5.1, 2.5 }, 1., false}),
-		new octopus::EntitySpawnStep(octopus::Entity { { 6.5, 2.6 }, 1., false})
+		new octopus::EntitySpawnStep(octopus::Entity { { 6.5, 2.6 }, 1., false}),
+		new octopus::EntitySpawnStep(target_l)
 	};
 
-
-	spawners_l.push_back(new octopus::CommandSpawnStep(0,  new octopus::EntityMoveCommand(0, 0, {{2, 2}, {2, 5}, {10, 5}}), false));
+	spawners_l.push_back(new octopus::CommandSpawnStep(new octopus::EntityMoveCommand(0, 0, {{2, 2}, {2, 5}, {10, 5}})));
 	for(unsigned long i = 1 ; i < 9 ; ++ i)
 	{
-		spawners_l.push_back(new octopus::CommandSpawnStep(i,  new octopus::EntityWaitCommand(i, i), false));
+		spawners_l.push_back(new octopus::CommandSpawnStep(new octopus::EntityAttackCommand(i, i, 9)));
 	}
+
+	octopus::EntityAttackCommand *cmd_l = new octopus::EntityAttackCommand(0, 0, 9);
+	cmd_l->setQueued(true);
+	spawners_l.push_back(new octopus::CommandSpawnStep(cmd_l));
+
 	octopus::Controller controller_l(spawners_l, 1.);
 
 	size_t i = 1;
-	for( ; i < 60 ; ++ i)
+	for( ; i < 240 ; ++ i)
 	{
 		if(i == 1)
 		{
