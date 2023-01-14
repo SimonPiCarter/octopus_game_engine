@@ -1,0 +1,46 @@
+@startuml controller
+
+out -> controller : update(time)
+
+controller -> controller
+	note right
+		time_sine_last = time_sine_last + time
+	end note
+
+loop time_sine_last > time_per_step
+
+	controller -> controller
+	note right
+		++last_full_step
+	end note
+
+end
+
+out -> controller : loop_body
+
+alt back_state.step < last_full_step
+
+alt back_state.step > last_compiled_step
+	controller -> step : compile(back_state, new_commands)
+	controller -> step : fix_positions()
+	controller -> step : compact()
+end
+
+	controller -> step : apply(back_state)
+	controller -> state : increment_step()
+
+end
+
+alt back_state.step > buffer_state.step
+	controller -> controller : swap(back_state, buffer_state)
+end
+
+out -> controller : queryState()
+
+alt buffer_state.step > front_state.step
+	controller -> controller : swap(front_state, buffer_state)
+end
+
+controller -> out : front_state
+
+@enduml

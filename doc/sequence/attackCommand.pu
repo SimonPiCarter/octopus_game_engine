@@ -1,0 +1,32 @@
+@startuml attackCommand
+
+start
+
+if (Missing target?) then (yes)
+	#palegreen:reset wind up time;
+	if( Look for new target?) then (yes)
+	else (no)
+		#pink:return true;
+		stop
+	endif
+endif
+
+if (In range?) then (no)
+	:compute closest position;
+	#palegreen:add Steppable Movement;
+else (yes)
+	#palegreen:add Steppable wind up;
+
+	if (Wind up over?) then (yes)
+		#palegreen:add Steppable reset wind up;
+		#palegreen:add Steppable hit point change;
+		#palegreen:add Steppable attack step;
+	endif
+
+endif
+
+#pink:return false;
+
+stop
+
+@enduml

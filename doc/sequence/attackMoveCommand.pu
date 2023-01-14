@@ -1,0 +1,39 @@
+@startuml attackMoveCommand
+
+start
+
+if (attack command?) then (yes)
+	:run attack command;
+	if (Attack command is done?) then (yes)
+	else (no)
+		if (Should stop attacking?) then (yes)
+		else (no)
+			#pink:return false;
+			stop
+		endif
+	endif
+	#palegreen:add Steppable remove attack command;
+else (no)
+
+	if (Look for new target?) then (yes)
+		#palegreen:add Steppable store current position;
+		:new attack command;
+		:run attack command;
+		#pink:return attack is done?;
+		stop
+	else (no)
+endif
+
+endif
+
+:run move command;
+
+if (move command is done?) then (yes)
+	#pink:return true;
+else (no)
+	#pink:return false;
+endif
+
+stop
+
+@enduml
