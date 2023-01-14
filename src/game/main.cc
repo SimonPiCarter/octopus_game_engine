@@ -9,6 +9,7 @@
 #include "state/State.hh"
 #include "step/Step.hh"
 #include "step/entity/EntitySpawnStep.hh"
+#include "step/command/CommandQueueStep.hh"
 #include "controller/Controller.hh"
 
 int main()
@@ -26,13 +27,13 @@ int main()
 		new octopus::EntitySpawnStep(octopus::Entity { { 6.5, 2.6 }, 1., false})
 	};
 
-	octopus::Controller controller_l(spawners_l, 1.);
 
-	controller_l.commitCommand( new octopus::EntityMoveCommand(0, 0, {{2, 2}, {2, 5}, {10, 5}}));
-	for(unsigned long i = 1 ; i < spawners_l.size() ; ++ i)
+	spawners_l.push_back(new octopus::CommandSpawnStep(0,  new octopus::EntityMoveCommand(0, 0, {{2, 2}, {2, 5}, {10, 5}}), false));
+	for(unsigned long i = 1 ; i < 9 ; ++ i)
 	{
-		controller_l.commitCommand( new octopus::EntityWaitCommand(i, i) );
+		spawners_l.push_back(new octopus::CommandSpawnStep(i,  new octopus::EntityWaitCommand(i, i), false));
 	}
+	octopus::Controller controller_l(spawners_l, 1.);
 
 	size_t i = 1;
 	for( ; i < 60 ; ++ i)
