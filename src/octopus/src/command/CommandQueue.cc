@@ -11,6 +11,11 @@ bool CommandQueue::hasCommand() const
 	return !_contextList.empty();
 }
 
+CommandBundle &CommandQueue::getFrontCommand()
+{
+	return *_contextList.front();
+}
+
 /// @brief return an iterator of the current command
 /// this is the iterator stored in the front of _contextList
 CommandQueue::ConstQueueIterator CommandQueue::getCurrentCommand() const

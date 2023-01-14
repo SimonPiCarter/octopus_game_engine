@@ -25,6 +25,7 @@ add_library(octopus
 	${CMAKE_CURRENT_SOURCE_DIR}/src/step/TickingStep.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/step/command/CommandDataLongStep.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/step/command/CommandDataWaypointStep.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/src/step/command/CommandQueueStep.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/step/entity/EntityAttackStep.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/step/entity/EntityHitPointChangeStep.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/step/entity/EntityMoveStep.cc

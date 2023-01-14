@@ -10,7 +10,6 @@ namespace octopus
 class Step;
 class State;
 class Command;
-class CommandData;
 
 
 /// @brief This class handle commandles :
@@ -32,12 +31,12 @@ public:
 	void runCommands(Step & step_p, State const &state_p);
 
 	CommandBundle & getFrontQueue();
-	std::list<CommandBundle> &getQueue();
-	std::list<CommandBundle> const &getQueue() const;
+	CommandQueue & getQueue();
+	const CommandQueue & getQueue() const;
 
 	Handle _commandableHandle {0};
 private:
-	std::list<CommandBundle> _queue;
+	CommandQueue _queue;
 };
 
 } // namespace octopus
