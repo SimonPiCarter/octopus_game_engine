@@ -1,5 +1,6 @@
 #include "CommandQueueStep.hh"
 
+#include "command/Command.hh"
 #include "command/CommandQueue.hh"
 #include "command/Commandable.hh"
 #include "state/State.hh"
@@ -7,6 +8,11 @@
 
 namespace octopus
 {
+
+CommandSpawnStep::~CommandSpawnStep()
+{
+	delete _cmd;
+}
 
 void CommandSpawnStep::apply(State &state_p) const
 {

@@ -4,6 +4,7 @@
 #include <controller/Controller.hh>
 #include <step/entity/EntityMoveStep.hh>
 #include <step/entity/EntitySpawnStep.hh>
+#include <step/command/CommandQueueStep.hh>
 #include <state/State.hh>
 
 ///
@@ -18,14 +19,13 @@ TEST(controlerTest, simple)
 {
 	EntitySpawnStep * spawn_l = new EntitySpawnStep(Entity { { 3, 3. }, 1., false, 1});
 	EntityMoveCommand * command_l = new EntityMoveCommand(0, 0, { {4, 3}, {4, 4}});
+	CommandSpawnStep * commandSpawn_l = new CommandSpawnStep(0, command_l, false);
 
-	Controller controller_l({spawn_l}, 1.);
+	Controller controller_l({spawn_l, commandSpawn_l}, 1.);
 
 	State const *a = controller_l.getBackState();
 	State const *b = controller_l.getBufferState();
 	State const *c = controller_l.getFrontState();
-
-	controller_l.commitCommand(command_l);
 
 	// here all state are on step 1 and nothing is to be done because we are on time 0
 

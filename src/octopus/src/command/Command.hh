@@ -3,7 +3,6 @@
 
 #include "CommandData.hh"
 #include "state/Handle.hh"
-#include "state/State.hh"
 
 namespace octopus
 {
@@ -15,7 +14,7 @@ class Command
 public:
 	Command(Handle const &handle_p) : _handleCommand(handle_p) {}
 
-	void registerCommand(State &state_p);
+	void registerCommand(Step & step_p);
 
 	/// @brief register new commands or info into the step
 	/// @return true if command is over

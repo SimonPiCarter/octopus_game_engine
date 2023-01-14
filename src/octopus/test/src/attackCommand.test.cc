@@ -4,6 +4,7 @@
 #include <controller/Controller.hh>
 #include <step/entity/EntityMoveStep.hh>
 #include <step/entity/EntitySpawnStep.hh>
+#include <step/command/CommandQueueStep.hh>
 #include <state/State.hh>
 
 ///
@@ -21,14 +22,13 @@ TEST(attackCommandTest, simple)
 
 	// entity 0 attack entity 1
 	EntityAttackCommand * command_l = new EntityAttackCommand(0, 0, 1);
+	CommandSpawnStep * commandSpawn_l = new CommandSpawnStep(0, command_l, false);
 
-	Controller controller_l({spawn0_l, spawn1_l}, 1.);
+	Controller controller_l({spawn0_l, spawn1_l, commandSpawn_l}, 1.);
 
 	State const *a = controller_l.getBackState();
 	State const *b = controller_l.getBufferState();
 	State const *c = controller_l.getFrontState();
-
-	controller_l.commitCommand(command_l);
 
 	// query state
 	State const * state_l = controller_l.queryState();

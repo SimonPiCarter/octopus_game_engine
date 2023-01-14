@@ -16,10 +16,6 @@ namespace octopus
 BufferedState::~BufferedState()
 {
 	delete _state;
-	for(Step * step_l : _steps)
-	{
-		delete step_l;
-	}
 }
 
 Controller::Controller(
@@ -29,11 +25,13 @@ Controller::Controller(
 {
 	std::lock_guard<std::mutex> lock_l(_mutex);
 
-	_backState = new BufferedState { 0, {}, new State(0) };
-	_bufferState = new BufferedState { 0, {}, new State(1) };
-	_frontState = new BufferedState { 0, {}, new State(2) };
-
 	_ongoingStep = 1;
+	_lastHandledStep = 0;
+	_compiledSteps.push_back(new Step());
+
+	_backState = new BufferedState { 0, _compiledSteps.begin(), new State(0) };
+	_bufferState = new BufferedState { 0, _compiledSteps.begin(), new State(1) };
+	_frontState = new BufferedState { 0, _compiledSteps.begin(), new State(2) };
 
 	// add steppable
 	for(Steppable * steppable_l : initSteppables_p)
@@ -69,6 +67,10 @@ Controller::~Controller()
 	{
 		delete cmd_l;
 	}
+	for(Step * step_l : _compiledSteps)
+	{
+		delete step_l;
+	}
 }
 
 
@@ -80,45 +82,57 @@ bool Controller::loop_body()
 	{
 		upToDate_l = false;
 		Logger::getDebug() << "step back state on step "<< _backState->_stepHandled << " " <<_backState->_state<< std::endl;
-		// increment iterator to step
-		_backState->_steps.push_back(new Step());
-		_backState->_steps.back()->addSteppable(new TickingStep());
 		// increment number of step hadled
 		++_backState->_stepHandled;
 
-		// if step was not handled already
-		Logger::getDebug() << "handle commands" << " "<<_backState->_state<< std::endl;
-
-		std::list<Command *> * commands_l = nullptr;
+		// next step has not been compiled : we need to compile commands into the step
+		if(std::next(_backState->_stepIt) == _compiledSteps.end())
 		{
-			// lock to avoid overlap
-			std::lock_guard<std::mutex> lock_l(_mutex);
-			commands_l = _commitedCommands.at(_backState->_stepHandled-1);
-		}
+			// Compile current step
+			Step &step_l = *_compiledSteps.back();
 
-		// push new commands
-		for(Command * cmd_l : *commands_l)
-		{
-			Logger::getDebug() << "\tregister a command" << " "<<_backState->_state<< std::endl;
-			cmd_l->registerCommand(*_backState->_state);
-		}
+			// if step was not handled already
+			Logger::getDebug() << "compiling step " << _backState->_stepHandled << "on state "<<_backState->_state<< std::endl;
 
-		// apply all commands
-		for(Commandable * cmdable_l : _backState->_state->getCommandables())
-		{
-			cmdable_l->runCommands(*_backState->_steps.back(), *_backState->_state);
+			// apply all commands
+			for(Commandable * cmdable_l : _backState->_state->getCommandables())
+			{
+				cmdable_l->runCommands(step_l, *_backState->_state);
+			}
+
+			// push new commands
+			std::list<Command *> * commands_l = nullptr;
+			{
+				// lock to avoid overlap
+				std::lock_guard<std::mutex> lock_l(_mutex);
+				commands_l = _commitedCommands.at(_backState->_stepHandled-1);
+			}
+			for(Command * cmd_l : *commands_l)
+			{
+				Logger::getDebug() << "\tregister a command" << " "<<_backState->_state<< std::endl;
+				cmd_l->registerCommand(step_l);
+			}
+
+			Logger::getDebug() << "processing step " << _backState->_stepHandled << "on state "<<_backState->_state<< std::endl;
+
+			octopus::updateStepFromConflictPosition(step_l, *_backState->_state);
+			octopus::compact(step_l);
+
+			// Prepare next step
+			_compiledSteps.push_back(new Step());
+			_compiledSteps.back()->addSteppable(new TickingStep());
+			_lastHandledStep = _backState->_stepHandled;
 		}
 
 		Logger::getDebug() << "apply step" << " "<<_backState->_state<< std::endl;
 
-		octopus::updateStepFromConflictPosition(*_backState->_steps.back(), *_backState->_state);
-		octopus::compact(*_backState->_steps.back());
-
 		// apply step
-		apply(*_backState->_steps.back(), *_backState->_state);
+		apply(**_backState->_stepIt, *_backState->_state);
+		// increment iterator
+		++_backState->_stepIt;
 
 		// update last handled step
-		Logger::getDebug() << "last handled step = " << _backState->_stepHandled << " "<<_backState->_state<< std::endl;
+		Logger::getDebug() << "last handled step = " << _backState->_stepHandled << " for state "<<_backState->_state<< std::endl;
 	}
 
 	{

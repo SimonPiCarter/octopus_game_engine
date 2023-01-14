@@ -21,7 +21,7 @@ struct BufferedState
 
 	unsigned long _stepHandled {0};
 	/// @brief iterator to the last handled step
-	std::list<Step *> _steps;;
+	std::list<Step *>::iterator _stepIt;
 	State * _state {nullptr};
 };
 
@@ -90,6 +90,8 @@ private:
 	std::vector<std::list<Command *> *> _commitedCommands;
 	/// @brief initial step
 	Step _initialStep;
+	/// @brief list of compiled steps
+	std::list<Step *> _compiledSteps;
 
 	/// @brief mutex for multi threading handling
 	std::mutex _mutex;

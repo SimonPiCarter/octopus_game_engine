@@ -1,12 +1,13 @@
 #include "Command.hh"
 #include "Commandable.hh"
 #include "state/State.hh"
+#include "step/Step.hh"
+#include "step/command/CommandQueueStep.hh"
 
 namespace octopus
 {
-void Command::registerCommand(State &state_p)
+void Command::registerCommand(Step &step_p)
 {
-	Commandable * cmdable_l = state_p.getCommandable(_handleCommand);
-	cmdable_l->enqueue(this, _queued);
+	step_p.addSteppable(new CommandSpawnStep(_handleCommand, this, _queued));
 }
 }
