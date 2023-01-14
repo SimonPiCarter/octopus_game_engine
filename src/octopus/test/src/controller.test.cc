@@ -19,7 +19,7 @@ TEST(controlerTest, simple)
 {
 	EntitySpawnStep * spawn_l = new EntitySpawnStep(Entity { { 3, 3. }, 1., false, 1});
 	EntityMoveCommand * command_l = new EntityMoveCommand(0, 0, { {4, 3}, {4, 4}});
-	CommandSpawnStep * commandSpawn_l = new CommandSpawnStep(0, command_l, false);
+	CommandSpawnStep * commandSpawn_l = new CommandSpawnStep(command_l);
 
 	Controller controller_l({spawn_l, commandSpawn_l}, 1.);
 

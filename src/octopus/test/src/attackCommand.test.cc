@@ -22,7 +22,7 @@ TEST(attackCommandTest, simple)
 
 	// entity 0 attack entity 1
 	EntityAttackCommand * command_l = new EntityAttackCommand(0, 0, 1);
-	CommandSpawnStep * commandSpawn_l = new CommandSpawnStep(0, command_l, false);
+	CommandSpawnStep * commandSpawn_l = new CommandSpawnStep(command_l);
 
 	Controller controller_l({spawn0_l, spawn1_l, commandSpawn_l}, 1.);
 

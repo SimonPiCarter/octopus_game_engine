@@ -8,6 +8,6 @@ namespace octopus
 {
 void Command::registerCommand(Step &step_p)
 {
-	step_p.addSteppable(new CommandSpawnStep(_handleCommand, this, _queued));
+	step_p.addSteppable(new CommandSpawnStep(this));
 }
 }

@@ -16,9 +16,9 @@ CommandSpawnStep::~CommandSpawnStep()
 
 void CommandSpawnStep::apply(State &state_p) const
 {
-	Commandable * ent_l = state_p.getCommandable(this->_handle);
-	Logger::getDebug() << "CommandSpawnStep :: apply " << this->_handle <<std::endl;
-	if(_queueLast)
+	Commandable * ent_l = state_p.getCommandable(_cmd->getHandleCommand());
+	Logger::getDebug() << "CommandSpawnStep :: apply " << _cmd->getHandleCommand() <<std::endl;
+	if(_cmd->isQueued())
 	{
 		ent_l->getQueue().queueCommandLast(_cmd);
 	}
@@ -30,9 +30,9 @@ void CommandSpawnStep::apply(State &state_p) const
 
 void CommandSpawnStep::revert(State &state_p) const
 {
-	Commandable * ent_l = state_p.getCommandable(this->_handle);
-	Logger::getDebug() << "CommandSpawnStep :: revert " << this->_handle <<std::endl;
-	if(_queueLast)
+	Commandable * ent_l = state_p.getCommandable(this->_cmd->getHandleCommand());
+	Logger::getDebug() << "CommandSpawnStep :: revert " << _cmd->getHandleCommand() <<std::endl;
+	if(_cmd->isQueued())
 	{
 		ent_l->getQueue().unqueueCommandLast(_cmd);
 	}

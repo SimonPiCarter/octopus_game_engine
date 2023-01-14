@@ -66,9 +66,6 @@ public:
 	/// only swap the buffer and front state if buffer state is more advanced than front state
 	State const * queryState();
 
-	/// @brief commit commands on the ongoing step
-	void commitCommand(Command * command_p);
-
 	State const * getBackState() const;
 	State const * getBufferState() const;
 	State const * getFrontState() const;

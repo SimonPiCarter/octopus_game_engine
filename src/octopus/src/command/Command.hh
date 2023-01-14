@@ -23,6 +23,10 @@ public:
 	/// @brief create data supporting the command actions
 	virtual CommandData * newData() const = 0;
 
+	void setQueued(bool queued_p) { _queued = queued_p; }
+	bool isQueued() const { return _queued; }
+	Handle const &getHandleCommand() const { return _handleCommand; }
+
 protected:
 	/// @brief the commandable handle for the executor of this command
 	Handle const _handleCommand {0};

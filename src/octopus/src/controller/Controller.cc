@@ -181,16 +181,6 @@ State const * Controller::queryState()
 	return _frontState->_state;
 }
 
-/// @brief commit commands on the ongoing step
-void Controller::commitCommand(Command * command_p)
-{
-	// lock to avoid swap during commiting
-	std::lock_guard<std::mutex> lock_l(_mutex);
-
-	updateCommitedCommand();
-	_commitedCommands.at(_ongoingStep-1)->push_back(command_p);
-}
-
 State const * Controller::getBackState() const
 {
 	return _backState->_state;
