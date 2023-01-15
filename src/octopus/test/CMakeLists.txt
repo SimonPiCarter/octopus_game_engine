@@ -23,6 +23,7 @@ add_executable (unit_tests)
 target_sources (unit_tests
 	PRIVATE
 	src/attackCommand.test.cc
+	src/attackMoveCommand.test.cc
 	src/commandQueue.test.cc
 	src/controller.test.cc
 	src/entityMoveStep.test.cc
