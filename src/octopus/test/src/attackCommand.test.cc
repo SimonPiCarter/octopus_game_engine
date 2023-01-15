@@ -8,9 +8,9 @@
 #include <state/State.hh>
 
 ///
-/// This test suite aims at checking that EntityMoveStep works properly
-/// - Move an entity in a step
-/// - Is correctly undone
+/// This test suite aims at checking that EntityAttackCommand works properly
+/// - Move an entity to the target
+/// - Attack the target then terminate
 ///
 
 using namespace octopus;
@@ -90,7 +90,7 @@ TEST(attackCommandTest, simple)
 
 	state_l = controller_l.queryState();
 
-	// damage has not be done yet
+	// damage has been done
 	EXPECT_NEAR(7., state_l->getEntity(1)->_stats._hp, 1e-5);
 
 	// update time to 1 second (19)
@@ -100,6 +100,6 @@ TEST(attackCommandTest, simple)
 
 	state_l = controller_l.queryState();
 
-	// damage has not be done yet
+	// damage has been done twice
 	EXPECT_NEAR(4., state_l->getEntity(1)->_stats._hp, 1e-5);
 }

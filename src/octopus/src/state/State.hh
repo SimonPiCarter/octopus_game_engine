@@ -42,6 +42,8 @@ private:
 	std::vector<Commandable *> _commandables;
 };
 
+Entity const * lookUpNewTarget(State const &state_p, Handle const &sourceHandle_p);
+
 } // namespace octopus
 
 #endif

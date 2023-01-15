@@ -2,6 +2,7 @@
 #define __CommandSetPositionFromStep__
 
 #include "state/Handle.hh"
+#include "utils/Vector.hh"
 #include "step/Steppable.hh"
 
 namespace octopus

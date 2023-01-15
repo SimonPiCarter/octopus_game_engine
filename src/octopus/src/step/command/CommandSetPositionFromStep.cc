@@ -1,4 +1,4 @@
-#include "CommandSubAttackStep.hh"
+#include "CommandSetPositionFromStep.hh"
 
 #include "command/data/AttackMoveData.hh"
 #include "command/CommandData.hh"

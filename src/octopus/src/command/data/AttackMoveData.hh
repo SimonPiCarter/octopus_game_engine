@@ -2,8 +2,8 @@
 #define __AttackMoveData__
 
 #include "utils/Vector.hh"
+#include "state/Handle.hh"
 #include <list>
-
 
 namespace octopus
 {
@@ -14,6 +14,8 @@ class EntityAttackCommand;
 /// attack, move, attack move and patrol commands
 struct AttackMoveData
 {
+	// target of attack
+	Handle _target;
 	// used in attack
 	long _windup {0};
 	// used in move

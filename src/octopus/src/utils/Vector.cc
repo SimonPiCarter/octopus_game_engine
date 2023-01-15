@@ -84,6 +84,11 @@ bool operator==(octopus::Vector const & a, octopus::Vector const & b)
 	return square_length(a - b) < 1e-3;
 }
 
+bool operator!=(octopus::Vector const & a, octopus::Vector const & b)
+{
+	return !(a == b);
+}
+
 std::ostream &operator<<(std::ostream &os_p, octopus::Vector const &vec_p)
 {
 	return os_p<<"Vector[x="<<vec_p.x<<", y="<<vec_p.y<<"]";

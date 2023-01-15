@@ -23,30 +23,41 @@ EntityAttackCommand::EntityAttackCommand(Handle const &commandHandle_p, Handle c
 
 bool EntityAttackCommand::applyCommand(Step & step_p, State const &state_p, CommandData const *data_p) const
 {
-	Logger::getDebug() << "EntityAttackCommand:: apply Command "<<_source << " -> " <<_target<<std::endl;
-	long windup_l = static_cast<CommandDataWithData<AttackMoveData> const *>(data_p)->_data._windup;
+	// get data
+	AttackMoveData const &data_l = static_cast<CommandDataWithData<AttackMoveData> const *>(data_p)->_data;
+	long windup_l = data_l._windup;
+	Handle const &curTarget_l = data_l._target;
+
+	Logger::getDebug() << "EntityAttackCommand:: apply Command "<<_source << " -> " <<curTarget_l<<std::endl;
+
 	// target disappeared or is dead
-	bool targetMissing_l = checkTarget(state_p);
+	bool targetMissing_l = checkTarget(state_p, curTarget_l);
 	if(targetMissing_l)
 	{
 		// reset wind up
 		step_p.addSteppable(new CommandWindUpDiffStep(_handleCommand, - windup_l));
 		// If target is dead we look for another target in range
-		bool newTarget_l = lookUpNewTarget(state_p);
+		Entity const * newTarget_l = lookUpNewTarget(state_p, _source);
 
 		// If no target we release
 		if(!newTarget_l)
 		{
 			return true;
 		}
+		else
+		{
+			// steppable to update target
+			// TODO
+			return false;
+		}
 	}
 
 	Entity const * entSource_l = state_p.getEntity(_source);
-	Entity const * entTarget_l = state_p.getEntity(_target);
+	Entity const * entTarget_l = state_p.getEntity(curTarget_l);
 
 	// If not in range we move to the target
 	// if windup started we skip this
-	if(!inRange(state_p) && windup_l == 0)
+	if(!inRange(state_p, curTarget_l) && windup_l == 0)
 	{
 		Logger::getDebug() << "\tEntityAttackCommand:: not in range"<<std::endl;
 		// direction (source -> target)
@@ -86,22 +97,16 @@ bool EntityAttackCommand::applyCommand(Step & step_p, State const &state_p, Comm
 	return false;
 }
 
-bool EntityAttackCommand::checkTarget(State const &state_p) const
+bool EntityAttackCommand::checkTarget(State const &state_p, Handle const & target_p) const
 {
-	Entity const * entTarget_l = state_p.getEntity(_target);
+	Entity const * entTarget_l = state_p.getEntity(target_p);
 	return !entTarget_l->_alive;
 }
 
-bool EntityAttackCommand::lookUpNewTarget(State const &state_p) const
-{
-	/// @todo implement this
-	return false;
-}
-
-bool EntityAttackCommand::inRange(State const &state_p) const
+bool EntityAttackCommand::inRange(State const &state_p, Handle const & target_p) const
 {
 	Entity const * entSource_l = state_p.getEntity(_source);
-	Entity const * entTarget_l = state_p.getEntity(_target);
+	Entity const * entTarget_l = state_p.getEntity(target_p);
 
 	// direction (source -> target)
 	Vector dir_l = entTarget_l->_pos - entSource_l->_pos;

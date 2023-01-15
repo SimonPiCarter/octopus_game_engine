@@ -33,8 +33,6 @@ private:
 
 	/// @brief sub move command
 	EntityMoveCommand _subMoveCommand;
-
-	Entity const * lookUpNewTarget(State const &state_p) const;
 };
 
 } // namespace octopus

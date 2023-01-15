@@ -30,6 +30,7 @@ octopus::Vector operator*(octopus::Vector const & a, double const & b);
 octopus::Vector & operator*=(octopus::Vector & a, double const & b);
 
 bool operator==(octopus::Vector const & a, octopus::Vector const & b);
+bool operator!=(octopus::Vector const & a, octopus::Vector const & b);
 
 std::ostream &operator<<(std::ostream &os_p, octopus::Vector const &vec_p);
 

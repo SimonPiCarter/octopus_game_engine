@@ -54,7 +54,7 @@ bool EntityAttackMoveCommand::applyCommand(Step & step_p, State const &state_p, 
 	}
 	else
 	{
-		Entity const * target_l = lookUpNewTarget(state_p);
+		Entity const * target_l = lookUpNewTarget(state_p, _source);
 		if(target_l)
 		{
 			step_p.addSteppable(new CommandSetPositionFromStep(_handleCommand, ent_l->_pos, attackMoveData_l._positionFromAttack));
@@ -65,12 +65,6 @@ bool EntityAttackMoveCommand::applyCommand(Step & step_p, State const &state_p, 
 
 	// run move command
 	return _subMoveCommand.applyCommand(step_p, state_p, data_p);
-}
-
-Entity const * EntityAttackMoveCommand::lookUpNewTarget(State const &state_p) const
-{
-	/// @todo implement this
-	return nullptr;
 }
 
 } // namespace octopus

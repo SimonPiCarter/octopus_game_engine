@@ -23,15 +23,15 @@ public:
 	/// @brief
 	virtual bool applyCommand(Step & step_p, State const &state_p, CommandData const *data_p) const override;
 
-	virtual CommandData * newData() const override { return new CommandDataWithData<AttackMoveData>({0, {}}); }
+	virtual CommandData * newData() const override { return new CommandDataWithData<AttackMoveData>({_target, 0, {}}); }
 
 private:
 	Handle const _source;
+	/// @brief initial target
 	Handle _target;
 
-	bool checkTarget(State const &state_p) const;
-	bool lookUpNewTarget(State const &state_p) const;
-	bool inRange(State const &state_p) const;
+	bool checkTarget(State const &state_p, Handle const & target_p) const;
+	bool inRange(State const &state_p, Handle const & target_p) const;
 };
 
 } // namespace octopus
