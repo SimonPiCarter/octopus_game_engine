@@ -2,6 +2,8 @@
 
 #include <set>
 #include <thread>
+#include <ctime>
+#include <chrono>
 
 #include "state/State.hh"
 #include "command/Command.hh"
@@ -94,6 +96,8 @@ bool Controller::loop_body()
 			// if step was not handled already
 			Logger::getDebug() << "compiling step " << _backState->_stepHandled << "on state "<<_backState->_state<< std::endl;
 
+			const std::chrono::time_point<std::chrono::steady_clock> start_l = std::chrono::steady_clock::now();
+
 			// apply all commands
 			for(Commandable * cmdable_l : _backState->_state->getCommandables())
 			{
@@ -122,14 +126,24 @@ bool Controller::loop_body()
 			_compiledSteps.push_back(new Step());
 			_compiledSteps.back()->addSteppable(new TickingStep());
 			_lastHandledStep = _backState->_stepHandled;
+
+			_metrics._nbStepsCompiled += 1;
+			_metrics._timeCompilingSteps += std::chrono::nanoseconds( std::chrono::steady_clock::now() - start_l ).count();
 		}
 
 		Logger::getDebug() << "apply step" << " "<<_backState->_state<< std::endl;
+
+		const std::chrono::time_point<std::chrono::steady_clock> start_l = std::chrono::steady_clock::now();
 
 		// apply step
 		apply(**_backState->_stepIt, *_backState->_state);
 		// increment iterator
 		++_backState->_stepIt;
+
+		// update metrics
+		updateStateMetrics(_metrics, *_backState->_state);
+		_metrics._nbStepsApplied += 1;
+		_metrics._timeApplyingSteps += std::chrono::nanoseconds( std::chrono::steady_clock::now() - start_l ).count();
 
 		// update last handled step
 		Logger::getDebug() << "last handled step = " << _backState->_stepHandled << " for state "<<_backState->_state<< std::endl;
@@ -192,6 +206,11 @@ State const * Controller::getBufferState() const
 State const * Controller::getFrontState() const
 {
 	return _frontState->_state;
+}
+
+Metrics const &Controller::getMetrics() const
+{
+	return _metrics;
 }
 
 void Controller::updateCommitedCommand()

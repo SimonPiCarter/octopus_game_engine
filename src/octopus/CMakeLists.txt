@@ -19,6 +19,7 @@ add_library(octopus
 	${CMAKE_CURRENT_SOURCE_DIR}/src/command/EntityMoveCommand.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/logger/Logger.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/controller/Controller.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/src/controller/Metrics.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/state/State.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/state/entity/Entity.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/step/ConflictPositionSolver.cc

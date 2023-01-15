@@ -5,6 +5,7 @@
 #include <list>
 #include <vector>
 
+#include "Metrics.hh"
 #include "step/Step.hh"
 
 namespace octopus
@@ -69,6 +70,8 @@ public:
 	State const * getBackState() const;
 	State const * getBufferState() const;
 	State const * getFrontState() const;
+
+	Metrics const &getMetrics() const;
 private:
 
 	BufferedState * _backState {nullptr};
@@ -89,6 +92,9 @@ private:
 	Step _initialStep;
 	/// @brief list of compiled steps
 	std::list<Step *> _compiledSteps;
+
+	/// @brief the metrics of this controller
+	Metrics _metrics;
 
 	/// @brief mutex for multi threading handling
 	std::mutex _mutex;

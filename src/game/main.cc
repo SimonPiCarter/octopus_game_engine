@@ -71,5 +71,10 @@ int main()
 	}
 
 	octopus::Logger::getNormal()<<"Done"<<std::endl;
+
+
+	octopus::Logger::getNormal()<<controller_l.getMetrics()<<std::endl;
+
+
 	return 0;
 }

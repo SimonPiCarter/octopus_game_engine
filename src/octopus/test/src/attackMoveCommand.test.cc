@@ -31,7 +31,6 @@ using namespace octopus;
 ///
 TEST(attackMoveCommandTest, simple)
 {
-	Logger::enable_debug();
 	EntitySpawnStep * spawn0_l = new EntitySpawnStep(Entity { { 3, 3. }, 1., false, 1});
 	EntitySpawnStep * spawn1_l = new EntitySpawnStep(Entity { { 11, 3. }, 1., false, 1});
 
@@ -117,7 +116,4 @@ TEST(attackMoveCommandTest, simple)
 
 	// damage has been done twice
 	EXPECT_NEAR(4., state_l->getEntity(1)->_stats._hp, 1e-5);
-
-	Logger::disable_debug();
-
 }
