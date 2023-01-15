@@ -14,6 +14,7 @@ add_library(octopus
 	${CMAKE_CURRENT_SOURCE_DIR}/src/command/Commandable.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/command/CommandQueue.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/command/EntityAttackCommand.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/src/command/EntityAttackMoveCommand.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/command/EntityWaitCommand.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/command/EntityMoveCommand.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/logger/Logger.cc
@@ -24,6 +25,7 @@ add_library(octopus
 	${CMAKE_CURRENT_SOURCE_DIR}/src/step/Step.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/step/TickingStep.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/step/command/CommandDataWaypointStep.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/src/step/command/CommandSubAttackStep.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/step/command/CommandQueueStep.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/step/command/CommandWindUpDiffStep.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/step/entity/EntityAttackStep.cc
