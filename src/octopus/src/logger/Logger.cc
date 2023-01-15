@@ -15,6 +15,9 @@ std::ostream &Logger::getDebug()
 	if(!Logger::_debug)
 	{
 		std::cout.setstate(std::ios_base::badbit);
+	} else
+	{
+		std::cout.clear();
 	}
 	return std::cout;
 }
