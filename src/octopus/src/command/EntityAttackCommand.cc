@@ -7,7 +7,7 @@
 #include "logger/Logger.hh"
 #include "state/State.hh"
 #include "step/Step.hh"
-#include "step/command/CommandDataLongStep.hh"
+#include "step/command/CommandWindUpDiffStep.hh"
 #include "step/entity/EntityAttackStep.hh"
 #include "step/entity/EntityHitPointChangeStep.hh"
 #include "step/entity/EntityMoveStep.hh"
@@ -30,7 +30,7 @@ bool EntityAttackCommand::applyCommand(Step & step_p, State const &state_p, Comm
 	if(targetMissing_l)
 	{
 		// reset wind up
-		step_p.addSteppable(new CommandDataLongDiffStep(_handleCommand, - windup_l));
+		step_p.addSteppable(new CommandWindUpDiffStep(_handleCommand, - windup_l));
 		// If target is dead we look for another target in range
 		bool newTarget_l = lookUpNewTarget(state_p);
 
@@ -66,7 +66,7 @@ bool EntityAttackCommand::applyCommand(Step & step_p, State const &state_p, Comm
 	}
 	else if(entSource_l->_stats._reload >= entSource_l->_stats._fullReload )
 	{
-		step_p.addSteppable(new CommandDataLongDiffStep(_handleCommand, 1));
+		step_p.addSteppable(new CommandWindUpDiffStep(_handleCommand, 1));
 		Logger::getDebug() << "\tEntityAttackCommand:: in range (winding up)"<<std::endl;
 		// If in range we trigger the attack (delay may be applied for animation)
 		// + 1 to take into account steppable added just before
@@ -74,7 +74,7 @@ bool EntityAttackCommand::applyCommand(Step & step_p, State const &state_p, Comm
 		{
 			Logger::getDebug() << "\tEntityAttackCommand:: in range (attack)"<<std::endl;
 			// reset wind up (remove value + 1 because step +1 will be applied before resetting)
-			step_p.addSteppable(new CommandDataLongDiffStep(_handleCommand, - windup_l - 1));
+			step_p.addSteppable(new CommandWindUpDiffStep(_handleCommand, - windup_l - 1));
 
 			// add damage
 			step_p.addSteppable(new EntityHitPointChangeStep(_target, std::min(-1., entTarget_l->_stats._armor - entSource_l->_stats._damage)));

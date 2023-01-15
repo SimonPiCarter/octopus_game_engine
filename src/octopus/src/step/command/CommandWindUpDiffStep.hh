@@ -1,15 +1,15 @@
-#ifndef __CommandDataLongStep__
-#define __CommandDataLongStep__
+#ifndef __CommandWindUpDiffStep__
+#define __CommandWindUpDiffStep__
 
 #include "state/Handle.hh"
 #include "step/Steppable.hh"
 
 namespace octopus
 {
-class CommandDataLongDiffStep : public Steppable
+class CommandWindUpDiffStep : public Steppable
 {
 public:
-	CommandDataLongDiffStep(Handle const &handle_p, long diff_p)
+	CommandWindUpDiffStep(Handle const &handle_p, long diff_p)
 		: _handle(handle_p) , _diff(diff_p){}
 
 	virtual void apply(State &state_p) const override;

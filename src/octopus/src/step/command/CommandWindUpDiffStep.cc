@@ -1,4 +1,4 @@
-#include "CommandDataLongStep.hh"
+#include "CommandWindUpDiffStep.hh"
 
 #include "command/data/AttackMoveData.hh"
 #include "command/CommandData.hh"
@@ -8,23 +8,23 @@
 
 namespace octopus
 {
-void CommandDataLongDiffStep::apply(State &state_p) const
+void CommandWindUpDiffStep::apply(State &state_p) const
 {
 	Commandable * ent_l = state_p.getCommandable(this->_handle);
-	Logger::getDebug() << "CommandDataLongDiffStep :: apply " << this->_handle <<std::endl;
+	Logger::getDebug() << "CommandWindUpDiffStep :: apply " << this->_handle <<std::endl;
 	CommandDataWithData<AttackMoveData> *data_l = dynamic_cast<CommandDataWithData<AttackMoveData> *>(ent_l->getFrontQueue()._data);
 	data_l->_data._windup += _diff;
 }
 
-void CommandDataLongDiffStep::revert(State &state_p) const
+void CommandWindUpDiffStep::revert(State &state_p) const
 {
 	Commandable * ent_l = state_p.getCommandable(this->_handle);
-	Logger::getDebug() << "CommandDataLongDiffStep :: revert " << this->_handle <<std::endl;
+	Logger::getDebug() << "CommandWindUpDiffStep :: revert " << this->_handle <<std::endl;
 	CommandDataWithData<AttackMoveData> *data_l = dynamic_cast<CommandDataWithData<AttackMoveData> *>(ent_l->getFrontQueue()._data);
 	data_l->_data._windup -= _diff;
 }
 
-bool CommandDataLongDiffStep::isNoOp() const
+bool CommandWindUpDiffStep::isNoOp() const
 {
 	return _diff == 0;
 }
