@@ -27,6 +27,10 @@ void updateStateMetrics(Metrics &metrics_p, State const &state_p);
 
 } // octopus
 
+/// @brief raw display of Metrics
 std::ostream &operator<<(std::ostream &os_p, octopus::Metrics const &metrics_p);
+
+/// @brief prettified display of Metrics
+void streamMetrics(std::ostream &os_p, octopus::Metrics const &metrics_p);
 
 #endif
