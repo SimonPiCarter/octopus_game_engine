@@ -17,9 +17,8 @@ else (no)
 
 	if (Look for new target?) then (yes)
 		#palegreen:add Steppable store current position;
-		:new attack command;
-		:run attack command;
-		#pink:return attack is done?;
+		#palegreen:add Steppable to add attack command;
+		#pink:return false;
 		stop
 	else (no)
 endif
