@@ -10,7 +10,7 @@ namespace octopus
 void EntityMoveStep::apply(State &state_p) const
 {
 	Entity * ent_l = state_p.getEntity(this->_handle);
-	Logger::getDebug() << "EntityMoveStep :: " << ent_l->_pos << " + "<<this->_move<<std::endl;
+	Logger::getDebug() << "EntityMoveStep :: "<< this->_handle << " " << ent_l->_pos << " + "<<this->_move<<std::endl;
 
 	updateGrid(state_p, ent_l, false);
 	ent_l->_pos += this->_move;
@@ -21,7 +21,7 @@ void EntityMoveStep::apply(State &state_p) const
 void EntityMoveStep::revert(State &state_p) const
 {
 	Entity * ent_l = state_p.getEntity(this->_handle);
-	Logger::getDebug() << "EntityMoveStep :: " << ent_l->_pos << " - "<<this->_move<<std::endl;
+	Logger::getDebug() << "EntityMoveStep :: " << this->_handle << " " << ent_l->_pos << " - "<<this->_move<<std::endl;
 
 	updateGrid(state_p, ent_l, false);
 	ent_l->_pos -= this->_move;

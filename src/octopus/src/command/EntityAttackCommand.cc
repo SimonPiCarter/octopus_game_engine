@@ -72,6 +72,7 @@ bool EntityAttackCommand::applyCommand(Step & step_p, State const &state_p, Comm
 
 		Vector closest_l = entSource_l->_pos + dir_l * (1 - ratio_l);
 
+		Logger::getDebug() << "\t\tEntityAttackCommand:: adding move step "<< _source << " target " << closest_l << " speed " <<entSource_l->_stepSpeed<<std::endl;
 		// add move command
 		step_p.addEntityMoveStep(new EntityMoveStep(createEntityMoveStep(*entSource_l, closest_l, entSource_l->_stepSpeed)));
 	}

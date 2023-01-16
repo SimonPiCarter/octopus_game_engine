@@ -6,6 +6,7 @@
 #include <cmath>
 #include <unordered_set>
 
+#include "logger/Logger.hh"
 #include "state/entity/Entity.hh"
 #include "state/State.hh"
 #include "step/entity/EntityMoveStep.hh"
@@ -164,7 +165,7 @@ bool updateStepFromConflictPosition(Step &step_p, State const &state_p)
 		{
 			continue;
 		}
-
+		Logger::getDebug() << " conflict solver :: "<<ent_l->_handle<<" correction : "<<mapCorrection_l[ent_l]<<std::endl;
 		// ensure that move does not become too cahotic
 		double square_l = state_p.getEntity(ent_l->_handle)->_stepSpeed*state_p.getEntity(ent_l->_handle)->_stepSpeed;
 		ent_l->_move = ent_l->_move + mapCorrection_l[ent_l] * 0.9;

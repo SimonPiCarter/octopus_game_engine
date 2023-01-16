@@ -94,7 +94,7 @@ bool Controller::loop_body()
 			Step &step_l = *_compiledSteps.back();
 
 			// if step was not handled already
-			Logger::getDebug() << "compiling step " << _backState->_stepHandled << "on state "<<_backState->_state<< std::endl;
+			Logger::getDebug() << "compiling step " << _backState->_stepHandled << " on state "<<_backState->_state<< std::endl;
 
 			const std::chrono::time_point<std::chrono::steady_clock> start_l = std::chrono::steady_clock::now();
 
