@@ -21,12 +21,12 @@ bool State::hasEntity(Handle const &handle_p) const
 
 Entity *State::getEntity(Handle const &handle_p)
 {
-	return _entities.at(handle_p);
+	return _entities[handle_p];
 }
 
 Entity const *State::getEntity(Handle const &handle_p) const
 {
-	return _entities.at(handle_p);
+	return _entities[handle_p];
 }
 
 bool State::hasCommandable(Handle const &handle_p) const
@@ -35,11 +35,11 @@ bool State::hasCommandable(Handle const &handle_p) const
 }
 Commandable *State::getCommandable(Handle const &handle_p)
 {
-	return _commandables.at(handle_p);
+	return _commandables[handle_p];
 }
 Commandable const *State::getCommandable(Handle const &handle_p) const
 {
-	return _commandables.at(handle_p);
+	return _commandables[handle_p];
 }
 
 /// @brief warning handle will be modified!
