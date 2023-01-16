@@ -9,6 +9,8 @@ namespace octopus
 class Step;
 class State;
 
+/// @brief symbolise a command given (by player; by ai)
+/// those commands must be serializable otherwise replay from file will not be possible
 class Command
 {
 public:

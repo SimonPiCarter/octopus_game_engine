@@ -11,6 +11,8 @@ namespace octopus
 	/// represent a step from one state to another
 	/// It is mandatory that Stappable apply and
 	/// revert does the exact opposite actions
+	/// must be serializable otherwise wont be
+	/// replayable easily
 	class Steppable
 	{
 		public:
