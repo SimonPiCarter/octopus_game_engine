@@ -3,6 +3,7 @@
 #include <stdexcept>
 #include <unordered_map>
 #include <iostream>
+#include <cmath>
 
 #include "state/entity/Entity.hh"
 #include "state/State.hh"
@@ -24,7 +25,7 @@ bool collision(Entity const * entA_p, EntityMoveStep const *stepA_p, Entity cons
 	return squareLength_l < squareRay_l;
 }
 
-void updateStepFromConflictPosition(Step &step_p, State const &state_p)
+bool updateStepFromConflictPosition(Step &step_p, State const &state_p)
 {
 	/// map to access move step from entity
 	std::unordered_map<Entity const *, EntityMoveStep *> mapMoveStep_l;
@@ -103,10 +104,30 @@ void updateStepFromConflictPosition(Step &step_p, State const &state_p)
 			}
 		}
 	}
+	bool updated_l = false;
 	for(EntityMoveStep *ent_l: step_p.getEntityMoveStep())
 	{
+		// if update
+		if(mapCorrection_l[ent_l] != Vector {0,0})
+		{
+			updated_l = true;
+		}
+		else
+		{
+			continue;
+		}
+
+		// ensure that move does not become too cahotic
+		double square_l = square_length(ent_l->_move);
 		ent_l->_move = ent_l->_move + mapCorrection_l[ent_l] * 0.9;
+		double newSquare_l = square_length(ent_l->_move);
+		if(newSquare_l > square_l)
+		{
+			ent_l->_move = ent_l->_move * std::sqrt(square_l/newSquare_l);
+		}
 	}
+
+	return updated_l;
 }
 
 } // namespace octopus

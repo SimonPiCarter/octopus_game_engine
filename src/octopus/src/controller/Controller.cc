@@ -119,7 +119,7 @@ bool Controller::loop_body()
 
 			Logger::getDebug() << "processing step " << _backState->_stepHandled << "on state "<<_backState->_state<< std::endl;
 
-			octopus::updateStepFromConflictPosition(step_l, *_backState->_state);
+			for(size_t i = 0; i < 5 && octopus::updateStepFromConflictPosition(step_l, *_backState->_state) ; ++ i) {}
 			octopus::compact(step_l);
 
 			// Prepare next step
