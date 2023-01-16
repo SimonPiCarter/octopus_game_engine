@@ -63,7 +63,7 @@ int main()
 	octopus::Logger::getNormal()<<"Playing"<<std::endl;
 
 	size_t i = 1;
-	for( ; i < 300 ; ++ i)
+	for( ; i < 600 ; ++ i)
 	{
 		if(i == 1 && writeFiles_l)
 		{

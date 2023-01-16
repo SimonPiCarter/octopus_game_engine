@@ -70,10 +70,15 @@ bool EntityMoveCommand::applyCommand(Step & step_p, State const &state_p, Comman
 		// add step to increment count since progress
 		step_p.addSteppable(new CommandIncrementNoProgressStep(_handleCommand, data_l._countSinceProgress, data_l._countSinceProgress+1));
 	}
+	else
+	{
+		// reset no progress count
+		step_p.addSteppable(new CommandIncrementNoProgressStep(_handleCommand, data_l._countSinceProgress, 0));
+	}
 	// add step to record last position
 	step_p.addSteppable(new CommandUpdateLastPosStep(_handleCommand, _source, data_l._lastPos));
 	// If no progress for too long we stop
-	if(data_l._countSinceProgress > 25)
+	if(data_l._countSinceProgress > 50)
 	{
 		Logger::getDebug() << "no progress since 25 steps" << std::endl;
 		return true;
