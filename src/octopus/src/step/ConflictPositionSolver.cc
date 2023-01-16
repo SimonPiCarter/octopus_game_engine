@@ -166,7 +166,7 @@ bool updateStepFromConflictPosition(Step &step_p, State const &state_p)
 		}
 
 		// ensure that move does not become too cahotic
-		double square_l = square_length(ent_l->_move);
+		double square_l = state_p.getEntity(ent_l->_handle)->_stepSpeed*state_p.getEntity(ent_l->_handle)->_stepSpeed;
 		ent_l->_move = ent_l->_move + mapCorrection_l[ent_l] * 0.9;
 		double newSquare_l = square_length(ent_l->_move);
 		if(newSquare_l > square_l)
