@@ -41,6 +41,7 @@ add_library(octopus
 	${CMAKE_CURRENT_SOURCE_DIR}/src/graph/Grid.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/graph/GridNode.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/utils/Vector.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/src/utils/DynamicBitset.cc
 )
 
 target_link_libraries(octopus PRIVATE Boost::graph)
