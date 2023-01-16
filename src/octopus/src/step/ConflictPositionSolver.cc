@@ -136,10 +136,10 @@ bool updateStepFromConflictPosition(Step &step_p, State const &state_p)
 		// check every entity with one another
 		for(EntityMoveStep *stepB_l : set_l)
 		{
-			// break if same
+			// continue if same
 			if(stepB_l == stepA_l)
 			{
-				break;
+				continue;
 			}
 			Entity const * entB_l = state_p.getEntity(stepB_l->_handle);
 			// check collision
