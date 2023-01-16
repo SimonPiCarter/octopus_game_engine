@@ -31,6 +31,14 @@ int main()
 		new octopus::EntitySpawnStep(target_l)
 	};
 
+	/// add a ton of entities
+	for(unsigned long i = 0 ; i < 1000 ; ++ i)
+	{
+		spawners_l.push_back(new octopus::EntitySpawnStep(octopus::Entity { { 6.5+2*i%100, 2.6-2*(i/100) }, 1., false}));
+		octopus::EntityMoveCommand * cmd_l = new octopus::EntityMoveCommand(10+i, 10+i, {{50, 50}});
+		spawners_l.push_back(new octopus::CommandSpawnStep(cmd_l));
+	}
+
 	for(unsigned long i = 1 ; i < 9 ; ++ i)
 	{
 		spawners_l.push_back(new octopus::CommandSpawnStep(new octopus::EntityAttackCommand(i, i, 9)));
@@ -50,10 +58,14 @@ int main()
 
 	octopus::Controller controller_l(spawners_l, 1.);
 
+	bool writeFiles_l = true;
+
+	octopus::Logger::getNormal()<<"Playing"<<std::endl;
+
 	size_t i = 1;
 	for( ; i < 300 ; ++ i)
 	{
-		if(i == 1)
+		if(i == 1 && writeFiles_l)
 		{
 			octopus::State const * state_l = controller_l.queryState();
 			std::ofstream file_l("step/step_0.csv");
@@ -66,15 +78,17 @@ int main()
 
 		octopus::State const * state_l = controller_l.queryState();
 
-		std::ofstream file_l("step/step_"+std::to_string(i)+".csv");
-		streamCsvEntity(file_l, state_l->getEntities());
+		if(writeFiles_l)
+		{
+			std::ofstream file_l("step/step_"+std::to_string(i)+".csv");
+			streamCsvEntity(file_l, state_l->getEntities());
+		}
 	}
 
 	octopus::Logger::getNormal()<<"Done"<<std::endl;
 
 
-	octopus::Logger::getNormal()<<controller_l.getMetrics()<<std::endl;
-
+	streamMetrics(octopus::Logger::getNormal(), controller_l.getMetrics());
 
 	return 0;
 }

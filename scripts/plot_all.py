@@ -13,4 +13,5 @@ for i in range(nb_files):
 	input_file = file_dir+("/step_{0}.csv".format(i))
 	output_file = file_dir+"/step_{0}{1}{2}.png".format("0" if i < 100 else "", "0" if i < 10 else "", i)
 	print("python ../../scripts/plot.py {0} {1}".format(input_file, output_file))
-	os.system("python {2}/plot.py {0} {1}".format(input_file, output_file, script_dir))
+	if not os.system("python {2}/plot.py {0} {1}".format(input_file, output_file, script_dir)) == 0:
+		break

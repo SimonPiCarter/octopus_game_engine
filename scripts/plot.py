@@ -7,10 +7,10 @@ text_kwargs = dict(ha='center', va='center', fontsize=12, color='black')
 
 fig, ax = plt.subplots() # note we must use plt.subplots, not plt.subplot
 
-fig.set_size_inches(10.,10.)
+fig.set_size_inches(10.5,5.)
 
-ax.set_xlim([-15, 20])
-ax.set_ylim([-15, 20])
+ax.set_xlim([-10, 200])
+ax.set_ylim([-0, 100])
 
 with open(sys.argv[1], newline='') as f:
 	reader = csv.reader(f)
@@ -30,10 +30,10 @@ with open(sys.argv[1], newline='') as f:
 				color = 'g'
 			circle1 = plt.Circle((x, y), r, color=color)
 			ax.add_patch(circle1)
-			plt.text(x, y, str(hp), **text_kwargs)
+			#plt.text(x, y, str(hp), **text_kwargs)
 
-		print(row)
+#		print(row)
 		first = False
-
+print("done")
 plt.grid()
 fig.savefig(sys.argv[2], dpi=120)
