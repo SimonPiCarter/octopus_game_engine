@@ -11,6 +11,7 @@
 #include "step/entity/EntityMoveStep.hh"
 #include "step/Step.hh"
 #include "utils/Vector.hh"
+#include "utils/DynamicBitset.hh"
 
 namespace octopus
 {
@@ -68,24 +69,25 @@ bool updateStepFromConflictPosition(Step &step_p, State const &state_p)
 
 	// grid for fast access
 	long size_l = 500;
-	static std::vector<std::vector<std::list<EntityMoveStep *> > > grid_l;
+	long bitsetSize_l = 3200;
+	static std::vector<std::vector<DynamicBitset> > grid_l;
 	if(grid_l.empty())
 	{
 		grid_l.reserve(size_l);
 		for(size_t i = 0 ; i < size_l ; ++ i)
 		{
-			grid_l.emplace_back(size_l);
+			grid_l.emplace_back(size_l, DynamicBitset(bitsetSize_l));
 		}
 	}
 	else
 	{
-		for(size_t i = 0 ; i < size_l ; ++ i)
-		{
-			for(size_t j = 0 ; j < size_l ; ++ j)
-			{
-				grid_l[i][j].clear();
-			}
-		}
+		// for(size_t i = 0 ; i < size_l ; ++ i)
+		// {
+		// 	for(size_t j = 0 ; j < size_l ; ++ j)
+		// 	{
+		// 		grid_l[i][j].reset();
+		// 	}
+		// }
 	}
 
 	// fill up move steps when missing
@@ -108,7 +110,7 @@ bool updateStepFromConflictPosition(Step &step_p, State const &state_p)
 		{
 			for(size_t y = box_l._lowerY+size_l/2 ; y < box_l._upperY+size_l/2; ++y)
 			{
-				grid_l[x][y].push_back(mapMoveStep_l[ent_l]);
+				grid_l[x][y].set(ent_l->_handle, true);
 			}
 		}
 	}
@@ -124,24 +126,25 @@ bool updateStepFromConflictPosition(Step &step_p, State const &state_p)
 				  long(newPos_l[entA_l->_handle].y-entA_l->_ray),
 				  long(newPos_l[entA_l->_handle].y+entA_l->_ray+0.999)};
 
-		std::unordered_set<EntityMoveStep *, HandleHash> set_l;
+		DynamicBitset bitset_l(bitsetSize_l);
 		for(size_t x = box_l._lowerX+size_l/2 ; x < box_l._upperX+size_l/2; ++x)
 		{
 			for(size_t y = box_l._lowerY+size_l/2 ; y < box_l._upperY+size_l/2; ++y)
 			{
-				set_l.insert(grid_l[x][y].begin(), grid_l[x][y].end());
+				bitset_l |= grid_l[x][y];
 			}
 		}
 
 		// check every entity with one another
-		for(EntityMoveStep *stepB_l : set_l)
+		for_each_bit(bitset_l, [&] (int handle_p)
 		{
+			Entity const * entB_l = state_p.getEntity(handle_p);
+			EntityMoveStep *stepB_l = mapMoveStep_l[entB_l];
 			// continue if same
 			if(stepB_l == stepA_l)
 			{
-				continue;
+				return;
 			}
-			Entity const * entB_l = state_p.getEntity(stepB_l->_handle);
 			// check collision
 			if(collision(newPos_l[entA_l->_handle], newPos_l[entB_l->_handle], entA_l->_ray, entB_l->_ray))
 			{
@@ -186,8 +189,7 @@ bool updateStepFromConflictPosition(Step &step_p, State const &state_p)
 				mapCorrection_l[stepA_l] += normalizedAxis_l * distance_l * coefA_l;
 				mapCorrection_l[stepB_l] -= normalizedAxis_l * distance_l * coefB_l;
 			}
-		}
-
+		});
 	}
 	bool updated_l = false;
 	for(EntityMoveStep *ent_l: step_p.getEntityMoveStep())
