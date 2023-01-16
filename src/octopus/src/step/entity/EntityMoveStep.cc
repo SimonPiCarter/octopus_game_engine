@@ -2,19 +2,30 @@
 
 #include "state/State.hh"
 #include "logger/Logger.hh"
+#include "utils/Box.hh"
 
 namespace octopus
 {
+
 void EntityMoveStep::apply(State &state_p) const
 {
-	Logger::getDebug() << "EntityMoveStep :: " << state_p.getEntity(this->_handle)->_pos << " + "<<this->_move<<std::endl;
-	state_p.getEntity(this->_handle)->_pos += this->_move;
+	Entity * ent_l = state_p.getEntity(this->_handle);
+	Logger::getDebug() << "EntityMoveStep :: " << ent_l->_pos << " + "<<this->_move<<std::endl;
+
+	updateGrid(state_p, ent_l, false);
+	ent_l->_pos += this->_move;
+	updateGrid(state_p, ent_l, true);
+
 }
 
 void EntityMoveStep::revert(State &state_p) const
 {
-	Logger::getDebug() << "EntityMoveStep :: " << state_p.getEntity(this->_handle)->_pos << " - "<<this->_move<<std::endl;
-	state_p.getEntity(this->_handle)->_pos -= this->_move;
+	Entity * ent_l = state_p.getEntity(this->_handle);
+	Logger::getDebug() << "EntityMoveStep :: " << ent_l->_pos << " - "<<this->_move<<std::endl;
+
+	updateGrid(state_p, ent_l, false);
+	ent_l->_pos -= this->_move;
+	updateGrid(state_p, ent_l, true);
 }
 
 bool EntityMoveStep::isNoOp() const

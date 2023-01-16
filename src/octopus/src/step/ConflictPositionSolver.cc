@@ -12,17 +12,10 @@
 #include "step/Step.hh"
 #include "utils/Vector.hh"
 #include "utils/DynamicBitset.hh"
+#include "utils/Box.hh"
 
 namespace octopus
 {
-
-struct Box
-{
-	long _lowerX {0};
-	long _upperX {0};
-	long _lowerY {0};
-	long _upperY {0};
-};
 
 bool collision(Vector const &posA_p, Vector const &posB_p, double const &rayA_p, double const &rayB_p)
 {
@@ -68,27 +61,7 @@ bool updateStepFromConflictPosition(Step &step_p, State const &state_p)
 	}
 
 	// grid for fast access
-	long size_l = 500;
-	long bitsetSize_l = 3200;
-	static std::vector<std::vector<DynamicBitset> > grid_l;
-	if(grid_l.empty())
-	{
-		grid_l.reserve(size_l);
-		for(size_t i = 0 ; i < size_l ; ++ i)
-		{
-			grid_l.emplace_back(size_l, DynamicBitset(bitsetSize_l));
-		}
-	}
-	else
-	{
-		// for(size_t i = 0 ; i < size_l ; ++ i)
-		// {
-		// 	for(size_t j = 0 ; j < size_l ; ++ j)
-		// 	{
-		// 		grid_l[i][j].reset();
-		// 	}
-		// }
-	}
+	std::vector<std::vector<DynamicBitset> > const & grid_l = state_p.getGrid();
 
 	// fill up move steps when missing
 	for(Entity const * ent_l : state_p.getEntities())
@@ -99,19 +72,6 @@ bool updateStepFromConflictPosition(Step &step_p, State const &state_p)
 			step_p.addEntityMoveStep(step_l);
 			mapMoveStep_l[ent_l] = step_l;
 			newPos_l[ent_l->_handle] = ent_l->_pos;
-		}
-
-		// fill grid
-		Box box_l { long(newPos_l[ent_l->_handle].x-ent_l->_ray),
-				   long(newPos_l[ent_l->_handle].x+ent_l->_ray+0.999),
-				   long(newPos_l[ent_l->_handle].y-ent_l->_ray),
-				   long(newPos_l[ent_l->_handle].y+ent_l->_ray+0.999) };
-		for(size_t x = box_l._lowerX+size_l/2 ; x < box_l._upperX+size_l/2; ++x)
-		{
-			for(size_t y = box_l._lowerY+size_l/2 ; y < box_l._upperY+size_l/2; ++y)
-			{
-				grid_l[x][y].set(ent_l->_handle, true);
-			}
 		}
 	}
 
@@ -126,10 +86,11 @@ bool updateStepFromConflictPosition(Step &step_p, State const &state_p)
 				  long(newPos_l[entA_l->_handle].y-entA_l->_ray),
 				  long(newPos_l[entA_l->_handle].y+entA_l->_ray+0.999)};
 
-		DynamicBitset bitset_l(bitsetSize_l);
-		for(size_t x = box_l._lowerX+size_l/2 ; x < box_l._upperX+size_l/2; ++x)
+		DynamicBitset bitset_l(state_p.getGridBitSize());
+		unsigned long gridSize_l = state_p.getGridSize();
+		for(size_t x = box_l._lowerX+gridSize_l/2 ; x < box_l._upperX+gridSize_l/2; ++x)
 		{
-			for(size_t y = box_l._lowerY+size_l/2 ; y < box_l._upperY+size_l/2; ++y)
+			for(size_t y = box_l._lowerY+gridSize_l/2 ; y < box_l._upperY+gridSize_l/2; ++y)
 			{
 				bitset_l |= grid_l[x][y];
 			}

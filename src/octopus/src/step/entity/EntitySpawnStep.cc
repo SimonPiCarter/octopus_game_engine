@@ -24,13 +24,17 @@ void EntitySpawnStep::apply(State &state_p) const
 			}
 		}
 	}
-	state_p.getEntity(this->_handle)->_alive = true;
+	Entity * ent_l = state_p.getEntity(this->_handle);
+	ent_l->_alive = true;
+	updateGrid(state_p, ent_l, true);
 }
 
 void EntitySpawnStep::revert(State &state_p) const
 {
-	// unspawn but not delete
-	state_p.getEntity(this->_handle)->_alive = false;
+	// unspawn but do not delete
+	Entity * ent_l = state_p.getEntity(this->_handle);
+	ent_l->_alive = false;
+	updateGrid(state_p, ent_l, false);
 }
 
 bool EntitySpawnStep::isNoOp() const

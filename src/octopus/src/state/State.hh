@@ -3,6 +3,7 @@
 
 #include <vector>
 #include "Handle.hh"
+#include "utils/DynamicBitset.hh"
 
 namespace octopus
 {
@@ -33,6 +34,12 @@ public:
 	std::vector<Entity *> const &getEntities() const;
 	std::vector<Commandable *> const &getCommandables() const;
 
+	std::vector<std::vector<DynamicBitset> > const & getGrid() const;
+	std::vector<std::vector<DynamicBitset> > & getGrid();
+
+	unsigned long getGridSize() const;
+	unsigned long getGridBitSize() const;
+
 	unsigned long const _id;
 private:
 	/// @brief vector of all entities
@@ -40,9 +47,16 @@ private:
 
 	/// @brief vector of all commandables
 	std::vector<Commandable *> _commandables;
+
+	/// @brief grid for position indexing
+	std::vector<std::vector<DynamicBitset> > _grid;
+	unsigned long const _gridSize;
+	unsigned long const _gridBitSize;
 };
 
 Entity const * lookUpNewTarget(State const &state_p, Handle const &sourceHandle_p);
+
+void updateGrid(State &state_p, Entity const *ent_p, bool set_p);
 
 } // namespace octopus
 

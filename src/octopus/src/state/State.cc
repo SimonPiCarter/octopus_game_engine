@@ -1,12 +1,29 @@
 #include "State.hh"
 
 #include "entity/Entity.hh"
+#include "utils/Box.hh"
 
 namespace octopus
 {
 
-State::State() : _id(0) {}
-State::State(unsigned long id_p) : _id(id_p) {}
+State::State() : _id(0), _gridSize(500), _gridBitSize(3200)
+{
+	_grid.reserve(_gridSize);
+	for(size_t i = 0 ; i < _gridSize ; ++ i)
+	{
+		_grid.emplace_back(_gridSize, DynamicBitset(_gridBitSize));
+	}
+}
+
+State::State(unsigned long id_p) : _id(id_p), _gridSize(500), _gridBitSize(3200)
+{
+	_grid.reserve(_gridSize);
+	for(size_t i = 0 ; i < _gridSize ; ++ i)
+	{
+		_grid.emplace_back(_gridSize, DynamicBitset(_gridBitSize));
+	}
+}
+
 State::~State()
 {
 	for(Entity * ent_l : _entities)
@@ -62,6 +79,25 @@ std::vector<Commandable *> const &State::getCommandables() const
 	return _commandables;
 }
 
+std::vector<std::vector<DynamicBitset> > const & State::getGrid() const
+{
+	return _grid;
+}
+
+std::vector<std::vector<DynamicBitset> > & State::getGrid()
+{
+	return _grid;
+}
+
+unsigned long State::getGridSize() const
+{
+	return _gridSize;
+}
+unsigned long State::getGridBitSize() const
+{
+	return _gridBitSize;
+}
+
 Entity const * lookUpNewTarget(State const &state_p, Handle const &sourceHandle_p)
 {
 	double sqDis_l = 0.;
@@ -89,6 +125,23 @@ Entity const * lookUpNewTarget(State const &state_p, Handle const &sourceHandle_
 		closest_l = nullptr;
 	}
 	return closest_l;
+}
+
+void updateGrid(State &state_p, Entity const *ent_p, bool set_p)
+{
+	unsigned long size_l = state_p.getGridSize();
+	// fill grid
+	Box box_l { long(ent_p->_pos.x-ent_p->_ray),
+				long(ent_p->_pos.x+ent_p->_ray+0.999),
+				long(ent_p->_pos.y-ent_p->_ray),
+				long(ent_p->_pos.y+ent_p->_ray+0.999) };
+	for(size_t x = box_l._lowerX+size_l/2 ; x < box_l._upperX+size_l/2; ++x)
+	{
+		for(size_t y = box_l._lowerY+size_l/2 ; y < box_l._upperY+size_l/2; ++y)
+		{
+			state_p.getGrid()[x][y].set(ent_p->_handle, set_p);
+		}
+	}
 }
 
 }
