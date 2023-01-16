@@ -5,7 +5,9 @@
 namespace octopus
 {
 
-DynamicBitset::DynamicBitset(size_t nb_p) : _bitsetSize(nb_p), _size(sizeof(unsigned long))
+DynamicBitset::DynamicBitset(size_t nb_p) :
+	_bitsetSize(nb_p),
+	_size(sizeof(unsigned long)*8)
 {
 	for(size_t i = 0 ; i < std::ceil(double(_bitsetSize)/_size) ; ++i)
 	{
@@ -67,7 +69,7 @@ void for_each_bit(DynamicBitset const &bitset_p, std::function<void(int)> fn_p)
 
 			int r = __builtin_ctzl(bitset_l);
 
-			fn_p(k * 64 + r);
+			fn_p(k * bitset_p._size + r);
 
 			bitset_l ^= t;
 		}

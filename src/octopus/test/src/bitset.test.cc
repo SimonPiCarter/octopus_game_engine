@@ -93,3 +93,21 @@ TEST(DynamicBitsetTest, and)
 	ASSERT_EQ(1ul, vals_l.size());
 	EXPECT_EQ(5, vals_l.at(0));
 }
+
+TEST(DynamicBitsetTest, over_one)
+{
+	DynamicBitset bitset_l(321);
+
+	EXPECT_EQ(321ul, bitset_l.size());
+
+	bitset_l.set(317, true);
+	bitset_l.set(12, true);
+
+	// to store values set to 1 in the bitset
+	std::vector<int> vals_l;
+	for_each_bit(bitset_l, std::bind(record, std::ref(vals_l), std::placeholders::_1));
+
+	ASSERT_EQ(2ul, vals_l.size());
+	EXPECT_EQ(12, vals_l.at(0));
+	EXPECT_EQ(317, vals_l.at(1));
+}
