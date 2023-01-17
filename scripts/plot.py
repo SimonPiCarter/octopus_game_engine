@@ -1,4 +1,5 @@
 import matplotlib.pyplot as plt
+import matplotlib.patches as patches
 import csv
 import sys
 
@@ -22,15 +23,24 @@ with open(sys.argv[1], newline='') as f:
 			y = float(row[1])
 			r = float(row[2])
 			hp = float(row[3])
+			building = float(row[4])
 			color = 'r'
 			index = index + 1
 			if index % 3 == 0:
 				color = 'b'
 			elif index % 3 == 1:
 				color = 'g'
-			circle1 = plt.Circle((x, y), r, color=color)
-			ax.add_patch(circle1)
-			#plt.text(x, y, str(hp), **text_kwargs)
+
+			if building == 0:
+				# Create a Cricle patch
+				circle1 = plt.Circle((x, y), r, color=color)
+				ax.add_patch(circle1)
+			else:
+				# Create a Rectangle patch
+				rect = patches.Rectangle((x-r, y-r), 2*r, 2*r, linewidth=1, edgecolor='r', facecolor='r')
+				ax.add_patch(rect)
+
+			plt.text(x, y, str(hp), **text_kwargs)
 
 #		print(row)
 		first = False
