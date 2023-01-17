@@ -37,6 +37,7 @@ set (CMAKE_FIND_PACKAGE_SORT_DIRECTION DEC)
 set (CMAKE_FIND_PACKAGE_PREFER_CONFIG ON)
 
 find_package(Boost 1.75.0 REQUIRED)
+add_definitions(-DBOOST_ALLOW_DEPRECATED_HEADERS)
 
 # ============================================================================
 # Game Engine configuration
