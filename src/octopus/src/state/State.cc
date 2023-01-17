@@ -6,7 +6,7 @@
 namespace octopus
 {
 
-State::State() : _id(0), _gridSize(500), _gridBitSize(3200)
+State::State() : _id(0), _gridSize(500), _gridBitSize(3200), _pathGrid(_gridSize, _gridSize, 1., 1.)
 {
 	_grid.reserve(_gridSize);
 	for(size_t i = 0 ; i < _gridSize ; ++ i)
@@ -15,7 +15,7 @@ State::State() : _id(0), _gridSize(500), _gridBitSize(3200)
 	}
 }
 
-State::State(unsigned long id_p) : _id(id_p), _gridSize(500), _gridBitSize(3200)
+State::State(unsigned long id_p) : _id(id_p), _gridSize(500), _gridBitSize(3200), _pathGrid(_gridSize, _gridSize, 1., 1.)
 {
 	_grid.reserve(_gridSize);
 	for(size_t i = 0 ; i < _gridSize ; ++ i)
@@ -93,9 +93,19 @@ unsigned long State::getGridSize() const
 {
 	return _gridSize;
 }
+
 unsigned long State::getGridBitSize() const
 {
 	return _gridBitSize;
+}
+
+Grid &State::getPathGrid()
+{
+	return _pathGrid;
+}
+Grid const &State::getPathGrid() const
+{
+	return _pathGrid;
 }
 
 Entity const * lookUpNewTarget(State const &state_p, Handle const &sourceHandle_p)
@@ -129,17 +139,30 @@ Entity const * lookUpNewTarget(State const &state_p, Handle const &sourceHandle_
 
 void updateGrid(State &state_p, Entity const *ent_p, bool set_p)
 {
-	unsigned long size_l = state_p.getGridSize();
-	// fill grid
-	Box<long> box_l { long(ent_p->_pos.x-ent_p->_model._ray),
-				long(ent_p->_pos.x+ent_p->_model._ray+0.999),
-				long(ent_p->_pos.y-ent_p->_model._ray),
-				long(ent_p->_pos.y+ent_p->_model._ray+0.999) };
-	for(size_t x = box_l._lowerX+size_l/2 ; x < box_l._upperX+size_l/2; ++x)
+	long size_l = state_p.getGridSize();
+	// fill positional grid
+	Box<long> box_l { std::min(std::max(0l, long(ent_p->_pos.x-ent_p->_model._ray)), size_l),
+					  std::min(std::max(0l, long(ent_p->_pos.x+ent_p->_model._ray+0.999)), size_l),
+					  std::min(std::max(0l, long(ent_p->_pos.y-ent_p->_model._ray)), size_l),
+					  std::min(std::max(0l, long(ent_p->_pos.y+ent_p->_model._ray+0.999)), size_l)
+					};
+	for(size_t x = box_l._lowerX ; x < box_l._upperX; ++x)
 	{
-		for(size_t y = box_l._lowerY+size_l/2 ; y < box_l._upperY+size_l/2; ++y)
+		for(size_t y = box_l._lowerY ; y < box_l._upperY; ++y)
 		{
 			state_p.getGrid()[x][y].set(ent_p->_handle, set_p);
+		}
+	}
+
+	// update pathing grid only if entity is a building
+	if(ent_p->_model._isStatic)
+	{
+		for(size_t x = box_l._lowerX ; x < box_l._upperX; ++x)
+		{
+			for(size_t y = box_l._lowerY ; y < box_l._upperY; ++y)
+			{
+				state_p.getPathGrid().getNode(x, y)->setFree(!set_p);
+			}
 		}
 	}
 }

@@ -3,6 +3,7 @@
 
 #include <vector>
 #include "Handle.hh"
+#include "graph/Grid.hh"
 #include "utils/DynamicBitset.hh"
 
 namespace octopus
@@ -40,6 +41,9 @@ public:
 	unsigned long getGridSize() const;
 	unsigned long getGridBitSize() const;
 
+	Grid &getPathGrid();
+	Grid const &getPathGrid() const;
+
 	unsigned long const _id;
 private:
 	/// @brief vector of all entities
@@ -52,6 +56,9 @@ private:
 	std::vector<std::vector<DynamicBitset> > _grid;
 	unsigned long const _gridSize;
 	unsigned long const _gridBitSize;
+
+	/// @brief grid for pathing purpose
+	Grid _pathGrid;
 };
 
 Entity const * lookUpNewTarget(State const &state_p, Handle const &sourceHandle_p);

@@ -7,7 +7,7 @@ namespace octopus
 	{
 		/// @brief if true is a building (in that case _ray is the width if the building)
 		/// buildings are squared
-		bool _isBuilding { false };
+		bool _isStatic { false };
 
 		double _ray {1.};
 

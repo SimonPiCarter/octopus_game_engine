@@ -12,10 +12,18 @@ void EntityHitPointChangeStep::apply(State &state_p) const
 	ent_l->_hp += this->_delta;
 	if(ent_l->_hp < 1e-3)
 	{
+		if(ent_l->_alive)
+		{
+			updateGrid(state_p, ent_l, false);
+		}
 		ent_l->_alive = false;
 	}
 	else
 	{
+		if(!ent_l->_alive)
+		{
+			updateGrid(state_p, ent_l, false);
+		}
 		ent_l->_alive = true;
 	}
 }
@@ -27,10 +35,18 @@ void EntityHitPointChangeStep::revert(State &state_p) const
 	ent_l->_hp -= this->_delta;
 	if(ent_l->_hp < 1e-3)
 	{
+		if(ent_l->_alive)
+		{
+			updateGrid(state_p, ent_l, true);
+		}
 		ent_l->_alive = false;
 	}
 	else
 	{
+		if(!ent_l->_alive)
+		{
+			updateGrid(state_p, ent_l, false);
+		}
 		ent_l->_alive = true;
 	}
 }

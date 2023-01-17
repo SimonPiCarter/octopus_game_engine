@@ -96,10 +96,9 @@ bool updateStepFromConflictPosition(Step &step_p, State const &state_p)
 				  long(newPos_l[ent_l->_handle].y+ent_l->_model._ray+0.999)};
 
 		mapBitset_l[step_l] = new DynamicBitset(state_p.getGridBitSize());
-		unsigned long gridSize_l = state_p.getGridSize();
-		for(size_t x = box_l._lowerX+gridSize_l/2 ; x < box_l._upperX+gridSize_l/2; ++x)
+		for(size_t x = box_l._lowerX ; x < box_l._upperX; ++x)
 		{
-			for(size_t y = box_l._lowerY+gridSize_l/2 ; y < box_l._upperY+gridSize_l/2; ++y)
+			for(size_t y = box_l._lowerY ; y < box_l._upperY; ++y)
 			{
 				(*mapBitset_l[step_l]) |= grid_l[x][y];
 			}
@@ -125,12 +124,12 @@ bool updateStepFromConflictPosition(Step &step_p, State const &state_p)
 			{
 				return;
 			}
-			if(entA_l->_model._isBuilding || entB_l->_model._isBuilding)
+			if(entA_l->_model._isStatic || entB_l->_model._isStatic)
 			{
 				return;
 			}
 			// if one of the two is a building we check on rectangle instead of circles
-			if(entA_l->_model._isBuilding || entB_l->_model._isBuilding)
+			if(entA_l->_model._isStatic || entB_l->_model._isStatic)
 			{
 				Box<double> boxA_l { newPos_l[entA_l->_handle].x - entA_l->_model._ray, newPos_l[entA_l->_handle].x + entA_l->_model._ray,
 									newPos_l[entA_l->_handle].y - entA_l->_model._ray, newPos_l[entA_l->_handle].y + entA_l->_model._ray };
@@ -278,7 +277,7 @@ bool updateStepFromConflictPosition(Step &step_p, State const &state_p)
 			{
 				return;
 			}
-			if(!entA_l->_model._isBuilding && !entB_l->_model._isBuilding)
+			if(!entA_l->_model._isStatic && !entB_l->_model._isStatic)
 			{
 				return;
 			}

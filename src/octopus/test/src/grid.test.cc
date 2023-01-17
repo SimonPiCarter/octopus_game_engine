@@ -24,7 +24,7 @@ TEST(gridTest, simple)
 	size_t idx_l = 0;
 	for(GridNode const * node_l : path_l)
 	{
-		EXPECT_TRUE(expected_l.at(idx_l) == node_l->getPosition());
+		EXPECT_TRUE(expected_l.at(idx_l) == node_l->getPosition()) << "expected = "<<expected_l.at(idx_l) << " real = "<<node_l->getPosition();
 		++idx_l;
 	}
 
@@ -50,7 +50,7 @@ TEST(gridTest, simple)
 	idx_l = 0;
 	for(GridNode const * node_l : path_l)
 	{
-		EXPECT_TRUE(expected_l.at(idx_l) == node_l->getPosition());
+		EXPECT_TRUE(expected_l.at(idx_l) == node_l->getPosition()) << "expected = "<<expected_l.at(idx_l) << " real = "<<node_l->getPosition();
 		++idx_l;
 	}
 }
