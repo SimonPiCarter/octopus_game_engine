@@ -17,7 +17,9 @@ using namespace octopus;
 
 TEST(controlerTest, simple)
 {
-	EntitySpawnStep * spawn_l = new EntitySpawnStep(Entity { { 3, 3. }, 1., false, 1});
+	octopus::EntityModel unitModel_l { false, 1., 1., 10. };
+
+	EntitySpawnStep * spawn_l = new EntitySpawnStep(Entity { { 3, 3. }, false, unitModel_l});
 	EntityMoveCommand * command_l = new EntityMoveCommand(0, 0, { {4, 3}, {4, 4}});
 	CommandSpawnStep * commandSpawn_l = new CommandSpawnStep(command_l);
 

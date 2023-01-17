@@ -6,32 +6,31 @@
 #include "command/Commandable.hh"
 #include "utils/Vector.hh"
 #include "state/Handle.hh"
-#include "state/stats/Stats.hh"
+#include "state/model/entity/EntityModel.hh"
 
 namespace octopus
 {
 	class Entity : public Commandable
 	{
 		public:
-			Entity(Vector const &pos_p, double ray_p, bool frozen_p, double stepSpeed_p=0.25);
+			Entity(Vector const &pos_p, bool frozen_p, EntityModel const &model_p);
 
-			/// @brief if true is a building (in that case _ray is the width if the building)
-			/// buildings are squared
-			bool _isBuilding { false };
 			Vector _pos;
-			double _ray {1.};
 
 			/// @brief cannot move
 			bool _frozen {false};
-
-			double _stepSpeed {0.25};
 
 			Handle _handle {0};
 
 			/// @brief is alive in the state
 			bool _alive {false};
 
-			Stats _stats;
+			double _hp { 10. };
+			/// @brief time since last attack in step
+			unsigned long _reload { 10 };
+
+			/// @brief entity model
+			EntityModel const &_model;
 	};
 }
 

@@ -15,7 +15,8 @@ TEST(entityMoveStepTest, simple)
 {
 	State state_l;
 
-	state_l.addEntity(new Entity { { 3, 3. }, 1., false});
+	octopus::EntityModel unitModel_l { false, 1., 1., 10. };
+	state_l.addEntity(new Entity { { 3, 3. }, false, unitModel_l});
 
 	EntityMoveStep step_l(0, {1, 2});
 
@@ -37,7 +38,8 @@ TEST(entityMoveStepTest, simple_two)
 {
 	State state_l;
 
-	state_l.addEntity(new Entity { { 3, 3. }, 1., false});
+	octopus::EntityModel unitModel_l { false, 1., 1., 10. };
+	state_l.addEntity(new Entity { { 3, 3. }, false, unitModel_l});
 
 	EntityMoveStep step_l(0, {1, 2});
 	EntityMoveStep step2_l(0, {5, 7});

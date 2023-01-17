@@ -31,8 +31,10 @@ using namespace octopus;
 ///
 TEST(attackMoveCommandTest, simple)
 {
-	EntitySpawnStep * spawn0_l = new EntitySpawnStep(Entity { { 3, 3. }, 1., false, 1});
-	EntitySpawnStep * spawn1_l = new EntitySpawnStep(Entity { { 11, 3. }, 1., false, 1});
+	octopus::EntityModel unitModel_l { false, 1., 1., 10. };
+
+	EntitySpawnStep * spawn0_l = new EntitySpawnStep(Entity { { 3, 3. }, false, unitModel_l});
+	EntitySpawnStep * spawn1_l = new EntitySpawnStep(Entity { { 11, 3. }, false, unitModel_l});
 
 	// entity 0 attack entity 1
 	EntityAttackMoveCommand * command_l = new EntityAttackMoveCommand(0, 0, {{9, 3}});
@@ -71,7 +73,7 @@ TEST(attackMoveCommandTest, simple)
 
 	EXPECT_NEAR(6., state_l->getEntity(0)->_pos.x, 1e-5);
 	EXPECT_NEAR(3., state_l->getEntity(0)->_pos.y, 1e-5);
-	EXPECT_NEAR(10., state_l->getEntity(1)->_stats._hp, 1e-5);
+	EXPECT_NEAR(10., state_l->getEntity(1)->_hp, 1e-5);
 
 	// update time to 3 seconds (6)
 	controller_l.update(3.);
@@ -81,7 +83,7 @@ TEST(attackMoveCommandTest, simple)
 	state_l = controller_l.queryState();
 
 	// wind up should just be over but no damage still
-	EXPECT_NEAR(10., state_l->getEntity(1)->_stats._hp, 1e-5);
+	EXPECT_NEAR(10., state_l->getEntity(1)->_hp, 1e-5);
 
 
 	// update time to 1 second (7)
@@ -92,7 +94,7 @@ TEST(attackMoveCommandTest, simple)
 	state_l = controller_l.queryState();
 
 	// damage has been done
-	EXPECT_NEAR(7., state_l->getEntity(1)->_stats._hp, 1e-5);
+	EXPECT_NEAR(7., state_l->getEntity(1)->_hp, 1e-5);
 
 	// Next damage should be -> reload time + windup
 	// 10 + 3 (13)
@@ -105,7 +107,7 @@ TEST(attackMoveCommandTest, simple)
 	state_l = controller_l.queryState();
 
 	// damage has been done
-	EXPECT_NEAR(7., state_l->getEntity(1)->_stats._hp, 1e-5);
+	EXPECT_NEAR(7., state_l->getEntity(1)->_hp, 1e-5);
 
 	// update time to 1 second (20)
 	controller_l.update(1.);
@@ -115,5 +117,5 @@ TEST(attackMoveCommandTest, simple)
 	state_l = controller_l.queryState();
 
 	// damage has been done twice
-	EXPECT_NEAR(4., state_l->getEntity(1)->_stats._hp, 1e-5);
+	EXPECT_NEAR(4., state_l->getEntity(1)->_hp, 1e-5);
 }

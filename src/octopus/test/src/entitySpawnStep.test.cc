@@ -16,7 +16,8 @@ TEST(entityStepTest, simple)
 {
 	State state_l;
 
-	EntitySpawnStep step_l(Entity { { 3, 4. }, 1., false});
+	octopus::EntityModel unitModel_l { false, 1., 1., 10. };
+	EntitySpawnStep step_l(Entity { { 3, 4. }, false, unitModel_l});
 
 	EXPECT_EQ(0u, state_l.getEntities().size());
 

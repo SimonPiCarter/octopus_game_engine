@@ -25,7 +25,8 @@ TEST(moveCommandTest, simple)
 {
 	State state_l;
 
-	state_l.addEntity(new Entity { { 3, 3. }, 0.9, false, 1.});
+	octopus::EntityModel unitModel_l { false, 0.9, 1., 10. };
+	state_l.addEntity(new Entity { { 3, 3. }, false, unitModel_l});
 
 	EntityMoveCommand command_l(0, 0, { {4, 3}, {4, 4}});
 

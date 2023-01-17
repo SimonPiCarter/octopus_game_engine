@@ -40,7 +40,7 @@ bool EntityMoveCommand::applyCommand(Step & step_p, State const &state_p, Comman
 	Vector next_l = *it_l;
 	Vector delta_l = ent_l->_pos - next_l;
 	// Check entity position
-	while(square_length(delta_l) < ent_l->_ray*ent_l->_ray)
+	while(square_length(delta_l) < ent_l->_model._ray*ent_l->_model._ray)
 	{
 		// pop front
 		step_p.addSteppable(new CommandDataWaypointRemoveStep(_handleCommand, *it_l));
@@ -84,10 +84,10 @@ bool EntityMoveCommand::applyCommand(Step & step_p, State const &state_p, Comman
 		return true;
 	}
 
-	Logger::getDebug() << "Adding move step orig = "<<ent_l->_pos<<" target = "<<next_l<<" step speed = " << ent_l->_stepSpeed << std::endl;
+	Logger::getDebug() << "Adding move step orig = "<<ent_l->_pos<<" target = "<<next_l<<" step speed = " << ent_l->_model._stepSpeed << std::endl;
 
 	// Use next waypoint as target
-	step_p.addEntityMoveStep(new EntityMoveStep(createEntityMoveStep(*ent_l, next_l, ent_l->_stepSpeed)));
+	step_p.addEntityMoveStep(new EntityMoveStep(createEntityMoveStep(*ent_l, next_l, ent_l->_model._stepSpeed)));
 
 	return false;
 }

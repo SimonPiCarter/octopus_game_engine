@@ -66,32 +66,32 @@ bool EntityAttackCommand::applyCommand(Step & step_p, State const &state_p, Comm
 		double sqDistance_l = square_length(dir_l);
 		// range squared (+ ray of target), we do not add ray of source because we might stop earlier to attack anyway plus move command
 		// stops as soon as source touch target point
-		double sqRange_l = (entSource_l->_stats._range + entTarget_l->_ray) * (entSource_l->_stats._range +  + entTarget_l->_ray);
+		double sqRange_l = (entSource_l->_model._range + entTarget_l->_model._ray) * (entSource_l->_model._range +  + entTarget_l->_model._ray);
 		// ratio of direction to keep (square rooted)
 		double ratio_l = std::sqrt(sqRange_l/sqDistance_l);
 
 		Vector closest_l = entSource_l->_pos + dir_l * (1 - ratio_l);
 
-		Logger::getDebug() << "\t\tEntityAttackCommand:: adding move step "<< _source << " target " << closest_l << " speed " <<entSource_l->_stepSpeed<<std::endl;
+		Logger::getDebug() << "\t\tEntityAttackCommand:: adding move step "<< _source << " target " << closest_l << " speed " <<entSource_l->_model._stepSpeed<<std::endl;
 		// add move command
-		step_p.addEntityMoveStep(new EntityMoveStep(createEntityMoveStep(*entSource_l, closest_l, entSource_l->_stepSpeed)));
+		step_p.addEntityMoveStep(new EntityMoveStep(createEntityMoveStep(*entSource_l, closest_l, entSource_l->_model._stepSpeed)));
 	}
-	else if(entSource_l->_stats._reload >= entSource_l->_stats._fullReload )
+	else if(entSource_l->_reload >= entSource_l->_model._fullReload )
 	{
 		step_p.addSteppable(new CommandWindUpDiffStep(_handleCommand, 1));
 		Logger::getDebug() << "\tEntityAttackCommand:: in range (winding up)"<<std::endl;
 		// If in range we trigger the attack (delay may be applied for animation)
 		// + 1 to take into account steppable added just before
-		if(windup_l +1 >= entSource_l->_stats._windup)
+		if(windup_l +1 >= entSource_l->_model._windup)
 		{
 			Logger::getDebug() << "\tEntityAttackCommand:: in range (attack)"<<std::endl;
 			// reset wind up (remove value + 1 because step +1 will be applied before resetting)
 			step_p.addSteppable(new CommandWindUpDiffStep(_handleCommand, - windup_l - 1));
 
 			// add damage
-			step_p.addSteppable(new EntityHitPointChangeStep(_target, std::min(-1., entTarget_l->_stats._armor - entSource_l->_stats._damage)));
+			step_p.addSteppable(new EntityHitPointChangeStep(_target, std::min(-1., entTarget_l->_model._armor - entSource_l->_model._damage)));
 			// reset reload time
-			step_p.addSteppable(new EntityAttackStep(_source, entSource_l->_stats._reload));
+			step_p.addSteppable(new EntityAttackStep(_source, entSource_l->_reload));
 		}
 	}
 
@@ -114,7 +114,7 @@ bool EntityAttackCommand::inRange(State const &state_p, Handle const & target_p)
 	// square distances
 	double sqDistance_l = square_length(dir_l);
 	// range squared (+ rays)
-	double rangeAndRays_l = entSource_l->_stats._range + entTarget_l->_ray + entSource_l->_ray;
+	double rangeAndRays_l = entSource_l->_model._range + entTarget_l->_model._ray + entSource_l->_model._ray;
 	double sqRange_l = rangeAndRays_l * rangeAndRays_l;
 
 	return sqDistance_l < sqRange_l + 1e-5;

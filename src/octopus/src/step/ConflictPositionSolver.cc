@@ -90,10 +90,10 @@ bool updateStepFromConflictPosition(Step &step_p, State const &state_p)
 	for(EntityMoveStep *step_l: step_p.getEntityMoveStep())
 	{
 		Entity const * ent_l = state_p.getEntity(step_l->_handle);
-		Box<long> box_l {long(newPos_l[ent_l->_handle].x-ent_l->_ray),
-				  long(newPos_l[ent_l->_handle].x+ent_l->_ray+0.999),
-				  long(newPos_l[ent_l->_handle].y-ent_l->_ray),
-				  long(newPos_l[ent_l->_handle].y+ent_l->_ray+0.999)};
+		Box<long> box_l {long(newPos_l[ent_l->_handle].x-ent_l->_model._ray),
+				  long(newPos_l[ent_l->_handle].x+ent_l->_model._ray+0.999),
+				  long(newPos_l[ent_l->_handle].y-ent_l->_model._ray),
+				  long(newPos_l[ent_l->_handle].y+ent_l->_model._ray+0.999)};
 
 		mapBitset_l[step_l] = new DynamicBitset(state_p.getGridBitSize());
 		unsigned long gridSize_l = state_p.getGridSize();
@@ -125,17 +125,17 @@ bool updateStepFromConflictPosition(Step &step_p, State const &state_p)
 			{
 				return;
 			}
-			if(entA_l->_isBuilding || entB_l->_isBuilding)
+			if(entA_l->_model._isBuilding || entB_l->_model._isBuilding)
 			{
 				return;
 			}
 			// if one of the two is a building we check on rectangle instead of circles
-			if(entA_l->_isBuilding || entB_l->_isBuilding)
+			if(entA_l->_model._isBuilding || entB_l->_model._isBuilding)
 			{
-				Box<double> boxA_l { newPos_l[entA_l->_handle].x - entA_l->_ray, newPos_l[entA_l->_handle].x + entA_l->_ray,
-									newPos_l[entA_l->_handle].y - entA_l->_ray, newPos_l[entA_l->_handle].y + entA_l->_ray };
-				Box<double> boxB_l { newPos_l[entB_l->_handle].x - entB_l->_ray, newPos_l[entB_l->_handle].x + entB_l->_ray,
-									newPos_l[entB_l->_handle].y - entB_l->_ray, newPos_l[entB_l->_handle].y + entB_l->_ray };
+				Box<double> boxA_l { newPos_l[entA_l->_handle].x - entA_l->_model._ray, newPos_l[entA_l->_handle].x + entA_l->_model._ray,
+									newPos_l[entA_l->_handle].y - entA_l->_model._ray, newPos_l[entA_l->_handle].y + entA_l->_model._ray };
+				Box<double> boxB_l { newPos_l[entB_l->_handle].x - entB_l->_model._ray, newPos_l[entB_l->_handle].x + entB_l->_model._ray,
+									newPos_l[entB_l->_handle].y - entB_l->_model._ray, newPos_l[entB_l->_handle].y + entB_l->_model._ray };
 
 				Box<double> intersect_l = { std::max(boxA_l._lowerX, boxB_l._lowerX),
 									std::min(boxA_l._upperX, boxB_l._upperX),
@@ -187,7 +187,7 @@ bool updateStepFromConflictPosition(Step &step_p, State const &state_p)
 				}
 			}
 			// check collision
-			else if(collision(newPos_l[entA_l->_handle], newPos_l[entB_l->_handle], entA_l->_ray, entB_l->_ray))
+			else if(collision(newPos_l[entA_l->_handle], newPos_l[entB_l->_handle], entA_l->_model._ray, entB_l->_model._ray))
 			{
 				// repulsion against axis between both (from B to A)
 				Vector axis_l = (entA_l->_pos + stepA_l->_move) - (entB_l->_pos + stepB_l->_move);
@@ -196,7 +196,7 @@ bool updateStepFromConflictPosition(Step &step_p, State const &state_p)
 				double length_l = length(axis_l);
 
 				// collision distance (distance missing to avoid collision)
-				double distance_l = entA_l->_ray + entB_l->_ray - length_l;
+				double distance_l = entA_l->_model._ray + entB_l->_model._ray - length_l;
 				if(distance_l < 0.)
 				{
 					throw std::logic_error("octopus :: Error collision but no distance to fix");
@@ -246,7 +246,7 @@ bool updateStepFromConflictPosition(Step &step_p, State const &state_p)
 		}
 		Logger::getDebug() << " conflict solver :: "<<ent_l->_handle<<" correction : "<<mapCorrection_l[ent_l]<<std::endl;
 		// ensure that move does not become too cahotic
-		double square_l = state_p.getEntity(ent_l->_handle)->_stepSpeed*state_p.getEntity(ent_l->_handle)->_stepSpeed;
+		double square_l = state_p.getEntity(ent_l->_handle)->_model._stepSpeed*state_p.getEntity(ent_l->_handle)->_model._stepSpeed;
 		ent_l->_move = ent_l->_move + mapCorrection_l[ent_l] * 0.9;
 		double newSquare_l = square_length(ent_l->_move);
 		if(newSquare_l > square_l)
@@ -278,15 +278,15 @@ bool updateStepFromConflictPosition(Step &step_p, State const &state_p)
 			{
 				return;
 			}
-			if(!entA_l->_isBuilding && !entB_l->_isBuilding)
+			if(!entA_l->_model._isBuilding && !entB_l->_model._isBuilding)
 			{
 				return;
 			}
 			// if one of the two is a building we check on rectangle instead of circles
-			Box<double> boxA_l { newPos_l[entA_l->_handle].x - entA_l->_ray, newPos_l[entA_l->_handle].x + entA_l->_ray,
-								newPos_l[entA_l->_handle].y - entA_l->_ray, newPos_l[entA_l->_handle].y + entA_l->_ray };
-			Box<double> boxB_l { newPos_l[entB_l->_handle].x - entB_l->_ray, newPos_l[entB_l->_handle].x + entB_l->_ray,
-								newPos_l[entB_l->_handle].y - entB_l->_ray, newPos_l[entB_l->_handle].y + entB_l->_ray };
+			Box<double> boxA_l { newPos_l[entA_l->_handle].x - entA_l->_model._ray, newPos_l[entA_l->_handle].x + entA_l->_model._ray,
+								newPos_l[entA_l->_handle].y - entA_l->_model._ray, newPos_l[entA_l->_handle].y + entA_l->_model._ray };
+			Box<double> boxB_l { newPos_l[entB_l->_handle].x - entB_l->_model._ray, newPos_l[entB_l->_handle].x + entB_l->_model._ray,
+								newPos_l[entB_l->_handle].y - entB_l->_model._ray, newPos_l[entB_l->_handle].y + entB_l->_model._ray };
 
 			Box<double> intersect_l = { std::max(boxA_l._lowerX, boxB_l._lowerX),
 								std::min(boxA_l._upperX, boxB_l._upperX),

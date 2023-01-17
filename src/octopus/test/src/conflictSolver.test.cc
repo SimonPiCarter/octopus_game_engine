@@ -13,9 +13,11 @@ TEST(conflictSolverTest, simple)
 	State state_l;
 	Step step_l;
 
-	Entity * ent_l = new Entity { { 6., 3. }, 1., false} ;
-	Entity * building_l = new Entity { { 4., 2. }, 1., true} ;
-	building_l->_isBuilding = true;
+	octopus::EntityModel unitModel_l { false, 1., 1., 10. };
+	octopus::EntityModel buildingModel_l { true, 1., 1., 10. };
+
+	Entity * ent_l = new Entity { { 6., 3. }, false, unitModel_l} ;
+	Entity * building_l = new Entity { { 4., 2. }, true, buildingModel_l} ;
 
 	state_l.addEntity(ent_l);
 	state_l.addEntity(building_l);
