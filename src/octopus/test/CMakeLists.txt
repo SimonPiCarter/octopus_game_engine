@@ -26,6 +26,7 @@ target_sources (unit_tests
 	src/attackMoveCommand.test.cc
 	src/bitset.test.cc
 	src/commandQueue.test.cc
+	src/conflictSolver.test.cc
 	src/controller.test.cc
 	src/entityMoveStep.test.cc
 	src/entitySpawnStep.test.cc
