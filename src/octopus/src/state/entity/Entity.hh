@@ -15,6 +15,9 @@ namespace octopus
 		public:
 			Entity(Vector const &pos_p, double ray_p, bool frozen_p, double stepSpeed_p=0.25);
 
+			/// @brief if true is a building (in that case _ray is the width if the building)
+			/// buildings are squared
+			bool _isBuilding { false };
 			Vector _pos;
 			double _ray {1.};
 

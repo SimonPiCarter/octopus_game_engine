@@ -20,12 +20,12 @@ std::ostream &operator<<(std::ostream &os_p, octopus::Entity const &ent_p)
 
 std::ostream &streamCsvPos(std::ostream &os_p, octopus::Entity const &ent_p)
 {
-	return os_p<<ent_p._pos.x<<","<<ent_p._pos.y<<","<<ent_p._ray<<","<<ent_p._stats._hp;
+	return os_p<<ent_p._pos.x<<","<<ent_p._pos.y<<","<<ent_p._ray<<","<<ent_p._stats._hp<<","<<ent_p._isBuilding;
 }
 
 std::ostream &streamCsvEntity(std::ostream &os_p, std::vector<octopus::Entity *> const &vec_p)
 {
-	os_p<<"x,y,r,hp"<<std::endl;
+	os_p<<"x,y,r,hp,building"<<std::endl;
 	for(octopus::Entity const *ent_l : vec_p)
 	{
 		if(ent_l->_alive)
