@@ -40,7 +40,7 @@ int main()
 	for(unsigned long i = 0 ; i < 1000 ; ++ i)
 	{
 		spawners_l.push_back(new octopus::EntitySpawnStep(octopus::Entity { { 6.5+2*i%100, 2.6-2*(i/100) }, 1., false}));
-		octopus::EntityMoveCommand * cmd_l = new octopus::EntityMoveCommand(10+i, 10+i, {{50, 50}});
+		octopus::EntityMoveCommand * cmd_l = new octopus::EntityMoveCommand(11+i, 11+i, {{50, 50}});
 		spawners_l.push_back(new octopus::CommandSpawnStep(cmd_l));
 	}
 
