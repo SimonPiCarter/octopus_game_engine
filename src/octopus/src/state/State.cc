@@ -108,6 +108,11 @@ Grid const &State::getPathGrid() const
 	return _pathGrid;
 }
 
+void State::incrementPathGridStatus()
+{
+	++_pathGridStatus;
+}
+
 Entity const * lookUpNewTarget(State const &state_p, Handle const &sourceHandle_p)
 {
 	double sqDis_l = 0.;
@@ -157,6 +162,7 @@ void updateGrid(State &state_p, Entity const *ent_p, bool set_p)
 	// update pathing grid only if entity is a building
 	if(ent_p->_model._isStatic)
 	{
+		state_p.incrementPathGridStatus();
 		for(size_t x = box_l._lowerX ; x < box_l._upperX; ++x)
 		{
 			for(size_t y = box_l._lowerY ; y < box_l._upperY; ++y)

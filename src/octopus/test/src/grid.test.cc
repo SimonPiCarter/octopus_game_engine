@@ -21,6 +21,7 @@ TEST(gridTest, simple)
 		{ 0, 0 },
 		{ 9, 9 }
 	};
+	ASSERT_EQ(expected_l.size(), path_l.size());
 	size_t idx_l = 0;
 	for(GridNode const * node_l : path_l)
 	{
@@ -35,8 +36,6 @@ TEST(gridTest, simple)
 			grid_l.getNode(i,j)->setFree(false);
 		}
 	}
-	graph_l.update();
-
 	path_l = graph_l.getPath(grid_l.getNode(0,0), grid_l.getNode(9,9));
 	trimPath(path_l);
 	expected_l = {
@@ -47,6 +46,7 @@ TEST(gridTest, simple)
 		{ 9, 9 }
 	};
 
+	ASSERT_EQ(expected_l.size(), path_l.size());
 	idx_l = 0;
 	for(GridNode const * node_l : path_l)
 	{

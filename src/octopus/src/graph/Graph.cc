@@ -32,20 +32,8 @@ bool checkNodes(std::vector<std::vector<GridNode *> > const &nodes_p)
 void Graph::buildEdge(mygraph_t &g, size_t i, size_t j, size_t k, size_t l,
 	std::vector<std::vector<GridNode *> > const &nodes_p, std::unordered_map<GridNode const *, Vertex> const & nodeIndex_p)
 {
-	// check node availableness
-	if(!nodes_p.at(i).at(j)->isFree()
-	|| !nodes_p.at(k).at(l)->isFree())
-	{
-		return;
-	}
-
-	typedef boost::adjacency_list< boost::listS, boost::vecS, boost::undirectedS, boost::no_property,
-		boost::property< boost::edge_weight_t, float > >
-		mygraph_t;
-	typedef boost::property_map< mygraph_t, boost::edge_weight_t >::type WeightMap;
+	typedef boost::adjacency_list< boost::listS, boost::vecS, boost::undirectedS, VertexProperties, EdgeProperties> mygraph_t;
 	typedef mygraph_t::edge_descriptor edge_descriptor;
-
-	WeightMap weightmap = get(boost::edge_weight, g);
 
 	GridNode const * from_l = nodes_p.at(i).at(j);
 	GridNode const * to_l = nodes_p.at(k).at(l);
@@ -54,24 +42,17 @@ void Graph::buildEdge(mygraph_t &g, size_t i, size_t j, size_t k, size_t l,
 	bool inserted;
 
 	boost::tie(e, inserted) = add_edge(nodeIndex_p.at(from_l), nodeIndex_p.at(to_l), g);
-	weightmap[e] = length(to_l->getPosition() - from_l->getPosition());
+	g[e].weight = length(to_l->getPosition() - from_l->getPosition());
 }
 
 Graph::Graph(std::vector<std::vector<GridNode *> > const &nodes_p)
 	: _nodes(nodes_p)
-	, _g(nullptr)
+	, _g(new mygraph_t())
 {
 	if(!checkNodes(_nodes))
 	{
 		throw std::logic_error("Cannot create graph with different number of node per row!");
 	}
-	// initial update
-	update();
-}
-
-void Graph::update()
-{
-	delete _g;
 	_g = new mygraph_t();
 
 	for(size_t i = 0 ; i < _nodes.size() ; ++i)
@@ -104,17 +85,25 @@ void Graph::update()
 			buildEdge(*_g, i, j, i+1, j+1, _nodes, _nodeIndex);
 		}
 	}
+
+	_filtered = new myfilteredgraph_t(*_g, Filter {this});
+}
+
+Graph::~Graph()
+{
+	delete _filtered;
+	delete _g;
 }
 
 // euclidean distance heuristic
 template < class Graph>
-class distance_heuristic : public boost::astar_heuristic< Graph, float >
+class distance_heuristic : public boost::astar_heuristic< Graph, double >
 {
 public:
 	typedef typename boost::graph_traits< Graph >::vertex_descriptor Vertex;
 
 	distance_heuristic(std::vector<GridNode const*> const &vec_p, Vertex goal_p) : _vec(vec_p), _goal(goal_p) {}
-	float operator()(Vertex u)
+	double operator()(Vertex u)
 	{
 		float dx = _vec.at(_goal)->getPosition().x - _vec.at(u)->getPosition().x;
 		float dy = _vec.at(_goal)->getPosition().y - _vec.at(u)->getPosition().y;
@@ -153,18 +142,19 @@ std::list<GridNode const *> Graph::getPath(GridNode const * from_p, GridNode con
 	vertex start_l = _nodeIndex.at(from_p);
 	vertex goal_l = _nodeIndex.at(to_p);
 
-	std::vector< mygraph_t::vertex_descriptor > p(boost::num_vertices(*_g));
-	std::vector<float> d(boost::num_vertices(*_g));
+	std::vector<Vertex> p(boost::num_vertices(*_filtered));
+	std::vector<float> d(boost::num_vertices(*_filtered));
 	try
 	{
-		// call astar named parameter interface
-		boost::astar_search_tree(*_g, start_l,
-			distance_heuristic<mygraph_t>(_vecNodes, goal_l),
-			boost::predecessor_map(
-				boost::make_iterator_property_map(p.begin(), get(boost::vertex_index, *_g)))
-				.distance_map(
-					boost::make_iterator_property_map(d.begin(), get(boost::vertex_index, *_g)))
-				.visitor(astar_goal_visitor< vertex >(goal_l)));
+		// // call astar named parameter interface
+		boost::astar_search(
+			*_filtered,
+			start_l,
+			distance_heuristic<myfilteredgraph_t>(_vecNodes, goal_l),
+			boost::predecessor_map(&p[0])
+				.weight_map(boost::get(&EdgeProperties::weight, *_filtered))
+				.distance_map(&d[0])
+				.visitor(astar_goal_visitor< Vertex >(goal_l)));
 	}
 	catch (found_goal fg)
 	{ // found a path to the goal
@@ -188,6 +178,13 @@ std::list<GridNode const *> Graph::getPath(GridNode const * from_p, GridNode con
 	Logger::getDebug() << "Didn't find a path from " << _vecNodes[start_l]->getPosition() << "to" << _vecNodes[goal_l]->getPosition()
 		 << "!" << std::endl;
 	return {};
+}
+
+bool Graph::Filter::operator()(boost::graph_traits< mygraph_t >::edge_descriptor const &e) const
+{
+	Vertex s = boost::source(e, *_graph->_g);
+	Vertex t = boost::target(e, *_graph->_g);
+	return _graph->_vecNodes[s]->isFree() && _graph->_vecNodes[t]->isFree();
 }
 
 void trimPath(std::list<GridNode const *> &path_p)

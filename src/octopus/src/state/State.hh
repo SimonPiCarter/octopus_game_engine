@@ -44,6 +44,12 @@ public:
 	Grid &getPathGrid();
 	Grid const &getPathGrid() const;
 
+	/// @brief increment path grid status
+	/// this status is used to know if a path is deprecated
+	/// and should be recomputed or not
+	void incrementPathGridStatus();
+	unsigned long getPathGridStatus() const { return _pathGridStatus; }
+
 	unsigned long const _id;
 private:
 	/// @brief vector of all entities
@@ -59,6 +65,8 @@ private:
 
 	/// @brief grid for pathing purpose
 	Grid _pathGrid;
+	/// @brief used to know if grid has changed
+	unsigned long _pathGridStatus {0};
 };
 
 Entity const * lookUpNewTarget(State const &state_p, Handle const &sourceHandle_p);
