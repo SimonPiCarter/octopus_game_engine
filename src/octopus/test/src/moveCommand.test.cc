@@ -2,6 +2,7 @@
 
 #include <command/CommandData.hh>
 #include <command/EntityMoveCommand.hh>
+#include <command/data/MoveData.hh>
 #include <step/entity/EntityMoveStep.hh>
 #include <step/Step.hh>
 #include <state/State.hh>
@@ -29,8 +30,7 @@ TEST(moveCommandTest, simple)
 	EntityMoveCommand command_l(0, 0, { {4, 3}, {4, 4}});
 
 	state_l.getEntity(0)->enqueue(&command_l, false);
-	CommandDataWithData<AttackMoveData> *data_l =
-		dynamic_cast<CommandDataWithData<AttackMoveData> *>(state_l.getEntity(0)->getFrontQueue()._data);
+	MoveData *data_l = dynamic_cast<MoveData *>(state_l.getEntity(0)->getFrontQueue()._data);
 	EXPECT_NE(nullptr, data_l);
 
 	///

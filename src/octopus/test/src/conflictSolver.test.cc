@@ -10,8 +10,6 @@ using namespace octopus;
 
 TEST(conflictSolverTest, simple)
 {
-	Logger::enable_debug();
-
 	State state_l;
 	Step step_l;
 
@@ -30,7 +28,7 @@ TEST(conflictSolverTest, simple)
 
 	updateStepFromConflictPosition(step_l, state_l);
 
-	EXPECT_EQ(0., moveStep_l._move.x);
-	EXPECT_EQ(-1., moveStep_l._move.y);
+	EXPECT_EQ(0., moveStep_l->_move.x);
+	EXPECT_EQ(-1., moveStep_l->_move.y);
 
 }

@@ -1,7 +1,7 @@
 #ifndef __AttackMoveData__
 #define __AttackMoveData__
 
-#include "utils/Vector.hh"
+#include "MoveData.hh"
 #include "state/Handle.hh"
 #include <list>
 
@@ -12,8 +12,9 @@ class EntityAttackCommand;
 
 /// @brief This struct is aimed at supporting
 /// attack, move, attack move and patrol commands
-struct AttackMoveData
+struct AttackMoveData : public MoveData
 {
+	AttackMoveData(Handle const &target_p, std::list<Vector> const &waypoints_p) : MoveData(waypoints_p), _target(target_p) {}
 	///
 	/// Attack
 	///
@@ -21,17 +22,6 @@ struct AttackMoveData
 	Handle _target;
 	// used in attack
 	long _windup {0};
-
-
-	///
-	/// Move
-	///
-	// used in move
-	std::list<Vector> _waypoints;
-	// last position used to check if we made progress
-	Vector _lastPos;
-	// count steps since last progress to waypoint
-	unsigned long _countSinceProgress {0};
 
 	///
 	/// AttackMove

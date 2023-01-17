@@ -21,7 +21,7 @@ EntityMoveCommand::EntityMoveCommand(Handle const &commandHandle_p, Handle const
 
 bool EntityMoveCommand::applyCommand(Step & step_p, State const &state_p, CommandData const *data_p) const
 {
-	AttackMoveData const &data_l = static_cast<CommandDataWithData<AttackMoveData> const *>(data_p)->_data;
+	MoveData const &data_l = *static_cast<MoveData const *>(data_p);
 	std::list<Vector> const &waypoints_l =  data_l._waypoints;
 	// No waypoint -> terminate
 	if(waypoints_l.empty())

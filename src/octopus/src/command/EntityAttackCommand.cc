@@ -24,7 +24,7 @@ EntityAttackCommand::EntityAttackCommand(Handle const &commandHandle_p, Handle c
 bool EntityAttackCommand::applyCommand(Step & step_p, State const &state_p, CommandData const *data_p) const
 {
 	// get data
-	AttackMoveData const &data_l = static_cast<CommandDataWithData<AttackMoveData> const *>(data_p)->_data;
+	AttackMoveData const &data_l = *static_cast<AttackMoveData const *>(data_p);
 	long windup_l = data_l._windup;
 	Handle const &curTarget_l = data_l._target;
 

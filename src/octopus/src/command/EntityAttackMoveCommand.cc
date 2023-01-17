@@ -36,7 +36,7 @@ bool shouldStopAttacking(AttackMoveData const &attackMoveData_p, Entity const *e
 bool EntityAttackMoveCommand::applyCommand(Step & step_p, State const &state_p, CommandData const *data_p) const
 {
 	Logger::getDebug() << "EntityAttackMoveCommand:: apply Command "<<_source <<std::endl;
-	AttackMoveData const &attackMoveData_l = static_cast<CommandDataWithData<AttackMoveData> const *>(data_p)->_data;
+	AttackMoveData const &attackMoveData_l = *static_cast<AttackMoveData const *>(data_p);
 	EntityAttackCommand const * subAttackCommand_l = attackMoveData_l._subAttackCommand;
 	Entity const * ent_l = state_p.getEntity(_source);
 

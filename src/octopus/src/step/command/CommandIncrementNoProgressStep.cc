@@ -12,24 +12,24 @@ void CommandIncrementNoProgressStep::apply(State &state_p) const
 {
 	Commandable * ent_l = state_p.getCommandable(this->_handle);
 	Logger::getDebug() << "CommandIncrementNoProgressStep :: apply " << this->_handle <<std::endl;
-	CommandDataWithData<AttackMoveData> *data_l = dynamic_cast<CommandDataWithData<AttackMoveData> *>(ent_l->getFrontQueue()._data);
-	if(data_l->_data._countSinceProgress != _old)
+	MoveData *data_l = dynamic_cast<MoveData*>(ent_l->getFrontQueue()._data);
+	if(data_l->_countSinceProgress != _old)
 	{
 		throw std::logic_error("Setting target had incoherent old target regarding content in state");
 	}
-	data_l->_data._countSinceProgress = _new;
+	data_l->_countSinceProgress = _new;
 }
 
 void CommandIncrementNoProgressStep::revert(State &state_p) const
 {
 	Commandable * ent_l = state_p.getCommandable(this->_handle);
 	Logger::getDebug() << "CommandIncrementNoProgressStep :: revert " << this->_handle <<std::endl;
-	CommandDataWithData<AttackMoveData> *data_l = dynamic_cast<CommandDataWithData<AttackMoveData> *>(ent_l->getFrontQueue()._data);
-	if(data_l->_data._countSinceProgress != _new)
+	MoveData *data_l = dynamic_cast<MoveData*>(ent_l->getFrontQueue()._data);
+	if(data_l->_countSinceProgress != _new)
 	{
 		throw std::logic_error("Setting target had incoherent old target regarding content in state");
 	}
-	data_l->_data._countSinceProgress = _old;
+	data_l->_countSinceProgress = _old;
 }
 
 bool CommandIncrementNoProgressStep::isNoOp() const
