@@ -28,12 +28,11 @@ public:
 
 	virtual CommandData * newData() const override
 	{
-		return new AttackMoveData(0, _subMoveCommand.getFinalPoint(), _subMoveCommand.getGridStatus(), _waypoints);
+		return new AttackMoveData(0, _subMoveCommand.getFinalPoint(), _subMoveCommand.getGridStatus(), _subMoveCommand.getWaypoints());
 	}
 
 private:
 	Handle const _source;
-	std::list<Vector> const _waypoints;
 
 	/// @brief sub move command
 	EntityMoveCommand _subMoveCommand;

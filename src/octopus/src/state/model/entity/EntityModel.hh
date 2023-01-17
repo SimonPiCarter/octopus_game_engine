@@ -5,7 +5,13 @@ namespace octopus
 {
 	struct EntityModel
 	{
-		/// @brief if true is a building (in that case _ray is the width if the building)
+		EntityModel(bool isStatic_p, double ray_p, double stepSpeed_p, double hpMax_p)
+			: _isStatic(isStatic_p), _ray(ray_p), _stepSpeed(stepSpeed_p), _hpMax(hpMax_p)
+		{}
+
+		virtual ~EntityModel() {}
+
+		/// @brief if true is a static (in that case _ray is the width if the building)
 		/// buildings are squared
 		bool _isStatic { false };
 
@@ -24,6 +30,10 @@ namespace octopus
 
 		/// @brief time to wind up an attack
 		unsigned long _windup { 3 };
+
+		bool _isBuilding { false };
+		bool _isUnit { false };
+		bool _isResource { false };
 	};
 } // namespace octopus
 

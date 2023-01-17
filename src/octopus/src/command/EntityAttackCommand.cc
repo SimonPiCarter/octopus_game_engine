@@ -42,10 +42,12 @@ bool EntityAttackCommand::applyCommand(Step & step_p, State const &state_p, Comm
 		// If no target we release
 		if(!newTarget_l)
 		{
+			Logger::getDebug() << "EntityAttackCommand:: no new target found "<<std::endl;
 			return true;
 		}
 		else
 		{
+			Logger::getDebug() << "EntityAttackCommand:: new target found "<<newTarget_l->_handle<<std::endl;
 			// steppable to update target
 			// TODO
 			return false;

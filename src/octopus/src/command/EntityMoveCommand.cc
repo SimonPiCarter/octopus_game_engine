@@ -41,7 +41,7 @@ bool EntityMoveCommand::applyCommand(Step & step_p, State const &state_p, Comman
 	///
 	unsigned long gridStatus_l = state_p.getPathGridStatus();
 	if(gridStatus_l > data_l._gridStatus
-	&& data_l._stepSinceUpdate > 20)
+	&& data_l._stepSinceUpdate > 100)
 	{
 		// compute new path
 		std::list<Vector> path_l = computePath(state_p, _source, data_l._finalPoint);

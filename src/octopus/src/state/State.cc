@@ -1,7 +1,9 @@
 #include "State.hh"
 
 #include "entity/Entity.hh"
+#include "entity/Resource.hh"
 #include "utils/Box.hh"
+#include "state/model/building/BuildingModel.hh"
 
 namespace octopus
 {
@@ -79,6 +81,23 @@ std::vector<Commandable *> const &State::getCommandables() const
 	return _commandables;
 }
 
+std::vector<Player *> &State::getPlayers()
+{
+	return _players;
+}
+std::vector<Player *> const &State::getPlayers() const
+{
+	return _players;
+}
+Player *State::getPlayer(unsigned long player_p)
+{
+	return _players[player_p];
+}
+Player const *State::getPlayer(unsigned long player_p) const
+{
+	return _players[player_p];
+}
+
 std::vector<std::vector<DynamicBitset> > const & State::getGrid() const
 {
 	return _grid;
@@ -122,10 +141,93 @@ Entity const * lookUpNewTarget(State const &state_p, Handle const &sourceHandle_
 	// for now look for closest entity
 	for(Entity const * ent_l : state_p.getEntities())
 	{
-		if(ent_l == source_l)
+		if(ent_l == source_l
+		|| !ent_l->_alive
+		|| !ent_l->_model._isUnit)
 		{
 			continue;
 		}
+		double curSqDis_l = square_length(ent_l->_pos - source_l->_pos);
+		if(closest_l == nullptr
+		|| sqDis_l > curSqDis_l)
+		{
+			closest_l = ent_l;
+			sqDis_l = curSqDis_l;
+		}
+	}
+	// reset target if too far
+	if(sqDis_l > 25)
+	{
+		closest_l = nullptr;
+	}
+	return closest_l;
+}
+
+
+Entity const * lookUpDeposit(State const &state_p, Handle const &sourceHandle_p, Handle const &res_p)
+{
+	double sqDis_l = 0.;
+	Entity const * closest_l = nullptr;
+	Entity const * source_l = state_p.getEntity(sourceHandle_p);
+
+	Resource const * origRes_l = dynamic_cast<Resource const *>(state_p.getEntity(res_p));
+
+	// for now look for closest entity
+	for(Entity const * ent_l : state_p.getEntities())
+	{
+		if(ent_l == source_l
+		|| !ent_l->_alive
+		|| !ent_l->_model._isBuilding)
+		{
+			continue;
+		}
+		BuildingModel const * model_l = dynamic_cast<BuildingModel const *>(&ent_l->_model);
+		if(!model_l->_deposit.at(origRes_l->_type))
+		{
+			continue;
+		}
+
+		double curSqDis_l = square_length(ent_l->_pos - source_l->_pos);
+		if(closest_l == nullptr
+		|| sqDis_l > curSqDis_l)
+		{
+			closest_l = ent_l;
+			sqDis_l = curSqDis_l;
+		}
+	}
+	// reset target if too far
+	if(sqDis_l > 25)
+	{
+		closest_l = nullptr;
+	}
+	return closest_l;
+}
+
+Entity const * lookUpNewResource(State const &state_p, Handle const &sourceHandle_p, Handle const &res_p)
+{
+	double sqDis_l = 0.;
+	Entity const * closest_l = nullptr;
+	Entity const * source_l = state_p.getEntity(sourceHandle_p);
+
+	Resource const * origRes_l = dynamic_cast<Resource const *>(state_p.getEntity(res_p));
+
+	// for now look for closest entity
+	for(Entity const * ent_l : state_p.getEntities())
+	{
+		if(ent_l == source_l
+		|| !ent_l->_alive
+		|| !ent_l->_model._isResource)
+		{
+			continue;
+		}
+
+		Resource const * res_l = dynamic_cast<Resource const *>(ent_l);
+		// Skip if not correct resource
+		if(res_l->_type != origRes_l->_type)
+		{
+			continue;
+		}
+
 		double curSqDis_l = square_length(ent_l->_pos - source_l->_pos);
 		if(closest_l == nullptr
 		|| sqDis_l > curSqDis_l)

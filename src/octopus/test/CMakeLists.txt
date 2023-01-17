@@ -32,6 +32,7 @@ target_sources (unit_tests
 	src/entitySpawnStep.test.cc
 	src/grid.test.cc
 	src/moveCommand.test.cc
+	src/queueCommand.test.cc
 )
 
 target_link_libraries (unit_tests

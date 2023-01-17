@@ -20,7 +20,7 @@ class Command;
 class Commandable
 {
 public:
-	~Commandable();
+	virtual ~Commandable();
 
 	/// @brief add the command to the queue
 	/// @param cmd_p

@@ -10,6 +10,7 @@ namespace octopus
 {
 class Entity;
 class Commandable;
+class Player;
 
 /// @brief represent the whole world
 /// @warning a State must only be modified through step apply and revert!
@@ -35,6 +36,12 @@ public:
 	std::vector<Entity *> const &getEntities() const;
 	std::vector<Commandable *> const &getCommandables() const;
 
+	std::vector<Player *> &getPlayers();
+	std::vector<Player *> const &getPlayers() const;
+
+	Player *getPlayer(unsigned long player_p);
+	Player const *getPlayer(unsigned long player_p) const;
+
 	std::vector<std::vector<DynamicBitset> > const & getGrid() const;
 	std::vector<std::vector<DynamicBitset> > & getGrid();
 
@@ -58,6 +65,9 @@ private:
 	/// @brief vector of all commandables
 	std::vector<Commandable *> _commandables;
 
+	/// @brief vector of players
+	std::vector<Player *> _players;
+
 	/// @brief grid for position indexing
 	std::vector<std::vector<DynamicBitset> > _grid;
 	unsigned long const _gridSize;
@@ -70,6 +80,8 @@ private:
 };
 
 Entity const * lookUpNewTarget(State const &state_p, Handle const &sourceHandle_p);
+Entity const * lookUpDeposit(State const &state_p, Handle const &sourceHandle_p, Handle const &res_p);
+Entity const * lookUpNewResource(State const &state_p, Handle const &sourceHandle_p, Handle const &res_p);
 
 void updateGrid(State &state_p, Entity const *ent_p, bool set_p);
 

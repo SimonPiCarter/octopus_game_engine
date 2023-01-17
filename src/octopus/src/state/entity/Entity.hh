@@ -31,6 +31,8 @@ namespace octopus
 
 			/// @brief entity model
 			EntityModel const &_model;
+
+			unsigned long _player {0};
 	};
 }
 

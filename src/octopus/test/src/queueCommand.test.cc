@@ -1,47 +1,39 @@
 #include <gtest/gtest.h>
 
-#include <logger/Logger.hh>
-
-#include <command/EntityAttackMoveCommand.hh>
+#include <command/EntityMoveCommand.hh>
+#include <command/EntityAttackCommand.hh>
 #include <controller/Controller.hh>
 #include <step/entity/EntityMoveStep.hh>
 #include <step/entity/EntitySpawnStep.hh>
 #include <step/command/CommandQueueStep.hh>
 #include <state/State.hh>
+#include <logger/Logger.hh>
 
 ///
-/// This test suite aims at checking that EntityAttackMoveCommand works properly
-/// - Move an entity along the waypoints
-/// - Attack an entity along the way
+/// This test suite aims at checking that EntityAttackCommand works properly
+/// - Move an entity to the target
 /// - Attack the target then terminate
 ///
 
 using namespace octopus;
 
-///
-/// > 2 entities
-///  - 3, 3 attack moving to 9, 3
-///  - 11, 3
-/// range is 3 and rays are 1
-/// Entity must move from 3,3 to 6,3 to attack (3 steps) + 1 step to capture the target on 11,3
-/// Entity then requires 3 steps of windup before attacking and then 10 seconds of reload + 3 seconds of windup to attack again
-/// This means first damage should occur on step 7
-/// Second damage should occur on step 20
-///
-///
-TEST(attackMoveCommandTest, simple)
+TEST(queueCommandTest, simple)
 {
-	octopus::EntityModel unitModel_l { false, 1., 1., 10. };
-	unitModel_l._isUnit = true;
+	octopus::EntityModel unitModel_l { false, 1., 1., 3. };
 
 	EntitySpawnStep * spawn0_l = new EntitySpawnStep(Entity { { 3, 3. }, false, unitModel_l});
 	EntitySpawnStep * spawn1_l = new EntitySpawnStep(Entity { { 11, 3. }, false, unitModel_l});
 
 	// entity 0 attack entity 1
-	EntityAttackMoveCommand * command_l = new EntityAttackMoveCommand(0, 0, {9, 3}, 0, {{9, 3}});
+	EntityAttackCommand * command_l = new EntityAttackCommand(0, 0, 1);
 	CommandSpawnStep * commandSpawn_l = new CommandSpawnStep(command_l);
 
-	Controller controller_l({spawn0_l, spawn1_l, commandSpawn_l}, 1.);
+	// move back
+	EntityMoveCommand * move_l = new EntityMoveCommand(0, 0, {3, 3}, 0, {{3,3}});
+	move_l->setQueued(true);
+	CommandSpawnStep * moveSpawn_l = new CommandSpawnStep(move_l);
+
+	Controller controller_l({spawn0_l, spawn1_l, commandSpawn_l, moveSpawn_l}, 1.);
 
 	State const *a = controller_l.getBackState();
 	State const *b = controller_l.getBufferState();
@@ -74,17 +66,28 @@ TEST(attackMoveCommandTest, simple)
 
 	EXPECT_NEAR(6., state_l->getEntity(0)->_pos.x, 1e-5);
 	EXPECT_NEAR(3., state_l->getEntity(0)->_pos.y, 1e-5);
-	EXPECT_NEAR(10., state_l->getEntity(1)->_hp, 1e-5);
+	EXPECT_NEAR(3., state_l->getEntity(1)->_hp, 1e-5);
 
-	// update time to 3 seconds (6)
-	controller_l.update(3.);
+	// update time to 2 seconds (5)
+	controller_l.update(2.);
 	// updated until synced up
 	while(!controller_l.loop_body()) {}
 
 	state_l = controller_l.queryState();
 
 	// wind up should just be over but no damage still
-	EXPECT_NEAR(10., state_l->getEntity(1)->_hp, 1e-5);
+	EXPECT_NEAR(3., state_l->getEntity(1)->_hp, 1e-5);
+
+
+	// update time to 1 second (6)
+	controller_l.update(1.);
+	// updated until synced up
+	while(!controller_l.loop_body()) {}
+
+	state_l = controller_l.queryState();
+
+	// damage has been done
+	EXPECT_NEAR(0., state_l->getEntity(1)->_hp, 1e-5);
 
 
 	// update time to 1 second (7)
@@ -94,29 +97,8 @@ TEST(attackMoveCommandTest, simple)
 
 	state_l = controller_l.queryState();
 
-	// damage has been done
-	EXPECT_NEAR(7., state_l->getEntity(1)->_hp, 1e-5);
+	// we should start to move back
+	EXPECT_NEAR(5., state_l->getEntity(0)->_pos.x, 1e-5);
+	EXPECT_NEAR(3., state_l->getEntity(0)->_pos.y, 1e-5);
 
-	// Next damage should be -> reload time + windup
-	// 10 + 3 (13)
-
-	// update time to 12 seconds (19)
-	controller_l.update(12.);
-	// updated until synced up
-	while(!controller_l.loop_body()) {}
-
-	state_l = controller_l.queryState();
-
-	// damage has been done
-	EXPECT_NEAR(7., state_l->getEntity(1)->_hp, 1e-5);
-
-	// update time to 1 second (20)
-	controller_l.update(1.);
-	// updated until synced up
-	while(!controller_l.loop_body()) {}
-
-	state_l = controller_l.queryState();
-
-	// damage has been done twice
-	EXPECT_NEAR(4., state_l->getEntity(1)->_hp, 1e-5);
 }

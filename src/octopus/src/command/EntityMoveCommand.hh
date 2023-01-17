@@ -29,6 +29,7 @@ public:
 
 	Vector const &getFinalPoint() const { return _finalPoint; }
 	unsigned long const &getGridStatus() const { return _gridStatus; }
+	std::list<Vector> const &getWaypoints() const { return _waypoints; }
 
 	virtual CommandData * newData() const override { return new MoveData(_finalPoint, _gridStatus, _waypoints); }
 private:

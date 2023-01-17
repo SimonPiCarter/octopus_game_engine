@@ -22,6 +22,7 @@ add_library(octopus
 	${CMAKE_CURRENT_SOURCE_DIR}/src/controller/Metrics.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/state/State.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/state/entity/Entity.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/src/state/entity/Unit.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/step/ConflictPositionSolver.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/step/Step.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/step/TickingStep.cc
@@ -34,10 +35,12 @@ add_library(octopus
 	${CMAKE_CURRENT_SOURCE_DIR}/src/step/command/CommandSubAttackStep.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/step/command/CommandUpdateLastPosStep
 	${CMAKE_CURRENT_SOURCE_DIR}/src/step/command/CommandWindUpDiffStep.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/src/step/command/harvest/CommandHarvestStep.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/step/entity/EntityAttackStep.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/step/entity/EntityHitPointChangeStep.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/step/entity/EntityMoveStep.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/step/entity/EntitySpawnStep.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/src/step/unit/UnitHarvestStep.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/graph/Graph.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/graph/Grid.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/graph/GridNode.cc
