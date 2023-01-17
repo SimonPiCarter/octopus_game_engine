@@ -2,7 +2,6 @@
 
 #include "state/State.hh"
 #include "logger/Logger.hh"
-#include "utils/Box.hh"
 
 namespace octopus
 {

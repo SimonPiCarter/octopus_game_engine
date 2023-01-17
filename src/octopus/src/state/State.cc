@@ -131,7 +131,7 @@ void updateGrid(State &state_p, Entity const *ent_p, bool set_p)
 {
 	unsigned long size_l = state_p.getGridSize();
 	// fill grid
-	Box box_l { long(ent_p->_pos.x-ent_p->_ray),
+	Box<long> box_l { long(ent_p->_pos.x-ent_p->_ray),
 				long(ent_p->_pos.x+ent_p->_ray+0.999),
 				long(ent_p->_pos.y-ent_p->_ray),
 				long(ent_p->_pos.y+ent_p->_ray+0.999) };

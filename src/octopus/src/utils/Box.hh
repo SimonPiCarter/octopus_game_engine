@@ -4,12 +4,13 @@
 
 namespace octopus
 {
+template<typename T>
 struct Box
 {
-	long _lowerX {0};
-	long _upperX {0};
-	long _lowerY {0};
-	long _upperY {0};
+	T _lowerX {0};
+	T _upperX {0};
+	T _lowerY {0};
+	T _upperY {0};
 };
 } // octopus
 

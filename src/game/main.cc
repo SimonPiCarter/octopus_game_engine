@@ -17,6 +17,10 @@ int main()
 {
 	octopus::Entity target_l { { -10., 15. }, 5., true};
 	target_l._stats._hp = 250;
+
+	octopus::Entity building_l { {-5, 5}, 2, true };
+	building_l._isBuilding = true;
+
 	std::list<octopus::Steppable *> spawners_l =
 	{
 		new octopus::EntitySpawnStep(octopus::Entity { { 3.6, 3. }, 1., false}),
@@ -28,7 +32,8 @@ int main()
 		new octopus::EntitySpawnStep(octopus::Entity { { 3.2, 2.4 }, 1., false}),
 		new octopus::EntitySpawnStep(octopus::Entity { { 5.1, 2.5 }, 1., false}),
 		new octopus::EntitySpawnStep(octopus::Entity { { 6.5, 2.6 }, 1., false}),
-		new octopus::EntitySpawnStep(target_l)
+		new octopus::EntitySpawnStep(target_l),
+		new octopus::EntitySpawnStep(building_l)
 	};
 
 	/// add a ton of entities

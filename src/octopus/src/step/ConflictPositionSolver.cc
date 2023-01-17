@@ -50,6 +50,7 @@ struct HandleHash
 
 bool updateStepFromConflictPosition(Step &step_p, State const &state_p)
 {
+	Logger::getDebug() << " conflict solver :: start"<<std::endl;
 	/// map to access move step from entity
 	std::unordered_map<Entity const *, EntityMoveStep *> mapMoveStep_l;
 	std::vector<Vector> newPos_l(state_p.getEntities().size());
@@ -78,27 +79,44 @@ bool updateStepFromConflictPosition(Step &step_p, State const &state_p)
 
 	/// map to access correction from step
 	std::unordered_map<EntityMoveStep *, Vector> mapCorrection_l;
-	// check every entity with one another
-	for(EntityMoveStep *stepA_l: step_p.getEntityMoveStep())
-	{
-		Entity const * entA_l = state_p.getEntity(stepA_l->_handle);
-		Box box_l {long(newPos_l[entA_l->_handle].x-entA_l->_ray),
-				  long(newPos_l[entA_l->_handle].x+entA_l->_ray+0.999),
-				  long(newPos_l[entA_l->_handle].y-entA_l->_ray),
-				  long(newPos_l[entA_l->_handle].y+entA_l->_ray+0.999)};
+	/// this correction should not been normalized in the end (used with buildings)
+	std::unordered_map<EntityMoveStep *, Vector> mapAbsoluteCorrection_l;
 
-		DynamicBitset bitset_l(state_p.getGridBitSize());
+	//////////////////////////////
+	// Set up bitset of collision
+	//////////////////////////////
+
+	std::unordered_map<EntityMoveStep *, DynamicBitset *> mapBitset_l;
+	for(EntityMoveStep *step_l: step_p.getEntityMoveStep())
+	{
+		Entity const * ent_l = state_p.getEntity(step_l->_handle);
+		Box<long> box_l {long(newPos_l[ent_l->_handle].x-ent_l->_ray),
+				  long(newPos_l[ent_l->_handle].x+ent_l->_ray+0.999),
+				  long(newPos_l[ent_l->_handle].y-ent_l->_ray),
+				  long(newPos_l[ent_l->_handle].y+ent_l->_ray+0.999)};
+
+		mapBitset_l[step_l] = new DynamicBitset(state_p.getGridBitSize());
 		unsigned long gridSize_l = state_p.getGridSize();
 		for(size_t x = box_l._lowerX+gridSize_l/2 ; x < box_l._upperX+gridSize_l/2; ++x)
 		{
 			for(size_t y = box_l._lowerY+gridSize_l/2 ; y < box_l._upperY+gridSize_l/2; ++y)
 			{
-				bitset_l |= grid_l[x][y];
+				(*mapBitset_l[step_l]) |= grid_l[x][y];
 			}
 		}
+	}
+
+	//////////////////////////////
+	// Check on non Buildings
+	//////////////////////////////
+
+	// check every entity with one another
+	for(EntityMoveStep *stepA_l: step_p.getEntityMoveStep())
+	{
+		Entity const * entA_l = state_p.getEntity(stepA_l->_handle);
 
 		// check every entity with one another
-		for_each_bit(bitset_l, [&] (int handle_p)
+		for_each_bit(*mapBitset_l[stepA_l], [&] (int handle_p)
 		{
 			Entity const * entB_l = state_p.getEntity(handle_p);
 			EntityMoveStep *stepB_l = mapMoveStep_l[entB_l];
@@ -107,8 +125,69 @@ bool updateStepFromConflictPosition(Step &step_p, State const &state_p)
 			{
 				return;
 			}
+			if(entA_l->_isBuilding || entB_l->_isBuilding)
+			{
+				return;
+			}
+			// if one of the two is a building we check on rectangle instead of circles
+			if(entA_l->_isBuilding || entB_l->_isBuilding)
+			{
+				Box<double> boxA_l { newPos_l[entA_l->_handle].x - entA_l->_ray, newPos_l[entA_l->_handle].x + entA_l->_ray,
+									newPos_l[entA_l->_handle].y - entA_l->_ray, newPos_l[entA_l->_handle].y + entA_l->_ray };
+				Box<double> boxB_l { newPos_l[entB_l->_handle].x - entB_l->_ray, newPos_l[entB_l->_handle].x + entB_l->_ray,
+									newPos_l[entB_l->_handle].y - entB_l->_ray, newPos_l[entB_l->_handle].y + entB_l->_ray };
+
+				Box<double> intersect_l = { std::max(boxA_l._lowerX, boxB_l._lowerX),
+									std::min(boxA_l._upperX, boxB_l._upperX),
+									std::max(boxA_l._lowerY, boxB_l._lowerY),
+									std::min(boxA_l._upperY, boxB_l._upperY) };
+				// Check intersections
+				if(intersect_l._lowerX < intersect_l._upperX
+				&& intersect_l._lowerY < intersect_l._upperY)
+				{
+					// direction in regards of A
+					double dXRight_l = boxA_l._upperX - boxB_l._lowerX;
+					double dXLeft_l = boxA_l._lowerX - boxB_l._upperX;
+					double dYUp_l = boxA_l._upperY - boxB_l._lowerY;
+					double dYDown_l = boxA_l._lowerY - boxB_l._upperY;
+
+					double dXRightAbs_l = std::abs(dXRight_l);
+					double dXLeftAbs_l = std::abs(dXLeft_l);
+					double dYUpAbs_l = std::abs(dYUp_l);
+					double dYDownAbs_l = std::abs(dYDown_l);
+					double min_l = std::min(dXRightAbs_l, std::min(dXLeftAbs_l, std::min(dYUpAbs_l, dYDownAbs_l)));
+					// B -> A
+					Vector diff_l;
+					if(min_l <= dXRightAbs_l)
+					{
+						diff_l = {dXRight_l, 0.};
+					} else if(min_l <= dXLeftAbs_l) {
+						diff_l = {dXLeft_l, 0.};
+					} else if(min_l <= dYUpAbs_l) {
+						diff_l = {0., dYUp_l};
+					} else if(min_l <= dYDownAbs_l) {
+						diff_l = {0., dYDown_l};
+					}
+
+					double coefA_l = 0.5;
+					if(entA_l->_frozen && entB_l->_frozen)
+					{
+						coefA_l = 0.;
+					}
+					if(entA_l->_frozen)
+					{
+						coefA_l = 0.;
+					}
+					else if(entB_l->_frozen)
+					{
+						coefA_l = 1.;
+					}
+					// updated steps, both doing half distance
+					mapAbsoluteCorrection_l[stepA_l] += diff_l * coefA_l;
+				}
+			}
 			// check collision
-			if(collision(newPos_l[entA_l->_handle], newPos_l[entB_l->_handle], entA_l->_ray, entB_l->_ray))
+			else if(collision(newPos_l[entA_l->_handle], newPos_l[entB_l->_handle], entA_l->_ray, entB_l->_ray))
 			{
 				// repulsion against axis between both (from B to A)
 				Vector axis_l = (entA_l->_pos + stepA_l->_move) - (entB_l->_pos + stepB_l->_move);
@@ -131,28 +210,28 @@ bool updateStepFromConflictPosition(Step &step_p, State const &state_p)
 				}
 
 				double coefA_l = 0.5;
-				double coefB_l = 0.5;
 				if(entA_l->_frozen && entB_l->_frozen)
 				{
 					coefA_l = 0.;
-					coefB_l = 0.;
 				}
 				if(entA_l->_frozen)
 				{
 					coefA_l = 0.;
-					coefB_l = 1.;
 				}
 				else if(entB_l->_frozen)
 				{
 					coefA_l = 1.;
-					coefB_l = 0.;
 				}
 				// updated steps, both doing half distance
 				mapCorrection_l[stepA_l] += normalizedAxis_l * distance_l * coefA_l;
-				mapCorrection_l[stepB_l] -= normalizedAxis_l * distance_l * coefB_l;
 			}
 		});
 	}
+
+	//////////////////////////////
+	// Update from non building
+	//////////////////////////////
+
 	bool updated_l = false;
 	for(EntityMoveStep *ent_l: step_p.getEntityMoveStep())
 	{
@@ -174,6 +253,119 @@ bool updateStepFromConflictPosition(Step &step_p, State const &state_p)
 		{
 			ent_l->_move = ent_l->_move * std::sqrt(square_l/newSquare_l);
 		}
+		ent_l->_move = ent_l->_move + mapAbsoluteCorrection_l[ent_l];
+
+		Entity const *entA_l = state_p.getEntity(ent_l->_handle);
+		newPos_l[entA_l->_handle] = entA_l->_pos + ent_l->_move;
+	}
+
+	//////////////////////////////
+	// Check on Buildings
+	//////////////////////////////
+
+	// check every entity with one another on buildings
+	for(EntityMoveStep *stepA_l: step_p.getEntityMoveStep())
+	{
+		Entity const * entA_l = state_p.getEntity(stepA_l->_handle);
+
+		// check every entity with one another
+		for_each_bit(*mapBitset_l[stepA_l], [&] (int handle_p)
+		{
+			Entity const * entB_l = state_p.getEntity(handle_p);
+			EntityMoveStep *stepB_l = mapMoveStep_l[entB_l];
+			// continue if same
+			if(stepB_l == stepA_l)
+			{
+				return;
+			}
+			if(!entA_l->_isBuilding && !entB_l->_isBuilding)
+			{
+				return;
+			}
+			// if one of the two is a building we check on rectangle instead of circles
+			Box<double> boxA_l { newPos_l[entA_l->_handle].x - entA_l->_ray, newPos_l[entA_l->_handle].x + entA_l->_ray,
+								newPos_l[entA_l->_handle].y - entA_l->_ray, newPos_l[entA_l->_handle].y + entA_l->_ray };
+			Box<double> boxB_l { newPos_l[entB_l->_handle].x - entB_l->_ray, newPos_l[entB_l->_handle].x + entB_l->_ray,
+								newPos_l[entB_l->_handle].y - entB_l->_ray, newPos_l[entB_l->_handle].y + entB_l->_ray };
+
+			Box<double> intersect_l = { std::max(boxA_l._lowerX, boxB_l._lowerX),
+								std::min(boxA_l._upperX, boxB_l._upperX),
+								std::max(boxA_l._lowerY, boxB_l._lowerY),
+								std::min(boxA_l._upperY, boxB_l._upperY) };
+			// Check intersections
+			if(intersect_l._lowerX < intersect_l._upperX
+			&& intersect_l._lowerY < intersect_l._upperY)
+			{
+				// direction in regards of A
+				double dXRight_l = boxA_l._upperX - boxB_l._lowerX;
+				double dXLeft_l = boxA_l._lowerX - boxB_l._upperX;
+				double dYUp_l = boxA_l._upperY - boxB_l._lowerY;
+				double dYDown_l = boxA_l._lowerY - boxB_l._upperY;
+
+				Logger::getDebug() << "dXRight_l = "<< dXRight_l<<std::endl;
+				Logger::getDebug() << "dXLeft_l = "<< dXLeft_l<<std::endl;
+				Logger::getDebug() << "dYUp_l = "<< dYUp_l<<std::endl;
+				Logger::getDebug() << "dYDown_l = "<< dYDown_l<<std::endl;
+				double dXRightAbs_l = std::abs(dXRight_l);
+				double dXLeftAbs_l = std::abs(dXLeft_l);
+				double dYUpAbs_l = std::abs(dYUp_l);
+				double dYDownAbs_l = std::abs(dYDown_l);
+				double min_l = std::min(dXRightAbs_l, std::min(dXLeftAbs_l, std::min(dYUpAbs_l, dYDownAbs_l)));
+				// B -> A
+				Vector diff_l { 0, 0 };
+				if(min_l + 1e-5 >= dXRightAbs_l)
+				{
+					diff_l = {dXRight_l, 0.};
+				} else if(min_l + 1e-5 >= dXLeftAbs_l) {
+					diff_l = {dXLeft_l, 0.};
+				} else if(min_l + 1e-5 >= dYUpAbs_l) {
+					diff_l = {0., dYUp_l};
+				} else if(min_l + 1e-5 >= dYDownAbs_l) {
+					diff_l = {0., dYDown_l};
+				}
+				Logger::getDebug() << "diff_l = "<< diff_l<<std::endl;
+
+				double coefA_l = 0.5;
+				if(entA_l->_frozen && entB_l->_frozen)
+				{
+					coefA_l = 0.;
+				}
+				if(entA_l->_frozen)
+				{
+					coefA_l = 0.;
+				}
+				else if(entB_l->_frozen)
+				{
+					coefA_l = 1.;
+				}
+				// updated steps, both doing half distance
+				mapAbsoluteCorrection_l[stepA_l] -= diff_l * coefA_l;
+			}
+		});
+	}
+
+	//////////////////////////////
+	// Update from building
+	//////////////////////////////
+
+	for(EntityMoveStep *ent_l: step_p.getEntityMoveStep())
+	{
+		// if update
+		if(mapAbsoluteCorrection_l[ent_l] != Vector {0,0})
+		{
+			updated_l = true;
+		}
+		else
+		{
+			continue;
+		}
+		Logger::getDebug() << " conflict solver :: "<<ent_l->_handle<< " absolute correction : "<<mapAbsoluteCorrection_l[ent_l]<<std::endl;
+		ent_l->_move = ent_l->_move + mapAbsoluteCorrection_l[ent_l];
+	}
+
+	for(auto && pair_l : mapBitset_l)
+	{
+		delete pair_l.second;
 	}
 
 	return updated_l;
