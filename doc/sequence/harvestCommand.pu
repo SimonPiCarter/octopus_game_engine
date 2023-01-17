@@ -1,0 +1,43 @@
+@startuml harvestCommand
+
+start
+
+if (resource exhausted?) then (yes)
+	if (Look up for new resource?) then (yes)
+		#palegreen:add Steppable update resource;
+		#pink:return false;
+		stop
+	else (no)
+		#pink:return true;
+		stop
+	endif
+else (no)
+
+	if (Are we full?) then (yes)
+		if (On the way to deposit and valid?) then (yes)
+			if (In range of deposit?) then (yes)
+				#palegreen:add Steppable drop;
+			else (no)
+				:run move command;
+			endif
+		else (no)
+			if (Look up for deposit?) then (yes)
+				#palegreen:add Steppable update deposit;
+			else (no)
+				#pink:return true;
+				stop
+			endif
+		endif
+	else (no)
+		if (In range of resource?) then (yes)
+			#palegreen:add Steppable harvest;
+		else (no)
+			:run move command;
+		endif
+
+endif
+
+#pink:return false;
+stop
+
+@enduml
