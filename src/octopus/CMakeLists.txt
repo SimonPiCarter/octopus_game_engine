@@ -27,6 +27,7 @@ add_library(octopus
 	${CMAKE_CURRENT_SOURCE_DIR}/src/step/TickingStep.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/step/command/CommandDataWaypointStep.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/step/command/CommandIncrementNoProgressStep
+	${CMAKE_CURRENT_SOURCE_DIR}/src/step/command/CommandMoveUpdateStep.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/step/command/CommandNewTargetStep.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/step/command/CommandQueueStep.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/step/command/CommandSetPositionFromStep.cc

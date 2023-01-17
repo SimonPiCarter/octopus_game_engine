@@ -13,10 +13,18 @@ namespace octopus
 class MoveData : public CommandData
 {
 public:
-	MoveData(std::list<Vector> const &waypoints_p) : _waypoints(waypoints_p) {}
+	MoveData(Vector const &finalPoint_p, unsigned long gridStatus_p, std::list<Vector> const &waypoints_p) :
+		_finalPoint(finalPoint_p), _gridStatus(gridStatus_p) ,_waypoints(waypoints_p) {}
+
 	///
 	/// Move
 	///
+	/// @brief target of the move
+	Vector _finalPoint;
+	/// @brief number of step since update (to avoid updating too much)
+	unsigned long _stepSinceUpdate {0};
+	/// @brief grid status when path was computed
+	unsigned long _gridStatus {0};
 	// used in move
 	std::list<Vector> _waypoints;
 	// last position used to check if we made progress

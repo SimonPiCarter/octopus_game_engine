@@ -14,7 +14,8 @@ class EntityAttackCommand;
 /// attack, move, attack move and patrol commands
 struct AttackMoveData : public MoveData
 {
-	AttackMoveData(Handle const &target_p, std::list<Vector> const &waypoints_p) : MoveData(waypoints_p), _target(target_p) {}
+	AttackMoveData(Handle const &target_p, Vector const &finalPoint_p, unsigned long gridStatus_p, std::list<Vector> const &waypoints_p)
+		: MoveData(finalPoint_p, gridStatus_p, waypoints_p), _target(target_p) {}
 	///
 	/// Attack
 	///

@@ -8,14 +8,18 @@
 #include "step/command/CommandDataWaypointStep.hh"
 #include "step/command/CommandIncrementNoProgressStep.hh"
 #include "step/command/CommandUpdateLastPosStep.hh"
+#include "step/command/CommandMoveUpdateStep.hh"
 #include "step/entity/EntityMoveStep.hh"
 
 namespace octopus
 {
 
-EntityMoveCommand::EntityMoveCommand(Handle const &commandHandle_p, Handle const &source_p, std::list<Vector> const &waypoints_p)
+EntityMoveCommand::EntityMoveCommand(Handle const &commandHandle_p, Handle const &source_p,
+		Vector const &finalPoint_p, unsigned long gridStatus_p, std::list<Vector> const &waypoints_p)
 	: Command(commandHandle_p)
 	, _source(source_p)
+	, _finalPoint(finalPoint_p)
+	, _gridStatus(gridStatus_p)
 	, _waypoints(waypoints_p)
 {}
 
@@ -31,6 +35,20 @@ bool EntityMoveCommand::applyCommand(Step & step_p, State const &state_p, Comman
 	}
 
 	Entity const * ent_l = state_p.getEntity(_source);
+
+	///
+	/// Check if we need to update
+	///
+	unsigned long gridStatus_l = state_p.getPathGridStatus();
+	if(gridStatus_l > data_l._gridStatus
+	&& data_l._stepSinceUpdate > 20)
+	{
+		// compute new path
+		std::list<Vector> path_l = computePath(state_p, _source, data_l._finalPoint);
+		step_p.addSteppable(new CommandDataWaypointSetStep(_handleCommand, waypoints_l, path_l));
+		step_p.addSteppable(new CommandMoveUpdateStep(_handleCommand, data_l._stepSinceUpdate, data_l._gridStatus, gridStatus_l));
+		return false;
+	}
 
 	///
 	/// Update waypoints based on current position

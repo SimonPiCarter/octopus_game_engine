@@ -28,7 +28,7 @@ TEST(moveCommandTest, simple)
 	octopus::EntityModel unitModel_l { false, 0.9, 1., 10. };
 	state_l.addEntity(new Entity { { 3, 3. }, false, unitModel_l});
 
-	EntityMoveCommand command_l(0, 0, { {4, 3}, {4, 4}});
+	EntityMoveCommand command_l(0, 0, {4, 4}, 0, { {4, 3}, {4, 4}});
 
 	state_l.getEntity(0)->enqueue(&command_l, false);
 	MoveData *data_l = dynamic_cast<MoveData *>(state_l.getEntity(0)->getFrontQueue()._data);

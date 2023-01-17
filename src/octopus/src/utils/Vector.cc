@@ -79,14 +79,14 @@ octopus::Vector & operator*=(octopus::Vector & a, double const & b)
 	return a;
 }
 
-bool operator==(octopus::Vector const & a, octopus::Vector const & b)
+bool octopus::Vector::operator==(octopus::Vector const & b) const
 {
-	return square_length(a - b) < 1e-3;
+	return square_length((*this) - b) < 1e-3;
 }
 
-bool operator!=(octopus::Vector const & a, octopus::Vector const & b)
+bool octopus::Vector::operator!=(octopus::Vector const & b) const
 {
-	return !(a == b);
+	return !((*this) == b);
 }
 
 std::ostream &operator<<(std::ostream &os_p, octopus::Vector const &vec_p)

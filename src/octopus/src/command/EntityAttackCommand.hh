@@ -23,7 +23,7 @@ public:
 	/// @brief
 	virtual bool applyCommand(Step & step_p, State const &state_p, CommandData const *data_p) const override;
 
-	virtual CommandData * newData() const override { return new AttackMoveData(_target, {}); }
+	virtual CommandData * newData() const override { return new AttackMoveData(_target, Vector{}, 0, {}); }
 
 private:
 	Handle const _source;

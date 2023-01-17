@@ -1,6 +1,7 @@
 #ifndef __CommandDataWaypointStep__
 #define __CommandDataWaypointStep__
 
+#include <list>
 #include "state/Handle.hh"
 #include "step/Steppable.hh"
 #include "utils/Vector.hh"
@@ -36,6 +37,23 @@ public:
 	Handle _handle {0};
 	Vector _waypoint {0};
 };
+
+class CommandDataWaypointSetStep : public Steppable
+{
+public:
+	CommandDataWaypointSetStep(Handle const &handle_p, std::list<Vector> const &old_p, std::list<Vector> const &new_p)
+		: _handle(handle_p) , _old(old_p), _new(new_p) {}
+
+	virtual void apply(State &state_p) const override;
+	virtual void revert(State &state_p) const override;
+
+	virtual bool isNoOp() const override;
+
+	Handle _handle {0};
+	std::list<Vector> const _old;
+	std::list<Vector> const _new;
+};
+
 }
 
 #endif

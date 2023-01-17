@@ -173,4 +173,17 @@ void updateGrid(State &state_p, Entity const *ent_p, bool set_p)
 	}
 }
 
+std::list<Vector> computePath(State const & state_p, Handle const &handle_p, Vector const &target_p)
+{
+	// Find grid node source
+	GridNode const * source_l = state_p.getPathGrid().getNode(state_p.getEntity(handle_p)->_pos);
+	// Find grid node target
+	GridNode const * target_l = state_p.getPathGrid().getNode(target_p);
+
+	// compute path
+	std::list<GridNode const *> path_l = state_p.getPathGrid().getGraph().getPath(source_l, target_l);
+	trimPath(path_l);
+	return toWaypoints(path_l);
+}
+
 }

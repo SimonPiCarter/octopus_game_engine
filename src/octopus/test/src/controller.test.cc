@@ -20,7 +20,7 @@ TEST(controlerTest, simple)
 	octopus::EntityModel unitModel_l { false, 1., 1., 10. };
 
 	EntitySpawnStep * spawn_l = new EntitySpawnStep(Entity { { 3, 3. }, false, unitModel_l});
-	EntityMoveCommand * command_l = new EntityMoveCommand(0, 0, { {4, 3}, {4, 4}});
+	EntityMoveCommand * command_l = new EntityMoveCommand(0, 0, {4, 4}, 0, { {4, 3}, {4, 4}});
 	CommandSpawnStep * commandSpawn_l = new CommandSpawnStep(command_l);
 
 	Controller controller_l({spawn_l, commandSpawn_l}, 1.);

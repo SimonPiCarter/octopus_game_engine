@@ -73,6 +73,8 @@ Entity const * lookUpNewTarget(State const &state_p, Handle const &sourceHandle_
 
 void updateGrid(State &state_p, Entity const *ent_p, bool set_p);
 
+std::list<Vector> computePath(State const & state_p, Handle const &handle_p, Vector const &target_p);
+
 } // namespace octopus
 
 #endif

@@ -42,7 +42,7 @@ int main()
 	for(unsigned long i = 0 ; i < 1000 ; ++ i)
 	{
 		spawners_l.push_back(new octopus::EntitySpawnStep(octopus::Entity { { 6.5+2*i%100, 2.6+2*(i/100) }, false, unitModel_l}));
-		octopus::EntityMoveCommand * cmd_l = new octopus::EntityMoveCommand(11+i, 11+i, {{50, 50}});
+		octopus::EntityMoveCommand * cmd_l = new octopus::EntityMoveCommand(11+i, 11+i, {50, 50}, 0, {{50, 50}});
 		spawners_l.push_back(new octopus::CommandSpawnStep(cmd_l));
 	}
 
@@ -51,14 +51,14 @@ int main()
 		spawners_l.push_back(new octopus::CommandSpawnStep(new octopus::EntityAttackCommand(i, i, 9)));
 	}
 	{
-		spawners_l.push_back(new octopus::CommandSpawnStep(new octopus::EntityMoveCommand(0, 0, {{2, 2}, {2, 5}, {10, 5}})));
+		spawners_l.push_back(new octopus::CommandSpawnStep(new octopus::EntityMoveCommand(0, 0, {10, 5}, 0, {{2, 2}, {2, 5}, {10, 5}})));
 		octopus::EntityAttackCommand *cmd_l = new octopus::EntityAttackCommand(0, 0, 9);
 		cmd_l->setQueued(true);
 		spawners_l.push_back(new octopus::CommandSpawnStep(cmd_l));
 	}
 	for(unsigned long i = 0 ; i < 9 ; ++ i)
 	{
-		octopus::EntityMoveCommand * cmd_l = new octopus::EntityMoveCommand(i, i, {{0, 0}});
+		octopus::EntityMoveCommand * cmd_l = new octopus::EntityMoveCommand(i, i,  {0, 0}, 0, {{0, 0}});
 		cmd_l->setQueued(true);
 		spawners_l.push_back(new octopus::CommandSpawnStep(cmd_l));
 	}

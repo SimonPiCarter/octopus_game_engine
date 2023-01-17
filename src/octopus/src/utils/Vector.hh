@@ -9,6 +9,9 @@ namespace octopus
 	{
 		double x {0.};
 		double y {0.};
+
+		bool operator==(octopus::Vector const & other_p) const;
+		bool operator!=(octopus::Vector const & other_p) const;
 	};
 
 	double length(Vector const &vec_p);
@@ -29,8 +32,6 @@ octopus::Vector & operator/=(octopus::Vector & a, double const & b);
 octopus::Vector operator*(octopus::Vector const & a, double const & b);
 octopus::Vector & operator*=(octopus::Vector & a, double const & b);
 
-bool operator==(octopus::Vector const & a, octopus::Vector const & b);
-bool operator!=(octopus::Vector const & a, octopus::Vector const & b);
 
 std::ostream &operator<<(std::ostream &os_p, octopus::Vector const &vec_p);
 

@@ -20,12 +20,16 @@ class Entity;
 class EntityAttackMoveCommand : public Command
 {
 public:
-	EntityAttackMoveCommand(Handle const &commandHandle_p, Handle const &source_p, std::list<Vector> const &waypoints_p);
+	EntityAttackMoveCommand(Handle const &commandHandle_p, Handle const &source_p,
+		Vector const &finalPoint_p, unsigned long gridStatus_p, std::list<Vector> const &waypoints_p);
 
 	/// @brief
 	virtual bool applyCommand(Step & step_p, State const &state_p, CommandData const *data_p) const override;
 
-	virtual CommandData * newData() const override { return new AttackMoveData(0, _waypoints); }
+	virtual CommandData * newData() const override
+	{
+		return new AttackMoveData(0, _subMoveCommand.getFinalPoint(), _subMoveCommand.getGridStatus(), _waypoints);
+	}
 
 private:
 	Handle const _source;

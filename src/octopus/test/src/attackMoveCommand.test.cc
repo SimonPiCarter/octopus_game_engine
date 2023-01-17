@@ -37,7 +37,7 @@ TEST(attackMoveCommandTest, simple)
 	EntitySpawnStep * spawn1_l = new EntitySpawnStep(Entity { { 11, 3. }, false, unitModel_l});
 
 	// entity 0 attack entity 1
-	EntityAttackMoveCommand * command_l = new EntityAttackMoveCommand(0, 0, {{9, 3}});
+	EntityAttackMoveCommand * command_l = new EntityAttackMoveCommand(0, 0, {9, 3}, 0, {{9, 3}});
 	CommandSpawnStep * commandSpawn_l = new CommandSpawnStep(command_l);
 
 	Controller controller_l({spawn0_l, spawn1_l, commandSpawn_l}, 1.);
