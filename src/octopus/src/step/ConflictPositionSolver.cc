@@ -254,13 +254,20 @@ bool updateStepFromConflictPosition(Step &step_p, State const &state_p)
 		Logger::getDebug() << " conflict solver :: "<<ent_l->_handle<<" correction : "<<mapCorrection_l[ent_l]<<std::endl;
 		// ensure that move does not become too cahotic
 		double square_l = state_p.getEntity(ent_l->_handle)->_model._stepSpeed*state_p.getEntity(ent_l->_handle)->_model._stepSpeed;
+		Vector origMove_l = ent_l->_move;
 		ent_l->_move = ent_l->_move + mapCorrection_l[ent_l] * 0.9;
 		double newSquare_l = square_length(ent_l->_move);
 		if(newSquare_l > square_l)
 		{
 			ent_l->_move = ent_l->_move * std::sqrt(square_l/newSquare_l);
 		}
-		ent_l->_move = ent_l->_move + mapAbsoluteCorrection_l[ent_l];
+		// in case no move
+		if(newSquare_l < 1e-3)
+		{
+			// try a small perpendicular move to avoid two entities to block each other
+			Vector perpendicular_l {origMove_l.y, -origMove_l.x};
+			ent_l->_move += perpendicular_l * 0.1;
+		}
 
 		Entity const *entA_l = state_p.getEntity(ent_l->_handle);
 		newPos_l[entA_l->_handle] = entA_l->_pos + ent_l->_move;
