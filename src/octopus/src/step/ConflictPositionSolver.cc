@@ -4,6 +4,7 @@
 #include <unordered_map>
 #include <iostream>
 #include <cmath>
+#include <random>
 #include <unordered_set>
 
 #include "logger/Logger.hh"
@@ -14,6 +15,7 @@
 #include "utils/Vector.hh"
 #include "utils/DynamicBitset.hh"
 #include "utils/Box.hh"
+#include "utils/RandomGen.hh"
 
 namespace octopus
 {
@@ -50,6 +52,8 @@ struct HandleHash
 
 bool updateStepFromConflictPosition(Step &step_p, State const &state_p)
 {
+	RandomGen gen_l(42);
+
 	Logger::getDebug() << " conflict solver :: start"<<std::endl;
 	/// map to access move step from entity
 	std::unordered_map<Entity const *, EntityMoveStep *> mapMoveStep_l;
@@ -201,11 +205,15 @@ bool updateStepFromConflictPosition(Step &step_p, State const &state_p)
 					throw std::logic_error("octopus :: Error collision but no distance to fix");
 				}
 
-				Vector normalizedAxis_l { 0., 1.};
+				Vector normalizedAxis_l { 1., 0.};
 				if(length_l > 1e-3)
 				{
 					// Normalized axis from B to A
 					normalizedAxis_l = axis_l / length_l;
+				}
+				else
+				{
+					normalizedAxis_l = Vector { double(gen_l.nextFromRange(-10, 10)), double(gen_l.nextFromRange(-10, 10))} / length(normalizedAxis_l);
 				}
 
 				double coefA_l = 0.5;
