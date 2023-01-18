@@ -63,16 +63,29 @@ void for_each_bit(DynamicBitset const &bitset_p, std::function<void(int)> fn_p)
 {
 	for (size_t k = 0; k < bitset_p._vecBitset.size(); ++k) {
 		unsigned long bitset_l = bitset_p._vecBitset[k];
+		#ifdef _MSC_VER
+			int r = 0;
+			while (bitset_l != 0)
+			{
+				if(bitset_l % 2 == 1)
+				{
+					fn_p(k * bitset_p._size + r);
+				}
+				++r;
+				bitset_l = bitset_l >> 1;
+			}
+		#else
+			while (bitset_l != 0)
+			{
+				unsigned long t = bitset_l & -bitset_l;
 
-		while (bitset_l != 0) {
-			unsigned long t = bitset_l & -bitset_l;
+				int r = __builtin_ctzl(bitset_l);
 
-			int r = __builtin_ctzl(bitset_l);
+				fn_p(k * bitset_p._size + r);
 
-			fn_p(k * bitset_p._size + r);
-
-			bitset_l ^= t;
-		}
+				bitset_l ^= t;
+			}
+		#endif
 	}
 }
 

@@ -20,7 +20,7 @@ public:
 	virtual bool isNoOp() const override;
 
 	Handle _handle {0};
-	Vector _waypoint {0};
+	Vector _waypoint;
 };
 
 class CommandDataWaypointRemoveStep : public Steppable
@@ -35,7 +35,7 @@ public:
 	virtual bool isNoOp() const override;
 
 	Handle _handle {0};
-	Vector _waypoint {0};
+	Vector _waypoint;
 };
 
 class CommandDataWaypointSetStep : public Steppable

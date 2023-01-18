@@ -7,6 +7,9 @@ namespace octopus
 {
 	struct Vector
 	{
+		Vector();
+		Vector(double x_p, double y_p);
+
 		double x {0.};
 		double y {0.};
 

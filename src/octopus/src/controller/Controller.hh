@@ -18,6 +18,7 @@ class State;
 /// @brief simple structure aggregating usefull info for triple buffering
 struct BufferedState
 {
+	BufferedState(unsigned long stepHandled_p, std::list<Step *>::iterator it_p, State *state_p);
 	~BufferedState();
 
 	unsigned long _stepHandled {0};

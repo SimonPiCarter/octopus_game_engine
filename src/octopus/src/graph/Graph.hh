@@ -39,16 +39,6 @@ private:
 	typedef typename boost::graph_traits< mygraph_t >::vertex_descriptor Vertex;
 	typedef typename boost::graph_traits< mygraph_t >::edge_descriptor Edge;
 
-	struct Filter
-	{
-		Graph const * _graph {nullptr};
-
-		/// @brief used for filter graph
-		bool operator()(Edge const &e) const;
-	};
-
-	typedef boost::filtered_graph<mygraph_t, Filter > myfilteredgraph_t;
-
 	/// @brief vector of vector of all nodes
 	std::vector<std::vector<GridNode *> > const &_nodes;
 	/// @brief map on constant access to get vertex id from GridNode
@@ -56,7 +46,6 @@ private:
 	std::vector<GridNode const*> _vecNodes;
 	/// @brief internal graph
 	mygraph_t *_g;
-	myfilteredgraph_t * _filtered;
 
 	void buildEdge(mygraph_t &g, size_t i, size_t j, size_t k, size_t l,
 		std::vector<std::vector<GridNode *> > const &nodes_p, std::unordered_map<GridNode const *, Vertex> const & nodeIndex_p);

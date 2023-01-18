@@ -2,6 +2,13 @@
 
 #include <cmath>
 
+octopus::Vector::Vector()
+	: x(0.) , y(0.)
+{}
+octopus::Vector::Vector(double x_p, double y_p)
+	: x(x_p) , y(y_p)
+{}
+
 double octopus::length(Vector const &vec_p)
 {
 	return std::sqrt(octopus::square_length(vec_p));

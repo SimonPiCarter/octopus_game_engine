@@ -15,6 +15,11 @@
 
 namespace octopus
 {
+
+BufferedState::BufferedState(unsigned long stepHandled_p, std::list<Step *>::iterator it_p, State *state_p)
+	: _stepHandled(stepHandled_p), _stepIt(it_p), _state(state_p)
+{}
+
 BufferedState::~BufferedState()
 {
 	delete _state;

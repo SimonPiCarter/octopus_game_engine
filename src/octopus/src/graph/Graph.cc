@@ -118,13 +118,10 @@ Graph::Graph(std::vector<std::vector<GridNode *> > const &nodes_p)
 			buildEdge(*_g, i, j, i+1, j+1, _nodes, _nodeIndex);
 		}
 	}
-
-	_filtered = new myfilteredgraph_t(*_g, Filter {this});
 }
 
 Graph::~Graph()
 {
-	delete _filtered;
 	delete _g;
 }
 
@@ -189,7 +186,7 @@ std::list<GridNode const *> Graph::getPath(GridNode const * from_p, GridNode con
 		boost::astar_search(
 			*graph_l,
 			start_l,
-			distance_heuristic<myfilteredgraph_t>(_vecNodes, goal_l),
+			distance_heuristic<mygraph_t>(_vecNodes, goal_l),
 			boost::predecessor_map(&p[0])
 				.weight_map(custom)
 				.distance_map(&d[0])
@@ -217,13 +214,6 @@ std::list<GridNode const *> Graph::getPath(GridNode const * from_p, GridNode con
 	Logger::getDebug() << "Didn't find a path from " << _vecNodes[start_l]->getPosition() << "to" << _vecNodes[goal_l]->getPosition()
 		 << "!" << std::endl;
 	return {};
-}
-
-bool Graph::Filter::operator()(boost::graph_traits< mygraph_t >::edge_descriptor const &e) const
-{
-	Vertex s = boost::source(e, *_graph->_g);
-	Vertex t = boost::target(e, *_graph->_g);
-	return _graph->_vecNodes[s]->isFree() && _graph->_vecNodes[t]->isFree();
 }
 
 void trimPath(std::list<GridNode const *> &path_p)
