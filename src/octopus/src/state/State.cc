@@ -177,7 +177,8 @@ Entity const * lookUpDeposit(State const &state_p, Handle const &sourceHandle_p,
 	{
 		if(ent_l == source_l
 		|| !ent_l->_alive
-		|| !ent_l->_model._isBuilding)
+		|| !ent_l->_model._isBuilding
+		|| source_l->_player != ent_l->_player)
 		{
 			continue;
 		}
@@ -224,7 +225,7 @@ Entity const * lookUpNewResource(State const &state_p, Handle const &sourceHandl
 			continue;
 		}
 
-		double curSqDis_l = square_length(ent_l->_pos - source_l->_pos);
+		double curSqDis_l = square_length(ent_l->_pos - origRes_l->_pos);
 		if(closest_l == nullptr
 		|| sqDis_l > curSqDis_l)
 		{
