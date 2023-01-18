@@ -72,7 +72,7 @@ void CommandDataWaypointSetStep::revert(State &state_p) const
 
 bool CommandDataWaypointSetStep::isNoOp() const
 {
-	return _old != _new;
+	return _old == _new;
 }
 
 } // namespace octopus

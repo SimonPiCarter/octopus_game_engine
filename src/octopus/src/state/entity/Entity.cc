@@ -4,7 +4,8 @@ namespace octopus
 {
 
 Entity::Entity(Vector const &pos_p, bool frozen_p, EntityModel const &model_p)
-	: _pos(pos_p)
+	: Commandable()
+	, _pos(pos_p)
 	, _frozen(frozen_p)
 	, _hp(model_p._hpMax)
 	, _model(model_p)

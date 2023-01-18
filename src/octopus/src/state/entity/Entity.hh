@@ -14,6 +14,7 @@ namespace octopus
 	{
 		public:
 			Entity(Vector const &pos_p, bool frozen_p, EntityModel const &model_p);
+			virtual ~Entity() {}
 
 			Vector _pos;
 

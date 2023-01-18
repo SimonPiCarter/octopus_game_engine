@@ -13,7 +13,7 @@ namespace octopus
 			std::map<ResourceType, double> _resources;
 
 			unsigned long _popCap {0};
-			unsigned long _pop; {0}
+			unsigned long _pop {0};
 
 			unsigned long _id;
 
