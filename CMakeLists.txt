@@ -45,6 +45,10 @@ add_definitions(-DBOOST_ALLOW_DEPRECATED_HEADERS)
 
 add_subdirectory(src/octopus)
 
+if(GRAPHICS)
+	add_subdirectory(src/cuttlefish)
+endif()
+
 # ============================================================================
 # Game configuration
 # ============================================================================

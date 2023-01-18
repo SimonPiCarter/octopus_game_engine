@@ -56,7 +56,10 @@ class cfllpspConan(ConanFile):
 
     # manages requirements
     # allows for defining optional requirements
-    #def requirements(self):
+    def requirements(self):
+        if self.settings.os == "Windows":
+            self.requires("sdl/2.26.1")
+            self.requires("sdl_image/2.0.5")
 
     # copy required files from local store to project
     # handy for copying required shared libraries when testing
@@ -73,6 +76,7 @@ class cfllpspConan(ConanFile):
     # CMake configuration wrapper
     def configure_cmake(self):
         cmake = CMake(self)
+        cmake.definitions["GRAPHICS"] = "ON" if  self.settings.os == "Windows" else "OFF"
         cmake.configure()
         return cmake
 
