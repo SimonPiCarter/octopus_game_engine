@@ -67,7 +67,8 @@ bool UnitHarvestCommand::applyCommand(Step & step_p, State const &state_p, Comma
 {
 	Logger::getDebug() << "UnitHarvestCommand:: apply Command "<<_source <<std::endl;
 	HarvestMoveData const &data_l = *static_cast<HarvestMoveData const *>(data_p);
-	Unit const * unit_l = static_cast<Unit const *>(state_p.getEntity(_source));
+	Unit const * unit_l = dynamic_cast<Unit const *>(state_p.getEntity(_source));
+	Resource const * res_l = dynamic_cast<Resource const *>(state_p.getEntity(data_l._resource));
 
 	bool notFull_l = !isFull(state_p, unit_l, data_l._resource);
 	// Is resource exhausted and harvesting
@@ -100,8 +101,13 @@ bool UnitHarvestCommand::applyCommand(Step & step_p, State const &state_p, Comma
 		if(inRange(state_p, unit_l, data_l._resource))
 		{
 			Logger::getDebug() << "UnitHarvestCommand:: gather"<<std::endl;
+			// If != type of resource we reset the unit resource gather info
+			if (unit_l->_typeOfResource != res_l->_type)
+			{
+				step_p.addSteppable(new UnitHarvestTypeStep(_source, data_l._resource, unit_l->_typeOfResource, res_l->_type));
+			}
 			/// @todo change gather rate to read data
-			step_p.addSteppable(new UnitHarvestQuantityStep(_source, 1.));
+			step_p.addSteppable(new UnitHarvestQuantityStep(_source, data_l._resource, 1.));
 		}
 		else
 		{
@@ -112,8 +118,8 @@ bool UnitHarvestCommand::applyCommand(Step & step_p, State const &state_p, Comma
 		return false;
 	}
 
-	// if still harvesting
-	if(data_l._harvesting)
+	// if still harvesting or deposit is not available
+	if(data_l._harvesting || !state_p.getEntity(data_l._deposit)->_alive)
 	{
 		Logger::getDebug() << "UnitHarvestCommand:: look for deposit"<<std::endl;
 		Entity const * deposit_l = lookUpDeposit(state_p, _source, data_l._resource);
@@ -143,7 +149,7 @@ bool UnitHarvestCommand::applyCommand(Step & step_p, State const &state_p, Comma
 			step_p.addSteppable(new CommandHarvestingChangeStep(_handleCommand, data_l._harvesting, true));
 
 			// update move back to resource
-			std::list<Vector> path_l = computePath(state_p, _source, state_p.getEntity(data_l._resource)->_pos);
+			std::list<Vector> path_l = computePath(state_p, _source, res_l->_pos);
 			step_p.addSteppable(new CommandDataWaypointSetStep(_handleCommand, data_l._waypoints, path_l));
 			step_p.addSteppable(new CommandMoveUpdateStep(_handleCommand, data_l._stepSinceUpdate, data_l._gridStatus, state_p.getPathGridStatus()));
 		}
