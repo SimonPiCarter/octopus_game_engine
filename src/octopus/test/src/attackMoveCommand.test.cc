@@ -6,6 +6,7 @@
 #include <controller/Controller.hh>
 #include <step/entity/EntityMoveStep.hh>
 #include <step/entity/spawn/EntitySpawnStep.hh>
+#include <step/player/PlayerSpawnStep.hh>
 #include <step/command/CommandQueueStep.hh>
 #include <state/State.hh>
 
@@ -34,14 +35,17 @@ TEST(attackMoveCommandTest, simple)
 	octopus::EntityModel unitModel_l { false, 1., 1., 10. };
 	unitModel_l._isUnit = true;
 
+	Entity ent_l { { 11, 3. }, false, unitModel_l};
+	ent_l._player = 1;
+
 	EntitySpawnStep * spawn0_l = new EntitySpawnStep(Entity { { 3, 3. }, false, unitModel_l});
-	EntitySpawnStep * spawn1_l = new EntitySpawnStep(Entity { { 11, 3. }, false, unitModel_l});
+	EntitySpawnStep * spawn1_l = new EntitySpawnStep(ent_l);
 
 	// entity 0 attack entity 1
 	EntityAttackMoveCommand * command_l = new EntityAttackMoveCommand(0, 0, {9, 3}, 0, {{9, 3}});
 	CommandSpawnStep * commandSpawn_l = new CommandSpawnStep(command_l);
 
-	Controller controller_l({spawn0_l, spawn1_l, commandSpawn_l}, 1.);
+	Controller controller_l({new PlayerSpawnStep(0, 0), new PlayerSpawnStep(1, 1), spawn0_l, spawn1_l, commandSpawn_l}, 1.);
 
 	State const *a = controller_l.getBackState();
 	State const *b = controller_l.getBufferState();

@@ -6,6 +6,7 @@
 #include <step/entity/EntityMoveStep.hh>
 #include <step/entity/spawn/EntitySpawnStep.hh>
 #include <step/command/CommandQueueStep.hh>
+#include <step/player/PlayerSpawnStep.hh>
 #include <state/State.hh>
 #include <logger/Logger.hh>
 
@@ -21,8 +22,11 @@ TEST(queueCommandTest, simple)
 {
 	octopus::EntityModel unitModel_l { false, 1., 1., 3. };
 
+	Entity ent_l { { 11, 3. }, false, unitModel_l};
+	ent_l._player = 1;
+
 	EntitySpawnStep * spawn0_l = new EntitySpawnStep(Entity { { 3, 3. }, false, unitModel_l});
-	EntitySpawnStep * spawn1_l = new EntitySpawnStep(Entity { { 11, 3. }, false, unitModel_l});
+	EntitySpawnStep * spawn1_l = new EntitySpawnStep(ent_l);
 
 	// entity 0 attack entity 1
 	EntityAttackCommand * command_l = new EntityAttackCommand(0, 0, 1);
@@ -33,7 +37,7 @@ TEST(queueCommandTest, simple)
 	move_l->setQueued(true);
 	CommandSpawnStep * moveSpawn_l = new CommandSpawnStep(move_l);
 
-	Controller controller_l({spawn0_l, spawn1_l, commandSpawn_l, moveSpawn_l}, 1.);
+	Controller controller_l({new PlayerSpawnStep(0, 0), new PlayerSpawnStep(1, 1), spawn0_l, spawn1_l, commandSpawn_l, moveSpawn_l}, 1.);
 
 	State const *a = controller_l.getBackState();
 	State const *b = controller_l.getBufferState();
