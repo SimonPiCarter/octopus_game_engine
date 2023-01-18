@@ -49,7 +49,9 @@ add_subdirectory(src/octopus)
 # Game configuration
 # ============================================================================
 
-add_executable(game src/game/main.cc)
+add_executable(game
+	src/game/main.cc
+	src/game/case1/Case1.cc)
 
 target_link_libraries(game PRIVATE octopus)
 
