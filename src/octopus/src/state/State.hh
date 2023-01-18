@@ -59,6 +59,8 @@ public:
 
 	unsigned long const _id;
 private:
+	State(State const &state_p) = delete;
+
 	/// @brief vector of all entities
 	std::vector<Entity *> _entities;
 
