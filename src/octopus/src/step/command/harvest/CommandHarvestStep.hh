@@ -40,6 +40,22 @@ public:
 	Handle _newDeposit {0};
 };
 
+class CommandHarvestingChangeStep : public Steppable
+{
+public:
+	CommandHarvestingChangeStep(Handle const &handle_p, bool old_p, bool new_p)
+		: _handle(handle_p) , _old(old_p), _new(new_p) {}
+
+	virtual void apply(State &state_p) const override;
+	virtual void revert(State &state_p) const override;
+
+	virtual bool isNoOp() const override;
+
+	Handle _handle {0};
+	bool _old {0};
+	bool _new {0};
+};
+
 } // namespace octopus
 
 

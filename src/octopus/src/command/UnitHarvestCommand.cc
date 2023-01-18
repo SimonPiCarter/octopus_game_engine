@@ -24,7 +24,7 @@ UnitHarvestCommand::UnitHarvestCommand(Handle const &commandHandle_p, Handle con
 	, _subMoveCommand(commandHandle_p, source_p, finalPoint_p, gridStatus_p, waypoints_p)
 {}
 
-bool resourceExhausted(State const state_p, Handle const &resource_p)
+bool resourceExhausted(State const &state_p, Handle const &resource_p)
 {
 	Resource const * res_l = dynamic_cast<Resource const *>(state_p.getEntity(resource_p));
 	return res_l->_resource <= 1e-3;
@@ -35,9 +35,10 @@ bool hasResourceToDrop(Unit const * unit_p)
 	return unit_p->_quantityOfResource > 1e-3;
 }
 
-bool isFull(Unit const * unit_p)
+bool isFull(State const &state_p, Unit const * unit_p, Handle const &res_p)
 {
-	return unit_p->_quantityOfResource >= 10.;
+	Resource const *res_l = dynamic_cast<Resource const *>(state_p.getEntity(res_p));
+	return unit_p->_quantityOfResource >= unit_p->_unitModel._maxQuantity.at(res_l->_type);
 }
 
 bool inRange(State const &state_p, Unit const * unit_p, Handle const res_p)
@@ -48,9 +49,10 @@ bool inRange(State const &state_p, Unit const * unit_p, Handle const res_p)
 	Box<double> boxB_l { unit_p->_pos.x - unit_p->_model._ray, unit_p->_pos.x + unit_p->_model._ray,
 						unit_p->_pos.y - unit_p->_model._ray, unit_p->_pos.y + unit_p->_model._ray };
 
-	Box<double> intersect_l = { std::max(boxA_l._lowerX, boxB_l._lowerX),
+	// Use 0.1 as a margin for range resource check
+	Box<double> intersect_l = { std::max(boxA_l._lowerX, boxB_l._lowerX)-0.1,
 						std::min(boxA_l._upperX, boxB_l._upperX),
-						std::max(boxA_l._lowerY, boxB_l._lowerY),
+						std::max(boxA_l._lowerY, boxB_l._lowerY)-0.1,
 						std::min(boxA_l._upperY, boxB_l._upperY) };
 	// Check intersections
 	if(intersect_l._lowerX < intersect_l._upperX
@@ -63,15 +65,20 @@ bool inRange(State const &state_p, Unit const * unit_p, Handle const res_p)
 
 bool UnitHarvestCommand::applyCommand(Step & step_p, State const &state_p, CommandData const *data_p) const
 {
+	Logger::getDebug() << "UnitHarvestCommand:: apply Command "<<_source <<std::endl;
 	HarvestMoveData const &data_l = *static_cast<HarvestMoveData const *>(data_p);
 	Unit const * unit_l = static_cast<Unit const *>(state_p.getEntity(_source));
-	// Is resource exhausted
-	if(resourceExhausted(state_p, data_l._resource))
+
+	bool notFull_l = !isFull(state_p, unit_l, data_l._resource);
+	// Is resource exhausted and harvesting
+	if(notFull_l && resourceExhausted(state_p, data_l._resource) && data_l._harvesting)
 	{
+		Logger::getDebug() << "UnitHarvestCommand:: resource exhausted "<<data_l._resource <<std::endl;
 		// Look up for new target
 		Entity const * newRes_l = lookUpNewResource(state_p, _source, data_l._resource);
 		if(newRes_l)
 		{
+			Logger::getDebug() << "UnitHarvestCommand:: new resource "<<newRes_l->_handle <<std::endl;
 			// update move
 			step_p.addSteppable(new CommandDataWaypointSetStep(_handleCommand, data_l._waypoints, computePath(state_p, _source, newRes_l->_pos)));
 			step_p.addSteppable(new CommandMoveUpdateStep(_handleCommand, data_l._stepSinceUpdate, data_l._gridStatus, state_p.getPathGridStatus()));
@@ -81,19 +88,24 @@ bool UnitHarvestCommand::applyCommand(Step & step_p, State const &state_p, Comma
 		}
 		else if(!hasResourceToDrop(unit_l))
 		{
+			Logger::getDebug() << "UnitHarvestCommand:: no new resource found and no resource to drop"<<std::endl;
 			// no resource to drop -> command is over
 			return true;
 		}
+		Logger::getDebug() << "UnitHarvestCommand:: no new resource found "<<std::endl;
 	}
-	else if(!isFull(unit_l))
+	else if(notFull_l && data_l._harvesting)
 	{
+		Logger::getDebug() << "UnitHarvestCommand:: is not full"<<std::endl;
 		if(inRange(state_p, unit_l, data_l._resource))
 		{
+			Logger::getDebug() << "UnitHarvestCommand:: gather"<<std::endl;
 			/// @todo change gather rate to read data
 			step_p.addSteppable(new UnitHarvestQuantityStep(_source, 1.));
 		}
 		else
 		{
+			Logger::getDebug() << "UnitHarvestCommand:: move to resource"<<std::endl;
 			// apply move
 			_subMoveCommand.applyCommand(step_p, state_p, data_p);
 		}
@@ -103,17 +115,21 @@ bool UnitHarvestCommand::applyCommand(Step & step_p, State const &state_p, Comma
 	// if still harvesting
 	if(data_l._harvesting)
 	{
+		Logger::getDebug() << "UnitHarvestCommand:: look for deposit"<<std::endl;
 		Entity const * deposit_l = lookUpDeposit(state_p, _source, data_l._resource);
 		if(deposit_l)
 		{
+			Logger::getDebug() << "UnitHarvestCommand:: deposit found "<<deposit_l->_handle<<std::endl;
 			// update move
 			step_p.addSteppable(new CommandDataWaypointSetStep(_handleCommand, data_l._waypoints, computePath(state_p, _source, deposit_l->_pos)));
 			step_p.addSteppable(new CommandMoveUpdateStep(_handleCommand, data_l._stepSinceUpdate, data_l._gridStatus, state_p.getPathGridStatus()));
 			// update deposit
 			step_p.addSteppable(new CommandDepositChangeStep(_handleCommand, data_l._deposit, deposit_l->_handle));
+			step_p.addSteppable(new CommandHarvestingChangeStep(_handleCommand, data_l._harvesting, false));
 		}
 		else
 		{
+			Logger::getDebug() << "UnitHarvestCommand:: no deposit found"<<std::endl;
 			return true;
 		}
 	}
@@ -122,10 +138,18 @@ bool UnitHarvestCommand::applyCommand(Step & step_p, State const &state_p, Comma
 		// else on the way to deposit
 		if(inRange(state_p, unit_l, data_l._deposit))
 		{
+			Logger::getDebug() << "UnitHarvestCommand:: drop"<<std::endl;
 			step_p.addSteppable(new UnitHarvestDropStep(_source, unit_l->_quantityOfResource));
+			step_p.addSteppable(new CommandHarvestingChangeStep(_handleCommand, data_l._harvesting, true));
+
+			// update move back to resource
+			std::list<Vector> path_l = computePath(state_p, _source, state_p.getEntity(data_l._resource)->_pos);
+			step_p.addSteppable(new CommandDataWaypointSetStep(_handleCommand, data_l._waypoints, path_l));
+			step_p.addSteppable(new CommandMoveUpdateStep(_handleCommand, data_l._stepSinceUpdate, data_l._gridStatus, state_p.getPathGridStatus()));
 		}
 		else
 		{
+			Logger::getDebug() << "UnitHarvestCommand:: move to deposit"<<std::endl;
 			// apply move
 			_subMoveCommand.applyCommand(step_p, state_p, data_p);
 		}

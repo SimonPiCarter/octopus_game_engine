@@ -16,7 +16,6 @@ void CommandResourceChangeStep::apply(State &state_p) const
 	Logger::getDebug() << "CommandResourceChangeStep :: apply " << this->_handle <<std::endl;
 	HarvestMoveData *data_l = dynamic_cast<HarvestMoveData*>(ent_l->getFrontQueue()._data);
 	data_l->_resource = _newResource;
-	data_l->_harvesting = true;
 }
 void CommandResourceChangeStep::revert(State &state_p) const
 {
@@ -24,12 +23,11 @@ void CommandResourceChangeStep::revert(State &state_p) const
 	Logger::getDebug() << "CommandResourceChangeStep :: revert " << this->_handle <<std::endl;
 	HarvestMoveData *data_l = dynamic_cast<HarvestMoveData*>(ent_l->getFrontQueue()._data);
 	data_l->_resource = _oldResource;
-	data_l->_harvesting = false;
 }
 
 bool CommandResourceChangeStep::isNoOp() const
 {
-	return _oldResource != _newResource;
+	return _oldResource == _newResource;
 }
 
 void CommandDepositChangeStep::apply(State &state_p) const
@@ -37,21 +35,39 @@ void CommandDepositChangeStep::apply(State &state_p) const
 	Commandable * ent_l = state_p.getCommandable(this->_handle);
 	Logger::getDebug() << "CommandDepositChangeStep :: apply " << this->_handle <<std::endl;
 	HarvestMoveData *data_l = dynamic_cast<HarvestMoveData*>(ent_l->getFrontQueue()._data);
-	data_l->_resource = _newDeposit;
-	data_l->_harvesting = false;
+	data_l->_deposit = _newDeposit;
 }
 void CommandDepositChangeStep::revert(State &state_p) const
 {
 	Commandable * ent_l = state_p.getCommandable(this->_handle);
 	Logger::getDebug() << "CommandDepositChangeStep :: revert " << this->_handle <<std::endl;
 	HarvestMoveData *data_l = dynamic_cast<HarvestMoveData*>(ent_l->getFrontQueue()._data);
-	data_l->_resource = _oldDeposit;
-	data_l->_harvesting = true;
+	data_l->_deposit = _oldDeposit;
 }
 
 bool CommandDepositChangeStep::isNoOp() const
 {
-	return _oldDeposit != _newDeposit;
+	return _oldDeposit == _newDeposit;
+}
+
+void CommandHarvestingChangeStep::apply(State &state_p) const
+{
+	Commandable * ent_l = state_p.getCommandable(this->_handle);
+	Logger::getDebug() << "CommandHarvestingChangeStep :: apply " << this->_handle <<std::endl;
+	HarvestMoveData *data_l = dynamic_cast<HarvestMoveData*>(ent_l->getFrontQueue()._data);
+	data_l->_harvesting = _new;
+}
+void CommandHarvestingChangeStep::revert(State &state_p) const
+{
+	Commandable * ent_l = state_p.getCommandable(this->_handle);
+	Logger::getDebug() << "CommandHarvestingChangeStep :: revert " << this->_handle <<std::endl;
+	HarvestMoveData *data_l = dynamic_cast<HarvestMoveData*>(ent_l->getFrontQueue()._data);
+	data_l->_harvesting = _old;
+}
+
+bool CommandHarvestingChangeStep::isNoOp() const
+{
+	return _new == _old;
 }
 
 } // namespace octopus
