@@ -15,7 +15,9 @@ struct VertexProperties {
 };
 
 struct EdgeProperties {
-	double weight;
+	GridNode const * from { nullptr };
+	GridNode const * to { nullptr };
+	double weight { 0. };
 };
 
 /// @brief This class represent a graph based on a grid of nodes

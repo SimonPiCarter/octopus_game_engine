@@ -3,6 +3,7 @@
 #include <stdexcept>
 
 #include <boost/graph/astar_search.hpp>
+#include <boost/property_map/function_property_map.hpp>
 
 #include "logger/Logger.hh"
 
@@ -43,6 +44,25 @@ void Graph::buildEdge(mygraph_t &g, size_t i, size_t j, size_t k, size_t l,
 
 	boost::tie(e, inserted) = add_edge(nodeIndex_p.at(from_l), nodeIndex_p.at(to_l), g);
 	g[e].weight = length(to_l->getPosition() - from_l->getPosition());
+	g[e].from = from_l;
+	g[e].to = to_l;
+}
+
+double weight_adjusted(
+	boost::adjacency_list< boost::listS, boost::vecS, boost::undirectedS, VertexProperties, EdgeProperties> const &g,
+	boost::adjacency_list< boost::listS, boost::vecS, boost::undirectedS, VertexProperties, EdgeProperties>::edge_descriptor e)
+{
+	EdgeProperties const &prop_l = g[e];
+	double w_l = prop_l.weight;
+	if(!prop_l.from->isFree())
+	{
+		w_l += 5000.;
+	}
+	if(!prop_l.to->isFree())
+	{
+		w_l += 5000.;
+	}
+	return w_l;
 }
 
 Graph::Graph(std::vector<std::vector<GridNode *> > const &nodes_p)
@@ -134,32 +154,38 @@ public:
 private:
 	Vertex _goal;
 };
-
+/// cf this for using dynamic weight
+/// https://stackoverflow.com/questions/45966930/augment-custom-weights-to-edge-descriptors-in-boostgrid-graph
 std::list<GridNode const *> Graph::getPath(GridNode const * from_p, GridNode const * to_p) const
 {
-	typedef mygraph_t::vertex_descriptor vertex;
+	Vertex start_l = _nodeIndex.at(from_p);
+	Vertex goal_l = _nodeIndex.at(to_p);
 
-	vertex start_l = _nodeIndex.at(from_p);
-	vertex goal_l = _nodeIndex.at(to_p);
-
-	std::vector<Vertex> p(boost::num_vertices(*_filtered));
-	std::vector<float> d(boost::num_vertices(*_filtered));
+	mygraph_t *graph_l = _g;
+	std::vector<Vertex> p(boost::num_vertices(*graph_l));
+	std::vector<float> d(boost::num_vertices(*graph_l));
 	try
 	{
+		// custom weight map
+		auto custom = boost::make_function_property_map<mygraph_t::edge_descriptor>(
+				[&graph_l](mygraph_t::edge_descriptor e) {
+					return weight_adjusted(*graph_l, e);
+				});
+
 		// // call astar named parameter interface
 		boost::astar_search(
-			*_filtered,
+			*graph_l,
 			start_l,
 			distance_heuristic<myfilteredgraph_t>(_vecNodes, goal_l),
 			boost::predecessor_map(&p[0])
-				.weight_map(boost::get(&EdgeProperties::weight, *_filtered))
+				.weight_map(custom)
 				.distance_map(&d[0])
 				.visitor(astar_goal_visitor< Vertex >(goal_l)));
 	}
 	catch (found_goal fg)
 	{ // found a path to the goal
 		std::list< GridNode const * > shortest_path_l;
-		for (vertex v = goal_l;; v = p[v])
+		for (Vertex v = goal_l;; v = p[v])
 		{
 			shortest_path_l.push_front(_vecNodes[v]);
 			if (p[v] == v)
