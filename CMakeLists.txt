@@ -51,7 +51,9 @@ add_subdirectory(src/octopus)
 
 add_executable(game
 	src/game/main.cc
-	src/game/case1/Case1.cc)
+	src/game/cases/Case1.cc
+	src/game/cases/Case2.cc
+)
 
 target_link_libraries(game PRIVATE octopus)
 
