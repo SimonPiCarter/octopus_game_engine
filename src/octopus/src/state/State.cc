@@ -1,5 +1,6 @@
 #include "State.hh"
 
+#include "player/Player.hh"
 #include "entity/Entity.hh"
 #include "entity/Resource.hh"
 #include "utils/Box.hh"
@@ -137,13 +138,15 @@ Entity const * lookUpNewTarget(State const &state_p, Handle const &sourceHandle_
 	double sqDis_l = 0.;
 	Entity const * closest_l = nullptr;
 	Entity const * source_l = state_p.getEntity(sourceHandle_p);
+	unsigned long team_l = state_p.getPlayer(source_l->_player)->_team;
 
 	// for now look for closest entity
 	for(Entity const * ent_l : state_p.getEntities())
 	{
 		if(ent_l == source_l
 		|| !ent_l->_alive
-		|| !ent_l->_model._isUnit)
+		|| !ent_l->_model._isUnit
+		|| team_l == state_p.getPlayer(ent_l->_player)->_team)
 		{
 			continue;
 		}
