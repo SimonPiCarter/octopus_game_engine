@@ -15,9 +15,8 @@ namespace octopus
 			unsigned long _popCap {0};
 			unsigned long _pop {0};
 
-			unsigned long _id;
-
-			unsigned long _team;
+			unsigned long _id {0};
+			unsigned long _team {0};
 	};
 }
 
