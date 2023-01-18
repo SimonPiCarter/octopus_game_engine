@@ -48,17 +48,30 @@ void Graph::buildEdge(mygraph_t &g, size_t i, size_t j, size_t k, size_t l,
 	g[e].to = to_l;
 }
 
+bool contains(Entity const *ent_p, std::list<Entity const *> const& ignored_p)
+{
+	for(Entity const * cur_l : ignored_p)
+	{
+		if(ent_p == cur_l)
+		{
+			return true;
+		}
+	}
+	return false;
+}
+
 double weight_adjusted(
 	boost::adjacency_list< boost::listS, boost::vecS, boost::undirectedS, VertexProperties, EdgeProperties> const &g,
-	boost::adjacency_list< boost::listS, boost::vecS, boost::undirectedS, VertexProperties, EdgeProperties>::edge_descriptor e)
+	boost::adjacency_list< boost::listS, boost::vecS, boost::undirectedS, VertexProperties, EdgeProperties>::edge_descriptor e,
+	std::list<Entity const *> const& ignored_p)
 {
 	EdgeProperties const &prop_l = g[e];
 	double w_l = prop_l.weight;
-	if(!prop_l.from->isFree())
+	if(!prop_l.from->isFree() && !contains(prop_l.from->getContent(), ignored_p))
 	{
 		w_l += 5000.;
 	}
-	if(!prop_l.to->isFree())
+	if(!prop_l.to->isFree() && !contains(prop_l.to->getContent(), ignored_p))
 	{
 		w_l += 5000.;
 	}
@@ -156,7 +169,7 @@ private:
 };
 /// cf this for using dynamic weight
 /// https://stackoverflow.com/questions/45966930/augment-custom-weights-to-edge-descriptors-in-boostgrid-graph
-std::list<GridNode const *> Graph::getPath(GridNode const * from_p, GridNode const * to_p) const
+std::list<GridNode const *> Graph::getPath(GridNode const * from_p, GridNode const * to_p, std::list<Entity const *> const& ignored_p) const
 {
 	Vertex start_l = _nodeIndex.at(from_p);
 	Vertex goal_l = _nodeIndex.at(to_p);
@@ -168,8 +181,8 @@ std::list<GridNode const *> Graph::getPath(GridNode const * from_p, GridNode con
 	{
 		// custom weight map
 		auto custom = boost::make_function_property_map<mygraph_t::edge_descriptor>(
-				[&graph_l](mygraph_t::edge_descriptor e) {
-					return weight_adjusted(*graph_l, e);
+				[&graph_l, &ignored_p](mygraph_t::edge_descriptor e) {
+					return weight_adjusted(*graph_l, e, ignored_p);
 				});
 
 		// // call astar named parameter interface

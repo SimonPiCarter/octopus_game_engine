@@ -11,6 +11,8 @@
 namespace octopus
 {
 
+class Entity;
+
 struct VertexProperties {
 };
 
@@ -29,7 +31,7 @@ public:
 	Graph(std::vector<std::vector<GridNode *> > const &nodes_p);
 	~Graph();
 
-	std::list<GridNode const *> getPath(GridNode const * from_p, GridNode const * to_p) const;
+	std::list<GridNode const *> getPath(GridNode const * from_p, GridNode const * to_p, std::list<Entity const *> const& ignored_p= {}) const;
 private:
 	// specify some types
 	typedef boost::adjacency_list< boost::listS, boost::vecS, boost::undirectedS, VertexProperties, EdgeProperties > mygraph_t;

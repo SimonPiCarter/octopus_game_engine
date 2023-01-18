@@ -269,13 +269,22 @@ void updateGrid(State &state_p, Entity const *ent_p, bool set_p)
 		{
 			for(size_t y = box_l._lowerY ; y < box_l._upperY; ++y)
 			{
-				state_p.getPathGrid().getNode(x, y)->setFree(!set_p);
+				GridNode *node_l = state_p.getPathGrid().getNode(x, y);
+				if(set_p)
+				{
+					node_l->setContent(ent_p);
+				}
+				else
+				{
+					node_l->setContent(nullptr);
+				}
+				node_l->setFree(!set_p);
 			}
 		}
 	}
 }
 
-std::list<Vector> computePath(State const & state_p, Handle const &handle_p, Vector const &target_p)
+std::list<Vector> computePath(State const & state_p, Handle const &handle_p, Vector const &target_p, std::list<Entity const *> const& ignored_p)
 {
 	// Find grid node source
 	GridNode const * source_l = state_p.getPathGrid().getNode(state_p.getEntity(handle_p)->_pos);
@@ -283,9 +292,14 @@ std::list<Vector> computePath(State const & state_p, Handle const &handle_p, Vec
 	GridNode const * target_l = state_p.getPathGrid().getNode(target_p);
 
 	// compute path
-	std::list<GridNode const *> path_l = state_p.getPathGrid().getGraph().getPath(source_l, target_l);
+	std::list<GridNode const *> path_l = state_p.getPathGrid().getGraph().getPath(source_l, target_l, ignored_p);
 	trimPath(path_l);
-	return toWaypoints(path_l);
+	// get waypoints
+	std::list<Vector> waypoints_l = toWaypoints(path_l);
+	// update for exact destination
+	waypoints_l.pop_back();
+	waypoints_l.push_back(target_p);
+	return waypoints_l;
 }
 
 }
