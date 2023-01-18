@@ -5,7 +5,7 @@
 #include <command/EntityAttackMoveCommand.hh>
 #include <controller/Controller.hh>
 #include <step/entity/EntityMoveStep.hh>
-#include <step/entity/EntitySpawnStep.hh>
+#include <step/entity/spawn/EntitySpawnStep.hh>
 #include <step/command/CommandQueueStep.hh>
 #include <state/State.hh>
 

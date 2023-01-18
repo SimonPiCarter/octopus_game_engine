@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 
 #include <step/entity/EntityMoveStep.hh>
-#include <step/entity/EntitySpawnStep.hh>
+#include <step/entity/spawn/EntitySpawnStep.hh>
 #include <state/State.hh>
 
 ///

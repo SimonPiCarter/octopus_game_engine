@@ -4,8 +4,14 @@
 #include "command/data/AttackMoveData.hh"
 #include "logger/Logger.hh"
 #include "state/State.hh"
+#include "state/entity/Resource.hh"
+#include "state/entity/Unit.hh"
 #include "step/Step.hh"
 #include "step/command/harvest/CommandHarvestStep.hh"
+#include "step/command/CommandDataWaypointStep.hh"
+#include "step/command/CommandMoveUpdateStep.hh"
+#include "step/unit/UnitHarvestStep.hh"
+#include "utils/Box.hh"
 
 namespace octopus
 {
@@ -22,6 +28,11 @@ bool resourceExhausted(State const state_p, Handle const &resource_p)
 {
 	Resource const * res_l = dynamic_cast<Resource const *>(state_p.getEntity(resource_p));
 	return res_l->_resource <= 1e-3;
+}
+
+bool hasResourceToDrop(Unit const * unit_p)
+{
+	return unit_p->_quantityOfResource > 1e-3;
 }
 
 bool isFull(Unit const * unit_p)
@@ -61,8 +72,11 @@ bool UnitHarvestCommand::applyCommand(Step & step_p, State const &state_p, Comma
 		Entity const * newRes_l = lookUpNewResource(state_p, _source, data_l._resource);
 		if(newRes_l)
 		{
+			// update move
+			step_p.addSteppable(new CommandDataWaypointSetStep(_handleCommand, data_l._waypoints, computePath(state_p, _source, newRes_l->_pos)));
+			step_p.addSteppable(new CommandMoveUpdateStep(_handleCommand, data_l._stepSinceUpdate, data_l._gridStatus, state_p.getPathGridStatus()));
 			// update resource in steps
-			step_p.addSteppable(new CommandResourceChangeStep(_commandableHandle, data_l._resource, newRes_l->_handle));
+			step_p.addSteppable(new CommandResourceChangeStep(_handleCommand, data_l._resource, newRes_l->_handle));
 			return false;
 		}
 		else if(!hasResourceToDrop(unit_l))
@@ -76,7 +90,7 @@ bool UnitHarvestCommand::applyCommand(Step & step_p, State const &state_p, Comma
 		if(inRange(state_p, unit_l, data_l._resource))
 		{
 			/// @todo change gather rate to read data
-			step_p.addSteppable(new UnitHarvestQuantityStep(_source, 1.)));
+			step_p.addSteppable(new UnitHarvestQuantityStep(_source, 1.));
 		}
 		else
 		{
@@ -92,8 +106,11 @@ bool UnitHarvestCommand::applyCommand(Step & step_p, State const &state_p, Comma
 		Entity const * deposit_l = lookUpDeposit(state_p, _source, data_l._resource);
 		if(deposit_l)
 		{
+			// update move
+			step_p.addSteppable(new CommandDataWaypointSetStep(_handleCommand, data_l._waypoints, computePath(state_p, _source, deposit_l->_pos)));
+			step_p.addSteppable(new CommandMoveUpdateStep(_handleCommand, data_l._stepSinceUpdate, data_l._gridStatus, state_p.getPathGridStatus()));
 			// update deposit
-			step_p.addSteppable(new CommandDepositChangeStep(_commandableHandle, data_l._deposit, deposit_l->_handle));
+			step_p.addSteppable(new CommandDepositChangeStep(_handleCommand, data_l._deposit, deposit_l->_handle));
 		}
 		else
 		{
@@ -105,7 +122,7 @@ bool UnitHarvestCommand::applyCommand(Step & step_p, State const &state_p, Comma
 		// else on the way to deposit
 		if(inRange(state_p, unit_l, data_l._deposit))
 		{
-			step_p.addSteppable(new UnitHarvestDropStep(_source, unit_l->_quantityOfResource)));
+			step_p.addSteppable(new UnitHarvestDropStep(_source, unit_l->_quantityOfResource));
 		}
 		else
 		{

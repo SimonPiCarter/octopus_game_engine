@@ -9,7 +9,7 @@
 #include "state/entity/Entity.hh"
 #include "state/State.hh"
 #include "step/Step.hh"
-#include "step/entity/EntitySpawnStep.hh"
+#include "step/entity/spawn/EntitySpawnStep.hh"
 #include "step/command/CommandQueueStep.hh"
 #include "controller/Controller.hh"
 
@@ -39,7 +39,7 @@ int main()
 	};
 
 	/// add a ton of entities
-	for(unsigned long i = 0 ; i < 1000 ; ++ i)
+	for(unsigned long i = 0 ; i < 0 ; ++ i)
 	{
 		spawners_l.push_back(new octopus::EntitySpawnStep(octopus::Entity { { 6.5+2*i%100, 2.6+2*(i/100) }, false, unitModel_l}));
 		octopus::EntityMoveCommand * cmd_l = new octopus::EntityMoveCommand(11+i, 11+i, {50, 50}, 0, {{50, 50}});

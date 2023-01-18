@@ -4,6 +4,7 @@
 #include "Command.hh"
 #include "state/Handle.hh"
 #include "command/data/HarvestMoveData.hh"
+#include "command/EntityMoveCommand.hh"
 
 namespace octopus
 {
@@ -22,7 +23,7 @@ public:
 
 	virtual CommandData * newData() const override
 	{
-		return new HarvestMoveData(_resource, 0, _subMoveCommand.getFinalPoint(), _subMoveCommand.getGridStatus(), _subMoveCommand.getWayPoints());
+		return new HarvestMoveData(_resource, 0, _subMoveCommand.getFinalPoint(), _subMoveCommand.getGridStatus(), _subMoveCommand.getWaypoints());
 	}
 private:
 	Handle const _source;
