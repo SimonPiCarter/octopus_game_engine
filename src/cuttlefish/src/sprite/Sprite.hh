@@ -4,12 +4,11 @@
 #include <string>
 #include <vector>
 
-class SDL_Renderer;
-
 namespace cuttlefish
 {
 
 class Texture;
+class Window;
 
 /// @brief sprite used to render an entity in the world
 /// a sprite is composed of different states each composed of
@@ -37,7 +36,7 @@ class Sprite
 
 		/// @brief render sprite with its logical center on (x, y)
 		/// call texture render using a clip based on state and frame
-		void render( SDL_Renderer* renderer, int x, int y );
+		void render( Window &window_p, int x, int y );
 
 		//Gets image dimensions
 		int getWidth();

@@ -7,6 +7,7 @@
 
 #include "sprite/Sprite.hh"
 #include "texture/Texture.hh"
+#include "window/Window.hh"
 
 #define SCREEN_WIDTH 640
 #define SCREEN_HEIGHT 480
@@ -17,151 +18,39 @@ using namespace cuttlefish;
 /// http://lazyfoo.net/tutorials/SDL/index.php#The%20Viewport
 ///
 
-//The window we'll be rendering to
-SDL_Window* gWindow = NULL;
-
-//The window renderer
-SDL_Renderer* gRenderer = NULL;
-
-//Scene textures
-Texture gFooTexture;
-Texture gBackgroundTexture;
-
-bool init()
-{
-    //Initialization flag
-    bool success = true;
-
-    //Initialize SDL
-    if( SDL_Init( SDL_INIT_VIDEO ) < 0 )
-    {
-        printf( "SDL could not initialize! SDL Error: %s\n", SDL_GetError() );
-        success = false;
-    }
-    else
-    {
-        //Create window
-        gWindow = SDL_CreateWindow( "SDL Tutorial", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN );
-        if( gWindow == NULL )
-        {
-            printf( "Window could not be created! SDL Error: %s\n", SDL_GetError() );
-            success = false;
-        }
-        else
-        {
-            //Create renderer for window
-            gRenderer = SDL_CreateRenderer( gWindow, -1, SDL_RENDERER_ACCELERATED );
-            if( gRenderer == NULL )
-            {
-                printf( "Renderer could not be created! SDL Error: %s\n", SDL_GetError() );
-                success = false;
-            }
-            else
-            {
-                //Initialize renderer color
-                SDL_SetRenderDrawColor( gRenderer, 0xFF, 0xFF, 0xFF, 0xFF );
-
-                //Initialize PNG loading
-                int imgFlags = IMG_INIT_PNG;
-                if( !( IMG_Init( imgFlags ) & imgFlags ) )
-                {
-                    printf( "SDL_image could not initialize! SDL_image Error: %s\n", IMG_GetError() );
-                    success = false;
-                }
-            }
-        }
-    }
-
-    return success;
-}
-
-bool loadMedia()
-{
-
-    //Loading success flag
-    bool success = true;
-
-    //Load Foo' texture
-    if( !gFooTexture.loadFromFile( "resources/circle.png", gRenderer ) )
-    {
-        printf( "Failed to load Foo' texture image!\n" );
-        success = false;
-    }
-
-    //Load background texture
-    if( !gBackgroundTexture.loadFromFile( "resources/wp3386769.jpg", gRenderer ) )
-    {
-        printf( "Failed to load background texture image!\n" );
-        success = false;
-    }
-
-    return success;
-}
-
-void close()
-{
-    //Free loaded images
-    gFooTexture.free();
-    gBackgroundTexture.free();
-
-    //Destroy window
-    SDL_DestroyRenderer( gRenderer );
-    SDL_DestroyWindow( gWindow );
-    gWindow = NULL;
-    gRenderer = NULL;
-
-    //Quit SDL subsystems
-    IMG_Quit();
-    SDL_Quit();
-}
-
 int main( int argc, char* args[] )
 {
-    SDL_Rect gSpriteClips[ 4 ];
-
-    //Set top left sprite
-    gSpriteClips[ 0 ].x =   0;
-    gSpriteClips[ 0 ].y =   0;
-    gSpriteClips[ 0 ].w = 64;
-    gSpriteClips[ 0 ].h = 64;
-
-    //Set top right sprite
-    gSpriteClips[ 1 ].x = 64;
-    gSpriteClips[ 1 ].y =   0;
-    gSpriteClips[ 1 ].w = 64;
-    gSpriteClips[ 1 ].h = 64;
-
-    //Set bottom left sprite
-    gSpriteClips[ 2 ].x =   0;
-    gSpriteClips[ 2 ].y = 64;
-    gSpriteClips[ 2 ].w = 64;
-    gSpriteClips[ 2 ].h = 64;
-
-    //Set bottom right sprite
-    gSpriteClips[ 3 ].x = 64;
-    gSpriteClips[ 3 ].y = 64;
-    gSpriteClips[ 3 ].w = 64;
-    gSpriteClips[ 3 ].h = 64;
-
+    cuttlefish::Window window_l;
 
     //Start up SDL and create window
-    if( !init() )
+    if( !window_l.init(SCREEN_WIDTH, SCREEN_HEIGHT) )
     {
         printf( "Failed to initialize!\n" );
     }
     else
     {
+        Texture const * background_l = window_l.loadTexture("resources/wp3386769.jpg");
+        Texture const * circles_l = window_l.loadTexture("resources/circle.png");
         //Load media
-        if( !loadMedia() )
+        if( !background_l || !circles_l )
         {
             printf( "Failed to load media!\n" );
         }
         else
         {
-            Sprite sprite_l(&gFooTexture, 1., 32, 32, 64, 64, {2, 2}, {3., 0.25});
+            Sprite sprite_l(circles_l, 1., 32, 32, 64, 64, {2, 2}, {3., 0.25});
             sprite_l.setState(1);
 
             bool quit = false;
+            double x = 0.;
+            double y = 0.;
+            double dX = 0.;
+            double dY = 0.;
+            double camSpeed_l = 200.;
+
+            size_t frameCount_l = 0;
+            double totalTime_l = 0.;
+            double frameRate_l = 0;
 
             auto last_l = std::chrono::steady_clock::now();
             double elapsed_l = 0.;
@@ -183,55 +72,80 @@ int main( int argc, char* args[] )
                         /* Check the SDLKey values and move change the coords */
                         switch( e.key.keysym.sym ){
                             case SDLK_LEFT:
-                                sprite_l.setState(1);
+                                dX = - camSpeed_l;
                                 break;
                             case SDLK_RIGHT:
+                                dX = camSpeed_l;
+                                break;
+                            case SDLK_UP:
+                                dY = -camSpeed_l;
+                                break;
+                            case SDLK_DOWN:
+                                dY = camSpeed_l;
+                                break;
+                            case SDLK_j:
                                 sprite_l.setState(0);
+                                break;
+                            case SDLK_k:
+                                sprite_l.setState(1);
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+                    if( e.type == SDL_KEYUP)
+                    {
+                        switch( e.key.keysym.sym ){
+                            case SDLK_LEFT:
+                                dX = 0;
+                                break;
+                            case SDLK_RIGHT:
+                                dX = 0;
+                                break;
+                            case SDLK_UP:
+                                dY = 0;
+                                break;
+                            case SDLK_DOWN:
+                                dY = 0;
                                 break;
                             default:
                                 break;
                         }
                     }
                 }
-
-                //Clear screen
-                SDL_SetRenderDrawColor( gRenderer, 0xFF, 0xFF, 0xFF, 0xFF );
-                SDL_RenderClear( gRenderer );
+                x += dX * elapsed_l;
+                y += dY * elapsed_l;
+                window_l.setCamera(x, y);
+                window_l.clear();
 
                 //Render background texture to screen
-                gBackgroundTexture.render(gRenderer, 0, 0, SCREEN_HEIGHT, SCREEN_WIDTH );
+                background_l->render(window_l.getRenderer(), 0, 0, SCREEN_HEIGHT, SCREEN_WIDTH );
 
-                sprite_l.render(gRenderer, SCREEN_WIDTH/2, SCREEN_HEIGHT/2);
+                sprite_l.render(window_l, SCREEN_WIDTH/2, SCREEN_HEIGHT/2);
 
-                //Render top left sprite
-                gFooTexture.render( gRenderer, 0, 0, gSpriteClips[ 0 ].h*2, gSpriteClips[ 0 ].w*2,
-                    &gSpriteClips[ 0 ] );
-
-                //Render top right sprite
-                gFooTexture.render( gRenderer, SCREEN_WIDTH - gSpriteClips[ 1 ].w, 0, gSpriteClips[ 0 ].h, gSpriteClips[ 0 ].w,
-                    &gSpriteClips[ 1 ] );
-
-                //Render bottom left sprite
-                gFooTexture.render( gRenderer, 0, SCREEN_HEIGHT - gSpriteClips[ 2 ].h, gSpriteClips[ 0 ].h, gSpriteClips[ 0 ].w,
-                    &gSpriteClips[ 2 ] );
-
-                //Render bottom right sprite
-                gFooTexture.render( gRenderer, SCREEN_WIDTH - gSpriteClips[ 3 ].w, SCREEN_HEIGHT - gSpriteClips[ 3 ].h, gSpriteClips[ 0 ].h, gSpriteClips[ 0 ].w,
-                    &gSpriteClips[ 3 ] );
-
-                //Update screen
-                SDL_RenderPresent( gRenderer );
+                window_l.draw();
 
                 auto cur_l = std::chrono::steady_clock::now();
                 std::chrono::duration<double> elapsed_seconds_l = cur_l-last_l;
-                sprite_l.update(elapsed_seconds_l.count());
+                elapsed_l = elapsed_seconds_l.count();
+                sprite_l.update(elapsed_l);
                 last_l = cur_l;
+
+                ++ frameCount_l;
+                totalTime_l += elapsed_l;
+
+                if(frameCount_l == 500)
+                {
+                    frameRate_l = frameCount_l / totalTime_l;
+                    frameCount_l = 0;
+                    totalTime_l = 0.;
+                }
             }
+            std::cout<<"framerate = "<<frameRate_l<<std::endl;
         }
     }
-
     //Free resources and close SDL
-    close();
+    window_l.close();
 
     return 0;
 }

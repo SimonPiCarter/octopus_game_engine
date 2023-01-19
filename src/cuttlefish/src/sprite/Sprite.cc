@@ -4,6 +4,7 @@
 #include <SDL2/SDL_image.h>
 
 #include "texture/Texture.hh"
+#include "window/Window.hh"
 
 namespace cuttlefish
 {
@@ -38,7 +39,7 @@ void Sprite::update(double elapsedTime_l)
 	}
 }
 
-void Sprite::render( SDL_Renderer* renderer_p, int x, int y )
+void Sprite::render( Window &window_p, int x, int y )
 {
 	SDL_Rect final_l {
 		int(x - _logicalX * _scale),
@@ -53,8 +54,8 @@ void Sprite::render( SDL_Renderer* renderer_p, int x, int y )
 		_width,
 		_height,
 	};
-
-	_texture->render(renderer_p, final_l.x, final_l.y, final_l.h, final_l.w, &clip_l);
+	SDL_Point const &cam_l = window_p.getCamera();
+	_texture->render(window_p.getRenderer(), final_l.x - cam_l.x, final_l.y - cam_l.y, final_l.h, final_l.w, &clip_l);
 }
 
 } // cuttlefish
