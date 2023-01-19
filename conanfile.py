@@ -25,11 +25,13 @@ class cfllpspConan(ConanFile):
                 ("gtest/1.12.1", "private")
     options = {
         "shared": [True, False],
-        "fPIC": [True, False]
+        "fPIC": [True, False],
+        "with_graphic": [True, False]
         }
     default_options = {
         "shared": False,
-        "fPIC": True
+        "fPIC": True,
+        "with_graphic": False
         }
     generators = "cmake"
     #build_policy = # can be never, missing, always
@@ -42,6 +44,7 @@ class cfllpspConan(ConanFile):
     def config_options(self):
         if self.settings.os == "Windows":
             del self.options.fPIC
+            self.options.with_graphic = True
 
     # CMake configuration wrapper
     def configure_cmake(self):
@@ -57,7 +60,7 @@ class cfllpspConan(ConanFile):
     # manages requirements
     # allows for defining optional requirements
     def requirements(self):
-        if self.settings.os == "Windows":
+        if self.options.with_graphic:
             self.requires("sdl/2.26.1")
             self.requires("sdl_image/2.0.5")
 
@@ -76,7 +79,7 @@ class cfllpspConan(ConanFile):
     # CMake configuration wrapper
     def configure_cmake(self):
         cmake = CMake(self)
-        cmake.definitions["GRAPHICS"] = "ON" if  self.settings.os == "Windows" else "OFF"
+        cmake.definitions["GRAPHICS"] = "ON" if self.options.with_graphic else "OFF"
         cmake.configure()
         return cmake
 
