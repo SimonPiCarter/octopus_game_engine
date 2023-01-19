@@ -1,8 +1,11 @@
-#include "LTexture.hh"
+#include "Texture.hh"
+
+#include <SDL2/SDL.h>
+#include <SDL2/SDL_image.h>
 
 namespace cuttlefish
 {
-LTexture::LTexture()
+Texture::Texture()
 {
     //Initialize
     mTexture = NULL;
@@ -10,13 +13,13 @@ LTexture::LTexture()
     mHeight = 0;
 }
 
-LTexture::~LTexture()
+Texture::~Texture()
 {
     //Deallocate
     free();
 }
 
-bool LTexture::loadFromFile( std::string path, SDL_Renderer* renderer )
+bool Texture::loadFromFile( std::string path, SDL_Renderer* renderer )
 {
     //Get rid of preexisting texture
     free();
@@ -55,7 +58,7 @@ bool LTexture::loadFromFile( std::string path, SDL_Renderer* renderer )
     return mTexture != NULL;
 }
 
-void LTexture::free()
+void Texture::free()
 {
     //Free texture if it exists
     if( mTexture != NULL )
@@ -67,7 +70,7 @@ void LTexture::free()
     }
 }
 
-void LTexture::render(SDL_Renderer* renderer, int x, int y, int h, int w, SDL_Rect* clip )
+void Texture::render(SDL_Renderer* renderer, int x, int y, int h, int w, SDL_Rect* clip ) const
 {
     //Set rendering space and render to screen
     SDL_Rect renderQuad = { x, y, w, h };
@@ -76,12 +79,12 @@ void LTexture::render(SDL_Renderer* renderer, int x, int y, int h, int w, SDL_Re
 
 }
 
-int LTexture::getWidth()
+int Texture::getWidth()
 {
     return mWidth;
 }
 
-int LTexture::getHeight()
+int Texture::getHeight()
 {
     return mHeight;
 }

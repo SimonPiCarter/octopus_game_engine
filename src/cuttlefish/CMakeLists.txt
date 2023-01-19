@@ -12,7 +12,8 @@ find_package(SDL2 2.26.1 REQUIRED)
 find_package(SDL2_image 2.0.5 REQUIRED)
 
 add_executable(cuttlefish
-	${CMAKE_CURRENT_SOURCE_DIR}/src/texture/LTexture.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/src/sprite/Sprite.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/src/texture/Texture.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/test.cc
 )
 

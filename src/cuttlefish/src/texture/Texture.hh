@@ -1,23 +1,23 @@
 #ifndef __Texture__
 #define __Texture__
 
-#include <SDL2/SDL.h>
-#include <SDL2/SDL_image.h>
-
 #include <string>
+
+class SDL_Rect;
+class SDL_Renderer;
+class SDL_Texture;
 
 namespace cuttlefish
 {
-
 //Texture wrapper class
-class LTexture
+class Texture
 {
     public:
         //Initializes variables
-        LTexture();
+        Texture();
 
         //Deallocates memory
-        ~LTexture();
+        ~Texture();
 
         //Loads image at specified path
         bool loadFromFile( std::string path, SDL_Renderer* renderer );
@@ -26,7 +26,7 @@ class LTexture
         void free();
 
         //Renders texture at given point
-        void render( SDL_Renderer* renderer, int x, int y, int h, int w, SDL_Rect* clip = nullptr );
+        void render( SDL_Renderer* renderer, int x, int y, int h, int w, SDL_Rect* clip = nullptr ) const;
 
         //Gets image dimensions
         int getWidth();

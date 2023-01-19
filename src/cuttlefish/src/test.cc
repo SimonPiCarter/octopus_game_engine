@@ -3,7 +3,10 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 
-#include "texture/LTexture.hh"
+#include <chrono>
+
+#include "sprite/Sprite.hh"
+#include "texture/Texture.hh"
 
 #define SCREEN_WIDTH 640
 #define SCREEN_HEIGHT 480
@@ -21,8 +24,8 @@ SDL_Window* gWindow = NULL;
 SDL_Renderer* gRenderer = NULL;
 
 //Scene textures
-LTexture gFooTexture;
-LTexture gBackgroundTexture;
+Texture gFooTexture;
+Texture gBackgroundTexture;
 
 bool init()
 {
@@ -139,6 +142,8 @@ int main( int argc, char* args[] )
     gSpriteClips[ 3 ].y = 64;
     gSpriteClips[ 3 ].w = 64;
     gSpriteClips[ 3 ].h = 64;
+
+
     //Start up SDL and create window
     if( !init() )
     {
@@ -153,8 +158,13 @@ int main( int argc, char* args[] )
         }
         else
         {
+            Sprite sprite_l(&gFooTexture, 1., 32, 32, 64, 64, {2, 2}, {3., 0.25});
+            sprite_l.setState(1);
+
             bool quit = false;
 
+            auto last_l = std::chrono::steady_clock::now();
+            double elapsed_l = 0.;
             //Event handler
             SDL_Event e;
                        //While application is running
@@ -168,6 +178,20 @@ int main( int argc, char* args[] )
                     {
                         quit = true;
                     }
+                    if( e.type == SDL_KEYDOWN)
+                    {
+                        /* Check the SDLKey values and move change the coords */
+                        switch( e.key.keysym.sym ){
+                            case SDLK_LEFT:
+                                sprite_l.setState(1);
+                                break;
+                            case SDLK_RIGHT:
+                                sprite_l.setState(0);
+                                break;
+                            default:
+                                break;
+                        }
+                    }
                 }
 
                 //Clear screen
@@ -176,6 +200,8 @@ int main( int argc, char* args[] )
 
                 //Render background texture to screen
                 gBackgroundTexture.render(gRenderer, 0, 0, SCREEN_HEIGHT, SCREEN_WIDTH );
+
+                sprite_l.render(gRenderer, SCREEN_WIDTH/2, SCREEN_HEIGHT/2);
 
                 //Render top left sprite
                 gFooTexture.render( gRenderer, 0, 0, gSpriteClips[ 0 ].h*2, gSpriteClips[ 0 ].w*2,
@@ -195,6 +221,11 @@ int main( int argc, char* args[] )
 
                 //Update screen
                 SDL_RenderPresent( gRenderer );
+
+                auto cur_l = std::chrono::steady_clock::now();
+                std::chrono::duration<double> elapsed_seconds_l = cur_l-last_l;
+                sprite_l.update(elapsed_seconds_l.count());
+                last_l = cur_l;
             }
         }
     }
