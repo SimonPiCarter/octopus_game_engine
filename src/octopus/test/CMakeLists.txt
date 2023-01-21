@@ -34,6 +34,7 @@ target_sources (unit_tests
 	src/harvestCommand.test
 	src/moveCommand.test.cc
 	src/queueCommand.test.cc
+	src/unitProductionCommand.test.cc
 )
 
 target_link_libraries (unit_tests
