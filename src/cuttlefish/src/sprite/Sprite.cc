@@ -39,11 +39,11 @@ void Sprite::update(double elapsedTime_l)
 	}
 }
 
-void Sprite::render( Window &window_p, int x, int y )
+void Sprite::render( Window &window_p )
 {
 	SDL_Rect final_l {
-		int(x - _logicalX * _scale),
-		int(y - _logicalY * _scale),
+		int(_x - _logicalX * _scale),
+		int(_y - _logicalY * _scale),
 		int(_width * _scale),
 		int(_height * _scale),
 	};
@@ -57,5 +57,29 @@ void Sprite::render( Window &window_p, int x, int y )
 	SDL_Point const &cam_l = window_p.getCamera();
 	_texture->render(window_p.getRenderer(), final_l.x - cam_l.x, final_l.y - cam_l.y, final_l.h, final_l.w, &clip_l);
 }
+
+void Sprite::setPosition(double x, double y)
+{
+	_x = x;
+	_y = y;
+}
+
+void Sprite::move(double dx, double dy)
+{
+	_x += dx;
+	_y += dy;
+}
+
+double Sprite::getX() const
+{
+	return _x;
+}
+
+double Sprite::getY() const
+{
+	return _y;
+}
+
+
 
 } // cuttlefish
