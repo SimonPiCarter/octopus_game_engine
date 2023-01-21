@@ -22,7 +22,7 @@ struct BufferedState
 	~BufferedState();
 
 	unsigned long _stepHandled {0};
-	/// @brief iterator to the last handled step
+	/// @brief iterator after the last handled step
 	std::list<Step *>::iterator _stepIt;
 	State * _state {nullptr};
 };
@@ -33,6 +33,7 @@ struct BufferedState
 /// state returned and the new state (especially for display purpose)
 struct StateAndSteps
 {
+	/// @brief iterator after the last handled step
 	std::list<Step *>::iterator _stepIt;
 	std::list<Step *> const &_steps;
 	State const *_state;
