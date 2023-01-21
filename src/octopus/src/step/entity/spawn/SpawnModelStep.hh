@@ -51,6 +51,9 @@ public:
 	{
 		return false;
 	}
+
+	Handle const &getHandle() const { return _handle; }
+	class_t const &getModel() const { return _model; }
 protected:
 	/// @brief setup on first apply (that's why it must be mutable)
 	mutable bool _initialized {false};

@@ -36,11 +36,16 @@ class Sprite
 
 		/// @brief render sprite with its logical center on (x, y)
 		/// call texture render using a clip based on state and frame
-		void render( Window &window_p, int x, int y );
+		void render( Window &window_p );
 
 		//Gets image dimensions
 		int getWidth();
 		int getHeight();
+
+		void setPosition(double x, double y);
+		void move(double dx, double dy);
+		double getX() const;
+		double getY() const;
 
 	private:
 		//The underlying texture
@@ -59,6 +64,13 @@ class Sprite
 		std::vector<int> const _nbFramesPerState;
 
 		std::vector<double> const _timePerFramePerState;
+
+		////
+		//// Dynamic data
+		////
+
+		double _x {0};
+		double _y {0};
 
 		/// @brief the time since frame has changed
 		double _timeIntoFrame {0.};

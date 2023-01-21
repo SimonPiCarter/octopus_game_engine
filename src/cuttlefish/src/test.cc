@@ -8,6 +8,15 @@
 #include "sprite/Sprite.hh"
 #include "texture/Texture.hh"
 #include "window/Window.hh"
+#include "world/World.hh"
+
+#include "controller/Controller.hh"
+#include "state/entity/Entity.hh"
+#include "state/model/entity/EntityModel.hh"
+#include "step/entity/spawn/EntitySpawnStep.hh"
+#include "step/Step.hh"
+
+#include "cases/Cases.hh"
 
 #define SCREEN_WIDTH 640
 #define SCREEN_HEIGHT 480
@@ -39,8 +48,9 @@ int main( int argc, char* args[] )
 		}
 		else
 		{
-			Sprite sprite_l(circles_l, 1., 32, 32, 64, 64, {2, 2}, {3., 0.25});
-			sprite_l.setState(1);
+			World world_l;
+
+			octopus::Controller controller_l(Case2(), 0.1);
 
 			bool quit = false;
 			double x = 0.;
@@ -80,12 +90,6 @@ int main( int argc, char* args[] )
 							case SDLK_DOWN:
 								dY = camSpeed_l;
 								break;
-							case SDLK_j:
-								sprite_l.setState(0);
-								break;
-							case SDLK_k:
-								sprite_l.setState(1);
-								break;
 							default:
 								break;
 						}
@@ -115,18 +119,25 @@ int main( int argc, char* args[] )
 				window_l.setCamera(x, y);
 				window_l.clear();
 
+				// update controller
+				controller_l.update(elapsed_l);
+				controller_l.loop_body();
+
+				// query a new state if available
+				octopus::StateAndSteps stateAndSteps_l = controller_l.queryStateAndSteps();
+				world_l.handleStep(window_l, stateAndSteps_l);
+
 				//Render background texture to screen
 				background_l->render(window_l.getRenderer(), 0, 0, SCREEN_HEIGHT, SCREEN_WIDTH );
-
-				sprite_l.render(window_l, SCREEN_WIDTH/2, SCREEN_HEIGHT/2);
-
-				window_l.draw();
 
 				auto cur_l = std::chrono::steady_clock::now();
 				std::chrono::duration<double> elapsed_seconds_l = cur_l-last_l;
 				elapsed_l = elapsed_seconds_l.count();
-				sprite_l.update(elapsed_l);
 				last_l = cur_l;
+
+				world_l.display(window_l, elapsed_l);
+
+				window_l.draw();
 			}
 		}
 	}

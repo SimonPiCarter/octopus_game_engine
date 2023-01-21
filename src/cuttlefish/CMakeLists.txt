@@ -16,10 +16,12 @@ add_executable(cuttlefish
 	${CMAKE_CURRENT_SOURCE_DIR}/src/sprite/Sprite.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/texture/Texture.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/window/Window.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/src/world/World.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/src/world/WorldUpdaterStepVisitor.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/test.cc
 )
 
-target_link_libraries(cuttlefish PUBLIC octopus SDL2::SDL2main SDL2_image::SDL2_image SDL2_ttf::SDL2_ttf)
+target_link_libraries(cuttlefish PUBLIC levels SDL2::SDL2main SDL2_image::SDL2_image SDL2_ttf::SDL2_ttf)
 
 target_include_directories(cuttlefish
 	PUBLIC
