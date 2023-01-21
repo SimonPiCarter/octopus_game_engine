@@ -21,12 +21,12 @@ void ProductionProgressionStep::revert(State &state_p) const
 	Commandable * cmdable_l = state_p.getCommandable(this->_handle);
 	Logger::getDebug() << "ProductionProgressionStep :: revert " << this->_handle <<std::endl;
 	ProductionData *data_l = dynamic_cast<ProductionData *>(cmdable_l->getFrontQueue()._data);
-	data_l->_progression += _delta;
+	data_l->_progression -= _delta;
 }
 
 bool ProductionProgressionStep::isNoOp() const
 {
-	return _delta != 0;
+	return _delta == 0;
 }
 
 } // namespace octopus
