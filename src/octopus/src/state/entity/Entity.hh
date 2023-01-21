@@ -24,7 +24,7 @@ namespace octopus
 			Handle _handle {0};
 
 			/// @brief is alive in the state
-			bool _alive {false};
+			bool _alive {true};
 
 			double _hp { 10. };
 			/// @brief time since last attack in step
