@@ -98,7 +98,7 @@ bool EntityMoveCommand::applyCommand(Step & step_p, State const &state_p, Comman
 	// If no progress for too long we stop
 	if(data_l._countSinceProgress > 50)
 	{
-		Logger::getDebug() << "no progress since 25 steps" << std::endl;
+		Logger::getDebug() << "no progress since 50 steps" << std::endl;
 		return true;
 	}
 

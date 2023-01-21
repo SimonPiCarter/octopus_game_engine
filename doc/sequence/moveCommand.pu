@@ -1,0 +1,35 @@
+@startuml moveCommand
+
+start
+
+if (check grid status (is outdated) should update?) then (yes)
+	:compute new path;
+	#palegreen:add Steppable set waypoint;
+	#palegreen:add Steppable set grid status;
+	#pink:return false;
+	stop
+else (no)
+endif
+
+while (while waypoint reached?)
+	#palegreen:add Steppable remove waypoint;
+endwhile
+
+if (more waypoint?) then (yes)
+else (no)
+	#pink:return true;
+	stop
+endif
+
+	#palegreen:add Steppable record position;
+if (progress made?) then (yes)
+	#palegreen:add Steppable progress;
+else (no)
+	#palegreen:add Steppable no progress;
+endif
+
+	#palegreen:add Steppable move step;
+
+#pink:return false;
+stop
+@enduml
