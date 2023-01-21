@@ -23,9 +23,12 @@ Sprite::Sprite(Texture const * texture_p, double scale_p, int logX_p, int logY_p
 
 void Sprite::setState(int state_p)
 {
+	if(state_p != _state)
+	{
+		_timeIntoFrame = 0.;
+		_frame = 0;
+	}
 	_state = state_p;
-	_timeIntoFrame = 0.;
-	_frame = 0;
 }
 
 void Sprite::update(double elapsedTime_l)
