@@ -63,6 +63,8 @@ class cfllpspConan(ConanFile):
         if self.options.with_graphic:
             self.requires("sdl/2.26.1")
             self.requires("sdl_image/2.0.5")
+            self.requires("sdl_ttf/2.0.18")
+            self.requires("libpng/1.6.39")
 
     # copy required files from local store to project
     # handy for copying required shared libraries when testing
