@@ -37,6 +37,7 @@ struct StateAndSteps
 	std::list<Step *>::iterator _stepIt;
 	std::list<Step *> const &_steps;
 	State const *_state;
+	Step const &_initialStep;
 };
 
 /// @brief This class aims at controlling a triple state buffer

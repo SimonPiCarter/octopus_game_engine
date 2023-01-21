@@ -15,15 +15,19 @@ void World::handleStep(Window &window_p, octopus::StateAndSteps const &steps_p)
 
 	if(_first)
 	{
-		std::cout<<"first"<<std::endl;
 		_lastIt = steps_p._steps.begin();
 		_first = false;
+
+		// visit intial steps
+		for(octopus::Steppable const * steppable_l : steps_p._initialStep.getSteppable())
+		{
+			vis_l(steppable_l);
+		}
 	}
 
 	// Every step missing
 	for(auto it_l = _lastIt ; it_l != steps_p._stepIt ; ++it_l)
 	{
-		std::cout<<"iterating step"<<std::endl;
 		// Visit every stepapble in the step
 		for(octopus::Steppable const * steppable_l : (*it_l)->getSteppable())
 		{

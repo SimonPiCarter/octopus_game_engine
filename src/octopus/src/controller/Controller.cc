@@ -209,7 +209,7 @@ StateAndSteps Controller::queryStateAndSteps()
 	{
 		std::swap(_bufferState, _frontState);
 	}
-	return { _frontState->_stepIt, _compiledSteps , _frontState->_state };
+	return { _frontState->_stepIt, _compiledSteps , _frontState->_state, _initialStep };
 }
 
 State const * Controller::getBackState() const

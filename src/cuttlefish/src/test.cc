@@ -15,6 +15,7 @@
 #include "state/model/entity/EntityModel.hh"
 #include "step/entity/spawn/EntitySpawnStep.hh"
 #include "step/Step.hh"
+#include "library/Library.hh"
 
 #include "cases/Cases.hh"
 
@@ -50,7 +51,10 @@ int main( int argc, char* args[] )
 		{
 			World world_l;
 
-			octopus::Controller controller_l(Case2(), 0.1);
+			octopus::Library lib_l;
+			std::list<octopus::Steppable *> spawners_l = Case2(lib_l);
+
+			octopus::Controller controller_l(spawners_l, 0.1);
 
 			bool quit = false;
 			double x = 0.;
