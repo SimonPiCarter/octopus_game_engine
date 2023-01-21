@@ -55,6 +55,7 @@ public:
 	virtual void visit(octopus::CommandWindUpDiffStep const *) override {}
 	virtual void visit(octopus::EntityAttackStep const *) override {}
 	virtual void visit(octopus::PlayerSpawnStep const *) override {}
+	virtual void visit(octopus::ProductionProgressionStep const *) override {}
 	virtual void visit(octopus::TickingStep const *) override {}
 	virtual void visit(octopus::UnitHarvestDropStep const *) override {}
 	virtual void visit(octopus::UnitHarvestTypeStep const *) override {}

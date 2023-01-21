@@ -8,7 +8,7 @@
 
 namespace octopus
 {
-	/// @brief this is aimed at dmgi
+	/// @brief this is aimed at changing hp
 	class EntityHitPointChangeStep : public Steppable
 	{
 		public:

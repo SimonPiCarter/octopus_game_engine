@@ -10,6 +10,7 @@ cmake_minimum_required (VERSION 3.14.0)
 
 
 add_library(octopus
+	${CMAKE_CURRENT_SOURCE_DIR}/src/command/BuildingUnitProductionCommand.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/command/Command.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/command/Commandable.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/command/CommandQueue.cc
@@ -38,6 +39,7 @@ add_library(octopus
 	${CMAKE_CURRENT_SOURCE_DIR}/src/step/command/CommandSubAttackStep.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/step/command/CommandUpdateLastPosStep
 	${CMAKE_CURRENT_SOURCE_DIR}/src/step/command/CommandWindUpDiffStep.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/src/step/command/ProductionProgressionStep.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/step/command/harvest/CommandHarvestStep.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/step/entity/EntityAttackStep.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/step/entity/EntityHitPointChangeStep.cc

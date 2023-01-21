@@ -52,6 +52,7 @@ namespace octopus
 	class EntityMoveStep;
 	class EntitySpawnStep;
 	class PlayerSpawnStep;
+	class ProductionProgressionStep;
 	class ResourceSpawnStep;
 	class TickingStep;
 	class UnitHarvestDropStep;
@@ -95,6 +96,7 @@ namespace octopus
 			virtual void visit(EntityMoveStep const *steppable_p) = 0;
 			virtual void visit(EntitySpawnStep const *steppable_p) = 0;
 			virtual void visit(PlayerSpawnStep const *steppable_p) = 0;
+			virtual void visit(ProductionProgressionStep const *steppable_p) = 0;
 			virtual void visit(ResourceSpawnStep const *steppable_p) = 0;
 			virtual void visit(TickingStep const *steppable_p) = 0;
 			virtual void visit(UnitHarvestDropStep const *steppable_p) = 0;
