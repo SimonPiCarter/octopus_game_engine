@@ -1,9 +1,6 @@
 #include <iostream>
 #include <fstream>
 
-#include "command/EntityMoveCommand.hh"
-#include "command/EntityWaitCommand.hh"
-#include "command/EntityAttackCommand.hh"
 #include "command/UnitHarvestCommand.hh"
 #include "library/Library.hh"
 #include "state/entity/Entity.hh"
@@ -16,7 +13,6 @@
 #include "state/State.hh"
 #include "step/Step.hh"
 #include "step/command/CommandQueueStep.hh"
-#include "step/entity/spawn/EntitySpawnStep.hh"
 #include "step/entity/spawn/UnitSpawnStep.hh"
 #include "step/entity/spawn/ResourceSpawnStep.hh"
 #include "step/entity/spawn/BuildingSpawnStep.hh"
