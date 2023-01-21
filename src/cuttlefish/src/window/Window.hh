@@ -1,9 +1,11 @@
 #ifndef __Window__
 #define __Window__
 
+#include <chrono>
 #include <string>
 #include <map>
 #include <SDL2/SDL.h>
+#include <SDL2/SDL_ttf.h>
 
 
 namespace cuttlefish
@@ -35,6 +37,8 @@ public:
 	SDL_Point const &getCamera() const { return _camera; }
 	void setCamera(int x, int y);
 
+	void displayFps(bool display_p) { _displayFps = display_p; }
+
 private:
 	std::map<std::string, Texture *> _mapTexture;
 
@@ -46,6 +50,15 @@ private:
 
 	// camera offset
 	SDL_Point _camera {0, 0};
+
+	// display fps
+	bool _displayFps {false};
+	TTF_Font* _font {nullptr};
+	double _fps {0.};
+	double _elpased {0.};
+	long _frameCount {0};
+	std::chrono::time_point<std::chrono::steady_clock> _refTime;
+
 };
 
 } // cuttlefish

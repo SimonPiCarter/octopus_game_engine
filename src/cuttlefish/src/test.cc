@@ -29,6 +29,7 @@ int main( int argc, char* args[] )
 	}
 	else
 	{
+		window_l.displayFps(true);
 		Texture const * background_l = window_l.loadTexture("resources/wp3386769.jpg");
 		Texture const * circles_l = window_l.loadTexture("resources/circle.png");
 		//Load media
@@ -47,10 +48,6 @@ int main( int argc, char* args[] )
 			double dX = 0.;
 			double dY = 0.;
 			double camSpeed_l = 200.;
-
-			size_t frameCount_l = 0;
-			double totalTime_l = 0.;
-			double frameRate_l = 0;
 
 			auto last_l = std::chrono::steady_clock::now();
 			double elapsed_l = 0.;
@@ -130,18 +127,7 @@ int main( int argc, char* args[] )
 				elapsed_l = elapsed_seconds_l.count();
 				sprite_l.update(elapsed_l);
 				last_l = cur_l;
-
-				++ frameCount_l;
-				totalTime_l += elapsed_l;
-
-				if(frameCount_l == 500)
-				{
-					frameRate_l = frameCount_l / totalTime_l;
-					frameCount_l = 0;
-					totalTime_l = 0.;
-				}
 			}
-			std::cout<<"framerate = "<<frameRate_l<<std::endl;
 		}
 	}
 	//Free resources and close SDL

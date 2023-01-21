@@ -16,7 +16,7 @@ bool Window::init(int width_l, int height_l)
 	//Initialize SDL
 	if( SDL_Init( SDL_INIT_VIDEO ) < 0 )
 	{
-		printf( "SDL could not initialize! SDL Error: %s\n", SDL_GetError() );
+		std::cout<< "SDL could not initialize! SDL Error: "<< SDL_GetError() <<std::endl;
 		success = false;
 	}
 	else
@@ -25,7 +25,7 @@ bool Window::init(int width_l, int height_l)
 		_window = SDL_CreateWindow( "SDL Tutorial", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, width_l, height_l, SDL_WINDOW_SHOWN );
 		if( _window == nullptr )
 		{
-			printf( "Window could not be created! SDL Error: %s\n", SDL_GetError() );
+			std::cout<< "Window could not be created! SDL Error: "<< SDL_GetError() <<std::endl;
 			success = false;
 		}
 		else
@@ -34,7 +34,7 @@ bool Window::init(int width_l, int height_l)
 			_renderer = SDL_CreateRenderer( _window, -1, SDL_RENDERER_ACCELERATED );
 			if( _renderer == nullptr )
 			{
-				printf( "Renderer could not be created! SDL Error: %s\n", SDL_GetError() );
+				std::cout<< "Renderer could not be created! SDL Error: "<< SDL_GetError() <<std::endl;
 				success = false;
 			}
 			else
@@ -48,12 +48,22 @@ bool Window::init(int width_l, int height_l)
 				int imgFlags = IMG_INIT_PNG;
 				if( !( IMG_Init( imgFlags ) & imgFlags ) )
 				{
-					printf( "SDL_image could not initialize! SDL_image Error: %s\n", IMG_GetError() );
+					std::cout<< "SDL_image could not initialize! SDL_image Error: "<< IMG_GetError() <<std::endl;
 					success = false;
+				}
+				if ( TTF_Init() < 0 ) {
+					std::cout << "Error initializing SDL_ttf: " << TTF_GetError() << std::endl;
+				}
+
+				_font = TTF_OpenFont("resources/font.ttf", 24);
+				if ( !_font ) {
+					std::cout << "Failed to load font: " << TTF_GetError() << std::endl;
 				}
 			}
 		}
 	}
+
+	_refTime = std::chrono::steady_clock::now();
 
 	return success;
 }
@@ -87,8 +97,41 @@ void Window::clear()
 
 void Window::draw()
 {
+	// udate framerate
+	++_frameCount;
+	auto cur_l = std::chrono::steady_clock::now();
+	std::chrono::duration<double> elapsed_seconds_l = cur_l-_refTime;
+	_elpased += elapsed_seconds_l.count();
+	_refTime = cur_l;
+
+	if(_frameCount == 100)
+	{
+		_fps = _frameCount/_elpased;
+		_frameCount = 0;
+		_elpased = 0;
+	}
+
+	if(_displayFps)
+	{
+		SDL_Surface* text;
+		// Set color to black
+		SDL_Color color = { 0, 0, 0 };
+
+		std::string strFps_l = std::to_string(_fps);
+		text = TTF_RenderText_Solid( _font, strFps_l.c_str(), color );
+		if ( !text ) {
+			std::cout << "Failed to render text: " << TTF_GetError() << std::endl;
+		}
+		SDL_Texture* text_texture = SDL_CreateTextureFromSurface( _renderer, text );
+
+		SDL_Rect dest = { 0, 0, text->w, text->h };
+
+		SDL_RenderCopy( _renderer, text_texture, nullptr, &dest );
+	}
+
 	//Update screen
 	SDL_RenderPresent( _renderer );
+
 }
 
 Texture const * Window::loadTexture(std::string const &path_p)
