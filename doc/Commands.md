@@ -9,6 +9,9 @@
 - EntityAttackMoveCommand : move to point issuing attack command to everything in a given range
 - UnitHarvestCommand : move to a resource and harvest it, then go and drop it, repeat while no other command in queue
 
+### Building
+- BuildingUnitProductionCommand : produce an unit from a UnitModel
+
 ## to implement
 
 
@@ -17,5 +20,4 @@
 - EntityBuildCommand : move to a building and build it
 
 ### Building
-- BuildingTrainCommand
 - BuildingResearchCommand
