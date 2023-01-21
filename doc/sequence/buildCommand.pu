@@ -1,0 +1,15 @@
+@startuml buildCommand
+
+start
+
+if (is done?) then (yes)
+	#palegreen:add Steppable UnitSpawn;
+	#pink:return false;
+	stop
+else (no)
+	#palegreen:add Steppable progress;
+	#pink:return false;
+	stop
+endif
+
+@enduml
