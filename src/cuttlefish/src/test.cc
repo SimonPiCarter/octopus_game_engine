@@ -4,6 +4,7 @@
 #include <SDL2/SDL_image.h>
 
 #include <chrono>
+#include <thread>
 
 #include "sprite/Sprite.hh"
 #include "texture/Texture.hh"
@@ -28,6 +29,27 @@ using namespace cuttlefish;
 /// http://lazyfoo.net/tutorials/SDL/index.php#The%20Viewport
 ///
 
+void controllerLoop(octopus::Controller &controller_p, bool &over_p)
+{
+	using namespace std::chrono_literals;
+
+	auto last_l = std::chrono::steady_clock::now();
+	double elapsed_l = 0.;
+	while(!over_p)
+	{
+		// update controller
+		controller_p.update(elapsed_l);
+		controller_p.loop_body();
+
+		std::this_thread::sleep_for(1ms);
+
+		auto cur_l = std::chrono::steady_clock::now();
+		std::chrono::duration<double> elapsed_seconds_l = cur_l-last_l;
+		elapsed_l = elapsed_seconds_l.count();
+		last_l = cur_l;
+	}
+}
+
 int main( int argc, char* args[] )
 {
 	cuttlefish::Window window_l;
@@ -49,6 +71,8 @@ int main( int argc, char* args[] )
 		}
 		else
 		{
+			bool quit_l = false;
+
 			World world_l;
 
 			octopus::Library lib_l;
@@ -56,7 +80,8 @@ int main( int argc, char* args[] )
 
 			octopus::Controller controller_l(spawners_l, 0.01);
 
-			bool quit = false;
+			std::thread controllerThread_l(controllerLoop, std::ref(controller_l), std::ref(quit_l));
+
 			double x = 0.;
 			double y = 0.;
 			double dX = 0.;
@@ -68,15 +93,15 @@ int main( int argc, char* args[] )
 			//Event handler
 			SDL_Event e;
 					   //While application is running
-			while( !quit )
+			while( !quit_l )
 			{
 				//Handle events on queue
 				while( SDL_PollEvent( &e ) != 0 )
 				{
-					//User requests quit
+					//User requests quit_l
 					if( e.type == SDL_QUIT )
 					{
-						quit = true;
+						quit_l = true;
 					}
 					if( e.type == SDL_KEYDOWN)
 					{
@@ -123,10 +148,6 @@ int main( int argc, char* args[] )
 				window_l.setCamera(x, y);
 				window_l.clear();
 
-				// update controller
-				controller_l.update(elapsed_l);
-				controller_l.loop_body();
-
 				// query a new state if available
 				octopus::StateAndSteps stateAndSteps_l = controller_l.queryStateAndSteps();
 				world_l.handleStep(window_l, stateAndSteps_l);
@@ -143,6 +164,8 @@ int main( int argc, char* args[] )
 
 				window_l.draw();
 			}
+
+			controllerThread_l.join();
 		}
 	}
 	//Free resources and close SDL
