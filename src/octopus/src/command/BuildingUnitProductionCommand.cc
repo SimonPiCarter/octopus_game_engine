@@ -37,7 +37,10 @@ bool BuildingUnitProductionCommand::applyCommand(Step & step_p, State const &sta
 		Building const * bulding_l = dynamic_cast<Building const *>(state_p.getEntity(_source));
 
 		Unit unit_l(bulding_l->_productionOutput, false, data_l._model);
+		unit_l._player = bulding_l->_player;
 		step_p.addSteppable(new UnitSpawnStep(unit_l));
+
+		return true;
 	}
 
 	return false;
