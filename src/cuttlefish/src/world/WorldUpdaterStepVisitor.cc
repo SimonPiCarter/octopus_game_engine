@@ -28,7 +28,7 @@ void WorldUpdaterStepVisitor::spawn(octopus::Entity const &entity_p, octopus::Ha
 	const octopus::EntityModel &model_l = entity_p._model;
 
 	Sprite * sprite_l = new Sprite(_window.loadTexture("resources/circle.png"), model_l._ray, 32, 32, 64, 64, {2, 2}, {0.25, 1});
-	sprite_l->setPosition(entity_p._pos.x, entity_p._pos.y);
+	sprite_l->setPosition(entity_p._pos.x*32, entity_p._pos.y*32);
 
 	_world._sprites[handle_p] = sprite_l;
 	_world._listSprite.push_back(sprite_l);
@@ -79,7 +79,7 @@ void WorldUpdaterStepVisitor::visit(octopus::EntityHitPointChangeStep const *ste
 
 void WorldUpdaterStepVisitor::visit(octopus::EntityMoveStep const *step_p)
 {
-	_world._sprites[step_p->_handle]->move(step_p->_move.x, step_p->_move.y);
+	_world._sprites[step_p->_handle]->move(step_p->_move.x*32, step_p->_move.y*32);
 }
 
 }
