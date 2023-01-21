@@ -49,17 +49,8 @@ if(GRAPHICS)
 	add_subdirectory(src/cuttlefish)
 endif()
 
-# ============================================================================
-# Game configuration
-# ============================================================================
-
-add_executable(game
-	src/game/main.cc
-	src/game/cases/Case1.cc
-	src/game/cases/Case2.cc
-)
-
-target_link_libraries(game PRIVATE octopus)
+add_subdirectory(src/levels)
+add_subdirectory(src/game)
 
 # ============================================================================
 # Installation

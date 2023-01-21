@@ -2,7 +2,7 @@
 
 int main()
 {
-	Case2();
+	Case1();
 
 	return 0;
 }
