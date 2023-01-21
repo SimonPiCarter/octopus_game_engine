@@ -68,6 +68,9 @@ void WorldUpdaterStepVisitor::visit(octopus::UnitHarvestQuantityStep const *step
 	{
 		clear(step_p->_res);
 	}
+
+	// Update state of sprite harvesting
+	_world._sprites[step_p->_handle]->setState(1);
 }
 
 void WorldUpdaterStepVisitor::visit(octopus::EntityHitPointChangeStep const *step_p)

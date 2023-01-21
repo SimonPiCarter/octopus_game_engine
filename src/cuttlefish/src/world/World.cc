@@ -28,6 +28,11 @@ void World::handleStep(Window &window_p, octopus::StateAndSteps const &steps_p)
 	// Every step missing
 	for(auto it_l = _lastIt ; it_l != steps_p._stepIt ; ++it_l)
 	{
+		for(Sprite * sprite_l : _listSprite)
+		{
+			// reset steps state
+			sprite_l->setState(0);
+		}
 		// Visit every stepapble in the step
 		for(octopus::Steppable const * steppable_l : (*it_l)->getSteppable())
 		{
