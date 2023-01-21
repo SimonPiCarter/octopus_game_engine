@@ -9,7 +9,7 @@
 
 int main()
 {
-	std::list<octopus::Steppable *> spawners_l = Case1();
+	std::list<octopus::Steppable *> spawners_l = Case2();
 
 	octopus::Controller controller_l(spawners_l, 1.);
 
