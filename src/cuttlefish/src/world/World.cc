@@ -33,8 +33,8 @@ void World::handleStep(Window &window_p, octopus::StateAndSteps const &steps_p)
 		{
 			vis_l(steppable_l);
 		}
-		_lastIt = it_l;
 	}
+	_lastIt = steps_p._stepIt;
 }
 
 void World::display(Window &window_p, double elapsed_p)
