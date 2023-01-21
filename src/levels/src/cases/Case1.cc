@@ -3,34 +3,39 @@
 #include "command/EntityMoveCommand.hh"
 #include "command/EntityWaitCommand.hh"
 #include "command/EntityAttackCommand.hh"
+#include "library/Library.hh"
 #include "state/entity/Entity.hh"
 #include "step/Step.hh"
 #include "step/command/CommandQueueStep.hh"
 #include "step/entity/spawn/EntitySpawnStep.hh"
 #include "step/player/PlayerSpawnStep.hh"
 
-std::list<octopus::Steppable *> Case1()
+std::list<octopus::Steppable *> Case1(octopus::Library &lib_p)
 {
 	octopus::EntityModel targetModel_l { false, 5., 0.25, 250. };
 	octopus::EntityModel buildingModel_l { true, 2., 0.25, 10. };
 	octopus::EntityModel unitModel_l { false, 1., 0.25, 10. };
 
-	octopus::Entity target_l { { 10., 15. }, true, targetModel_l};
+	lib_p.registerEntityModel("target", targetModel_l);
+	lib_p.registerEntityModel("building", buildingModel_l);
+	lib_p.registerEntityModel("unit", unitModel_l);
 
-	octopus::Entity building_l { {15, 5}, true, buildingModel_l };
+	octopus::Entity target_l { { 10., 15. }, true, lib_p.getEntityModel("target")};
+
+	octopus::Entity building_l { {15, 5}, true, lib_p.getEntityModel("building") };
 
 	std::list<octopus::Steppable *> spawners_l =
 	{
 		new octopus::PlayerSpawnStep(0, 0),
-		new octopus::EntitySpawnStep(octopus::Entity { { 23.6, 3. }, false, unitModel_l}),
-		new octopus::EntitySpawnStep(octopus::Entity { { 25.1, 3.1 }, false, unitModel_l}),
-		new octopus::EntitySpawnStep(octopus::Entity { { 26.5, 3. }, false, unitModel_l}),
-		new octopus::EntitySpawnStep(octopus::Entity { { 23.5, 3.6 }, false, unitModel_l}),
-		new octopus::EntitySpawnStep(octopus::Entity { { 25., 3.4 }, false, unitModel_l}),
-		new octopus::EntitySpawnStep(octopus::Entity { { 26.4, 3.5 }, false, unitModel_l}),
-		new octopus::EntitySpawnStep(octopus::Entity { { 23.2, 2.4 }, false, unitModel_l}),
-		new octopus::EntitySpawnStep(octopus::Entity { { 25.1, 2.5 }, false, unitModel_l}),
-		new octopus::EntitySpawnStep(octopus::Entity { { 26.5, 2.6 }, false, unitModel_l}),
+		new octopus::EntitySpawnStep(octopus::Entity { { 23.6, 3. }, false, lib_p.getEntityModel("unit")}),
+		new octopus::EntitySpawnStep(octopus::Entity { { 25.1, 3.1 }, false, lib_p.getEntityModel("unit")}),
+		new octopus::EntitySpawnStep(octopus::Entity { { 26.5, 3. }, false, lib_p.getEntityModel("unit")}),
+		new octopus::EntitySpawnStep(octopus::Entity { { 23.5, 3.6 }, false, lib_p.getEntityModel("unit")}),
+		new octopus::EntitySpawnStep(octopus::Entity { { 25., 3.4 }, false, lib_p.getEntityModel("unit")}),
+		new octopus::EntitySpawnStep(octopus::Entity { { 26.4, 3.5 }, false, lib_p.getEntityModel("unit")}),
+		new octopus::EntitySpawnStep(octopus::Entity { { 23.2, 2.4 }, false, lib_p.getEntityModel("unit")}),
+		new octopus::EntitySpawnStep(octopus::Entity { { 25.1, 2.5 }, false, lib_p.getEntityModel("unit")}),
+		new octopus::EntitySpawnStep(octopus::Entity { { 26.5, 2.6 }, false, lib_p.getEntityModel("unit")}),
 		new octopus::EntitySpawnStep(target_l),
 		new octopus::EntitySpawnStep(building_l)
 	};

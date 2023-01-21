@@ -6,10 +6,12 @@
 #include "state/State.hh"
 #include "state/entity/Entity.hh"
 #include "logger/Logger.hh"
+#include "library/Library.hh"
 
 int main()
 {
-	std::list<octopus::Steppable *> spawners_l = Case1();
+	octopus::Library lib_l;
+	std::list<octopus::Steppable *> spawners_l = Case2(lib_l);
 
 	octopus::Controller controller_l(spawners_l, 1.);
 

@@ -1,6 +1,8 @@
 #ifndef __BuildingModel__
 #define __BuildingModel__
 
+#include <map>
+
 #include "state/ResourceType.hh"
 #include "state/model/entity/EntityModel.hh"
 

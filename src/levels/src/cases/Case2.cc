@@ -5,6 +5,7 @@
 #include "command/EntityWaitCommand.hh"
 #include "command/EntityAttackCommand.hh"
 #include "command/UnitHarvestCommand.hh"
+#include "library/Library.hh"
 #include "state/entity/Entity.hh"
 #include "state/entity/Unit.hh"
 #include "state/entity/Building.hh"
@@ -23,25 +24,31 @@
 
 using namespace octopus;
 
-std::list<octopus::Steppable *> Case2()
+std::list<Steppable *> Case2(Library &lib_p)
 {
 	UnitModel unitModel_l { false, 1., 0.25, 10. };
 	unitModel_l._isUnit = true;
 	unitModel_l._maxQuantity[ResourceType::Food] = 10;
-	Unit unit_l({ 15, 20. }, false, unitModel_l);
+	lib_p.registerUnitModel("unit", unitModel_l);
 
 	EntityModel resModel_l { true, 3., 1., 10. };
 	resModel_l._isResource = true;
-	Resource res_l({20,20}, true, resModel_l);
-	res_l._resource = 100.;
-	Resource res2_l({21,17}, true, resModel_l);
-	res2_l._resource = 100.;
+	lib_p.registerEntityModel("resource", resModel_l);
 
 	BuildingModel depositModel_l { true, 3., 1., 10. };
 	depositModel_l._isBuilding = true;
 	depositModel_l._deposit[ResourceType::Food] = true;
+	lib_p.registerBuildingModel("deposit", depositModel_l);
 
-	Building deposit_l({1, 20}, true, depositModel_l);
+	Unit unit_l({ 15, 20. }, false, lib_p.getUnitModel("unit"));
+
+	Resource res_l({20,20}, true, lib_p.getEntityModel("resource"));
+	res_l._resource = 100.;
+
+	Resource res2_l({21,17}, true, lib_p.getEntityModel("resource"));
+	res2_l._resource = 100.;
+
+	Building deposit_l({1, 20}, true, lib_p.getBuildingModel("deposit"));
 
 	// unit harvest
 	UnitHarvestCommand * command0_l = new UnitHarvestCommand(0, 0, 5, {20, 20}, 0, {{20, 20}});
