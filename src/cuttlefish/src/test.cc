@@ -19,8 +19,8 @@
 
 #include "cases/Cases.hh"
 
-#define SCREEN_WIDTH 640
-#define SCREEN_HEIGHT 480
+#define SCREEN_WIDTH 1024
+#define SCREEN_HEIGHT 820
 
 using namespace cuttlefish;
 
@@ -54,7 +54,7 @@ int main( int argc, char* args[] )
 			octopus::Library lib_l;
 			std::list<octopus::Steppable *> spawners_l = Case2(lib_l);
 
-			octopus::Controller controller_l(spawners_l, 0.1);
+			octopus::Controller controller_l(spawners_l, 0.01);
 
 			bool quit = false;
 			double x = 0.;
