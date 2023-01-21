@@ -124,7 +124,7 @@ bool Controller::loop_body()
 
 			Logger::getDebug() << "processing step " << _backState->_stepHandled << " on state "<<_backState->_state<< std::endl;
 
-			for(size_t i = 0; i < 5 && octopus::updateStepFromConflictPosition(step_l, *_backState->_state) ; ++ i) {}
+			for(size_t i = 0; i < 1 && octopus::updateStepFromConflictPosition(step_l, *_backState->_state) ; ++ i) {}
 			octopus::compact(step_l);
 
 			// Prepare next step
@@ -198,6 +198,18 @@ State const * Controller::queryState()
 		std::swap(_bufferState, _frontState);
 	}
 	return _frontState->_state;
+}
+
+StateAndSteps Controller::queryStateAndSteps()
+{
+	// lock to avoid multi swap
+	std::lock_guard<std::mutex> lock_l(_mutex);
+
+	if(_bufferState->_stepHandled > _frontState->_stepHandled)
+	{
+		std::swap(_bufferState, _frontState);
+	}
+	return { _frontState->_stepIt, _compiledSteps , _frontState->_state };
 }
 
 State const * Controller::getBackState() const

@@ -4,6 +4,7 @@
 namespace octopus
 {
 	class State;
+	class SteppableVisitor;
 
 	/// @brief define an interface for
 	/// apply and revert on a Steppable, they
@@ -24,6 +25,82 @@ namespace octopus
 
 			/// @brief return true if this Steppable does no operation on the State it would be applied
 			virtual bool isNoOp() const = 0;
+
+			/// @brief visitor method
+			virtual void visit(SteppableVisitor * visitor_p) const = 0;
+	};
+
+	class BuildingSpawnStep;
+	class CommandAddSubAttackStep;
+	class CommandDataWaypointAddStep;
+	class CommandDataWaypointRemoveStep;
+	class CommandDataWaypointSetStep;
+	class CommandDelSubAttackStep;
+	class CommandDepositChangeStep;
+	class CommandHarvestingChangeStep;
+	class CommandIncrementNoProgressStep;
+	class CommandMoveUpdateStep;
+	class CommandNewTargetStep;
+	class CommandNextStep;
+	class CommandResourceChangeStep;
+	class CommandSetPositionFromStep;
+	class CommandSpawnStep;
+	class CommandUpdateLastPosStep;
+	class CommandWindUpDiffStep;
+	class EntityAttackStep;
+	class EntityHitPointChangeStep;
+	class EntityMoveStep;
+	class EntitySpawnStep;
+	class PlayerSpawnStep;
+	class ResourceSpawnStep;
+	class TickingStep;
+	class UnitHarvestDropStep;
+	class UnitHarvestQuantityStep;
+	class UnitHarvestTypeStep;
+	class UnitSpawnStep;
+
+	/// @brief This is used to enable specific step comportement in
+	/// libs using Octopus
+	/// especially for diplay or saving purpose
+	class SteppableVisitor
+	{
+		public:
+			virtual ~SteppableVisitor() {}
+
+			/// @brief untypped visiting method
+			void operator()(Steppable const *steppable_p)
+			{
+				steppable_p->visit(this);
+			}
+
+			virtual void visit(BuildingSpawnStep const *steppable_p) = 0;
+			virtual void visit(CommandAddSubAttackStep const *steppable_p) = 0;
+			virtual void visit(CommandDataWaypointAddStep const *steppable_p) = 0;
+			virtual void visit(CommandDataWaypointRemoveStep const *steppable_p) = 0;
+			virtual void visit(CommandDataWaypointSetStep const *steppable_p) = 0;
+			virtual void visit(CommandDelSubAttackStep const *steppable_p) = 0;
+			virtual void visit(CommandDepositChangeStep const *steppable_p) = 0;
+			virtual void visit(CommandHarvestingChangeStep const *steppable_p) = 0;
+			virtual void visit(CommandIncrementNoProgressStep const *steppable_p) = 0;
+			virtual void visit(CommandMoveUpdateStep const *steppable_p) = 0;
+			virtual void visit(CommandNewTargetStep const *steppable_p) = 0;
+			virtual void visit(CommandNextStep const *steppable_p) = 0;
+			virtual void visit(CommandResourceChangeStep const *steppable_p) = 0;
+			virtual void visit(CommandSetPositionFromStep const *steppable_p) = 0;
+			virtual void visit(CommandSpawnStep const *steppable_p) = 0;
+			virtual void visit(CommandUpdateLastPosStep const *steppable_p) = 0;
+			virtual void visit(CommandWindUpDiffStep const *steppable_p) = 0;
+			virtual void visit(EntityAttackStep const *steppable_p) = 0;
+			virtual void visit(EntityHitPointChangeStep const *steppable_p) = 0;
+			virtual void visit(EntityMoveStep const *steppable_p) = 0;
+			virtual void visit(EntitySpawnStep const *steppable_p) = 0;
+			virtual void visit(PlayerSpawnStep const *steppable_p) = 0;
+			virtual void visit(ResourceSpawnStep const *steppable_p) = 0;
+			virtual void visit(TickingStep const *steppable_p) = 0;
+			virtual void visit(UnitHarvestDropStep const *steppable_p) = 0;
+			virtual void visit(UnitHarvestQuantityStep const *steppable_p) = 0;
+			virtual void visit(UnitHarvestTypeStep const *steppable_p) = 0;
+			virtual void visit(UnitSpawnStep const *steppable_p) = 0;
 
 	};
 }

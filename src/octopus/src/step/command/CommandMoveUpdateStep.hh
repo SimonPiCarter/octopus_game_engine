@@ -17,6 +17,10 @@ public:
 	virtual void revert(State &state_p) const override;
 
 	virtual bool isNoOp() const override;
+	virtual void visit(SteppableVisitor * visitor_p) const override
+	{
+		visitor_p->visit(this);
+	}
 
 	Handle _handle {0};
 	unsigned long const _old;

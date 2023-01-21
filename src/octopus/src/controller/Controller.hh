@@ -27,6 +27,17 @@ struct BufferedState
 	State * _state {nullptr};
 };
 
+/// @brief simple structure used to return in one go a state
+/// its last step applied and the list of all steps
+/// this is necessary to process all steps between last
+/// state returned and the new state (especially for display purpose)
+struct StateAndSteps
+{
+	std::list<Step *>::iterator _stepIt;
+	std::list<Step *> const &_steps;
+	State const *_state;
+};
+
 /// @brief This class aims at controlling a triple state buffer
 /// It works this way
 /// - Three State are kept in memory
@@ -67,6 +78,9 @@ public:
 	/// @brief update and return the front state
 	/// only swap the buffer and front state if buffer state is more advanced than front state
 	State const * queryState();
+	/// @brief update and return the front state with steps information
+	/// only swap the buffer and front state if buffer state is more advanced than front state
+	StateAndSteps queryStateAndSteps();
 
 	State const * getBackState() const;
 	State const * getBufferState() const;

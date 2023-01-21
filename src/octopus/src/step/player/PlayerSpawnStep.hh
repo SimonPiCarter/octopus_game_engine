@@ -22,6 +22,10 @@ public:
 	{
 		return false;
 	}
+	virtual void visit(SteppableVisitor * visitor_p) const override
+	{
+		visitor_p->visit(this);
+	}
 protected:
 	unsigned long _playerIdx;
 	unsigned long _playerTeam;

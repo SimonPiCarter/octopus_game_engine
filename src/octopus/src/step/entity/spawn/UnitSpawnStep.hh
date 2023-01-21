@@ -10,6 +10,10 @@ class UnitSpawnStep : public SpawnModelStep<Unit>
 {
 public:
 	explicit UnitSpawnStep(Unit const &model_p);
+	virtual void visit(SteppableVisitor * visitor_p) const override
+	{
+		visitor_p->visit(this);
+	}
 };
 }
 
