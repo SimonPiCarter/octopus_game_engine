@@ -27,7 +27,8 @@ void WorldUpdaterStepVisitor::spawn(octopus::Entity const &entity_p, octopus::Ha
 	}
 	const octopus::EntityModel &model_l = entity_p._model;
 
-	Sprite * sprite_l = new Sprite(_window.loadTexture("resources/circle.png"), model_l._ray, 32, 32, 64, 64, {2, 2}, {0.25, 1});
+	std::string texture_l = model_l._isStatic?"resources/square.png":"resources/circle.png";
+	Sprite * sprite_l = new Sprite(_window.loadTexture(texture_l), model_l._ray, 32, 32, 64, 64, {2, 2}, {0.25, 1});
 	sprite_l->setPosition(entity_p._pos.x*32, entity_p._pos.y*32);
 
 	_world._sprites[handle_p] = sprite_l;
