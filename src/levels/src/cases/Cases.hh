@@ -1,7 +1,14 @@
 #ifndef __Cases__
 #define __Cases__
 
-void Case1();
-void Case2();
+#include <list>
+namespace octopus
+{
+	class Steppable;
+} // namespace octopus
+
+
+std::list<octopus::Steppable *> Case1();
+std::list<octopus::Steppable *> Case2();
 
 #endif

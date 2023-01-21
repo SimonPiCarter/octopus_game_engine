@@ -1,20 +1,15 @@
 #include <iostream>
-#include <fstream>
 
 #include "command/EntityMoveCommand.hh"
 #include "command/EntityWaitCommand.hh"
 #include "command/EntityAttackCommand.hh"
-#include "graph/Grid.hh"
-#include "logger/Logger.hh"
 #include "state/entity/Entity.hh"
-#include "state/State.hh"
 #include "step/Step.hh"
 #include "step/command/CommandQueueStep.hh"
 #include "step/entity/spawn/EntitySpawnStep.hh"
 #include "step/player/PlayerSpawnStep.hh"
-#include "controller/Controller.hh"
 
-void Case1()
+std::list<octopus::Steppable *> Case1()
 {
 	octopus::EntityModel targetModel_l { false, 5., 0.25, 250. };
 	octopus::EntityModel buildingModel_l { true, 2., 0.25, 10. };
@@ -65,37 +60,5 @@ void Case1()
 		spawners_l.push_back(new octopus::CommandSpawnStep(cmd_l));
 	}
 
-	octopus::Controller controller_l(spawners_l, 1.);
-
-	bool writeFiles_l = true;
-
-	octopus::Logger::getNormal()<<"Playing"<<std::endl;
-
-	size_t i = 1;
-	for( ; i < 600 ; ++ i)
-	{
-		if(i == 1 && writeFiles_l)
-		{
-			octopus::State const * state_l = controller_l.queryState();
-			std::ofstream file_l("step/step_0.csv");
-			streamCsvEntity(file_l, state_l->getEntities());
-		}
-
-		controller_l.update(1.);
-
-		while(!controller_l.loop_body()) {}
-
-		octopus::State const * state_l = controller_l.queryState();
-
-		if(writeFiles_l)
-		{
-			std::ofstream file_l("step/step_"+std::to_string(i)+".csv");
-			streamCsvEntity(file_l, state_l->getEntities());
-		}
-	}
-
-	octopus::Logger::getNormal()<<"Done"<<std::endl;
-
-
-	streamMetrics(octopus::Logger::getNormal(), controller_l.getMetrics());
+	return spawners_l;
 }
