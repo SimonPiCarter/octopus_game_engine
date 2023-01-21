@@ -76,7 +76,7 @@ int main( int argc, char* args[] )
 			World world_l;
 
 			octopus::Library lib_l;
-			std::list<octopus::Steppable *> spawners_l = Case2(lib_l);
+			std::list<octopus::Steppable *> spawners_l = Case3(lib_l);
 
 			octopus::Controller controller_l(spawners_l, 0.01);
 
