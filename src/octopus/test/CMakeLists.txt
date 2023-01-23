@@ -27,6 +27,7 @@ target_sources (unit_tests
 	src/bitset.test.cc
 	src/buffCommand.test.cc
 	src/buffStep.test.cc
+	src/buildingCommand.test.cc
 	src/commandQueue.test.cc
 	src/conflictSolver.test.cc
 	src/controller.test.cc

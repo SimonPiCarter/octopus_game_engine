@@ -36,8 +36,14 @@ public:
 			}
 		}
 		Entity * ent_l = state_p.getEntity(this->_handle);
-		ent_l->_alive = true;
-		updateGrid(state_p, ent_l, true);
+		if(!ent_l->_model._isBuilding)
+		{
+			ent_l->_alive = true;
+		}
+		if(ent_l->_alive)
+		{
+			updateGrid(state_p, ent_l, true);
+		}
 	}
 	virtual void revert(State &state_p) const override
 	{
