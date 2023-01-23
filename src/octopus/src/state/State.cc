@@ -9,7 +9,7 @@
 namespace octopus
 {
 
-State::State() : _id(0), _gridSize(500), _gridBitSize(3200), _pathGrid(_gridSize, _gridSize, 1., 1.)
+State::State() : _id(0), _gridSize(50), _gridBitSize(3200), _pathGrid(_gridSize, _gridSize, 1., 1.)
 {
 	_grid.reserve(_gridSize);
 	for(size_t i = 0 ; i < _gridSize ; ++ i)
@@ -18,7 +18,7 @@ State::State() : _id(0), _gridSize(500), _gridBitSize(3200), _pathGrid(_gridSize
 	}
 }
 
-State::State(unsigned long id_p) : _id(id_p), _gridSize(500), _gridBitSize(3200), _pathGrid(_gridSize, _gridSize, 1., 1.)
+State::State(unsigned long id_p) : _id(id_p), _gridSize(50), _gridBitSize(3200), _pathGrid(_gridSize, _gridSize, 1., 1.)
 {
 	_grid.reserve(_gridSize);
 	for(size_t i = 0 ; i < _gridSize ; ++ i)
