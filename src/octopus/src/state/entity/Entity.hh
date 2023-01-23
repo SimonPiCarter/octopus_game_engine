@@ -10,6 +10,12 @@
 
 namespace octopus
 {
+	struct Buff
+	{
+		double _offset {0.};
+		double _coef {1.};
+	};
+
 	class Entity : public Commandable
 	{
 		public:
@@ -34,6 +40,26 @@ namespace octopus
 			EntityModel const &_model;
 
 			unsigned long _player {0};
+
+			///
+			/// Buffing properties
+			///
+			Buff _buffSpeed;
+			Buff _buffFullReload;
+			Buff _buffDamage;
+			Buff _buffArmor;
+
+			///
+			/// Getters for buffer properties
+			///
+			/// @brief get step speed updated using buffing info
+			double getStepSpeed() const;
+			/// @brief get step speed updated using buffing info
+			double getFullReload() const;
+			/// @brief get damage updated using buffing info
+			double getDamage() const;
+			/// @brief get armor updated using buffing info
+			double getArmor() const;
 	};
 }
 

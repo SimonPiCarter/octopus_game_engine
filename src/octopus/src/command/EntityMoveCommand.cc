@@ -102,10 +102,10 @@ bool EntityMoveCommand::applyCommand(Step & step_p, State const &state_p, Comman
 		return true;
 	}
 
-	Logger::getDebug() << "Adding move step orig = "<<ent_l->_pos<<" target = "<<next_l<<" step speed = " << ent_l->_model._stepSpeed << std::endl;
+	Logger::getDebug() << "Adding move step orig = "<<ent_l->_pos<<" target = "<<next_l<<" step speed = " << ent_l->getStepSpeed() << std::endl;
 
 	// Use next waypoint as target
-	step_p.addEntityMoveStep(new EntityMoveStep(createEntityMoveStep(*ent_l, next_l, ent_l->_model._stepSpeed)));
+	step_p.addEntityMoveStep(new EntityMoveStep(createEntityMoveStep(*ent_l, next_l, ent_l->getStepSpeed())));
 
 	return false;
 }

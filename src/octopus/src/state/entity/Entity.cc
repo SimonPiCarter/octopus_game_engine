@@ -8,8 +8,28 @@ Entity::Entity(Vector const &pos_p, bool frozen_p, EntityModel const &model_p)
 	, _pos(pos_p)
 	, _frozen(frozen_p)
 	, _hp(model_p._hpMax)
+	, _reload(model_p._fullReload)
 	, _model(model_p)
 {}
+
+double Entity::getStepSpeed() const
+{
+	return ( _model._stepSpeed + _buffSpeed._offset )* _buffSpeed._coef;
+}
+
+double Entity::getFullReload() const
+{
+	return ( _model._fullReload + _buffFullReload._offset )* _buffFullReload._coef;
+}
+
+double Entity::getDamage() const
+{
+	return ( _model._damage + _buffDamage._offset )* _buffDamage._coef;
+}
+double Entity::getArmor() const
+{
+	return ( _model._armor + _buffArmor._offset )* _buffArmor._coef;
+}
 
 } // namespace octopus
 

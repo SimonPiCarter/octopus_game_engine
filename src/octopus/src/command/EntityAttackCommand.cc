@@ -74,11 +74,11 @@ bool EntityAttackCommand::applyCommand(Step & step_p, State const &state_p, Comm
 
 		Vector closest_l = entSource_l->_pos + dir_l * (1 - ratio_l);
 
-		Logger::getDebug() << "\t\tEntityAttackCommand:: adding move step "<< _source << " target " << closest_l << " speed " <<entSource_l->_model._stepSpeed<<std::endl;
+		Logger::getDebug() << "\t\tEntityAttackCommand:: adding move step "<< _source << " target " << closest_l << " speed " <<entSource_l->getStepSpeed()<<std::endl;
 		// add move command
-		step_p.addEntityMoveStep(new EntityMoveStep(createEntityMoveStep(*entSource_l, closest_l, entSource_l->_model._stepSpeed)));
+		step_p.addEntityMoveStep(new EntityMoveStep(createEntityMoveStep(*entSource_l, closest_l, entSource_l->getStepSpeed())));
 	}
-	else if(entSource_l->_reload >= entSource_l->_model._fullReload )
+	else if(entSource_l->_reload >= entSource_l->getFullReload() )
 	{
 		step_p.addSteppable(new CommandWindUpDiffStep(_handleCommand, 1));
 		Logger::getDebug() << "\tEntityAttackCommand:: in range (winding up)"<<std::endl;
@@ -91,7 +91,7 @@ bool EntityAttackCommand::applyCommand(Step & step_p, State const &state_p, Comm
 			step_p.addSteppable(new CommandWindUpDiffStep(_handleCommand, - windup_l - 1));
 
 			// add damage
-			step_p.addSteppable(new EntityHitPointChangeStep(_target, std::min(-1., entTarget_l->_model._armor - entSource_l->_model._damage)));
+			step_p.addSteppable(new EntityHitPointChangeStep(_target, std::min(-1., entTarget_l->getArmor() - entSource_l->getDamage())));
 			// reset reload time
 			step_p.addSteppable(new EntityAttackStep(_source, entSource_l->_reload));
 		}
