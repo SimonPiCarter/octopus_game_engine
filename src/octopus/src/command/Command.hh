@@ -22,6 +22,10 @@ public:
 	/// @return true if command is over
 	virtual bool applyCommand(Step & step_p, State const &state_p, CommandData const * data_p) const = 0;
 
+	/// @brief check if command is legal given the state
+	/// command is not registered if not legal
+	virtual bool checkLegality(State const &) const { return true; }
+
 	/// @brief create data supporting the command actions
 	virtual CommandData * newData() const = 0;
 

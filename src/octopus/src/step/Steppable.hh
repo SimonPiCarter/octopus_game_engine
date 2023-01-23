@@ -30,8 +30,8 @@ namespace octopus
 			virtual void visit(SteppableVisitor * visitor_p) const = 0;
 	};
 
-	class BuildingStep;
 	class BuildingSpawnStep;
+	class BuildingStep;
 	class CommandAddSubAttackStep;
 	class CommandDataWaypointAddStep;
 	class CommandDataWaypointRemoveStep;
@@ -53,7 +53,10 @@ namespace octopus
 	class EntityHitPointChangeStep;
 	class EntityMoveStep;
 	class EntitySpawnStep;
+	class MissingResourceStep;
 	class PlayerSpawnStep;
+	class PlayerSpendResourceStep;
+	class ProductionPaidStep;
 	class ProductionProgressionStep;
 	class ResourceSpawnStep;
 	class TickingStep;
@@ -76,8 +79,8 @@ namespace octopus
 				steppable_p->visit(this);
 			}
 
-			virtual void visit(BuildingStep const *steppable_p) = 0;
 			virtual void visit(BuildingSpawnStep const *steppable_p) = 0;
+			virtual void visit(BuildingStep const *steppable_p) = 0;
 			virtual void visit(CommandAddSubAttackStep const *steppable_p) = 0;
 			virtual void visit(CommandDataWaypointAddStep const *steppable_p) = 0;
 			virtual void visit(CommandDataWaypointRemoveStep const *steppable_p) = 0;
@@ -99,7 +102,10 @@ namespace octopus
 			virtual void visit(EntityHitPointChangeStep const *steppable_p) = 0;
 			virtual void visit(EntityMoveStep const *steppable_p) = 0;
 			virtual void visit(EntitySpawnStep const *steppable_p) = 0;
+			virtual void visit(MissingResourceStep const *steppable_p) = 0;
 			virtual void visit(PlayerSpawnStep const *steppable_p) = 0;
+			virtual void visit(PlayerSpendResourceStep const *steppable_p) = 0;
+			virtual void visit(ProductionPaidStep const *steppable_p) = 0;
 			virtual void visit(ProductionProgressionStep const *steppable_p) = 0;
 			virtual void visit(ResourceSpawnStep const *steppable_p) = 0;
 			virtual void visit(TickingStep const *steppable_p) = 0;
@@ -107,7 +113,6 @@ namespace octopus
 			virtual void visit(UnitHarvestQuantityStep const *steppable_p) = 0;
 			virtual void visit(UnitHarvestTypeStep const *steppable_p) = 0;
 			virtual void visit(UnitSpawnStep const *steppable_p) = 0;
-
 	};
 }
 

@@ -118,8 +118,15 @@ bool Controller::loop_body()
 			}
 			for(Command * cmd_l : *commands_l)
 			{
-				Logger::getDebug() << "\tregister a command" << " "<<_backState->_state<< std::endl;
-				cmd_l->registerCommand(step_l);
+				if(cmd_l->checkLegality(*_backState->_state))
+				{
+					Logger::getDebug() << "\tregister a command" << " "<<_backState->_state<< std::endl;
+					cmd_l->registerCommand(step_l);
+				}
+				else
+				{
+					Logger::getDebug() << "\tdo not register command because not legal"<< std::endl;
+				}
 			}
 
 			Logger::getDebug() << "processing step " << _backState->_stepHandled << " on state "<<_backState->_state<< std::endl;

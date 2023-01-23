@@ -3,6 +3,7 @@
 
 #include <vector>
 #include "Handle.hh"
+#include "ResourceType.hh"
 #include "graph/Grid.hh"
 #include "utils/DynamicBitset.hh"
 
@@ -84,6 +85,8 @@ private:
 Entity const * lookUpNewTarget(State const &state_p, Handle const &sourceHandle_p);
 Entity const * lookUpDeposit(State const &state_p, Handle const &sourceHandle_p, Handle const &res_p);
 Entity const * lookUpNewResource(State const &state_p, Handle const &sourceHandle_p, Handle const &res_p);
+
+bool checkResource(State const &state_p, unsigned long player_p, std::map<ResourceType, double> const & cost_p);
 
 void updateGrid(State &state_p, Entity const *ent_p, bool set_p);
 

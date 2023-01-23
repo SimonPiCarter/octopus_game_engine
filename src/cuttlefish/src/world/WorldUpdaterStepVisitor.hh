@@ -54,9 +54,12 @@ public:
 	virtual void visit(octopus::CommandSpawnStep const *) override {}
 	virtual void visit(octopus::CommandUpdateLastPosStep const *) override {}
 	virtual void visit(octopus::CommandWindUpDiffStep const *) override {}
-	virtual void visit(octopus::EntityBuffStep const *) override {}
 	virtual void visit(octopus::EntityAttackStep const *) override {}
+	virtual void visit(octopus::EntityBuffStep const *) override {}
+	virtual void visit(octopus::MissingResourceStep const *) override {}
 	virtual void visit(octopus::PlayerSpawnStep const *) override {}
+	virtual void visit(octopus::PlayerSpendResourceStep const *) override {}
+	virtual void visit(octopus::ProductionPaidStep const *) override {}
 	virtual void visit(octopus::ProductionProgressionStep const *) override {}
 	virtual void visit(octopus::TickingStep const *) override {}
 	virtual void visit(octopus::UnitHarvestDropStep const *) override {}

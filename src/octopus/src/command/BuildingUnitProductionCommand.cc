@@ -8,7 +8,10 @@
 #include "state/entity/Building.hh"
 #include "step/Step.hh"
 #include "step/entity/spawn/UnitSpawnStep.hh"
+#include "step/command/MissingResourceStep.hh"
+#include "step/command/ProductionPaidStep.hh"
 #include "step/command/ProductionProgressionStep.hh"
+#include "step/player/PlayerSpendResourceStep.hh"
 
 namespace octopus
 {
@@ -26,6 +29,23 @@ bool BuildingUnitProductionCommand::applyCommand(Step & step_p, State const &sta
 
 	Logger::getDebug() << "BuildingUnitProductionCommand:: apply Command "<<_source <<std::endl;
 	Building const * building_l = dynamic_cast<Building const *>(state_p.getEntity(_source));
+
+	// If not payed we upadte player resource
+	// and mark this production as paid
+	if(!data_l._paid)
+	{
+		// check if we can pay for it
+		if(checkResource(state_p, building_l->_player, _model._cost))
+		{
+			step_p.addSteppable(new PlayerSpendResourceStep(building_l->_player, _model._cost));
+			step_p.addSteppable(new ProductionPaidStep(_handleCommand));
+		}
+		// else add informative step for failure
+		else
+		{
+			step_p.addSteppable(new MissingResourceStep(building_l->_player));
+		}
+	}
 
 	if(data_l._progression < data_l._model._productionTime)
 	{

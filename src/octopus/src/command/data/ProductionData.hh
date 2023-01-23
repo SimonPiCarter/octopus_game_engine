@@ -14,9 +14,12 @@ class ProductionData : public CommandData
 {
 public:
 	ProductionData() :
-		_progression(0.) {}
+		_progression(0.),
+		_paid(false) {}
 
 	double _progression;
+
+	bool _paid;
 };
 
 /// @brief This class is used to track unit production

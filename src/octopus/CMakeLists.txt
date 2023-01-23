@@ -42,6 +42,7 @@ add_library(octopus
 	${CMAKE_CURRENT_SOURCE_DIR}/src/step/command/CommandSubAttackStep.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/step/command/CommandUpdateLastPosStep
 	${CMAKE_CURRENT_SOURCE_DIR}/src/step/command/CommandWindUpDiffStep.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/src/step/command/ProductionPaidStep.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/step/command/ProductionProgressionStep.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/step/command/harvest/CommandHarvestStep.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/step/building/BuildingStep.cc
@@ -54,6 +55,7 @@ add_library(octopus
 	${CMAKE_CURRENT_SOURCE_DIR}/src/step/entity/spawn/BuildingSpawnStep.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/step/entity/spawn/ResourceSpawnStep.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/step/player/PlayerSpawnStep.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/src/step/player/PlayerSpendResourceStep.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/step/unit/UnitHarvestStep.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/graph/Graph.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/graph/Grid.cc

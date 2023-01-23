@@ -244,6 +244,20 @@ Entity const * lookUpNewResource(State const &state_p, Handle const &sourceHandl
 	return closest_l;
 }
 
+bool checkResource(State const &state_p, unsigned long player_p, std::map<ResourceType, double> const &cost_p)
+{
+	Player const * player_l = state_p.getPlayer(player_p);
+	for(auto && pair_l : cost_p)
+	{
+		// One resource is too much for player resources
+		if(pair_l.second > player_l->_resources.at(pair_l.first))
+		{
+			return false;
+		}
+	}
+	return true;
+}
+
 void updateGrid(State &state_p, Entity const *ent_p, bool set_p)
 {
 	long size_l = state_p.getGridSize();
