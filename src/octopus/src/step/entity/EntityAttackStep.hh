@@ -1,7 +1,6 @@
 #ifndef __EntityAttackStep__
 #define __EntityAttackStep__
 
-#include "state/entity/Entity.hh"
 #include "state/Handle.hh"
 #include "step/Steppable.hh"
 #include "utils/Vector.hh"

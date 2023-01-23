@@ -16,12 +16,14 @@ add_library(octopus
 	${CMAKE_CURRENT_SOURCE_DIR}/src/command/CommandQueue.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/command/EntityAttackCommand.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/command/EntityAttackMoveCommand.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/src/command/EntityBuffCommand.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/command/EntityWaitCommand.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/command/EntityMoveCommand.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/command/UnitHarvestCommand.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/logger/Logger.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/controller/Controller.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/controller/Metrics.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/src/state/entity/Buff.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/state/entity/Building.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/state/entity/Entity.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/state/entity/Resource.cc
@@ -44,6 +46,7 @@ add_library(octopus
 	${CMAKE_CURRENT_SOURCE_DIR}/src/step/entity/EntityAttackStep.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/step/entity/EntityHitPointChangeStep.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/step/entity/EntityMoveStep.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/src/step/entity/buff/EntityBuffStep.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/step/entity/spawn/EntitySpawnStep.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/step/entity/spawn/UnitSpawnStep.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/step/entity/spawn/BuildingSpawnStep.cc

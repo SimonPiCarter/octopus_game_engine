@@ -3,6 +3,9 @@
 
 #include <iostream>
 #include <vector>
+#include <unordered_map>
+
+#include "Buff.hh"
 #include "command/Commandable.hh"
 #include "utils/Vector.hh"
 #include "state/Handle.hh"
@@ -10,11 +13,6 @@
 
 namespace octopus
 {
-	struct Buff
-	{
-		double _offset {0.};
-		double _coef {1.};
-	};
 
 	class Entity : public Commandable
 	{
@@ -48,6 +46,11 @@ namespace octopus
 			Buff _buffFullReload;
 			Buff _buffDamage;
 			Buff _buffArmor;
+
+			/// @brief map of registered buff currently applied
+			std::unordered_map<std::string, TyppedBuff> _registeredBuff;
+			/// @brief map of time since the buff has been applied
+			std::unordered_map<std::string, unsigned long> _timeSinceBuff;
 
 			///
 			/// Getters for buffer properties

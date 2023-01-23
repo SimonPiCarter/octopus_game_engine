@@ -212,6 +212,13 @@ StateAndSteps Controller::queryStateAndSteps()
 	return { _frontState->_stepIt, _compiledSteps , _frontState->_state, _initialStep };
 }
 
+void Controller::commitCommand(Command * cmd_p)
+{
+	// lock to avoid multi swap
+	std::lock_guard<std::mutex> lock_l(_mutex);
+	_commitedCommands[_ongoingStep-1]->push_back(cmd_p);
+}
+
 State const * Controller::getBackState() const
 {
 	return _backState->_state;

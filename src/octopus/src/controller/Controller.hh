@@ -84,6 +84,9 @@ public:
 	/// only swap the buffer and front state if buffer state is more advanced than front state
 	StateAndSteps queryStateAndSteps();
 
+	/// @brief add a Command to the ongoing step
+	void commitCommand(Command * cmd_p);
+
 	State const * getBackState() const;
 	State const * getBufferState() const;
 	State const * getFrontState() const;

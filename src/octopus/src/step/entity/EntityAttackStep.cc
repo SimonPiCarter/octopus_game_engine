@@ -1,5 +1,6 @@
 #include "EntityAttackStep.hh"
 
+#include "state/entity/Entity.hh"
 #include "state/State.hh"
 #include "logger/Logger.hh"
 
