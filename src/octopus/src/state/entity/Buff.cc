@@ -25,6 +25,14 @@ void TyppedBuff::apply(Entity &ent_p) const
 			ent_p._buffArmor._offset += _offset;
 			ent_p._buffArmor._coef += _coef;
 			break;
+		case Type::Production:
+			ent_p._buffProduction._offset += _offset;
+			ent_p._buffProduction._coef += _coef;
+			break;
+		case Type::Harvest:
+			ent_p._buffHarvest._offset += _offset;
+			ent_p._buffHarvest._coef += _coef;
+			break;
 	}
 }
 
@@ -47,6 +55,14 @@ void TyppedBuff::revert(Entity &ent_p) const
 		case Type::Armor:
 			ent_p._buffArmor._offset -= _offset;
 			ent_p._buffArmor._coef -= _coef;
+			break;
+		case Type::Production:
+			ent_p._buffProduction._offset -= _offset;
+			ent_p._buffProduction._coef -= _coef;
+			break;
+		case Type::Harvest:
+			ent_p._buffHarvest._offset -= _offset;
+			ent_p._buffHarvest._coef -= _coef;
 			break;
 	}
 }

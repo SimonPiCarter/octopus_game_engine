@@ -46,6 +46,8 @@ namespace octopus
 			Buff _buffFullReload;
 			Buff _buffDamage;
 			Buff _buffArmor;
+			Buff _buffProduction;
+			Buff _buffHarvest;
 
 			/// @brief map of registered buff currently applied
 			std::unordered_map<std::string, TyppedBuff> _registeredBuff;
@@ -63,6 +65,10 @@ namespace octopus
 			double getDamage() const;
 			/// @brief get armor updated using buffing info
 			double getArmor() const;
+			/// @brief get production updated using buffing info
+			double getProduction() const;
+			/// @brief get harvest updated using buffing info
+			double getHarvest() const;
 	};
 }
 

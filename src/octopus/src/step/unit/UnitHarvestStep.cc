@@ -85,7 +85,7 @@ void UnitHarvestDropStep::apply(State &state_p) const
 	Logger::getDebug() << "UnitHarvestDropStep :: apply " << this->_handle <<std::endl;
 	Unit * unit_l = dynamic_cast<Unit *>(ent_l);
 	unit_l->_quantityOfResource -= _qty;
-	state_p.getPlayer(unit_l->_player)->_resources[unit_l->_typeOfResource] += _qty;
+	state_p.getPlayer(unit_l->_player)->_resources[unit_l->_typeOfResource] += _dropped;
 }
 
 void UnitHarvestDropStep::revert(State &state_p) const
@@ -94,7 +94,7 @@ void UnitHarvestDropStep::revert(State &state_p) const
 	Logger::getDebug() << "UnitHarvestDropStep :: revert " << this->_handle <<std::endl;
 	Unit * unit_l = dynamic_cast<Unit *>(ent_l);
 	unit_l->_quantityOfResource += _qty;
-	state_p.getPlayer(unit_l->_player)->_resources[unit_l->_typeOfResource] -= _qty;
+	state_p.getPlayer(unit_l->_player)->_resources[unit_l->_typeOfResource] -= _dropped;
 }
 
 bool UnitHarvestDropStep::isNoOp() const

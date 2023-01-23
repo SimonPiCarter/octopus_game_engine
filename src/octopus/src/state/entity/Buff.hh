@@ -20,7 +20,9 @@ struct TyppedBuff : public Buff
 		Speed,
 		FullReload,
 		Damage,
-		Armor
+		Armor,
+		Production,
+		Harvest
 	};
 
 	Type _type {Type::Speed};

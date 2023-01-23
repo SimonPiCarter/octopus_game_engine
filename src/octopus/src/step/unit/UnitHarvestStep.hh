@@ -52,8 +52,9 @@ public:
 class UnitHarvestDropStep : public Steppable
 {
 public:
-	UnitHarvestDropStep(Handle const &handle_p, double qty_p)
-		: _handle(handle_p) , _qty(qty_p){}
+	/// @brief dropped is the qty buffed
+	UnitHarvestDropStep(Handle const &handle_p, double qty_p, double dropped_p)
+		: _handle(handle_p), _qty(qty_p), _dropped(dropped_p) {}
 
 	virtual void apply(State &state_p) const override;
 	virtual void revert(State &state_p) const override;
@@ -66,6 +67,7 @@ public:
 
 	Handle _handle {0};
 	double _qty {0};
+	double _dropped {0};
 };
 
 } // namespace octopus

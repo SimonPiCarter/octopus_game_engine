@@ -25,19 +25,19 @@ bool BuildingUnitProductionCommand::applyCommand(Step & step_p, State const &sta
 	UnitProductionData const &data_l = *static_cast<UnitProductionData const *>(data_p);
 
 	Logger::getDebug() << "BuildingUnitProductionCommand:: apply Command "<<_source <<std::endl;
+	Building const * building_l = dynamic_cast<Building const *>(state_p.getEntity(_source));
 
 	if(data_l._progression < data_l._model._productionTime)
 	{
 		Logger::getDebug() << "BuildingUnitProductionCommand :: adding production progression step " <<std::endl;
-		step_p.addSteppable(new ProductionProgressionStep(_handleCommand, 1));
+		step_p.addSteppable(new ProductionProgressionStep(_handleCommand, building_l->getProduction()));
 	}
 	else
 	{
 		Logger::getDebug() << "BuildingUnitProductionCommand :: adding spawn step " <<std::endl;
-		Building const * bulding_l = dynamic_cast<Building const *>(state_p.getEntity(_source));
 
-		Unit unit_l(bulding_l->_productionOutput, false, data_l._model);
-		unit_l._player = bulding_l->_player;
+		Unit unit_l(building_l->_productionOutput, false, data_l._model);
+		unit_l._player = building_l->_player;
 		step_p.addSteppable(new UnitSpawnStep(unit_l));
 
 		return true;

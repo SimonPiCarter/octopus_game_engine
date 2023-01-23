@@ -31,6 +31,15 @@ double Entity::getArmor() const
 	return ( _model._armor + _buffArmor._offset )* ( 1. + _buffArmor._coef );
 }
 
+double Entity::getProduction() const
+{
+	return ( 1. + _buffProduction._offset )* ( 1. + _buffProduction._coef );
+}
+double Entity::getHarvest() const
+{
+	return ( 1. + _buffHarvest._offset )* ( 1. + _buffHarvest._coef );
+}
+
 } // namespace octopus
 
 

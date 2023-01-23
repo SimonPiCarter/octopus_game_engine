@@ -144,8 +144,9 @@ bool UnitHarvestCommand::applyCommand(Step & step_p, State const &state_p, Comma
 		// else on the way to deposit
 		if(inRange(state_p, unit_l, data_l._deposit))
 		{
+			Entity const * ent_l = state_p.getEntity(data_l._deposit);
 			Logger::getDebug() << "UnitHarvestCommand:: drop"<<std::endl;
-			step_p.addSteppable(new UnitHarvestDropStep(_source, unit_l->_quantityOfResource));
+			step_p.addSteppable(new UnitHarvestDropStep(_source, unit_l->_quantityOfResource, unit_l->_quantityOfResource * ent_l->getHarvest()));
 			step_p.addSteppable(new CommandHarvestingChangeStep(_handleCommand, data_l._harvesting, true));
 
 			// update move back to resource
