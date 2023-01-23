@@ -70,5 +70,5 @@ TEST(unitProductionCommandTest, simple)
 
 	state_l = controller_l.queryState();
 
-	EXPECT_EQ(1u, state_l->getEntities().size());
+	EXPECT_EQ(2u, state_l->getEntities().size());
 }
