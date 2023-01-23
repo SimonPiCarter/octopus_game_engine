@@ -4,7 +4,7 @@
 #include "entity/Entity.hh"
 #include "entity/Resource.hh"
 #include "utils/Box.hh"
-#include "state/model/building/BuildingModel.hh"
+#include "state/model/entity/BuildingModel.hh"
 
 namespace octopus
 {

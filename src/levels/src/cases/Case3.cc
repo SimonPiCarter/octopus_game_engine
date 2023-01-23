@@ -6,7 +6,7 @@
 #include "state/entity/Building.hh"
 #include "state/entity/Unit.hh"
 #include "state/model/entity/UnitModel.hh"
-#include "state/model/building/BuildingModel.hh"
+#include "state/model/entity/BuildingModel.hh"
 #include "state/State.hh"
 #include "step/command/CommandQueueStep.hh"
 #include "step/entity/spawn/UnitSpawnStep.hh"
@@ -23,7 +23,7 @@ std::list<Steppable *> Case3(Library &lib_p)
 	unitModel_l._productionTime = 100;
 	lib_p.registerUnitModel("unit", unitModel_l);
 
-	BuildingModel buildingModel_l { true, 1., 1., 10. };
+	BuildingModel buildingModel_l { true, 1., 10. };
 	buildingModel_l._isBuilding = true;
 	lib_p.registerBuildingModel("building", buildingModel_l);
 

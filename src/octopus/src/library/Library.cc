@@ -1,6 +1,6 @@
 #include "Library.hh"
 
-#include "state/model/building/BuildingModel.hh"
+#include "state/model/entity/BuildingModel.hh"
 #include "state/model/entity/EntityModel.hh"
 #include "state/model/entity/UnitModel.hh"
 

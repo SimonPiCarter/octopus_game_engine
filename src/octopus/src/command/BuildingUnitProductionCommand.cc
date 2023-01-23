@@ -36,7 +36,7 @@ bool BuildingUnitProductionCommand::applyCommand(Step & step_p, State const &sta
 	{
 		Logger::getDebug() << "BuildingUnitProductionCommand :: adding spawn step " <<std::endl;
 
-		Unit unit_l(building_l->_productionOutput, false, data_l._model);
+		Unit unit_l(building_l->_pos + building_l->_buildingModel._productionOutput, false, data_l._model);
 		unit_l._player = building_l->_player;
 		step_p.addSteppable(new UnitSpawnStep(unit_l));
 

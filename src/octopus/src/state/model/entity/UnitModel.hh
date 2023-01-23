@@ -16,8 +16,10 @@ namespace octopus
 
 		std::map<ResourceType, double> _maxQuantity;
 
+		std::map<ResourceType, double> _cost;
+
 		/// @brief production time in steps
-		unsigned long _productionTime;
+		unsigned long _productionTime {0};
 	};
 } // namespace octopus
 

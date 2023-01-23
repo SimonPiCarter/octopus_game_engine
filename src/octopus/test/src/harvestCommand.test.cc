@@ -6,7 +6,7 @@
 #include "controller/Controller.hh"
 #include "state/entity/Building.hh"
 #include "state/entity/Resource.hh"
-#include "state/model/building/BuildingModel.hh"
+#include "state/model/entity/BuildingModel.hh"
 #include "state/model/entity/UnitModel.hh"
 #include "state/player/Player.hh"
 #include "state/State.hh"
@@ -41,7 +41,7 @@ TEST(harvestCommandTest, simple)
 	Resource res_l({9,3}, true, resModel_l);
 	res_l._resource = 20.;
 
-	BuildingModel depositModel_l { true, 1., 1., 10. };
+	BuildingModel depositModel_l { true, 1., 10. };
 	depositModel_l._isBuilding = true;
 	depositModel_l._deposit[ResourceType::Food] = true;
 
@@ -233,7 +233,7 @@ TEST(harvestCommandTest, simple_new_res)
 	Resource res2_l({10,3}, true, resModel_l);
 	res2_l._resource = 10.;
 
-	BuildingModel depositModel_l { true, 1., 1., 10. };
+	BuildingModel depositModel_l { true, 1., 10. };
 	depositModel_l._isBuilding = true;
 	depositModel_l._deposit[ResourceType::Food] = true;
 

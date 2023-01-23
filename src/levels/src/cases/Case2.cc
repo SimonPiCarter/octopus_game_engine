@@ -9,7 +9,7 @@
 #include "state/entity/Resource.hh"
 #include "state/model/entity/EntityModel.hh"
 #include "state/model/entity/UnitModel.hh"
-#include "state/model/building/BuildingModel.hh"
+#include "state/model/entity/BuildingModel.hh"
 #include "state/State.hh"
 #include "step/Step.hh"
 #include "step/command/CommandQueueStep.hh"
@@ -31,7 +31,7 @@ std::list<Steppable *> Case2(Library &lib_p)
 	resModel_l._isResource = true;
 	lib_p.registerEntityModel("resource", resModel_l);
 
-	BuildingModel depositModel_l { true, 3., 1., 10. };
+	BuildingModel depositModel_l { true, 3., 10. };
 	depositModel_l._isBuilding = true;
 	depositModel_l._deposit[ResourceType::Food] = true;
 	lib_p.registerBuildingModel("deposit", depositModel_l);

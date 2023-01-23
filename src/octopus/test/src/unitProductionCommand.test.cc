@@ -5,7 +5,7 @@
 #include "command/BuildingUnitProductionCommand.hh"
 #include "controller/Controller.hh"
 #include "state/entity/Building.hh"
-#include "state/model/building/BuildingModel.hh"
+#include "state/model/entity/BuildingModel.hh"
 #include "state/model/entity/UnitModel.hh"
 #include "state/player/Player.hh"
 #include "state/State.hh"
@@ -33,7 +33,7 @@ TEST(unitProductionCommandTest, simple)
 	unitModel_l._productionTime = 5;
 
 
-	BuildingModel buildingModel_l { true, 1., 1., 10. };
+	BuildingModel buildingModel_l { true, 1., 10. };
 	buildingModel_l._isBuilding = true;
 
 	Building production_l({1,3}, true, buildingModel_l);
