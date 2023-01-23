@@ -49,6 +49,12 @@ bool BuildingCommand::applyCommand(Step & step_p, State const &state_p, CommandD
 	Entity const * ent_l = state_p.getEntity(_source);
 	Building const * building_l = static_cast<Building const *>(state_p.getEntity(_target));
 
+	if(ent_l->_player != building_l->_player)
+	{
+		Logger::getDebug() << "BuildingCommand:: building other player building is not allowed"<<std::endl;
+		return true;
+	}
+
 	// if building is over stop
 	if(building_l->_buildingProgress >= building_l->_buildingModel._buildingTime)
 	{
