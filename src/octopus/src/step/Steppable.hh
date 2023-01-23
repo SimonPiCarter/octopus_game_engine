@@ -30,6 +30,7 @@ namespace octopus
 			virtual void visit(SteppableVisitor * visitor_p) const = 0;
 	};
 
+	class BuildingStep;
 	class BuildingSpawnStep;
 	class CommandAddSubAttackStep;
 	class CommandDataWaypointAddStep;
@@ -75,6 +76,7 @@ namespace octopus
 				steppable_p->visit(this);
 			}
 
+			virtual void visit(BuildingStep const *steppable_p) = 0;
 			virtual void visit(BuildingSpawnStep const *steppable_p) = 0;
 			virtual void visit(CommandAddSubAttackStep const *steppable_p) = 0;
 			virtual void visit(CommandDataWaypointAddStep const *steppable_p) = 0;

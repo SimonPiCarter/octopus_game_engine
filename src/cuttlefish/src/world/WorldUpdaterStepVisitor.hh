@@ -37,6 +37,7 @@ public:
 	virtual void visit(octopus::EntityHitPointChangeStep const *step_p) override;
 	virtual void visit(octopus::EntityMoveStep const *step_p) override;
 
+	virtual void visit(octopus::BuildingStep const *steppable_p) override {}
 	virtual void visit(octopus::CommandAddSubAttackStep const *) override {}
 	virtual void visit(octopus::CommandDataWaypointAddStep const *) override {}
 	virtual void visit(octopus::CommandDataWaypointRemoveStep const *) override {}
