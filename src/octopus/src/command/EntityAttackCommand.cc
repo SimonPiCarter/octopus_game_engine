@@ -8,9 +8,11 @@
 #include "state/State.hh"
 #include "step/Step.hh"
 #include "step/command/CommandWindUpDiffStep.hh"
+#include "step/command/CommandNewTargetStep.hh"
 #include "step/entity/EntityAttackStep.hh"
 #include "step/entity/EntityHitPointChangeStep.hh"
 #include "step/entity/EntityMoveStep.hh"
+
 
 namespace octopus
 {
@@ -49,7 +51,7 @@ bool EntityAttackCommand::applyCommand(Step & step_p, State const &state_p, Comm
 		{
 			Logger::getDebug() << "EntityAttackCommand:: new target found "<<newTarget_l->_handle<<std::endl;
 			/// steppable to update target
-			/// @todo
+			step_p.addSteppable(new CommandNewTargetStep(_handleCommand, newTarget_l->_handle, curTarget_l));
 			return false;
 		}
 	}
