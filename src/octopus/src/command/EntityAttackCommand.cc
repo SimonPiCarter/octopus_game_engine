@@ -48,8 +48,8 @@ bool EntityAttackCommand::applyCommand(Step & step_p, State const &state_p, Comm
 		else
 		{
 			Logger::getDebug() << "EntityAttackCommand:: new target found "<<newTarget_l->_handle<<std::endl;
-			// steppable to update target
-			// TODO
+			/// steppable to update target
+			/// @todo
 			return false;
 		}
 	}
