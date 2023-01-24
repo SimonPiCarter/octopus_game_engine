@@ -10,6 +10,7 @@ cmake_minimum_required (VERSION 3.14.0)
 
 
 add_library(octopus
+	${CMAKE_CURRENT_SOURCE_DIR}/src/command/BuildingBlueprintCommand.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/command/BuildingCommand.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/command/BuildingUnitProductionCommand.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/command/Command.cc
