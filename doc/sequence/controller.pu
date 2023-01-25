@@ -23,6 +23,11 @@ alt back_state.step < last_full_step
 alt back_state.step > last_compiled_step
 	controller -> step : compile(back_state, new_commands)
 	controller -> step : fix_positions()
+	controller -> controller : handle_triggers()
+	note right
+		compute events
+		trigger on events
+	end note
 	controller -> step : compact()
 end
 
