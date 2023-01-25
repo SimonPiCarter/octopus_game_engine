@@ -1,6 +1,9 @@
 #ifndef __EntityModel__
 #define __EntityModel__
 
+#include <map>
+#include "state/ResourceType.hh"
+
 namespace octopus
 {
 	struct EntityModel
@@ -34,6 +37,8 @@ namespace octopus
 		bool _isBuilding { false };
 		bool _isUnit { false };
 		bool _isResource { false };
+
+		std::map<ResourceType, double> _cost;
 	};
 } // namespace octopus
 

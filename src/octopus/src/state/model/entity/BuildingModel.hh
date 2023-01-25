@@ -1,9 +1,8 @@
 #ifndef __BuildingModel__
 #define __BuildingModel__
 
-#include <map>
+#include <list>
 
-#include "state/ResourceType.hh"
 #include "utils/Vector.hh"
 #include "EntityModel.hh"
 
@@ -16,8 +15,6 @@ namespace octopus
 		{}
 
 		std::map<ResourceType, bool> _deposit;
-
-		std::map<ResourceType, double> _cost;
 
 		/// @brief building time in steps
 		unsigned long _buildingTime {0};

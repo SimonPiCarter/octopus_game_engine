@@ -1,9 +1,6 @@
 #ifndef __UnitModel__
 #define __UnitModel__
 
-#include <map>
-
-#include "state/ResourceType.hh"
 #include "EntityModel.hh"
 
 namespace octopus
@@ -15,8 +12,6 @@ namespace octopus
 		{}
 
 		std::map<ResourceType, double> _maxQuantity;
-
-		std::map<ResourceType, double> _cost;
 
 		/// @brief production time in steps
 		unsigned long _productionTime {0};
