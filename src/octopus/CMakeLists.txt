@@ -21,6 +21,7 @@ add_library(octopus
 	${CMAKE_CURRENT_SOURCE_DIR}/src/command/entity/EntityBuildingCommand.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/command/entity/EntityMoveCommand.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/command/entity/EntityWaitCommand.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/src/command/player/PlayerChoseDivinityCommand.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/command/unit/UnitHarvestCommand.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/logger/Logger.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/controller/Controller.cc
@@ -57,6 +58,10 @@ add_library(octopus
 	${CMAKE_CURRENT_SOURCE_DIR}/src/step/entity/spawn/UnitSpawnStep.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/step/entity/spawn/BuildingSpawnStep.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/step/entity/spawn/ResourceSpawnStep.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/src/step/player/PlayerAddOptionDivinityStep.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/src/step/player/PlayerAnchorDivinityStep.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/src/step/player/PlayerLevelUpDivinityStep.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/src/step/player/PlayerResetOptionDivinityStep.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/step/player/PlayerSpawnStep.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/step/player/PlayerSpendResourceStep.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/step/unit/UnitHarvestStep.cc
