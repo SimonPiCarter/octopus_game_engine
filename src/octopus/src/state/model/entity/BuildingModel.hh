@@ -22,7 +22,7 @@ namespace octopus
 		unsigned long _buildingTime {0};
 
 		/// @brief relative position for output production
-		Vector _productionOutput;
+		Vector _productionOutput { 1, 0 };
 
 		/// @brief list of UnitModel available in this building
 		std::list<UnitModel const *> _unitModels;
