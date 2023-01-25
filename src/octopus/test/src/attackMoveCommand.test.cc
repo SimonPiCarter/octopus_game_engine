@@ -2,7 +2,7 @@
 
 #include <logger/Logger.hh>
 
-#include <command/EntityAttackMoveCommand.hh>
+#include <command/entity/EntityAttackMoveCommand.hh>
 #include <controller/Controller.hh>
 #include <step/entity/EntityMoveStep.hh>
 #include <step/entity/spawn/EntitySpawnStep.hh>

@@ -1,5 +1,5 @@
 #include "Commandable.hh"
-#include "Command.hh"
+#include "command/Command.hh"
 
 #include "step/command/CommandQueueStep.hh"
 #include "step/Step.hh"

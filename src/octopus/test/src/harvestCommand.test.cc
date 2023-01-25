@@ -2,7 +2,7 @@
 
 #include <logger/Logger.hh>
 
-#include "command/UnitHarvestCommand.hh"
+#include "command/unit/UnitHarvestCommand.hh"
 #include "controller/Controller.hh"
 #include "state/entity/Building.hh"
 #include "state/entity/Resource.hh"

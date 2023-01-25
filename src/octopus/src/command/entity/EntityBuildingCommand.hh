@@ -1,8 +1,8 @@
 #ifndef __BuildingCommand__
 #define __BuildingCommand__
 
-#include "Command.hh"
-#include "data/MoveData.hh"
+#include "command/Command.hh"
+#include "command/data/MoveData.hh"
 #include "EntityMoveCommand.hh"
 #include "state/Handle.hh"
 
@@ -10,11 +10,11 @@ namespace octopus
 {
 class UnitModel;
 
-/// @brief This command will produce a unit according to the given model
-class BuildingCommand : public Command
+/// @brief This command build a building
+class EntityBuildingCommand : public Command
 {
 public:
-	BuildingCommand(Handle const &commandHandle_p, Handle const &source_p, Handle const &target_p,
+	EntityBuildingCommand(Handle const &commandHandle_p, Handle const &source_p, Handle const &target_p,
 		Vector const &finalPoint_p, unsigned long gridStatus_p, std::list<Vector> const &waypoints_p);
 
 	/// @brief

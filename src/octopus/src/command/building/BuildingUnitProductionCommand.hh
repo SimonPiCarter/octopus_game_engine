@@ -1,9 +1,9 @@
 #ifndef __BuildingUnitProductionCommand__
 #define __BuildingUnitProductionCommand__
 
-#include "Command.hh"
+#include "command/Command.hh"
 
-#include "data/ProductionData.hh"
+#include "command/data/ProductionData.hh"
 #include "state/Handle.hh"
 
 namespace octopus

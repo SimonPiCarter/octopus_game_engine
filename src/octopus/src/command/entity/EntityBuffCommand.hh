@@ -1,7 +1,7 @@
 #ifndef __EntityBuffCommand__
 #define __EntityBuffCommand__
 
-#include "Command.hh"
+#include "command/Command.hh"
 #include "state/Handle.hh"
 #include "state/entity/Buff.hh"
 

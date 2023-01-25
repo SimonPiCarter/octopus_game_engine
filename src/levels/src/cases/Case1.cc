@@ -1,8 +1,8 @@
 #include <iostream>
 
-#include "command/EntityMoveCommand.hh"
-#include "command/EntityWaitCommand.hh"
-#include "command/EntityAttackCommand.hh"
+#include "command/entity/EntityMoveCommand.hh"
+#include "command/entity/EntityWaitCommand.hh"
+#include "command/entity/EntityAttackCommand.hh"
 #include "library/Library.hh"
 #include "state/entity/Entity.hh"
 #include "step/Step.hh"

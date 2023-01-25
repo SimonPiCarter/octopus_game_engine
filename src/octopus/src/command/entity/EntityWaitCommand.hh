@@ -1,7 +1,7 @@
 #ifndef __EntityWaitCommand__
 #define __EntityWaitCommand__
 
-#include "Command.hh"
+#include "command/Command.hh"
 #include "state/Handle.hh"
 
 

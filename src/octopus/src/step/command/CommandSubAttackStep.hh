@@ -3,7 +3,7 @@
 
 #include "state/Handle.hh"
 #include "step/Steppable.hh"
-#include "command/EntityAttackCommand.hh"
+#include "command/entity/EntityAttackCommand.hh"
 
 namespace octopus
 {

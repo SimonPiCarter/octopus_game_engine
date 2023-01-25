@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include <command/EntityAttackCommand.hh>
+#include <command/entity/EntityAttackCommand.hh>
 #include <controller/Controller.hh>
 #include <step/entity/EntityMoveStep.hh>
 #include <step/entity/spawn/EntitySpawnStep.hh>

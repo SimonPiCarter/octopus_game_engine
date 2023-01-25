@@ -1,7 +1,7 @@
 #include <iostream>
 #include <fstream>
 
-#include "command/BuildingUnitProductionCommand.hh"
+#include "command/building/BuildingUnitProductionCommand.hh"
 #include "library/Library.hh"
 #include "state/entity/Building.hh"
 #include "state/entity/Unit.hh"

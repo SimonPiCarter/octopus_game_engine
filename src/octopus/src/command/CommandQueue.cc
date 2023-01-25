@@ -1,5 +1,5 @@
 #include "CommandQueue.hh"
-#include "Command.hh"
+#include "command/Command.hh"
 
 #include <stdexcept>
 

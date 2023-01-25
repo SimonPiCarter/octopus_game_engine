@@ -1,9 +1,9 @@
 #ifndef __EntityMoveCommand__
 #define __EntityMoveCommand__
 
-#include "Command.hh"
+#include "command/Command.hh"
 
-#include "data/MoveData.hh"
+#include "command/data/MoveData.hh"
 #include "state/Handle.hh"
 #include "utils/Vector.hh"
 #include <list>

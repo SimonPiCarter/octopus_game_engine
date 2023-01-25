@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 
 #include <command/CommandData.hh>
-#include <command/EntityMoveCommand.hh>
+#include <command/entity/EntityMoveCommand.hh>
 #include <command/data/MoveData.hh>
 #include <step/entity/EntityMoveStep.hh>
 #include <step/Step.hh>

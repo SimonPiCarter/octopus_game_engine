@@ -1,7 +1,7 @@
 #ifndef __BuildingBlueprintCommand__
 #define __BuildingBlueprintCommand__
 
-#include "Command.hh"
+#include "command/Command.hh"
 
 #include "state/Handle.hh"
 #include "utils/Vector.hh"

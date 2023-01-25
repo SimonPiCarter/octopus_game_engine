@@ -1,10 +1,10 @@
 #ifndef __EntityAttackMoveCommand__
 #define __EntityAttackMoveCommand__
 
-#include "Command.hh"
+#include "command/Command.hh"
 #include "EntityMoveCommand.hh"
 
-#include "data/AttackMoveData.hh"
+#include "command/data/AttackMoveData.hh"
 #include "state/Handle.hh"
 #include "utils/Vector.hh"
 #include <list>

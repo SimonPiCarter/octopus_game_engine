@@ -1,7 +1,7 @@
 #include <iostream>
 #include <fstream>
 
-#include "command/UnitHarvestCommand.hh"
+#include "command/unit/UnitHarvestCommand.hh"
 #include "library/Library.hh"
 #include "state/entity/Entity.hh"
 #include "state/entity/Unit.hh"

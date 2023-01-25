@@ -2,7 +2,7 @@
 
 #include <logger/Logger.hh>
 
-#include "command/BuildingCommand.hh"
+#include "command/entity/EntityBuildingCommand.hh"
 #include "controller/Controller.hh"
 #include "state/entity/Building.hh"
 #include "state/model/entity/BuildingModel.hh"
@@ -42,7 +42,7 @@ TEST(buildingCommandTest, simple)
 	BuildingSpawnStep * spawn1_l = new BuildingSpawnStep(building_l);
 
 	// unit harvest
-	BuildingCommand * command_l = new BuildingCommand(0, 0, 1, {1, 3}, 0, {{1, 3}});
+	EntityBuildingCommand * command_l = new EntityBuildingCommand(0, 0, 1, {1, 3}, 0, {{1, 3}});
 	CommandSpawnStep * commandSpawn_l = new CommandSpawnStep(command_l);
 
 	Controller controller_l({new PlayerSpawnStep(0, 0), spawn0_l, spawn1_l, commandSpawn_l}, 1.);

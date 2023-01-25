@@ -1,5 +1,5 @@
 
-#include "BuildingCommand.hh"
+#include "EntityBuildingCommand.hh"
 
 #include <cmath>
 
@@ -13,7 +13,7 @@
 namespace octopus
 {
 
-BuildingCommand::BuildingCommand(Handle const &commandHandle_p, Handle const &source_p, Handle const &target_p,
+EntityBuildingCommand::EntityBuildingCommand(Handle const &commandHandle_p, Handle const &source_p, Handle const &target_p,
 		Vector const &finalPoint_p, unsigned long gridStatus_p, std::list<Vector> const &waypoints_p)
 	: Command(commandHandle_p)
 	, _source(source_p)
@@ -42,37 +42,37 @@ bool isInRange(State const &state_p, Entity const * ent_p, Building const * buil
 	return false;
 }
 
-bool BuildingCommand::applyCommand(Step & step_p, State const &state_p, CommandData const *data_p) const
+bool EntityBuildingCommand::applyCommand(Step & step_p, State const &state_p, CommandData const *data_p) const
 {
-	Logger::getDebug() << "BuildingCommand:: apply Command "<<_source <<std::endl;
+	Logger::getDebug() << "EntityBuildingCommand:: apply Command "<<_source <<std::endl;
 	MoveData const &moveData_l = *static_cast<MoveData const *>(data_p);
 	Entity const * ent_l = state_p.getEntity(_source);
 	Building const * building_l = static_cast<Building const *>(state_p.getEntity(_target));
 
 	if(ent_l->_player != building_l->_player)
 	{
-		Logger::getDebug() << "BuildingCommand:: building other player building is not allowed"<<std::endl;
+		Logger::getDebug() << "EntityBuildingCommand:: building other player building is not allowed"<<std::endl;
 		return true;
 	}
 
 	// if building is over stop
 	if(building_l->_buildingProgress >= building_l->_buildingModel._buildingTime)
 	{
-		Logger::getDebug() << "BuildingCommand:: building over"<<std::endl;
+		Logger::getDebug() << "EntityBuildingCommand:: building over"<<std::endl;
 		return true;
 	}
 
 	// If not in range et move
 	if(!isInRange(state_p, ent_l, building_l))
 	{
-		Logger::getDebug() << "BuildingCommand:: moving"<<std::endl;
+		Logger::getDebug() << "EntityBuildingCommand:: moving"<<std::endl;
 		// run move command
 		_subMoveCommand.applyCommand(step_p, state_p, data_p);
 	}
 	// If in range build
 	else
 	{
-		Logger::getDebug() << "BuildingCommand:: building"<<std::endl;
+		Logger::getDebug() << "EntityBuildingCommand:: building"<<std::endl;
 		step_p.addSteppable(new BuildingStep(_target, 1.));
 	}
 

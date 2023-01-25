@@ -1,9 +1,9 @@
 #ifndef __EntityAttackCommand__
 #define __EntityAttackCommand__
 
-#include "Command.hh"
+#include "command/Command.hh"
 
-#include "data/AttackMoveData.hh"
+#include "command/data/AttackMoveData.hh"
 #include "state/Handle.hh"
 #include "utils/Vector.hh"
 #include <list>

@@ -1,10 +1,10 @@
 #ifndef __UnitHarvestCommand__
 #define __UnitHarvestCommand__
 
-#include "Command.hh"
+#include "command/Command.hh"
 #include "state/Handle.hh"
 #include "command/data/HarvestMoveData.hh"
-#include "command/EntityMoveCommand.hh"
+#include "command/entity/EntityMoveCommand.hh"
 
 namespace octopus
 {

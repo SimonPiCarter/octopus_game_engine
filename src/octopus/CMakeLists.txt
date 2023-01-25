@@ -10,18 +10,18 @@ cmake_minimum_required (VERSION 3.14.0)
 
 
 add_library(octopus
-	${CMAKE_CURRENT_SOURCE_DIR}/src/command/BuildingBlueprintCommand.cc
-	${CMAKE_CURRENT_SOURCE_DIR}/src/command/BuildingCommand.cc
-	${CMAKE_CURRENT_SOURCE_DIR}/src/command/BuildingUnitProductionCommand.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/src/command/building/BuildingBlueprintCommand.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/src/command/building/BuildingUnitProductionCommand.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/command/Command.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/command/Commandable.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/command/CommandQueue.cc
-	${CMAKE_CURRENT_SOURCE_DIR}/src/command/EntityAttackCommand.cc
-	${CMAKE_CURRENT_SOURCE_DIR}/src/command/EntityAttackMoveCommand.cc
-	${CMAKE_CURRENT_SOURCE_DIR}/src/command/EntityBuffCommand.cc
-	${CMAKE_CURRENT_SOURCE_DIR}/src/command/EntityWaitCommand.cc
-	${CMAKE_CURRENT_SOURCE_DIR}/src/command/EntityMoveCommand.cc
-	${CMAKE_CURRENT_SOURCE_DIR}/src/command/UnitHarvestCommand.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/src/command/entity/EntityAttackCommand.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/src/command/entity/EntityAttackMoveCommand.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/src/command/entity/EntityBuffCommand.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/src/command/entity/EntityBuildingCommand.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/src/command/entity/EntityMoveCommand.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/src/command/entity/EntityWaitCommand.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/src/command/unit/UnitHarvestCommand.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/logger/Logger.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/controller/Controller.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/controller/Metrics.cc

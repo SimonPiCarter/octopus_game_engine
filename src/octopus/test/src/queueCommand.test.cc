@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 
-#include <command/EntityMoveCommand.hh>
-#include <command/EntityAttackCommand.hh>
+#include <command/entity/EntityMoveCommand.hh>
+#include <command/entity/EntityAttackCommand.hh>
 #include <controller/Controller.hh>
 #include <step/entity/EntityMoveStep.hh>
 #include <step/entity/spawn/EntitySpawnStep.hh>

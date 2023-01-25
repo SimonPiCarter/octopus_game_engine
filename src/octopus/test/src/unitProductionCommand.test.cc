@@ -2,7 +2,7 @@
 
 #include <logger/Logger.hh>
 
-#include "command/BuildingUnitProductionCommand.hh"
+#include "command/building/BuildingUnitProductionCommand.hh"
 #include "controller/Controller.hh"
 #include "state/entity/Building.hh"
 #include "state/model/entity/BuildingModel.hh"
