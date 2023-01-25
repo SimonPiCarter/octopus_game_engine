@@ -5,6 +5,16 @@
 
 namespace octopus
 {
+double getResource(Player const &player_p, ResourceType type_p)
+{
+	auto &&it_l = player_p._resources.find(type_p);
+	if(it_l != player_p._resources.end())
+	{
+		return it_l->second;
+	}
+	return 0.;
+}
+
 std::list<BuildingModel const *> getAvailableBuildingModels(Player const &player_p)
 {
 	std::list<BuildingModel const *> availables_l;

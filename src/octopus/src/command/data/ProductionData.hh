@@ -3,21 +3,23 @@
 
 #include "command/CommandData.hh"
 
+#include "state/model/entity/UnitModel.hh"
+
 namespace octopus
 {
-
-class UnitModel;
 
 /// @brief This class is aimed at supporting
 /// every command that involve production time
 class ProductionData : public CommandData
 {
 public:
-	ProductionData() :
+	ProductionData(unsigned long completeTime_p) :
 		_progression(0.),
+		_completeTime(completeTime_p),
 		_paid(false) {}
 
 	double _progression;
+	unsigned long const _completeTime;
 
 	bool _paid;
 };
@@ -27,7 +29,7 @@ class UnitProductionData : public ProductionData
 {
 public:
 	UnitProductionData(UnitModel const &model_p) :
-		ProductionData(), _model(model_p) {}
+		ProductionData(model_p._productionTime), _model(model_p) {}
 
 	UnitModel const &_model;
 };

@@ -9,6 +9,7 @@ namespace octopus
 	class EntityMoveStep;
 	class State;
 	class Steppable;
+	class SteppableVisitor;
 
 	class Step
 	{
@@ -41,6 +42,9 @@ namespace octopus
 	/// for example : remove all EntityMoveStep with no noticeable difference
 	/// between pos and new pos
 	void compact(Step &step_p);
+
+	/// @brief visit all steppable in the step
+	void visitAll(Step const &step_p, SteppableVisitor &visitor_p);
 }
 
 #endif

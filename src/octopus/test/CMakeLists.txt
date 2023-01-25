@@ -37,6 +37,8 @@ target_sources (unit_tests
 	src/harvestCommand.test
 	src/moveCommand.test.cc
 	src/queueCommand.test.cc
+	src/triggerBuilding.test.cc
+	src/triggerUnitSpawn.test.cc
 	src/unitProductionCommand.test.cc
 )
 

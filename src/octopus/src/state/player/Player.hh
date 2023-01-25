@@ -46,6 +46,9 @@ namespace octopus
 			std::map<std::string, bool> _techUnlocked;
 	};
 
+	/// @brief safe getter for resource of a player
+	double getResource(Player const &player_p, ResourceType type_p);
+
 	/// @brief return availables building models from building
 	std::list<BuildingModel const *> getAvailableBuildingModels(Player const &player_p);
 	/// @brief return availables unit models from building and player

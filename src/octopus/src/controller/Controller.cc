@@ -5,11 +5,12 @@
 #include <ctime>
 #include <chrono>
 
-#include "state/State.hh"
 #include "command/Command.hh"
 #include "command/Commandable.hh"
+#include "controller/event/EventCollection.hh"
+#include "controller/trigger/Listener.hh"
 #include "logger/Logger.hh"
-
+#include "state/State.hh"
 #include "step/ConflictPositionSolver.hh"
 #include "step/TickingStep.hh"
 
@@ -78,6 +79,15 @@ Controller::~Controller()
 	{
 		delete step_l;
 	}
+
+	for(OneShotTrigger * trigger_l : _oneShotTriggers)
+	{
+		delete trigger_l;
+	}
+	for(OnEachTrigger * trigger_l : _onEachTriggers)
+	{
+		delete trigger_l;
+	}
 }
 
 
@@ -132,6 +142,26 @@ bool Controller::loop_body()
 			Logger::getDebug() << "processing step " << _backState->_stepHandled << " on state "<<_backState->_state<< std::endl;
 
 			for(size_t i = 0; i < 5 && octopus::updateStepFromConflictPosition(step_l, *_backState->_state) ; ++ i) {}
+
+			// push new triggers
+			{
+				// lock to avoid overlap
+				std::lock_guard<std::mutex> lock_l(_mutex);
+				_oneShotTriggers.insert(
+						_oneShotTriggers.end(),
+						_queuedOneShotTriggers[_backState->_stepHandled-1].begin(),
+						_queuedOneShotTriggers[_backState->_stepHandled-1].end());
+
+				_onEachTriggers.insert(
+						_onEachTriggers.end(),
+						_queuedOnEachTriggers[_backState->_stepHandled-1].begin(),
+						_queuedOnEachTriggers[_backState->_stepHandled-1].end());
+
+				_queuedOneShotTriggers.erase(_backState->_stepHandled-1);
+				_queuedOnEachTriggers.erase(_backState->_stepHandled-1);
+			}
+			handleTriggers(*_backState->_state, step_l);
+
 			octopus::compact(step_l);
 
 			// Prepare next step
@@ -226,6 +256,21 @@ void Controller::commitCommand(Command * cmd_p)
 	_commitedCommands[_ongoingStep-1]->push_back(cmd_p);
 }
 
+/// @brief add a trigger on the ongoing step
+void Controller::commitOneShotTrigger(OneShotTrigger * trigger_p)
+{
+	// lock to avoid multi swap
+	std::lock_guard<std::mutex> lock_l(_mutex);
+	_queuedOneShotTriggers[_ongoingStep-1].push_back(trigger_p);
+}
+/// @brief add a trigger on the ongoing step
+void Controller::commitOnEachTrigger(OnEachTrigger * trigger_p)
+{
+	// lock to avoid multi swap
+	std::lock_guard<std::mutex> lock_l(_mutex);
+	_queuedOnEachTriggers[_ongoingStep-1].push_back(trigger_p);
+}
+
 State const * Controller::getBackState() const
 {
 	return _backState->_state;
@@ -249,6 +294,40 @@ void Controller::updateCommitedCommand()
 	while(_commitedCommands.size() < _ongoingStep)
 	{
 		_commitedCommands.push_back(new std::list<Command *>());
+	}
+}
+
+void Controller::handleTriggers(State const &state_p, Step &step_p)
+{
+	Logger::getDebug() << "handleTriggers :: start "<<std::endl;
+	// compute event and triggers
+	EventCollection visitor_l(state_p);
+	visitAll(step_p, visitor_l);
+
+	for(auto &&it_l = _oneShotTriggers.begin() ; it_l != _oneShotTriggers.end() ; )
+	{
+		OneShotTrigger * trigger_l = *it_l;
+		trigger_l->complete(visitor_l);
+		if(trigger_l->isCompleted())
+		{
+			Logger::getDebug() << "handleTriggers :: trigger one shot "<<std::endl;
+			step_p.addSteppable(trigger_l->_steppable);
+			it_l = _oneShotTriggers.erase(it_l);
+		}
+		else
+		{
+			++it_l;
+		}
+	}
+
+	for(OnEachTrigger * trigger_l : _onEachTriggers)
+	{
+		trigger_l->_listener->complete(visitor_l, true);
+		for(unsigned long i = 0 ; i < trigger_l->_listener->getCount() ; ++ i)
+		{
+			Logger::getDebug() << "handleTriggers :: trigger on each "<<std::endl;
+			step_p.addSteppable(trigger_l->newSteppable());
+		}
 	}
 }
 

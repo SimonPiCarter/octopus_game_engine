@@ -26,6 +26,9 @@ add_library(octopus
 	${CMAKE_CURRENT_SOURCE_DIR}/src/logger/Logger.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/controller/Controller.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/controller/Metrics.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/src/controller/event/EventCollection.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/src/controller/trigger/Listener.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/src/controller/trigger/Trigger.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/state/entity/Buff.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/state/entity/Building.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/state/entity/Entity.cc

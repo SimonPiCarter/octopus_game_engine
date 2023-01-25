@@ -82,4 +82,12 @@ void compact(Step & step_p)
 	}
 }
 
+void visitAll(Step const &step_p, SteppableVisitor &visitor_p)
+{
+	for(Steppable const * steppable_l : step_p.getSteppable())
+	{
+		visitor_p(steppable_l);
+	}
+}
+
 } // namespace octopus
