@@ -2,6 +2,7 @@
 #define __EntityModel__
 
 #include <map>
+#include "state/model/requirements/Requirements.hh"
 #include "state/ResourceType.hh"
 
 namespace octopus
@@ -39,6 +40,8 @@ namespace octopus
 		bool _isResource { false };
 
 		std::map<ResourceType, double> _cost;
+		/// @brief requirements
+		Requirements _requirements;
 	};
 } // namespace octopus
 
