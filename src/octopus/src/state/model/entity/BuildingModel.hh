@@ -8,6 +8,8 @@
 
 namespace octopus
 {
+	class UnitModel;
+
 	struct BuildingModel : public EntityModel
 	{
 		BuildingModel(bool isStatic_p, double ray_p, double hpMax_p)
@@ -21,6 +23,9 @@ namespace octopus
 
 		/// @brief relative position for output production
 		Vector _productionOutput;
+
+		/// @brief list of UnitModel available in this building
+		std::list<UnitModel const *> _unitModels;
 	};
 } // namespace octopus
 
