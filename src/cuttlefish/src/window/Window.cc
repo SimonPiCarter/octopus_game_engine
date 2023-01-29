@@ -4,6 +4,7 @@
 #include <SDL2/SDL_image.h>
 
 #include "texture/Texture.hh"
+#include "text/Text.hh"
 
 namespace cuttlefish
 {
@@ -113,20 +114,7 @@ void Window::draw()
 
 	if(_displayFps)
 	{
-		SDL_Surface* text;
-		// Set color to black
-		SDL_Color color = { 0, 0, 0 };
-
-		std::string strFps_l = std::to_string(_fps);
-		text = TTF_RenderText_Solid( _font, strFps_l.c_str(), color );
-		if ( !text ) {
-			std::cout << "Failed to render text: " << TTF_GetError() << std::endl;
-		}
-		SDL_Texture* text_texture = SDL_CreateTextureFromSurface( _renderer, text );
-
-		SDL_Rect dest = { 0, 0, text->w, text->h };
-
-		SDL_RenderCopy( _renderer, text_texture, nullptr, &dest );
+		displayText(this, std::to_string(_fps), {0,0,0}, 0, 0);
 	}
 
 	//Update screen

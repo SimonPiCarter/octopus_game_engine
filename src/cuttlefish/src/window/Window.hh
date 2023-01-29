@@ -39,6 +39,8 @@ public:
 
 	void displayFps(bool display_p) { _displayFps = display_p; }
 
+	TTF_Font* getFont() { return _font; }
+
 private:
 	std::map<std::string, Texture *> _mapTexture;
 

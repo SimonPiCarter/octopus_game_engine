@@ -14,6 +14,7 @@ find_package(SDL2_ttf 2.0.18 REQUIRED)
 
 add_executable(cuttlefish
 	${CMAKE_CURRENT_SOURCE_DIR}/src/sprite/Sprite.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/src/text/Text.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/texture/Texture.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/window/Window.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/world/World.cc
