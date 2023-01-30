@@ -11,8 +11,8 @@
 namespace octopus
 {
 
-BuildingBlueprintCommand::BuildingBlueprintCommand(Handle const &commandHandle_p, Vector const &pos_p, unsigned long player_p, BuildingModel const &model_p)
-	: Command(commandHandle_p)
+BuildingBlueprintCommand::BuildingBlueprintCommand(Vector const &pos_p, unsigned long player_p, BuildingModel const &model_p)
+	: Command(0)
 	, _pos(pos_p)
 	, _player(player_p)
 	, _model(model_p)
