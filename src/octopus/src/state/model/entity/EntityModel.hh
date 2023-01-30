@@ -42,6 +42,9 @@ namespace octopus
 		std::map<ResourceType, double> _cost;
 		/// @brief requirements
 		Requirements _requirements;
+
+		/// @brief id to be set up when library loads a model
+		std::string _id;
 	};
 } // namespace octopus
 

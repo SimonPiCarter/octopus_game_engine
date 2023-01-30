@@ -17,6 +17,7 @@ Library::~Library()
 void Library::registerEntityModel(std::string const &id_p, EntityModel const &model_p)
 {
 	_mapEntityModel[id_p] = new EntityModel(model_p);
+	_mapEntityModel[id_p]->_id = id_p;
 }
 
 EntityModel const & Library::getEntityModel(std::string const &id_p) const
@@ -27,6 +28,7 @@ EntityModel const & Library::getEntityModel(std::string const &id_p) const
 void Library::registerBuildingModel(std::string const &id_p, BuildingModel const &model_p)
 {
 	_mapBuildingModel[id_p] = new BuildingModel(model_p);
+	_mapBuildingModel[id_p]->_id = id_p;
 }
 
 BuildingModel const & Library::getBuildingModel(std::string const &id_p) const
@@ -37,6 +39,7 @@ BuildingModel const & Library::getBuildingModel(std::string const &id_p) const
 void Library::registerUnitModel(std::string const &id_p, UnitModel const &model_p)
 {
 	_mapUnitModel[id_p] = new UnitModel(model_p);
+	_mapUnitModel[id_p]->_id = id_p;
 }
 
 UnitModel const & Library::getUnitModel(std::string const &id_p) const
