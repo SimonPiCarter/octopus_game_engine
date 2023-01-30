@@ -109,6 +109,7 @@ int main( int argc, char* args[] )
 			Panel panel_l(SCREEN_WIDTH-200, SCREEN_HEIGHT-200,
 				window_l.loadTexture("resources/background.png"), window_l.loadTexture("resources/grid.png"), 3);
 			panel_l.addSpriteInfo("unit", 2, 1);
+			panel_l.addSpriteInfo("building", 1, 0);
 
 			Sprite * selection_l = nullptr;
 

@@ -53,6 +53,7 @@ std::list<Steppable *> Case4(Library &lib_p)
 	std::list<Steppable *> spawners_l =
 	{
 		new PlayerSpawnStep(0, 0),
+		new PlayerAddBuildingModel(0, lib_p.getBuildingModel("building")),
 		new PlayerSpendResourceStep(0, mapRes_l),
 		new BuildingSpawnStep(building_l),
 		new ResourceSpawnStep(res1_l),
