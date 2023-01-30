@@ -81,7 +81,7 @@ void CommandQueue::unqueueCommandLast(Command *cmd_p)
 	delete bundle_l._data;
 	_commandQueue.pop_back();
 	// if context queue was empty
-	if(_commandQueue.size() == 0)
+	if(_commandQueue.empty())
 	{
 		_contextList.pop_front();
 	}

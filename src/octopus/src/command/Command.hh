@@ -16,15 +16,15 @@ class Command
 public:
 	Command(Handle const &handle_p) : _handleCommand(handle_p) {}
 
-	void registerCommand(Step & step_p);
+	/// @brief refister the command into the step
+	/// This method is responsible for
+	/// handling cost of command and spawning command in step
+	/// and checking legality
+	virtual void registerCommand(Step & step_p, State const &state_p);
 
-	/// @brief register new commands or info into the step
+	/// @brief compile command or info into the step
 	/// @return true if command is over
 	virtual bool applyCommand(Step & step_p, State const &state_p, CommandData const * data_p) const = 0;
-
-	/// @brief check if command is legal given the state
-	/// command is not registered if not legal
-	virtual bool checkLegality(State const &) const { return true; }
 
 	/// @brief create data supporting the command actions
 	virtual CommandData * newData() const = 0;

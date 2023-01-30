@@ -6,7 +6,7 @@
 
 namespace octopus
 {
-void Command::registerCommand(Step &step_p)
+void Command::registerCommand(Step &step_p, State const &)
 {
 	step_p.addSteppable(new CommandSpawnStep(this));
 }
