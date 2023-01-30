@@ -174,7 +174,7 @@ int main( int argc, char* args[] )
 				world_l.display(window_l, elapsed_l);
 
 				octopus::Player const * player_l = stateAndSteps_l._state->getPlayer(0);
-				displayText(&window_l, stringify(player_l->_resources.at(octopus::ResourceType::Food)), {0,0,0}, 300, 0);
+				displayText(&window_l, stringify(octopus::getResource(*player_l, octopus::ResourceType::Food)), {0,0,0}, 300, 0);
 
 				window_l.draw();
 			}
