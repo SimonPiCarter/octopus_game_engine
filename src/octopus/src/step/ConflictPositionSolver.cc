@@ -132,63 +132,6 @@ bool updateStepFromConflictPosition(Step &step_p, State const &state_p)
 			{
 				return;
 			}
-			// if one of the two is a building we check on rectangle instead of circles
-			if(entA_l->_model._isStatic || entB_l->_model._isStatic)
-			{
-				Box<double> boxA_l { newPos_l[entA_l->_handle].x - entA_l->_model._ray, newPos_l[entA_l->_handle].x + entA_l->_model._ray,
-									newPos_l[entA_l->_handle].y - entA_l->_model._ray, newPos_l[entA_l->_handle].y + entA_l->_model._ray };
-				Box<double> boxB_l { newPos_l[entB_l->_handle].x - entB_l->_model._ray, newPos_l[entB_l->_handle].x + entB_l->_model._ray,
-									newPos_l[entB_l->_handle].y - entB_l->_model._ray, newPos_l[entB_l->_handle].y + entB_l->_model._ray };
-
-				Box<double> intersect_l = { std::max(boxA_l._lowerX, boxB_l._lowerX),
-									std::min(boxA_l._upperX, boxB_l._upperX),
-									std::max(boxA_l._lowerY, boxB_l._lowerY),
-									std::min(boxA_l._upperY, boxB_l._upperY) };
-				// Check intersections
-				if(intersect_l._lowerX < intersect_l._upperX
-				&& intersect_l._lowerY < intersect_l._upperY)
-				{
-					// direction in regards of A
-					double dXRight_l = boxA_l._upperX - boxB_l._lowerX;
-					double dXLeft_l = boxA_l._lowerX - boxB_l._upperX;
-					double dYUp_l = boxA_l._upperY - boxB_l._lowerY;
-					double dYDown_l = boxA_l._lowerY - boxB_l._upperY;
-
-					double dXRightAbs_l = std::abs(dXRight_l);
-					double dXLeftAbs_l = std::abs(dXLeft_l);
-					double dYUpAbs_l = std::abs(dYUp_l);
-					double dYDownAbs_l = std::abs(dYDown_l);
-					double min_l = std::min(dXRightAbs_l, std::min(dXLeftAbs_l, std::min(dYUpAbs_l, dYDownAbs_l)));
-					// B -> A
-					Vector diff_l;
-					if(min_l <= dXRightAbs_l)
-					{
-						diff_l = {dXRight_l, 0.};
-					} else if(min_l <= dXLeftAbs_l) {
-						diff_l = {dXLeft_l, 0.};
-					} else if(min_l <= dYUpAbs_l) {
-						diff_l = {0., dYUp_l};
-					} else if(min_l <= dYDownAbs_l) {
-						diff_l = {0., dYDown_l};
-					}
-
-					double coefA_l = 0.5;
-					if(entA_l->_frozen && entB_l->_frozen)
-					{
-						coefA_l = 0.;
-					}
-					if(entA_l->_frozen)
-					{
-						coefA_l = 0.;
-					}
-					else if(entB_l->_frozen)
-					{
-						coefA_l = 1.;
-					}
-					// updated steps, both doing half distance
-					mapAbsoluteCorrection_l[stepA_l] += diff_l * coefA_l;
-				}
-			}
 			// check collision
 			else if(collision(newPos_l[entA_l->_handle], newPos_l[entB_l->_handle], entA_l->_model._ray, entB_l->_model._ray))
 			{
