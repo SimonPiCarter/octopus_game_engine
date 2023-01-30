@@ -16,6 +16,7 @@
 #include "logger/Logger.hh"
 #include "controller/Controller.hh"
 #include "command/building/BuildingUnitProductionCommand.hh"
+#include "command/entity/EntityMoveCommand.hh"
 #include "state/player/Player.hh"
 #include "state/entity/Entity.hh"
 #include "state/model/entity/EntityModel.hh"
@@ -103,6 +104,8 @@ int main( int argc, char* args[] )
 			double dY = 0.;
 			double camSpeed_l = 200.;
 
+			Sprite * selection_l = nullptr;
+
 			auto last_l = std::chrono::steady_clock::now();
 			double elapsed_l = 0.;
 			//Event handler
@@ -110,6 +113,11 @@ int main( int argc, char* args[] )
 					   //While application is running
 			while( !quit_l )
 			{
+				// query a new state if available
+				octopus::StateAndSteps stateAndSteps_l = controller_l.queryStateAndSteps();
+				octopus::State const &state_l = *stateAndSteps_l._state;
+				world_l.handleStep(window_l, stateAndSteps_l);
+
 				//Handle events on queue
 				while( SDL_PollEvent( &e ) != 0 )
 				{
@@ -120,13 +128,27 @@ int main( int argc, char* args[] )
 					}
 					if (e.type == SDL_MOUSEBUTTONDOWN)
 					{
-						//Get mouse position
-						int x, y;
-						SDL_GetMouseState( &x, &y );
-						Sprite * sprite_l = world_l.getSprite(window_l, x, y);
-						if(sprite_l)
+						Sprite * sprite_l = world_l.getSprite(window_l, e.button.x, e.button.y);
+						if(e.button.button == SDL_BUTTON_LEFT)
 						{
-							octopus::Logger::getNormal()<<"ok"<<std::endl;
+							selection_l = sprite_l;
+						}
+						if(e.button.button == SDL_BUTTON_RIGHT
+						&& selection_l)
+						{
+							const octopus::Entity * cur_l = state_l.getEntity(selection_l->getHandle());
+							bool isStatic_l = cur_l->_model._isStatic;
+							if(!isStatic_l)
+							{
+								octopus::EntityMoveCommand * command_l = new octopus::EntityMoveCommand(
+									selection_l->getHandle(),
+									selection_l->getHandle(),
+									window_l.getWorldVector(e.button.x, e.button.y),
+									0,
+									{window_l.getWorldVector(e.button.x, e.button.y)}
+								);
+								controller_l.commitCommand(command_l);
+							}
 						}
 					}
 					if( e.type == SDL_KEYDOWN)
@@ -182,10 +204,6 @@ int main( int argc, char* args[] )
 				window_l.setCamera(x, y);
 				window_l.clear();
 
-				// query a new state if available
-				octopus::StateAndSteps stateAndSteps_l = controller_l.queryStateAndSteps();
-				world_l.handleStep(window_l, stateAndSteps_l);
-
 				//Render background texture to screen
 				background_l->render(window_l.getRenderer(), 0, 0, SCREEN_HEIGHT, SCREEN_WIDTH );
 
@@ -196,7 +214,7 @@ int main( int argc, char* args[] )
 
 				world_l.display(window_l, elapsed_l);
 
-				octopus::Player const * player_l = stateAndSteps_l._state->getPlayer(0);
+				octopus::Player const * player_l = state_l.getPlayer(0);
 				displayText(&window_l, resourceStr(*player_l), {0,0,0}, 300, 0);
 
 				window_l.draw();
