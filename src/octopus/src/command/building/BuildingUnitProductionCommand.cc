@@ -44,6 +44,7 @@ bool BuildingUnitProductionCommand::applyCommand(Step & step_p, State const &sta
 		else
 		{
 			step_p.addSteppable(new MissingResourceStep(building_l->_player));
+			return true;
 		}
 	}
 
