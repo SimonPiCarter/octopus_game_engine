@@ -7,9 +7,10 @@
 #include <thread>
 #include <sstream>
 
+#include "panel/Panel.hh"
 #include "sprite/Sprite.hh"
-#include "texture/Texture.hh"
 #include "text/Text.hh"
+#include "texture/Texture.hh"
 #include "window/Window.hh"
 #include "world/World.hh"
 
@@ -105,8 +106,9 @@ int main( int argc, char* args[] )
 			double dY = 0.;
 			double camSpeed_l = 200.;
 
-			Sprite sprite_l(0, window_l.loadTexture("resources/background.png"), 1, 0, 0, 400, 400, {1}, {1}, true);
-			sprite_l.setPosition(SCREEN_WIDTH-400, SCREEN_HEIGHT-400);
+			Panel panel_l(SCREEN_WIDTH-200, SCREEN_HEIGHT-200,
+				window_l.loadTexture("resources/background.png"), window_l.loadTexture("resources/grid.png"), 3);
+			panel_l.addSpriteInfo("unit", 2, 1);
 
 			Sprite * selection_l = nullptr;
 
@@ -136,6 +138,15 @@ int main( int argc, char* args[] )
 						if(e.button.button == SDL_BUTTON_LEFT)
 						{
 							selection_l = sprite_l;
+							if(selection_l)
+							{
+								const octopus::Entity * cur_l = state_l.getEntity(selection_l->getHandle());
+								panel_l.refresh(cur_l, state_l);
+							}
+							else
+							{
+								panel_l.refresh(nullptr, state_l);
+							}
 						}
 						if(e.button.button == SDL_BUTTON_RIGHT
 						&& selection_l)
@@ -234,7 +245,7 @@ int main( int argc, char* args[] )
 
 				world_l.display(window_l, elapsed_l);
 
-				sprite_l.render(window_l);
+				panel_l.render(window_l);
 
 				octopus::Player const * player_l = state_l.getPlayer(0);
 				displayText(&window_l, resourceStr(*player_l), {0,0,0}, 300, 0);
