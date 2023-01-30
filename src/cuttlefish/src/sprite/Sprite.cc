@@ -9,9 +9,10 @@
 namespace cuttlefish
 {
 
-Sprite::Sprite(Texture const * texture_p, double scale_p, int logX_p, int logY_p, int width_p, int height_p,
-	std::vector<int> const &nbFramesPerState_p, std::vector<double> const &timePerFramePerState_p)
-	: _texture(texture_p)
+Sprite::Sprite(octopus::Handle const &ent_p, Texture const * texture_p, double scale_p, int logX_p, int logY_p,
+	int width_p, int height_p, std::vector<int> const &nbFramesPerState_p, std::vector<double> const &timePerFramePerState_p)
+	: _handle(ent_p)
+	, _texture(texture_p)
 	, _scale(scale_p)
 	, _logicalX(logX_p)
 	, _logicalY(logY_p)
@@ -42,7 +43,7 @@ void Sprite::update(double elapsedTime_l)
 	}
 }
 
-void Sprite::render( Window &window_p )
+void Sprite::render(Window &window_p)
 {
 	SDL_Rect final_l {
 		int(_x - _logicalX * _scale),
@@ -59,6 +60,25 @@ void Sprite::render( Window &window_p )
 	};
 	SDL_Point const &cam_l = window_p.getCamera();
 	_texture->render(window_p.getRenderer(), final_l.x - cam_l.x, final_l.y - cam_l.y, final_l.h, final_l.w, &clip_l);
+}
+
+bool Sprite::isInside(Window const &window_p, int x, int y) const
+{
+	// rectangle of drawing
+	SDL_Rect final_l {
+		int(_x - _logicalX * _scale),
+		int(_y - _logicalY * _scale),
+		int(_width * _scale),
+		int(_height * _scale),
+	};
+
+	SDL_Point const &cam_l = window_p.getCamera();
+	if(x >= final_l.x - cam_l.x && x <= final_l.x - cam_l.x + final_l.w
+	&& y >= final_l.y - cam_l.y && y <= final_l.y - cam_l.y + final_l.h)
+	{
+		return true;
+	}
+	return false;
 }
 
 void Sprite::setPosition(double x, double y)
@@ -83,6 +103,10 @@ double Sprite::getY() const
 	return _y;
 }
 
+octopus::Handle const & Sprite::getHandle() const
+{
+	return _handle;
+}
 
 
 } // cuttlefish

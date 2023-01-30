@@ -3,6 +3,7 @@
 
 #include <string>
 #include <vector>
+#include "state/Handle.hh"
 
 namespace cuttlefish
 {
@@ -25,7 +26,7 @@ class Window;
 class Sprite
 {
 	public:
-		Sprite(Texture const * texture_p, double scale_p, int logX_p, int logY_p, int width_p, int height_p,
+		Sprite(octopus::Handle const &ent_p, Texture const * texture_p, double scale_p, int logX_p, int logY_p, int width_p, int height_p,
 			std::vector<int> const &nbFramesPerState_p, std::vector<double> const &timePerFramePerState_p);
 
 		/// @brief update state and reset current frame and time into frame
@@ -38,6 +39,9 @@ class Sprite
 		/// call texture render using a clip based on state and frame
 		void render( Window &window_p );
 
+		/// @brief check if the position in on the sprite
+		bool isInside(Window const &window_p, int x, int y) const;
+
 		//Gets image dimensions
 		int getWidth();
 		int getHeight();
@@ -47,7 +51,11 @@ class Sprite
 		double getX() const;
 		double getY() const;
 
+		octopus::Handle const & getHandle() const;
+
 	private:
+		/// @brief the handle of the entity displayed
+		octopus::Handle const _handle;
 		//The underlying texture
 		Texture const * const _texture;
 

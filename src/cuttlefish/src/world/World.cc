@@ -51,5 +51,16 @@ void World::display(Window &window_p, double elapsed_p)
 	}
 }
 
+Sprite * World::getSprite(Window &window_p, int x, int y) const
+{
+	for(Sprite * sprite_l : _listSprite)
+	{
+		if(sprite_l->isInside(window_p, x, y))
+		{
+			return sprite_l;
+		}
+	}
+	return nullptr;
+}
 
 }

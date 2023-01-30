@@ -29,6 +29,10 @@ public:
 	/// @brief update all sprites and
 	void display(Window &window_p, double elapsed_p);
 
+	/// @brief get sprite under coordinate on the window
+	/// @return nullptr if no sprint under coordinate
+	Sprite * getSprite(Window &window_p, int x, int y) const;
+
 private:
 	/// @brief sprite of every entity
 	/// content can be nullptr in case of sprite
