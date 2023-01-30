@@ -27,10 +27,14 @@ class Sprite
 {
 	public:
 		Sprite(octopus::Handle const &ent_p, Texture const * texture_p, double scale_p, int logX_p, int logY_p, int width_p, int height_p,
-			std::vector<int> const &nbFramesPerState_p, std::vector<double> const &timePerFramePerState_p);
+			std::vector<int> const &nbFramesPerState_p, std::vector<double> const &timePerFramePerState_p, bool absolute_p=false);
 
 		/// @brief update state and reset current frame and time into frame
 		void setState(int state_p);
+
+		/// @brief update frame to given value
+		/// @note mainly used for icons
+		void setFrame(int frame_p);
 
 		/// @brief update frame based on elapsed time and refresh rate
 		void update(double elapsedTime_l);
@@ -72,6 +76,9 @@ class Sprite
 		std::vector<int> const _nbFramesPerState;
 
 		std::vector<double> const _timePerFramePerState;
+
+		/// @brief if true camera is not applied
+		bool const _absolute;
 
 		////
 		//// Dynamic data

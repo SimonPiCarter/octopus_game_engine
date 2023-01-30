@@ -10,7 +10,7 @@ namespace cuttlefish
 {
 
 Sprite::Sprite(octopus::Handle const &ent_p, Texture const * texture_p, double scale_p, int logX_p, int logY_p,
-	int width_p, int height_p, std::vector<int> const &nbFramesPerState_p, std::vector<double> const &timePerFramePerState_p)
+	int width_p, int height_p, std::vector<int> const &nbFramesPerState_p, std::vector<double> const &timePerFramePerState_p, bool absolute_p)
 	: _handle(ent_p)
 	, _texture(texture_p)
 	, _scale(scale_p)
@@ -20,6 +20,7 @@ Sprite::Sprite(octopus::Handle const &ent_p, Texture const * texture_p, double s
 	, _height(height_p)
 	, _nbFramesPerState(nbFramesPerState_p)
 	, _timePerFramePerState(timePerFramePerState_p)
+	, _absolute(absolute_p)
 {}
 
 void Sprite::setState(int state_p)
@@ -30,6 +31,11 @@ void Sprite::setState(int state_p)
 		_frame = 0;
 	}
 	_state = state_p;
+}
+
+void Sprite::setFrame(int frame_p)
+{
+	_frame = frame_p;
 }
 
 void Sprite::update(double elapsedTime_l)
@@ -59,7 +65,14 @@ void Sprite::render(Window &window_p)
 		_height,
 	};
 	SDL_Point const &cam_l = window_p.getCamera();
-	_texture->render(window_p.getRenderer(), final_l.x - cam_l.x, final_l.y - cam_l.y, final_l.h, final_l.w, &clip_l);
+	if(_absolute)
+	{
+		_texture->render(window_p.getRenderer(), final_l.x, final_l.y, final_l.h, final_l.w, &clip_l);
+	}
+	else
+	{
+		_texture->render(window_p.getRenderer(), final_l.x - cam_l.x, final_l.y - cam_l.y, final_l.h, final_l.w, &clip_l);
+	}
 }
 
 bool Sprite::isInside(Window const &window_p, int x, int y) const
