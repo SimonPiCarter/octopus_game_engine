@@ -127,7 +127,6 @@ TEST(commandQueueTest, multiple)
 
 TEST(commandQueueTest, multiple_on_multiple_call)
 {
-	Logger::enable_debug();
 	State state_l;
 	Step step_l;
 
