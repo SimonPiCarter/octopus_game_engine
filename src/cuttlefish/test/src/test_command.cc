@@ -17,6 +17,7 @@
 #include "controller/Controller.hh"
 #include "command/building/BuildingUnitProductionCommand.hh"
 #include "command/entity/EntityMoveCommand.hh"
+#include "command/unit/UnitHarvestCommand.hh"
 #include "state/player/Player.hh"
 #include "state/entity/Entity.hh"
 #include "state/model/entity/EntityModel.hh"
@@ -140,14 +141,29 @@ int main( int argc, char* args[] )
 							bool isStatic_l = cur_l->_model._isStatic;
 							if(!isStatic_l)
 							{
-								octopus::EntityMoveCommand * command_l = new octopus::EntityMoveCommand(
-									selection_l->getHandle(),
-									selection_l->getHandle(),
-									window_l.getWorldVector(e.button.x, e.button.y),
-									0,
-									{window_l.getWorldVector(e.button.x, e.button.y)}
-								);
-								controller_l.commitCommand(command_l);
+								if(sprite_l && state_l.getEntity(sprite_l->getHandle())->_model._isResource)
+								{
+									octopus::UnitHarvestCommand * command_l = new octopus::UnitHarvestCommand(
+										selection_l->getHandle(),
+										selection_l->getHandle(),
+										sprite_l->getHandle(),
+										window_l.getWorldVector(e.button.x, e.button.y),
+										0,
+										{window_l.getWorldVector(e.button.x, e.button.y)}
+									);
+									controller_l.commitCommand(command_l);
+								}
+								else
+								{
+									octopus::EntityMoveCommand * command_l = new octopus::EntityMoveCommand(
+										selection_l->getHandle(),
+										selection_l->getHandle(),
+										window_l.getWorldVector(e.button.x, e.button.y),
+										0,
+										{window_l.getWorldVector(e.button.x, e.button.y)}
+									);
+									controller_l.commitCommand(command_l);
+								}
 							}
 						}
 					}
