@@ -18,7 +18,7 @@ using namespace octopus;
 
 std::list<Steppable *> Case4(Library &lib_p)
 {
-	UnitModel unitModel_l { false, 1., 0.25, 10. };
+	UnitModel unitModel_l { false, 1., 0.05, 10. };
 	unitModel_l._isUnit = true;
 	unitModel_l._maxQuantity[ResourceType::Food] = 10;
 	unitModel_l._productionTime = 100;
