@@ -158,8 +158,11 @@ bool updateStepFromConflictPosition(Step &step_p, State const &state_p)
 				{
 					normalizedAxis_l = Vector { double(gen_l.nextFromRange(-10, 10)), double(gen_l.nextFromRange(-10, 10))} / length(normalizedAxis_l);
 				}
-
 				double coefA_l = 0.5;
+				if(square_length(stepA_l->_move) > 1e-5 || square_length(stepB_l->_move) > 1e-5)
+				{
+					coefA_l = std::sqrt(square_length(stepB_l->_move)/(square_length(stepA_l->_move)+square_length(stepB_l->_move)));
+				}
 				if(entA_l->_frozen && entB_l->_frozen)
 				{
 					coefA_l = 0.;
