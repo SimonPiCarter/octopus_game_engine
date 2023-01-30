@@ -13,6 +13,8 @@
 #include "world/World.hh"
 
 #include "controller/Controller.hh"
+#include "command/building/BuildingUnitProductionCommand.hh"
+#include "state/player/Player.hh"
 #include "state/entity/Entity.hh"
 #include "state/model/entity/EntityModel.hh"
 #include "step/entity/spawn/EntitySpawnStep.hh"
@@ -77,7 +79,7 @@ int main( int argc, char* args[] )
 			World world_l;
 
 			octopus::Library lib_l;
-			std::list<octopus::Steppable *> spawners_l = Case3(lib_l);
+			std::list<octopus::Steppable *> spawners_l = Case4(lib_l);
 
 			octopus::Controller controller_l(spawners_l, 0.01);
 
@@ -120,6 +122,14 @@ int main( int argc, char* args[] )
 							case SDLK_DOWN:
 								dY = camSpeed_l;
 								break;
+							case SDLK_p:
+							{
+								octopus::BuildingUnitProductionCommand * command_l =
+									new octopus::BuildingUnitProductionCommand(0, 0, lib_l.getUnitModel("unit"));
+								command_l->setQueued(true);
+								controller_l.commitCommand(command_l);
+								break;
+							}
 							default:
 								break;
 						}
@@ -163,7 +173,8 @@ int main( int argc, char* args[] )
 
 				world_l.display(window_l, elapsed_l);
 
-				displayText(&window_l, "200", {0,0,0}, 300, 0);
+				octopus::Player const * player_l = stateAndSteps_l._state->getPlayer(0);
+				displayText(&window_l, stringify(player_l->_resources.at(octopus::ResourceType::Food)), {0,0,0}, 300, 0);
 
 				window_l.draw();
 			}
