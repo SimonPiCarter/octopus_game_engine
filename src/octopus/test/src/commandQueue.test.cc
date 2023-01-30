@@ -125,6 +125,69 @@ TEST(commandQueueTest, multiple)
 	ASSERT_EQ(queue_l.getEnd(), queue_l.getCurrentCommand());
 }
 
+TEST(commandQueueTest, multiple_on_multiple_call)
+{
+	Logger::enable_debug();
+	State state_l;
+	Step step_l;
+
+	std::vector<unsigned long> vec_l;
+
+	CommandQueue queue_l;
+
+	TestCommand cmd_l(1, vec_l);	cmd_l.setQueued(true);
+	TestCommand cmd2_l(2, vec_l);	cmd2_l.setQueued(true);
+
+	queue_l.queueCommandLast(&cmd_l);
+
+	EXPECT_TRUE(queue_l.hasCommand());
+	CommandQueue::ConstQueueIterator it_l = queue_l.getCurrentCommand();
+
+	while(it_l != queue_l.getEnd())
+	{
+		if(it_l->_cmd->applyCommand(step_l, state_l, it_l->_data))
+		{
+			++it_l;
+			queue_l.nextCommand();
+		}
+		else
+		{
+			break;
+		}
+	}
+
+	ASSERT_EQ(1u, vec_l.size());
+	EXPECT_EQ(1u, vec_l.at(0));
+	ASSERT_EQ(queue_l.getEnd(), queue_l.getCurrentCommand());
+	EXPECT_TRUE(queue_l.hasCommand());
+
+	queue_l.queueCommandLast(&cmd2_l);
+
+	ASSERT_NE(queue_l.getEnd(), queue_l.getCurrentCommand());
+
+	EXPECT_TRUE(queue_l.hasCommand());
+	it_l = queue_l.getCurrentCommand();
+
+	while(it_l != queue_l.getEnd())
+	{
+		if(it_l->_cmd->applyCommand(step_l, state_l, it_l->_data))
+		{
+			++it_l;
+			queue_l.nextCommand();
+		}
+		else
+		{
+			break;
+		}
+	}
+
+	ASSERT_EQ(2u, vec_l.size());
+	EXPECT_EQ(1u, vec_l.at(0));
+	EXPECT_EQ(2u, vec_l.at(1));
+	ASSERT_EQ(queue_l.getEnd(), queue_l.getCurrentCommand());
+	EXPECT_TRUE(queue_l.hasCommand());
+}
+
 TEST(commandQueueTest, multiple_override)
 {
 	State state_l;

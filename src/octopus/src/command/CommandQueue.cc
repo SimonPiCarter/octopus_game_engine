@@ -61,9 +61,10 @@ void CommandQueue::unqueueCommand(Command *cmd_p)
 /// @brief this will queue the command at the end of the current context
 void CommandQueue::queueCommandLast(Command *cmd_p)
 {
+	bool isEmpty_l = _commandQueue.empty() || getCurrentCommand() == getEnd();
 	_commandQueue.push_back({cmd_p, cmd_p->newData()});
 	// if context queue was empty
-	if(_commandQueue.size() == 1)
+	if(isEmpty_l)
 	{
 		_contextList.push_front(std::prev(_commandQueue.end()));
 	}
