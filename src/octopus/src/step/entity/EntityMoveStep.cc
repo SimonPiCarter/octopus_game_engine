@@ -52,7 +52,7 @@ EntityMoveStep createEntityMoveStep(Entity const &ent_p, Vector const &target_p,
 
 bool isEntityMoveStepNoOp(EntityMoveStep const &step_p)
 {
-	return square_length(step_p._move) < 1e-3;
+	return square_length(step_p._move) < 1e-5;
 }
 
 } // namespace octopus
