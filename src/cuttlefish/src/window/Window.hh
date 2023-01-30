@@ -7,6 +7,7 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_ttf.h>
 
+#include "utils/Vector.hh"
 
 namespace cuttlefish
 {
@@ -40,6 +41,10 @@ public:
 	void displayFps(bool display_p) { _displayFps = display_p; }
 
 	TTF_Font* getFont() { return _font; }
+
+	/// @brief return the position in the world given the coordinate on the window
+	/// and the camera position
+	octopus::Vector getWorldVector(int x, int y) const;
 
 private:
 	std::map<std::string, Texture *> _mapTexture;

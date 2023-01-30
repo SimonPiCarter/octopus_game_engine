@@ -150,4 +150,9 @@ void Window::setCamera(int x, int y)
 	_camera.y = y;
 }
 
+octopus::Vector Window::getWorldVector(int x, int y) const
+{
+	return {(x + _camera.x)/32., (y + _camera.y)/32. };
+}
+
 } // cuttlefish
