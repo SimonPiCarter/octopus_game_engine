@@ -13,6 +13,7 @@
 #include "window/Window.hh"
 #include "world/World.hh"
 
+#include "logger/Logger.hh"
 #include "controller/Controller.hh"
 #include "command/building/BuildingUnitProductionCommand.hh"
 #include "state/player/Player.hh"
@@ -116,6 +117,17 @@ int main( int argc, char* args[] )
 					if( e.type == SDL_QUIT )
 					{
 						quit_l = true;
+					}
+					if (e.type == SDL_MOUSEBUTTONDOWN)
+					{
+						//Get mouse position
+						int x, y;
+						SDL_GetMouseState( &x, &y );
+						Sprite * sprite_l = world_l.getSprite(window_l, x, y);
+						if(sprite_l)
+						{
+							octopus::Logger::getNormal()<<"ok"<<std::endl;
+						}
 					}
 					if( e.type == SDL_KEYDOWN)
 					{
