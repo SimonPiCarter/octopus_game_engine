@@ -5,6 +5,7 @@
 
 #include <chrono>
 #include <thread>
+#include <sstream>
 
 #include "sprite/Sprite.hh"
 #include "texture/Texture.hh"
@@ -31,6 +32,16 @@ using namespace cuttlefish;
 /// cf
 /// http://lazyfoo.net/tutorials/SDL/index.php#The%20Viewport
 ///
+
+std::string resourceStr(octopus::Player const &player_p)
+{
+	std::stringstream ss_l;
+	ss_l << "Food   : "<<stringify(octopus::getResource(player_p, octopus::ResourceType::Food))<<" | ";
+	ss_l << "Steel  : "<<stringify(octopus::getResource(player_p, octopus::ResourceType::Steel))<<" | ";
+	ss_l << "Ether  : "<<stringify(octopus::getResource(player_p, octopus::ResourceType::Ether))<<" | ";
+	ss_l << "Anchor : "<<stringify(octopus::getResource(player_p, octopus::ResourceType::Anchor))<<" | ";
+	return ss_l.str();
+}
 
 void controllerLoop(octopus::Controller &controller_p, bool &over_p)
 {
@@ -174,7 +185,7 @@ int main( int argc, char* args[] )
 				world_l.display(window_l, elapsed_l);
 
 				octopus::Player const * player_l = stateAndSteps_l._state->getPlayer(0);
-				displayText(&window_l, stringify(octopus::getResource(*player_l, octopus::ResourceType::Food)), {0,0,0}, 300, 0);
+				displayText(&window_l, resourceStr(*player_l), {0,0,0}, 300, 0);
 
 				window_l.draw();
 			}
