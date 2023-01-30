@@ -54,6 +54,7 @@ namespace octopus
 	class EntityMoveStep;
 	class EntitySpawnStep;
 	class MissingResourceStep;
+	class PlayerAddBuildingModel;
 	class PlayerAddOptionDivinityStep;
 	class PlayerAnchorDivinityStep;
 	class PlayerLevelUpDivinityStep;
@@ -107,6 +108,7 @@ namespace octopus
 			virtual void visit(EntityMoveStep const *steppable_p) = 0;
 			virtual void visit(EntitySpawnStep const *steppable_p) = 0;
 			virtual void visit(MissingResourceStep const *steppable_p) = 0;
+			virtual void visit(PlayerAddBuildingModel const *steppable_p) = 0;
 			virtual void visit(PlayerAddOptionDivinityStep const *steppable_p) = 0;
 			virtual void visit(PlayerAnchorDivinityStep const *steppable_p) = 0;
 			virtual void visit(PlayerLevelUpDivinityStep const *steppable_p) = 0;

@@ -53,6 +53,7 @@ public:
 	virtual void visit(EntityMoveStep const *) {}
 	virtual void visit(EntitySpawnStep const *) {}
 	virtual void visit(MissingResourceStep const *) {}
+	virtual void visit(PlayerAddBuildingModel const *) {}
 	virtual void visit(PlayerAddOptionDivinityStep const *) {}
 	virtual void visit(PlayerAnchorDivinityStep const *) {}
 	virtual void visit(PlayerLevelUpDivinityStep const *) {}

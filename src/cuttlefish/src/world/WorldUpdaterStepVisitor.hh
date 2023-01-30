@@ -57,6 +57,7 @@ public:
 	virtual void visit(octopus::EntityAttackStep const *) override {}
 	virtual void visit(octopus::EntityBuffStep const *) override {}
 	virtual void visit(octopus::MissingResourceStep const *) override {}
+	virtual void visit(octopus::PlayerAddBuildingModel const *) override {}
 	virtual void visit(octopus::PlayerAddOptionDivinityStep const *steppable_p) override {}
 	virtual void visit(octopus::PlayerAnchorDivinityStep const *steppable_p) override {}
 	virtual void visit(octopus::PlayerLevelUpDivinityStep const *steppable_p) override {}
