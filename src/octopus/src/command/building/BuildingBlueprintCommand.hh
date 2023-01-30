@@ -17,6 +17,8 @@ public:
 	BuildingBlueprintCommand(Handle const &commandHandle_p, Vector const &pos_p,
 		unsigned long player_p, BuildingModel const &model_p);
 
+	virtual void registerCommand(Step & step_p, State const &state_p) override;
+
 	/// @brief
 	virtual bool applyCommand(Step & step_p, State const &state_p, CommandData const *data_p) const override;
 

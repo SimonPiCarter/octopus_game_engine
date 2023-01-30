@@ -18,9 +18,9 @@ BuildingBlueprintCommand::BuildingBlueprintCommand(Handle const &commandHandle_p
 	, _model(model_p)
 {}
 
-bool BuildingBlueprintCommand::applyCommand(Step & step_p, State const &state_p, CommandData const *data_p) const
+void BuildingBlueprintCommand::registerCommand(Step & step_p, State const &state_p)
 {
-	Logger::getDebug() << "BuildingBlueprintCommand:: apply Command "<<_player <<std::endl;
+	Logger::getDebug() << "BuildingBlueprintCommand:: register Command "<<_player <<std::endl;
 	// If not payed we upadte player resource
 	// and mark this production as paid
 	if(!checkResource(state_p, _player, _model._cost))
@@ -33,7 +33,11 @@ bool BuildingBlueprintCommand::applyCommand(Step & step_p, State const &state_p,
 		building_l._player = _player;
 		step_p.addSteppable(new BuildingSpawnStep(building_l));
 	}
+}
 
+bool BuildingBlueprintCommand::applyCommand(Step &, State const &, CommandData const *) const
+{
+	// NA
 	return true;
 }
 
