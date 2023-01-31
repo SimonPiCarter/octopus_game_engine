@@ -52,6 +52,7 @@ add_library(octopus
 	${CMAKE_CURRENT_SOURCE_DIR}/src/step/command/ProductionPaidStep.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/step/command/ProductionProgressionStep.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/step/command/harvest/CommandHarvestStep.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/src/step/building/BuildingCancelStep.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/step/building/BuildingStep.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/step/entity/EntityAttackStep.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/step/entity/EntityHitPointChangeStep.cc
