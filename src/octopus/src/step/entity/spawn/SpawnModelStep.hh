@@ -13,7 +13,7 @@ template<typename class_t>
 class SpawnModelStep : public Steppable
 {
 public:
-	SpawnModelStep(class_t const &model_p) : _model(model_p) {}
+	SpawnModelStep(class_t const &model_p, bool forceAlive_p=false) : _model(model_p), _forceAlive(forceAlive_p) {}
 
 	virtual void apply(State &state_p) const override
 	{
@@ -36,9 +36,14 @@ public:
 			}
 		}
 		Entity * ent_l = state_p.getEntity(this->_handle);
-		if(!ent_l->_model._isBuilding)
+		if(!ent_l->_model._isBuilding
+		|| _forceAlive)
 		{
 			ent_l->_alive = true;
+		}
+		else
+		{
+			ent_l->_alive = false;
 		}
 		if(ent_l->_alive)
 		{
@@ -49,8 +54,11 @@ public:
 	{
 		// unspawn but do not delete
 		Entity * ent_l = state_p.getEntity(this->_handle);
+		if(ent_l->_alive)
+		{
+			updateGrid(state_p, ent_l, false);
+		}
 		ent_l->_alive = false;
-		updateGrid(state_p, ent_l, false);
 	}
 
 	virtual bool isNoOp() const override
@@ -64,6 +72,7 @@ protected:
 	/// @brief setup on first apply (that's why it must be mutable)
 	mutable bool _initialized {false};
 	mutable Handle _handle {0};
+	bool const _forceAlive;
 
 	class_t _model;
 };

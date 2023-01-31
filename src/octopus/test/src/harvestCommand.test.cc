@@ -49,7 +49,7 @@ TEST(harvestCommandTest, simple)
 
 	UnitSpawnStep * spawn0_l = new UnitSpawnStep(unit_l);
 	ResourceSpawnStep * spawn1_l = new ResourceSpawnStep(res_l);
-	BuildingSpawnStep * spawn2_l = new BuildingSpawnStep(deposit_l);
+	BuildingSpawnStep * spawn2_l = new BuildingSpawnStep(deposit_l, true);
 
 	// unit harvest
 	UnitHarvestCommand * command_l = new UnitHarvestCommand(0, 0, 1, {9, 3}, 0, {{9, 3}});
@@ -244,7 +244,7 @@ TEST(harvestCommandTest, simple_new_res)
 	spawners_l.push_back(new UnitSpawnStep(unit_l));
 	spawners_l.push_back(new ResourceSpawnStep(res_l));
 	spawners_l.push_back(new ResourceSpawnStep(res2_l));
-	spawners_l.push_back(new BuildingSpawnStep(deposit_l));
+	spawners_l.push_back(new BuildingSpawnStep(deposit_l, true));
 
 	// unit harvest
 	UnitHarvestCommand * command_l = new UnitHarvestCommand(0, 0, 1, {9, 3}, 0, {{9, 3}});

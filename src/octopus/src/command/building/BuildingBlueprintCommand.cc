@@ -25,13 +25,15 @@ void BuildingBlueprintCommand::registerCommand(Step & step_p, State const &state
 	// and mark this production as paid
 	if(!checkResource(state_p, _player, _model._cost))
 	{
+		Logger::getDebug() << "BuildingBlueprintCommand:: missing resource "<<_player <<std::endl;
 		step_p.addSteppable(new MissingResourceStep(_player));
 	}
 	else
 	{
+		Logger::getDebug() << "BuildingBlueprintCommand:: spawn building "<<_player <<std::endl;
 		Building building_l(_pos, false, _model);
 		building_l._player = _player;
-		step_p.addSteppable(new BuildingSpawnStep(building_l));
+		step_p.addSteppable(new BuildingSpawnStep(building_l, false));
 	}
 }
 

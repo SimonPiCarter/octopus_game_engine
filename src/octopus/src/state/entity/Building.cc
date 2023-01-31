@@ -8,4 +8,12 @@ Building::Building(Vector const &pos_p, bool frozen_p, BuildingModel const &mode
 	, _buildingModel(model_p)
 {}
 
+bool Building::isBuilt() const
+{
+	return _buildingProgress >= _buildingModel._buildingTime;
+}
+bool Building::isBlueprint() const
+{
+	return _buildingProgress <= 1e-5;
+}
 } // namespace octopus

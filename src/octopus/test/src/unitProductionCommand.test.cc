@@ -38,7 +38,7 @@ TEST(unitProductionCommandTest, simple)
 
 	Building production_l({1,3}, true, buildingModel_l);
 
-	BuildingSpawnStep * spawn0_l = new BuildingSpawnStep(production_l);
+	BuildingSpawnStep * spawn0_l = new BuildingSpawnStep(production_l, true);
 
 	// unit production
 	BuildingUnitProductionCommand * command_l = new BuildingUnitProductionCommand(0, 0, unitModel_l);

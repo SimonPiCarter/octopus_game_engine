@@ -55,7 +55,7 @@ std::list<Steppable *> Case4(Library &lib_p)
 		new PlayerSpawnStep(0, 0),
 		new PlayerAddBuildingModel(0, lib_p.getBuildingModel("building")),
 		new PlayerSpendResourceStep(0, mapRes_l),
-		new BuildingSpawnStep(building_l),
+		new BuildingSpawnStep(building_l, true),
 		new ResourceSpawnStep(res1_l),
 		new ResourceSpawnStep(res2_l),
 		new UnitSpawnStep(unit_l)

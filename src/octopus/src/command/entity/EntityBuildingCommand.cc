@@ -8,6 +8,7 @@
 #include "state/entity/Building.hh"
 #include "step/Step.hh"
 #include "step/building/BuildingStep.hh"
+#include "step/building/BuildingCancelStep.hh"
 #include "utils/Box.hh"
 
 namespace octopus
@@ -55,10 +56,29 @@ bool EntityBuildingCommand::applyCommand(Step & step_p, State const &state_p, Co
 		return true;
 	}
 
+	if(building_l->isBlueprint() && !checkGrid(state_p, building_l))
+	{
+		Logger::getDebug() << "EntityBuildingCommand:: space taken"<<std::endl;
+		step_p.addSteppable(new BuildingCancelStep(_target, true, building_l->_canceled));
+		return true;
+	}
+
+	if(building_l->_canceled)
+	{
+		Logger::getDebug() << "EntityBuildingCommand:: canceled"<<std::endl;
+		return true;
+	}
+
 	// if building is over stop
-	if(building_l->_buildingProgress >= building_l->_buildingModel._buildingTime)
+	if(building_l->isBuilt())
 	{
 		Logger::getDebug() << "EntityBuildingCommand:: building over"<<std::endl;
+		return true;
+	}
+
+	if(!building_l->_alive && !building_l->isBlueprint())
+	{
+		Logger::getDebug() << "EntityBuildingCommand:: building died"<<std::endl;
 		return true;
 	}
 
@@ -69,7 +89,7 @@ bool EntityBuildingCommand::applyCommand(Step & step_p, State const &state_p, Co
 		// run move command
 		_subMoveCommand.applyCommand(step_p, state_p, data_p);
 	}
-	// If in range build
+	// If in range build after grid check
 	else
 	{
 		Logger::getDebug() << "EntityBuildingCommand:: building"<<std::endl;

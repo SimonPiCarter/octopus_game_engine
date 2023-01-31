@@ -66,8 +66,8 @@ TEST(triggerUnitSpawnTest, two_players)
 	Controller controller_l({
 		new PlayerSpawnStep(0, 0),
 		new PlayerSpawnStep(1, 0),
-		new BuildingSpawnStep(productionPlayer0_l),
-		new BuildingSpawnStep(productionPlayer1_l),
+		new BuildingSpawnStep(productionPlayer0_l, true),
+		new BuildingSpawnStep(productionPlayer1_l, true),
 		new CommandSpawnStep(command0_l),
 		new CommandSpawnStep(command1_l)
 	}, 1.);
@@ -133,8 +133,8 @@ TEST(triggerUnitSpawnTest, two_models)
 
 	Controller controller_l({
 		new PlayerSpawnStep(0, 0),
-		new BuildingSpawnStep(production0_l),
-		new BuildingSpawnStep(production1_l),
+		new BuildingSpawnStep(production0_l, true),
+		new BuildingSpawnStep(production1_l, true),
 		new CommandSpawnStep(command0_l),
 		new CommandSpawnStep(command1_l)
 	}, 1.);
@@ -196,8 +196,8 @@ TEST(triggerUnitSpawnTest, one_model)
 
 	Controller controller_l({
 		new PlayerSpawnStep(0, 0),
-		new BuildingSpawnStep(production0_l),
-		new BuildingSpawnStep(production1_l),
+		new BuildingSpawnStep(production0_l, true),
+		new BuildingSpawnStep(production1_l, true),
 		new CommandSpawnStep(command0_l),
 		new CommandSpawnStep(command1_l)
 	}, 1.);
@@ -259,8 +259,8 @@ TEST(triggerUnitSpawnTest, one_shot)
 
 	Controller controller_l({
 		new PlayerSpawnStep(0, 0),
-		new BuildingSpawnStep(production0_l),
-		new BuildingSpawnStep(production1_l),
+		new BuildingSpawnStep(production0_l, true),
+		new BuildingSpawnStep(production1_l, true),
 		new CommandSpawnStep(command0_l),
 		new CommandSpawnStep(command1_l)
 	}, 1.);

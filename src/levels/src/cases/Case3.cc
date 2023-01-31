@@ -44,7 +44,7 @@ std::list<Steppable *> Case3(Library &lib_p)
 	std::list<Steppable *> spawners_l =
 	{
 		new PlayerSpawnStep(0, 0),
-		new BuildingSpawnStep(building_l),
+		new BuildingSpawnStep(building_l, true),
 		new UnitSpawnStep(unit_l),
 		new CommandSpawnStep(command0_l),
 		new CommandSpawnStep(command1_l),

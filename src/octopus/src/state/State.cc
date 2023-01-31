@@ -298,6 +298,35 @@ void updateGrid(State &state_p, Entity const *ent_p, bool set_p)
 	}
 }
 
+bool checkGrid(State const &state_p, Entity const *ent_p)
+{
+	long size_l = state_p.getGridSize();
+	// fill positional grid
+	Box<long> box_l { std::min(std::max(0l, long(ent_p->_pos.x-ent_p->_model._ray)), size_l),
+					  std::min(std::max(0l, long(ent_p->_pos.x+ent_p->_model._ray+0.999)), size_l),
+					  std::min(std::max(0l, long(ent_p->_pos.y-ent_p->_model._ray)), size_l),
+					  std::min(std::max(0l, long(ent_p->_pos.y+ent_p->_model._ray+0.999)), size_l)
+					};
+
+	// only chekc grid if static
+	if(ent_p->_model._isStatic)
+	{
+		for(size_t x = box_l._lowerX ; x < box_l._upperX; ++x)
+		{
+			for(size_t y = box_l._lowerY ; y < box_l._upperY; ++y)
+			{
+				GridNode const *node_l = state_p.getPathGrid().getNode(x, y);
+				if(!node_l->isFree())
+				{
+					return false;
+				}
+			}
+		}
+	}
+
+	return true;
+}
+
 std::list<Vector> computePath(State const & state_p, Handle const &handle_p, Vector const &target_p, std::list<Entity const *> const& ignored_p)
 {
 	// Find grid node source

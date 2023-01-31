@@ -63,7 +63,7 @@ std::list<Steppable *> Case2(Library &lib_p)
 		new UnitSpawnStep(unit_l),
 		new ResourceSpawnStep(res_l),
 		new ResourceSpawnStep(res2_l),
-		new BuildingSpawnStep(deposit_l),
+		new BuildingSpawnStep(deposit_l, true),
 		new CommandSpawnStep(command0_l),
 		new CommandSpawnStep(command1_l),
 		new CommandSpawnStep(command2_l),

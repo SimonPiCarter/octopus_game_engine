@@ -18,7 +18,7 @@
 #include "step/player/PlayerSpendResourceStep.hh"
 
 ///
-/// This test suite aims at checking that Harvest command works properly
+/// This test suite aims at checking that trigger building
 ///
 
 using namespace octopus;
@@ -47,7 +47,7 @@ TEST(triggerBuildingTest, simple)
 	Controller controller_l({
 		new PlayerSpawnStep(0, 0),
 		new UnitSpawnStep(unit_l),
-		new BuildingSpawnStep(building_l),
+		new BuildingSpawnStep(building_l, false),
 		new CommandSpawnStep(command_l)
 	}, 1.);
 
