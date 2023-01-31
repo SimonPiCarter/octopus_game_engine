@@ -17,6 +17,15 @@ Panel::Panel(int x, int y, Texture const * background_p, Texture const *icons_p,
 	_background->setPosition(x, y);
 }
 
+Panel::~Panel()
+{
+	delete _background;
+	for(SpriteModel &sprite_l : _sprites)
+	{
+		delete sprite_l.sprite;
+	}
+}
+
 void Panel::refresh(octopus::Entity const *selected_p, octopus::State const &state_p)
 {
 	// nothing to do
@@ -27,9 +36,9 @@ void Panel::refresh(octopus::Entity const *selected_p, octopus::State const &sta
 
 	_lastSelection = selected_p;
 
-	for(Sprite * sprite_l : _sprites)
+	for(SpriteModel &sprite_l : _sprites)
 	{
-		delete sprite_l;
+		delete sprite_l.sprite;
 	}
 	_sprites.clear();
 
@@ -50,7 +59,10 @@ void Panel::refresh(octopus::Entity const *selected_p, octopus::State const &sta
 			SpriteInfo const &info_l = _mapIcons.at(model_l->_id);
 			sprite_l->setState(info_l.state);
 			sprite_l->setFrame(info_l.frame);
-			_sprites.push_back(sprite_l);
+			SpriteModel spriteModel_l;
+			spriteModel_l.sprite = sprite_l;
+			spriteModel_l.buildingModel = model_l;
+			_sprites.push_back(spriteModel_l);
 		}
 
 	} else if(_lastSelection->_model._isBuilding)
@@ -63,19 +75,22 @@ void Panel::refresh(octopus::Entity const *selected_p, octopus::State const &sta
 			SpriteInfo const &info_l = _mapIcons.at(model_l->_id);
 			sprite_l->setState(info_l.state);
 			sprite_l->setFrame(info_l.frame);
-			_sprites.push_back(sprite_l);
+			SpriteModel spriteModel_l;
+			spriteModel_l.sprite = sprite_l;
+			spriteModel_l.unitModel = model_l;
+			_sprites.push_back(spriteModel_l);
 		}
 	}
 
 	// index used of position
 	size_t idx_l = 0;
 	// update position of sprites
-	for(Sprite * sprite_l : _sprites)
+	for(SpriteModel & sprite_l : _sprites)
 	{
 		int x = idx_l % _iconsPerLine;
 		int y = idx_l/_iconsPerLine;
 
-		sprite_l->setPosition(_x + x * 65, _y + y * 65);
+		sprite_l.sprite->setPosition(_x + x * 65, _y + y * 65);
 
 		++idx_l;
 	}
@@ -84,9 +99,9 @@ void Panel::refresh(octopus::Entity const *selected_p, octopus::State const &sta
 void Panel::render(Window &window_p) const
 {
 	_background->render(window_p);
-	for(Sprite * sprite_l : _sprites)
+	for(SpriteModel const & sprite_l : _sprites)
 	{
-		sprite_l->render(window_p);
+		sprite_l.sprite->render(window_p);
 	}
 }
 
@@ -94,6 +109,18 @@ void Panel::addSpriteInfo(std::string const &model_p, int state_p, int frame_p)
 {
 	_mapIcons[model_p].state = state_p;
 	_mapIcons[model_p].frame = frame_p;
+}
+
+SpriteModel const * Panel::getSpriteModel(Window &window_p, int x, int y) const
+{
+	for(SpriteModel const & sprite_l : _sprites)
+	{
+		if(sprite_l.sprite->isInside(window_p, x, y))
+		{
+			return &sprite_l;
+		}
+	}
+	return nullptr;
 }
 
 } // namespace cuttlefish

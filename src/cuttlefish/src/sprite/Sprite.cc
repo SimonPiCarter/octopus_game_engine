@@ -85,9 +85,17 @@ bool Sprite::isInside(Window const &window_p, int x, int y) const
 		int(_height * _scale),
 	};
 
+	if(x >= final_l.x && x <= final_l.x + final_l.w
+	&& y >= final_l.y && y <= final_l.y + final_l.h
+	&& _absolute)
+	{
+		return true;
+	}
+
 	SDL_Point const &cam_l = window_p.getCamera();
 	if(x >= final_l.x - cam_l.x && x <= final_l.x - cam_l.x + final_l.w
-	&& y >= final_l.y - cam_l.y && y <= final_l.y - cam_l.y + final_l.h)
+	&& y >= final_l.y - cam_l.y && y <= final_l.y - cam_l.y + final_l.h
+	&& !_absolute)
 	{
 		return true;
 	}

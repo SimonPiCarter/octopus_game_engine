@@ -9,6 +9,8 @@ namespace octopus
 {
 	class Entity;
 	class State;
+	class UnitModel;
+	class BuildingModel;
 } // namespace octopus
 
 
@@ -19,8 +21,15 @@ class Window;
 
 struct SpriteInfo
 {
-	int state;
-	int frame;
+	int state {0};
+	int frame {0};
+};
+
+struct SpriteModel
+{
+	Sprite * sprite {nullptr};
+	octopus::UnitModel const * unitModel {nullptr};
+	octopus::BuildingModel const * buildingModel {nullptr};
 };
 
 /// @brief this class represent a Panel
@@ -31,6 +40,7 @@ class Panel
 {
 public:
 	Panel(int x, int y, Texture const * background_p, Texture const *icons_p, int iconsPerLine_p);
+	~Panel();
 
 	/// @brief refresh Panel if necessary
 	void refresh(octopus::Entity const *selected_p, octopus::State const &state_p);
@@ -40,11 +50,17 @@ public:
 
 	/// @brief add a sprite info for a given model
 	void addSpriteInfo(std::string const &model_p, int state_p, int frame_p);
+
+	/// @brief return a sprite model combination if clicked
+	/// @note return nullptr if no clic
+	SpriteModel const * getSpriteModel(Window &window_p, int x, int y) const;
+
+	Sprite const * getBackground() const { return _background; }
 protected:
 	/// @brief last selection
 	octopus::Entity const * _lastSelection {nullptr};
 	/// @brief sprites
-	std::list<Sprite *> _sprites;
+	std::list<SpriteModel> _sprites;
 
 	Sprite * _background;
 

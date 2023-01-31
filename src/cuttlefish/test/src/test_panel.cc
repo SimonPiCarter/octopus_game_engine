@@ -22,6 +22,8 @@
 #include "state/player/Player.hh"
 #include "state/entity/Entity.hh"
 #include "state/model/entity/EntityModel.hh"
+#include "state/model/entity/BuildingModel.hh"
+#include "state/model/entity/UnitModel.hh"
 #include "step/entity/spawn/EntitySpawnStep.hh"
 #include "step/Step.hh"
 #include "library/Library.hh"
@@ -135,8 +137,29 @@ int main( int argc, char* args[] )
 					}
 					if (e.type == SDL_MOUSEBUTTONDOWN)
 					{
+						SpriteModel const * spriteModel_l = panel_l.getSpriteModel(window_l, e.button.x, e.button.y);
 						Sprite * sprite_l = world_l.getSprite(window_l, e.button.x, e.button.y);
-						if(e.button.button == SDL_BUTTON_LEFT)
+
+						if(spriteModel_l)
+						{
+							if(e.button.button == SDL_BUTTON_LEFT)
+							{
+								std::cout.clear();
+								if(spriteModel_l->unitModel)
+								{
+									std::cout<<spriteModel_l->unitModel->_id<<std::endl;
+								}
+								if(spriteModel_l->buildingModel)
+								{
+									std::cout<<spriteModel_l->buildingModel->_id<<std::endl;
+								}
+							}
+						}
+						else if(panel_l.getBackground()->isInside(window_l, e.button.x, e.button.y))
+						{
+							// NA (skip selection and move command)
+						}
+						else if(e.button.button == SDL_BUTTON_LEFT)
 						{
 							selection_l = sprite_l;
 							if(selection_l)
@@ -149,7 +172,7 @@ int main( int argc, char* args[] )
 								panel_l.refresh(nullptr, state_l);
 							}
 						}
-						if(e.button.button == SDL_BUTTON_RIGHT
+						else if(e.button.button == SDL_BUTTON_RIGHT
 						&& selection_l)
 						{
 							const octopus::Entity * cur_l = state_l.getEntity(selection_l->getHandle());
