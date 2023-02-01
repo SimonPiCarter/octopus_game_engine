@@ -14,6 +14,6 @@ bool Building::isBuilt() const
 }
 bool Building::isBlueprint() const
 {
-	return _buildingProgress <= 1e-5;
+	return _buildingProgress <= 1e-5 && !_alive;
 }
 } // namespace octopus

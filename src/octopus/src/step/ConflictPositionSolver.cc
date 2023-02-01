@@ -163,15 +163,15 @@ bool updateStepFromConflictPosition(Step &step_p, State const &state_p)
 				{
 					coefA_l = std::sqrt(square_length(stepB_l->_move)/(square_length(stepA_l->_move)+square_length(stepB_l->_move)));
 				}
-				if(entA_l->_frozen && entB_l->_frozen)
+				if(entA_l->isFrozen() && entB_l->isFrozen())
 				{
 					coefA_l = 0.;
 				}
-				if(entA_l->_frozen)
+				if(entA_l->isFrozen())
 				{
 					coefA_l = 0.;
 				}
-				else if(entB_l->_frozen)
+				else if(entB_l->isFrozen())
 				{
 					coefA_l = 1.;
 				}
@@ -286,15 +286,15 @@ bool updateStepFromConflictPosition(Step &step_p, State const &state_p)
 				Logger::getDebug() << "diff_l = "<< diff_l<<std::endl;
 
 				double coefA_l = 0.5;
-				if(entA_l->_frozen && entB_l->_frozen)
+				if(entA_l->isFrozen() && entB_l->isFrozen())
 				{
 					coefA_l = 0.;
 				}
-				if(entA_l->_frozen)
+				if(entA_l->isFrozen())
 				{
 					coefA_l = 0.;
 				}
-				else if(entB_l->_frozen)
+				else if(entB_l->isFrozen())
 				{
 					coefA_l = 1.;
 				}

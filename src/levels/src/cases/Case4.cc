@@ -29,8 +29,10 @@ std::list<Steppable *> Case4(Library &lib_p)
 
 	BuildingModel buildingModel_l { true, 1., 10. };
 	buildingModel_l._isBuilding = true;
+	buildingModel_l._isStatic = true;
 	buildingModel_l._deposit[ResourceType::Food] = true;
 	buildingModel_l._unitModels.push_back(&lib_p.getUnitModel("unit"));
+	buildingModel_l._buildingTime = 200;
 	lib_p.registerBuildingModel("building", buildingModel_l);
 
 	EntityModel resModel_l { true, 2., 1., 10. };

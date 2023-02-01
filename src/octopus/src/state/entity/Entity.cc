@@ -40,6 +40,11 @@ double Entity::getHarvest() const
 	return ( 1. + _buffHarvest._offset )* ( 1. + _buffHarvest._coef );
 }
 
+bool Entity::isFrozen() const
+{
+	return _frozen || _model._isStatic;
+}
+
 } // namespace octopus
 
 

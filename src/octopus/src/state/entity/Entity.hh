@@ -69,6 +69,9 @@ namespace octopus
 			double getProduction() const;
 			/// @brief get harvest updated using buffing info
 			double getHarvest() const;
+
+			/// @brief if frozen ou static
+			bool isFrozen() const;
 	};
 }
 
