@@ -9,6 +9,7 @@
 // octopus
 #include "state/entity/Entity.hh"
 #include "state/State.hh"
+#include "step/building/BuildingCancelStep.hh"
 #include "step/entity/spawn/EntitySpawnStep.hh"
 #include "step/entity/spawn/BuildingSpawnStep.hh"
 #include "step/entity/spawn/ResourceSpawnStep.hh"
@@ -62,6 +63,11 @@ void WorldUpdaterStepVisitor::visit(octopus::ResourceSpawnStep const *step_p)
 void WorldUpdaterStepVisitor::visit(octopus::UnitSpawnStep const *step_p)
 {
 	spawn(step_p->getHandle());
+}
+
+void WorldUpdaterStepVisitor::visit(octopus::BuildingCancelStep const *step_p)
+{
+	clear(step_p->_handle);
 }
 
 void WorldUpdaterStepVisitor::visit(octopus::UnitHarvestQuantityStep const *step_p)

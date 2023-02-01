@@ -34,12 +34,12 @@ public:
 	virtual void visit(octopus::BuildingSpawnStep const *step_p) override;
 	virtual void visit(octopus::ResourceSpawnStep const *step_p) override;
 	virtual void visit(octopus::UnitSpawnStep const *step_p) override;
+	virtual void visit(octopus::BuildingCancelStep const *) override;
 	virtual void visit(octopus::UnitHarvestQuantityStep const *step_p) override;
 	virtual void visit(octopus::EntityHitPointChangeStep const *step_p) override;
 	virtual void visit(octopus::EntityMoveStep const *step_p) override;
 
 	virtual void visit(octopus::BuildingStep const *steppable_p) override {}
-	virtual void visit(octopus::BuildingCancelStep const *) {}
 	virtual void visit(octopus::CommandAddSubAttackStep const *) override {}
 	virtual void visit(octopus::CommandDataWaypointAddStep const *) override {}
 	virtual void visit(octopus::CommandDataWaypointRemoveStep const *) override {}
