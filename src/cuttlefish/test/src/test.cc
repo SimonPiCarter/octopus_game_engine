@@ -7,6 +7,7 @@
 #include <thread>
 
 #include "sprite/Sprite.hh"
+#include "sprite/SpriteLibrary.hh"
 #include "texture/Texture.hh"
 #include "window/Window.hh"
 #include "world/World.hh"
@@ -82,6 +83,11 @@ int main( int argc, char* args[] )
 
 			std::thread controllerThread_l(controllerLoop, std::ref(controller_l), std::ref(quit_l));
 
+			SpriteLibrary spriteLib_l;
+			spriteLib_l.registerSpriteTemplate("resource", window_l.loadTexture("resources/square.png"), 2., 32, 32, 64, 64, {2, 2}, {0.25, 1}, 1);
+			spriteLib_l.registerSpriteTemplate("building", window_l.loadTexture("resources/square.png"), 1., 32, 32, 64, 64, {2, 2}, {0.25, 1}, 1);
+			spriteLib_l.registerSpriteTemplate("unit", window_l.loadTexture("resources/circle.png"), 1., 32, 32, 64, 64, {2, 2}, {0.25, 1}, 1);
+
 			double x = 0.;
 			double y = 0.;
 			double dX = 0.;
@@ -150,7 +156,7 @@ int main( int argc, char* args[] )
 
 				// query a new state if available
 				octopus::StateAndSteps stateAndSteps_l = controller_l.queryStateAndSteps();
-				world_l.handleStep(window_l, stateAndSteps_l);
+				world_l.handleStep(window_l, stateAndSteps_l, spriteLib_l);
 
 				//Render background texture to screen
 				background_l->render(window_l.getRenderer(), 0, 0, SCREEN_HEIGHT, SCREEN_WIDTH );

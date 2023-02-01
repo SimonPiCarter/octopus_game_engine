@@ -1,17 +1,21 @@
 #include "World.hh"
 #include "WorldUpdaterStepVisitor.hh"
 #include "sprite/Sprite.hh"
+#include "sprite/SpriteLibrary.hh"
 
 // octopus
+#include "state/entity/Entity.hh"
+#include "state/entity/Building.hh"
+#include "state/State.hh"
 #include "controller/Controller.hh"
 #include "step/Step.hh"
 
 namespace cuttlefish
 {
 
-void World::handleStep(Window &window_p, octopus::StateAndSteps const &steps_p)
+void World::handleStep(Window &window_p, octopus::StateAndSteps const &steps_p, SpriteLibrary const &lib_p)
 {
-	WorldUpdaterStepVisitor vis_l(*this, window_p, steps_p._state);
+	WorldUpdaterStepVisitor vis_l(*this, window_p, steps_p._state, lib_p);
 
 	if(_first)
 	{
@@ -31,7 +35,16 @@ void World::handleStep(Window &window_p, octopus::StateAndSteps const &steps_p)
 		for(Sprite * sprite_l : _listSprite)
 		{
 			// reset steps state
-			sprite_l->setState(0);
+			octopus::Entity const &entity_l = *steps_p._state->getEntity(sprite_l->getHandle());
+			if(entity_l._model._isBuilding
+			&& static_cast<const octopus::Building &>(entity_l).isBlueprint())
+			{
+				sprite_l->setState(lib_p.getBlueprintState(entity_l._model._id));
+			}
+			else
+			{
+				sprite_l->setState(0);
+			}
 		}
 		// Visit every stepapble in the step
 		for(octopus::Steppable const * steppable_l : (*it_l)->getSteppable())

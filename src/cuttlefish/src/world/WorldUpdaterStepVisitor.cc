@@ -1,8 +1,10 @@
 #include "WorldUpdaterStepVisitor.hh"
 
+#include "logger/Logger.hh"
 #include "World.hh"
 #include "window/Window.hh"
 #include "sprite/Sprite.hh"
+#include "sprite/SpriteLibrary.hh"
 
 // octopus
 #include "state/entity/Entity.hh"
@@ -19,17 +21,17 @@
 namespace cuttlefish
 {
 
-void WorldUpdaterStepVisitor::spawn(octopus::Entity const &entity_p, octopus::Handle const &handle_p)
+void WorldUpdaterStepVisitor::spawn(octopus::Handle const &handle_p)
 {
+	octopus::Entity const &entity_l = *_state->getEntity(handle_p);
 	if(handle_p >= _world._sprites.size())
 	{
 		_world._sprites.resize(handle_p+1, nullptr);
 	}
-	const octopus::EntityModel &model_l = entity_p._model;
+	const octopus::EntityModel &model_l = entity_l._model;
 
-	std::string texture_l = model_l._isStatic?"resources/square.png":"resources/circle.png";
-	Sprite * sprite_l = new Sprite(handle_p, _window.loadTexture(texture_l), model_l._ray, 32, 32, 64, 64, {2, 2}, {0.25, 1});
-	sprite_l->setPosition(entity_p._pos.x*32, entity_p._pos.y*32);
+	Sprite * sprite_l = _lib.createSprite(handle_p, model_l._id, false);
+	sprite_l->setPosition(entity_l._pos.x*32, entity_l._pos.y*32);
 
 	_world._sprites[handle_p] = sprite_l;
 	_world._listSprite.push_back(sprite_l);
@@ -44,22 +46,22 @@ void WorldUpdaterStepVisitor::clear(octopus::Handle const &handle_p)
 
 void WorldUpdaterStepVisitor::visit(octopus::EntitySpawnStep const *step_p)
 {
-	spawn(step_p->getModel(), step_p->getHandle());
+	spawn(step_p->getHandle());
 }
 
 void WorldUpdaterStepVisitor::visit(octopus::BuildingSpawnStep const *step_p)
 {
-	spawn(step_p->getModel(), step_p->getHandle());
+	spawn(step_p->getHandle());
 }
 
 void WorldUpdaterStepVisitor::visit(octopus::ResourceSpawnStep const *step_p)
 {
-	spawn(step_p->getModel(), step_p->getHandle());
+	spawn(step_p->getHandle());
 }
 
 void WorldUpdaterStepVisitor::visit(octopus::UnitSpawnStep const *step_p)
 {
-	spawn(step_p->getModel(), step_p->getHandle());
+	spawn(step_p->getHandle());
 }
 
 void WorldUpdaterStepVisitor::visit(octopus::UnitHarvestQuantityStep const *step_p)

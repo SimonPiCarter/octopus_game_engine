@@ -8,6 +8,7 @@
 #include <sstream>
 
 #include "sprite/Sprite.hh"
+#include "sprite/SpriteLibrary.hh"
 #include "texture/Texture.hh"
 #include "text/Text.hh"
 #include "window/Window.hh"
@@ -99,6 +100,11 @@ int main( int argc, char* args[] )
 
 			std::thread controllerThread_l(controllerLoop, std::ref(controller_l), std::ref(quit_l));
 
+			SpriteLibrary spriteLib_l;
+			spriteLib_l.registerSpriteTemplate("resource", window_l.loadTexture("resources/square.png"), 2., 32, 32, 64, 64, {2, 2}, {0.25, 1}, 1);
+			spriteLib_l.registerSpriteTemplate("building", window_l.loadTexture("resources/square.png"), 1., 32, 32, 64, 64, {2, 2}, {0.25, 1}, 1);
+			spriteLib_l.registerSpriteTemplate("unit", window_l.loadTexture("resources/circle.png"), 1., 32, 32, 64, 64, {2, 2}, {0.25, 1}, 1);
+
 			double x = 0.;
 			double y = 0.;
 			double dX = 0.;
@@ -117,7 +123,7 @@ int main( int argc, char* args[] )
 				// query a new state if available
 				octopus::StateAndSteps stateAndSteps_l = controller_l.queryStateAndSteps();
 				octopus::State const &state_l = *stateAndSteps_l._state;
-				world_l.handleStep(window_l, stateAndSteps_l);
+				world_l.handleStep(window_l, stateAndSteps_l, spriteLib_l);
 
 				//Handle events on queue
 				while( SDL_PollEvent( &e ) != 0 )

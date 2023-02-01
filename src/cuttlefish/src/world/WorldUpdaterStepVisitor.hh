@@ -14,6 +14,7 @@ namespace octopus
 
 namespace cuttlefish
 {
+class SpriteLibrary;
 class World;
 class Window;
 
@@ -23,11 +24,11 @@ class Window;
 class WorldUpdaterStepVisitor : public octopus::SteppableVisitor
 {
 public:
-	WorldUpdaterStepVisitor(World &world_p, Window &window_p, octopus::State const *state_p)
-		: _world(world_p), _window(window_p), _state(state_p) {}
+	WorldUpdaterStepVisitor(World &world_p, Window &window_p, octopus::State const *state_p, SpriteLibrary const &lib_p)
+		: _world(world_p), _window(window_p), _state(state_p), _lib(lib_p) {}
 
 	void clear(octopus::Handle const &handle_p);
-	void spawn(octopus::Entity const &entity_p, octopus::Handle const &handle_p);
+	void spawn(octopus::Handle const &handle_p);
 
 	virtual void visit(octopus::EntitySpawnStep const *step_p) override;
 	virtual void visit(octopus::BuildingSpawnStep const *step_p) override;
@@ -75,6 +76,7 @@ private:
 	World &_world;
 	Window &_window;
 	octopus::State const * const _state;
+	SpriteLibrary const &_lib;
 };
 } // namespace cuttlefish
 

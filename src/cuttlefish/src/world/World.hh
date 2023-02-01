@@ -13,6 +13,7 @@ namespace octopus
 namespace cuttlefish
 {
 class Sprite;
+class SpriteLibrary;
 class Window;
 
 /// @brief This class is used to maintain a representation of the world
@@ -24,7 +25,7 @@ public:
 
 	/// @brief update all sprites from the steps given
 	/// only works if all previous steps have been handled this way
-	void handleStep(Window &window_p, octopus::StateAndSteps const &steps_p);
+	void handleStep(Window &window_p, octopus::StateAndSteps const &steps_p, SpriteLibrary const &lib_p);
 
 	/// @brief update all sprites and
 	void display(Window &window_p, double elapsed_p);

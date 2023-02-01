@@ -7,26 +7,32 @@
 #include <thread>
 #include <sstream>
 
+// cuttlefish
+#include "clicMode/BuildClicMode.hh"
+#include "clicMode/StandardClicMode.hh"
+#include "logger/Logger.hh"
 #include "panel/Panel.hh"
 #include "sprite/Sprite.hh"
+#include "sprite/SpriteLibrary.hh"
 #include "text/Text.hh"
 #include "texture/Texture.hh"
 #include "window/Window.hh"
 #include "world/World.hh"
 
-#include "logger/Logger.hh"
-#include "controller/Controller.hh"
+// octopus
 #include "command/building/BuildingUnitProductionCommand.hh"
 #include "command/entity/EntityMoveCommand.hh"
 #include "command/unit/UnitHarvestCommand.hh"
-#include "state/player/Player.hh"
+#include "controller/Controller.hh"
+#include "library/Library.hh"
+#include "logger/Logger.hh"
 #include "state/entity/Entity.hh"
-#include "state/model/entity/EntityModel.hh"
 #include "state/model/entity/BuildingModel.hh"
+#include "state/model/entity/EntityModel.hh"
 #include "state/model/entity/UnitModel.hh"
+#include "state/player/Player.hh"
 #include "step/entity/spawn/EntitySpawnStep.hh"
 #include "step/Step.hh"
-#include "library/Library.hh"
 
 #include "cases/Cases.hh"
 
@@ -51,6 +57,7 @@ std::string resourceStr(octopus::Player const &player_p)
 
 void controllerLoop(octopus::Controller &controller_p, bool &over_p)
 {
+	//octopus::Logger::enable_debug();
 	using namespace std::chrono_literals;
 
 	auto last_l = std::chrono::steady_clock::now();
@@ -113,7 +120,15 @@ int main( int argc, char* args[] )
 			panel_l.addSpriteInfo("unit", 2, 1);
 			panel_l.addSpriteInfo("building", 1, 0);
 
-			Sprite * selection_l = nullptr;
+			SpriteLibrary spriteLib_l;
+			spriteLib_l.registerSpriteTemplate("resource", window_l.loadTexture("resources/square.png"), 2., 32, 32, 64, 64, {2, 2}, {0.25, 1}, 1);
+			spriteLib_l.registerSpriteTemplate("building", window_l.loadTexture("resources/square.png"), 1., 32, 32, 64, 64, {2, 2}, {0.25, 1}, 1);
+			spriteLib_l.registerSpriteTemplate("unit", window_l.loadTexture("resources/circle.png"), 1., 32, 32, 64, 64, {2, 2}, {0.25, 1}, 1);
+
+			StandardClicMode standardClicMode_l;
+			ClicMode * currentClicMode_l = &standardClicMode_l;
+
+			Selection selection_l;
 
 			auto last_l = std::chrono::steady_clock::now();
 			double elapsed_l = 0.;
@@ -125,7 +140,7 @@ int main( int argc, char* args[] )
 				// query a new state if available
 				octopus::StateAndSteps stateAndSteps_l = controller_l.queryStateAndSteps();
 				octopus::State const &state_l = *stateAndSteps_l._state;
-				world_l.handleStep(window_l, stateAndSteps_l);
+				world_l.handleStep(window_l, stateAndSteps_l, spriteLib_l);
 
 				//Handle events on queue
 				while( SDL_PollEvent( &e ) != 0 )
@@ -138,7 +153,6 @@ int main( int argc, char* args[] )
 					if (e.type == SDL_MOUSEBUTTONDOWN)
 					{
 						SpriteModel const * spriteModel_l = panel_l.getSpriteModel(window_l, e.button.x, e.button.y);
-						Sprite * sprite_l = world_l.getSprite(window_l, e.button.x, e.button.y);
 
 						if(spriteModel_l)
 						{
@@ -151,6 +165,7 @@ int main( int argc, char* args[] )
 								}
 								if(spriteModel_l->buildingModel)
 								{
+									currentClicMode_l = new BuildClicMode(*spriteModel_l->buildingModel, spriteLib_l);
 									std::cout<<spriteModel_l->buildingModel->_id<<std::endl;
 								}
 							}
@@ -159,49 +174,12 @@ int main( int argc, char* args[] )
 						{
 							// NA (skip selection and move command)
 						}
-						else if(e.button.button == SDL_BUTTON_LEFT)
+						else
 						{
-							selection_l = sprite_l;
-							if(selection_l)
+							if( currentClicMode_l->handleMouse(e, selection_l, world_l, panel_l, window_l, state_l, controller_l) )
 							{
-								const octopus::Entity * cur_l = state_l.getEntity(selection_l->getHandle());
-								panel_l.refresh(cur_l, state_l);
-							}
-							else
-							{
-								panel_l.refresh(nullptr, state_l);
-							}
-						}
-						else if(e.button.button == SDL_BUTTON_RIGHT
-						&& selection_l)
-						{
-							const octopus::Entity * cur_l = state_l.getEntity(selection_l->getHandle());
-							bool isStatic_l = cur_l->_model._isStatic;
-							if(!isStatic_l)
-							{
-								if(sprite_l && state_l.getEntity(sprite_l->getHandle())->_model._isResource)
-								{
-									octopus::UnitHarvestCommand * command_l = new octopus::UnitHarvestCommand(
-										selection_l->getHandle(),
-										selection_l->getHandle(),
-										sprite_l->getHandle(),
-										window_l.getWorldVector(e.button.x, e.button.y),
-										0,
-										{window_l.getWorldVector(e.button.x, e.button.y)}
-									);
-									controller_l.commitCommand(command_l);
-								}
-								else
-								{
-									octopus::EntityMoveCommand * command_l = new octopus::EntityMoveCommand(
-										selection_l->getHandle(),
-										selection_l->getHandle(),
-										window_l.getWorldVector(e.button.x, e.button.y),
-										0,
-										{window_l.getWorldVector(e.button.x, e.button.y)}
-									);
-									controller_l.commitCommand(command_l);
-								}
+								delete currentClicMode_l;
+								currentClicMode_l = &standardClicMode_l;
 							}
 						}
 					}
@@ -268,6 +246,10 @@ int main( int argc, char* args[] )
 				last_l = cur_l;
 
 				world_l.display(window_l, elapsed_l);
+
+				int mouseX, mouseY;
+				SDL_GetMouseState(&mouseX, &mouseY);
+				currentClicMode_l->display(window_l, elapsed_l, mouseX, mouseY);
 
 				panel_l.render(window_l);
 

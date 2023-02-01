@@ -13,8 +13,11 @@ find_package(SDL2_image 2.0.5 REQUIRED)
 find_package(SDL2_ttf 2.0.18 REQUIRED)
 
 add_library(cuttlefish
+	${CMAKE_CURRENT_SOURCE_DIR}/src/clicMode/BuildClicMode.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/src/clicMode/StandardClicMode.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/panel/Panel.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/sprite/Sprite.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/src/sprite/SpriteLibrary.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/text/Text.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/texture/Texture.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/window/Window.cc
