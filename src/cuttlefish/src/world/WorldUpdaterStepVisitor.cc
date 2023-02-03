@@ -10,6 +10,7 @@
 #include "state/entity/Entity.hh"
 #include "state/State.hh"
 #include "step/building/BuildingCancelStep.hh"
+#include "step/building/BuildingStep.hh"
 #include "step/entity/spawn/EntitySpawnStep.hh"
 #include "step/entity/spawn/BuildingSpawnStep.hh"
 #include "step/entity/spawn/ResourceSpawnStep.hh"
@@ -45,53 +46,59 @@ void WorldUpdaterStepVisitor::clear(octopus::Handle const &handle_p)
 	_world._sprites[handle_p] = nullptr;
 }
 
-void WorldUpdaterStepVisitor::visit(octopus::EntitySpawnStep const *step_p)
+void WorldUpdaterStepVisitor::visit(octopus::EntitySpawnStep const *steppable_p)
 {
-	spawn(step_p->getHandle());
+	spawn(steppable_p->getHandle());
 }
 
-void WorldUpdaterStepVisitor::visit(octopus::BuildingSpawnStep const *step_p)
+void WorldUpdaterStepVisitor::visit(octopus::BuildingSpawnStep const *steppable_p)
 {
-	spawn(step_p->getHandle());
+	spawn(steppable_p->getHandle());
 }
 
-void WorldUpdaterStepVisitor::visit(octopus::ResourceSpawnStep const *step_p)
+void WorldUpdaterStepVisitor::visit(octopus::ResourceSpawnStep const *steppable_p)
 {
-	spawn(step_p->getHandle());
+	spawn(steppable_p->getHandle());
 }
 
-void WorldUpdaterStepVisitor::visit(octopus::UnitSpawnStep const *step_p)
+void WorldUpdaterStepVisitor::visit(octopus::UnitSpawnStep const *steppable_p)
 {
-	spawn(step_p->getHandle());
+	spawn(steppable_p->getHandle());
 }
 
-void WorldUpdaterStepVisitor::visit(octopus::BuildingCancelStep const *step_p)
+void WorldUpdaterStepVisitor::visit(octopus::BuildingCancelStep const *steppable_p)
 {
-	clear(step_p->_handle);
+	clear(steppable_p->_handle);
 }
 
-void WorldUpdaterStepVisitor::visit(octopus::UnitHarvestQuantityStep const *step_p)
+void WorldUpdaterStepVisitor::visit(octopus::UnitHarvestQuantityStep const *steppable_p)
 {
-	if(static_cast<octopus::Resource const *>(_state->getEntity(step_p->_res))->_resource <= 0.)
+	if(static_cast<octopus::Resource const *>(_state->getEntity(steppable_p->_res))->_resource <= 0.)
 	{
-		clear(step_p->_res);
+		clear(steppable_p->_res);
 	}
 
 	// Update state of sprite harvesting
-	_world._sprites[step_p->_handle]->setState(1);
+	_world._sprites[steppable_p->_handle]->setStateNoReset(1);
 }
 
-void WorldUpdaterStepVisitor::visit(octopus::EntityHitPointChangeStep const *step_p)
+void WorldUpdaterStepVisitor::visit(octopus::EntityHitPointChangeStep const *steppable_p)
 {
-	if(_state->getEntity(step_p->_handle)->_hp <= 0.)
+	if(_state->getEntity(steppable_p->_handle)->_hp <= 0.)
 	{
-		clear(step_p->_handle);
+		clear(steppable_p->_handle);
 	}
 }
 
-void WorldUpdaterStepVisitor::visit(octopus::EntityMoveStep const *step_p)
+void WorldUpdaterStepVisitor::visit(octopus::EntityMoveStep const *steppable_p)
 {
-	_world._sprites[step_p->_handle]->move(step_p->_move.x*32, step_p->_move.y*32);
+	_world._sprites[steppable_p->_handle]->move(steppable_p->_move.x*32, steppable_p->_move.y*32);
+}
+
+void WorldUpdaterStepVisitor::visit(octopus::BuildingStep const *steppable_p)
+{
+	// Update state of sprite harvesting
+	_world._sprites[steppable_p->_handle]->setStateNoReset(2);
 }
 
 }

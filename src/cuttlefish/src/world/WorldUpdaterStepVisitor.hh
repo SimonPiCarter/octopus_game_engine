@@ -38,8 +38,8 @@ public:
 	virtual void visit(octopus::UnitHarvestQuantityStep const *step_p) override;
 	virtual void visit(octopus::EntityHitPointChangeStep const *step_p) override;
 	virtual void visit(octopus::EntityMoveStep const *step_p) override;
+	virtual void visit(octopus::BuildingStep const *steppable_p) override;
 
-	virtual void visit(octopus::BuildingStep const *steppable_p) override {}
 	virtual void visit(octopus::CommandAddSubAttackStep const *) override {}
 	virtual void visit(octopus::CommandDataWaypointAddStep const *) override {}
 	virtual void visit(octopus::CommandDataWaypointRemoveStep const *) override {}
@@ -49,6 +49,7 @@ public:
 	virtual void visit(octopus::CommandHarvestingChangeStep const *) override {}
 	virtual void visit(octopus::CommandIncrementNoProgressStep const *) override {}
 	virtual void visit(octopus::CommandMoveUpdateStep const *) override {}
+	virtual void visit(octopus::CommandMoveStepSinceUpdateIncrementStep const *) {}
 	virtual void visit(octopus::CommandNewTargetStep const *) override {}
 	virtual void visit(octopus::CommandNextStep const *) override {}
 	virtual void visit(octopus::CommandResourceChangeStep const *) override {}
