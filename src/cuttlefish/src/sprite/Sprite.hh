@@ -32,6 +32,11 @@ class Sprite
 		/// @brief update state and reset current frame and time into frame
 		void setState(int state_p);
 
+		/// @brief update state
+		/// @warning do not reset the frame
+		/// @warning this may result in out of bound frame selection (if the frame is > to frame of the new state)
+		void setStateNoReset(int state_p);
+
 		/// @brief update frame to given value
 		/// @note mainly used for icons
 		void setFrame(int frame_p);

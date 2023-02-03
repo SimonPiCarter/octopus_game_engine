@@ -35,15 +35,13 @@ void World::handleStep(Window &window_p, octopus::StateAndSteps const &steps_p, 
 		for(Sprite * sprite_l : _listSprite)
 		{
 			// reset steps state
+			sprite_l->setStateNoReset(0);
+
 			octopus::Entity const &entity_l = *steps_p._state->getEntity(sprite_l->getHandle());
 			if(entity_l._model._isBuilding
 			&& static_cast<const octopus::Building &>(entity_l).isBlueprint())
 			{
-				sprite_l->setState(lib_p.getBlueprintState(entity_l._model._id));
-			}
-			else
-			{
-				sprite_l->setState(0);
+				sprite_l->setStateNoReset(lib_p.getBlueprintState(entity_l._model._id));
 			}
 		}
 		// Visit every stepapble in the step

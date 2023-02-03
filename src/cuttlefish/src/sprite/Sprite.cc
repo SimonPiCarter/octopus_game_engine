@@ -33,6 +33,11 @@ void Sprite::setState(int state_p)
 	_state = state_p;
 }
 
+void Sprite::setStateNoReset(int state_p)
+{
+	_state = state_p;
+}
+
 void Sprite::setFrame(int frame_p)
 {
 	_frame = frame_p;
