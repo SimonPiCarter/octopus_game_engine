@@ -46,7 +46,7 @@ bool BuildClicMode::handleMouse(SDL_Event const & e, Selection &selection_p, Wor
 		const octopus::Entity * cur_l = state_p.getEntity(selection_p._sprite->getHandle());
 
 		octopus::BuildingBlueprintCommand * command_l = new octopus::BuildingBlueprintCommand(
-			{newX_l/32, newY_l/32},
+			{double(newX_l/32), double(newY_l/32)},
 			cur_l->_player,
 			_model
 		);
