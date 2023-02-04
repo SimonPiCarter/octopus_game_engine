@@ -116,6 +116,10 @@ Graph::Graph(std::vector<std::vector<GridNode *> > const &nodes_p)
 			buildEdge(*_g, i, j, i+1, j, _nodes, _nodeIndex);
 			buildEdge(*_g, i, j, i, j+1, _nodes, _nodeIndex);
 			buildEdge(*_g, i, j, i+1, j+1, _nodes, _nodeIndex);
+			if(i > 0)
+			{
+				buildEdge(*_g, i, j, i-1, j+1, _nodes, _nodeIndex);
+			}
 		}
 	}
 }

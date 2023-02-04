@@ -10,7 +10,7 @@ std::vector<std::vector<GridNode *> > setUpGrid(size_t sizeX_p, size_t sizeY_p, 
 	{
 		for(size_t y = 0 ; y < sizeY_p ; ++ y)
 		{
-			vec_l.at(x).push_back(new GridNode({x * stepX_p, y * stepY_p}));
+			vec_l.at(x).push_back(new GridNode({x * stepX_p + stepX_p/2., y * stepY_p + stepY_p/2.}));
 		}
 	}
 	return vec_l;
