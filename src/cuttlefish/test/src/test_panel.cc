@@ -118,12 +118,16 @@ int main( int argc, char* args[] )
 			Panel panel_l(SCREEN_WIDTH-200, SCREEN_HEIGHT-200,
 				window_l.loadTexture("resources/background.png"), window_l.loadTexture("resources/grid.png"), 3);
 			panel_l.addSpriteInfo("unit", 2, 1);
+			panel_l.addSpriteInfo("soldier", 2, 2);
 			panel_l.addSpriteInfo("building", 1, 0);
+			panel_l.addSpriteInfo("barrack", 0, 1);
 
 			SpriteLibrary spriteLib_l;
 			spriteLib_l.registerSpriteTemplate("resource", window_l.loadTexture("resources/square.png"), 2., 32, 32, 64, 64, {2, 2}, {0.25, 1}, 1);
-			spriteLib_l.registerSpriteTemplate("building", window_l.loadTexture("resources/square.png"), 1., 32, 32, 64, 64, {2, 2}, {0.25, 1}, 1);
-			spriteLib_l.registerSpriteTemplate("unit", window_l.loadTexture("resources/circle.png"), 1., 32, 32, 64, 64, {2, 2}, {0.25, 1}, 1);
+			spriteLib_l.registerSpriteTemplate("building", window_l.loadTexture("resources/building.png"), 1., 32, 32, 64, 64, {2, 2, 2, 2}, {0.25, 0.5, 0.5, 0.5}, 1);
+			spriteLib_l.registerSpriteTemplate("barrack", window_l.loadTexture("resources/building.png"), 1., 32, 32, 64, 64, {2, 2, 2, 2}, {0.25, 0.5, 0.5, 0.5}, 1);
+			spriteLib_l.registerSpriteTemplate("unit", window_l.loadTexture("resources/circle.png"), 0.5, 32, 32, 64, 64, {2, 2}, {0.25, 1}, 1);
+			spriteLib_l.registerSpriteTemplate("soldier", window_l.loadTexture("resources/circle.png"), 0.5, 32, 32, 64, 64, {2, 2}, {0.25, 1}, 1);
 
 			StandardClicMode standardClicMode_l;
 			ClicMode * currentClicMode_l = &standardClicMode_l;
@@ -152,6 +156,8 @@ int main( int argc, char* args[] )
 					}
 					if (e.type == SDL_MOUSEBUTTONDOWN)
 					{
+						std::cout.clear();
+						std::cout<<"clic "<<window_l.getWorldVector(e.button.x, e.button.y)<<std::endl;
 						SpriteModel const * spriteModel_l = panel_l.getSpriteModel(window_l, e.button.x, e.button.y);
 
 						if(spriteModel_l)
@@ -161,12 +167,18 @@ int main( int argc, char* args[] )
 								std::cout.clear();
 								if(spriteModel_l->unitModel)
 								{
-									std::cout<<spriteModel_l->unitModel->_id<<std::endl;
+
+									octopus::BuildingUnitProductionCommand * command_l = new octopus::BuildingUnitProductionCommand(
+										selection_l._sprite->getHandle(),
+										selection_l._sprite->getHandle(),
+										lib_l.getUnitModel(spriteModel_l->unitModel->_id)
+									);
+									command_l->setQueued(true);
+									controller_l.commitCommand(command_l);
 								}
 								if(spriteModel_l->buildingModel)
 								{
 									currentClicMode_l = new BuildClicMode(*spriteModel_l->buildingModel, spriteLib_l);
-									std::cout<<spriteModel_l->buildingModel->_id<<std::endl;
 								}
 							}
 						}
@@ -199,14 +211,6 @@ int main( int argc, char* args[] )
 							case SDLK_DOWN:
 								dY = camSpeed_l;
 								break;
-							case SDLK_p:
-							{
-								octopus::BuildingUnitProductionCommand * command_l =
-									new octopus::BuildingUnitProductionCommand(0, 0, lib_l.getUnitModel("unit"));
-								command_l->setQueued(true);
-								controller_l.commitCommand(command_l);
-								break;
-							}
 							default:
 								break;
 						}
