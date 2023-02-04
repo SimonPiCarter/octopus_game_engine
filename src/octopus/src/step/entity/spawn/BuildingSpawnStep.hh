@@ -14,6 +14,9 @@ public:
 	{
 		visitor_p->visit(this);
 	}
+
+
+	virtual void apply(State &state_p) const override;
 };
 }
 
