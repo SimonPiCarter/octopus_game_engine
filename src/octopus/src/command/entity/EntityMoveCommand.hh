@@ -19,7 +19,7 @@ class EntityMoveCommand : public Command
 {
 public:
 	EntityMoveCommand(Handle const &commandHandle_p, Handle const &source_p,
-		Vector const &finalPoint_p, unsigned long gridStatus_p, std::list<Vector> const &waypoints_p);
+		Vector const &finalPoint_p, unsigned long gridStatus_p, std::list<Vector> const &waypoints_p, bool init_p=false);
 
 	/// @brief check if _ent is close to the waypoint, if so
 	/// remove reached waypoint and create a step to the next waypoint
@@ -37,6 +37,7 @@ private:
 	Vector _finalPoint;
 	unsigned long _gridStatus;
 	std::list<Vector> const _waypoints;
+	bool const _init;
 };
 
 } // namespace octopus

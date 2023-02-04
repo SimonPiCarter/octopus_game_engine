@@ -18,11 +18,11 @@ namespace octopus
 {
 
 UnitHarvestCommand::UnitHarvestCommand(Handle const &commandHandle_p, Handle const &source_p, Handle const &resource_p,
-		Vector const &finalPoint_p, unsigned long gridStatus_p, std::list<Vector> const &waypoints_p)
+		Vector const &finalPoint_p, unsigned long gridStatus_p, std::list<Vector> const &waypoints_p, bool init_p)
 	: Command(commandHandle_p)
 	, _source(source_p)
 	, _resource(resource_p)
-	, _subMoveCommand(commandHandle_p, source_p, finalPoint_p, gridStatus_p, waypoints_p)
+	, _subMoveCommand(commandHandle_p, source_p, finalPoint_p, gridStatus_p, waypoints_p, init_p)
 {}
 
 void UnitHarvestCommand::registerCommand(Step &step_p, State const &state_p)

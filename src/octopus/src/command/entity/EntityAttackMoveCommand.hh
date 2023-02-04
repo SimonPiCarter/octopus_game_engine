@@ -21,7 +21,7 @@ class EntityAttackMoveCommand : public Command
 {
 public:
 	EntityAttackMoveCommand(Handle const &commandHandle_p, Handle const &source_p,
-		Vector const &finalPoint_p, unsigned long gridStatus_p, std::list<Vector> const &waypoints_p);
+		Vector const &finalPoint_p, unsigned long gridStatus_p, std::list<Vector> const &waypoints_p, bool init_p=false);
 
 	/// @brief
 	virtual bool applyCommand(Step & step_p, State const &state_p, CommandData const *data_p) const override;

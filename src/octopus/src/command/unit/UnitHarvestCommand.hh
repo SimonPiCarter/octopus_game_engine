@@ -16,7 +16,7 @@ class UnitHarvestCommand : public Command
 {
 public:
 	UnitHarvestCommand(Handle const &commandHandle_p, Handle const &source_p, Handle const &resource_p,
-		Vector const &finalPoint_p, unsigned long gridStatus_p, std::list<Vector> const &waypoints_p);
+		Vector const &finalPoint_p, unsigned long gridStatus_p, std::list<Vector> const &waypoints_p, bool init_p=false);
 
 	virtual void registerCommand(Step & step_p, State const &state_p);
 

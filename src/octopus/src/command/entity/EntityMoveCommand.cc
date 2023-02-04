@@ -15,12 +15,13 @@ namespace octopus
 {
 
 EntityMoveCommand::EntityMoveCommand(Handle const &commandHandle_p, Handle const &source_p,
-		Vector const &finalPoint_p, unsigned long gridStatus_p, std::list<Vector> const &waypoints_p)
+		Vector const &finalPoint_p, unsigned long gridStatus_p, std::list<Vector> const &waypoints_p, bool init_p)
 	: Command(commandHandle_p)
 	, _source(source_p)
 	, _finalPoint(finalPoint_p)
 	, _gridStatus(gridStatus_p)
 	, _waypoints(waypoints_p)
+	, _init(init_p)
 {}
 
 bool EntityMoveCommand::applyCommand(Step & step_p, State const &state_p, CommandData const *data_p) const
@@ -40,19 +41,28 @@ bool EntityMoveCommand::applyCommand(Step & step_p, State const &state_p, Comman
 	/// Check if we need to update
 	///
 	unsigned long gridStatus_l = state_p.getPathGridStatus();
-	if(gridStatus_l > data_l._gridStatus
+	if((gridStatus_l > data_l._gridStatus
 	&& data_l._stepSinceUpdate > 100)
+	|| (data_l._gridStatus == 0 && _init))
 	{
 		// compute new path
 		std::list<Vector> path_l = computePath(state_p, _source, data_l._finalPoint);
 		step_p.addSteppable(new CommandDataWaypointSetStep(_handleCommand, waypoints_l, path_l));
 		step_p.addSteppable(new CommandMoveUpdateStep(_handleCommand, data_l._stepSinceUpdate, data_l._gridStatus, gridStatus_l));
+
+		std::cout.clear();
+		std::cout<<"recompute path"<<std::endl;
+		for(Vector const &v : path_l)
+		{
+			std::cout<<"\t"<<v<<std::endl;
+		}
 		return false;
 	}
+	step_p.addSteppable(new CommandMoveStepSinceUpdateIncrementStep(_handleCommand));
 
 	///
 	/// Update waypoints based on current position
-	/// Waypoint must be within ray to stop
+	/// Waypoint must be within two steps
 	///
 	auto it_l = waypoints_l.begin();
 	Vector next_l = *it_l;

@@ -15,11 +15,11 @@ namespace octopus
 {
 
 EntityBuildingCommand::EntityBuildingCommand(Handle const &commandHandle_p, Handle const &source_p, Handle const &target_p,
-		Vector const &finalPoint_p, unsigned long gridStatus_p, std::list<Vector> const &waypoints_p)
+		Vector const &finalPoint_p, unsigned long gridStatus_p, std::list<Vector> const &waypoints_p, bool init_p)
 	: Command(commandHandle_p)
 	, _source(source_p)
 	, _target(target_p)
-	, _subMoveCommand(commandHandle_p, source_p, finalPoint_p, gridStatus_p, waypoints_p)
+	, _subMoveCommand(commandHandle_p, source_p, finalPoint_p, gridStatus_p, waypoints_p, init_p)
 {}
 
 bool isInRange(State const &state_p, Entity const * ent_p, Building const * building_p)
