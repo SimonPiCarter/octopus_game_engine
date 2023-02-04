@@ -22,10 +22,29 @@ public:
 		visitor_p->visit(this);
 	}
 
-	Handle _handle {0};
+	Handle const _handle;
 	unsigned long const _old;
 	unsigned long const _oldGridStatus;
 	unsigned long const _newGridStatus;
+};
+
+
+class CommandMoveStepSinceUpdateIncrementStep : public Steppable
+{
+public:
+	CommandMoveStepSinceUpdateIncrementStep(Handle const &handle_p)
+		: _handle(handle_p) {}
+
+	virtual void apply(State &state_p) const override;
+	virtual void revert(State &state_p) const override;
+
+	virtual bool isNoOp() const override;
+	virtual void visit(SteppableVisitor * visitor_p) const override
+	{
+		visitor_p->visit(this);
+	}
+
+	Handle const _handle;
 };
 
 }

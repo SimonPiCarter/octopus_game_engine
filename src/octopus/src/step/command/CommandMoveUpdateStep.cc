@@ -33,4 +33,25 @@ bool CommandMoveUpdateStep::isNoOp() const
 	return false;
 }
 
+void CommandMoveStepSinceUpdateIncrementStep::apply(State &state_p) const
+{
+	Commandable * ent_l = state_p.getCommandable(this->_handle);
+	Logger::getDebug() << "CommandMoveStepSinceUpdateIncrementStep :: apply " << this->_handle <<std::endl;
+	MoveData *data_l = dynamic_cast<MoveData*>(ent_l->getFrontQueue()._data);
+	++data_l->_stepSinceUpdate;
+}
+
+void CommandMoveStepSinceUpdateIncrementStep::revert(State &state_p) const
+{
+	Commandable * ent_l = state_p.getCommandable(this->_handle);
+	Logger::getDebug() << "CommandMoveStepSinceUpdateIncrementStep :: revert " << this->_handle <<std::endl;
+	MoveData *data_l = dynamic_cast<MoveData*>(ent_l->getFrontQueue()._data);
+	--data_l->_stepSinceUpdate;
+}
+
+bool CommandMoveStepSinceUpdateIncrementStep::isNoOp() const
+{
+	return false;
+}
+
 } // namespace octopus
