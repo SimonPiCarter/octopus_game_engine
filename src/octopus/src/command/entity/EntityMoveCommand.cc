@@ -50,12 +50,6 @@ bool EntityMoveCommand::applyCommand(Step & step_p, State const &state_p, Comman
 		step_p.addSteppable(new CommandDataWaypointSetStep(_handleCommand, waypoints_l, path_l));
 		step_p.addSteppable(new CommandMoveUpdateStep(_handleCommand, data_l._stepSinceUpdate, data_l._gridStatus, gridStatus_l));
 
-		std::cout.clear();
-		std::cout<<"recompute path"<<std::endl;
-		for(Vector const &v : path_l)
-		{
-			std::cout<<"\t"<<v<<std::endl;
-		}
 		return false;
 	}
 	step_p.addSteppable(new CommandMoveStepSinceUpdateIncrementStep(_handleCommand));

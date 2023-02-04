@@ -156,15 +156,12 @@ int main( int argc, char* args[] )
 					}
 					if (e.type == SDL_MOUSEBUTTONDOWN)
 					{
-						std::cout.clear();
-						std::cout<<"clic "<<window_l.getWorldVector(e.button.x, e.button.y)<<std::endl;
 						SpriteModel const * spriteModel_l = panel_l.getSpriteModel(window_l, e.button.x, e.button.y);
 
 						if(spriteModel_l)
 						{
 							if(e.button.button == SDL_BUTTON_LEFT)
 							{
-								std::cout.clear();
 								if(spriteModel_l->unitModel)
 								{
 
