@@ -26,6 +26,17 @@ namespace octopus
 
 		/// @brief list of UnitModel available in this building
 		std::list<UnitModel const *> _unitModels;
+
+		/// @brief safe getter for the deposit map
+		bool isDeposit(ResourceType type_p) const
+		{
+			auto && it_l = _deposit.find(type_p);
+			if(it_l != _deposit.end())
+			{
+				return it_l->second;
+			}
+			return false;
+		}
 	};
 } // namespace octopus
 

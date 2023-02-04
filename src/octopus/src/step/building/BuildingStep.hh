@@ -21,8 +21,8 @@ class BuildingStep : public Steppable
 			visitor_p->visit(this);
 		}
 
-		Handle _handle {0};
-		double _delta;
+		Handle const _handle {0};
+		double const _delta;
 };
 }
 

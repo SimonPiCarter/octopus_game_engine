@@ -3,6 +3,7 @@
 #include "player/Player.hh"
 #include "entity/Entity.hh"
 #include "entity/Resource.hh"
+#include "entity/Building.hh"
 #include "utils/Box.hh"
 #include "state/model/entity/BuildingModel.hh"
 
@@ -185,8 +186,13 @@ Entity const * lookUpDeposit(State const &state_p, Handle const &sourceHandle_p,
 		{
 			continue;
 		}
-		BuildingModel const * model_l = dynamic_cast<BuildingModel const *>(&ent_l->_model);
-		if(!model_l->_deposit.at(origRes_l->_type))
+		Building const * building_l = dynamic_cast<Building const *>(ent_l);
+		if(!building_l->isBuilt())
+		{
+			continue;
+		}
+		BuildingModel const & model_l = building_l->_buildingModel;
+		if(!model_l.isDeposit(origRes_l->_type))
 		{
 			continue;
 		}
@@ -336,6 +342,7 @@ std::list<Vector> computePath(State const & state_p, Handle const &handle_p, Vec
 
 	// compute path
 	std::list<GridNode const *> path_l = state_p.getPathGrid().getGraph().getPath(source_l, target_l, ignored_p);
+	path_l.pop_front();
 	trimPath(path_l);
 	// get waypoints
 	std::list<Vector> waypoints_l = toWaypoints(path_l);
