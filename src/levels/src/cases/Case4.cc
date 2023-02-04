@@ -52,7 +52,7 @@ void createCommandCenter(Library &lib_p)
 
 void createBarrack(Library &lib_p)
 {
-	BuildingModel buildingModel_l { true, 0.9, 10. };
+	BuildingModel buildingModel_l { true, 0.75, 10. };
 	buildingModel_l._isBuilding = true;
 	buildingModel_l._isStatic = true;
 	buildingModel_l._unitModels.push_back(&lib_p.getUnitModel("soldier"));
@@ -88,7 +88,7 @@ std::list<Steppable *> Case4(Library &lib_p)
 	res2_l._type = ResourceType::Food;
 	res2_l._resource = 500.;
 
-	Resource res3_l({21,45}, true, lib_p.getEntityModel("resource"));
+	Resource res3_l({21,13}, true, lib_p.getEntityModel("resource"));
 	res3_l._type = ResourceType::Steel;
 	res3_l._resource = 500.;
 
