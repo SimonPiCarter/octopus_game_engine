@@ -60,7 +60,8 @@ bool StandardClicMode::handleMouse(SDL_Event const & e, Selection &selection_p, 
 					sprite_l->getHandle(),
 					window_p.getWorldVector(e.button.x, e.button.y),
 					0,
-					{window_p.getWorldVector(e.button.x, e.button.y)}
+					{window_p.getWorldVector(e.button.x, e.button.y)},
+					true
 				);
 				controller_p.commitCommand(command_l);
 			}
@@ -74,7 +75,8 @@ bool StandardClicMode::handleMouse(SDL_Event const & e, Selection &selection_p, 
 					sprite_l->getHandle(),
 					window_p.getWorldVector(e.button.x, e.button.y),
 					0,
-					{window_p.getWorldVector(e.button.x, e.button.y)}
+					{window_p.getWorldVector(e.button.x, e.button.y)},
+					true
 				);
 				controller_p.commitCommand(command_l);
 			}
@@ -85,7 +87,8 @@ bool StandardClicMode::handleMouse(SDL_Event const & e, Selection &selection_p, 
 					selection_p._sprite->getHandle(),
 					window_p.getWorldVector(e.button.x, e.button.y),
 					0,
-					{window_p.getWorldVector(e.button.x, e.button.y)}
+					{window_p.getWorldVector(e.button.x, e.button.y)},
+					true
 				);
 				controller_p.commitCommand(command_l);
 			}
