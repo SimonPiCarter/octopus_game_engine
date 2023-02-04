@@ -18,6 +18,8 @@ public:
 	UnitHarvestCommand(Handle const &commandHandle_p, Handle const &source_p, Handle const &resource_p,
 		Vector const &finalPoint_p, unsigned long gridStatus_p, std::list<Vector> const &waypoints_p);
 
+	virtual void registerCommand(Step & step_p, State const &state_p);
+
 	/// @brief
 	virtual bool applyCommand(Step & step_p, State const &state_p, CommandData const *data_p) const override;
 

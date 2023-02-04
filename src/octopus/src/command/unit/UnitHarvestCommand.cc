@@ -7,6 +7,7 @@
 #include "state/entity/Resource.hh"
 #include "state/entity/Unit.hh"
 #include "step/Step.hh"
+#include "step/command/CommandQueueStep.hh"
 #include "step/command/harvest/CommandHarvestStep.hh"
 #include "step/command/CommandDataWaypointStep.hh"
 #include "step/command/CommandMoveUpdateStep.hh"
@@ -23,6 +24,17 @@ UnitHarvestCommand::UnitHarvestCommand(Handle const &commandHandle_p, Handle con
 	, _resource(resource_p)
 	, _subMoveCommand(commandHandle_p, source_p, finalPoint_p, gridStatus_p, waypoints_p)
 {}
+
+void UnitHarvestCommand::registerCommand(Step &step_p, State const &state_p)
+{
+	Resource const *res_l = dynamic_cast<Resource const *>(state_p.getEntity(_resource));
+	Unit const * unit_l = dynamic_cast<Unit const *>(state_p.getEntity(_source));
+
+	if(unit_l->_unitModel._maxQuantity.find(res_l->_type) != unit_l->_unitModel._maxQuantity.end())
+	{
+		step_p.addSteppable(new CommandSpawnStep(this));
+	}
+}
 
 bool resourceExhausted(State const &state_p, Handle const &resource_p)
 {
