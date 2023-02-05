@@ -3,23 +3,29 @@
 namespace octopus
 {
 bool Logger::_debug = false;
+std::mutex Logger::_mutex;
 
-std::ostream &Logger::getNormal()
+
+LoggerHandler::LoggerHandler(std::mutex &mutex_p, bool shouldLog_p) : _mutex(mutex_p), _shouldLog(shouldLog_p) {}
+LoggerHandler::LoggerHandler(LoggerHandler const &other_p) : _mutex(other_p._mutex), _shouldLog(other_p._shouldLog) {}
+
+LoggerHandler::~LoggerHandler()
 {
-	std::cout.clear();
-	return std::cout;
+	if(_shouldLog)
+	{
+		std::lock_guard<std::mutex> lock_l(_mutex);
+		std::cout<<this->str();
+	}
 }
 
-std::ostream &Logger::getDebug()
+LoggerHandler Logger::getNormal()
 {
-	if(!Logger::_debug)
-	{
-		std::cout.setstate(std::ios_base::badbit);
-	} else
-	{
-		std::cout.clear();
-	}
-	return std::cout;
+	return LoggerHandler(_mutex, true);
+}
+
+LoggerHandler Logger::getDebug()
+{
+	return LoggerHandler(_mutex, _debug);
 }
 
 }

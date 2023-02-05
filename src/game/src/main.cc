@@ -44,7 +44,8 @@ int main()
 
 	octopus::Logger::getNormal()<<"Done"<<std::endl;
 
-	streamMetrics(octopus::Logger::getNormal(), controller_l.getMetrics());
+	octopus::LoggerHandler logger_l = octopus::Logger::getNormal();
+	streamMetrics(logger_l, controller_l.getMetrics());
 
 	return 0;
 }
