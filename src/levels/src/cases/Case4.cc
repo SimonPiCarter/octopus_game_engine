@@ -23,6 +23,7 @@ void createWorker(Library &lib_p)
 	UnitModel unitModel_l { false, 0.5, 0.05, 10. };
 	unitModel_l._isUnit = true;
 	unitModel_l._maxQuantity[ResourceType::Food] = 10;
+	unitModel_l._maxQuantity[ResourceType::Steel] = 50;
 	unitModel_l._productionTime = 100;
 	unitModel_l._cost[ResourceType::Food] = 50;
 	lib_p.registerUnitModel("unit", unitModel_l);
@@ -44,6 +45,7 @@ void createCommandCenter(Library &lib_p)
 	buildingModel_l._isBuilding = true;
 	buildingModel_l._isStatic = true;
 	buildingModel_l._deposit[ResourceType::Food] = true;
+	buildingModel_l._deposit[ResourceType::Steel] = true;
 	buildingModel_l._unitModels.push_back(&lib_p.getUnitModel("unit"));
 	buildingModel_l._buildingTime = 500;
 	buildingModel_l._cost[ResourceType::Steel] = 350;
