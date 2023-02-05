@@ -24,6 +24,20 @@ protected:
 	unsigned long _count {0};
 };
 
+class ListenerStepCount : public Listener
+{
+public:
+	ListenerStepCount(unsigned long stepCount_p)
+		: _stepCount(stepCount_p) {}
+
+	/// @brief check if listener is completed based on events in controller
+	/// @param count_p if set to true will count the number of time completed
+	virtual void complete(EventCollection const &controller_p, bool count_p);
+
+protected:
+	unsigned long const _stepCount;
+	unsigned long _elapsedStep {0};
+};
 
 class ListenerEntityModelDied : public Listener
 {

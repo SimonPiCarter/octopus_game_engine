@@ -10,6 +10,16 @@ namespace octopus
 bool Listener::isCompleted() const { return _completed; }
 unsigned long Listener::getCount() const { return _count; }
 
+void ListenerStepCount::complete(EventCollection const &controller_p, bool count_p)
+{
+	++_elapsedStep;
+	if(_elapsedStep >= _stepCount)
+	{
+		_completed = true;
+		++_count;
+	}
+}
+
 void ListenerEntityModelDied::complete(EventCollection const &controller_p, bool count_p)
 {
 	_count = 0;
