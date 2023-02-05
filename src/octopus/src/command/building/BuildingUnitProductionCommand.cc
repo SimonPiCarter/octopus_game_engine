@@ -28,6 +28,12 @@ void BuildingUnitProductionCommand::registerCommand(Step & step_p, State const &
 	Logger::getDebug() << "BuildingUnitProductionCommand:: register Command "<<_source <<std::endl;
 	Building const * building_l = dynamic_cast<Building const *>(state_p.getEntity(_source));
 
+	// if building is not build we skip everything
+	if(!building_l->isBuilt())
+	{
+		return;
+	}
+
 	// check if we can pay for it
 	if(checkResource(state_p, building_l->_player, _model._cost))
 	{
