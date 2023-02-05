@@ -84,6 +84,7 @@ void Panel::refresh(octopus::Entity const *selected_p, octopus::State const &sta
 
 	// index used of position
 	size_t idx_l = 0;
+	_grid.clear();
 	// update position of sprites
 	for(SpriteModel & sprite_l : _sprites)
 	{
@@ -91,7 +92,7 @@ void Panel::refresh(octopus::Entity const *selected_p, octopus::State const &sta
 		int y = idx_l/_iconsPerLine;
 
 		sprite_l.sprite->setPosition(_x + x * 65, _y + y * 65);
-
+		_grid[{x,y}] = &sprite_l;
 		++idx_l;
 	}
 }
@@ -121,6 +122,16 @@ SpriteModel const * Panel::getSpriteModel(Window &window_p, int x, int y) const
 		}
 	}
 	return nullptr;
+}
+
+SpriteModel const * Panel::getSpriteModelOnGrid(int x, int y) const
+{
+	auto it_l = _grid.find({x,y});
+	if(it_l == _grid.end())
+	{
+		return nullptr;
+	}
+	return it_l->second;
 }
 
 } // namespace cuttlefish

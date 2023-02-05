@@ -55,12 +55,18 @@ public:
 	/// @note return nullptr if no clic
 	SpriteModel const * getSpriteModel(Window &window_p, int x, int y) const;
 
+	/// @brief return a sprite model combination for grid position
+	/// @note return nullptr if no match
+	SpriteModel const * getSpriteModelOnGrid(int x, int y) const;
+
 	Sprite const * getBackground() const { return _background; }
 protected:
 	/// @brief last selection
 	octopus::Entity const * _lastSelection {nullptr};
 	/// @brief sprites
 	std::list<SpriteModel> _sprites;
+	/// @brief sprite models used for grid coordinate access
+	std::map<std::pair<int, int>, SpriteModel *> _grid;
 
 	Sprite * _background;
 

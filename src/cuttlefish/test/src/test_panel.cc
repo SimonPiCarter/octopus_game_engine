@@ -55,6 +55,38 @@ std::string resourceStr(octopus::Player const &player_p)
 	return ss_l.str();
 }
 
+/// @brief delete clicMode_p execpt if equal to stdClicMode_p
+void cleanClicMode(ClicMode const * clicMode_p, ClicMode const * stdClicMode_p)
+{
+	if(stdClicMode_p != clicMode_p)
+	{
+		delete clicMode_p;
+	}
+}
+
+void commandFromSpriteModel(SpriteModel const *spriteModel_l, octopus::Library const &lib_l, SpriteLibrary const &spriteLib_l,
+	Selection const &selection_l, octopus::Controller &controller_l, ClicMode *&clicMode_r, ClicMode const & stdClicMode_p)
+{
+	if(spriteModel_l)
+	{
+		if(spriteModel_l->unitModel)
+		{
+			octopus::BuildingUnitProductionCommand * command_l = new octopus::BuildingUnitProductionCommand(
+					selection_l._sprite->getHandle(),
+					selection_l._sprite->getHandle(),
+					lib_l.getUnitModel(spriteModel_l->unitModel->_id)
+				);
+			command_l->setQueued(true);
+			controller_l.commitCommand(command_l);
+		}
+		if(spriteModel_l->buildingModel)
+		{
+			cleanClicMode(clicMode_r, &stdClicMode_p);
+			clicMode_r = new BuildClicMode(*spriteModel_l->buildingModel, spriteLib_l);
+		}
+	}
+}
+
 void controllerLoop(octopus::Controller &controller_p, bool &over_p)
 {
 	//octopus::Logger::enable_debug();
@@ -164,7 +196,6 @@ int main( int argc, char* args[] )
 							{
 								if(spriteModel_l->unitModel)
 								{
-
 									octopus::BuildingUnitProductionCommand * command_l = new octopus::BuildingUnitProductionCommand(
 										selection_l._sprite->getHandle(),
 										selection_l._sprite->getHandle(),
@@ -175,6 +206,7 @@ int main( int argc, char* args[] )
 								}
 								if(spriteModel_l->buildingModel)
 								{
+									cleanClicMode(currentClicMode_l, &standardClicMode_l);
 									currentClicMode_l = new BuildClicMode(*spriteModel_l->buildingModel, spriteLib_l);
 								}
 							}
@@ -187,7 +219,7 @@ int main( int argc, char* args[] )
 						{
 							if( currentClicMode_l->handleMouse(e, selection_l, world_l, panel_l, window_l, state_l, controller_l) )
 							{
-								delete currentClicMode_l;
+								cleanClicMode(currentClicMode_l, &standardClicMode_l);
 								currentClicMode_l = &standardClicMode_l;
 							}
 						}
@@ -208,6 +240,36 @@ int main( int argc, char* args[] )
 							case SDLK_DOWN:
 								dY = camSpeed_l;
 								break;
+
+							/// handle panel
+							case SDLK_a:
+							{
+								SpriteModel const * spriteModel_l = panel_l.getSpriteModelOnGrid(0, 0);
+								commandFromSpriteModel(spriteModel_l, lib_l, spriteLib_l, selection_l, controller_l,
+									currentClicMode_l, standardClicMode_l);
+								break;
+							}
+							case SDLK_z:
+							{
+								SpriteModel const * spriteModel_l = panel_l.getSpriteModelOnGrid(1, 0);
+								commandFromSpriteModel(spriteModel_l, lib_l, spriteLib_l, selection_l, controller_l,
+									currentClicMode_l, standardClicMode_l);
+								break;
+							}
+							case SDLK_e:
+							{
+								SpriteModel const * spriteModel_l = panel_l.getSpriteModelOnGrid(2, 0);
+								commandFromSpriteModel(spriteModel_l, lib_l, spriteLib_l, selection_l, controller_l,
+									currentClicMode_l, standardClicMode_l);
+								break;
+							}
+							case SDLK_q:
+							{
+								SpriteModel const * spriteModel_l = panel_l.getSpriteModelOnGrid(0, 1);
+								commandFromSpriteModel(spriteModel_l, lib_l, spriteLib_l, selection_l, controller_l,
+									currentClicMode_l, standardClicMode_l);
+								break;
+							}
 							default:
 								break;
 						}
