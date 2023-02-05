@@ -7,6 +7,8 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_ttf.h>
 
+#include "text/Text.hh"
+
 #include "utils/Vector.hh"
 
 namespace cuttlefish
@@ -58,14 +60,18 @@ private:
 	// camera offset
 	SDL_Point _camera {0, 0};
 
+	TTF_Font* _font {nullptr};
+
+
 	// display fps
 	bool _displayFps {false};
-	TTF_Font* _font {nullptr};
 	double _fps {0.};
 	double _elpased {0.};
 	long _frameCount {0};
 	std::chrono::time_point<std::chrono::steady_clock> _refTime;
 
+	// Text for fps display
+	Text *_text {nullptr};
 };
 
 } // cuttlefish

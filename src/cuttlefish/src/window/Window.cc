@@ -64,6 +64,8 @@ bool Window::init(int width_l, int height_l)
 		}
 	}
 
+	_text = new Text(this, {0,0,0}, 0, 0);
+
 	_refTime = std::chrono::steady_clock::now();
 
 	return success;
@@ -71,6 +73,8 @@ bool Window::init(int width_l, int height_l)
 
 void Window::close()
 {
+	delete _text;
+
 	for(auto &&pair_l : _mapTexture)
 	{
 		if(pair_l.second)
@@ -114,7 +118,8 @@ void Window::draw()
 
 	if(_displayFps)
 	{
-		displayText(this, std::to_string(_fps), {0,0,0}, 0, 0);
+		_text->setText(stringify(_fps));
+		_text->display();
 	}
 
 	//Update screen

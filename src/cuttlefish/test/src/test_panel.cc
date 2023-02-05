@@ -161,6 +161,9 @@ int main( int argc, char* args[] )
 			spriteLib_l.registerSpriteTemplate("unit", window_l.loadTexture("resources/circle.png"), 0.5, 32, 32, 64, 64, {2, 2}, {0.25, 1}, 1);
 			spriteLib_l.registerSpriteTemplate("soldier", window_l.loadTexture("resources/circle.png"), 0.5, 32, 32, 64, 64, {2, 2}, {0.25, 1}, 1);
 
+			// Text for resource
+			Text textResource_l(&window_l, {0,0,0}, 300, 0);
+
 			StandardClicMode standardClicMode_l;
 			ClicMode * currentClicMode_l = &standardClicMode_l;
 
@@ -317,7 +320,8 @@ int main( int argc, char* args[] )
 				panel_l.render(window_l);
 
 				octopus::Player const * player_l = state_l.getPlayer(0);
-				displayText(&window_l, resourceStr(*player_l), {0,0,0}, 300, 0);
+				textResource_l.setText(resourceStr(*player_l));
+				textResource_l.display();
 
 				window_l.draw();
 			}
