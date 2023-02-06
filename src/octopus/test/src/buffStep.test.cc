@@ -4,6 +4,7 @@
 #include <step/entity/buff/EntityBuffStep.hh>
 #include <step/entity/spawn/EntitySpawnStep.hh>
 #include <step/command/CommandQueueStep.hh>
+#include <step/player/PlayerSpawnStep.hh>
 #include <state/State.hh>
 
 ///
@@ -25,7 +26,7 @@ TEST(buffStepTest, simple_speed)
 	buff_l._id = "speed";
 	buff_l._coef = 1.;
 
-	Controller controller_l({spawn0_l, new EntityBuffStep(0, buff_l, 0, true)}, 1.);
+	Controller controller_l({new PlayerSpawnStep(0, 0), spawn0_l, new EntityBuffStep(0, buff_l, 0, true)}, 1.);
 
 	// query state
 	State const * state_l = controller_l.queryState();
@@ -90,7 +91,7 @@ TEST(buffStepTest, simple_armor)
 	buff_l._offset = 1.;
 	buff_l._type = TyppedBuff::Type::Armor;
 
-	Controller controller_l({spawn0_l, new EntityBuffStep(0, buff_l, 0, true)}, 1.);
+	Controller controller_l({new PlayerSpawnStep(0, 0), spawn0_l, new EntityBuffStep(0, buff_l, 0, true)}, 1.);
 
 	// query state
 	State const * state_l = controller_l.queryState();

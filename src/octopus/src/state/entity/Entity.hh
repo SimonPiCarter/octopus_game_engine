@@ -20,6 +20,8 @@ namespace octopus
 			Entity(Vector const &pos_p, bool frozen_p, EntityModel const &model_p);
 			virtual ~Entity() {}
 
+			virtual void runCommands(Step & step_p, State const &state_p) override;
+
 			Vector _pos;
 
 			/// @brief cannot move

@@ -28,7 +28,7 @@ public:
 	void enqueue(Command * cmd_p, bool enqueue_p);
 
 	/// @brief run the commands in queue and pop them if terminated
-	void runCommands(Step & step_p, State const &state_p);
+	virtual void runCommands(Step & step_p, State const &state_p);
 
 	CommandBundle & getFrontQueue();
 	CommandQueue & getQueue();

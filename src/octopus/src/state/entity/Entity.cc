@@ -1,5 +1,10 @@
 #include "Entity.hh"
 
+#include "command/entity/EntityAttackCommand.hh"
+#include "state/State.hh"
+#include "step/command/CommandQueueStep.hh"
+#include "step/Step.hh"
+
 namespace octopus
 {
 
@@ -11,6 +16,20 @@ Entity::Entity(Vector const &pos_p, bool frozen_p, EntityModel const &model_p)
 	, _reload(model_p._fullReload)
 	, _model(model_p)
 {}
+
+void Entity::runCommands(Step & step_p, State const &state_p)
+{
+	// If no command we check for target
+	if(!getQueue().hasCommand())
+	{
+		Entity const * target_l = lookUpNewTarget(state_p, _handle);
+		if(target_l)
+		{
+			step_p.addSteppable(new CommandSpawnStep(new EntityAttackCommand(_commandableHandle, _handle, target_l->_handle)));
+		}
+	}
+	Commandable::runCommands(step_p, state_p);
+}
 
 double Entity::getStepSpeed() const
 {

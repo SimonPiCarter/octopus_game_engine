@@ -5,6 +5,7 @@
 #include <step/entity/EntityMoveStep.hh>
 #include <step/entity/spawn/EntitySpawnStep.hh>
 #include <step/command/CommandQueueStep.hh>
+#include <step/player/PlayerSpawnStep.hh>
 #include <state/State.hh>
 
 ///
@@ -26,7 +27,7 @@ TEST(attackCommandTest, simple)
 	EntityAttackCommand * command_l = new EntityAttackCommand(0, 0, 1);
 	CommandSpawnStep * commandSpawn_l = new CommandSpawnStep(command_l);
 
-	Controller controller_l({spawn0_l, spawn1_l, commandSpawn_l}, 1.);
+	Controller controller_l({new PlayerSpawnStep(0, 0), spawn0_l, spawn1_l, commandSpawn_l}, 1.);
 
 	State const *a = controller_l.getBackState();
 	State const *b = controller_l.getBufferState();
