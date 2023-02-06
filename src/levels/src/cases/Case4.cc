@@ -1,6 +1,8 @@
 #include <iostream>
 #include <fstream>
 
+#include "controller/trigger/Trigger.hh"
+#include "controller/trigger/Listener.hh"
 #include "command/building/BuildingUnitProductionCommand.hh"
 #include "library/Library.hh"
 #include "state/entity/Building.hh"
@@ -9,12 +11,14 @@
 #include "state/model/entity/UnitModel.hh"
 #include "state/model/entity/BuildingModel.hh"
 #include "state/State.hh"
+#include "step/Step.hh"
 #include "step/command/CommandQueueStep.hh"
 #include "step/entity/spawn/UnitSpawnStep.hh"
 #include "step/entity/spawn/ResourceSpawnStep.hh"
 #include "step/entity/spawn/BuildingSpawnStep.hh"
 #include "step/player/PlayerSpawnStep.hh"
 #include "step/player/PlayerSpendResourceStep.hh"
+#include "step/trigger/TriggerSpawn.hh"
 
 using namespace octopus;
 
@@ -71,6 +75,38 @@ void createResource(Library &lib_p)
 	lib_p.registerEntityModel("resource", resModel_l);
 }
 
+class Case4TriggerSpawn : public OneShotTrigger
+{
+public:
+	Case4TriggerSpawn(Listener * listener_p, Library const &lib_p) : OneShotTrigger({listener_p}), _lib(lib_p) {}
+
+	virtual void trigger(Step &step_p) const override
+	{
+		{
+			Unit unit_l({ 1, 35. }, false, _lib.getUnitModel("unit"));
+			unit_l._player = 1;
+			step_p.addSteppable(new UnitSpawnStep(unit_l));
+		}
+		{
+			Unit unit_l({ 2, 35. }, false, _lib.getUnitModel("unit"));
+			unit_l._player = 1;
+			step_p.addSteppable(new UnitSpawnStep(unit_l));
+		}
+		{
+			Unit unit_l({ 1, 36. }, false, _lib.getUnitModel("unit"));
+			unit_l._player = 1;
+			step_p.addSteppable(new UnitSpawnStep(unit_l));
+		}
+		{
+			Unit unit_l({ 2, 36. }, false, _lib.getUnitModel("unit"));
+			unit_l._player = 1;
+			step_p.addSteppable(new UnitSpawnStep(unit_l));
+		}
+	}
+private:
+	Library const &_lib;
+};
+
 std::list<Steppable *> Case4(Library &lib_p)
 {
 	createWorker(lib_p);
@@ -98,9 +134,12 @@ std::list<Steppable *> Case4(Library &lib_p)
 	mapRes_l[octopus::ResourceType::Food] = -200;
 	mapRes_l[octopus::ResourceType::Steel] = -200;
 
+	Trigger * trigger_l = new Case4TriggerSpawn(new ListenerStepCount(1000), lib_p);
+
 	std::list<Steppable *> spawners_l =
 	{
 		new PlayerSpawnStep(0, 0),
+		new PlayerSpawnStep(1, 1),
 		new PlayerAddBuildingModel(0, lib_p.getBuildingModel("building")),
 		new PlayerAddBuildingModel(0, lib_p.getBuildingModel("barrack")),
 		new PlayerSpendResourceStep(0, mapRes_l),
@@ -108,7 +147,8 @@ std::list<Steppable *> Case4(Library &lib_p)
 		new ResourceSpawnStep(res1_l),
 		new ResourceSpawnStep(res2_l),
 		new ResourceSpawnStep(res3_l),
-		new UnitSpawnStep(unit_l)
+		new UnitSpawnStep(unit_l),
+		new TriggerSpawn(trigger_l)
 	};
 
 	return spawners_l;
