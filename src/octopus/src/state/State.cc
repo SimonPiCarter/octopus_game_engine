@@ -365,12 +365,18 @@ std::list<Vector> computePath(State const & state_p, Handle const &handle_p, Vec
 
 	// compute path
 	std::list<GridNode const *> path_l = state_p.getPathGrid().getGraph().getPath(source_l, target_l, ignored_p);
-	path_l.pop_front();
+	if(!path_l.empty())
+	{
+		path_l.pop_front();
+	}
 	trimPath(path_l);
 	// get waypoints
 	std::list<Vector> waypoints_l = toWaypoints(path_l);
 	// update for exact destination
-	waypoints_l.pop_back();
+	if(!waypoints_l.empty())
+	{
+		waypoints_l.pop_back();
+	}
 	waypoints_l.push_back(target_p);
 	return waypoints_l;
 }
