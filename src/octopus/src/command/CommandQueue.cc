@@ -6,6 +6,14 @@
 namespace octopus
 {
 
+CommandQueue::~CommandQueue()
+{
+	for(CommandBundle const &bundle_l : _commandQueue)
+	{
+		delete bundle_l._data;
+	}
+}
+
 bool CommandQueue::hasCommand() const
 {
 	return !_contextList.empty();

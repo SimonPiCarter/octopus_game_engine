@@ -13,6 +13,8 @@ class EntityModel;
 class Listener
 {
 public:
+	virtual ~Listener() {}
+
 	/// @brief check if listener is completed based on events in controller
 	/// @param count_p if set to true will count the number of time completed
 	virtual void complete(EventCollection const &controller_p, bool count_p) = 0;

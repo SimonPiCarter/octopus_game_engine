@@ -80,7 +80,7 @@ double weight_adjusted(
 
 Graph::Graph(std::vector<std::vector<GridNode *> > const &nodes_p)
 	: _nodes(nodes_p)
-	, _g(new mygraph_t())
+	, _g(nullptr)
 {
 	if(!checkNodes(_nodes))
 	{

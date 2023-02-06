@@ -36,6 +36,16 @@ bool Trigger::isCompleted() const
 	return _isCompleted;
 }
 
+void Trigger::setIsDisabled(bool isDisabled_p)
+{
+	_isDisabled = isDisabled_p;
+}
+
+bool Trigger::isDisabled() const
+{
+	return _isDisabled;
+}
+
 OneShotTrigger::OneShotTrigger(std::list<Listener *> const &listeners_p, Steppable * steppable_p)
 	: Trigger(listeners_p)
 	, _steppable(steppable_p)
@@ -44,5 +54,10 @@ OneShotTrigger::OneShotTrigger(std::list<Listener *> const &listeners_p, Steppab
 OnEachTrigger::OnEachTrigger(Listener *listeners_p)
 	: _listener(listeners_p)
 {}
+
+OnEachTrigger::~OnEachTrigger()
+{
+	delete _listener;
+}
 
 }

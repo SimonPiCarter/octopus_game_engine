@@ -26,6 +26,8 @@ public:
 	typedef std::list<CommandBundle>::const_iterator ConstQueueIterator;
 	typedef std::list<CommandBundle>::iterator QueueIterator;
 
+	~CommandQueue();
+
 	/// @brief returns true if at least one command has been queued
 	/// @warning getCurrentCommand will throw if this return false
 	bool hasCommand() const;

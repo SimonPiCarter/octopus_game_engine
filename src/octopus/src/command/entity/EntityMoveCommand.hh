@@ -36,7 +36,7 @@ private:
 	Handle const _source;
 	Vector _finalPoint;
 	unsigned long _gridStatus;
-	std::list<Vector> const _waypoints;
+	std::list<Vector> _waypoints;
 	bool const _init;
 };
 

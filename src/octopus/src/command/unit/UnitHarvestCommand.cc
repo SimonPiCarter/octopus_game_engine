@@ -34,6 +34,10 @@ void UnitHarvestCommand::registerCommand(Step &step_p, State const &state_p)
 	{
 		step_p.addSteppable(new CommandSpawnStep(this));
 	}
+	else
+	{
+		step_p.addSteppable(new CommandStorageStep(this));
+	}
 }
 
 bool resourceExhausted(State const &state_p, Handle const &resource_p)

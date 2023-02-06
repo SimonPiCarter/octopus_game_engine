@@ -44,7 +44,7 @@ Controller::Controller(
 	// add steppable
 	for(Steppable * steppable_l : initSteppables_p)
 	{
-		_initialStep.getSteppable().push_back(steppable_l);
+		_initialStep.addSteppable(steppable_l);
 	}
 
 	octopus::updateStepFromConflictPosition(_initialStep, *_backState->_state);
@@ -61,19 +61,9 @@ Controller::~Controller()
 	delete _backState;
 	delete _bufferState;
 	delete _frontState;
-	std::set<Command const *> setCommand_l;
 	for(std::list<Command *> const *cmds_l : _commitedCommands)
 	{
-		for(Command const *cmd_l : *cmds_l)
-		{
-			setCommand_l.insert(cmd_l);
-		}
-
 		delete cmds_l;
-	}
-	for(Command const *cmd_l : setCommand_l)
-	{
-		delete cmd_l;
 	}
 	for(Step * step_l : _compiledSteps)
 	{
@@ -296,19 +286,19 @@ void Controller::handleTriggers(State const &state_p, Step &step_p)
 	EventCollection visitor_l(state_p);
 	visitAll(step_p, visitor_l);
 
-	for(auto &&it_l = _oneShotTriggers.begin() ; it_l != _oneShotTriggers.end() ; )
+	for(auto &&it_l = _oneShotTriggers.begin() ; it_l != _oneShotTriggers.end() ; ++it_l)
 	{
 		OneShotTrigger * trigger_l = *it_l;
+		if(trigger_l->isDisabled())
+		{
+			continue;
+		}
 		trigger_l->complete(visitor_l);
 		if(trigger_l->isCompleted())
 		{
 			Logger::getDebug() << "handleTriggers :: trigger one shot "<<std::endl;
 			step_p.addSteppable(trigger_l->_steppable);
-			it_l = _oneShotTriggers.erase(it_l);
-		}
-		else
-		{
-			++it_l;
+			trigger_l->setIsDisabled(true);
 		}
 	}
 

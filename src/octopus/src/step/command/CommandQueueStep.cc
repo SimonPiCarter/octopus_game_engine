@@ -9,6 +9,11 @@
 namespace octopus
 {
 
+CommandStorageStep::~CommandStorageStep()
+{
+	delete _cmd;
+}
+
 CommandSpawnStep::~CommandSpawnStep()
 {
 	delete _cmd;

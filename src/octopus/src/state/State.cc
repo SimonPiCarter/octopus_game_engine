@@ -34,6 +34,10 @@ State::~State()
 	{
 		delete ent_l;
 	}
+	for(Player * player_l : _players)
+	{
+		delete player_l;
+	}
 }
 bool State::hasEntity(Handle const &handle_p) const
 {

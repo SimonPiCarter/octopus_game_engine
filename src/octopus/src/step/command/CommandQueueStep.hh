@@ -9,6 +9,27 @@ namespace octopus
 
 class Command;
 
+/// @brief this step is only used to store and delete properly commands
+/// that wont register as usual (missing resources for example)
+class CommandStorageStep : public Steppable
+{
+public:
+	CommandStorageStep(Command *cmd_p)
+		: _cmd(cmd_p) {}
+	~CommandStorageStep();
+
+	virtual void apply(State &) const override {}
+	virtual void revert(State &) const override {}
+
+	virtual bool isNoOp() const override { return _cmd == nullptr; }
+	virtual void visit(SteppableVisitor * visitor_p) const override
+	{
+		visitor_p->visit(this);
+	}
+private:
+	Command * const _cmd;
+};
+
 class CommandSpawnStep : public Steppable
 {
 public:

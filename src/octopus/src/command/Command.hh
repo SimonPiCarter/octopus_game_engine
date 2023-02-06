@@ -15,6 +15,7 @@ class Command
 {
 public:
 	Command(Handle const &handle_p) : _handleCommand(handle_p) {}
+	virtual ~Command() {}
 
 	/// @brief refister the command into the step
 	/// This method is responsible for

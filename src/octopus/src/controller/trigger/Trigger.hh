@@ -22,9 +22,15 @@ public:
 
 	bool isCompleted() const;
 
+	/// @brief update boolean for disabled
+	void setIsDisabled(bool isDisabled_p);
+	/// @brief if true trigger is disabled and should not be run anymore
+	bool isDisabled() const;
+
 	std::list<Listener *> const _listeners;
 private:
-	bool _isCompleted;
+	bool _isCompleted {false};
+	bool _isDisabled {false};
 };
 
 /// @brief a trigger add steppable to the controller
@@ -44,6 +50,7 @@ class OnEachTrigger
 {
 public:
 	OnEachTrigger(Listener * listener_p);
+	virtual ~OnEachTrigger();
 
 	virtual Steppable * newSteppable() = 0;
 

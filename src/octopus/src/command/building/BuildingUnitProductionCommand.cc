@@ -44,6 +44,7 @@ void BuildingUnitProductionCommand::registerCommand(Step & step_p, State const &
 	else
 	{
 		step_p.addSteppable(new MissingResourceStep(building_l->_player));
+		step_p.addSteppable(new CommandStorageStep(this));
 	}
 }
 

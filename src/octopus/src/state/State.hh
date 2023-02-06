@@ -71,6 +71,10 @@ private:
 	/// @brief vector of players
 	std::vector<Player *> _players;
 
+	/// @brief list of triggers (one shot and on each)
+	std::vector<OneShotTrigger *> _oneShotTriggers;
+	std::vector<OnEachTrigger *> _onEachTriggers;
+
 	/// @brief grid for position indexing
 	std::vector<std::vector<DynamicBitset> > _grid;
 	unsigned long const _gridSize;

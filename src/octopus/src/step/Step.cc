@@ -10,7 +10,7 @@ namespace octopus
 
 Step::~Step()
 {
-	for(EntityMoveStep * step_l : _listEntityMoveStep)
+	for(Steppable * step_l : _listSteppable)
 	{
 		delete step_l;
 	}
@@ -73,6 +73,7 @@ void compact(Step & step_p)
 		// remove if no op
 		if((*it_l)->isNoOp())
 		{
+			delete *it_l;
 			it_l = step_p.getSteppable().erase(it_l);
 		}
 		else

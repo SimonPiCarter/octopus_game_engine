@@ -7,6 +7,7 @@
 #include "state/entity/Building.hh"
 #include "step/entity/spawn/BuildingSpawnStep.hh"
 #include "step/command/MissingResourceStep.hh"
+#include "step/command/CommandQueueStep.hh"
 #include "step/player/PlayerSpendResourceStep.hh"
 
 namespace octopus
@@ -37,6 +38,8 @@ void BuildingBlueprintCommand::registerCommand(Step & step_p, State const &state
 		step_p.addSteppable(new PlayerSpendResourceStep(_player, _model._cost));
 		step_p.addSteppable(new BuildingSpawnStep(building_l, false));
 	}
+
+	step_p.addSteppable(new CommandStorageStep(this));
 }
 
 bool BuildingBlueprintCommand::applyCommand(Step &, State const &, CommandData const *) const
