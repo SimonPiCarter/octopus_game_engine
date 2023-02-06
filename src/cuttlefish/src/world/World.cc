@@ -3,12 +3,15 @@
 #include "sprite/Sprite.hh"
 #include "sprite/SpriteLibrary.hh"
 
+#include <SDL2/SDL.h>
+
 // octopus
 #include "state/entity/Entity.hh"
 #include "state/entity/Building.hh"
 #include "state/State.hh"
 #include "controller/Controller.hh"
 #include "step/Step.hh"
+#include "window/Window.hh"
 
 namespace cuttlefish
 {
@@ -62,7 +65,7 @@ void World::display(Window &window_p, double elapsed_p)
 	}
 }
 
-Sprite * World::getSprite(Window &window_p, int x, int y) const
+Sprite * World::getSprite(Window const &window_p, int x, int y) const
 {
 	for(Sprite * sprite_l : _listSprite)
 	{
@@ -72,6 +75,22 @@ Sprite * World::getSprite(Window &window_p, int x, int y) const
 		}
 	}
 	return nullptr;
+}
+
+std::list<Sprite *> World::getSprites(Window const &window_p, int lx, int ly, int ux, int uy) const
+{
+	std::list<Sprite *> list_l;
+
+	for(Sprite * sprite_l : _listSprite)
+	{
+		SDL_Point const &cam_l = window_p.getCamera();
+		if(sprite_l->intersect(lx + cam_l.x, ly + cam_l.y, ux + cam_l.x, uy + cam_l.y))
+		{
+			list_l.push_back(sprite_l);
+		}
+	}
+
+	return list_l;
 }
 
 }

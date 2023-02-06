@@ -107,6 +107,35 @@ bool Sprite::isInside(Window const &window_p, int x, int y) const
 	return false;
 }
 
+bool Sprite::intersect(int lx, int ly, int ux, int uy) const
+{
+	// rectangle of drawing
+	SDL_Rect final_l {
+		int(_x - _logicalX * _scale),
+		int(_y - _logicalY * _scale),
+		int(_width * _scale),
+		int(_height * _scale),
+	};
+
+	int lowerX_l = std::min(lx, ux);
+	int upperX_l = std::max(lx, ux);
+	int lowerY_l = std::min(ly, uy);
+	int upperY_l = std::max(ly, uy);
+
+	int lowerIntersectX_l = std::max(lowerX_l, final_l.x);
+	int upperIntersectX_l = std::min(upperX_l, final_l.x+final_l.w);
+
+	int lowerIntersectY_l = std::max(lowerY_l, final_l.y);
+	int upperIntersectY_l = std::min(upperY_l, final_l.y+final_l.h);
+
+	if(lowerIntersectX_l <= upperIntersectX_l
+	&& lowerIntersectY_l <= upperIntersectY_l)
+	{
+		return true;
+	}
+	return false;
+}
+
 void Sprite::setPosition(double x, double y)
 {
 	_x = x;

@@ -30,9 +30,12 @@ class ClicMode
 public:
 	virtual ~ClicMode() {}
 
-	/// @brief handle mouse
+	/// @brief handle mouse button down should only be used to store start of clic
+	virtual void handleMouseDown(SDL_Event const &) {}
+
+	/// @brief handle mouse button up
 	/// @return true if the clic mode is over
-	virtual bool handleMouse(SDL_Event const & e, Selection &selection_p, World &world_p, Panel &panel_p,
+	virtual bool handleMouseUp(SDL_Event const & e, Selection &selection_p, World &world_p, Panel &panel_p,
 	Window &window_p, octopus::State const &state_p, octopus::Controller &controller_p) = 0;
 
 	/// @brief display sprites handled in this clic mode

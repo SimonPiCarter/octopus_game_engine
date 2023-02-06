@@ -23,7 +23,7 @@ public:
 
 	/// @brief handle mouse
 	/// @return true if the clic mode is over
-	bool handleMouse(SDL_Event const & e, Selection &selection_p, World &world_p, Panel &panel_p,
+	bool handleMouseUp(SDL_Event const & e, Selection &selection_p, World &world_p, Panel &panel_p,
 	Window &window_p, octopus::State const &state_p, octopus::Controller &controller_p) override;
 
 	/// @brief display sprites handled in this clic mode

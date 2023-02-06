@@ -51,6 +51,11 @@ class Sprite
 		/// @brief check if the position in on the sprite
 		bool isInside(Window const &window_p, int x, int y) const;
 
+		/// @brief check if the sprite intersect the box
+		/// @note do not require lx < ux nor ly < uy
+		/// @note x and y coordinates must be in absolute world coordinate
+		bool intersect(int lx, int ly, int ux, int uy) const;
+
 		//Gets image dimensions
 		int getWidth();
 		int getHeight();

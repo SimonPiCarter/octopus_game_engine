@@ -32,7 +32,11 @@ public:
 
 	/// @brief get sprite under coordinate on the window
 	/// @return nullptr if no sprint under coordinate
-	Sprite * getSprite(Window &window_p, int x, int y) const;
+	Sprite * getSprite(Window const &window_p, int x, int y) const;
+
+	/// @brief get all sprites in the box on the window
+	/// @return nullptr if no sprint under coordinate
+	std::list<Sprite *> getSprites(Window const &window_p, int lx, int ly, int ux, int uy) const;
 
 private:
 	/// @brief sprite of every entity

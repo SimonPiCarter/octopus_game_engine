@@ -169,6 +169,8 @@ int main( int argc, char* args[] )
 
 			Selection selection_l;
 
+			std::pair<int, int> initialClic_l {-1, -1};
+
 			auto last_l = std::chrono::steady_clock::now();
 			double elapsed_l = 0.;
 			//Event handler
@@ -190,6 +192,10 @@ int main( int argc, char* args[] )
 						quit_l = true;
 					}
 					if (e.type == SDL_MOUSEBUTTONDOWN)
+					{
+						currentClicMode_l->handleMouseDown(e);
+					}
+					if (e.type == SDL_MOUSEBUTTONUP)
 					{
 						SpriteModel const * spriteModel_l = panel_l.getSpriteModel(window_l, e.button.x, e.button.y);
 
@@ -220,7 +226,7 @@ int main( int argc, char* args[] )
 						}
 						else
 						{
-							if( currentClicMode_l->handleMouse(e, selection_l, world_l, panel_l, window_l, state_l, controller_l) )
+							if( currentClicMode_l->handleMouseUp(e, selection_l, world_l, panel_l, window_l, state_l, controller_l) )
 							{
 								cleanClicMode(currentClicMode_l, &standardClicMode_l);
 								currentClicMode_l = &standardClicMode_l;
