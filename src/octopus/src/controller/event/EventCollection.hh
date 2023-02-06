@@ -67,6 +67,10 @@ public:
 	virtual void visit(ProductionProgressionStep const *) {}
 	virtual void visit(ResourceSpawnStep const *) {}
 	virtual void visit(TickingStep const *) {}
+	virtual void visit(TriggerCountChange const *) {}
+	virtual void visit(TriggerEnableChange const *) {}
+	virtual void visit(TriggerSpawn const *) {}
+	virtual void visit(TriggerStepCountChange const *) {}
 	virtual void visit(UnitHarvestDropStep const *) {}
 	virtual void visit(UnitHarvestQuantityStep const *) {}
 	virtual void visit(UnitHarvestTypeStep const *) {}

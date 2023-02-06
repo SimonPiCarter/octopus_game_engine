@@ -71,6 +71,10 @@ public:
 	virtual void visit(octopus::ProductionPaidStep const *) override {}
 	virtual void visit(octopus::ProductionProgressionStep const *) override {}
 	virtual void visit(octopus::TickingStep const *) override {}
+	virtual void visit(octopus::TriggerCountChange const *) override {}
+	virtual void visit(octopus::TriggerEnableChange const *) override {}
+	virtual void visit(octopus::TriggerSpawn const *) override {}
+	virtual void visit(octopus::TriggerStepCountChange const *) override {}
 	virtual void visit(octopus::UnitHarvestDropStep const *) override {}
 	virtual void visit(octopus::UnitHarvestTypeStep const *) override {}
 

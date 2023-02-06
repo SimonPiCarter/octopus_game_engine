@@ -1,5 +1,6 @@
 #include "State.hh"
 
+#include "controller/trigger/Trigger.hh"
 #include "player/Player.hh"
 #include "entity/Entity.hh"
 #include "entity/Resource.hh"
@@ -107,6 +108,24 @@ Player const *State::getPlayer(unsigned long player_p) const
 std::vector<std::vector<DynamicBitset> > const & State::getGrid() const
 {
 	return _grid;
+}
+
+ListenerData * State::getListenerData(Handle const &handleTrigger_p, Handle const &handleListener_p)
+{
+	return getTriggerData(handleTrigger_p)->_listenerData[handleListener_p];
+}
+const ListenerData * State::getListenerData(Handle const &handleTrigger_p, Handle const &handleListener_p) const
+{
+	return getTriggerData(handleTrigger_p)->_listenerData[handleListener_p];
+}
+
+TriggerData * State::getTriggerData(Handle const &handleTrigger_p)
+{
+	return _triggersData[handleTrigger_p];
+}
+const TriggerData * State::getTriggerData(Handle const &handleTrigger_p) const
+{
+	return _triggersData[handleTrigger_p];
 }
 
 std::vector<std::vector<DynamicBitset> > & State::getGrid()

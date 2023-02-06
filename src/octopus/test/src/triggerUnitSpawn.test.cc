@@ -30,13 +30,25 @@ class OnEachTriggerResourceTest : public OnEachTrigger
 public:
 	OnEachTriggerResourceTest(Listener * listener_p) : OnEachTrigger(listener_p) {}
 
-	Steppable * newSteppable() override
+	virtual void trigger(Step &step_p) const override
 	{
 		std::map<ResourceType, double> map_l;
 		map_l[ResourceType::Food] = -10.;
-		return new PlayerSpendResourceStep(0, map_l);
+		step_p.addSteppable(new PlayerSpendResourceStep(0, map_l));
 	}
+};
 
+class OneShotTriggerResourceTest : public OneShotTrigger
+{
+public:
+	OneShotTriggerResourceTest(Listener * listener_p) : OneShotTrigger({listener_p}) {}
+
+	virtual void trigger(Step &step_p) const override
+	{
+		std::map<ResourceType, double> map_l;
+		map_l[ResourceType::Food] = -10.;
+		step_p.addSteppable(new PlayerSpendResourceStep(0, map_l));
+	}
 };
 
 ///
@@ -72,26 +84,27 @@ TEST(triggerUnitSpawnTest, two_players)
 		new CommandSpawnStep(command1_l)
 	}, 1.);
 
-	controller_l.commitOnEachTrigger(new OnEachTriggerResourceTest(new ListenerEntityModelFinished(&unitModel_l, 0)));
+	controller_l.commitTrigger(new OnEachTriggerResourceTest(new ListenerEntityModelFinished(&unitModel_l, 0)));
 
 	// query state
 	State const * state_l = controller_l.queryState();
 
 	EXPECT_EQ(2u, state_l->getEntities().size());
 
-	// update time to 5second (5)
-	// at this point production time is over but no spawn yet
-	controller_l.update(5.);
+	// update time to 6 seconds (6)
+	// at this point production time is over and spawned has been done
+	// but trigger step has not been applied yet
+	controller_l.update(6.);
 
 	// updated until synced up
 	while(!controller_l.loop_body()) {}
 
 	state_l = controller_l.queryState();
 
-	EXPECT_EQ(2u, state_l->getEntities().size());
+	EXPECT_EQ(4u, state_l->getEntities().size());
 	EXPECT_NEAR(0., getResource(*state_l->getPlayer(0), ResourceType::Food), 1e-3);
 
-	// update time to 1second (6)
+	// update time to 1second (7)
 	controller_l.update(1.);
 
 	// updated until synced up
@@ -139,26 +152,27 @@ TEST(triggerUnitSpawnTest, two_models)
 		new CommandSpawnStep(command1_l)
 	}, 1.);
 
-	controller_l.commitOnEachTrigger(new OnEachTriggerResourceTest(new ListenerEntityModelFinished(&unitModel0_l, 0)));
+	controller_l.commitTrigger(new OnEachTriggerResourceTest(new ListenerEntityModelFinished(&unitModel0_l, 0)));
 
 	// query state
 	State const * state_l = controller_l.queryState();
 
 	EXPECT_EQ(2u, state_l->getEntities().size());
 
-	// update time to 5second (5)
-	// at this point production time is over but no spawn yet
-	controller_l.update(5.);
+	// update time to 6 seconds (6)
+	// at this point production time is over and spawned has been done
+	// but trigger step has not been applied yet
+	controller_l.update(6.);
 
 	// updated until synced up
 	while(!controller_l.loop_body()) {}
 
 	state_l = controller_l.queryState();
 
-	EXPECT_EQ(2u, state_l->getEntities().size());
+	EXPECT_EQ(4u, state_l->getEntities().size());
 	EXPECT_NEAR(0., getResource(*state_l->getPlayer(0), ResourceType::Food), 1e-3);
 
-	// update time to 1second (6)
+	// update time to 1second (7)
 	controller_l.update(1.);
 
 	// updated until synced up
@@ -202,26 +216,27 @@ TEST(triggerUnitSpawnTest, one_model)
 		new CommandSpawnStep(command1_l)
 	}, 1.);
 
-	controller_l.commitOnEachTrigger(new OnEachTriggerResourceTest(new ListenerEntityModelFinished(&unitModel0_l, 0)));
+	controller_l.commitTrigger(new OnEachTriggerResourceTest(new ListenerEntityModelFinished(&unitModel0_l, 0)));
 
 	// query state
 	State const * state_l = controller_l.queryState();
 
 	EXPECT_EQ(2u, state_l->getEntities().size());
 
-	// update time to 5second (5)
-	// at this point production time is over but no spawn yet
-	controller_l.update(5.);
+	// update time to 6 seconds (6)
+	// at this point production time is over and spawned has been done
+	// but trigger step has not been applied yet
+	controller_l.update(6.);
 
 	// updated until synced up
 	while(!controller_l.loop_body()) {}
 
 	state_l = controller_l.queryState();
 
-	EXPECT_EQ(2u, state_l->getEntities().size());
+	EXPECT_EQ(4u, state_l->getEntities().size());
 	EXPECT_NEAR(0., getResource(*state_l->getPlayer(0), ResourceType::Food), 1e-3);
 
-	// update time to 1second (6)
+	// update time to 1second (7)
 	controller_l.update(1.);
 
 	// updated until synced up
@@ -265,31 +280,27 @@ TEST(triggerUnitSpawnTest, one_shot)
 		new CommandSpawnStep(command1_l)
 	}, 1.);
 
-	std::map<ResourceType, double> map_l;
-	map_l[ResourceType::Food] = -10.;
-
-	controller_l.commitOneShotTrigger(new OneShotTrigger(
-		{new ListenerEntityModelFinished(&unitModel0_l, 0)},
-		new PlayerSpendResourceStep(0, map_l)));
+	controller_l.commitTrigger(new OneShotTriggerResourceTest(new ListenerEntityModelFinished(&unitModel0_l, 0)));
 
 	// query state
 	State const * state_l = controller_l.queryState();
 
 	EXPECT_EQ(2u, state_l->getEntities().size());
 
-	// update time to 5second (5)
-	// at this point production time is over but no spawn yet
-	controller_l.update(5.);
+	// update time to 6 seconds (6)
+	// at this point production time is over and spawned has been done
+	// but trigger step has not been applied yet
+	controller_l.update(6.);
 
 	// updated until synced up
 	while(!controller_l.loop_body()) {}
 
 	state_l = controller_l.queryState();
 
-	EXPECT_EQ(2u, state_l->getEntities().size());
+	EXPECT_EQ(4u, state_l->getEntities().size());
 	EXPECT_NEAR(0., getResource(*state_l->getPlayer(0), ResourceType::Food), 1e-3);
 
-	// update time to 1second (6)
+	// update time to 1second (7)
 	controller_l.update(1.);
 
 	// updated until synced up

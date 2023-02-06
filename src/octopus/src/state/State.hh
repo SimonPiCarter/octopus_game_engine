@@ -9,9 +9,12 @@
 
 namespace octopus
 {
-class Entity;
 class Commandable;
+class Entity;
+class ListenerData;
 class Player;
+class Trigger;
+class TriggerData;
 
 /// @brief represent the whole world
 /// @warning a State must only be modified through step apply and revert!
@@ -46,6 +49,20 @@ public:
 	std::vector<std::vector<DynamicBitset> > const & getGrid() const;
 	std::vector<std::vector<DynamicBitset> > & getGrid();
 
+	///
+	/// Trigger and Listener data
+	///
+	ListenerData * getListenerData(Handle const &handleTrigger_p, Handle const &handleListener_p);
+	const ListenerData * getListenerData(Handle const &handleTrigger_p, Handle const &handleListener_p) const;
+
+	TriggerData * getTriggerData(Handle const &handleTrigger_p);
+	const TriggerData * getTriggerData(Handle const &handleTrigger_p) const;
+
+	std::vector<Trigger const *> &getTriggers() { return _triggers; }
+	std::vector<Trigger const *> const &getTriggers() const { return _triggers; }
+	std::vector<TriggerData *> &getTriggersData() { return _triggersData; }
+	std::vector<TriggerData *> const &getTriggersData() const { return _triggersData; }
+
 	unsigned long getGridSize() const;
 	unsigned long getGridBitSize() const;
 
@@ -71,9 +88,11 @@ private:
 	/// @brief vector of players
 	std::vector<Player *> _players;
 
-	/// @brief list of triggers (one shot and on each)
-	std::vector<OneShotTrigger *> _oneShotTriggers;
-	std::vector<OnEachTrigger *> _onEachTriggers;
+	/// @brief list of triggers ("one shot" and "on each")
+	std::vector<Trigger const *> _triggers;
+
+	/// @brief trigger data (multiple trigger for one shot but only one allowed for on each)
+	std::vector<TriggerData *> _triggersData;
 
 	/// @brief grid for position indexing
 	std::vector<std::vector<DynamicBitset> > _grid;

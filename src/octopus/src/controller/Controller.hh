@@ -90,9 +90,7 @@ public:
 	void commitCommand(Command * cmd_p);
 
 	/// @brief add a trigger on the ongoing step
-	void commitOneShotTrigger(OneShotTrigger * trigger_p);
-	/// @brief add a trigger on the ongoing step
-	void commitOnEachTrigger(OnEachTrigger * trigger_p);
+	void commitTrigger(Trigger * trigger_p);
 
 	State const * getBackState() const;
 	State const * getBufferState() const;
@@ -129,11 +127,7 @@ private:
 	void updateCommitedCommand();
 
 	/// @brief one shot trigger lists
-	std::unordered_map<unsigned long, std::list<OneShotTrigger *> > _queuedOneShotTriggers;
-	std::list<OneShotTrigger *> _oneShotTriggers;
-	/// @brief on each trigger
-	std::unordered_map<unsigned long, std::list<OnEachTrigger *> > _queuedOnEachTriggers;
-	std::list<OnEachTrigger *> _onEachTriggers;
+	std::unordered_map<unsigned long, std::list<Trigger *> > _queuedTriggers;
 
 	void handleTriggers(State const &state_p, Step &step_p);
 };

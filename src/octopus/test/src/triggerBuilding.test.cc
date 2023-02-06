@@ -23,6 +23,20 @@
 
 using namespace octopus;
 
+class TestTriggerBuildingTrigger : public OneShotTrigger
+{
+public:
+	TestTriggerBuildingTrigger(std::list<Listener *> const &listeners_p) : OneShotTrigger(listeners_p) {}
+
+	virtual void trigger(Step &step_p) const override
+	{
+		std::map<ResourceType, double> map_l;
+		map_l[ResourceType::Food] = -10.;
+
+		step_p.addSteppable(new PlayerSpendResourceStep(0, map_l));
+	}
+};
+
 ///
 /// > 2 entities
 ///  - unit : 5 3 building
@@ -54,9 +68,7 @@ TEST(triggerBuildingTest, simple)
 	std::map<ResourceType, double> map_l;
 	map_l[ResourceType::Food] = -10.;
 
-	controller_l.commitOneShotTrigger(new OneShotTrigger(
-		{new ListenerEntityModelFinished(&depositModel_l, 0)},
-		new PlayerSpendResourceStep(0, map_l)));
+	controller_l.commitTrigger(new TestTriggerBuildingTrigger({new ListenerEntityModelFinished(&depositModel_l, 0)}));
 
 	// query state
 	State const * state_l = controller_l.queryState();
@@ -73,6 +85,16 @@ TEST(triggerBuildingTest, simple)
 
 	// update time to 10 seconds (12)
 	controller_l.update(10.);
+
+	// updated until synced up
+	while(!controller_l.loop_body()) {}
+
+	state_l = controller_l.queryState();
+
+	EXPECT_NEAR(0., getResource(*state_l->getPlayer(0), ResourceType::Food), 1e-3);
+
+	// update time to 1 seconds (13)
+	controller_l.update(1.);
 
 	// updated until synced up
 	while(!controller_l.loop_body()) {}

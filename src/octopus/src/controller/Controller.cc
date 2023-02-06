@@ -13,6 +13,8 @@
 #include "state/State.hh"
 #include "step/ConflictPositionSolver.hh"
 #include "step/TickingStep.hh"
+#include "step/trigger/TriggerEnableChange.hh"
+#include "step/trigger/TriggerSpawn.hh"
 
 namespace octopus
 {
@@ -69,15 +71,6 @@ Controller::~Controller()
 	{
 		delete step_l;
 	}
-
-	for(OneShotTrigger * trigger_l : _oneShotTriggers)
-	{
-		delete trigger_l;
-	}
-	for(OnEachTrigger * trigger_l : _onEachTriggers)
-	{
-		delete trigger_l;
-	}
 }
 
 
@@ -129,18 +122,11 @@ bool Controller::loop_body()
 			{
 				// lock to avoid overlap
 				std::lock_guard<std::mutex> lock_l(_mutex);
-				_oneShotTriggers.insert(
-						_oneShotTriggers.end(),
-						_queuedOneShotTriggers[_backState->_stepHandled-1].begin(),
-						_queuedOneShotTriggers[_backState->_stepHandled-1].end());
 
-				_onEachTriggers.insert(
-						_onEachTriggers.end(),
-						_queuedOnEachTriggers[_backState->_stepHandled-1].begin(),
-						_queuedOnEachTriggers[_backState->_stepHandled-1].end());
-
-				_queuedOneShotTriggers.erase(_backState->_stepHandled-1);
-				_queuedOnEachTriggers.erase(_backState->_stepHandled-1);
+				for(Trigger * trigger_l : _queuedTriggers[_backState->_stepHandled-1])
+				{
+					step_l.addSteppable(new TriggerSpawn(trigger_l));
+				}
 			}
 			handleTriggers(*_backState->_state, step_l);
 
@@ -239,18 +225,11 @@ void Controller::commitCommand(Command * cmd_p)
 }
 
 /// @brief add a trigger on the ongoing step
-void Controller::commitOneShotTrigger(OneShotTrigger * trigger_p)
+void Controller::commitTrigger(Trigger * trigger_p)
 {
 	// lock to avoid multi swap
 	std::lock_guard<std::mutex> lock_l(_mutex);
-	_queuedOneShotTriggers[_ongoingStep-1].push_back(trigger_p);
-}
-/// @brief add a trigger on the ongoing step
-void Controller::commitOnEachTrigger(OnEachTrigger * trigger_p)
-{
-	// lock to avoid multi swap
-	std::lock_guard<std::mutex> lock_l(_mutex);
-	_queuedOnEachTriggers[_ongoingStep-1].push_back(trigger_p);
+	_queuedTriggers[_ongoingStep-1].push_back(trigger_p);
 }
 
 State const * Controller::getBackState() const
@@ -286,30 +265,43 @@ void Controller::handleTriggers(State const &state_p, Step &step_p)
 	EventCollection visitor_l(state_p);
 	visitAll(step_p, visitor_l);
 
-	for(auto &&it_l = _oneShotTriggers.begin() ; it_l != _oneShotTriggers.end() ; ++it_l)
+	Handle curHandle_l = 0;
+	for(Trigger const * trigger_l : state_p.getTriggers())
 	{
-		OneShotTrigger * trigger_l = *it_l;
-		if(trigger_l->isDisabled())
+		TriggerData const &data_l = *state_p.getTriggerData(curHandle_l);
+		if(!data_l._isEnabled)
 		{
+			Logger::getDebug() << "handleTriggers :: is disabled "<<curHandle_l<<std::endl;
 			continue;
 		}
-		trigger_l->complete(visitor_l);
-		if(trigger_l->isCompleted())
+		if(trigger_l->isComplete(data_l))
 		{
-			Logger::getDebug() << "handleTriggers :: trigger one shot "<<std::endl;
-			step_p.addSteppable(trigger_l->_steppable);
-			trigger_l->setIsDisabled(true);
-		}
-	}
+			// trigger
+			for(size_t count_l = 0 ; count_l < trigger_l->getCount(data_l) ; ++count_l)
+			{
+				Logger::getDebug() << "handleTriggers :: trigger on trigger "<<curHandle_l<<std::endl;
+				trigger_l->trigger(step_p);
+			}
 
-	for(OnEachTrigger * trigger_l : _onEachTriggers)
-	{
-		trigger_l->_listener->complete(visitor_l, true);
-		for(unsigned long i = 0 ; i < trigger_l->_listener->getCount() ; ++ i)
-		{
-			Logger::getDebug() << "handleTriggers :: trigger on each "<<std::endl;
-			step_p.addSteppable(trigger_l->newSteppable());
+			// handle reset or disabling
+			if(trigger_l->_isOneShot)
+			{
+				// if one shot disable trigger
+				step_p.addSteppable(new TriggerEnableChange(curHandle_l, data_l._isEnabled, false));
+				Logger::getDebug() << "handleTriggers :: disable "<<curHandle_l<<std::endl;
+			}
+			else
+			{
+				// Else reset data
+				trigger_l->reset(step_p, data_l);
+				Logger::getDebug() << "handleTriggers :: reset "<<curHandle_l<<std::endl;
+			}
 		}
+		// update trigger/listener states
+		trigger_l->compile(visitor_l, step_p, data_l);
+		Logger::getDebug() << "handleTriggers :: compile "<<curHandle_l<<std::endl;
+
+		++curHandle_l;
 	}
 }
 

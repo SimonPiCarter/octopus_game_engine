@@ -4,56 +4,79 @@
 #include "controller/event/EventEntityModelDied.hh"
 #include "controller/event/EventEntityModelFinished.hh"
 
+#include "step/Step.hh"
+#include "step/trigger/TriggerCountChange.hh"
+#include "step/trigger/TriggerStepCountChange.hh"
+
 namespace octopus
 {
 
-bool Listener::isCompleted() const { return _completed; }
-unsigned long Listener::getCount() const { return _count; }
-
-void ListenerStepCount::complete(EventCollection const &controller_p, bool count_p)
+bool ListenerData::isCompleted() const
 {
-	++_elapsedStep;
-	if(_elapsedStep >= _stepCount)
+	return this->getCount() > 0;
+}
+unsigned long ListenerData::getCount() const
+{
+	return _count;
+}
+
+void Listener::reset(Step &step_p, ListenerData const &data_p) const
+{
+	step_p.addSteppable(new TriggerCountChange(data_p._triggerHandle, data_p._listenerHandle, data_p._count, 0));
+}
+
+void ListenerStepCount::compile(EventCollection const &controller_p, Step &step_p, bool count_p, ListenerData const &data_p) const
+{
+	unsigned long steps_l = static_cast<ListenerStepCountData const &>(data_p)._elapsedStep;
+
+	step_p.addSteppable(new TriggerStepCountChange(data_p._triggerHandle, data_p._listenerHandle, steps_l, steps_l+1));
+	if(steps_l + 1 >= _stepCount)
 	{
-		_completed = true;
-		++_count;
+		step_p.addSteppable(new TriggerCountChange(data_p._triggerHandle, data_p._listenerHandle, data_p._count, data_p._count+1));
 	}
 }
 
-void ListenerEntityModelDied::complete(EventCollection const &controller_p, bool count_p)
+void ListenerStepCount::reset(Step &step_p, ListenerData const &data_p) const
 {
-	_count = 0;
+	Listener::reset(step_p, data_p);
+	unsigned long steps_l = static_cast<ListenerStepCountData const &>(data_p)._elapsedStep;
+	step_p.addSteppable(new TriggerStepCountChange(data_p._triggerHandle, data_p._listenerHandle, steps_l, 0));
+}
+
+void ListenerEntityModelDied::compile(EventCollection const &controller_p, Step &step_p, bool count_p, ListenerData const &data_p) const
+{
+	unsigned long count_l = 0;
 	for(EventEntityModelDied const *event_l : controller_p._listEventEntityModelDied)
 	{
 		// pointer comparison
 		if(&event_l->_model == _model && event_l->_player == _player)
 		{
-			_completed = true;
+			++count_l;
 			if(!count_p)
 			{
 				break;
 			}
-			++_count;
 		}
 	}
+	step_p.addSteppable(new TriggerCountChange(data_p._triggerHandle, data_p._listenerHandle, data_p._count, data_p._count+count_l));
 }
 
-void ListenerEntityModelFinished::complete(EventCollection const &controller_p, bool count_p)
+void ListenerEntityModelFinished::compile(EventCollection const &controller_p, Step &step_p, bool count_p, ListenerData const &data_p) const
 {
-	_count = 0;
+	unsigned long count_l = 0;
 	for(EventEntityModelFinished const *event_l : controller_p._listEventEntityModelFinished)
 	{
 		// pointer comparison
 		if(&event_l->_model == _model && event_l->_player == _player)
 		{
-			_completed = true;
+			++count_l;
 			if(!count_p)
 			{
 				break;
 			}
-			++_count;
 		}
 	}
+	step_p.addSteppable(new TriggerCountChange(data_p._triggerHandle, data_p._listenerHandle, data_p._count, data_p._count+count_l));
 }
 
 } // octopus

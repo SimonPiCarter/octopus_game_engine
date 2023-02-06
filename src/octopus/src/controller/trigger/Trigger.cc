@@ -1,12 +1,15 @@
 #include "Trigger.hh"
 
+#include <limits>
+
 #include "Listener.hh"
 
 namespace octopus
 {
 
-Trigger::Trigger(std::list<Listener *> const &listeners_p)
+Trigger::Trigger(std::list<Listener *> const &listeners_p, bool isOneShot_p)
 	: _listeners(listeners_p)
+	, _isOneShot(isOneShot_p)
 {}
 
 Trigger::~Trigger()
@@ -17,47 +20,73 @@ Trigger::~Trigger()
 	}
 }
 
-void Trigger::complete(EventCollection const &collection_p)
+void Trigger::compile(EventCollection const &collection_p, Step &step_p, TriggerData const &data_p) const
 {
-	_isCompleted = true;
-	for(Listener * listener_l : _listeners)
+	Handle listenerHandle_l = 0;
+	for(Listener const * listener_l : _listeners)
 	{
-		if(!listener_l->isCompleted())
+		ListenerData const * listData_l = data_p._listenerData[listenerHandle_l];
+		if(!listData_l->isCompleted())
 		{
-			listener_l->complete(collection_p, false);
-			// updte is completed
-			_isCompleted &= listener_l->isCompleted();
+			listener_l->compile(collection_p, step_p, !_isOneShot, *listData_l);
 		}
 	}
 }
 
-bool Trigger::isCompleted() const
+bool Trigger::isComplete(TriggerData const &data_p) const
 {
-	return _isCompleted;
+	for(ListenerData const * listData_l : data_p._listenerData)
+	{
+		if(!listData_l->isCompleted())
+		{
+			return false;
+		}
+	}
+	return true;
 }
 
-void Trigger::setIsDisabled(bool isDisabled_p)
+void Trigger::reset(Step &step_p, TriggerData const &data_p) const
 {
-	_isDisabled = isDisabled_p;
+	Handle listenerHandle_l = 0;
+	for(Listener const * listener_l : _listeners)
+	{
+		ListenerData const * listData_l = data_p._listenerData[listenerHandle_l];
+		listener_l->reset(step_p, *listData_l);
+	}
 }
 
-bool Trigger::isDisabled() const
+unsigned long Trigger::getCount(TriggerData const &data_p) const
 {
-	return _isDisabled;
+	if(_isOneShot)
+	{
+		return 1;
+	}
+
+	unsigned long minCount_l = std::numeric_limits<unsigned long>::max();
+	for(ListenerData const *listData_l : data_p._listenerData)
+	{
+		minCount_l = std::min(minCount_l, listData_l->getCount());
+	}
+	return minCount_l;
 }
 
-OneShotTrigger::OneShotTrigger(std::list<Listener *> const &listeners_p, Steppable * steppable_p)
-	: Trigger(listeners_p)
-	, _steppable(steppable_p)
+
+TriggerData * Trigger::newTriggerData(Handle const &triggerHandle_p) const
+{
+	TriggerData * data_l = new TriggerData();
+	for(Listener * listener_l : _listeners)
+	{
+		data_l->_listenerData.push_back(listener_l->newData(triggerHandle_p, data_l->_listenerData.size()));
+	}
+	return data_l;
+}
+
+OneShotTrigger::OneShotTrigger(std::list<Listener *> const &listeners_p)
+	: Trigger(listeners_p, true)
 {}
 
-OnEachTrigger::OnEachTrigger(Listener *listeners_p)
-	: _listener(listeners_p)
+OnEachTrigger::OnEachTrigger(Listener *listener_p)
+	: Trigger({listener_p}, false)
 {}
-
-OnEachTrigger::~OnEachTrigger()
-{
-	delete _listener;
-}
 
 }
