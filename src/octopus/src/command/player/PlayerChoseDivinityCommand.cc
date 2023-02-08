@@ -43,7 +43,7 @@ PlayerChoseDivinityCommand::PlayerChoseDivinityCommand(Handle const &commandHand
 	, _lvlUp(lvlUp_p)
 {}
 
-bool PlayerChoseDivinityCommand::applyCommand(Step & step_p, State const &state_p, CommandData const *data_p) const
+void PlayerChoseDivinityCommand::registerCommand(Step & step_p, State const &state_p)
 {
 	Logger::getDebug() << "PlayerChoseDivinityCommand:: apply Command "<<_player <<std::endl;
 	// check for available option
@@ -53,12 +53,15 @@ bool PlayerChoseDivinityCommand::applyCommand(Step & step_p, State const &state_
 		if(_lvlUp && checkLvlUp(*state_p.getPlayer(_player)))
 		{
 			step_p.addSteppable(new PlayerLevelUpDivinityStep(_player, _type));
+			step_p.addSteppable(new PlayerResetOptionDivinityStep(_player, state_p.getPlayer(_player)->_divOptions));
+			/// @todo read from data how much
+			step_p.addSteppable(new PlayerAnchorDivinityStep(_player, _type, 120.));
 		}
-		step_p.addSteppable(new PlayerResetOptionDivinityStep(_player, state_p.getPlayer(_player)->_divOptions));
-		/// @todo read from data how much
-		step_p.addSteppable(new PlayerAnchorDivinityStep(_player, _type, 120.));
 	}
+}
 
+bool PlayerChoseDivinityCommand::applyCommand(Step &, State const &, CommandData const *) const
+{
 	return true;
 }
 

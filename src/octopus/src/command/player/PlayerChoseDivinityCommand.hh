@@ -16,6 +16,8 @@ class PlayerChoseDivinityCommand : public Command
 public:
 	PlayerChoseDivinityCommand(Handle const &commandHandle_p, unsigned long player_p, DivinityType type_p, bool lvlUp_p);
 
+	virtual void registerCommand(Step & step_p, State const &state_p) override;
+
 	/// @brief
 	virtual bool applyCommand(Step & step_p, State const &state_p, CommandData const *data_p) const override;
 
