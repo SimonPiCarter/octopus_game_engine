@@ -47,15 +47,17 @@ void PlayerChoseDivinityCommand::registerCommand(Step & step_p, State const &sta
 {
 	Logger::getDebug() << "PlayerChoseDivinityCommand:: apply Command "<<_player <<std::endl;
 	// check for available option
-	if(checkOption(*state_p.getPlayer(_player), _type))
+	Player const & player_l = *state_p.getPlayer(_player);
+	if(checkOption(player_l, _type))
 	{
 		// check for lvl up legality
-		if(_lvlUp && checkLvlUp(*state_p.getPlayer(_player)))
+		if(_lvlUp && checkLvlUp(player_l))
 		{
 			step_p.addSteppable(new PlayerLevelUpDivinityStep(_player, _type));
-			step_p.addSteppable(new PlayerResetOptionDivinityStep(_player, state_p.getPlayer(_player)->_divOptions));
+			step_p.addSteppable(new PlayerResetOptionDivinityStep(_player, player_l._divOptions));
 			/// @todo read from data how much
-			step_p.addSteppable(new PlayerAnchorDivinityStep(_player, _type, 120.));
+			step_p.addSteppable(new PlayerAnchorDivinityStep(_player, _type,
+				getDivAnchor(player_l, _type, false), getDivAnchor(player_l, _type) + 120.));
 		}
 	}
 }

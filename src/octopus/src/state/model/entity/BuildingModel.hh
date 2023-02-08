@@ -18,6 +18,8 @@ namespace octopus
 			: EntityModel(isStatic_p, ray_p, 0., hpMax_p)
 		{
 			_isBuilding = true;
+			_stepSpeed = 0.;
+			_damage = 0.;
 		}
 
 		std::map<ResourceType, bool> _deposit;

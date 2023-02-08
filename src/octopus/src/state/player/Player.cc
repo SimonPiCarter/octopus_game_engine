@@ -15,6 +15,37 @@ double getResource(Player const &player_p, ResourceType type_p)
 	return 0.;
 }
 
+unsigned long getDivOption(Player const &player_p, DivinityType type_p)
+{
+	auto &&it_l = player_p._divOptions.find(type_p);
+	if(it_l != player_p._divOptions.end())
+	{
+		return it_l->second;
+	}
+	return 0;
+}
+
+unsigned long getDivLvl(Player const &player_p, DivinityType type_p)
+{
+	auto &&it_l = player_p._divLvl.find(type_p);
+	if(it_l != player_p._divLvl.end())
+	{
+		return it_l->second;
+	}
+	return 0;
+}
+
+double getDivAnchor(Player const &player_p, DivinityType type_p, bool floor_p)
+{
+	auto &&it_l = player_p._divAnchor.find(type_p);
+	if(it_l != player_p._divAnchor.end())
+	{
+		return floor_p ? std::max(0., it_l->second) : it_l->second;
+	}
+	return 0.;
+}
+
+
 std::list<BuildingModel const *> getAvailableBuildingModels(Player const &player_p)
 {
 	std::list<BuildingModel const *> availables_l;
