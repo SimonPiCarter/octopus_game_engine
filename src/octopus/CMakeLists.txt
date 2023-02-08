@@ -35,6 +35,7 @@ add_library(octopus
 	${CMAKE_CURRENT_SOURCE_DIR}/src/state/entity/Resource.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/state/entity/Unit.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/state/model/requirements/Requirements.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/src/state/model/entity/EntityModel.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/state/player/Player.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/state/State.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/step/ConflictPositionSolver.cc

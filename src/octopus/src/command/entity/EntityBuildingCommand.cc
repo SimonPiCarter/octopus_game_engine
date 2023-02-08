@@ -9,6 +9,7 @@
 #include "step/Step.hh"
 #include "step/building/BuildingStep.hh"
 #include "step/building/BuildingCancelStep.hh"
+#include "step/player/PlayerSpendResourceStep.hh"
 #include "utils/Box.hh"
 
 namespace octopus
@@ -60,6 +61,7 @@ bool EntityBuildingCommand::applyCommand(Step & step_p, State const &state_p, Co
 	{
 		Logger::getDebug() << "EntityBuildingCommand:: space taken"<<std::endl;
 		step_p.addSteppable(new BuildingCancelStep(_target, true, building_l->_canceled));
+		step_p.addSteppable(new PlayerSpendResourceStep(building_l->_player, getReverseCostMap(building_l->_model._cost)));
 		return true;
 	}
 

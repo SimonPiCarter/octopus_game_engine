@@ -46,6 +46,8 @@ namespace octopus
 		/// @brief id to be set up when library loads a model
 		std::string _id;
 	};
+
+	std::map<ResourceType, double> getReverseCostMap(std::map<ResourceType, double> const &cost_p);
 } // namespace octopus
 
 
