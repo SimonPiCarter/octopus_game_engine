@@ -19,6 +19,11 @@ bool CommandQueue::hasCommand() const
 	return !_contextList.empty();
 }
 
+bool CommandQueue::hasCurrentCommand() const
+{
+	return hasCommand() && getCurrentCommand() != getEnd();
+}
+
 CommandBundle &CommandQueue::getFrontCommand()
 {
 	return *_contextList.front();

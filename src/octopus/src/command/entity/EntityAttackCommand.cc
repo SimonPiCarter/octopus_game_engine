@@ -93,10 +93,14 @@ bool EntityAttackCommand::applyCommand(Step & step_p, State const &state_p, Comm
 			step_p.addSteppable(new CommandWindUpDiffStep(_handleCommand, - windup_l - 1));
 
 			// add damage
-			step_p.addSteppable(new EntityHitPointChangeStep(_target, std::min(-1., entTarget_l->getArmor() - entSource_l->getDamage())));
+			step_p.addSteppable(new EntityHitPointChangeStep(curTarget_l, std::min(-1., entTarget_l->getArmor() - entSource_l->getDamage())));
 			// reset reload time
 			step_p.addSteppable(new EntityAttackStep(_source, entSource_l->_reload));
 		}
+	}
+	else
+	{
+		Logger::getDebug() << "\tEntityAttackCommand:: in range (reloading)"<<std::endl;
 	}
 
 	return false;

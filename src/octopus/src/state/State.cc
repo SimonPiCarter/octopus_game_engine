@@ -1,5 +1,7 @@
 #include "State.hh"
 
+#include "logger/Logger.hh"
+
 #include "controller/trigger/Trigger.hh"
 #include "player/Player.hh"
 #include "entity/Entity.hh"
@@ -164,6 +166,8 @@ Entity const * lookUpNewTarget(State const &state_p, Handle const &sourceHandle_
 	Entity const * source_l = state_p.getEntity(sourceHandle_p);
 	unsigned long team_l = state_p.getPlayer(source_l->_player)->_team;
 
+	Logger::getDebug() << " lookUpNewTarget :: start"<< std::endl;
+
 	// for now look for closest entity
 	for(Entity const * ent_l : state_p.getEntities())
 	{
@@ -172,12 +176,17 @@ Entity const * lookUpNewTarget(State const &state_p, Handle const &sourceHandle_
 		|| !ent_l->_model._isUnit
 		|| team_l == state_p.getPlayer(ent_l->_player)->_team)
 		{
+			Logger::getDebug() << " lookUpNewTarget :: ent_l->_alive "<< ent_l->_alive << std::endl;
+			Logger::getDebug() << " lookUpNewTarget :: ent_l->_model._isUnit "<< ent_l->_model._isUnit << std::endl;
+			Logger::getDebug() << " lookUpNewTarget :: state_p.getPlayer(ent_l->_player)->_team "<< state_p.getPlayer(ent_l->_player)->_team << std::endl;
+			Logger::getDebug() << " lookUpNewTarget :: skip "<< ent_l->_handle << std::endl;
 			continue;
 		}
 		double curSqDis_l = square_length(ent_l->_pos - source_l->_pos);
 		if(closest_l == nullptr
 		|| sqDis_l > curSqDis_l)
 		{
+			Logger::getDebug() << " lookUpNewTarget :: update closest with "<< ent_l->_handle <<" distance (sq) = " << curSqDis_l << std::endl;
 			closest_l = ent_l;
 			sqDis_l = curSqDis_l;
 		}
@@ -185,6 +194,7 @@ Entity const * lookUpNewTarget(State const &state_p, Handle const &sourceHandle_
 	// reset target if too far
 	if(sqDis_l > 25)
 	{
+		Logger::getDebug() << " lookUpNewTarget :: reset because too far "<< std::endl;
 		closest_l = nullptr;
 	}
 	return closest_l;

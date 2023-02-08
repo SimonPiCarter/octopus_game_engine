@@ -250,6 +250,11 @@ Metrics const &Controller::getMetrics() const
 	return _metrics;
 }
 
+unsigned long Controller::getOngoingStep() const
+{
+	return _ongoingStep-1;
+}
+
 void Controller::updateCommitedCommand()
 {
 	while(_commitedCommands.size() < _ongoingStep)
@@ -272,6 +277,7 @@ void Controller::handleTriggers(State const &state_p, Step &step_p)
 		if(!data_l._isEnabled)
 		{
 			Logger::getDebug() << "handleTriggers :: is disabled "<<curHandle_l<<std::endl;
+			++curHandle_l;
 			continue;
 		}
 		if(trigger_l->isComplete(data_l))

@@ -10,6 +10,7 @@
 #include "state/entity/Entity.hh"
 #include "step/Step.hh"
 #include "step/command/CommandSetPositionFromStep.hh"
+#include "step/command/CommandNewTargetStep.hh"
 #include "step/command/CommandSubAttackStep.hh"
 #include "step/entity/EntityAttackStep.hh"
 #include "step/entity/EntityHitPointChangeStep.hh"
@@ -58,6 +59,8 @@ bool EntityAttackMoveCommand::applyCommand(Step & step_p, State const &state_p, 
 		if(target_l)
 		{
 			step_p.addSteppable(new CommandSetPositionFromStep(_handleCommand, ent_l->_pos, attackMoveData_l._positionFromAttack));
+			/// steppable to update target
+			step_p.addSteppable(new CommandNewTargetStep(_handleCommand, target_l->_handle, attackMoveData_l._target));
 			step_p.addSteppable(new CommandAddSubAttackStep(_handleCommand, new EntityAttackCommand(_handleCommand, _source, target_l->_handle)));
 			return false;
 		}

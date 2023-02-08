@@ -32,6 +32,9 @@ public:
 	/// @warning getCurrentCommand will throw if this return false
 	bool hasCommand() const;
 
+	/// @brief return true if getCurrentCommand is different from getEnd
+	bool hasCurrentCommand() const;
+
 	CommandBundle &getFrontCommand();
 	/// @brief return an iterator of the current command
 	/// this is the iterator stored in the front of _contextList

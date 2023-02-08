@@ -97,6 +97,8 @@ public:
 	State const * getFrontState() const;
 
 	Metrics const &getMetrics() const;
+
+	unsigned long getOngoingStep() const;
 private:
 
 	BufferedState * _backState {nullptr};

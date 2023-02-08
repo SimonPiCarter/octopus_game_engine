@@ -18,7 +18,7 @@ bool EntityWaitCommand::applyCommand(Step & step_p, State const &state_p, Comman
 	// Use
 	step_p.addEntityMoveStep(new EntityMoveStep(createEntityMoveStep(*state_p.getEntity(_source))));
 
-	return false;
+	return true;
 }
 
 } // namespace octopus

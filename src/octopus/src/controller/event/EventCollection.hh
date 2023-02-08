@@ -54,6 +54,7 @@ public:
 	virtual void visit(EntityAttackStep const *) {}
 	virtual void visit(EntityBuffStep const *) {}
 	virtual void visit(EntityMoveStep const *) {}
+	virtual void visit(EntityUpdateWaitingStep const *) {}
 	virtual void visit(EntitySpawnStep const *) {}
 	virtual void visit(MissingResourceStep const *) {}
 	virtual void visit(PlayerAddBuildingModel const *) {}

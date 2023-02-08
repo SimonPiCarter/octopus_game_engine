@@ -14,7 +14,9 @@ namespace octopus
 	{
 		BuildingModel(bool isStatic_p, double ray_p, double hpMax_p)
 			: EntityModel(isStatic_p, ray_p, 0., hpMax_p)
-		{}
+		{
+			_isBuilding = true;
+		}
 
 		std::map<ResourceType, bool> _deposit;
 

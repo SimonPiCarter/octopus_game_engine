@@ -35,6 +35,9 @@ namespace octopus
 			double _hp { 10. };
 			/// @brief time since last attack in step
 			unsigned long _reload { 10 };
+			/// @brief time waiting since last command for entity
+			/// used to auto attack nearby enemies
+			unsigned long _waiting { 50 };
 
 			/// @brief entity model
 			EntityModel const &_model;
