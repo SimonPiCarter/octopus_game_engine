@@ -8,6 +8,8 @@
 
 namespace octopus
 {
+	class Building;
+	class State;
 	class UnitModel;
 
 	struct BuildingModel : public EntityModel
@@ -38,6 +40,11 @@ namespace octopus
 				return it_l->second;
 			}
 			return false;
+		}
+
+		virtual bool checkLegality(Building const &, State const &) const
+		{
+			return true;
 		}
 	};
 } // namespace octopus

@@ -23,7 +23,7 @@ BuildingBlueprintCommand::BuildingBlueprintCommand(Vector const &pos_p, unsigned
 void BuildingBlueprintCommand::registerCommand(Step & step_p, State const &state_p)
 {
 	Logger::getDebug() << "BuildingBlueprintCommand:: register Command "<<_player <<std::endl;
-	// If not payed we upadte player resource
+	// If not payed we update player resource
 	// and mark this production as paid
 	if(!checkResource(state_p, _player, _model._cost))
 	{
@@ -32,11 +32,14 @@ void BuildingBlueprintCommand::registerCommand(Step & step_p, State const &state
 	}
 	else
 	{
-		Logger::getDebug() << "BuildingBlueprintCommand:: spawn building "<<_player <<std::endl;
 		Building building_l(_pos, true, _model);
 		building_l._player = _player;
-		step_p.addSteppable(new PlayerSpendResourceStep(_player, _model._cost));
-		step_p.addSteppable(new BuildingSpawnStep(building_l, false));
+		if(_model.checkLegality(building_l, state_p))
+		{
+			Logger::getDebug() << "BuildingBlueprintCommand:: spawn building "<<_player <<std::endl;
+			step_p.addSteppable(new PlayerSpendResourceStep(_player, _model._cost));
+			step_p.addSteppable(new BuildingSpawnStep(building_l, false));
+		}
 	}
 
 	step_p.addSteppable(new CommandStorageStep(this));
