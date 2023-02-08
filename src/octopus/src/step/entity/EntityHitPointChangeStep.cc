@@ -20,7 +20,7 @@ void updateFromHp(State &state_p, Entity *ent_p)
 	{
 		if(!ent_p->_alive)
 		{
-			updateGrid(state_p, ent_p, false);
+			updateGrid(state_p, ent_p, true);
 		}
 		ent_p->_alive = true;
 	}
