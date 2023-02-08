@@ -40,6 +40,8 @@ void createSoldier(Library &lib_p)
 	unitModel_l._productionTime = 200;
 	unitModel_l._cost[ResourceType::Food] = 50;
 	unitModel_l._cost[ResourceType::Steel] = 20;
+	unitModel_l._hpMax = 5000.;
+	unitModel_l._damage = 7.;
 	lib_p.registerUnitModel("soldier", unitModel_l);
 }
 
@@ -83,25 +85,27 @@ public:
 	virtual void trigger(Step &step_p) const override
 	{
 		{
-			Unit unit_l({ 1, 35. }, false, _lib.getUnitModel("unit"));
+			Unit unit_l({ 5, 35. }, false, _lib.getUnitModel("soldier"));
 			unit_l._player = 1;
 			step_p.addSteppable(new UnitSpawnStep(unit_l));
 		}
 		{
-			Unit unit_l({ 2, 35. }, false, _lib.getUnitModel("unit"));
+			Unit unit_l({ 6, 35. }, false, _lib.getUnitModel("soldier"));
 			unit_l._player = 1;
 			step_p.addSteppable(new UnitSpawnStep(unit_l));
 		}
 		{
-			Unit unit_l({ 1, 36. }, false, _lib.getUnitModel("unit"));
+			Unit unit_l({ 5, 36. }, false, _lib.getUnitModel("soldier"));
 			unit_l._player = 1;
 			step_p.addSteppable(new UnitSpawnStep(unit_l));
 		}
 		{
-			Unit unit_l({ 2, 36. }, false, _lib.getUnitModel("unit"));
+			Unit unit_l({ 6, 36. }, false, _lib.getUnitModel("soldier"));
 			unit_l._player = 1;
 			step_p.addSteppable(new UnitSpawnStep(unit_l));
 		}
+
+		step_p.addSteppable(new TriggerSpawn(new Case4TriggerSpawn(new ListenerStepCount(1000), _lib)));
 	}
 private:
 	Library const &_lib;
