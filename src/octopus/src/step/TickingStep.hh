@@ -24,6 +24,8 @@ namespace octopus
 			{
 				visitor_p->visit(this);
 			}
+
+			static double const _anchorLoss;
 	};
 }
 

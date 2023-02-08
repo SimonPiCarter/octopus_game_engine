@@ -3,10 +3,14 @@
 #include "state/State.hh"
 #include "state/entity/Buff.hh"
 #include "state/entity/Entity.hh"
+#include "state/player/Player.hh"
 #include "logger/Logger.hh"
 
 namespace octopus
 {
+
+double const TickingStep::_anchorLoss = 0.01;
+
 void TickingStep::apply(State &state_p) const
 {
 	Logger::getDebug() << "TickingStep :: apply "<<std::endl;
@@ -32,6 +36,14 @@ void TickingStep::apply(State &state_p) const
 			}
 			// increment time
 			++ time_l;
+		}
+	}
+
+	for(Player *player_l : state_p.getPlayers())
+	{
+		for(auto &&pair_l : player_l->_divAnchor)
+		{
+			pair_l.second -= _anchorLoss;
 		}
 	}
 }
@@ -69,6 +81,14 @@ void TickingStep::revert(State &state_p) const
 				// decrement time
 				-- time_l;
 			}
+		}
+	}
+
+	for(Player *player_l : state_p.getPlayers())
+	{
+		for(auto &&pair_l : player_l->_divAnchor)
+		{
+			pair_l.second += _anchorLoss;
 		}
 	}
 }
