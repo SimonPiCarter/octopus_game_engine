@@ -151,11 +151,13 @@ int main( int argc, char* args[] )
 			panel_l.addSpriteInfo("soldier", 2, 2);
 			panel_l.addSpriteInfo("building", 1, 0);
 			panel_l.addSpriteInfo("barrack", 0, 1);
+			panel_l.addSpriteInfo("temple", 0, 4);
 
 			SpriteLibrary spriteLib_l;
 			spriteLib_l.registerSpriteTemplate("resource", window_l.loadTexture("resources/square.png"), 2., 32, 32, 64, 64, {2, 2}, {0.25, 1}, 1);
 			spriteLib_l.registerSpriteTemplate("building", window_l.loadTexture("resources/building.png"), 1., 32, 32, 64, 64, {2, 2, 2, 2}, {0.25, 0.5, 0.5, 0.5}, 1);
 			spriteLib_l.registerSpriteTemplate("barrack", window_l.loadTexture("resources/building.png"), 1., 32, 32, 64, 64, {2, 2, 2, 2}, {0.25, 0.5, 0.5, 0.5}, 1);
+			spriteLib_l.registerSpriteTemplate("temple", window_l.loadTexture("resources/building.png"), 1., 32, 32, 64, 64, {2, 2, 2, 2}, {0.25, 0.5, 0.5, 0.5}, 1);
 			spriteLib_l.registerSpriteTemplate("unit", window_l.loadTexture("resources/circle.png"), 0.5, 32, 32, 64, 64, {2, 2}, {0.25, 1}, 1);
 			spriteLib_l.registerSpriteTemplate("soldier", window_l.loadTexture("resources/circle.png"), 0.5, 32, 32, 64, 64, {2, 2}, {0.25, 1}, 1);
 

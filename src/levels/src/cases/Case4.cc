@@ -18,6 +18,7 @@
 #include "step/entity/spawn/BuildingSpawnStep.hh"
 #include "step/player/PlayerSpawnStep.hh"
 #include "step/player/PlayerSpendResourceStep.hh"
+#include "step/player/PlayerAddOptionDivinityStep.hh"
 #include "step/trigger/TriggerSpawn.hh"
 
 using namespace octopus;
@@ -69,6 +70,16 @@ void createBarrack(Library &lib_p)
 	lib_p.registerBuildingModel("barrack", buildingModel_l);
 }
 
+void createTemple(Library &lib_p)
+{
+	BuildingModel buildingModel_l { true, 0.75, 10. };
+	buildingModel_l._isBuilding = true;
+	buildingModel_l._isStatic = true;
+	buildingModel_l._buildingTime = 200;
+	buildingModel_l._cost[ResourceType::Steel] = 150;
+	lib_p.registerBuildingModel("temple", buildingModel_l);
+}
+
 void createResource(Library &lib_p)
 {
 	EntityModel resModel_l { true, 1.8, 1., 10. };
@@ -111,12 +122,30 @@ private:
 	Library const &_lib;
 };
 
+class Case4DivinitiesOptionTrigger : public OnEachTrigger
+{
+public:
+	Case4DivinitiesOptionTrigger(Listener * listener_p, unsigned long player_p) : OnEachTrigger(listener_p), _player(player_p) {}
+
+	virtual void trigger(Step &step_p) const override
+	{
+		std::set<DivinityType> set_l;
+		set_l.insert(DivinityType::Divinity_1);
+		set_l.insert(DivinityType::Divinity_2);
+		set_l.insert(DivinityType::Divinity_3);
+		step_p.addSteppable(new PlayerAddOptionDivinityStep(_player, set_l));
+	}
+private:
+	unsigned long const _player;
+};
+
 std::list<Steppable *> Case4(Library &lib_p)
 {
 	createWorker(lib_p);
 	createSoldier(lib_p);
 	createCommandCenter(lib_p);
 	createBarrack(lib_p);
+	createTemple(lib_p);
 	createResource(lib_p);
 
 	Building building_l({1, 20}, true, lib_p.getBuildingModel("building"));
@@ -140,19 +169,23 @@ std::list<Steppable *> Case4(Library &lib_p)
 
 	Trigger * trigger_l = new Case4TriggerSpawn(new ListenerStepCount(1000), lib_p);
 
+	Trigger * divTrigger_l = new Case4DivinitiesOptionTrigger(new ListenerEntityModelFinished(&lib_p.getBuildingModel("building"), 0), 0);
+
 	std::list<Steppable *> spawners_l =
 	{
 		new PlayerSpawnStep(0, 0),
 		new PlayerSpawnStep(1, 1),
 		new PlayerAddBuildingModel(0, lib_p.getBuildingModel("building")),
 		new PlayerAddBuildingModel(0, lib_p.getBuildingModel("barrack")),
+		new PlayerAddBuildingModel(0, lib_p.getBuildingModel("temple")),
 		new PlayerSpendResourceStep(0, mapRes_l),
 		new BuildingSpawnStep(building_l, true),
 		new ResourceSpawnStep(res1_l),
 		new ResourceSpawnStep(res2_l),
 		new ResourceSpawnStep(res3_l),
 		new UnitSpawnStep(unit_l),
-		new TriggerSpawn(trigger_l)
+		new TriggerSpawn(trigger_l),
+		new TriggerSpawn(divTrigger_l)
 	};
 
 	return spawners_l;
