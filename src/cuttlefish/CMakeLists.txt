@@ -21,6 +21,7 @@ add_library(cuttlefish
 	${CMAKE_CURRENT_SOURCE_DIR}/src/text/Text.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/texture/Texture.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/window/Window.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/src/world/Selection.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/world/World.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/world/WorldUpdaterStepVisitor.cc
 )

@@ -4,6 +4,8 @@
 #include <vector>
 #include <list>
 
+#include "Selection.hh"
+
 namespace octopus
 {
 	class StateAndSteps;
@@ -12,6 +14,7 @@ namespace octopus
 
 namespace cuttlefish
 {
+class Panel;
 class Sprite;
 class SpriteLibrary;
 class Window;
@@ -25,7 +28,7 @@ public:
 
 	/// @brief update all sprites from the steps given
 	/// only works if all previous steps have been handled this way
-	void handleStep(Window &window_p, octopus::StateAndSteps const &steps_p, SpriteLibrary const &lib_p);
+	void handleStep(Window &window_p, Panel &panel_p, octopus::StateAndSteps const &steps_p, SpriteLibrary const &lib_p);
 
 	/// @brief update all sprites and
 	void display(Window &window_p, double elapsed_p);
@@ -38,6 +41,9 @@ public:
 	/// @return nullptr if no sprint under coordinate
 	std::list<Sprite *> getSprites(Window const &window_p, int lx, int ly, int ux, int uy) const;
 
+	Selection &getSelection() { return _selection; }
+	Selection const &getSelection() const { return _selection; }
+
 private:
 	/// @brief sprite of every entity
 	/// content can be nullptr in case of sprite
@@ -45,6 +51,9 @@ private:
 	std::vector<Sprite *> _sprites;
 	/// @brief this list is kept to avoid iterating on a lot of dead sprites
 	std::list<Sprite *> _listSprite;
+
+	/// @brief current selection
+	Selection _selection;
 
 	bool _first {true};
 	std::list<octopus::Step *>::const_iterator _lastIt;

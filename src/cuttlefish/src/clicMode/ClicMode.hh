@@ -3,7 +3,7 @@
 
 #include <SDL2/SDL.h>
 
-#include "Selection.hh"
+#include "world/Selection.hh"
 
 namespace octopus
 {

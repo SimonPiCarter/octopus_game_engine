@@ -10,8 +10,8 @@
 namespace cuttlefish
 {
 
-Panel::Panel(int x, int y, Texture const * background_p, Texture const *icons_p, int iconsPerLine_p) :
-	_x(x), _y(y), _icons(icons_p), _iconsPerLine(iconsPerLine_p)
+Panel::Panel(Window* window_p, int x, int y, Texture const * background_p, Texture const *icons_p, int iconsPerLine_p) :
+	_x(x), _y(y), _icons(icons_p), _iconsPerLine(iconsPerLine_p), _textStats(window_p, {0,0,0}, x, y+160)
 {
 	_background = new Sprite(0, background_p, 0.5, 0, 0, 400, 400, {1}, {1}, true);
 	_background->setPosition(x, y);
@@ -26,15 +26,22 @@ Panel::~Panel()
 	}
 }
 
-void Panel::refresh(octopus::Entity const *selected_p, octopus::State const &state_p)
+void Panel::refresh(Sprite const *sprite_p, octopus::State const &state_p)
 {
+	const octopus::Entity * selected_l = nullptr;
+	if(sprite_p)
+	{
+		const octopus::Entity * cur_l = state_p.getEntity(sprite_p->getHandle());
+		selected_l = cur_l;
+	}
+
 	// nothing to do
-	if(selected_p == _lastSelection)
+	if(selected_l == _lastSelection)
 	{
 		return;
 	}
 
-	_lastSelection = selected_p;
+	_lastSelection = selected_l;
 
 	for(SpriteModel &sprite_l : _sprites)
 	{
@@ -42,8 +49,9 @@ void Panel::refresh(octopus::Entity const *selected_p, octopus::State const &sta
 	}
 	_sprites.clear();
 
-	if(selected_p == nullptr)
+	if(selected_l == nullptr)
 	{
+		_textStats.setText("");
 		return;
 	}
 
@@ -97,13 +105,23 @@ void Panel::refresh(octopus::Entity const *selected_p, octopus::State const &sta
 	}
 }
 
-void Panel::render(Window &window_p) const
+void Panel::render(Window &window_p)
 {
 	_background->render(window_p);
 	for(SpriteModel const & sprite_l : _sprites)
 	{
 		sprite_l.sprite->render(window_p);
 	}
+
+	if(_lastSelection)
+	{
+		std::stringstream ss_l;
+		ss_l<<"HP : "<<_lastSelection->_hp<<"/"<<_lastSelection->_model._hpMax;
+		_textStats.setText(ss_l.str());
+	}
+
+	// display stats on selection
+	_textStats.display(window_p);
 }
 
 void Panel::addSpriteInfo(std::string const &model_p, int state_p, int frame_p)

@@ -100,8 +100,6 @@ void controllerLoop(octopus::Controller &controller_p, bool &over_p)
 		controller_p.update(elapsed_l);
 		controller_p.loop_body();
 
-		std::this_thread::sleep_for(1ms);
-
 		auto cur_l = std::chrono::steady_clock::now();
 		std::chrono::duration<double> elapsed_seconds_l = cur_l-last_l;
 		elapsed_l = elapsed_seconds_l.count();
@@ -147,7 +145,7 @@ int main( int argc, char* args[] )
 			double dY = 0.;
 			double camSpeed_l = 200.;
 
-			Panel panel_l(SCREEN_WIDTH-200, SCREEN_HEIGHT-200,
+			Panel panel_l(&window_l, SCREEN_WIDTH-200, SCREEN_HEIGHT-200,
 				window_l.loadTexture("resources/background.png"), window_l.loadTexture("resources/grid.png"), 3);
 			panel_l.addSpriteInfo("unit", 2, 1);
 			panel_l.addSpriteInfo("soldier", 2, 2);
@@ -163,11 +161,12 @@ int main( int argc, char* args[] )
 
 			// Text for resource
 			Text textResource_l(&window_l, {0,0,0}, 300, 0);
+			Text textSteps_l(&window_l, {0,0,0}, 750, 0);
 
 			StandardClicMode standardClicMode_l;
 			ClicMode * currentClicMode_l = &standardClicMode_l;
 
-			Selection selection_l;
+			Selection &selection_l = world_l.getSelection();
 
 			std::pair<int, int> initialClic_l {-1, -1};
 
@@ -181,7 +180,7 @@ int main( int argc, char* args[] )
 				// query a new state if available
 				octopus::StateAndSteps stateAndSteps_l = controller_l.queryStateAndSteps();
 				octopus::State const &state_l = *stateAndSteps_l._state;
-				world_l.handleStep(window_l, stateAndSteps_l, spriteLib_l);
+				world_l.handleStep(window_l, panel_l, stateAndSteps_l, spriteLib_l);
 
 				//Handle events on queue
 				while( SDL_PollEvent( &e ) != 0 )
@@ -193,7 +192,10 @@ int main( int argc, char* args[] )
 					}
 					if (e.type == SDL_MOUSEBUTTONDOWN)
 					{
-						currentClicMode_l->handleMouseDown(e);
+						if(!panel_l.getBackground()->isInside(window_l, e.button.x, e.button.y))
+						{
+							currentClicMode_l->handleMouseDown(e);
+						}
 					}
 					if (e.type == SDL_MOUSEBUTTONUP)
 					{
@@ -327,16 +329,24 @@ int main( int argc, char* args[] )
 
 				octopus::Player const * player_l = state_l.getPlayer(0);
 				textResource_l.setText(resourceStr(*player_l));
-				textResource_l.display();
+				textResource_l.display(window_l);
+
+				std::stringstream ss_l;
+				ss_l << stateAndSteps_l._steps.size()<<"/"<<controller_l.getOngoingStep();
+				textSteps_l.setText(ss_l.str());
+				textSteps_l.display(window_l);
 
 				window_l.draw();
 			}
 
 			controllerThread_l.join();
+
+			streamMetrics(std::cout, controller_l.getMetrics());
 		}
 	}
 	//Free resources and close SDL
 	window_l.close();
+
 
 	return 0;
 }

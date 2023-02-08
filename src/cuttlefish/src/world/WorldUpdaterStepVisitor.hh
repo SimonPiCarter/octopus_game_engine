@@ -14,6 +14,7 @@ namespace octopus
 
 namespace cuttlefish
 {
+class Panel;
 class SpriteLibrary;
 class World;
 class Window;
@@ -24,8 +25,8 @@ class Window;
 class WorldUpdaterStepVisitor : public octopus::SteppableVisitor
 {
 public:
-	WorldUpdaterStepVisitor(World &world_p, Window &window_p, octopus::State const *state_p, SpriteLibrary const &lib_p)
-		: _world(world_p), _window(window_p), _state(state_p), _lib(lib_p) {}
+	WorldUpdaterStepVisitor(World &world_p, Window &window_p, Panel &panel_p, octopus::State const *state_p, SpriteLibrary const &lib_p)
+		: _world(world_p), _window(window_p), _panel(panel_p), _state(state_p), _lib(lib_p) {}
 
 	void clear(octopus::Handle const &handle_p);
 	void spawn(octopus::Handle const &handle_p);
@@ -60,6 +61,7 @@ public:
 	virtual void visit(octopus::CommandWindUpDiffStep const *) override {}
 	virtual void visit(octopus::EntityAttackStep const *) override {}
 	virtual void visit(octopus::EntityBuffStep const *) override {}
+	virtual void visit(octopus::EntityUpdateWaitingStep const *) override {}
 	virtual void visit(octopus::MissingResourceStep const *) override {}
 	virtual void visit(octopus::PlayerAddBuildingModel const *) override {}
 	virtual void visit(octopus::PlayerAddOptionDivinityStep const *steppable_p) override {}
@@ -81,6 +83,7 @@ public:
 private:
 	World &_world;
 	Window &_window;
+	Panel &_panel;
 	octopus::State const * const _state;
 	SpriteLibrary const &_lib;
 };

@@ -4,6 +4,7 @@
 #include <list>
 #include <map>
 #include "sprite/Sprite.hh"
+#include "text/Text.hh"
 
 namespace octopus
 {
@@ -39,14 +40,14 @@ struct SpriteModel
 class Panel
 {
 public:
-	Panel(int x, int y, Texture const * background_p, Texture const *icons_p, int iconsPerLine_p);
+	Panel(Window* window_p, int x, int y, Texture const * background_p, Texture const *icons_p, int iconsPerLine_p);
 	~Panel();
 
 	/// @brief refresh Panel if necessary
-	void refresh(octopus::Entity const *selected_p, octopus::State const &state_p);
+	void refresh(Sprite const *selected_p, octopus::State const &state_p);
 
 	/// @brief display panel
-	void render(Window &window_p) const;
+	void render(Window &window_p);
 
 	/// @brief add a sprite info for a given model
 	void addSpriteInfo(std::string const &model_p, int state_p, int frame_p);
@@ -79,6 +80,8 @@ protected:
 	int _x;
 	int _y;
 	int const _iconsPerLine;
+
+	Text _textStats;
 };
 } // namespace octopus
 

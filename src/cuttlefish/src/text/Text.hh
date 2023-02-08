@@ -18,7 +18,7 @@ namespace cuttlefish
 
 		void setText(std::string const & text_p);
 
-		void display();
+		void display(Window & window_p) const;
 
 	protected:
 		void clean();

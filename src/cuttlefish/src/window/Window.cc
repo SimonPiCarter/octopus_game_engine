@@ -119,7 +119,7 @@ void Window::draw()
 	if(_displayFps)
 	{
 		_text->setText(stringify(_fps));
-		_text->display();
+		_text->display(*this);
 	}
 
 	//Update screen

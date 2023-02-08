@@ -5,6 +5,7 @@
 #include "window/Window.hh"
 #include "sprite/Sprite.hh"
 #include "sprite/SpriteLibrary.hh"
+#include "panel/Panel.hh"
 
 // octopus
 #include "state/entity/Entity.hh"
@@ -41,6 +42,11 @@ void WorldUpdaterStepVisitor::spawn(octopus::Handle const &handle_p)
 
 void WorldUpdaterStepVisitor::clear(octopus::Handle const &handle_p)
 {
+	// update selection
+	_world.getSelection().removeSprite(_world._sprites[handle_p]);
+	_panel.refresh(_world.getSelection()._sprite, *_state);
+
+	// remove sprite
 	_world._listSprite.remove(_world._sprites[handle_p]);
 	delete _world._sprites[handle_p];
 	_world._sprites[handle_p] = nullptr;
@@ -78,8 +84,12 @@ void WorldUpdaterStepVisitor::visit(octopus::UnitHarvestQuantityStep const *step
 		clear(steppable_p->_res);
 	}
 
-	// Update state of sprite harvesting
-	_world._sprites[steppable_p->_handle]->setStateNoReset(1);
+
+	if(_world._sprites[steppable_p->_handle])
+	{
+		// Update state of sprite harvesting
+		_world._sprites[steppable_p->_handle]->setStateNoReset(1);
+	}
 }
 
 void WorldUpdaterStepVisitor::visit(octopus::EntityHitPointChangeStep const *steppable_p)
@@ -92,13 +102,19 @@ void WorldUpdaterStepVisitor::visit(octopus::EntityHitPointChangeStep const *ste
 
 void WorldUpdaterStepVisitor::visit(octopus::EntityMoveStep const *steppable_p)
 {
-	_world._sprites[steppable_p->_handle]->move(steppable_p->_move.x*32, steppable_p->_move.y*32);
+	if(_world._sprites[steppable_p->_handle])
+	{
+		_world._sprites[steppable_p->_handle]->move(steppable_p->_move.x*32, steppable_p->_move.y*32);
+	}
 }
 
 void WorldUpdaterStepVisitor::visit(octopus::BuildingStep const *steppable_p)
 {
-	// Update state of sprite harvesting
-	_world._sprites[steppable_p->_handle]->setStateNoReset(2);
+	if(_world._sprites[steppable_p->_handle])
+	{
+		// Update state of sprite harvesting
+		_world._sprites[steppable_p->_handle]->setStateNoReset(2);
+	}
 }
 
 }

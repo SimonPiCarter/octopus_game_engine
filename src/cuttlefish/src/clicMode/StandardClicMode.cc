@@ -68,16 +68,7 @@ bool StandardClicMode::handleMouseUp(SDL_Event const & e, Selection &selection_p
 				selection_p._sprites.push_back(sprite_l);
 			}
 		}
-
-		if(selection_p._sprite)
-		{
-			const octopus::Entity * cur_l = state_p.getEntity(selection_p._sprite->getHandle());
-			panel_p.refresh(cur_l, state_p);
-		}
-		else
-		{
-			panel_p.refresh(nullptr, state_p);
-		}
+		panel_p.refresh(selection_p._sprite, state_p);
 	}
 	else if(e.button.button == SDL_BUTTON_RIGHT
 	&& selection_p._sprite)

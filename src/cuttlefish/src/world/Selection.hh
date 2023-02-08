@@ -14,6 +14,8 @@ public:
 	Sprite *_sprite {nullptr};
 
 	std::list<Sprite *> _sprites;
+
+	void removeSprite(Sprite * sprite_p);
 };
 
 } // namespace cuttlefish
