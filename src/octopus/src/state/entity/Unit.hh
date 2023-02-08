@@ -13,6 +13,8 @@ class Unit : public Entity
 	public:
 		Unit(Vector const &pos_p, bool frozen_p, UnitModel const &model_p);
 
+		virtual void runCommands(Step & step_p, State const &state_p) override;
+
 		/// used when harvesting
 		ResourceType _typeOfResource { ResourceType::Food };
 		double _quantityOfResource { 0. };
