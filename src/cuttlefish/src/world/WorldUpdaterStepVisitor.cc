@@ -6,6 +6,7 @@
 #include "sprite/Sprite.hh"
 #include "sprite/SpriteLibrary.hh"
 #include "panel/Panel.hh"
+#include "panel/DivinityPanel.hh"
 
 // octopus
 #include "state/entity/Entity.hh"
@@ -19,6 +20,7 @@
 #include "step/entity/EntityHitPointChangeStep.hh"
 #include "step/entity/EntityMoveStep.hh"
 #include "step/unit/UnitHarvestStep.hh"
+#include "step/player/PlayerAddOptionDivinityStep.hh"
 
 
 namespace cuttlefish
@@ -115,6 +117,11 @@ void WorldUpdaterStepVisitor::visit(octopus::BuildingStep const *steppable_p)
 		// Update state of sprite harvesting
 		_world._sprites[steppable_p->_handle]->setStateNoReset(2);
 	}
+}
+
+void WorldUpdaterStepVisitor::visit(octopus::PlayerAddOptionDivinityStep const *steppable_p)
+{
+	_divPanel.addOptionLayer(steppable_p->_player, steppable_p->_types);
 }
 
 }

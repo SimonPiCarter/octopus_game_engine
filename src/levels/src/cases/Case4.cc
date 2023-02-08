@@ -169,7 +169,7 @@ std::list<Steppable *> Case4(Library &lib_p)
 
 	Trigger * trigger_l = new Case4TriggerSpawn(new ListenerStepCount(1000), lib_p);
 
-	Trigger * divTrigger_l = new Case4DivinitiesOptionTrigger(new ListenerEntityModelFinished(&lib_p.getBuildingModel("building"), 0), 0);
+	Trigger * divTrigger_l = new Case4DivinitiesOptionTrigger(new ListenerEntityModelFinished(&lib_p.getBuildingModel("temple"), 0), 0);
 
 	std::list<Steppable *> spawners_l =
 	{

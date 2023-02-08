@@ -15,6 +15,7 @@ find_package(SDL2_ttf 2.0.18 REQUIRED)
 add_library(cuttlefish
 	${CMAKE_CURRENT_SOURCE_DIR}/src/clicMode/BuildClicMode.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/clicMode/StandardClicMode.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/src/panel/DivinityPanel.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/panel/Panel.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/sprite/Sprite.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/sprite/SpriteLibrary.cc

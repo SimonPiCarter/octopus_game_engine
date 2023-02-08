@@ -14,10 +14,11 @@ namespace octopus
 
 namespace cuttlefish
 {
+class DivinityPanel;
 class Panel;
 class SpriteLibrary;
-class World;
 class Window;
+class World;
 
 /// @brief This class is used to maintain a representation of the world
 /// based on state the engine sends
@@ -25,8 +26,9 @@ class Window;
 class WorldUpdaterStepVisitor : public octopus::SteppableVisitor
 {
 public:
-	WorldUpdaterStepVisitor(World &world_p, Window &window_p, Panel &panel_p, octopus::State const *state_p, SpriteLibrary const &lib_p)
-		: _world(world_p), _window(window_p), _panel(panel_p), _state(state_p), _lib(lib_p) {}
+	WorldUpdaterStepVisitor(World &world_p, Window &window_p, Panel &panel_p, DivinityPanel &divPanel_p,
+		octopus::State const *state_p, SpriteLibrary const &lib_p)
+		: _world(world_p), _window(window_p), _panel(panel_p), _divPanel(divPanel_p), _state(state_p), _lib(lib_p) {}
 
 	void clear(octopus::Handle const &handle_p);
 	void spawn(octopus::Handle const &handle_p);
@@ -40,6 +42,7 @@ public:
 	virtual void visit(octopus::EntityHitPointChangeStep const *step_p) override;
 	virtual void visit(octopus::EntityMoveStep const *step_p) override;
 	virtual void visit(octopus::BuildingStep const *steppable_p) override;
+	virtual void visit(octopus::PlayerAddOptionDivinityStep const *steppable_p) override;
 
 	virtual void visit(octopus::CommandAddSubAttackStep const *) override {}
 	virtual void visit(octopus::CommandDataWaypointAddStep const *) override {}
@@ -64,7 +67,6 @@ public:
 	virtual void visit(octopus::EntityUpdateWaitingStep const *) override {}
 	virtual void visit(octopus::MissingResourceStep const *) override {}
 	virtual void visit(octopus::PlayerAddBuildingModel const *) override {}
-	virtual void visit(octopus::PlayerAddOptionDivinityStep const *steppable_p) override {}
 	virtual void visit(octopus::PlayerAnchorDivinityStep const *steppable_p) override {}
 	virtual void visit(octopus::PlayerLevelUpDivinityStep const *steppable_p) override {}
 	virtual void visit(octopus::PlayerResetOptionDivinityStep const *steppable_p) override {}
@@ -84,6 +86,7 @@ private:
 	World &_world;
 	Window &_window;
 	Panel &_panel;
+	DivinityPanel &_divPanel;
 	octopus::State const * const _state;
 	SpriteLibrary const &_lib;
 };
