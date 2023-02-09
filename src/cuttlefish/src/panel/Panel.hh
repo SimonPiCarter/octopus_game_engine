@@ -4,7 +4,7 @@
 #include <list>
 #include <map>
 #include "sprite/Sprite.hh"
-#include "text/Text.hh"
+#include "text/SegmentedText.hh"
 
 namespace octopus
 {
@@ -81,7 +81,7 @@ protected:
 	int _y;
 	int const _iconsPerLine;
 
-	Text _textStats;
+	SegmentedText _textStats;
 };
 } // namespace octopus
 

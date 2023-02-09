@@ -43,6 +43,12 @@ void Text::setText(std::string const & text_p)
 	_text = text_p;
 }
 
+void Text::setPosition(int x, int y)
+{
+	_x = x;
+	_y = y;
+}
+
 void Text::display(Window& window_p) const
 {
 	if(_surface && _texture)

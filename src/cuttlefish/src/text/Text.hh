@@ -18,7 +18,12 @@ namespace cuttlefish
 
 		void setText(std::string const & text_p);
 
+		void setPosition(int x, int y);
+
 		void display(Window & window_p) const;
+
+		int getWidth() const { return _surface?_surface->w:0; }
+		int getHeight() const { return _surface?_surface->h:0; }
 
 	protected:
 		void clean();

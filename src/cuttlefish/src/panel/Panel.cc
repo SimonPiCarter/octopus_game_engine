@@ -11,10 +11,16 @@ namespace cuttlefish
 {
 
 Panel::Panel(Window* window_p, int x, int y, Texture const * background_p, Texture const *icons_p, int iconsPerLine_p) :
-	_x(x), _y(y), _icons(icons_p), _iconsPerLine(iconsPerLine_p), _textStats(window_p, {0,0,0}, x, y+160)
+	_x(x), _y(y), _icons(icons_p), _iconsPerLine(iconsPerLine_p), _textStats(window_p, x, y+120)
 {
 	_background = new Sprite(0, background_p, 0.5, 0, 0, 400, 400, {1}, {1}, true);
 	_background->setPosition(x, y);
+	_textStats.addText("hp", "hp : ", {0, 0, 0}, false);
+	_textStats.addText("hp_val", "", {0, 155, 0}, true);
+	_textStats.addText("dmg", "dmg : ", {0, 0, 0}, false);
+	_textStats.addText("dmg_val", "", {155, 0, 0}, true);
+	_textStats.addText("armor", "armor : ", {0, 0, 0}, false);
+	_textStats.addText("armor_val", "", {0, 0, 155}, true);
 }
 
 Panel::~Panel()
@@ -51,7 +57,6 @@ void Panel::refresh(Sprite const *sprite_p, octopus::State const &state_p)
 
 	if(selected_l == nullptr)
 	{
-		_textStats.setText("");
 		return;
 	}
 
@@ -116,12 +121,20 @@ void Panel::render(Window &window_p)
 	if(_lastSelection)
 	{
 		std::stringstream ss_l;
-		ss_l<<"HP : "<<_lastSelection->_hp<<"/"<<_lastSelection->_model._hpMax;
-		_textStats.setText(ss_l.str());
-	}
+		ss_l<<_lastSelection->_hp<<"/"<<_lastSelection->_model._hpMax;
+		_textStats.updateText("hp_val", ss_l.str());
 
-	// display stats on selection
-	_textStats.display(window_p);
+		ss_l.str("");
+		ss_l<<_lastSelection->_model._damage;
+		_textStats.updateText("dmg_val", ss_l.str());
+
+		ss_l.str("");
+		ss_l<<_lastSelection->_model._armor;
+		_textStats.updateText("armor_val", ss_l.str());
+
+		// display stats on selection
+		_textStats.display(window_p);
+	}
 }
 
 void Panel::addSpriteInfo(std::string const &model_p, int state_p, int frame_p)
