@@ -91,7 +91,7 @@ void WrappedText::refresh()
 		text_l->setPosition(_cursorX, _cursorY);
 
 		// new line if too wide
-		// if first in line do not skip new line
+		// if first do not skip new line
 		if(_cursorX + text_l->getWidth() - _x > _w && !first_l)
 		{
 			// update cursor to start of new line
