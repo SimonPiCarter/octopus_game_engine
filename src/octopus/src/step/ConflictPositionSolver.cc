@@ -156,7 +156,8 @@ bool updateStepFromConflictPosition(Step &step_p, State const &state_p)
 				}
 				else
 				{
-					normalizedAxis_l = Vector { double(gen_l.nextFromRange(-10, 10)), double(gen_l.nextFromRange(-10, 10))} / length(normalizedAxis_l);
+					normalizedAxis_l = Vector { double(gen_l.nextFromRange(-10, 10)), double(gen_l.nextFromRange(-10, 10))};
+					normalizedAxis_l = normalizedAxis_l / length(normalizedAxis_l);
 				}
 				double coefA_l = 0.5;
 				if(square_length(stepA_l->_move) > 1e-5 || square_length(stepB_l->_move) > 1e-5)
@@ -208,12 +209,13 @@ bool updateStepFromConflictPosition(Step &step_p, State const &state_p)
 			ent_l->_move = ent_l->_move * std::sqrt(square_l/newSquare_l);
 		}
 		// in case no move
-		if(newSquare_l < 1e-3)
-		{
-			// try a small perpendicular move to avoid two entities to block each other
-			Vector perpendicular_l {origMove_l.y, -origMove_l.x};
-			ent_l->_move += perpendicular_l * 0.1;
-		}
+		// if(newSquare_l < 1e-3)
+		// {
+		// 	// try a small perpendicular move to avoid two entities to block each other
+		// 	Vector perpendicular_l {origMove_l.y, -origMove_l.x};
+		// 	double rdmFactr_l = gen_l.nextFromRange(5, 20)/100.;
+		// 	ent_l->_move += perpendicular_l * rdmFactr_l;
+		// }
 
 		Entity const *entA_l = state_p.getEntity(ent_l->_handle);
 		newPos_l[entA_l->_handle] = entA_l->_pos + ent_l->_move;
