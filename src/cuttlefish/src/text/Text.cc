@@ -23,24 +23,24 @@ Text::~Text()
 	clean();
 }
 
+void Text::setColor(SDL_Color const &color_p)
+{
+	_color = color_p;
+	clean();
+	generate();
+}
+
 void Text::setText(std::string const & text_p)
 {
 	if(text_p != _text)
 	{
+		_text = text_p;
 		clean();
 		if(text_p != "")
 		{
-			_surface = TTF_RenderText_Solid( _window->getFont(), text_p.c_str(), _color );
-			if ( !_surface ) {
-				octopus::Logger::getNormal() << "Failed to render text: " << TTF_GetError() << std::endl;
-			}
-			else
-			{
-				_texture = SDL_CreateTextureFromSurface( _window->getRenderer(), _surface );
-			}
+			generate();
 		}
 	}
-	_text = text_p;
 }
 
 void Text::setPosition(int x, int y)
@@ -73,6 +73,17 @@ void Text::clean()
 	}
 }
 
+void Text::generate()
+{
+	_surface = TTF_RenderText_Solid( _window->getFont(), _text.c_str(), _color );
+	if ( !_surface ) {
+		octopus::Logger::getNormal() << "Failed to render text: " << TTF_GetError() << std::endl;
+	}
+	else
+	{
+		_texture = SDL_CreateTextureFromSurface( _window->getRenderer(), _surface );
+	}
+}
 
 } // namespace cuttlefish
 

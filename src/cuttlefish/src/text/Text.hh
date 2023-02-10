@@ -17,6 +17,9 @@ namespace cuttlefish
 		~Text();
 
 		void setText(std::string const & text_p);
+		std::string getText() const { return _text; }
+
+		void setColor(SDL_Color const &color_p);
 
 		void setPosition(int x, int y);
 
@@ -27,10 +30,11 @@ namespace cuttlefish
 
 	protected:
 		void clean();
+		void generate();
 
 		int _x;
 		int _y;
-		SDL_Color const _color;
+		SDL_Color _color;
 		Window * const _window;
 
 		std::string _text;
