@@ -213,6 +213,9 @@ int main( int argc, char* args[] )
 			Text textDivAnchor_l(&window_l, {0,0,0}, 200, 60);
 			Text textSteps_l(&window_l, {0,0,0}, 750, 0);
 
+			WrappedText descText_l(&window_l, SCREEN_WIDTH-600, SCREEN_HEIGHT-400, 400);
+			descText_l.setText("Lorem ipsum dolor sit amet, consectetur adipiscing $hp elit, sed do eiusmod tempor incididunt ut labore $fps et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.", {0,0,0});
+
 			StandardClicMode standardClicMode_l;
 			ClicMode * currentClicMode_l = &standardClicMode_l;
 
@@ -410,6 +413,12 @@ int main( int argc, char* args[] )
 				ss_l << stateAndSteps_l._steps.size()<<"/"<<controller_l.getOngoingStep();
 				textSteps_l.setText(ss_l.str());
 				textSteps_l.display(window_l);
+
+				descText_l.updateText("hp", ss_l.str());
+				descText_l.updateColor("hp", {155, 155, 155});
+				descText_l.updateText("fps", "ldld");
+				descText_l.updateColor("fps", {155, 0, 155});
+				descText_l.display(window_l);
 
 				window_l.draw();
 			}
