@@ -23,11 +23,17 @@ namespace cuttlefish
 	public:
 		SegmentedText(Window* window_p, int x, int y);
 		~SegmentedText();
-
+		/// @brief add a text in the segmented text
+		/// @param key_p the key for the text to add (used to update text)
+		/// @param text_p the text to add
+		/// @param color_p the color of the text
+		/// @param newLine_p set to true to end the line after this text
 		void addText(std::string const &key_p, std::string const & text_p, SDL_Color const &color_p, bool newLine_p);
 
 		/// @brief update text and refresh segmented text positions
 		void updateText(std::string const &key_p, std::string const & text_p);
+		/// @brief update text color
+		void updateColor(std::string const &key_p, SDL_Color const &color_p);
 
 		/// @brief refresh text positions based on updated text
 		void refresh();

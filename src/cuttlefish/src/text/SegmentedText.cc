@@ -46,6 +46,11 @@ void SegmentedText::updateText(std::string const &key_p, std::string const & tex
 	refresh();
 }
 
+void SegmentedText::updateColor(std::string const &key_p, SDL_Color const & color_p)
+{
+	_mapText[key_p]->setColor(color_p);
+}
+
 void SegmentedText::refresh()
 {
 	_cursorX = _x;
