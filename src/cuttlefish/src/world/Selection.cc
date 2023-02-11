@@ -1,5 +1,12 @@
 #include "Selection.hh"
 
+#include <SDL2/SDL.h>
+#include <SDL2/SDL_image.h>
+
+#include "texture/Texture.hh"
+#include "window/Window.hh"
+#include "sprite/Sprite.hh"
+
 namespace cuttlefish
 {
 
@@ -16,6 +23,28 @@ void Selection::removeSprite(Sprite * sprite_p)
 		{
 			_sprite = nullptr;
 		}
+	}
+}
+
+void displaySelection(Window &window_p, Sprite const *sprite_p)
+{
+	SDL_Rect final_l {
+		int(sprite_p->getX() - sprite_p->getWidth()/2),
+		int(sprite_p->getY() - sprite_p->getHeight()/2),
+		int(sprite_p->getWidth()),
+		int(sprite_p->getHeight()),
+	};
+
+	SDL_Point const &cam_l = window_p.getCamera();
+	window_p.loadTexture("resources/selection.png")->render(window_p.getRenderer(),
+		final_l.x - cam_l.x, final_l.y - cam_l.y, final_l.h, final_l.w, nullptr);
+}
+
+void Selection::render(Window &window_p) const
+{
+	for(Sprite const * sprite_l : _sprites)
+	{
+		displaySelection(window_p, sprite_l);
 	}
 }
 

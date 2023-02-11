@@ -6,6 +6,7 @@
 namespace cuttlefish
 {
 class Sprite;
+class Window;
 
 /// @brief Handle selected sprites/entities
 class Selection
@@ -16,6 +17,8 @@ public:
 	std::list<Sprite *> _sprites;
 
 	void removeSprite(Sprite * sprite_p);
+
+	void render(Window &window_p) const;
 };
 
 } // namespace cuttlefish

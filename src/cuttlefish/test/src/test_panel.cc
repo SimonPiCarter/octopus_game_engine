@@ -400,6 +400,8 @@ int main( int argc, char* args[] )
 		textSteps_l.setText(ss_l.str());
 		textSteps_l.display(window_l);
 
+		world_l.getSelection().render(window_l);
+
 		window_l.draw();
 	}
 
