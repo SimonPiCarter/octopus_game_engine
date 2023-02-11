@@ -154,275 +154,271 @@ int main( int argc, char* args[] )
 	if( !window_l.init(SCREEN_WIDTH, SCREEN_HEIGHT) )
 	{
 		printf( "Failed to initialize!\n" );
+		return 1;
 	}
-	else
+	window_l.displayFps(true);
+	Texture const * background_l = window_l.loadTexture("resources/wp3386769.jpg");
+	//Load media
+	if( !background_l )
 	{
-		window_l.displayFps(true);
-		Texture const * background_l = window_l.loadTexture("resources/wp3386769.jpg");
-		Texture const * circles_l = window_l.loadTexture("resources/circle.png");
-		//Load media
-		if( !background_l || !circles_l )
+		printf( "Failed to load media!\n" );
+		return 1;
+	}
+
+	bool quit_l = false;
+	bool paused_l = false;
+
+	World world_l;
+
+	octopus::Library lib_l;
+	std::list<octopus::Steppable *> spawners_l = Case4(lib_l);
+
+	octopus::Controller controller_l(spawners_l, 0.01);
+
+	std::thread controllerThread_l(controllerLoop, std::ref(controller_l), std::ref(quit_l), std::ref(paused_l));
+
+	double x = 0.;
+	double y = 0.;
+	double dX = 0.;
+	double dY = 0.;
+	double camSpeed_l = 200.;
+
+	Panel panel_l(&window_l, SCREEN_WIDTH-200, SCREEN_HEIGHT-200,
+		window_l.loadTexture("resources/background.png"), window_l.loadTexture("resources/grid.png"), 3);
+	panel_l.addSpriteInfo("unit", 2, 1);
+	panel_l.addSpriteInfo("soldier", 2, 2);
+	panel_l.addSpriteInfo("building", 1, 0);
+	panel_l.addSpriteInfo("barrack", 0, 1);
+	panel_l.addSpriteInfo("temple", 0, 4);
+
+	DivinityPanel divPanel_l(&window_l, SCREEN_WIDTH-SCREEN_WIDTH/2-200, SCREEN_HEIGHT-SCREEN_HEIGHT/2-200,
+		window_l.loadTexture("resources/background.png"), window_l.loadTexture("resources/grid.png"), 0);
+	divPanel_l.addOptionInfo(octopus::DivinityType::Divinity_1, 1, 3);
+	divPanel_l.addOptionInfo(octopus::DivinityType::Divinity_2, 1, 4);
+	divPanel_l.addOptionInfo(octopus::DivinityType::Divinity_3, 2, 0);
+
+	SpriteLibrary spriteLib_l;
+	spriteLib_l.registerSpriteTemplate("resource", window_l.loadTexture("resources/square.png"), 2., 32, 32, 64, 64, {2, 2}, {0.25, 1}, 1);
+	spriteLib_l.registerSpriteTemplate("building", window_l.loadTexture("resources/building.png"), 1., 32, 32, 64, 64, {2, 2, 2, 2}, {0.25, 0.5, 0.5, 0.5}, 1);
+	spriteLib_l.registerSpriteTemplate("barrack", window_l.loadTexture("resources/building.png"), 1., 32, 32, 64, 64, {2, 2, 2, 2}, {0.25, 0.5, 0.5, 0.5}, 1);
+	spriteLib_l.registerSpriteTemplate("temple", window_l.loadTexture("resources/building.png"), 1., 32, 32, 64, 64, {2, 2, 2, 2}, {0.25, 0.5, 0.5, 0.5}, 1);
+	spriteLib_l.registerSpriteTemplate("unit", window_l.loadTexture("resources/circle.png"), 0.5, 32, 32, 64, 64, {2, 2}, {0.25, 1}, 1);
+	spriteLib_l.registerSpriteTemplate("soldier", window_l.loadTexture("resources/circle.png"), 0.5, 32, 32, 64, 64, {2, 2}, {0.25, 1}, 1);
+
+	// Text for resource
+	Text textResource_l(&window_l, {0,0,0}, 300, 0);
+	Text textDivLvl_l(&window_l, {0,0,0}, 200, 30);
+	Text textDivAnchor_l(&window_l, {0,0,0}, 200, 60);
+	Text textSteps_l(&window_l, {0,0,0}, 750, 0);
+
+	StandardClicMode standardClicMode_l;
+	ClicMode * currentClicMode_l = &standardClicMode_l;
+
+	Selection &selection_l = world_l.getSelection();
+
+	std::pair<int, int> initialClic_l {-1, -1};
+
+	auto last_l = std::chrono::steady_clock::now();
+	double elapsed_l = 0.;
+	//Event handler
+	SDL_Event e;
+	//While application is running
+	while( !quit_l )
+	{
+		// query a new state if available
+		octopus::StateAndSteps stateAndSteps_l = controller_l.queryStateAndSteps();
+		octopus::State const &state_l = *stateAndSteps_l._state;
+		world_l.handleStep(window_l, panel_l, divPanel_l, stateAndSteps_l, spriteLib_l);
+
+		//Handle events on queue
+		while( SDL_PollEvent( &e ) != 0 )
 		{
-			printf( "Failed to load media!\n" );
-		}
-		else
-		{
-			bool quit_l = false;
-			bool paused_l = false;
-
-			World world_l;
-
-			octopus::Library lib_l;
-			std::list<octopus::Steppable *> spawners_l = Case4(lib_l);
-
-			octopus::Controller controller_l(spawners_l, 0.01);
-
-			std::thread controllerThread_l(controllerLoop, std::ref(controller_l), std::ref(quit_l), std::ref(paused_l));
-
-			double x = 0.;
-			double y = 0.;
-			double dX = 0.;
-			double dY = 0.;
-			double camSpeed_l = 200.;
-
-			Panel panel_l(&window_l, SCREEN_WIDTH-200, SCREEN_HEIGHT-200,
-				window_l.loadTexture("resources/background.png"), window_l.loadTexture("resources/grid.png"), 3);
-			panel_l.addSpriteInfo("unit", 2, 1);
-			panel_l.addSpriteInfo("soldier", 2, 2);
-			panel_l.addSpriteInfo("building", 1, 0);
-			panel_l.addSpriteInfo("barrack", 0, 1);
-			panel_l.addSpriteInfo("temple", 0, 4);
-
-			DivinityPanel divPanel_l(&window_l, SCREEN_WIDTH-SCREEN_WIDTH/2-200, SCREEN_HEIGHT-SCREEN_HEIGHT/2-200,
-				window_l.loadTexture("resources/background.png"), window_l.loadTexture("resources/grid.png"), 0);
-			divPanel_l.addOptionInfo(octopus::DivinityType::Divinity_1, 1, 3);
-			divPanel_l.addOptionInfo(octopus::DivinityType::Divinity_2, 1, 4);
-			divPanel_l.addOptionInfo(octopus::DivinityType::Divinity_3, 2, 0);
-
-			SpriteLibrary spriteLib_l;
-			spriteLib_l.registerSpriteTemplate("resource", window_l.loadTexture("resources/square.png"), 2., 32, 32, 64, 64, {2, 2}, {0.25, 1}, 1);
-			spriteLib_l.registerSpriteTemplate("building", window_l.loadTexture("resources/building.png"), 1., 32, 32, 64, 64, {2, 2, 2, 2}, {0.25, 0.5, 0.5, 0.5}, 1);
-			spriteLib_l.registerSpriteTemplate("barrack", window_l.loadTexture("resources/building.png"), 1., 32, 32, 64, 64, {2, 2, 2, 2}, {0.25, 0.5, 0.5, 0.5}, 1);
-			spriteLib_l.registerSpriteTemplate("temple", window_l.loadTexture("resources/building.png"), 1., 32, 32, 64, 64, {2, 2, 2, 2}, {0.25, 0.5, 0.5, 0.5}, 1);
-			spriteLib_l.registerSpriteTemplate("unit", window_l.loadTexture("resources/circle.png"), 0.5, 32, 32, 64, 64, {2, 2}, {0.25, 1}, 1);
-			spriteLib_l.registerSpriteTemplate("soldier", window_l.loadTexture("resources/circle.png"), 0.5, 32, 32, 64, 64, {2, 2}, {0.25, 1}, 1);
-
-			// Text for resource
-			Text textResource_l(&window_l, {0,0,0}, 300, 0);
-			Text textDivLvl_l(&window_l, {0,0,0}, 200, 30);
-			Text textDivAnchor_l(&window_l, {0,0,0}, 200, 60);
-			Text textSteps_l(&window_l, {0,0,0}, 750, 0);
-
-			StandardClicMode standardClicMode_l;
-			ClicMode * currentClicMode_l = &standardClicMode_l;
-
-			Selection &selection_l = world_l.getSelection();
-
-			std::pair<int, int> initialClic_l {-1, -1};
-
-			auto last_l = std::chrono::steady_clock::now();
-			double elapsed_l = 0.;
-			//Event handler
-			SDL_Event e;
-			//While application is running
-			while( !quit_l )
+			//User requests quit_l
+			if( e.type == SDL_QUIT )
 			{
-				// query a new state if available
-				octopus::StateAndSteps stateAndSteps_l = controller_l.queryStateAndSteps();
-				octopus::State const &state_l = *stateAndSteps_l._state;
-				world_l.handleStep(window_l, panel_l, divPanel_l, stateAndSteps_l, spriteLib_l);
-
-				//Handle events on queue
-				while( SDL_PollEvent( &e ) != 0 )
+				quit_l = true;
+			}
+			if (e.type == SDL_MOUSEBUTTONDOWN)
+			{
+				if(!panel_l.getBackground()->isInside(window_l, e.button.x, e.button.y)
+				&& (!divPanel_l.getBackground()->isInside(window_l, e.button.x, e.button.y) || !divPanel_l.isActive()))
 				{
-					//User requests quit_l
-					if( e.type == SDL_QUIT )
-					{
-						quit_l = true;
-					}
-					if (e.type == SDL_MOUSEBUTTONDOWN)
-					{
-						if(!panel_l.getBackground()->isInside(window_l, e.button.x, e.button.y)
-						&& !divPanel_l.getBackground()->isInside(window_l, e.button.x, e.button.y))
-						{
-							currentClicMode_l->handleMouseDown(e);
-						}
-					}
-					if (e.type == SDL_MOUSEBUTTONUP)
-					{
-						if(divPanel_l.isActive())
-						{
-							std::pair<bool, octopus::DivinityType> option_l = divPanel_l.getOption(window_l, e.button.x, e.button.y);
-							if(option_l.first)
-							{
-								octopus::PlayerChoseDivinityCommand * command_l = new octopus::PlayerChoseDivinityCommand(0, 0, option_l.second, true);
-								controller_l.commitCommand(command_l);
-								divPanel_l.popOptionLayer();
-							}
-						}
-						else
-						{
-							SpriteModel const * spriteModel_l = panel_l.getSpriteModel(window_l, e.button.x, e.button.y);
-
-							if(spriteModel_l)
-							{
-								if(e.button.button == SDL_BUTTON_LEFT)
-								{
-									if(spriteModel_l->unitModel)
-									{
-										octopus::BuildingUnitProductionCommand * command_l = new octopus::BuildingUnitProductionCommand(
-											selection_l._sprite->getHandle(),
-											selection_l._sprite->getHandle(),
-											lib_l.getUnitModel(spriteModel_l->unitModel->_id)
-										);
-										command_l->setQueued(true);
-										controller_l.commitCommand(command_l);
-									}
-									if(spriteModel_l->buildingModel)
-									{
-										cleanClicMode(currentClicMode_l, &standardClicMode_l);
-										currentClicMode_l = new BuildClicMode(*spriteModel_l->buildingModel, spriteLib_l);
-									}
-								}
-							}
-							else if(panel_l.getBackground()->isInside(window_l, e.button.x, e.button.y))
-							{
-								// NA (skip selection and move command)
-							}
-							else
-							{
-								if( currentClicMode_l->handleMouseUp(e, selection_l, world_l, panel_l, window_l, state_l, controller_l) )
-								{
-									cleanClicMode(currentClicMode_l, &standardClicMode_l);
-									currentClicMode_l = &standardClicMode_l;
-								}
-							}
-						}
-					}
-					if( e.type == SDL_KEYDOWN)
-					{
-						/* Check the SDLKey values and move change the coords */
-						switch( e.key.keysym.sym ){
-							case SDLK_LEFT:
-								dX = - camSpeed_l;
-								break;
-							case SDLK_RIGHT:
-								dX = camSpeed_l;
-								break;
-							case SDLK_UP:
-								dY = -camSpeed_l;
-								break;
-							case SDLK_DOWN:
-								dY = camSpeed_l;
-								break;
-
-							/// handle panel
-							case SDLK_a:
-							{
-								SpriteModel const * spriteModel_l = panel_l.getSpriteModelOnGrid(0, 0);
-								commandFromSpriteModel(spriteModel_l, lib_l, spriteLib_l, selection_l, controller_l,
-									currentClicMode_l, standardClicMode_l);
-								break;
-							}
-							case SDLK_z:
-							{
-								SpriteModel const * spriteModel_l = panel_l.getSpriteModelOnGrid(1, 0);
-								commandFromSpriteModel(spriteModel_l, lib_l, spriteLib_l, selection_l, controller_l,
-									currentClicMode_l, standardClicMode_l);
-								break;
-							}
-							case SDLK_e:
-							{
-								SpriteModel const * spriteModel_l = panel_l.getSpriteModelOnGrid(2, 0);
-								commandFromSpriteModel(spriteModel_l, lib_l, spriteLib_l, selection_l, controller_l,
-									currentClicMode_l, standardClicMode_l);
-								break;
-							}
-							case SDLK_q:
-							{
-								SpriteModel const * spriteModel_l = panel_l.getSpriteModelOnGrid(0, 1);
-								commandFromSpriteModel(spriteModel_l, lib_l, spriteLib_l, selection_l, controller_l,
-									currentClicMode_l, standardClicMode_l);
-								break;
-							}
-							default:
-								break;
-						}
-					}
-					if( e.type == SDL_KEYUP)
-					{
-						switch( e.key.keysym.sym ){
-							case SDLK_LEFT:
-								dX = 0;
-								break;
-							case SDLK_RIGHT:
-								dX = 0;
-								break;
-							case SDLK_UP:
-								dY = 0;
-								break;
-							case SDLK_DOWN:
-								dY = 0;
-								break;
-							default:
-								break;
-						}
-					}
+					currentClicMode_l->handleMouseDown(e);
 				}
-				x += dX * elapsed_l;
-				y += dY * elapsed_l;
-				window_l.setCamera(x, y);
-				window_l.clear();
-
-				//Render background texture to screen
-				background_l->render(window_l.getRenderer(), 0, 0, SCREEN_HEIGHT, SCREEN_WIDTH );
-
-
-				auto cur_l = std::chrono::steady_clock::now();
-				std::chrono::duration<double> elapsed_seconds_l = cur_l-last_l;
-				elapsed_l = elapsed_seconds_l.count();
-				last_l = cur_l;
-
-				world_l.display(window_l, elapsed_l);
-
-				int mouseX, mouseY;
-				SDL_GetMouseState(&mouseX, &mouseY);
-				currentClicMode_l->display(window_l, elapsed_l, mouseX, mouseY);
-
-				panel_l.render(window_l);
-
-				octopus::Player const * player_l = state_l.getPlayer(0);
-
-				divPanel_l.refresh();
-				paused_l = divPanel_l.isActive();
+			}
+			if (e.type == SDL_MOUSEBUTTONUP)
+			{
 				if(divPanel_l.isActive())
 				{
-					divPanel_l.render(window_l);
+					std::pair<bool, octopus::DivinityType> option_l = divPanel_l.getOption(window_l, e.button.x, e.button.y);
+					if(option_l.first)
+					{
+						octopus::PlayerChoseDivinityCommand * command_l = new octopus::PlayerChoseDivinityCommand(0, 0, option_l.second, true);
+						controller_l.commitCommand(command_l);
+						divPanel_l.popOptionLayer();
+					}
 				}
+				else
+				{
+					SpriteModel const * spriteModel_l = panel_l.getSpriteModel(window_l, e.button.x, e.button.y);
 
-				textResource_l.setText(resourceStr(*player_l));
-				textResource_l.display(window_l);
-				textDivLvl_l.setText(divLvlStr(*player_l));
-				textDivLvl_l.display(window_l);
-				textDivAnchor_l.setText(divAnchorStr(*player_l));
-				textDivAnchor_l.display(window_l);
-
-				std::stringstream ss_l;
-				ss_l << stateAndSteps_l._steps.size()<<"/"<<controller_l.getOngoingStep();
-				textSteps_l.setText(ss_l.str());
-				textSteps_l.display(window_l);
-
-				window_l.draw();
+					if(spriteModel_l)
+					{
+						if(e.button.button == SDL_BUTTON_LEFT)
+						{
+							if(spriteModel_l->unitModel)
+							{
+								octopus::BuildingUnitProductionCommand * command_l = new octopus::BuildingUnitProductionCommand(
+									selection_l._sprite->getHandle(),
+									selection_l._sprite->getHandle(),
+									lib_l.getUnitModel(spriteModel_l->unitModel->_id)
+								);
+								command_l->setQueued(true);
+								controller_l.commitCommand(command_l);
+							}
+							if(spriteModel_l->buildingModel)
+							{
+								cleanClicMode(currentClicMode_l, &standardClicMode_l);
+								currentClicMode_l = new BuildClicMode(*spriteModel_l->buildingModel, spriteLib_l);
+							}
+						}
+					}
+					else if(panel_l.getBackground()->isInside(window_l, e.button.x, e.button.y))
+					{
+						// NA (skip selection and move command)
+					}
+					else
+					{
+						if( currentClicMode_l->handleMouseUp(e, selection_l, world_l, panel_l, window_l, state_l, controller_l) )
+						{
+							cleanClicMode(currentClicMode_l, &standardClicMode_l);
+							currentClicMode_l = &standardClicMode_l;
+						}
+					}
+				}
 			}
+			if( e.type == SDL_KEYDOWN)
+			{
+				/* Check the SDLKey values and move change the coords */
+				switch( e.key.keysym.sym ){
+					case SDLK_LEFT:
+						dX = - camSpeed_l;
+						break;
+					case SDLK_RIGHT:
+						dX = camSpeed_l;
+						break;
+					case SDLK_UP:
+						dY = -camSpeed_l;
+						break;
+					case SDLK_DOWN:
+						dY = camSpeed_l;
+						break;
 
-			controllerThread_l.join();
-
-			streamMetrics(std::cout, controller_l.getMetrics());
+					/// handle panel
+					case SDLK_a:
+					{
+						SpriteModel const * spriteModel_l = panel_l.getSpriteModelOnGrid(0, 0);
+						commandFromSpriteModel(spriteModel_l, lib_l, spriteLib_l, selection_l, controller_l,
+							currentClicMode_l, standardClicMode_l);
+						break;
+					}
+					case SDLK_z:
+					{
+						SpriteModel const * spriteModel_l = panel_l.getSpriteModelOnGrid(1, 0);
+						commandFromSpriteModel(spriteModel_l, lib_l, spriteLib_l, selection_l, controller_l,
+							currentClicMode_l, standardClicMode_l);
+						break;
+					}
+					case SDLK_e:
+					{
+						SpriteModel const * spriteModel_l = panel_l.getSpriteModelOnGrid(2, 0);
+						commandFromSpriteModel(spriteModel_l, lib_l, spriteLib_l, selection_l, controller_l,
+							currentClicMode_l, standardClicMode_l);
+						break;
+					}
+					case SDLK_q:
+					{
+						SpriteModel const * spriteModel_l = panel_l.getSpriteModelOnGrid(0, 1);
+						commandFromSpriteModel(spriteModel_l, lib_l, spriteLib_l, selection_l, controller_l,
+							currentClicMode_l, standardClicMode_l);
+						break;
+					}
+					default:
+						break;
+				}
+			}
+			if( e.type == SDL_KEYUP)
+			{
+				switch( e.key.keysym.sym ){
+					case SDLK_LEFT:
+						dX = 0;
+						break;
+					case SDLK_RIGHT:
+						dX = 0;
+						break;
+					case SDLK_UP:
+						dY = 0;
+						break;
+					case SDLK_DOWN:
+						dY = 0;
+						break;
+					default:
+						break;
+				}
+			}
 		}
+		x += dX * elapsed_l;
+		y += dY * elapsed_l;
+		window_l.setCamera(x, y);
+		window_l.clear();
+
+		//Render background texture to screen
+		background_l->render(window_l.getRenderer(), 0, 0, SCREEN_HEIGHT, SCREEN_WIDTH );
+
+
+		auto cur_l = std::chrono::steady_clock::now();
+		std::chrono::duration<double> elapsed_seconds_l = cur_l-last_l;
+		elapsed_l = elapsed_seconds_l.count();
+		last_l = cur_l;
+
+		world_l.display(window_l, elapsed_l);
+
+		int mouseX, mouseY;
+		SDL_GetMouseState(&mouseX, &mouseY);
+		currentClicMode_l->display(window_l, elapsed_l, mouseX, mouseY);
+
+		panel_l.render(window_l);
+
+		octopus::Player const * player_l = state_l.getPlayer(0);
+
+		divPanel_l.refresh();
+		paused_l = divPanel_l.isActive();
+		if(divPanel_l.isActive())
+		{
+			divPanel_l.render(window_l);
+		}
+
+		textResource_l.setText(resourceStr(*player_l));
+		textResource_l.display(window_l);
+		textDivLvl_l.setText(divLvlStr(*player_l));
+		textDivLvl_l.display(window_l);
+		textDivAnchor_l.setText(divAnchorStr(*player_l));
+		textDivAnchor_l.display(window_l);
+
+		std::stringstream ss_l;
+		ss_l << stateAndSteps_l._steps.size()<<"/"<<controller_l.getOngoingStep();
+		textSteps_l.setText(ss_l.str());
+		textSteps_l.display(window_l);
+
+		window_l.draw();
 	}
+
+	controllerThread_l.join();
+
+	streamMetrics(std::cout, controller_l.getMetrics());
+
 	//Free resources and close SDL
 	window_l.close();
-
 
 	return 0;
 }
