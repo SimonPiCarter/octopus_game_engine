@@ -21,6 +21,11 @@ void Commandable::enqueue(Command * cmd_p, bool enqueue_p)
 	}
 }
 
+bool Commandable::isActive() const
+{
+	return true;
+}
+
 void Commandable::runCommands(Step & step_p, State const &state_p)
 {
 	if(!_queue.hasCommand())

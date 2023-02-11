@@ -97,9 +97,12 @@ bool Controller::loop_body()
 			const std::chrono::time_point<std::chrono::steady_clock> start_l = std::chrono::steady_clock::now();
 
 			// apply all commands
-			for(Commandable * cmdable_l : _backState->_state->getCommandables())
+			for(Commandable * cmdable_l : _backState->_state->getEntities())
 			{
-				cmdable_l->runCommands(step_l, *_backState->_state);
+				if(cmdable_l->isActive())
+				{
+					cmdable_l->runCommands(step_l, *_backState->_state);
+				}
 			}
 
 			// push new commands

@@ -20,6 +20,11 @@ namespace octopus
 			Entity(Vector const &pos_p, bool frozen_p, EntityModel const &model_p);
 			virtual ~Entity() {}
 
+			virtual bool isActive() const override
+			{
+				return Commandable::isActive() && _alive;
+			}
+
 			Vector _pos;
 
 			/// @brief cannot move

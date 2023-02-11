@@ -27,6 +27,10 @@ public:
 	/// @param enqueue_p if true the cmd is added on top of the queue else it overrides it
 	void enqueue(Command * cmd_p, bool enqueue_p);
 
+	/// @brief is the commandable active in the state
+	/// @note should only return true if the commandable should be run
+	virtual bool isActive() const;
+
 	/// @brief run the commands in queue and pop them if terminated
 	virtual void runCommands(Step & step_p, State const &state_p);
 
