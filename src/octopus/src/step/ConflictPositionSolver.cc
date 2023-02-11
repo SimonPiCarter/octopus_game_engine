@@ -111,7 +111,7 @@ bool updateStepFromConflictPosition(Step &step_p, State const &state_p)
 		// check every entity with one another
 		grid_l[x][y]->for_each([&] (int handle_p)
 		{
-			if(bitset_l.at(handle_p))
+			if(bitset_l[handle_p])
 			{
 				return;
 			}
@@ -239,7 +239,7 @@ bool updateStepFromConflictPosition(Step &step_p, State const &state_p)
 		// check every entity with one another
 		grid_l[x][y]->for_each([&] (int handle_p)
 		{
-			if(bitset_l.at(handle_p))
+			if(bitset_l[handle_p])
 			{
 				return;
 			}
