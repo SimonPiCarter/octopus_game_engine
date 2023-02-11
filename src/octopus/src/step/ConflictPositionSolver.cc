@@ -66,9 +66,6 @@ bool updateStepFromConflictPosition(Step &step_p, State const &state_p)
 		newPos_l[ent_l->_handle] = ent_l->_pos + step_l->_move;
 	}
 
-	// grid for fast access
-	std::vector<std::vector<DynamicBitset> > const & grid_l = state_p.getGrid();
-
 	// fill up move steps when missing
 	for(Entity const * ent_l : state_p.getEntities())
 	{
@@ -90,24 +87,8 @@ bool updateStepFromConflictPosition(Step &step_p, State const &state_p)
 	// Set up bitset of collision
 	//////////////////////////////
 
-	std::unordered_map<EntityMoveStep *, DynamicBitset *> mapBitset_l;
-	for(EntityMoveStep *step_l: step_p.getEntityMoveStep())
-	{
-		Entity const * ent_l = state_p.getEntity(step_l->_handle);
-		Box<long> box_l {state_p.getGridIndex(newPos_l[ent_l->_handle].x-ent_l->_model._ray),
-						 state_p.getGridIndex(newPos_l[ent_l->_handle].x+ent_l->_model._ray+0.999),
-						 state_p.getGridIndex(newPos_l[ent_l->_handle].y-ent_l->_model._ray),
-						 state_p.getGridIndex(newPos_l[ent_l->_handle].y+ent_l->_model._ray+0.999)};
-
-		mapBitset_l[step_l] = new DynamicBitset(state_p.getGridBitSize());
-		for(size_t x = box_l._lowerX ; x <= box_l._upperX; ++x)
-		{
-			for(size_t y = box_l._lowerY ; y <= box_l._upperY; ++y)
-			{
-				(*mapBitset_l[step_l]) |= grid_l[x][y];
-			}
-		}
-	}
+	// grid for fast access
+	std::vector<std::vector<AbstractBitset *> > const & grid_l = state_p.getGrid();
 
 	//////////////////////////////
 	// Check on non Buildings
@@ -118,9 +99,24 @@ bool updateStepFromConflictPosition(Step &step_p, State const &state_p)
 	{
 		Entity const * entA_l = state_p.getEntity(stepA_l->_handle);
 
-		// check every entity with one another
-		for_each_bit(*mapBitset_l[stepA_l], [&] (int handle_p)
+		Box<long> box_l {state_p.getGridIndex(newPos_l[entA_l->_handle].x-entA_l->_model._ray),
+						 state_p.getGridIndex(newPos_l[entA_l->_handle].x+entA_l->_model._ray+0.999),
+						 state_p.getGridIndex(newPos_l[entA_l->_handle].y-entA_l->_model._ray),
+						 state_p.getGridIndex(newPos_l[entA_l->_handle].y+entA_l->_model._ray+0.999)};
+		std::vector<bool> bitset_l(state_p.getEntities().size(), false);
+		for(size_t x = box_l._lowerX ; x <= box_l._upperX; ++x)
 		{
+		for(size_t y = box_l._lowerY ; y <= box_l._upperY; ++y)
+		{
+		// check every entity with one another
+		grid_l[x][y]->for_each([&] (int handle_p)
+		{
+			if(bitset_l.at(handle_p))
+			{
+				return;
+			}
+			Logger::getDebug()<<"checking between [ent] "<<stepA_l->_handle<<" and "<<handle_p<<std::endl;
+			bitset_l[handle_p] = true;
 			Entity const * entB_l = state_p.getEntity(handle_p);
 			EntityMoveStep *stepB_l = mapMoveStep_l[entB_l];
 			// continue if same
@@ -180,6 +176,8 @@ bool updateStepFromConflictPosition(Step &step_p, State const &state_p)
 				mapCorrection_l[stepA_l] += normalizedAxis_l * distance_l * coefA_l;
 			}
 		});
+		}
+		}
 	}
 
 	//////////////////////////////
@@ -230,9 +228,25 @@ bool updateStepFromConflictPosition(Step &step_p, State const &state_p)
 	{
 		Entity const * entA_l = state_p.getEntity(stepA_l->_handle);
 
-		// check every entity with one another
-		for_each_bit(*mapBitset_l[stepA_l], [&] (int handle_p)
+		Box<long> box_l {state_p.getGridIndex(newPos_l[entA_l->_handle].x-entA_l->_model._ray),
+						 state_p.getGridIndex(newPos_l[entA_l->_handle].x+entA_l->_model._ray+0.999),
+						 state_p.getGridIndex(newPos_l[entA_l->_handle].y-entA_l->_model._ray),
+						 state_p.getGridIndex(newPos_l[entA_l->_handle].y+entA_l->_model._ray+0.999)};
+
+		std::vector<bool> bitset_l(state_p.getEntities().size(), false);
+		for(size_t x = box_l._lowerX ; x <= box_l._upperX; ++x)
 		{
+		for(size_t y = box_l._lowerY ; y <= box_l._upperY; ++y)
+		{
+		// check every entity with one another
+		grid_l[x][y]->for_each([&] (int handle_p)
+		{
+			if(bitset_l.at(handle_p))
+			{
+				return;
+			}
+			bitset_l[handle_p] = true;
+			Logger::getDebug()<<"checking between [bui] "<<stepA_l->_handle<<" and "<<handle_p<<std::endl;
 			Entity const * entB_l = state_p.getEntity(handle_p);
 			EntityMoveStep *stepB_l = mapMoveStep_l[entB_l];
 			// continue if same
@@ -304,6 +318,8 @@ bool updateStepFromConflictPosition(Step &step_p, State const &state_p)
 				mapAbsoluteCorrection_l[stepA_l] -= diff_l * coefA_l;
 			}
 		});
+		}
+		}
 	}
 
 	//////////////////////////////
@@ -323,11 +339,6 @@ bool updateStepFromConflictPosition(Step &step_p, State const &state_p)
 		}
 		Logger::getDebug() << " conflict solver :: "<<ent_l->_handle<< " absolute correction : "<<mapAbsoluteCorrection_l[ent_l]<<std::endl;
 		ent_l->_move = ent_l->_move + mapAbsoluteCorrection_l[ent_l];
-	}
-
-	for(auto && pair_l : mapBitset_l)
-	{
-		delete pair_l.second;
 	}
 
 	return updated_l;

@@ -19,7 +19,7 @@ TEST(DynamicBitsetTest, empty)
 
 	// to store values set to 1 in the bitset
 	std::vector<int> vals_l;
-	for_each_bit(bitset_l, std::bind(record, std::ref(vals_l), std::placeholders::_1));
+	bitset_l.for_each(std::bind(record, std::ref(vals_l), std::placeholders::_1));
 
 	ASSERT_EQ(0ul, vals_l.size());
 }
@@ -33,7 +33,7 @@ TEST(DynamicBitsetTest, set)
 
 	// to store values set to 1 in the bitset
 	std::vector<int> vals_l;
-	for_each_bit(bitset_l, std::bind(record, std::ref(vals_l), std::placeholders::_1));
+	bitset_l.for_each(std::bind(record, std::ref(vals_l), std::placeholders::_1));
 
 	ASSERT_EQ(2ul, vals_l.size());
 	EXPECT_EQ(3, vals_l.at(0));
@@ -42,7 +42,7 @@ TEST(DynamicBitsetTest, set)
 	bitset_l.set(3, false);
 
 	vals_l.clear();
-	for_each_bit(bitset_l, std::bind(record, std::ref(vals_l), std::placeholders::_1));
+	bitset_l.for_each(std::bind(record, std::ref(vals_l), std::placeholders::_1));
 
 	ASSERT_EQ(1ul, vals_l.size());
 	EXPECT_EQ(5, vals_l.at(0));
@@ -64,7 +64,7 @@ TEST(DynamicBitsetTest, or)
 
 	// to store values set to 1 in the bitset
 	std::vector<int> vals_l;
-	for_each_bit(bitsetA_l, std::bind(record, std::ref(vals_l), std::placeholders::_1));
+	bitsetA_l.for_each(std::bind(record, std::ref(vals_l), std::placeholders::_1));
 
 	ASSERT_EQ(3ul, vals_l.size());
 	EXPECT_EQ(2, vals_l.at(0));
@@ -88,7 +88,7 @@ TEST(DynamicBitsetTest, and)
 
 	// to store values set to 1 in the bitset
 	std::vector<int> vals_l;
-	for_each_bit(bitsetA_l, std::bind(record, std::ref(vals_l), std::placeholders::_1));
+	bitsetA_l.for_each(std::bind(record, std::ref(vals_l), std::placeholders::_1));
 
 	ASSERT_EQ(1ul, vals_l.size());
 	EXPECT_EQ(5, vals_l.at(0));
@@ -105,7 +105,7 @@ TEST(DynamicBitsetTest, over_one)
 
 	// to store values set to 1 in the bitset
 	std::vector<int> vals_l;
-	for_each_bit(bitset_l, std::bind(record, std::ref(vals_l), std::placeholders::_1));
+	bitset_l.for_each(std::bind(record, std::ref(vals_l), std::placeholders::_1));
 
 	ASSERT_EQ(2ul, vals_l.size());
 	EXPECT_EQ(12, vals_l.at(0));

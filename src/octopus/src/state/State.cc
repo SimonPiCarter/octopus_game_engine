@@ -18,7 +18,11 @@ State::State() : _id(0), _gridSize(50), _gridPointSize(1),_gridBitSize(3200), _p
 	_grid.reserve(_gridSize);
 	for(size_t i = 0 ; i < _gridSize ; ++ i)
 	{
-		_grid.emplace_back(_gridSize, DynamicBitset(_gridBitSize));
+		_grid.push_back(std::vector<AbstractBitset *>());
+		for(size_t j = 0 ; j < _gridSize ; ++ j)
+		{
+			_grid.at(i).emplace_back(new DynamicBitset(_gridBitSize));
+		}
 	}
 }
 
@@ -27,7 +31,11 @@ State::State(unsigned long id_p) : _id(id_p), _gridSize(50), _gridPointSize(1), 
 	_grid.reserve(_gridSize);
 	for(size_t i = 0 ; i < _gridSize ; ++ i)
 	{
-		_grid.emplace_back(_gridSize, DynamicBitset(_gridBitSize));
+		_grid.push_back(std::vector<AbstractBitset *>());
+		for(size_t j = 0 ; j < _gridSize ; ++ j)
+		{
+			_grid.at(i).emplace_back(new DynamicBitset(_gridBitSize));
+		}
 	}
 }
 
@@ -40,6 +48,13 @@ State::~State()
 	for(Player * player_l : _players)
 	{
 		delete player_l;
+	}
+	for(size_t i = 0 ; i < _gridSize ; ++ i)
+	{
+		for(size_t j = 0 ; j < _gridSize ; ++ j)
+		{
+			delete _grid.at(i).at(j);
+		}
 	}
 }
 bool State::hasEntity(Handle const &handle_p) const
@@ -107,7 +122,7 @@ Player const *State::getPlayer(unsigned long player_p) const
 	return _players[player_p];
 }
 
-std::vector<std::vector<DynamicBitset> > const & State::getGrid() const
+std::vector<std::vector<AbstractBitset *> > const & State::getGrid() const
 {
 	return _grid;
 }
@@ -130,7 +145,7 @@ const TriggerData * State::getTriggerData(Handle const &handleTrigger_p) const
 	return _triggersData[handleTrigger_p];
 }
 
-std::vector<std::vector<DynamicBitset> > & State::getGrid()
+std::vector<std::vector<AbstractBitset *> > & State::getGrid()
 {
 	return _grid;
 }
@@ -179,22 +194,23 @@ Entity const * lookUpNewTarget(State const &state_p, Handle const &sourceHandle_
 					 state_p.getGridIndex(source_l->_pos.x + matchDistance_l),
 					 state_p.getGridIndex(source_l->_pos.y - matchDistance_l),
 					 state_p.getGridIndex(source_l->_pos.y + matchDistance_l)};
+	std::vector<bool> bitset_l(state_p.getEntities().size(), false);
 
 	// grid for fast access
-	std::vector<std::vector<DynamicBitset> > const & grid_l = state_p.getGrid();
+	std::vector<std::vector<AbstractBitset *> > const & grid_l = state_p.getGrid();
 
-	DynamicBitset bitset_l(state_p.getGridBitSize());
-	for(long x = std::max<long>(0l, box_l._lowerX) ; x <= box_l._upperX; ++x)
+	for(long x = box_l._lowerX ; x <= box_l._upperX; ++x)
 	{
-		for(long y = std::max<long>(0l, box_l._lowerY) ; y <= box_l._upperY; ++y)
-		{
-			bitset_l |= grid_l[x][y];
-		}
-	}
-
+	for(long y = box_l._lowerY ; y <= box_l._upperY; ++y)
+	{
 	// for now look for closest entity
-	for_each_bit(bitset_l, [&] (int handle_p)
+	grid_l[x][y]->for_each([&] (int handle_p)
 	{
+		if(bitset_l.at(handle_p))
+		{
+			return;
+		}
+		bitset_l[handle_p] = true;
 		Entity const * ent_l = state_p.getEntity(handle_p);
 		if(ent_l == source_l
 		|| !ent_l->_alive
@@ -218,6 +234,8 @@ Entity const * lookUpNewTarget(State const &state_p, Handle const &sourceHandle_
 			}
 		}
 	});
+	}
+	}
 	// reset target if too far
 	if(sqDis_l > matchDistance_l*matchDistance_l)
 	{
@@ -337,7 +355,7 @@ void updateGrid(State &state_p, Entity const *ent_p, bool set_p)
 	{
 		for(size_t y = box_l._lowerY ; y <= box_l._upperY; ++y)
 		{
-			state_p.getGrid()[x][y].set(ent_p->_handle, set_p);
+			state_p.getGrid()[x][y]->set(ent_p->_handle, set_p);
 		}
 	}
 

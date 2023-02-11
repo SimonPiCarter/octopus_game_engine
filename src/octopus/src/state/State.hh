@@ -46,8 +46,8 @@ public:
 	Player *getPlayer(unsigned long player_p);
 	Player const *getPlayer(unsigned long player_p) const;
 
-	std::vector<std::vector<DynamicBitset> > const & getGrid() const;
-	std::vector<std::vector<DynamicBitset> > & getGrid();
+	std::vector<std::vector<AbstractBitset *> > const & getGrid() const;
+	std::vector<std::vector<AbstractBitset *> > & getGrid();
 
 	///
 	/// Trigger and Listener data
@@ -99,7 +99,7 @@ private:
 	std::vector<TriggerData *> _triggersData;
 
 	/// @brief grid for position indexing
-	std::vector<std::vector<DynamicBitset> > _grid;
+	std::vector<std::vector<AbstractBitset *> > _grid;
 	unsigned long const _gridSize;
 	unsigned long const _gridPointSize;
 	unsigned long const _gridBitSize;
