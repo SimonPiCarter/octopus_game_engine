@@ -101,7 +101,6 @@ private:
 	std::vector<std::vector<AbstractBitset *> > _grid;
 	unsigned long const _gridSize;
 	unsigned long const _gridPointSize;
-	unsigned long const _gridBitSize;
 
 	/// @brief grid for pathing purpose
 	Grid _pathGrid;
