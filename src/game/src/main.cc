@@ -11,16 +11,16 @@
 int main()
 {
 	octopus::Library lib_l;
-	std::list<octopus::Steppable *> spawners_l = Case2(lib_l);
+	std::list<octopus::Steppable *> spawners_l = Case4(lib_l);
 
-	octopus::Controller controller_l(spawners_l, 1.);
+	octopus::Controller controller_l(spawners_l, 0.01);
 
-	bool writeFiles_l = true;
+	bool writeFiles_l = false;
 
 	octopus::Logger::getNormal()<<"Playing"<<std::endl;
 
 	size_t i = 1;
-	for( ; i < 600 ; ++ i)
+	for( ; i <= 20000 ; ++ i)
 	{
 		if(i == 1 && writeFiles_l)
 		{
@@ -29,7 +29,7 @@ int main()
 			streamCsvEntity(file_l, state_l->getEntities());
 		}
 
-		controller_l.update(1.);
+		controller_l.update(0.01);
 
 		while(!controller_l.loop_body()) {}
 
