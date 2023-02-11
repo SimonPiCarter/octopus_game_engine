@@ -56,9 +56,9 @@ class Sprite
 		/// @note x and y coordinates must be in absolute world coordinate
 		bool intersect(int lx, int ly, int ux, int uy) const;
 
-		//Gets image dimensions
-		int getWidth();
-		int getHeight();
+		//Gets sprite dimensions
+		double getWidth() const;
+		double getHeight() const;
 
 		void setPosition(double x, double y);
 		void move(double dx, double dy);

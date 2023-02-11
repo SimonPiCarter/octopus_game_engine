@@ -136,6 +136,16 @@ bool Sprite::intersect(int lx, int ly, int ux, int uy) const
 	return false;
 }
 
+double Sprite::getWidth() const
+{
+	return _width * _scale;
+}
+
+double Sprite::getHeight() const
+{
+	return _height * _scale;
+}
+
 void Sprite::setPosition(double x, double y)
 {
 	_x = x;
