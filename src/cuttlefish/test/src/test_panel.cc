@@ -242,7 +242,8 @@ int main( int argc, char* args[] )
 					}
 					if (e.type == SDL_MOUSEBUTTONDOWN)
 					{
-						if(!panel_l.getBackground()->isInside(window_l, e.button.x, e.button.y))
+						if(!panel_l.getBackground()->isInside(window_l, e.button.x, e.button.y)
+						&& !divPanel_l.getBackground()->isInside(window_l, e.button.x, e.button.y))
 						{
 							currentClicMode_l->handleMouseDown(e);
 						}
