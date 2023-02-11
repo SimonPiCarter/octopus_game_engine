@@ -64,7 +64,6 @@ public:
 	std::vector<TriggerData *> const &getTriggersData() const { return _triggersData; }
 
 	unsigned long getGridSize() const;
-	unsigned long getGridBitSize() const;
 
 	Grid &getPathGrid();
 	Grid const &getPathGrid() const;

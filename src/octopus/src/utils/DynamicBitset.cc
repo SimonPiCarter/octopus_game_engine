@@ -15,18 +15,6 @@ DynamicBitset::DynamicBitset(size_t nb_p) :
 	}
 }
 
-void DynamicBitset::addBits(size_t nb_p)
-{
-	// increase vector size if necessary
-	while(_vecBitset.size() * _size < _bitsetSize + nb_p)
-	{
-		_vecBitset.emplace_back(0ul);
-	}
-
-	// update size
-	_bitsetSize += nb_p;
-}
-
 void DynamicBitset::set(size_t idx_p, bool val_p)
 {
 	// get index in the vector
@@ -86,6 +74,31 @@ void DynamicBitset::for_each(std::function<void(int)> fn_p) const
 				bitset_l ^= t;
 			}
 		#endif
+	}
+}
+
+void SetBitset::set(size_t idx_p, bool val_p)
+{
+	if(val_p)
+	{
+		_set.insert(idx_p);
+	}
+	else
+	{
+		_set.erase(idx_p);
+	}
+}
+
+void SetBitset::reset()
+{
+	_set.clear();
+}
+
+void SetBitset::for_each(std::function<void(int)> fn_p) const
+{
+	for(int i : _set)
+	{
+		fn_p(i);
 	}
 }
 

@@ -21,7 +21,7 @@ State::State() : _id(0), _gridSize(50), _gridPointSize(1),_gridBitSize(3200), _p
 		_grid.push_back(std::vector<AbstractBitset *>());
 		for(size_t j = 0 ; j < _gridSize ; ++ j)
 		{
-			_grid.at(i).emplace_back(new DynamicBitset(_gridBitSize));
+			_grid.at(i).emplace_back(new SetBitset());
 		}
 	}
 }
@@ -34,7 +34,7 @@ State::State(unsigned long id_p) : _id(id_p), _gridSize(50), _gridPointSize(1), 
 		_grid.push_back(std::vector<AbstractBitset *>());
 		for(size_t j = 0 ; j < _gridSize ; ++ j)
 		{
-			_grid.at(i).emplace_back(new DynamicBitset(_gridBitSize));
+			_grid.at(i).emplace_back(new SetBitset());
 		}
 	}
 }
@@ -153,11 +153,6 @@ std::vector<std::vector<AbstractBitset *> > & State::getGrid()
 unsigned long State::getGridSize() const
 {
 	return _gridSize;
-}
-
-unsigned long State::getGridBitSize() const
-{
-	return _gridBitSize;
 }
 
 Grid &State::getPathGrid()

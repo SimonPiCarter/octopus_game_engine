@@ -3,6 +3,7 @@
 
 #include <bitset>
 #include <iostream>
+#include <set>
 #include <vector>
 #include <functional>
 
@@ -41,7 +42,6 @@ class DynamicBitset : public AbstractBitset
 public:
 	DynamicBitset(size_t nb_p);
 
-	void addBits(size_t nb_p);
 	/// @brief return the logical size of the bitset
 	size_t size() const;
 
@@ -49,12 +49,12 @@ public:
 
 	void reset() override;
 
-	virtual void for_each(std::function<void(int)> fn_p) const override;
+	void for_each(std::function<void(int)> fn_p) const override;
 
 private:
 	/// @brief underlying data structure
 	std::vector<unsigned long> _vecBitset;
-	/// @brief this is the logical size of the bitset (takes into account constructor nb and all addBits call)
+	/// @brief this is the logical size of the bitset
 	/// This can be different from the underlying data
 	size_t _bitsetSize;
 
@@ -63,6 +63,20 @@ private:
 
 	friend octopus::DynamicBitset & ::operator&=(octopus::DynamicBitset &a, octopus::DynamicBitset const &b);
 	friend octopus::DynamicBitset & ::operator|=(octopus::DynamicBitset &a, octopus::DynamicBitset const &b);
+};
+
+/// @brief this class enacpsulate a set to modelize a sparse bitset
+class SetBitset : public AbstractBitset
+{
+public:
+	void set(size_t idx_p, bool val_p) override;
+
+	void reset() override;
+
+	void for_each(std::function<void(int)> fn_p) const override;
+
+private:
+	std::set<int> _set;
 };
 
 }
