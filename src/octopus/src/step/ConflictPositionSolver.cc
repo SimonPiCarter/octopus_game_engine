@@ -115,7 +115,6 @@ bool updateStepFromConflictPosition(Step &step_p, State const &state_p)
 			{
 				return;
 			}
-			Logger::getDebug()<<"checking between [ent] "<<stepA_l->_handle<<" and "<<handle_p<<std::endl;
 			bitset_l[handle_p] = true;
 			Entity const * entB_l = state_p.getEntity(handle_p);
 			EntityMoveStep *stepB_l = mapMoveStep_l[entB_l];
@@ -196,7 +195,6 @@ bool updateStepFromConflictPosition(Step &step_p, State const &state_p)
 		{
 			continue;
 		}
-		Logger::getDebug() << " conflict solver :: "<<ent_l->_handle<<" correction : "<<mapCorrection_l[ent_l]<<std::endl;
 		// ensure that move does not become too cahotic
 		double square_l = state_p.getEntity(ent_l->_handle)->getStepSpeed()*state_p.getEntity(ent_l->_handle)->getStepSpeed();
 		Vector origMove_l = ent_l->_move;
@@ -246,7 +244,6 @@ bool updateStepFromConflictPosition(Step &step_p, State const &state_p)
 				return;
 			}
 			bitset_l[handle_p] = true;
-			Logger::getDebug()<<"checking between [bui] "<<stepA_l->_handle<<" and "<<handle_p<<std::endl;
 			Entity const * entB_l = state_p.getEntity(handle_p);
 			EntityMoveStep *stepB_l = mapMoveStep_l[entB_l];
 			// continue if same
@@ -278,10 +275,6 @@ bool updateStepFromConflictPosition(Step &step_p, State const &state_p)
 				double dYUp_l = boxA_l._upperY - boxB_l._lowerY;
 				double dYDown_l = boxA_l._lowerY - boxB_l._upperY;
 
-				Logger::getDebug() << "dXRight_l = "<< dXRight_l<<std::endl;
-				Logger::getDebug() << "dXLeft_l = "<< dXLeft_l<<std::endl;
-				Logger::getDebug() << "dYUp_l = "<< dYUp_l<<std::endl;
-				Logger::getDebug() << "dYDown_l = "<< dYDown_l<<std::endl;
 				double dXRightAbs_l = std::abs(dXRight_l);
 				double dXLeftAbs_l = std::abs(dXLeft_l);
 				double dYUpAbs_l = std::abs(dYUp_l);
@@ -299,7 +292,6 @@ bool updateStepFromConflictPosition(Step &step_p, State const &state_p)
 				} else if(min_l + 1e-5 >= dYDownAbs_l) {
 					diff_l = {0., dYDown_l};
 				}
-				Logger::getDebug() << "diff_l = "<< diff_l<<std::endl;
 
 				double coefA_l = 0.5;
 				if(entA_l->isFrozen() && entB_l->isFrozen())
