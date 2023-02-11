@@ -181,7 +181,7 @@ int main( int argc, char* args[] )
 	double y = 0.;
 	double dX = 0.;
 	double dY = 0.;
-	double camSpeed_l = 200.;
+	double camSpeed_l = 400.;
 
 	Panel panel_l(&window_l, SCREEN_WIDTH-200, SCREEN_HEIGHT-200,
 		window_l.loadTexture("resources/background.png"), window_l.loadTexture("resources/grid.png"), 3);
@@ -233,6 +233,28 @@ int main( int argc, char* args[] )
 		//Handle events on queue
 		while( SDL_PollEvent( &e ) != 0 )
 		{
+			if( e.type == SDL_MOUSEMOTION )
+			{
+				dX = 0;
+				dY = 0;
+				int margin_l = 40;
+				if(e.button.x < margin_l)
+				{
+					dX = - camSpeed_l;
+				}
+				if(e.button.x > SCREEN_WIDTH - margin_l)
+				{
+					dX = camSpeed_l;
+				}
+				if(e.button.y < margin_l)
+				{
+					dY = -camSpeed_l;
+				}
+				if(e.button.y > SCREEN_HEIGHT - margin_l)
+				{
+					dY = camSpeed_l;
+				}
+			}
 			//User requests quit_l
 			if( e.type == SDL_QUIT )
 			{
@@ -301,19 +323,6 @@ int main( int argc, char* args[] )
 			{
 				/* Check the SDLKey values and move change the coords */
 				switch( e.key.keysym.sym ){
-					case SDLK_LEFT:
-						dX = - camSpeed_l;
-						break;
-					case SDLK_RIGHT:
-						dX = camSpeed_l;
-						break;
-					case SDLK_UP:
-						dY = -camSpeed_l;
-						break;
-					case SDLK_DOWN:
-						dY = camSpeed_l;
-						break;
-
 					/// handle panel
 					case SDLK_a:
 					{
@@ -343,25 +352,6 @@ int main( int argc, char* args[] )
 							currentClicMode_l, standardClicMode_l);
 						break;
 					}
-					default:
-						break;
-				}
-			}
-			if( e.type == SDL_KEYUP)
-			{
-				switch( e.key.keysym.sym ){
-					case SDLK_LEFT:
-						dX = 0;
-						break;
-					case SDLK_RIGHT:
-						dX = 0;
-						break;
-					case SDLK_UP:
-						dY = 0;
-						break;
-					case SDLK_DOWN:
-						dY = 0;
-						break;
 					default:
 						break;
 				}
