@@ -75,6 +75,10 @@ public:
 	void incrementPathGridStatus();
 	unsigned long getPathGridStatus() const { return _pathGridStatus; }
 
+	/// @brief get grid index from world position
+	/// @note basically divide by grid point size and floor value
+	long getGridIndex(double idx_p) const;
+
 	unsigned long const _id;
 private:
 	State(State const &state_p) = delete;
@@ -97,6 +101,7 @@ private:
 	/// @brief grid for position indexing
 	std::vector<std::vector<DynamicBitset> > _grid;
 	unsigned long const _gridSize;
+	unsigned long const _gridPointSize;
 	unsigned long const _gridBitSize;
 
 	/// @brief grid for pathing purpose

@@ -13,7 +13,7 @@
 namespace octopus
 {
 
-State::State() : _id(0), _gridSize(50), _gridBitSize(3200), _pathGrid(_gridSize, _gridSize, 1., 1.)
+State::State() : _id(0), _gridSize(50), _gridPointSize(1),_gridBitSize(3200), _pathGrid(_gridSize*_gridPointSize, _gridSize*_gridPointSize, 1., 1.)
 {
 	_grid.reserve(_gridSize);
 	for(size_t i = 0 ; i < _gridSize ; ++ i)
@@ -22,7 +22,7 @@ State::State() : _id(0), _gridSize(50), _gridBitSize(3200), _pathGrid(_gridSize,
 	}
 }
 
-State::State(unsigned long id_p) : _id(id_p), _gridSize(50), _gridBitSize(3200), _pathGrid(_gridSize, _gridSize, 1., 1.)
+State::State(unsigned long id_p) : _id(id_p), _gridSize(50), _gridPointSize(1), _gridBitSize(3200), _pathGrid(_gridSize*_gridPointSize, _gridSize*_gridPointSize, 1., 1.)
 {
 	_grid.reserve(_gridSize);
 	for(size_t i = 0 ; i < _gridSize ; ++ i)
@@ -159,9 +159,15 @@ void State::incrementPathGridStatus()
 	++_pathGridStatus;
 }
 
+long State::getGridIndex(double idx_p) const
+{
+	long size_l = getGridSize();
+	return std::min(std::max(0l, long(idx_p/_gridPointSize)), size_l);
+}
+
 Entity const * lookUpNewTarget(State const &state_p, Handle const &sourceHandle_p)
 {
-	long matchDistance_l = 5;
+	double matchDistance_l = 5;
 	double sqDis_l = 0.;
 	Entity const * closest_l = nullptr;
 	Entity const * source_l = state_p.getEntity(sourceHandle_p);
@@ -169,18 +175,18 @@ Entity const * lookUpNewTarget(State const &state_p, Handle const &sourceHandle_
 
 	Logger::getDebug() << " lookUpNewTarget :: start"<< std::endl;
 
-	Box<long> box_l {long(source_l->_pos.x) - matchDistance_l,
-					 long(source_l->_pos.x) + matchDistance_l,
-					 long(source_l->_pos.y) - matchDistance_l,
-					 long(source_l->_pos.y) + matchDistance_l};
+	Box<long> box_l {state_p.getGridIndex(source_l->_pos.x - matchDistance_l),
+					 state_p.getGridIndex(source_l->_pos.x + matchDistance_l),
+					 state_p.getGridIndex(source_l->_pos.y - matchDistance_l),
+					 state_p.getGridIndex(source_l->_pos.y + matchDistance_l)};
 
 	// grid for fast access
 	std::vector<std::vector<DynamicBitset> > const & grid_l = state_p.getGrid();
 
 	DynamicBitset bitset_l(state_p.getGridBitSize());
-	for(long x = std::max<long>(0l, box_l._lowerX) ; x < std::min<long>(grid_l.size(), box_l._upperX); ++x)
+	for(long x = std::max<long>(0l, box_l._lowerX) ; x <= box_l._upperX; ++x)
 	{
-		for(long y = std::max<long>(0l, box_l._lowerY) ; y < std::min<long>(grid_l[x].size(), box_l._upperY); ++y)
+		for(long y = std::max<long>(0l, box_l._lowerY) ; y <= box_l._upperY; ++y)
 		{
 			bitset_l |= grid_l[x][y];
 		}
@@ -322,14 +328,14 @@ void updateGrid(State &state_p, Entity const *ent_p, bool set_p)
 {
 	long size_l = state_p.getGridSize();
 	// fill positional grid
-	Box<long> box_l { std::min(std::max(0l, long(ent_p->_pos.x-ent_p->_model._ray)), size_l),
-					  std::min(std::max(0l, long(ent_p->_pos.x+ent_p->_model._ray+0.999)), size_l),
-					  std::min(std::max(0l, long(ent_p->_pos.y-ent_p->_model._ray)), size_l),
-					  std::min(std::max(0l, long(ent_p->_pos.y+ent_p->_model._ray+0.999)), size_l)
+	Box<long> box_l { state_p.getGridIndex(ent_p->_pos.x-ent_p->_model._ray),
+					  state_p.getGridIndex(ent_p->_pos.x+ent_p->_model._ray+0.999),
+					  state_p.getGridIndex(ent_p->_pos.y-ent_p->_model._ray),
+					  state_p.getGridIndex(ent_p->_pos.y+ent_p->_model._ray+0.999)
 					};
-	for(size_t x = box_l._lowerX ; x < box_l._upperX; ++x)
+	for(size_t x = box_l._lowerX ; x <= box_l._upperX; ++x)
 	{
-		for(size_t y = box_l._lowerY ; y < box_l._upperY; ++y)
+		for(size_t y = box_l._lowerY ; y <= box_l._upperY; ++y)
 		{
 			state_p.getGrid()[x][y].set(ent_p->_handle, set_p);
 		}
@@ -339,9 +345,16 @@ void updateGrid(State &state_p, Entity const *ent_p, bool set_p)
 	if(ent_p->_model._isStatic)
 	{
 		state_p.incrementPathGridStatus();
-		for(size_t x = box_l._lowerX ; x < box_l._upperX; ++x)
+		// Canot use grid index because it uses custom size
+		// because each node has a size of 1
+		Box<size_t> boxNode_l { size_t(std::max(0., ent_p->_pos.x-ent_p->_model._ray)),
+						size_t(std::max(0., ent_p->_pos.x+ent_p->_model._ray+0.999)),
+						size_t(std::max(0., ent_p->_pos.y-ent_p->_model._ray)),
+						size_t(std::max(0., ent_p->_pos.y+ent_p->_model._ray+0.999))
+						};
+		for(size_t x = boxNode_l._lowerX ; x < boxNode_l._upperX; ++x)
 		{
-			for(size_t y = box_l._lowerY ; y < box_l._upperY; ++y)
+			for(size_t y = boxNode_l._lowerY ; y < boxNode_l._upperY; ++y)
 			{
 				GridNode *node_l = state_p.getPathGrid().getNode(x, y);
 				if(set_p)

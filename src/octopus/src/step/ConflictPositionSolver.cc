@@ -94,15 +94,15 @@ bool updateStepFromConflictPosition(Step &step_p, State const &state_p)
 	for(EntityMoveStep *step_l: step_p.getEntityMoveStep())
 	{
 		Entity const * ent_l = state_p.getEntity(step_l->_handle);
-		Box<long> box_l {long(newPos_l[ent_l->_handle].x-ent_l->_model._ray),
-				  long(newPos_l[ent_l->_handle].x+ent_l->_model._ray+0.999),
-				  long(newPos_l[ent_l->_handle].y-ent_l->_model._ray),
-				  long(newPos_l[ent_l->_handle].y+ent_l->_model._ray+0.999)};
+		Box<long> box_l {state_p.getGridIndex(newPos_l[ent_l->_handle].x-ent_l->_model._ray),
+						 state_p.getGridIndex(newPos_l[ent_l->_handle].x+ent_l->_model._ray+0.999),
+						 state_p.getGridIndex(newPos_l[ent_l->_handle].y-ent_l->_model._ray),
+						 state_p.getGridIndex(newPos_l[ent_l->_handle].y+ent_l->_model._ray+0.999)};
 
 		mapBitset_l[step_l] = new DynamicBitset(state_p.getGridBitSize());
-		for(size_t x = box_l._lowerX ; x < box_l._upperX; ++x)
+		for(size_t x = box_l._lowerX ; x <= box_l._upperX; ++x)
 		{
-			for(size_t y = box_l._lowerY ; y < box_l._upperY; ++y)
+			for(size_t y = box_l._lowerY ; y <= box_l._upperY; ++y)
 			{
 				(*mapBitset_l[step_l]) |= grid_l[x][y];
 			}
