@@ -23,6 +23,7 @@ void spawn(Step & step_p, EntityModel const *model_p, Option const &option_p, un
 	Vector pos_l {option_p.x + std::ceil(2*model_p->_ray)/2., option_p.y + std::ceil(2*model_p->_ray)/2. };
 	if(model_p->_isUnit)
 	{
+		Logger::getDebug()<<"AreaSpawnerCommand :: spawn unit at " << pos_l<<std::endl;
 		Unit unit_l(pos_l, false, *dynamic_cast<UnitModel const *>(model_p));
 		unit_l._player = player_p;
 
@@ -30,6 +31,7 @@ void spawn(Step & step_p, EntityModel const *model_p, Option const &option_p, un
 	}
 	else if(model_p->_isBuilding)
 	{
+		Logger::getDebug()<<"AreaSpawnerCommand :: spawn building at " << pos_l<<std::endl;
 		Building building_l(pos_l, model_p->_isStatic, *dynamic_cast<BuildingModel const *>(model_p));
 		building_l._player = player_p;
 
@@ -37,6 +39,7 @@ void spawn(Step & step_p, EntityModel const *model_p, Option const &option_p, un
 	}
 	else
 	{
+		Logger::getDebug()<<"AreaSpawnerCommand :: spawn entity  at " << pos_l<<std::endl;
 		Entity entity_l(pos_l, model_p->_isStatic, *model_p);
 		entity_l._player = player_p;
 
