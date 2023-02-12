@@ -35,7 +35,12 @@ struct Option
 	unsigned long y;
 };
 
+/// @brief return a vector of valid options on the spawning grid
 std::vector<Option> getOptions(SpawningGrid const &grid_p, unsigned long size_p);
+
+/// @brief return a vector of valid options on a smaller area in the spawning grid
+std::vector<Option> getOptions(unsigned long x, unsigned long y, unsigned long width_p, unsigned long height_p,
+	SpawningGrid const &grid_p, unsigned long size_p);
 
 /// @brief fill the spawning grid based on the given input grid
 /// based on existing blocked nodes in the world

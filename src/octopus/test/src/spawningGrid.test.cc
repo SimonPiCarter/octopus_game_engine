@@ -14,6 +14,24 @@ TEST(spawner, options_2)
 	ASSERT_EQ(9, vec_l.size());
 }
 
+TEST(spawner, options_2_subgrid)
+{
+	SpawningGrid grid_l(4);
+
+	std::vector<Option> vec_l = getOptions(1, 1, 3, 3, grid_l, 2);
+
+	ASSERT_EQ(4, vec_l.size());
+}
+
+TEST(spawner, options_2_subgrid_irregular)
+{
+	SpawningGrid grid_l(4);
+
+	std::vector<Option> vec_l = getOptions(1, 0, 3, 4, grid_l, 2);
+
+	ASSERT_EQ(6, vec_l.size());
+}
+
 TEST(spawner, options_3)
 {
 	SpawningGrid grid_l(4);

@@ -63,6 +63,23 @@ std::vector<Option> getOptions(SpawningGrid const &grid_p, unsigned long size_p)
 	return options_l;
 }
 
+std::vector<Option> getOptions(unsigned long x, unsigned long y, unsigned long width_p, unsigned long height_p,
+	SpawningGrid const &grid_p, unsigned long size_p)
+{
+	std::vector<Option> options_l;
+	for(unsigned long i = x ; i < std::min(grid_p.getSize(), x + width_p) - size_p + 1 ; ++ i)
+	{
+		for(unsigned long j = y ; j < std::min(grid_p.getSize(), y + height_p) - size_p + 1 ; ++ j)
+		{
+			if(grid_p.isFree(i, j, size_p))
+			{
+				options_l.push_back({i, j});
+			}
+		}
+	}
+	return options_l;
+}
+
 void initGrid(unsigned long x, unsigned long y, SpawningGrid &grid_p, Grid const &inputGrid_p)
 {
 	for(unsigned long i = x ; i < grid_p.getSize() + x ; ++i)
