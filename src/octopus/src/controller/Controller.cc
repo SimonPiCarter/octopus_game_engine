@@ -30,7 +30,8 @@ BufferedState::~BufferedState()
 
 Controller::Controller(
 	std::list<Steppable *> const &initSteppables_p,
-	double timePerStep_p)
+	double timePerStep_p,
+	std::list<Command *> const &initCommands_p)
 	: _timePerStep(timePerStep_p)
 {
 	std::lock_guard<std::mutex> lock_l(_mutex);
@@ -47,6 +48,11 @@ Controller::Controller(
 	for(Steppable * steppable_l : initSteppables_p)
 	{
 		_initialStep.addSteppable(steppable_l);
+	}
+	// add commands
+	for(Command * cmd_l : initCommands_p)
+	{
+		cmd_l->registerCommand(_initialStep, *_backState->_state);
 	}
 
 	octopus::updateStepFromConflictPosition(_initialStep, *_backState->_state);
