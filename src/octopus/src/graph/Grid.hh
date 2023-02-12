@@ -31,6 +31,8 @@ public:
 
 	GridNode * getNode(size_t x, size_t y);
 	GridNode const * getNode(size_t x, size_t y) const;
+
+	unsigned long getSize() const { return _internalGrid.size(); }
 private:
 	/// @brief all grid node storred by indexes
 	std::vector<std::vector<GridNode *> > _internalGrid;
