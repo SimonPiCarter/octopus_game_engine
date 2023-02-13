@@ -8,7 +8,7 @@
 
 namespace octopus
 {
-class BuildingModel;
+struct BuildingModel;;
 
 /// @brief This command will update the divinity chosen and eventually lvling it up
 class PlayerChoseDivinityCommand : public Command

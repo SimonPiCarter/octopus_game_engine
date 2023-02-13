@@ -3,7 +3,7 @@
 
 namespace octopus
 {
-class EntityModel;
+struct EntityModel;
 
 class EventEntityModelDied
 {

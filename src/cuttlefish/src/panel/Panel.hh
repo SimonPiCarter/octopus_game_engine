@@ -10,8 +10,8 @@ namespace octopus
 {
 	class Entity;
 	class State;
-	class UnitModel;
-	class BuildingModel;
+	struct UnitModel;;
+	struct BuildingModel;;
 } // namespace octopus
 
 

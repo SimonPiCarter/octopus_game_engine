@@ -7,9 +7,9 @@
 namespace octopus
 {
 
-class EntityModel;
-class BuildingModel;
-class UnitModel;
+struct EntityModel;
+struct BuildingModel;;
+struct UnitModel;;
 
 /// @brief This class is storing resources like
 /// EntityModel, UnitModel, BuildingModel

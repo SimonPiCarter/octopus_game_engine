@@ -8,7 +8,7 @@
 
 namespace octopus
 {
-	class StateAndSteps;
+	struct StateAndSteps;
 	class Step;
 }
 

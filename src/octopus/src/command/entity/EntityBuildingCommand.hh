@@ -8,7 +8,7 @@
 
 namespace octopus
 {
-class UnitModel;
+struct UnitModel;;
 
 /// @brief This command build a building
 class EntityBuildingCommand : public Command

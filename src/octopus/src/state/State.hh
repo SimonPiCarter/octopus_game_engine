@@ -11,10 +11,10 @@ namespace octopus
 {
 class Commandable;
 class Entity;
-class ListenerData;
+struct ListenerData;
 class Player;
 class Trigger;
-class TriggerData;
+struct TriggerData;
 
 /// @brief represent the whole world
 /// @warning a State must only be modified through step apply and revert!

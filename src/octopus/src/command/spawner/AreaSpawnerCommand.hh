@@ -10,8 +10,8 @@
 
 namespace octopus
 {
-class BuildingModel;
-class EntityModel;
+struct BuildingModel;;
+struct EntityModel;
 
 struct AreaSpawn
 {

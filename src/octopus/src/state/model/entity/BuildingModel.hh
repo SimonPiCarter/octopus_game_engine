@@ -10,7 +10,7 @@ namespace octopus
 {
 	class Building;
 	class State;
-	class UnitModel;
+	struct UnitModel;;
 
 	struct BuildingModel : public EntityModel
 	{

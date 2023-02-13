@@ -8,7 +8,7 @@
 
 namespace octopus
 {
-class BuildingModel;
+struct BuildingModel;;
 
 /// @brief This command will spawn a blueprint after a resource check
 class BuildingBlueprintCommand : public Command

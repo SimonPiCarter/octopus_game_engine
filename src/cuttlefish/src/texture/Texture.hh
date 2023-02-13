@@ -3,9 +3,9 @@
 
 #include <string>
 
-class SDL_Rect;
-class SDL_Renderer;
-class SDL_Texture;
+struct SDL_Rect;
+struct SDL_Renderer;
+struct SDL_Texture;
 
 namespace cuttlefish
 {

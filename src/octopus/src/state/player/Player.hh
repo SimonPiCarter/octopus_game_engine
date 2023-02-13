@@ -10,8 +10,8 @@
 
 namespace octopus
 {
-	class BuildingModel;
-	class UnitModel;
+	struct BuildingModel;
+	struct UnitModel;
 
 	class Player
 	{

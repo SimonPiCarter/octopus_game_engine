@@ -10,7 +10,7 @@ namespace octopus
 {
 class EventCollection;
 class Listener;
-class ListenerData;
+struct ListenerData;
 class Step;
 class Steppable;
 

@@ -8,7 +8,7 @@
 
 namespace octopus
 {
-class UnitModel;
+struct UnitModel;;
 
 /// @brief This command will produce a unit according to the given model
 class BuildingUnitProductionCommand : public Command

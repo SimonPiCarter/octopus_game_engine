@@ -5,7 +5,7 @@
 
 namespace octopus
 {
-class BuildingModel;
+struct BuildingModel;;
 } // namespace octopus
 
 

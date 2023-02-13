@@ -6,7 +6,7 @@
 namespace octopus
 {
 class EventCollection;
-class EntityModel;
+struct EntityModel;
 class Step;
 
 struct ListenerData
