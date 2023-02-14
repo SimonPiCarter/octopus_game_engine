@@ -352,6 +352,30 @@ int main( int argc, char* args[] )
 							currentClicMode_l, standardClicMode_l);
 						break;
 					}
+					case SDLK_0:
+					case SDLK_1:
+					case SDLK_2:
+					case SDLK_3:
+					case SDLK_4:
+					case SDLK_5:
+					case SDLK_6:
+					case SDLK_7:
+					case SDLK_8:
+					case SDLK_9:
+						if(KMOD_SHIFT & SDL_GetModState())
+						{
+							world_l.addSelection(e.key.keysym.sym-SDLK_0);
+						}
+						else if(KMOD_CTRL & SDL_GetModState())
+						{
+							world_l.registerSelection(e.key.keysym.sym-SDLK_0);
+						}
+						else
+						{
+							world_l.useSelection(e.key.keysym.sym-SDLK_0);
+							panel_l.refresh(world_l.getSelection()._sprite, state_l);
+						}
+						break;
 					default:
 						break;
 				}
