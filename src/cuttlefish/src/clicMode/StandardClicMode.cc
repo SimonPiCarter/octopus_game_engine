@@ -56,13 +56,13 @@ bool StandardClicMode::handleMouseUp(SDL_Event const & e, Selection &selection_p
 			}
 			else
 			{
-				selection_p._sprite = nullptr;
+				selection_p.clear();
 			}
 		}
 		else
 		{
+			selection_p.clear();
 			selection_p._sprite = sprite_l;
-			selection_p._sprites.clear();
 			if(sprite_l)
 			{
 				selection_p._sprites.push_back(sprite_l);

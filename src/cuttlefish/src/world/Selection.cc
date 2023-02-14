@@ -15,7 +15,7 @@ void Selection::removeSprite(Sprite * sprite_p)
 	_sprites.remove(sprite_p);
 	if(_sprite == sprite_p)
 	{
-		if(_sprites.empty())
+		if(!_sprites.empty())
 		{
 			_sprite = *_sprites.begin();
 		}
@@ -46,6 +46,12 @@ void Selection::render(Window &window_p) const
 	{
 		displaySelection(window_p, sprite_l);
 	}
+}
+
+void Selection::clear()
+{
+	_sprites.clear();
+	_sprite = nullptr;
 }
 
 } // cuttlefish

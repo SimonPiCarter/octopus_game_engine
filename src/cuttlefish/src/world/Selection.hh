@@ -19,6 +19,9 @@ public:
 	void removeSprite(Sprite * sprite_p);
 
 	void render(Window &window_p) const;
+
+	/// @brief clear the full selection
+	void clear();
 };
 
 } // namespace cuttlefish
