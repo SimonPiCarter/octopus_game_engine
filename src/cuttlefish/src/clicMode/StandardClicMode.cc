@@ -27,16 +27,23 @@ bool StandardClicMode::handleMouseUp(SDL_Event const & e, Selection &selection_p
 {
 	Sprite * sprite_l = world_p.getSprite(window_p, e.button.x, e.button.y);
 
+	// true if selection need to be added to current selection
+	bool add_l = false;
+	if(KMOD_SHIFT & SDL_GetModState())
+	{
+		add_l = true;
+	}
+
 	if(e.button.button == SDL_BUTTON_LEFT)
 	{
 		if(e.button.x != _downX
 		|| e.button.y != _downY)
 		{
-			selection_p._sprites = world_p.getSprites(window_p, _downX, _downY, e.button.x, e.button.y);
+			std::list<Sprite *> newSelection_l = world_p.getSprites(window_p, _downX, _downY, e.button.x, e.button.y);
 
 			// filter units if both units and buildings have been boxed
 			std::list<Sprite *> units_l;
-			for(Sprite * sprite_l : selection_p._sprites)
+			for(Sprite * sprite_l : newSelection_l)
 			{
 				const octopus::Entity * cur_l = state_p.getEntity(sprite_l->getHandle());
 				if(cur_l && cur_l->_model._isUnit)
@@ -47,45 +54,51 @@ bool StandardClicMode::handleMouseUp(SDL_Event const & e, Selection &selection_p
 
 			if(!units_l.empty())
 			{
-				selection_p._sprites = units_l;
+				newSelection_l = units_l;
 			}
 
-			if(!selection_p._sprites.empty())
+			if(add_l)
 			{
-				selection_p._sprite = *selection_p._sprites.begin();
+				addToSelection(selection_p, newSelection_l);
 			}
 			else
 			{
-				selection_p.clear();
+				replaceSelection(selection_p, newSelection_l);
+			}
+		}
+		else if(sprite_l)
+		{
+			if(add_l)
+			{
+				addToSelection(selection_p, {sprite_l});
+			}
+			else
+			{
+				replaceSelection(selection_p, {sprite_l});
 			}
 		}
 		else
 		{
 			selection_p.clear();
-			selection_p._sprite = sprite_l;
-			if(sprite_l)
-			{
-				selection_p._sprites.push_back(sprite_l);
-			}
 		}
 		panel_p.refresh(selection_p._sprite, state_p);
 	}
 	else if(e.button.button == SDL_BUTTON_RIGHT
 	&& selection_p._sprite)
 	{
-		const octopus::Entity * cur_l = state_p.getEntity(selection_p._sprite->getHandle());
-		bool isStatic_l = cur_l->_model._isStatic;
-		if(!isStatic_l)
+		for(Sprite * selected_l : selection_p._sprites)
 		{
-			const octopus::Entity * target_l = nullptr;
-			if(sprite_l)
+			const octopus::Entity * cur_l = state_p.getEntity(selected_l->getHandle());
+			bool isStatic_l = cur_l->_model._isStatic;
+			if(!isStatic_l)
 			{
-				target_l = state_p.getEntity(sprite_l->getHandle());
-			}
-			if(target_l
-			&& target_l->_model._isResource)
-			{
-				for(Sprite * selected_l : selection_p._sprites)
+				const octopus::Entity * target_l = nullptr;
+				if(sprite_l)
+				{
+					target_l = state_p.getEntity(sprite_l->getHandle());
+				}
+				if(target_l
+				&& target_l->_model._isResource)
 				{
 					octopus::UnitHarvestCommand * command_l = new octopus::UnitHarvestCommand(
 						selected_l->getHandle(),
@@ -98,12 +111,9 @@ bool StandardClicMode::handleMouseUp(SDL_Event const & e, Selection &selection_p
 					);
 					controller_p.commitCommand(command_l);
 				}
-			}
-			else if(target_l
-			&& target_l->_model._isBuilding
-			&& !static_cast<const octopus::Building *>(target_l)->isBuilt())
-			{
-				for(Sprite * selected_l : selection_p._sprites)
+				else if(target_l
+				&& target_l->_model._isBuilding
+				&& !static_cast<const octopus::Building *>(target_l)->isBuilt())
 				{
 					octopus::EntityBuildingCommand * command_l = new octopus::EntityBuildingCommand(
 						selected_l->getHandle(),
@@ -116,10 +126,7 @@ bool StandardClicMode::handleMouseUp(SDL_Event const & e, Selection &selection_p
 					);
 					controller_p.commitCommand(command_l);
 				}
-			}
-			else
-			{
-				for(Sprite * selected_l : selection_p._sprites)
+				else
 				{
 					octopus::EntityMoveCommand * command_l = new octopus::EntityMoveCommand(
 						selected_l->getHandle(),

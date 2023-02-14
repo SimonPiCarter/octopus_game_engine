@@ -24,6 +24,15 @@ public:
 	void clear();
 };
 
+/// @brief add the list of sprite to the current selection
+/// @note remove duplicated if necessary
+void addToSelection(Selection &selection_p, std::list<Sprite *> const &sprites_p);
+
+/// @brief replace the selection with the list of sprite
+/// @note update main selected if necessary
+/// @note remove duplicated if any
+void replaceSelection(Selection &selection_p, std::list<Sprite *> const &sprites_p);
+
 } // namespace cuttlefish
 
 

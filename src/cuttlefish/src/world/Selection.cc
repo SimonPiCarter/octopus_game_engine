@@ -54,4 +54,26 @@ void Selection::clear()
 	_sprite = nullptr;
 }
 
+void addToSelection(Selection &selection_p, std::list<Sprite *> const &sprites_p)
+{
+	selection_p._sprites.insert(selection_p._sprites.end(), sprites_p.begin(), sprites_p.end());
+	if(!selection_p._sprites.empty())
+	{
+		selection_p._sprite = *selection_p._sprites.begin();
+	}
+}
+
+void replaceSelection(Selection &selection_p, std::list<Sprite *> const &sprites_p)
+{
+	selection_p._sprites = sprites_p;
+	if(!selection_p._sprites.empty())
+	{
+		selection_p._sprite = *selection_p._sprites.begin();
+	}
+	else
+	{
+		selection_p._sprite = nullptr;
+	}
+}
+
 } // cuttlefish
