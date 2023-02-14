@@ -56,32 +56,32 @@ bool updateStepFromConflictPosition(Step &step_p, State const &state_p)
 
 	Logger::getDebug() << " conflict solver :: start"<<std::endl;
 	/// map to access move step from entity
-	std::unordered_map<Entity const *, EntityMoveStep *> mapMoveStep_l;
+	std::vector<EntityMoveStep *> mapMoveStep_l(state_p.getEntities().size(), nullptr);
 	std::vector<Vector> newPos_l(state_p.getEntities().size());
 
 	for(EntityMoveStep *step_l: step_p.getEntityMoveStep())
 	{
 		Entity const *ent_l = state_p.getEntity(step_l->_handle);
-		mapMoveStep_l[ent_l] = step_l;
+		mapMoveStep_l[ent_l->_handle] = step_l;
 		newPos_l[ent_l->_handle] = ent_l->_pos + step_l->_move;
 	}
 
 	// fill up move steps when missing
 	for(Entity const * ent_l : state_p.getEntities())
 	{
-		if(mapMoveStep_l[ent_l] == nullptr)
+		if(mapMoveStep_l[ent_l->_handle] == nullptr)
 		{
 			EntityMoveStep *step_l = new EntityMoveStep(ent_l->_handle, {0, 0});
 			step_p.addEntityMoveStep(step_l);
-			mapMoveStep_l[ent_l] = step_l;
+			mapMoveStep_l[ent_l->_handle] = step_l;
 			newPos_l[ent_l->_handle] = ent_l->_pos;
 		}
 	}
 
 	/// map to access correction from step
-	std::unordered_map<EntityMoveStep *, Vector> mapCorrection_l;
+	std::vector<Vector> mapCorrection_l(state_p.getEntities().size());
 	/// this correction should not been normalized in the end (used with buildings)
-	std::unordered_map<EntityMoveStep *, Vector> mapAbsoluteCorrection_l;
+	std::vector<Vector> mapAbsoluteCorrection_l(state_p.getEntities().size());
 
 	//////////////////////////////
 	// Set up bitset of collision
@@ -117,7 +117,7 @@ bool updateStepFromConflictPosition(Step &step_p, State const &state_p)
 			}
 			bitset_l[handle_p] = true;
 			Entity const * entB_l = state_p.getEntity(handle_p);
-			EntityMoveStep *stepB_l = mapMoveStep_l[entB_l];
+			EntityMoveStep *stepB_l = mapMoveStep_l[entB_l->_handle];
 			// continue if same
 			if(stepB_l == stepA_l)
 			{
@@ -172,7 +172,7 @@ bool updateStepFromConflictPosition(Step &step_p, State const &state_p)
 					coefA_l = 1.;
 				}
 				// updated steps, both doing half distance
-				mapCorrection_l[stepA_l] += normalizedAxis_l * distance_l * coefA_l;
+				mapCorrection_l[stepA_l->_handle] += normalizedAxis_l * distance_l * coefA_l;
 			}
 		});
 		}
@@ -187,7 +187,7 @@ bool updateStepFromConflictPosition(Step &step_p, State const &state_p)
 	for(EntityMoveStep *ent_l: step_p.getEntityMoveStep())
 	{
 		// if update
-		if(mapCorrection_l[ent_l] != Vector {0,0})
+		if(mapCorrection_l[ent_l->_handle] != Vector {0,0})
 		{
 			updated_l = true;
 		}
@@ -198,7 +198,7 @@ bool updateStepFromConflictPosition(Step &step_p, State const &state_p)
 		// ensure that move does not become too cahotic
 		double square_l = state_p.getEntity(ent_l->_handle)->getStepSpeed()*state_p.getEntity(ent_l->_handle)->getStepSpeed();
 		Vector origMove_l = ent_l->_move;
-		ent_l->_move = ent_l->_move + mapCorrection_l[ent_l] * 0.9;
+		ent_l->_move = ent_l->_move + mapCorrection_l[ent_l->_handle] * 0.9;
 		double newSquare_l = square_length(ent_l->_move);
 		if(newSquare_l > square_l)
 		{
@@ -245,7 +245,7 @@ bool updateStepFromConflictPosition(Step &step_p, State const &state_p)
 			}
 			bitset_l[handle_p] = true;
 			Entity const * entB_l = state_p.getEntity(handle_p);
-			EntityMoveStep *stepB_l = mapMoveStep_l[entB_l];
+			EntityMoveStep *stepB_l = mapMoveStep_l[entB_l->_handle];
 			// continue if same
 			if(stepB_l == stepA_l)
 			{
@@ -307,7 +307,7 @@ bool updateStepFromConflictPosition(Step &step_p, State const &state_p)
 					coefA_l = 1.;
 				}
 				// updated steps, both doing half distance
-				mapAbsoluteCorrection_l[stepA_l] -= diff_l * coefA_l;
+				mapAbsoluteCorrection_l[stepA_l->_handle] -= diff_l * coefA_l;
 			}
 		});
 		}
@@ -321,7 +321,7 @@ bool updateStepFromConflictPosition(Step &step_p, State const &state_p)
 	for(EntityMoveStep *ent_l: step_p.getEntityMoveStep())
 	{
 		// if update
-		if(mapAbsoluteCorrection_l[ent_l] != Vector {0,0})
+		if(mapAbsoluteCorrection_l[ent_l->_handle] != Vector {0,0})
 		{
 			updated_l = true;
 		}
@@ -329,8 +329,8 @@ bool updateStepFromConflictPosition(Step &step_p, State const &state_p)
 		{
 			continue;
 		}
-		Logger::getDebug() << " conflict solver :: "<<ent_l->_handle<< " absolute correction : "<<mapAbsoluteCorrection_l[ent_l]<<std::endl;
-		ent_l->_move = ent_l->_move + mapAbsoluteCorrection_l[ent_l];
+		Logger::getDebug() << " conflict solver :: "<<ent_l->_handle<< " absolute correction : "<<mapAbsoluteCorrection_l[ent_l->_handle]<<std::endl;
+		ent_l->_move = ent_l->_move + mapAbsoluteCorrection_l[ent_l->_handle];
 	}
 
 	return updated_l;
