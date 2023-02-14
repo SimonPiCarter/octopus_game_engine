@@ -57,6 +57,9 @@ public:
 	/// @brief use selection (discarding current)
 	void useSelection(unsigned long idx_p);
 
+	/// @brief remove a sprite from all selections
+	void clearSpriteFromSelections(Sprite * sprite_p);
+
 private:
 	/// @brief sprite of every entity
 	/// content can be nullptr in case of sprite

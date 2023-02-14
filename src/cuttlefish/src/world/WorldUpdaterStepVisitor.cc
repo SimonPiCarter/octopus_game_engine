@@ -45,7 +45,7 @@ void WorldUpdaterStepVisitor::spawn(octopus::Handle const &handle_p)
 void WorldUpdaterStepVisitor::clear(octopus::Handle const &handle_p)
 {
 	// update selection
-	_world.getSelection().removeSprite(_world._sprites[handle_p]);
+	_world.clearSpriteFromSelections(_world._sprites[handle_p]);
 	_panel.refresh(_world.getSelection()._sprite, *_state);
 
 	// remove sprite
