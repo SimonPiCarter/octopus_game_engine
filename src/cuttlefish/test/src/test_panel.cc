@@ -122,7 +122,7 @@ void commandFromSpriteModel(SpriteModel const *spriteModel_l, octopus::Library c
 	}
 }
 
-void controllerLoop(octopus::Controller &controller_p, bool &over_p, bool &paused_p)
+void controllerLoop(octopus::Controller &controller_p, bool const &over_p, bool const &paused_p)
 {
 	//octopus::Logger::enable_debug();
 	using namespace std::chrono_literals;
@@ -131,7 +131,7 @@ void controllerLoop(octopus::Controller &controller_p, bool &over_p, bool &pause
 	double elapsed_l = 0.;
 	while(!over_p)
 	{
-		// if paused to not update controller
+		// if paused do not update controller
 		if(!paused_p)
 		{
 			// update controller
