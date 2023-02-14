@@ -83,6 +83,17 @@ void DynamicBitset::for_each(std::function<bool(int)> fn_p) const
 	}
 }
 
+bool DynamicBitset::empty() const
+{
+	for (size_t k = 0; k < _vecBitset.size(); ++k) {
+		if(_vecBitset[k] > 0)
+		{
+			return false;
+		}
+	}
+	return true;
+}
+
 void SetBitset::set(size_t idx_p, bool val_p)
 {
 	if(val_p)
@@ -110,6 +121,12 @@ void SetBitset::for_each(std::function<bool(int)> fn_p) const
 		}
 	}
 }
+
+bool SetBitset::empty() const
+{
+	return _set.empty();
+}
+
 
 } // octopus
 

@@ -31,6 +31,8 @@ public:
 	virtual void reset() = 0;
 
 	virtual void for_each(std::function<bool(int)> fn_p) const = 0;
+
+	virtual bool empty() const = 0;
 };
 
 /// @brief this class encapsulate vector of unsigned long to represent bitsets
@@ -50,6 +52,8 @@ public:
 	void reset() override;
 
 	void for_each(std::function<bool(int)> fn_p) const override;
+
+	bool empty() const override;
 
 private:
 	/// @brief underlying data structure
@@ -74,6 +78,8 @@ public:
 	void reset() override;
 
 	void for_each(std::function<bool(int)> fn_p) const override;
+
+	bool empty() const override;
 
 private:
 	std::set<int> _set;
