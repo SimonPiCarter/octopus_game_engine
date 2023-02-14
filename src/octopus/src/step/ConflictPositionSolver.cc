@@ -69,7 +69,7 @@ bool updateStepFromConflictPosition(Step &step_p, State const &state_p)
 	// fill up move steps when missing
 	for(Entity const * ent_l : state_p.getEntities())
 	{
-		if(mapMoveStep_l[ent_l->_handle] == nullptr)
+		if(mapMoveStep_l[ent_l->_handle] == nullptr && ent_l->isActive())
 		{
 			EntityMoveStep *step_l = new EntityMoveStep(ent_l->_handle, {0, 0});
 			step_p.addEntityMoveStep(step_l);
