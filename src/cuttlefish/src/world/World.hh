@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <list>
+#include <unordered_map>
 
 #include "Selection.hh"
 
@@ -45,6 +46,17 @@ public:
 	Selection &getSelection() { return _selection; }
 	Selection const &getSelection() const { return _selection; }
 
+	/// @brief get all registered selection
+	std::unordered_map<unsigned long, Selection> & getSelections() { return _selections; }
+	const std::unordered_map<unsigned long, Selection>  & getSelections() const { return _selections; }
+
+	/// @brief adding to a selection
+	void addSelection(unsigned long idx_p);
+	/// @brief register a selection
+	void registerSelection(unsigned long idx_p);
+	/// @brief use selection (discarding current)
+	void useSelection(unsigned long idx_p);
+
 private:
 	/// @brief sprite of every entity
 	/// content can be nullptr in case of sprite
@@ -55,6 +67,9 @@ private:
 
 	/// @brief current selection
 	Selection _selection;
+
+	/// @brief group of controls
+	std::unordered_map<unsigned long, Selection> _selections;
 
 	bool _first {true};
 	std::list<octopus::Step *>::const_iterator _lastIt;
