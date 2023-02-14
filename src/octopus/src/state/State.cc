@@ -212,10 +212,11 @@ Entity const * lookUpNewTarget(State const &state_p, Handle const &sourceHandle_
 		|| !ent_l->_model._isUnit
 		|| team_l == state_p.getPlayer(ent_l->_player)->_team)
 		{
-			Logger::getDebug() << " lookUpNewTarget :: ent_l->_alive "<< ent_l->_alive << std::endl;
-			Logger::getDebug() << " lookUpNewTarget :: ent_l->_model._isUnit "<< ent_l->_model._isUnit << std::endl;
-			Logger::getDebug() << " lookUpNewTarget :: state_p.getPlayer(ent_l->_player)->_team "<< state_p.getPlayer(ent_l->_player)->_team << std::endl;
-			Logger::getDebug() << " lookUpNewTarget :: skip "<< ent_l->_handle << std::endl;
+			// Logger::getDebug() << " lookUpNewTarget :: ent_l->_alive "<< ent_l->_alive << std::endl;
+			// Logger::getDebug() << " lookUpNewTarget :: ent_l->_model._isUnit "<< ent_l->_model._isUnit << std::endl;
+			// Logger::getDebug() << " lookUpNewTarget :: state_p.getPlayer(ent_l->_player)->_team "<< state_p.getPlayer(ent_l->_player)->_team << std::endl;
+			// Logger::getDebug() << " lookUpNewTarget :: skip "<< ent_l->_handle << std::endl;
+			// NA
 		}
 		else
 		{
@@ -223,7 +224,7 @@ Entity const * lookUpNewTarget(State const &state_p, Handle const &sourceHandle_
 			if(closest_l == nullptr
 			|| sqDis_l > curSqDis_l)
 			{
-				Logger::getDebug() << " lookUpNewTarget :: update closest with "<< ent_l->_handle <<" distance (sq) = " << curSqDis_l << std::endl;
+				// Logger::getDebug() << " lookUpNewTarget :: update closest with "<< ent_l->_handle <<" distance (sq) = " << curSqDis_l << std::endl;
 				closest_l = ent_l;
 				sqDis_l = curSqDis_l;
 			}
