@@ -203,7 +203,7 @@ Entity const * lookUpNewTarget(State const &state_p, Handle const &sourceHandle_
 	{
 		if(bitset_l.at(handle_p))
 		{
-			return;
+			return false;
 		}
 		bitset_l[handle_p] = true;
 		Entity const * ent_l = state_p.getEntity(handle_p);
@@ -229,6 +229,7 @@ Entity const * lookUpNewTarget(State const &state_p, Handle const &sourceHandle_
 				sqDis_l = curSqDis_l;
 			}
 		}
+		return false;
 	});
 	}
 	}

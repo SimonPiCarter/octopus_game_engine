@@ -6,9 +6,10 @@
 
 using namespace octopus;
 
-void record(std::vector<int> &records_p, int val_p)
+bool record(std::vector<int> &records_p, int val_p)
 {
 	records_p.push_back(val_p);
+	return false;
 }
 
 TEST(DynamicBitsetTest, empty)

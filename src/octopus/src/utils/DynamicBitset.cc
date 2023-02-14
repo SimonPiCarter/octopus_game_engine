@@ -47,7 +47,7 @@ size_t DynamicBitset::size() const
 	return _bitsetSize;
 }
 
-void DynamicBitset::for_each(std::function<void(int)> fn_p) const
+void DynamicBitset::for_each(std::function<bool(int)> fn_p) const
 {
 	for (size_t k = 0; k < _vecBitset.size(); ++k) {
 		unsigned long bitset_l = _vecBitset[k];
@@ -57,7 +57,10 @@ void DynamicBitset::for_each(std::function<void(int)> fn_p) const
 			{
 				if(bitset_l % 2 == 1)
 				{
-					fn_p(k * _size + r);
+					if(fn_p(k * _size + r))
+					{
+						return;
+					}
 				}
 				++r;
 				bitset_l = bitset_l >> 1;
@@ -69,7 +72,10 @@ void DynamicBitset::for_each(std::function<void(int)> fn_p) const
 
 				int r = __builtin_ctzl(bitset_l);
 
-				fn_p(k * _size + r);
+				if(fn_p(k * _size + r))
+				{
+					break;
+				}
 
 				bitset_l ^= t;
 			}
@@ -94,11 +100,14 @@ void SetBitset::reset()
 	_set.clear();
 }
 
-void SetBitset::for_each(std::function<void(int)> fn_p) const
+void SetBitset::for_each(std::function<bool(int)> fn_p) const
 {
 	for(int i : _set)
 	{
-		fn_p(i);
+		if(fn_p(i))
+		{
+			break;
+		}
 	}
 }
 

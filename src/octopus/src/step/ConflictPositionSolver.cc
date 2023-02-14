@@ -103,7 +103,7 @@ bool updateStepFromConflictPosition(Step &step_p, State const &state_p)
 						 state_p.getGridIndex(newPos_l[entA_l->_handle].x+entA_l->_model._ray+0.999),
 						 state_p.getGridIndex(newPos_l[entA_l->_handle].y-entA_l->_model._ray),
 						 state_p.getGridIndex(newPos_l[entA_l->_handle].y+entA_l->_model._ray+0.999)};
-		std::vector<bool> bitset_l(state_p.getEntities().size(), false);
+		std::vector<char> bitset_l(state_p.getEntities().size(), 0);
 		for(size_t x = box_l._lowerX ; x <= box_l._upperX; ++x)
 		{
 		for(size_t y = box_l._lowerY ; y <= box_l._upperY; ++y)
@@ -111,21 +111,20 @@ bool updateStepFromConflictPosition(Step &step_p, State const &state_p)
 		// check every entity with one another
 		grid_l[x][y]->for_each([&] (int handle_p)
 		{
-			if(bitset_l[handle_p])
+			if(handle_p >= stepA_l->_handle)
 			{
-				return;
+				return true;
 			}
-			bitset_l[handle_p] = true;
+			if(bitset_l[handle_p] == 1)
+			{
+				return false;
+			}
+			bitset_l[handle_p] = 1;
 			Entity const * entB_l = state_p.getEntity(handle_p);
 			EntityMoveStep *stepB_l = mapMoveStep_l[entB_l->_handle];
-			// continue if same
-			if(stepB_l == stepA_l)
-			{
-				return;
-			}
 			if(entA_l->_model._isStatic || entB_l->_model._isStatic)
 			{
-				return;
+				return false;
 			}
 			// check collision
 			else if(collision(newPos_l[entA_l->_handle], newPos_l[entB_l->_handle], entA_l->_model._ray, entB_l->_model._ray))
@@ -155,25 +154,32 @@ bool updateStepFromConflictPosition(Step &step_p, State const &state_p)
 					normalizedAxis_l = normalizedAxis_l / length(normalizedAxis_l);
 				}
 				double coefA_l = 0.5;
+				double coefB_l = 0.5;
 				if(square_length(stepA_l->_move) > 1e-5 || square_length(stepB_l->_move) > 1e-5)
 				{
 					coefA_l = std::sqrt(square_length(stepB_l->_move)/(square_length(stepA_l->_move)+square_length(stepB_l->_move)));
+					coefB_l = 1 - coefA_l;
 				}
 				if(entA_l->isFrozen() && entB_l->isFrozen())
 				{
 					coefA_l = 0.;
+					coefB_l = 0.;
 				}
-				if(entA_l->isFrozen())
+				else if(entA_l->isFrozen())
 				{
 					coefA_l = 0.;
+					coefB_l = 1.;
 				}
 				else if(entB_l->isFrozen())
 				{
 					coefA_l = 1.;
+					coefB_l = 0.;
 				}
 				// updated steps, both doing half distance
 				mapCorrection_l[stepA_l->_handle] += normalizedAxis_l * distance_l * coefA_l;
+				mapCorrection_l[stepB_l->_handle] -= normalizedAxis_l * distance_l * coefB_l;
 			}
+			return false;
 		});
 		}
 		}
@@ -195,7 +201,7 @@ bool updateStepFromConflictPosition(Step &step_p, State const &state_p)
 		{
 			continue;
 		}
-		// ensure that move does not become too cahotic
+		// ensure that move does not become too chaotic
 		double square_l = state_p.getEntity(ent_l->_handle)->getStepSpeed()*state_p.getEntity(ent_l->_handle)->getStepSpeed();
 		Vector origMove_l = ent_l->_move;
 		ent_l->_move = ent_l->_move + mapCorrection_l[ent_l->_handle] * 0.9;
@@ -231,7 +237,7 @@ bool updateStepFromConflictPosition(Step &step_p, State const &state_p)
 						 state_p.getGridIndex(newPos_l[entA_l->_handle].y-entA_l->_model._ray),
 						 state_p.getGridIndex(newPos_l[entA_l->_handle].y+entA_l->_model._ray+0.999)};
 
-		std::vector<bool> bitset_l(state_p.getEntities().size(), false);
+		std::vector<char> bitset_l(state_p.getEntities().size(), 0);
 		for(size_t x = box_l._lowerX ; x <= box_l._upperX; ++x)
 		{
 		for(size_t y = box_l._lowerY ; y <= box_l._upperY; ++y)
@@ -239,21 +245,20 @@ bool updateStepFromConflictPosition(Step &step_p, State const &state_p)
 		// check every entity with one another
 		grid_l[x][y]->for_each([&] (int handle_p)
 		{
-			if(bitset_l[handle_p])
+			if(handle_p >= stepA_l->_handle)
 			{
-				return;
+				return true;
 			}
-			bitset_l[handle_p] = true;
+			if(bitset_l[handle_p] == 1)
+			{
+				return false;
+			}
+			bitset_l[handle_p] = 1;
 			Entity const * entB_l = state_p.getEntity(handle_p);
 			EntityMoveStep *stepB_l = mapMoveStep_l[entB_l->_handle];
-			// continue if same
-			if(stepB_l == stepA_l)
-			{
-				return;
-			}
 			if(!entA_l->_model._isStatic && !entB_l->_model._isStatic)
 			{
-				return;
+				return false;
 			}
 			// if one of the two is a building we check on rectangle instead of circles
 			Box<double> boxA_l { newPos_l[entA_l->_handle].x - entA_l->_model._ray, newPos_l[entA_l->_handle].x + entA_l->_model._ray,
@@ -294,21 +299,27 @@ bool updateStepFromConflictPosition(Step &step_p, State const &state_p)
 				}
 
 				double coefA_l = 0.5;
+				double coefB_l = 0.5;
 				if(entA_l->isFrozen() && entB_l->isFrozen())
 				{
 					coefA_l = 0.;
+					coefB_l = 0.;
 				}
-				if(entA_l->isFrozen())
+				else if(entA_l->isFrozen())
 				{
 					coefA_l = 0.;
+					coefB_l = 1.;
 				}
 				else if(entB_l->isFrozen())
 				{
 					coefA_l = 1.;
+					coefB_l = 0.;
 				}
 				// updated steps, both doing half distance
 				mapAbsoluteCorrection_l[stepA_l->_handle] -= diff_l * coefA_l;
+				mapAbsoluteCorrection_l[stepB_l->_handle] += diff_l * coefB_l;
 			}
+			return false;
 		});
 		}
 		}
