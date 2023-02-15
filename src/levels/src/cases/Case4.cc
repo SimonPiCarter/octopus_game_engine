@@ -1,5 +1,6 @@
 #include <iostream>
 #include <fstream>
+#include <random>
 
 #include "controller/trigger/Trigger.hh"
 #include "controller/trigger/Listener.hh"
@@ -20,6 +21,8 @@
 #include "step/player/PlayerSpendResourceStep.hh"
 #include "step/player/PlayerAddOptionDivinityStep.hh"
 #include "step/trigger/TriggerSpawn.hh"
+
+#include "library/LibraryFillers.hh"
 
 using namespace octopus;
 
@@ -125,18 +128,34 @@ private:
 class Case4DivinitiesOptionTrigger : public OnEachTrigger
 {
 public:
-	Case4DivinitiesOptionTrigger(Listener * listener_p, unsigned long player_p) : OnEachTrigger(listener_p), _player(player_p) {}
+	Case4DivinitiesOptionTrigger(Listener * listener_p, unsigned long player_p) : OnEachTrigger(listener_p), _player(player_p), _gen(42) {}
 
 	virtual void trigger(Step &step_p) const override
 	{
-		std::set<DivinityType> set_l;
-		set_l.insert(DivinityType::Divinity_1);
-		set_l.insert(DivinityType::Divinity_2);
-		set_l.insert(DivinityType::Divinity_3);
+		std::vector<DivinityType> vector_l;
+		vector_l.push_back(DivinityType::Divinity_1);
+		vector_l.push_back(DivinityType::Divinity_3);
+		vector_l.push_back(DivinityType::Divinity_4);
+		vector_l.push_back(DivinityType::Divinity_5);
+
+		while(vector_l.size() > 3)
+		{
+			// remove 1 from the possibilty
+			std::uniform_int_distribution<> distrib_l(0, vector_l.size()-1);
+			int idx_l = distrib_l(_gen);
+			vector_l.erase(vector_l.begin() + idx_l);
+		}
+
+		std::set<DivinityType> set_l(vector_l.begin(), vector_l.end());
+
+
 		step_p.addSteppable(new PlayerAddOptionDivinityStep(_player, set_l));
 	}
 private:
 	unsigned long const _player;
+
+	// required for random gen in const method
+	mutable std::mt19937 _gen;
 };
 
 std::list<Steppable *> Case4(Library &lib_p)
@@ -147,6 +166,11 @@ std::list<Steppable *> Case4(Library &lib_p)
 	createBarrack(lib_p);
 	createTemple(lib_p);
 	createResource(lib_p);
+
+	divinitySwarmFiller(lib_p);
+	divinityRaidFiller(lib_p);
+	divinityArmorFiller(lib_p);
+	divinityFireFiller(lib_p);
 
 	Building building_l({1, 20}, true, lib_p.getBuildingModel("building"));
 	Unit unit_l({ 15, 20. }, false, lib_p.getUnitModel("unit"));
@@ -171,6 +195,7 @@ std::list<Steppable *> Case4(Library &lib_p)
 
 	Trigger * divTrigger_l = new Case4DivinitiesOptionTrigger(new ListenerEntityModelFinished(&lib_p.getBuildingModel("temple"), 0), 0);
 
+
 	std::list<Steppable *> spawners_l =
 	{
 		new PlayerSpawnStep(0, 0),
@@ -178,6 +203,10 @@ std::list<Steppable *> Case4(Library &lib_p)
 		new PlayerAddBuildingModel(0, lib_p.getBuildingModel("building")),
 		new PlayerAddBuildingModel(0, lib_p.getBuildingModel("barrack")),
 		new PlayerAddBuildingModel(0, lib_p.getBuildingModel("temple")),
+		new PlayerAddBuildingModel(0, lib_p.getBuildingModel("div_armor_well")),
+		new PlayerAddBuildingModel(0, lib_p.getBuildingModel("div_fire_well")),
+		new PlayerAddBuildingModel(0, lib_p.getBuildingModel("div_raid_well")),
+		new PlayerAddBuildingModel(0, lib_p.getBuildingModel("div_swarm_well")),
 		new PlayerSpendResourceStep(0, mapRes_l),
 		new BuildingSpawnStep(building_l, true),
 		new ResourceSpawnStep(res1_l),
