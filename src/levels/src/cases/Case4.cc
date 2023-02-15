@@ -32,6 +32,7 @@ void createWorker(Library &lib_p)
 	unitModel_l._isUnit = true;
 	unitModel_l._maxQuantity[ResourceType::Food] = 10;
 	unitModel_l._maxQuantity[ResourceType::Steel] = 50;
+	unitModel_l._maxQuantity[ResourceType::Ether] = 50;
 	unitModel_l._productionTime = 100;
 	unitModel_l._cost[ResourceType::Food] = 50;
 	lib_p.registerUnitModel("unit", unitModel_l);
@@ -56,6 +57,8 @@ void createCommandCenter(Library &lib_p)
 	buildingModel_l._isStatic = true;
 	buildingModel_l._deposit[ResourceType::Food] = true;
 	buildingModel_l._deposit[ResourceType::Steel] = true;
+	buildingModel_l._deposit[ResourceType::Ether] = true;
+	buildingModel_l._deposit[ResourceType::Gas] = true;
 	buildingModel_l._unitModels.push_back(&lib_p.getUnitModel("unit"));
 	buildingModel_l._buildingTime = 500;
 	buildingModel_l._cost[ResourceType::Steel] = 350;
@@ -91,6 +94,22 @@ void createResource(Library &lib_p)
 	lib_p.registerEntityModel("resource", resModel_l);
 }
 
+void createResourceFood(Library &lib_p)
+{
+	EntityModel resModel_l { true, 1.8, 1., 10. };
+	resModel_l._isResource = true;
+	resModel_l._isStatic = true;
+	lib_p.registerEntityModel("resource_food", resModel_l);
+}
+
+void createResourceEther(Library &lib_p)
+{
+	EntityModel resModel_l { true, 1.8, 1., 10. };
+	resModel_l._isResource = true;
+	resModel_l._isStatic = true;
+	lib_p.registerEntityModel("resource_ether", resModel_l);
+}
+
 class Case4TriggerSpawn : public OneShotTrigger
 {
 public:
@@ -119,7 +138,7 @@ public:
 			step_p.addSteppable(new UnitSpawnStep(unit_l));
 		}
 
-		step_p.addSteppable(new TriggerSpawn(new Case4TriggerSpawn(new ListenerStepCount(1000), _lib)));
+		step_p.addSteppable(new TriggerSpawn(new Case4TriggerSpawn(new ListenerStepCount(200), _lib)));
 	}
 private:
 	Library const &_lib;
@@ -166,6 +185,8 @@ std::list<Steppable *> Case4(Library &lib_p)
 	createBarrack(lib_p);
 	createTemple(lib_p);
 	createResource(lib_p);
+	createResourceFood(lib_p);
+	createResourceEther(lib_p);
 
 	divinitySwarmFiller(lib_p);
 	divinityRaidFiller(lib_p);
@@ -175,11 +196,11 @@ std::list<Steppable *> Case4(Library &lib_p)
 	Building building_l({1, 20}, true, lib_p.getBuildingModel("building"));
 	Unit unit_l({ 15, 20. }, false, lib_p.getUnitModel("unit"));
 
-	Resource res1_l({20,20}, true, lib_p.getEntityModel("resource"));
+	Resource res1_l({20,20}, true, lib_p.getEntityModel("resource_food"));
 	res1_l._type = ResourceType::Food;
 	res1_l._resource = 500.;
 
-	Resource res2_l({21,17}, true, lib_p.getEntityModel("resource"));
+	Resource res2_l({21,17}, true, lib_p.getEntityModel("resource_food"));
 	res2_l._type = ResourceType::Food;
 	res2_l._resource = 500.;
 
@@ -187,11 +208,16 @@ std::list<Steppable *> Case4(Library &lib_p)
 	res3_l._type = ResourceType::Steel;
 	res3_l._resource = 500.;
 
+	Resource res4_l({15,17}, true, lib_p.getEntityModel("resource_ether"));
+	res4_l._type = ResourceType::Ether;
+	res4_l._resource = 500.;
+
 	std::map<ResourceType, double> mapRes_l;
 	mapRes_l[octopus::ResourceType::Food] = -200;
 	mapRes_l[octopus::ResourceType::Steel] = -200;
 
-	Trigger * trigger_l = new Case4TriggerSpawn(new ListenerStepCount(1000), lib_p);
+	Trigger * trigger_l = new Case4TriggerSpawn(new ListenerStepCount(200), lib_p);
+
 
 	Trigger * divTrigger_l = new Case4DivinitiesOptionTrigger(new ListenerEntityModelFinished(&lib_p.getBuildingModel("temple"), 0), 0);
 
@@ -212,6 +238,7 @@ std::list<Steppable *> Case4(Library &lib_p)
 		new ResourceSpawnStep(res1_l),
 		new ResourceSpawnStep(res2_l),
 		new ResourceSpawnStep(res3_l),
+		new ResourceSpawnStep(res4_l),
 		new UnitSpawnStep(unit_l),
 		new TriggerSpawn(trigger_l),
 		new TriggerSpawn(divTrigger_l)
