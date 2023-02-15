@@ -204,11 +204,11 @@ void Controller::update(double elapsedTime_p)
 /// only swap the buffer and front state if buffer state is more advanced than front state
 State const * Controller::queryState()
 {
-	// lock to avoid multi swap
-	std::lock_guard<std::mutex> lock_l(_mutex);
 
 	if(_bufferState->_stepHandled > _frontState->_stepHandled)
 	{
+		// lock to avoid multi swap
+		std::lock_guard<std::mutex> lock_l(_mutex);
 		std::swap(_bufferState, _frontState);
 	}
 	return _frontState->_state;
@@ -216,11 +216,11 @@ State const * Controller::queryState()
 
 StateAndSteps Controller::queryStateAndSteps()
 {
-	// lock to avoid multi swap
-	std::lock_guard<std::mutex> lock_l(_mutex);
 
 	if(_bufferState->_stepHandled > _frontState->_stepHandled)
 	{
+		// lock to avoid multi swap
+		std::lock_guard<std::mutex> lock_l(_mutex);
 		std::swap(_bufferState, _frontState);
 	}
 	return { _frontState->_stepIt, _compiledSteps , _frontState->_state, _initialStep };
