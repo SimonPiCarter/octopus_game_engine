@@ -13,7 +13,7 @@ namespace cuttlefish
 Panel::Panel(Window* window_p, int x, int y, Texture const * background_p, Texture const *icons_p, int iconsPerLine_p) :
 	_x(x), _y(y), _icons(icons_p), _iconsPerLine(iconsPerLine_p), _textStats(window_p, x, y+120)
 {
-	_background = new Sprite(0, background_p, 0.5, 0, 0, 400, 400, {1}, {1}, true);
+	_background = new Sprite(0, background_p, 200./64., 0, 0, 400, 400, {1}, {1}, true);
 	_background->setPosition(x, y);
 	_textStats.addText("hp", "hp : ", {0, 0, 0}, false);
 	_textStats.addText("hp_val", "", {0, 155, 0}, true);

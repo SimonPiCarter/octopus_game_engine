@@ -13,7 +13,7 @@ namespace cuttlefish
 DivinityPanel::DivinityPanel(Window* window_p, int x, int y, Texture const * background_p, Texture const *icons_p, unsigned long player_p) :
 	_x(x), _y(y), _player(player_p), _icons(icons_p)
 {
-	_background = new Sprite(0, background_p, 0.5, 0, 0, 400, 400, {1}, {1}, true);
+	_background = new Sprite(0, background_p, 200./64., 0, 0, 400, 400, {1}, {1}, true);
 	_background->setPosition(x, y);
 }
 

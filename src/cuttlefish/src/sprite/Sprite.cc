@@ -14,8 +14,8 @@ Sprite::Sprite(octopus::Handle const &ent_p, Texture const * texture_p, double s
 	: _handle(ent_p)
 	, _texture(texture_p)
 	, _scale(scale_p)
-	, _logicalX(logX_p)
-	, _logicalY(logY_p)
+	, _logicalX(logX_p * (64./width_p))
+	, _logicalY(logY_p * (64./height_p))
 	, _width(width_p)
 	, _height(height_p)
 	, _nbFramesPerState(nbFramesPerState_p)
@@ -59,8 +59,8 @@ void Sprite::render(Window &window_p)
 	SDL_Rect final_l {
 		int(_x - _logicalX * _scale),
 		int(_y - _logicalY * _scale),
-		int(_width * _scale),
-		int(_height * _scale),
+		int(64 * _scale),
+		int(64 * _scale),
 	};
 
 	SDL_Rect clip_l {
@@ -86,8 +86,8 @@ bool Sprite::isInside(Window const &window_p, int x, int y) const
 	SDL_Rect final_l {
 		int(_x - _logicalX * _scale),
 		int(_y - _logicalY * _scale),
-		int(_width * _scale),
-		int(_height * _scale),
+		int(64. * _scale),
+		int(64. * _scale),
 	};
 
 	if(x >= final_l.x && x <= final_l.x + final_l.w
@@ -113,8 +113,8 @@ bool Sprite::intersect(int lx, int ly, int ux, int uy) const
 	SDL_Rect final_l {
 		int(_x - _logicalX * _scale),
 		int(_y - _logicalY * _scale),
-		int(_width * _scale),
-		int(_height * _scale),
+		int(64. * _scale),
+		int(64. * _scale),
 	};
 
 	int lowerX_l = std::min(lx, ux);
@@ -138,12 +138,12 @@ bool Sprite::intersect(int lx, int ly, int ux, int uy) const
 
 double Sprite::getWidth() const
 {
-	return _width * _scale;
+	return 64. * _scale;
 }
 
 double Sprite::getHeight() const
 {
-	return _height * _scale;
+	return 64. * _scale;
 }
 
 void Sprite::setPosition(double x, double y)
