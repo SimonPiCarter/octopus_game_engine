@@ -185,11 +185,29 @@ int main( int argc, char* args[] )
 	panel_l.addSpriteInfo("barrack", 0, 1);
 	panel_l.addSpriteInfo("temple", 0, 4);
 
+	panel_l.addSpriteInfo("div_armor_well", 1, 4);
+		panel_l.addSpriteInfo("div_armor_1", 3, 3);
+		panel_l.addSpriteInfo("div_armor_2", 3, 4);
+		panel_l.addSpriteInfo("div_armor_3", 4, 0);
+	panel_l.addSpriteInfo("div_fire_well", 2, 3);
+		panel_l.addSpriteInfo("div_fire_1", 4, 4);
+		panel_l.addSpriteInfo("div_fire_2", 5, 0);
+		panel_l.addSpriteInfo("div_fire_3", 5, 1);
+	panel_l.addSpriteInfo("div_raid_well", 1, 3);
+		panel_l.addSpriteInfo("div_raid_1", 3, 0);
+		panel_l.addSpriteInfo("div_raid_2", 3, 1);
+		panel_l.addSpriteInfo("div_raid_3", 3, 2);
+	panel_l.addSpriteInfo("div_swarm_well", 2, 0);
+		panel_l.addSpriteInfo("div_swarm_1", 4, 1);
+		panel_l.addSpriteInfo("div_swarm_2", 4, 2);
+		panel_l.addSpriteInfo("div_swarm_3", 4, 3);
+
 	DivinityPanel divPanel_l(&window_l, SCREEN_WIDTH-SCREEN_WIDTH/2-200, SCREEN_HEIGHT-SCREEN_HEIGHT/2-200,
 		window_l.loadTexture("resources/background.png"), window_l.loadTexture("resources/grid.png"), 0);
-	divPanel_l.addOptionInfo(octopus::DivinityType::Divinity_1, 1, 3);
-	divPanel_l.addOptionInfo(octopus::DivinityType::Divinity_2, 1, 4);
-	divPanel_l.addOptionInfo(octopus::DivinityType::Divinity_3, 2, 0);
+	divPanel_l.addOptionInfo(octopus::DivinityType::Divinity_1, 2, 0);
+	divPanel_l.addOptionInfo(octopus::DivinityType::Divinity_3, 1, 3);
+	divPanel_l.addOptionInfo(octopus::DivinityType::Divinity_4, 1, 4);
+	divPanel_l.addOptionInfo(octopus::DivinityType::Divinity_5, 2, 3);
 
 	SpriteLibrary spriteLib_l;
 	spriteLib_l.registerSpriteTemplate("resource", window_l.loadTexture("resources/steel_prop1.png"), 2., 128, 128, 256, 256, {10, 10}, {0.2,0.2}, 1);
@@ -198,6 +216,11 @@ int main( int argc, char* args[] )
 	spriteLib_l.registerSpriteTemplate("temple", window_l.loadTexture("resources/building.png"), 1., 32, 32, 64, 64, {2, 2, 2, 2}, {0.25, 0.5, 0.5, 0.5}, 1);
 	spriteLib_l.registerSpriteTemplate("unit", window_l.loadTexture("resources/circle.png"), 0.5, 32, 32, 64, 64, {2, 2}, {0.25, 1}, 1);
 	spriteLib_l.registerSpriteTemplate("soldier", window_l.loadTexture("resources/circle.png"), 0.5, 32, 32, 64, 64, {2, 2}, {0.25, 1}, 1);
+
+	spriteLib_l.registerSpriteTemplate("div_armor_well", window_l.loadTexture("resources/building.png"), 1., 32, 32, 64, 64, {2, 2, 2, 2}, {0.25, 0.5, 0.5, 0.5}, 1);
+	spriteLib_l.registerSpriteTemplate("div_fire_well", window_l.loadTexture("resources/building.png"), 1., 32, 32, 64, 64, {2, 2, 2, 2}, {0.25, 0.5, 0.5, 0.5}, 1);
+	spriteLib_l.registerSpriteTemplate("div_raid_well", window_l.loadTexture("resources/building.png"), 1., 32, 32, 64, 64, {2, 2, 2, 2}, {0.25, 0.5, 0.5, 0.5}, 1);
+	spriteLib_l.registerSpriteTemplate("div_swarm_well", window_l.loadTexture("resources/building.png"), 1., 32, 32, 64, 64, {2, 2, 2, 2}, {0.25, 0.5, 0.5, 0.5}, 1);
 
 	// Text for resource
 	Text textResource_l(&window_l, {0,0,0}, 300, 0);
