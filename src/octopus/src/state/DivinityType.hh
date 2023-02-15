@@ -10,10 +10,7 @@ namespace octopus
 		Divinity_3,
 		Divinity_4,
 		Divinity_5,
-		Divinity_6,
-		Divinity_7,
-		Divinity_8,
-		Divinity_9
+		Divinity_6
 	};
 } // namespace octopus
 

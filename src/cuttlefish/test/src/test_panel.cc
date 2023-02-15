@@ -68,9 +68,6 @@ std::string divAnchorStr(octopus::Player const &player_p)
 	ss_l << "div4 : "<<stringify(int(octopus::getDivAnchor(player_p, octopus::DivinityType::Divinity_4)))<<" | ";
 	ss_l << "div5 : "<<stringify(int(octopus::getDivAnchor(player_p, octopus::DivinityType::Divinity_5)))<<" | ";
 	ss_l << "div6 : "<<stringify(int(octopus::getDivAnchor(player_p, octopus::DivinityType::Divinity_6)))<<" | ";
-	ss_l << "div7 : "<<stringify(int(octopus::getDivAnchor(player_p, octopus::DivinityType::Divinity_7)))<<" | ";
-	ss_l << "div8 : "<<stringify(int(octopus::getDivAnchor(player_p, octopus::DivinityType::Divinity_8)))<<" | ";
-	ss_l << "div9 : "<<stringify(int(octopus::getDivAnchor(player_p, octopus::DivinityType::Divinity_9)))<<" | ";
 	return ss_l.str();
 }
 
@@ -84,9 +81,6 @@ std::string divLvlStr(octopus::Player const &player_p)
 	ss_l << "div4 : "<<stringify(octopus::getDivLvl(player_p, octopus::DivinityType::Divinity_4))<<" | ";
 	ss_l << "div5 : "<<stringify(octopus::getDivLvl(player_p, octopus::DivinityType::Divinity_5))<<" | ";
 	ss_l << "div6 : "<<stringify(octopus::getDivLvl(player_p, octopus::DivinityType::Divinity_6))<<" | ";
-	ss_l << "div7 : "<<stringify(octopus::getDivLvl(player_p, octopus::DivinityType::Divinity_7))<<" | ";
-	ss_l << "div8 : "<<stringify(octopus::getDivLvl(player_p, octopus::DivinityType::Divinity_8))<<" | ";
-	ss_l << "div9 : "<<stringify(octopus::getDivLvl(player_p, octopus::DivinityType::Divinity_9))<<" | ";
 	return ss_l.str();
 }
 
