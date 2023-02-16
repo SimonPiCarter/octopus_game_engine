@@ -16,5 +16,7 @@ std::list<octopus::Steppable *> Case2(octopus::Library &lib_p);
 std::list<octopus::Steppable *> Case3(octopus::Library &lib_p);
 /// @brief production command test
 std::list<octopus::Steppable *> Case4(octopus::Library &lib_p);
+/// @brief production command test
+std::list<octopus::Steppable *> Case5(octopus::Library &lib_p);
 
 #endif
