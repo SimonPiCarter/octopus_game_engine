@@ -46,6 +46,7 @@ TEST(triggerBuildingTest, simple)
 {
 	UnitModel unitModel_l { false, 1., 1., 10. };
 	unitModel_l._isUnit = true;
+	unitModel_l._isBuilder = true;
 	Unit unit_l({ 5, 3. }, false, unitModel_l);
 
 	BuildingModel depositModel_l { true, 1., 10. };
