@@ -23,3 +23,13 @@ ${CMAKE_CURRENT_SOURCE_DIR}/src/test_panel.cc
 )
 
 target_link_libraries(test_panel PUBLIC cuttlefish)
+
+# ===================
+# Test_level1
+# ===================
+
+add_executable(test_level1
+${CMAKE_CURRENT_SOURCE_DIR}/src/test_level1.cc
+)
+
+target_link_libraries(test_level1 PUBLIC cuttlefish)
