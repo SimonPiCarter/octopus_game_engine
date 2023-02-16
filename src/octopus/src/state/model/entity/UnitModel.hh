@@ -17,6 +17,8 @@ namespace octopus
 
 		/// @brief production time in steps
 		unsigned long _productionTime {0};
+
+		double _gatherRate { 1. };
 	};
 } // namespace octopus
 

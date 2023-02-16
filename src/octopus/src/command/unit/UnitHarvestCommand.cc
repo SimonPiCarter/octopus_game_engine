@@ -122,8 +122,7 @@ bool UnitHarvestCommand::applyCommand(Step & step_p, State const &state_p, Comma
 			{
 				step_p.addSteppable(new UnitHarvestTypeStep(_source, data_l._resource, unit_l->_typeOfResource, res_l->_type));
 			}
-			/// @todo change gather rate to read data
-			step_p.addSteppable(new UnitHarvestQuantityStep(_source, data_l._resource, 0.01));
+			step_p.addSteppable(new UnitHarvestQuantityStep(_source, data_l._resource, unit_l->_unitModel._gatherRate));
 		}
 		else
 		{
