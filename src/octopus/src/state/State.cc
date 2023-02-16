@@ -332,13 +332,13 @@ bool checkResource(State const &state_p, unsigned long player_p, std::map<Resour
 	{
 		// iterator to resource
 		auto && it_l = player_l->_resources.find(pair_l.first);
-		double res_l = 0;
+		double res_l = 0.;
 		if(it_l != player_l->_resources.end())
 		{
 			res_l = it_l->second;
 		}
 		// One resource is too much for player resources
-		if(pair_l.second > res_l)
+		if(pair_l.second > res_l + 1e-5)
 		{
 			return false;
 		}

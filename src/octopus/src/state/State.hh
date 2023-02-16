@@ -112,6 +112,11 @@ Entity const * lookUpNewTarget(State const &state_p, Handle const &sourceHandle_
 Entity const * lookUpDeposit(State const &state_p, Handle const &sourceHandle_p, Handle const &res_p);
 Entity const * lookUpNewResource(State const &state_p, Handle const &sourceHandle_p, Handle const &res_p);
 
+/// @brief Check if the player has enough resource in the given state
+/// @param state_p state in which we want to check resources
+/// @param player_p the player
+/// @param cost_p the cost
+/// @return true iif player has enough resource
 bool checkResource(State const &state_p, unsigned long player_p, std::map<ResourceType, double> const & cost_p);
 
 void updateGrid(State &state_p, Entity const *ent_p, bool set_p);
