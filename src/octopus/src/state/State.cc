@@ -172,7 +172,7 @@ void State::incrementPathGridStatus()
 long State::getGridIndex(double idx_p) const
 {
 	long size_l = getGridSize();
-	return std::min(std::max(0l, long(idx_p/_gridPointSize)), size_l);
+	return std::min(std::max(0l, long(idx_p/_gridPointSize)), size_l-1);
 }
 
 Entity const * lookUpNewTarget(State const &state_p, Handle const &sourceHandle_p)
