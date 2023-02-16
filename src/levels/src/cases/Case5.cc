@@ -51,6 +51,14 @@ void createResourceEther(Library &lib_p)
 	lib_p.registerEntityModel("resource_ether", resModel_l);
 }
 
+void createResourceGas(Library &lib_p)
+{
+	EntityModel resModel_l { true, 1.8, 1., 10. };
+	resModel_l._isResource = true;
+	resModel_l._isStatic = true;
+	lib_p.registerEntityModel("resource_gas", resModel_l);
+}
+
 class Case5DivinitiesOptionTrigger : public OnEachTrigger
 {
 public:
@@ -89,6 +97,7 @@ std::list<Steppable *> Case5(Library &lib_p)
 	createResource(lib_p);
 	createResourceFood(lib_p);
 	createResourceEther(lib_p);
+	createResourceGas(lib_p);
 
 	divinitySwarmFiller(lib_p);
 	divinityRaidFiller(lib_p);
@@ -116,6 +125,10 @@ std::list<Steppable *> Case5(Library &lib_p)
 	res4_l._type = ResourceType::Ether;
 	res4_l._resource = 500.;
 
+	Resource res5_l({7,17}, true, lib_p.getEntityModel("resource_gas"));
+	res5_l._type = ResourceType::Gas;
+	res5_l._resource = 500.;
+
 	std::map<ResourceType, double> mapRes_l;
 	mapRes_l[octopus::ResourceType::Food] = -200;
 	mapRes_l[octopus::ResourceType::Steel] = -200;
@@ -140,6 +153,7 @@ std::list<Steppable *> Case5(Library &lib_p)
 		new ResourceSpawnStep(res2_l),
 		new ResourceSpawnStep(res3_l),
 		new ResourceSpawnStep(res4_l),
+		new ResourceSpawnStep(res5_l),
 		new UnitSpawnStep(unit_l),
 		new UnitSpawnStep(unit_l),
 		new UnitSpawnStep(unit_l),

@@ -54,7 +54,7 @@ std::string resourceStr(octopus::Player const &player_p)
 	ss_l << "Food   : "<<stringify(std::abs(std::floor(1e-5+octopus::getResource(player_p, octopus::ResourceType::Food))))<<" | ";
 	ss_l << "Steel  : "<<stringify(std::abs(std::floor(1e-5+octopus::getResource(player_p, octopus::ResourceType::Steel))))<<" | ";
 	ss_l << "Ether  : "<<stringify(std::abs(std::floor(1e-5+octopus::getResource(player_p, octopus::ResourceType::Ether))))<<" | ";
-	ss_l << "Anchor : "<<stringify(std::abs(std::floor(1e-5+octopus::getResource(player_p, octopus::ResourceType::Anchor))))<<" | ";
+	ss_l << "Gas : "<<stringify(std::abs(std::floor(1e-5+octopus::getResource(player_p, octopus::ResourceType::Gas))))<<" | ";
 	return ss_l.str();
 }
 
@@ -217,6 +217,7 @@ int main( int argc, char* args[] )
 	spriteLib_l.registerSpriteTemplate("resource_steel", window_l.loadTexture("resources/steel_prop1.png"), 2., 128, 128, 256, 256, {10, 10}, {0.2,0.2}, 1);
 	spriteLib_l.registerSpriteTemplate("resource_food", window_l.loadTexture("resources/food_prop1.png"), 2., 64, 64, 128, 128, {2, 2}, {0.5, 1.}, 1);
 	spriteLib_l.registerSpriteTemplate("resource_ether", window_l.loadTexture("resources/ether_prop1.png"), 2., 64, 64, 128, 128, {10, 1}, {0.2, 1.5}, 1);
+	spriteLib_l.registerSpriteTemplate("resource_gas", window_l.loadTexture("resources/gas_prop1.png"), 2., 64, 64, 128, 128, {20, 1}, {0.1, 1.5}, 1);
 
 	// neutral
 	spriteLib_l.registerSpriteTemplate("command_center", window_l.loadTexture("resources/building.png"), 2., 32, 32, 64, 64, {2, 2, 2, 2}, {0.25, 0.5, 0.5, 0.5}, 1);
