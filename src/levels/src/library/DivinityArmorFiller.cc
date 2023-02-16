@@ -13,7 +13,7 @@ void divinityArmorFiller(Library &lib_p)
     {
         // unit 1
         // tanky melee (armor)
-        UnitModel unitModel_l { false, 0.5, 0.0125, 100. };
+        UnitModel unitModel_l { false, 0.5, 0.025, 100. };
         unitModel_l._isUnit = true;
         unitModel_l._productionTime = 2500;
         unitModel_l._cost[ResourceType::Food] = 30;
@@ -36,7 +36,7 @@ void divinityArmorFiller(Library &lib_p)
     {
         // unit 3
         // fat tanky
-        UnitModel unitModel_l { false, 0.75, 0.01, 300. };
+        UnitModel unitModel_l { false, 0.75, 0.02, 300. };
         unitModel_l._isUnit = true;
         unitModel_l._productionTime = 4500;
         unitModel_l._cost[ResourceType::Food] = 10;

@@ -13,7 +13,7 @@ void divinitySwarmFiller(Library &lib_p)
     {
         // unit 1
         // cheap melee
-        UnitModel unitModel_l { false, 0.35, 0.025, 35. };
+        UnitModel unitModel_l { false, 0.35, 0.05, 35. };
         unitModel_l._isUnit = true;
         unitModel_l._productionTime = 1000;
         unitModel_l._cost[ResourceType::Food] = 15;
@@ -33,7 +33,7 @@ void divinitySwarmFiller(Library &lib_p)
     {
         // unit 2
         // ranged moderate damage
-        UnitModel unitModel_l { false, 0.5, 0.0125, 50. };
+        UnitModel unitModel_l { false, 0.5, 0.025, 50. };
         unitModel_l._isUnit = true;
         unitModel_l._productionTime = 2000;
         unitModel_l._cost[ResourceType::Food] = 0;

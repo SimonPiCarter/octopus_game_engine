@@ -13,7 +13,7 @@ void divinityRaidFiller(Library &lib_p)
     {
         // unit 1
         // light fast unit
-        UnitModel unitModel_l { false, 0.5, 0.05, 90. };
+        UnitModel unitModel_l { false, 0.5, 0.1, 90. };
         unitModel_l._isUnit = true;
         unitModel_l._productionTime = 2000;
         unitModel_l._cost[ResourceType::Food] = 25;
@@ -33,7 +33,7 @@ void divinityRaidFiller(Library &lib_p)
     {
         // unit 2
         // tanky melee
-        UnitModel unitModel_l { false, 0.75, 0.0125, 220. };
+        UnitModel unitModel_l { false, 0.75, 0.025, 220. };
         unitModel_l._isUnit = true;
         unitModel_l._productionTime = 3500;
         unitModel_l._cost[ResourceType::Food] = 15;
@@ -53,7 +53,7 @@ void divinityRaidFiller(Library &lib_p)
     {
         // unit 3
         // high range and damage
-        UnitModel unitModel_l { false, 0.5, 0.0125, 75. };
+        UnitModel unitModel_l { false, 0.5, 0.025, 75. };
         unitModel_l._isUnit = true;
         unitModel_l._productionTime = 4000;
         unitModel_l._cost[ResourceType::Food] = 0;

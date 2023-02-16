@@ -13,7 +13,7 @@ void divinityFireFiller(Library &lib_p)
     {
         // unit 1
         // ranged rapid fire low dmg
-        UnitModel unitModel_l { false, 0.5, 0.0125, 50. };
+        UnitModel unitModel_l { false, 0.5, 0.025, 50. };
         unitModel_l._isUnit = true;
         unitModel_l._productionTime = 1000;
         unitModel_l._cost[ResourceType::Food] = 15;
@@ -36,7 +36,7 @@ void divinityFireFiller(Library &lib_p)
     {
         // unit 3
         // fast armored
-        UnitModel unitModel_l { false, 0.5, 0.025, 180. };
+        UnitModel unitModel_l { false, 0.5, 0.05, 180. };
         unitModel_l._isUnit = true;
         unitModel_l._productionTime = 4000;
         unitModel_l._cost[ResourceType::Food] = 10;
