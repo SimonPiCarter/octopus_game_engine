@@ -1,6 +1,8 @@
 #ifndef __ResourceType__
 #define __ResourceType__
 
+#include <string>
+
 namespace octopus
 {
 	enum class ResourceType
@@ -16,6 +18,8 @@ namespace octopus
 		// required to produce fighting entities
 		Ether
 	};
+
+	std::string to_string(ResourceType type_p);
 } // namespace octopus
 
 
