@@ -233,17 +233,17 @@ int main( int argc, char* args[] )
 
 	spriteLib_l.registerSpriteTemplate("div_armor_1", window_l.loadTexture("resources/circle.png"), 0.5, 32, 32, 64, 64, {2, 2}, {0.25, 1}, 1);
 	spriteLib_l.registerSpriteTemplate("div_armor_2", window_l.loadTexture("resources/circle.png"), 0.5, 32, 32, 64, 64, {2, 2}, {0.25, 1}, 1);
-	spriteLib_l.registerSpriteTemplate("div_armor_3", window_l.loadTexture("resources/circle.png"), 0.5, 32, 32, 64, 64, {2, 2}, {0.25, 1}, 1);
+	spriteLib_l.registerSpriteTemplate("div_armor_3", window_l.loadTexture("resources/circle.png"), 0.75, 32, 32, 64, 64, {2, 2}, {0.25, 1}, 1);
 
 	spriteLib_l.registerSpriteTemplate("div_fire_1", window_l.loadTexture("resources/circle.png"), 0.5, 32, 32, 64, 64, {2, 2}, {0.25, 1}, 1);
 	spriteLib_l.registerSpriteTemplate("div_fire_2", window_l.loadTexture("resources/circle.png"), 0.5, 32, 32, 64, 64, {2, 2}, {0.25, 1}, 1);
 	spriteLib_l.registerSpriteTemplate("div_fire_3", window_l.loadTexture("resources/circle.png"), 0.5, 32, 32, 64, 64, {2, 2}, {0.25, 1}, 1);
 
 	spriteLib_l.registerSpriteTemplate("div_raid_1", window_l.loadTexture("resources/circle.png"), 0.5, 32, 32, 64, 64, {2, 2}, {0.25, 1}, 1);
-	spriteLib_l.registerSpriteTemplate("div_raid_2", window_l.loadTexture("resources/circle.png"), 0.5, 32, 32, 64, 64, {2, 2}, {0.25, 1}, 1);
+	spriteLib_l.registerSpriteTemplate("div_raid_2", window_l.loadTexture("resources/circle.png"), 0.75, 32, 32, 64, 64, {2, 2}, {0.25, 1}, 1);
 	spriteLib_l.registerSpriteTemplate("div_raid_3", window_l.loadTexture("resources/circle.png"), 0.5, 32, 32, 64, 64, {2, 2}, {0.25, 1}, 1);
 
-	spriteLib_l.registerSpriteTemplate("div_swarm_1", window_l.loadTexture("resources/circle.png"), 0.5, 32, 32, 64, 64, {2, 2}, {0.25, 1}, 1);
+	spriteLib_l.registerSpriteTemplate("div_swarm_1", window_l.loadTexture("resources/circle.png"), 0.35, 32, 32, 64, 64, {2, 2}, {0.25, 1}, 1);
 	spriteLib_l.registerSpriteTemplate("div_swarm_2", window_l.loadTexture("resources/circle.png"), 0.5, 32, 32, 64, 64, {2, 2}, {0.25, 1}, 1);
 	spriteLib_l.registerSpriteTemplate("div_swarm_3", window_l.loadTexture("resources/circle.png"), 0.5, 32, 32, 64, 64, {2, 2}, {0.25, 1}, 1);
 
