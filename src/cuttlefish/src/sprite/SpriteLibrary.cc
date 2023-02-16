@@ -33,6 +33,11 @@ Sprite * SpriteLibrary::createSprite(octopus::Handle const &handle_p, std::strin
 		);
 }
 
+SpriteTemplate const & SpriteLibrary::getSpriteTemplate(std::string const &id_p) const
+{
+	return _mapTemplates.at(id_p);
+}
+
 int SpriteLibrary::getBlueprintState(std::string const &id_p) const
 {
 	return _mapTemplates.at(id_p).blueprint;

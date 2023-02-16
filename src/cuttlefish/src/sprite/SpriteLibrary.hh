@@ -37,6 +37,8 @@ public:
 
 	Sprite * createSprite(octopus::Handle const &handle_p, std::string const &id_p, bool absolute_p) const;
 
+	SpriteTemplate const & getSpriteTemplate(std::string const &id_p) const;
+
 	int getBlueprintState(std::string const &id_p) const;
 
 private:

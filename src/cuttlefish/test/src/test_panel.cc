@@ -10,7 +10,6 @@
 // cuttlefish
 #include "clicMode/BuildClicMode.hh"
 #include "clicMode/StandardClicMode.hh"
-#include "logger/Logger.hh"
 #include "panel/Panel.hh"
 #include "panel/DivinityPanel.hh"
 #include "sprite/Sprite.hh"
@@ -18,6 +17,7 @@
 #include "text/Text.hh"
 #include "text/WrappedText.hh"
 #include "texture/Texture.hh"
+#include "tilemap/Tilemap.hh"
 #include "window/Window.hh"
 #include "world/World.hh"
 
@@ -118,7 +118,6 @@ void commandFromSpriteModel(SpriteModel const *spriteModel_l, octopus::Library c
 
 void controllerLoop(octopus::Controller &controller_p, bool const &over_p, bool const &paused_p)
 {
-	//octopus::Logger::enable_debug();
 	using namespace std::chrono_literals;
 
 	auto last_l = std::chrono::steady_clock::now();
@@ -210,9 +209,11 @@ int main( int argc, char* args[] )
 	divPanel_l.addOptionInfo(octopus::DivinityType::Divinity_5, 2, 3);
 
 	SpriteLibrary spriteLib_l;
+	spriteLib_l.registerSpriteTemplate("tiles", window_l.loadTexture("resources/tiles.png"), 1., 0, 0, 64, 64, {1, 1}, {2,2}, 1);
+	spriteLib_l.registerSpriteTemplate("details", window_l.loadTexture("resources/details.png"), 1., 0, 0, 64, 64, {1}, {2}, 1);
 	spriteLib_l.registerSpriteTemplate("resource", window_l.loadTexture("resources/steel_prop1.png"), 2., 128, 128, 256, 256, {10, 10}, {0.2,0.2}, 1);
 	spriteLib_l.registerSpriteTemplate("resource_food", window_l.loadTexture("resources/food_prop1.png"), 2., 64, 64, 128, 128, {2, 2}, {0.5, 1.}, 1);
-	spriteLib_l.registerSpriteTemplate("resource_ether", window_l.loadTexture("resources/ether_prop1.png"), 2., 64, 64, 128, 128, {2, 2}, {1.5, 1.5}, 1);
+	spriteLib_l.registerSpriteTemplate("resource_ether", window_l.loadTexture("resources/ether_prop1.png"), 2., 64, 64, 128, 128, {10, 1}, {0.2, 1.5}, 1);
 	spriteLib_l.registerSpriteTemplate("building", window_l.loadTexture("resources/building.png"), 1., 32, 32, 64, 64, {2, 2, 2, 2}, {0.25, 0.5, 0.5, 0.5}, 1);
 	spriteLib_l.registerSpriteTemplate("barrack", window_l.loadTexture("resources/building.png"), 1., 32, 32, 64, 64, {2, 2, 2, 2}, {0.25, 0.5, 0.5, 0.5}, 1);
 	spriteLib_l.registerSpriteTemplate("temple", window_l.loadTexture("resources/building.png"), 1., 32, 32, 64, 64, {2, 2, 2, 2}, {0.25, 0.5, 0.5, 0.5}, 1);
@@ -240,6 +241,8 @@ int main( int argc, char* args[] )
 	spriteLib_l.registerSpriteTemplate("div_swarm_2", window_l.loadTexture("resources/circle.png"), 0.5, 32, 32, 64, 64, {2, 2}, {0.25, 1}, 1);
 	spriteLib_l.registerSpriteTemplate("div_swarm_3", window_l.loadTexture("resources/circle.png"), 0.5, 32, 32, 64, 64, {2, 2}, {0.25, 1}, 1);
 
+	Tilemap tilemap_l(50, spriteLib_l, "tiles", "details");
+	tilemap_l.generate();
 
 	// Text for resource
 	Text textResource_l(&window_l, {0,0,0}, 300, 0);
@@ -426,10 +429,13 @@ int main( int argc, char* args[] )
 		background_l->render(window_l.getRenderer(), 0, 0, SCREEN_HEIGHT, SCREEN_WIDTH );
 
 
+
 		auto cur_l = std::chrono::steady_clock::now();
 		std::chrono::duration<double> elapsed_seconds_l = cur_l-last_l;
 		elapsed_l = elapsed_seconds_l.count();
 		last_l = cur_l;
+
+		tilemap_l.render(window_l, elapsed_l);
 
 		world_l.display(window_l, elapsed_l);
 
