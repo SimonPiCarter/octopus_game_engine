@@ -19,4 +19,12 @@ void divinityArmorFiller(octopus::Library &lib_p);
 /// @brief fill library with info from rate of fire divinity (Divinity_5)
 void divinityFireFiller(octopus::Library &lib_p);
 
+/// @brief fill library with neutral
+/// - command center
+/// - deposit
+/// - temple
+/// - worker
+/// @param lib_p the library to fill
+void neutralFiller(octopus::Library &lib_p);
+
 #endif

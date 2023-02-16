@@ -17,6 +17,7 @@ add_library(levels
 	${CMAKE_CURRENT_SOURCE_DIR}/src/library/DivinityFireFiller.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/library/DivinityRaidFiller.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/library/DivinitySwarmFiller.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/src/library/NeutralFiller.cc
 )
 
 target_link_libraries(levels PUBLIC octopus)
