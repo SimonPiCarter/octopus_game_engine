@@ -99,6 +99,11 @@ bool updateStepFromConflictPosition(Step &step_p, State const &state_p)
 	{
 		Entity const * entA_l = state_p.getEntity(stepA_l->_handle);
 
+		if(entA_l->isIgnoringCollision())
+		{
+			continue;
+		}
+
 		Box<long> box_l {state_p.getGridIndex(newPos_l[entA_l->_handle].x-entA_l->_model._ray),
 						 state_p.getGridIndex(newPos_l[entA_l->_handle].x+entA_l->_model._ray+0.999),
 						 state_p.getGridIndex(newPos_l[entA_l->_handle].y-entA_l->_model._ray),
@@ -121,6 +126,12 @@ bool updateStepFromConflictPosition(Step &step_p, State const &state_p)
 			}
 			bitset_l[handle_p] = 1;
 			Entity const * entB_l = state_p.getEntity(handle_p);
+
+			if(entB_l->isIgnoringCollision())
+			{
+				return false;
+			}
+
 			EntityMoveStep *stepB_l = mapMoveStep_l[entB_l->_handle];
 			if(entA_l->_model._isStatic || entB_l->_model._isStatic)
 			{
@@ -232,6 +243,11 @@ bool updateStepFromConflictPosition(Step &step_p, State const &state_p)
 	{
 		Entity const * entA_l = state_p.getEntity(stepA_l->_handle);
 
+		if(entA_l->isIgnoringCollision())
+		{
+			continue;
+		}
+
 		Box<long> box_l {state_p.getGridIndex(newPos_l[entA_l->_handle].x-entA_l->_model._ray),
 						 state_p.getGridIndex(newPos_l[entA_l->_handle].x+entA_l->_model._ray+0.999),
 						 state_p.getGridIndex(newPos_l[entA_l->_handle].y-entA_l->_model._ray),
@@ -255,6 +271,12 @@ bool updateStepFromConflictPosition(Step &step_p, State const &state_p)
 			}
 			bitset_l[handle_p] = 1;
 			Entity const * entB_l = state_p.getEntity(handle_p);
+
+			if(entB_l->isIgnoringCollision())
+			{
+				return false;
+			}
+
 			EntityMoveStep *stepB_l = mapMoveStep_l[entB_l->_handle];
 			if(!entA_l->_model._isStatic && !entB_l->_model._isStatic)
 			{

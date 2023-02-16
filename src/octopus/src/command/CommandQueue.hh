@@ -11,8 +11,8 @@ class CommandData;
 
 struct CommandBundle
 {
-	Command * _cmd;
-	CommandData * _data;
+	Command * _cmd {nullptr};
+	CommandData * _data {nullptr};
 };
 
 /// @brief This class represent a command queue
@@ -36,6 +36,7 @@ public:
 	bool hasCurrentCommand() const;
 
 	CommandBundle &getFrontCommand();
+	CommandBundle const &getFrontCommand() const;
 	/// @brief return an iterator of the current command
 	/// this is the iterator stored in the front of _contextList
 	ConstQueueIterator getCurrentCommand() const;

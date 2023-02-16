@@ -1,5 +1,6 @@
 #include "Entity.hh"
 
+#include "command/CommandData.hh"
 
 namespace octopus
 {
@@ -12,6 +13,16 @@ Entity::Entity(Vector const &pos_p, bool frozen_p, EntityModel const &model_p)
 	, _reload(model_p._fullReload)
 	, _model(model_p)
 {}
+
+bool Entity::isIgnoringCollision() const
+{
+	if(getQueue().hasCurrentCommand())
+	{
+		return getQueue().getFrontCommand()._data
+			&& getQueue().getFrontCommand()._data->_ignoreCollision;
+	}
+	return false;
+}
 
 double Entity::getStepSpeed() const
 {

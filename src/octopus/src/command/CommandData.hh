@@ -9,6 +9,8 @@ class CommandData
 {
 public:
 	virtual ~CommandData() {}
+
+	bool _ignoreCollision {false};
 };
 
 template<typename data>

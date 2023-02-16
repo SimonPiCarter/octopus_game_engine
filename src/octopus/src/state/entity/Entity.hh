@@ -25,6 +25,8 @@ namespace octopus
 				return Commandable::isActive() && _alive;
 			}
 
+			bool isIgnoringCollision() const;
+
 			Vector _pos;
 
 			/// @brief cannot move
