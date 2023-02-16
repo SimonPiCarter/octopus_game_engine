@@ -59,6 +59,13 @@ void PlayerChoseDivinityCommand::registerCommand(Step & step_p, State const &sta
 			step_p.addSteppable(new PlayerAnchorDivinityStep(_player, _type,
 				getDivAnchor(player_l, _type, false), getDivAnchor(player_l, _type) + 120.));
 		}
+		else if(!_lvlUp)
+		{
+			step_p.addSteppable(new PlayerResetOptionDivinityStep(_player, player_l._divOptions));
+			/// @todo read from data how much
+			step_p.addSteppable(new PlayerAnchorDivinityStep(_player, _type,
+				getDivAnchor(player_l, _type, false), getDivAnchor(player_l, _type) + 120.));
+		}
 	}
 }
 
