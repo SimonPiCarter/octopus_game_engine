@@ -39,6 +39,8 @@ namespace octopus
 		bool _isUnit { false };
 		bool _isResource { false };
 
+		bool _isBuilder { false };
+
 		std::map<ResourceType, double> _cost;
 		/// @brief requirements
 		Requirements _requirements;

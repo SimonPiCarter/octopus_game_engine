@@ -56,6 +56,11 @@ bool EntityBuildingCommand::applyCommand(Step & step_p, State const &state_p, Co
 		Logger::getDebug() << "EntityBuildingCommand:: building other player building is not allowed"<<std::endl;
 		return true;
 	}
+	if(!ent_l->_model._isBuilder)
+	{
+		Logger::getDebug() << "EntityBuildingCommand:: non builder cannot build"<<std::endl;
+		return true;
+	}
 
 	if(building_l->isBlueprint() && !checkGrid(state_p, building_l))
 	{

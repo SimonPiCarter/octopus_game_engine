@@ -30,6 +30,7 @@ void createWorker(Library &lib_p)
 {
 	UnitModel unitModel_l { false, 0.5, 0.05, 10. };
 	unitModel_l._isUnit = true;
+	unitModel_l._isBuilder = true;
 	unitModel_l._maxQuantity[ResourceType::Food] = 10;
 	unitModel_l._maxQuantity[ResourceType::Steel] = 50;
 	unitModel_l._maxQuantity[ResourceType::Ether] = 50;
