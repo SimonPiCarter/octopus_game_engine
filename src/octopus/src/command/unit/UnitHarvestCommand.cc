@@ -54,7 +54,7 @@ bool hasResourceToDrop(Unit const * unit_p)
 bool isFull(State const &state_p, Unit const * unit_p, Handle const &res_p)
 {
 	Resource const *res_l = dynamic_cast<Resource const *>(state_p.getEntity(res_p));
-	return unit_p->_quantityOfResource >= unit_p->_unitModel._maxQuantity.at(res_l->_type);
+	return unit_p->_quantityOfResource >= unit_p->_unitModel._maxQuantity.at(res_l->_type) - 1e-5;
 }
 
 bool inRange(State const &state_p, Unit const * unit_p, Handle const res_p)
@@ -123,7 +123,7 @@ bool UnitHarvestCommand::applyCommand(Step & step_p, State const &state_p, Comma
 				step_p.addSteppable(new UnitHarvestTypeStep(_source, data_l._resource, unit_l->_typeOfResource, res_l->_type));
 			}
 			/// @todo change gather rate to read data
-			step_p.addSteppable(new UnitHarvestQuantityStep(_source, data_l._resource, 1.));
+			step_p.addSteppable(new UnitHarvestQuantityStep(_source, data_l._resource, 0.01));
 		}
 		else
 		{
