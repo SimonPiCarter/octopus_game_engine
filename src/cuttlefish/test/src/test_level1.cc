@@ -51,10 +51,10 @@ using namespace cuttlefish;
 std::string resourceStr(octopus::Player const &player_p)
 {
 	std::stringstream ss_l;
-	ss_l << "Food   : "<<stringify(octopus::getResource(player_p, octopus::ResourceType::Food))<<" | ";
-	ss_l << "Steel  : "<<stringify(octopus::getResource(player_p, octopus::ResourceType::Steel))<<" | ";
-	ss_l << "Ether  : "<<stringify(octopus::getResource(player_p, octopus::ResourceType::Ether))<<" | ";
-	ss_l << "Anchor : "<<stringify(octopus::getResource(player_p, octopus::ResourceType::Anchor))<<" | ";
+	ss_l << "Food   : "<<stringify(std::abs(std::floor(1e-5+octopus::getResource(player_p, octopus::ResourceType::Food))))<<" | ";
+	ss_l << "Steel  : "<<stringify(std::abs(std::floor(1e-5+octopus::getResource(player_p, octopus::ResourceType::Steel))))<<" | ";
+	ss_l << "Ether  : "<<stringify(std::abs(std::floor(1e-5+octopus::getResource(player_p, octopus::ResourceType::Ether))))<<" | ";
+	ss_l << "Anchor : "<<stringify(std::abs(std::floor(1e-5+octopus::getResource(player_p, octopus::ResourceType::Anchor))))<<" | ";
 	return ss_l.str();
 }
 
