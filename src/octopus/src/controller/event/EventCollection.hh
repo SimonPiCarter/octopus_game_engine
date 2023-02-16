@@ -3,6 +3,7 @@
 
 #include <list>
 #include <unordered_set>
+#include <unordered_map>
 
 #include "state/Handle.hh"
 #include "step/Steppable.hh"
@@ -80,7 +81,10 @@ private:
 	State const &_state;
 	/// statefull data
 	std::unordered_set<Handle> _finishedHandles;
+	std::unordered_map<Handle, double> _buildingProgress;
+
 	std::unordered_set<Handle> _diedHandles;
+	std::unordered_map<Handle, double> _hpChange;
 };
 
 }

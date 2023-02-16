@@ -33,9 +33,11 @@ void EventCollection::visit(BuildingStep const *step_p)
 	Building const * ent_l = static_cast<Building const *>(_state.getEntity(step_p->_handle));
 	Logger::getDebug() << "EventCollection :: visit BuildingStep " << step_p->_handle <<std::endl;
 
+	_buildingProgress[step_p->_handle] += step_p->_delta;
+
 	// if building over and not triggered yet for this building
 	if(ent_l->_buildingProgress < ent_l->_buildingModel._buildingTime
-	&& ent_l->_buildingProgress + step_p->_delta >= ent_l->_buildingModel._buildingTime
+	&& ent_l->_buildingProgress + _buildingProgress[step_p->_handle] >= ent_l->_buildingModel._buildingTime
 	&& _finishedHandles.find(step_p->_handle) == _finishedHandles.end())
 	{
 		Logger::getDebug() << "\ttrigger"<<std::endl;
@@ -56,7 +58,10 @@ void EventCollection::visit(EntityHitPointChangeStep const *step_p)
 	Logger::getDebug() << "EventCollection :: visit EntityHitPointChangeStep " << step_p->_handle <<std::endl;
 
 	Entity const * ent_l = _state.getEntity(step_p->_handle);
-	if(ent_l->_hp > 0. && ent_l->_hp + step_p->_delta < 1e-3
+
+	_hpChange[step_p->_handle] += step_p->_delta;
+
+	if(ent_l->_hp > 0. && ent_l->_hp + _hpChange[step_p->_handle] < 1e-3
 	&& _diedHandles.find(step_p->_handle) == _diedHandles.end())
 	{
 		Logger::getDebug() << "\ttrigger"<<std::endl;
