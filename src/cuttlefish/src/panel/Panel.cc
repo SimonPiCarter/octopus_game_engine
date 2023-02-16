@@ -146,7 +146,7 @@ void Panel::render(Window &window_p)
 		{
 			octopus::Resource const * resource_l = dynamic_cast<octopus::Resource const *>(_lastSelection);
 			std::stringstream ss_l;
-			ss_l<<resource_l->_resource;
+			ss_l<<std::abs(std::ceil(resource_l->_resource-1e-5));
 			_textResources.updateText("qty_val", ss_l.str());
 
 			_textResources.updateText("res_type", to_string(resource_l->_type));
