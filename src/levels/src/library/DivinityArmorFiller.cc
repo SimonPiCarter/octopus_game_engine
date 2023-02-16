@@ -55,7 +55,6 @@ void divinityArmorFiller(Library &lib_p)
     }
     {
         // well
-        // high range and damage
         BuildingModel buildingModel_l { true, 0.9, 1000. };
         buildingModel_l._isBuilding = true;
         buildingModel_l._isStatic = true;
