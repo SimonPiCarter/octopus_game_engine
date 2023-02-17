@@ -4,6 +4,8 @@
 #include "step/entity/EntityMoveStep.hh"
 #include "utils/Vector.hh"
 
+#include "StepAdditionVisitor.hh"
+
 namespace octopus
 {
 
@@ -24,6 +26,8 @@ void Step::addEntityMoveStep(EntityMoveStep * step_p)
 
 void Step::addSteppable(Steppable * step_p)
 {
+	StepAdditionVisitor vis_l(*this);
+	vis_l(step_p);
 	_listSteppable.push_back(step_p);
 }
 
@@ -45,6 +49,37 @@ std::list<Steppable *> &Step::getSteppable()
 std::list<Steppable *> const &Step::getSteppable() const
 {
 	return _listSteppable;
+}
+
+double & Step::getResourceSpent(unsigned long player_p, ResourceType res_p)
+{
+	return _spent[player_p][res_p];
+}
+double Step::getResourceSpent(unsigned long player_p, ResourceType res_p) const
+{
+	auto &&itPlayer_l = _spent.find(player_p);
+	if(itPlayer_l == _spent.end())
+	{
+		return 0;
+	}
+	auto &&itRes_l = itPlayer_l->second.find(res_p);
+	if(itRes_l == itPlayer_l->second.end())
+	{
+		return 0;
+	}
+	return itRes_l->second;
+}
+
+const std::map<ResourceType, double> & Step::getResourceSpent(unsigned long player_p) const
+{
+	/// @brief static empty map when no resources spent for player
+	static std::map<ResourceType, double> empty_l;
+	auto &&itPlayer_l = _spent.find(player_p);
+	if(itPlayer_l == _spent.end())
+	{
+		return empty_l;
+	}
+	return itPlayer_l->second;
 }
 
 void apply(Step const & step_p, State &state_p)

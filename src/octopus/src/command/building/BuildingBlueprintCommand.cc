@@ -25,7 +25,7 @@ void BuildingBlueprintCommand::registerCommand(Step & step_p, State const &state
 	Logger::getDebug() << "BuildingBlueprintCommand:: register Command "<<_player <<std::endl;
 	// If not payed we update player resource
 	// and mark this production as paid
-	if(!checkResource(state_p, _player, _model._cost))
+	if(!checkResource(state_p, _player, _model._cost, step_p.getResourceSpent(_player)))
 	{
 		Logger::getDebug() << "BuildingBlueprintCommand:: missing resource "<<_player <<std::endl;
 		step_p.addSteppable(new MissingResourceStep(_player));

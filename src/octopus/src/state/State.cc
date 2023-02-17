@@ -325,20 +325,26 @@ Entity const * lookUpNewResource(State const &state_p, Handle const &sourceHandl
 	return closest_l;
 }
 
-bool checkResource(State const &state_p, unsigned long player_p, std::map<ResourceType, double> const &cost_p)
+double safeGetInMapResource(std::map<ResourceType, double> const &map_p, ResourceType type_p)
+{
+	auto && it_l = map_p.find(type_p);
+	double res_l = 0.;
+	if(it_l != map_p.end())
+	{
+		res_l = it_l->second;
+	}
+	return res_l;
+}
+
+bool checkResource(State const &state_p, unsigned long player_p, std::map<ResourceType, double> const &cost_p, std::map<ResourceType, double> const & spent_p)
 {
 	Player const * player_l = state_p.getPlayer(player_p);
 	for(auto && pair_l : cost_p)
 	{
-		// iterator to resource
-		auto && it_l = player_l->_resources.find(pair_l.first);
-		double res_l = 0.;
-		if(it_l != player_l->_resources.end())
-		{
-			res_l = it_l->second;
-		}
+		double res_l = safeGetInMapResource(player_l->_resources, pair_l.first);
+		double spent_l = safeGetInMapResource(spent_p, pair_l.first);
 		// One resource is too much for player resources
-		if(pair_l.second > res_l + 1e-5)
+		if(pair_l.second + spent_l > res_l + 1e-5)
 		{
 			return false;
 		}

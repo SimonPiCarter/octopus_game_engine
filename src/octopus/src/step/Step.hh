@@ -3,6 +3,9 @@
 
 #include <list>
 #include <iostream>
+#include <map>
+
+#include "state/ResourceType.hh"
 
 namespace octopus
 {
@@ -26,10 +29,18 @@ namespace octopus
 
 			std::list<Steppable *> &getSteppable();
 			std::list<Steppable *> const &getSteppable() const;
+
+			double & getResourceSpent(unsigned long player_p, ResourceType res_p);
+			double getResourceSpent(unsigned long player_p, ResourceType res_p) const;
+
+			const std::map<ResourceType, double> & getResourceSpent(unsigned long player_p) const;
 		private:
 			std::list<EntityMoveStep *> _listEntityMoveStep;
 
 			std::list<Steppable *> _listSteppable;
+
+			/// @brief a map of map of resource spent (player, resource) -> value spent this step
+			std::map<unsigned long, std::map<ResourceType, double> > _spent;
 	};
 
 	/// @brief apply the step

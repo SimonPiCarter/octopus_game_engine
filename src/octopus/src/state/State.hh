@@ -116,8 +116,9 @@ Entity const * lookUpNewResource(State const &state_p, Handle const &sourceHandl
 /// @param state_p state in which we want to check resources
 /// @param player_p the player
 /// @param cost_p the cost
+/// @param spent_p the resources already spent (not applied yet on the state)
 /// @return true iif player has enough resource
-bool checkResource(State const &state_p, unsigned long player_p, std::map<ResourceType, double> const & cost_p);
+bool checkResource(State const &state_p, unsigned long player_p, std::map<ResourceType, double> const & cost_p, std::map<ResourceType, double> const & spent_p);
 
 void updateGrid(State &state_p, Entity const *ent_p, bool set_p);
 
