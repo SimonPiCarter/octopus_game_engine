@@ -39,6 +39,7 @@ target_sources (unit_tests
 	src/harvestCommand.test
 	src/moveCommand.test.cc
 	src/queueCommand.test.cc
+	src/resourceSpentSimultaneous.test.cc
 	src/spawningGrid.test.cc
 	src/triggerBuilding.test.cc
 	src/triggerTime.test.cc
