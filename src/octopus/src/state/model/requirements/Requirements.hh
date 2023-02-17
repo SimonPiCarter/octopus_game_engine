@@ -15,6 +15,7 @@ namespace octopus
 	/// @brief this class represent requirements for Building, Unit and technologies
 	struct Requirements
 	{
+		std::set<std::string> _noBuildings;
 		std::set<std::string> _buildings;
 		std::set<std::string> _technologies;
 		std::map<DivinityType, unsigned long> _divLvl;

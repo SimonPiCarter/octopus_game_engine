@@ -7,6 +7,16 @@ namespace octopus
 
 bool meetRequirements(Requirements const &req_p, Player const &player_p)
 {
+	// check no buildings
+	for(std::string const & id_l : req_p._buildings)
+	{
+		auto &&it_l = player_p._buildingCount.find(id_l);
+		if(it_l != player_p._buildingCount.end() && it_l->second > 0ul)
+		{
+			return false;
+		}
+	}
+
 	// check buildings
 	for(std::string const & id_l : req_p._buildings)
 	{
