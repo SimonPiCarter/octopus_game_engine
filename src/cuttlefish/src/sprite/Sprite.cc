@@ -56,11 +56,12 @@ void Sprite::update(double elapsedTime_l)
 
 void Sprite::render(Window &window_p)
 {
+	double ratio_l = _height/_width;
 	SDL_Rect final_l {
 		int(_x - _logicalX * _scale),
-		int(_y - _logicalY * _scale),
+		int(_y - _logicalY * ratio_l * _scale),
 		int(64 * _scale),
-		int(64 * _scale),
+		int(64 * ratio_l * _scale),
 	};
 
 	SDL_Rect clip_l {
