@@ -1,5 +1,5 @@
-#ifndef __UnitHarvestCommand__
-#define __UnitHarvestCommand__
+#ifndef __UnitDropCommand__
+#define __UnitDropCommand__
 
 #include "command/Command.hh"
 #include "state/Handle.hh"
@@ -9,12 +9,11 @@
 namespace octopus
 {
 
-/// @brief Command that make the unit harvest and drop automatically
-/// will also look for new resources close to exhausted one automatically
-class UnitHarvestCommand : public Command
+/// @brief Command that make the unit drop resources to the deposit
+class UnitDropCommand : public Command
 {
 public:
-	UnitHarvestCommand(Handle const &commandHandle_p, Handle const &source_p, Handle const &resource_p,
+	UnitDropCommand(Handle const &commandHandle_p, Handle const &source_p, Handle const &deposit_p,
 		Vector const &finalPoint_p, unsigned long gridStatus_p, std::list<Vector> const &waypoints_p, bool init_p=false);
 
 	virtual void registerCommand(Step & step_p, State const &state_p);
@@ -24,11 +23,11 @@ public:
 
 	virtual CommandData * newData() const override
 	{
-		return new HarvestMoveData(_resource, 0, _subMoveCommand.getFinalPoint(), _subMoveCommand.getGridStatus(), _subMoveCommand.getWaypoints());
+		return new MoveData(_subMoveCommand.getFinalPoint(), _subMoveCommand.getGridStatus(), _subMoveCommand.getWaypoints());
 	}
 private:
 	Handle const _source;
-	Handle const _resource;
+	Handle const _deposit;
 
 	/// @brief sub move command
 	EntityMoveCommand _subMoveCommand;

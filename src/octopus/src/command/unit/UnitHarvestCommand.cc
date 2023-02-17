@@ -30,6 +30,7 @@ void UnitHarvestCommand::registerCommand(Step &step_p, State const &state_p)
 	Resource const *res_l = dynamic_cast<Resource const *>(state_p.getEntity(_resource));
 	Unit const * unit_l = dynamic_cast<Unit const *>(state_p.getEntity(_source));
 
+	// check that unit can harvest this resource type
 	if(unit_l->_unitModel._maxQuantity.find(res_l->_type) != unit_l->_unitModel._maxQuantity.end())
 	{
 		step_p.addSteppable(new CommandSpawnStep(this));
@@ -43,12 +44,12 @@ void UnitHarvestCommand::registerCommand(Step &step_p, State const &state_p)
 bool resourceExhausted(State const &state_p, Handle const &resource_p)
 {
 	Resource const * res_l = dynamic_cast<Resource const *>(state_p.getEntity(resource_p));
-	return res_l->_resource <= 1e-3;
+	return res_l->_resource <= 1e-5;
 }
 
 bool hasResourceToDrop(Unit const * unit_p)
 {
-	return unit_p->_quantityOfResource > 1e-3;
+	return unit_p->_quantityOfResource > 1e-5;
 }
 
 bool isFull(State const &state_p, Unit const * unit_p, Handle const &res_p)
