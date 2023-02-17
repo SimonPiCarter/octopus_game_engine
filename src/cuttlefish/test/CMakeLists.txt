@@ -33,3 +33,13 @@ ${CMAKE_CURRENT_SOURCE_DIR}/src/test_level1.cc
 )
 
 target_link_libraries(test_level1 PUBLIC cuttlefish)
+
+# ===================
+# Test_logical_center
+# ===================
+
+add_executable(test_logical_center
+${CMAKE_CURRENT_SOURCE_DIR}/src/test_logical_center.cc
+)
+
+target_link_libraries(test_logical_center PUBLIC cuttlefish)
