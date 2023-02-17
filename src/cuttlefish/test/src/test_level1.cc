@@ -226,26 +226,26 @@ int main( int argc, char* args[] )
 	spriteLib_l.registerSpriteTemplate("temple", window_l.loadTexture("resources/building.png"), 1., 32, 32, 64, 64, {2, 2, 2, 2}, {0.25, 0.5, 0.5, 0.5}, 1);
 	spriteLib_l.registerSpriteTemplate("worker", window_l.loadTexture("resources/circle.png"), 0.5, 32, 32, 64, 64, {2, 2}, {0.25, 1}, 1);
 
-	spriteLib_l.registerSpriteTemplate("div_armor_well", window_l.loadTexture("resources/building.png"), 1., 32, 32, 64, 64, {2, 2, 2, 2}, {0.25, 0.5, 0.5, 0.5}, 1);
-	spriteLib_l.registerSpriteTemplate("div_fire_well", window_l.loadTexture("resources/building.png"), 1., 32, 32, 64, 64, {2, 2, 2, 2}, {0.25, 0.5, 0.5, 0.5}, 1);
-	spriteLib_l.registerSpriteTemplate("div_raid_well", window_l.loadTexture("resources/building.png"), 1., 32, 32, 64, 64, {2, 2, 2, 2}, {0.25, 0.5, 0.5, 0.5}, 1);
-	spriteLib_l.registerSpriteTemplate("div_swarm_well", window_l.loadTexture("resources/building.png"), 1., 32, 32, 64, 64, {2, 2, 2, 2}, {0.25, 0.5, 0.5, 0.5}, 1);
+	spriteLib_l.registerSpriteTemplate("div_armor_well", window_l.loadTexture("resources/well_2.png"), 1., 32, 32, 64, 64, {6, 1, 1, 1}, {0.25, 0.5, 0.5, 0.5}, 1);
+	spriteLib_l.registerSpriteTemplate("div_fire_well", window_l.loadTexture("resources/well_4.png"), 1., 32, 32, 64, 64, {6, 1, 1, 1}, {0.25, 0.5, 0.5, 0.5}, 1);
+	spriteLib_l.registerSpriteTemplate("div_raid_well", window_l.loadTexture("resources/well_1.png"), 1., 32, 32, 64, 64, {6, 1, 1, 1}, {0.25, 0.5, 0.5, 0.5}, 1);
+	spriteLib_l.registerSpriteTemplate("div_swarm_well", window_l.loadTexture("resources/well_3.png"), 1., 32, 32, 64, 64, {6, 1, 1, 1}, {0.25, 0.5, 0.5, 0.5}, 1);
 
-	spriteLib_l.registerSpriteTemplate("div_armor_1", window_l.loadTexture("resources/circle.png"), 0.5, 32, 32, 64, 64, {2, 2}, {0.25, 1}, 1);
-	spriteLib_l.registerSpriteTemplate("div_armor_2", window_l.loadTexture("resources/circle.png"), 0.5, 32, 32, 64, 64, {2, 2}, {0.25, 1}, 1);
-	spriteLib_l.registerSpriteTemplate("div_armor_3", window_l.loadTexture("resources/circle.png"), 0.75, 32, 32, 64, 64, {2, 2}, {0.25, 1}, 1);
+	spriteLib_l.registerSpriteTemplate("div_armor_1", window_l.loadTexture("resources/soldier2_1.png"), 0.5, 32, 32, 64, 64, {2, 2}, {0.25, 1}, 1);
+	spriteLib_l.registerSpriteTemplate("div_armor_2", window_l.loadTexture("resources/soldier2_2.png"), 0.5, 32, 32, 64, 64, {2, 2}, {0.25, 1}, 1);
+	spriteLib_l.registerSpriteTemplate("div_armor_3", window_l.loadTexture("resources/soldier2_3.png"), 0.75, 32, 32, 64, 64, {2, 2}, {0.25, 1}, 1);
 
-	spriteLib_l.registerSpriteTemplate("div_fire_1", window_l.loadTexture("resources/circle.png"), 0.5, 32, 32, 64, 64, {2, 2}, {0.25, 1}, 1);
-	spriteLib_l.registerSpriteTemplate("div_fire_2", window_l.loadTexture("resources/circle.png"), 0.5, 32, 32, 64, 64, {2, 2}, {0.25, 1}, 1);
-	spriteLib_l.registerSpriteTemplate("div_fire_3", window_l.loadTexture("resources/circle.png"), 0.5, 32, 32, 64, 64, {2, 2}, {0.25, 1}, 1);
+	spriteLib_l.registerSpriteTemplate("div_fire_1", window_l.loadTexture("resources/soldier4_1.png"), 0.5, 32, 32, 64, 64, {2, 2}, {0.25, 1}, 1);
+	spriteLib_l.registerSpriteTemplate("div_fire_2", window_l.loadTexture("resources/soldier4_2.png"), 0.5, 32, 32, 64, 64, {2, 2}, {0.25, 1}, 1);
+	spriteLib_l.registerSpriteTemplate("div_fire_3", window_l.loadTexture("resources/soldier4_3.png"), 0.5, 32, 32, 64, 64, {2, 2}, {0.25, 1}, 1);
 
-	spriteLib_l.registerSpriteTemplate("div_raid_1", window_l.loadTexture("resources/circle.png"), 0.5, 32, 32, 64, 64, {2, 2}, {0.25, 1}, 1);
-	spriteLib_l.registerSpriteTemplate("div_raid_2", window_l.loadTexture("resources/circle.png"), 0.75, 32, 32, 64, 64, {2, 2}, {0.25, 1}, 1);
-	spriteLib_l.registerSpriteTemplate("div_raid_3", window_l.loadTexture("resources/circle.png"), 0.5, 32, 32, 64, 64, {2, 2}, {0.25, 1}, 1);
+	spriteLib_l.registerSpriteTemplate("div_raid_1", window_l.loadTexture("resources/soldier1_1.png"), 0.5, 32, 32, 64, 64, {2, 2}, {0.25, 1}, 1);
+	spriteLib_l.registerSpriteTemplate("div_raid_2", window_l.loadTexture("resources/soldier1_2.png"), 0.75, 32, 32, 64, 64, {2, 2}, {0.25, 1}, 1);
+	spriteLib_l.registerSpriteTemplate("div_raid_3", window_l.loadTexture("resources/soldier1_3.png"), 0.5, 32, 32, 64, 64, {2, 2}, {0.25, 1}, 1);
 
-	spriteLib_l.registerSpriteTemplate("div_swarm_1", window_l.loadTexture("resources/circle.png"), 0.35, 32, 32, 64, 64, {2, 2}, {0.25, 1}, 1);
-	spriteLib_l.registerSpriteTemplate("div_swarm_2", window_l.loadTexture("resources/circle.png"), 0.5, 32, 32, 64, 64, {2, 2}, {0.25, 1}, 1);
-	spriteLib_l.registerSpriteTemplate("div_swarm_3", window_l.loadTexture("resources/circle.png"), 0.5, 32, 32, 64, 64, {2, 2}, {0.25, 1}, 1);
+	spriteLib_l.registerSpriteTemplate("div_swarm_1", window_l.loadTexture("resources/soldier3_1.png"), 0.35, 32, 32, 64, 64, {2, 2}, {0.25, 1}, 1);
+	spriteLib_l.registerSpriteTemplate("div_swarm_2", window_l.loadTexture("resources/soldier3_2.png"), 0.5, 32, 32, 64, 64, {2, 2}, {0.25, 1}, 1);
+	spriteLib_l.registerSpriteTemplate("div_swarm_3", window_l.loadTexture("resources/soldier3_3.png"), 0.5, 32, 32, 64, 64, {2, 2}, {0.25, 1}, 1);
 
 	Tilemap tilemap_l(50, spriteLib_l, "tiles", "details");
 	tilemap_l.generate();
