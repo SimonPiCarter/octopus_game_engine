@@ -1,11 +1,13 @@
 #include "StandardClicMode.hh"
 
 // octopus
+#include "command/unit/UnitDropCommand.hh"
 #include "command/unit/UnitHarvestCommand.hh"
 #include "command/entity/EntityBuildingCommand.hh"
 #include "controller/Controller.hh"
 #include "state/entity/Building.hh"
 #include "state/entity/Entity.hh"
+#include "state/entity/Unit.hh"
 #include "state/State.hh"
 
 // cuttlefish
@@ -89,13 +91,19 @@ bool StandardClicMode::handleMouseUp(SDL_Event const & e, Selection &selection_p
 		for(Sprite * selected_l : selection_p._sprites)
 		{
 			const octopus::Entity * cur_l = state_p.getEntity(selected_l->getHandle());
+			const octopus::Unit * unit_l = dynamic_cast<const octopus::Unit *>(cur_l);
 			bool isStatic_l = cur_l->_model._isStatic;
 			if(!isStatic_l)
 			{
 				const octopus::Entity * target_l = nullptr;
+				const octopus::Building * targetBuilding_l = nullptr;
 				if(sprite_l)
 				{
 					target_l = state_p.getEntity(sprite_l->getHandle());
+					if(target_l->_model._isBuilding)
+					{
+						targetBuilding_l = dynamic_cast<const octopus::Building *>(target_l);
+					}
 				}
 				if(target_l
 				&& target_l->_model._isResource)
@@ -116,6 +124,22 @@ bool StandardClicMode::handleMouseUp(SDL_Event const & e, Selection &selection_p
 				&& !static_cast<const octopus::Building *>(target_l)->isBuilt())
 				{
 					octopus::EntityBuildingCommand * command_l = new octopus::EntityBuildingCommand(
+						selected_l->getHandle(),
+						selected_l->getHandle(),
+						sprite_l->getHandle(),
+						window_p.getWorldVector(e.button.x, e.button.y),
+						0,
+						{window_p.getWorldVector(e.button.x, e.button.y)},
+						true
+					);
+					controller_p.commitCommand(command_l);
+				}
+				else if(target_l && unit_l
+				&& targetBuilding_l
+				&& targetBuilding_l->_buildingModel.isDeposit(unit_l->_typeOfResource)
+				&& unit_l->_quantityOfResource > 0)
+				{
+					octopus::UnitDropCommand * command_l = new octopus::UnitDropCommand(
 						selected_l->getHandle(),
 						selected_l->getHandle(),
 						sprite_l->getHandle(),
