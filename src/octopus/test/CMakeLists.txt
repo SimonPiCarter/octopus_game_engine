@@ -26,6 +26,7 @@ target_sources (unit_tests
 	src/attackCommand.test.cc
 	src/attackMoveCommand.test.cc
 	src/autoAttackCommand.test.cc
+	src/autoBuffCommand.test.cc
 	src/bitset.test.cc
 	src/buffCommand.test.cc
 	src/buffStep.test.cc
