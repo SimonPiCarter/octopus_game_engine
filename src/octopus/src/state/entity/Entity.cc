@@ -1,5 +1,7 @@
 #include "Entity.hh"
 
+#include <limits>
+
 #include "command/CommandData.hh"
 
 namespace octopus
@@ -55,6 +57,16 @@ double Entity::getHarvest() const
 bool Entity::isFrozen() const
 {
 	return _frozen || _model._isStatic;
+}
+
+unsigned long Entity::getTimeSinceBuff(std::string const &idBuff_p) const
+{
+	auto &&it_l = _timeSinceBuff.find(idBuff_p);
+	if(it_l == _timeSinceBuff.end())
+	{
+		return std::numeric_limits<unsigned long>::max();
+	}
+	return it_l->second;
 }
 
 } // namespace octopus

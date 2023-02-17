@@ -1,9 +1,45 @@
 
 #include "Buff.hh"
-#include "Entity.hh"
+
+#include "state/entity/Building.hh"
+#include "state/entity/Entity.hh"
+#include "state/player/Player.hh"
+#include "state/State.hh"
 
 namespace octopus
 {
+
+bool TyppedBuff::isApplying(State const &state_p, Entity const &source_p, Entity const &ent_p) const
+{
+	unsigned long teamSource_l = state_p.getPlayer(source_p._player)->_team;
+	unsigned long teamEnt_l = state_p.getPlayer(ent_p._player)->_team;
+	// cannot buff enemy
+	if(!_debuff && teamSource_l != teamEnt_l)
+	{
+		return false;
+	}
+	// cannot debuff allies
+	if(_debuff && teamSource_l == teamEnt_l)
+	{
+		return false;
+	}
+	if(_type == Type::Speed
+	|| _type == Type::FullReload
+	|| _type == Type::Damage
+	|| _type == Type::Armor)
+	{
+		return ent_p._model._isUnit;
+	}
+	if(_type == Type::Production)
+	{
+		return ent_p._model._isBuilding && static_cast<Building const &>(ent_p)._buildingModel.isProduction();
+	}
+	if(_type == Type::Harvest)
+	{
+		return ent_p._model._isBuilding && static_cast<Building const &>(ent_p)._buildingModel.isAnyDeposit();
+	}
+	return false;
+}
 
 void TyppedBuff::apply(Entity &ent_p) const
 {

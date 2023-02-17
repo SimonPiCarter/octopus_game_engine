@@ -175,6 +175,65 @@ long State::getGridIndex(double idx_p) const
 	return std::min(std::max(0l, long(idx_p/_gridPointSize)), size_l-1);
 }
 
+Entity const * lookUpNewBuffTarget(State const &state_p, Handle const &sourceHandle_p, double range_p, TyppedBuff const &buff_p)
+{
+	Entity const * source_l = state_p.getEntity(sourceHandle_p);
+	double matchDistance_l = range_p + source_l->_model._ray;
+	double sqDis_l = 0.;
+	unsigned long timeSinceBuff_l = 0;
+	Entity const * best_l = nullptr;
+	unsigned long team_l = state_p.getPlayer(source_l->_player)->_team;
+
+	Logger::getDebug() << " lookUpNewBuffTarget :: start"<< std::endl;
+
+	Box<long> box_l {state_p.getGridIndex(source_l->_pos.x - matchDistance_l),
+					 state_p.getGridIndex(source_l->_pos.x + matchDistance_l),
+					 state_p.getGridIndex(source_l->_pos.y - matchDistance_l),
+					 state_p.getGridIndex(source_l->_pos.y + matchDistance_l)};
+	std::vector<bool> bitset_l(state_p.getEntities().size(), false);
+
+	// grid for fast access
+	std::vector<std::vector<AbstractBitset *> > const & grid_l = state_p.getGrid();
+
+	for(long x = box_l._lowerX ; x <= box_l._upperX; ++x)
+	{
+		for(long y = box_l._lowerY ; y <= box_l._upperY; ++y)
+		{
+			// for now look for closest entity
+			grid_l[x][y]->for_each([&] (int handle_p)
+			{
+				if(bitset_l.at(handle_p))
+				{
+					return false;
+				}
+				bitset_l[handle_p] = true;
+				Entity const * ent_l = state_p.getEntity(handle_p);
+				double curSqDis_l = square_length(ent_l->_pos - source_l->_pos);
+				if(ent_l != source_l
+				&& ent_l->_alive
+				&& buff_p.isApplying(state_p, *source_l, *ent_l)
+				&& curSqDis_l <= range_p * range_p)
+				{
+					unsigned long curTimeSinceBuff_l = ent_l->getTimeSinceBuff(buff_p._id);
+					// update best if no best yet
+					// if time since buff is longer
+					// or if time is equal but target is closer
+					if(best_l == nullptr
+					|| curTimeSinceBuff_l > timeSinceBuff_l
+					|| (curTimeSinceBuff_l == timeSinceBuff_l && sqDis_l > curSqDis_l) )
+					{
+						best_l = ent_l;
+						sqDis_l = curSqDis_l;
+						timeSinceBuff_l = curTimeSinceBuff_l;
+					}
+				}
+				return false;
+			});
+		}
+	}
+	return best_l;
+}
+
 Entity const * lookUpNewTarget(State const &state_p, Handle const &sourceHandle_p)
 {
 	double matchDistance_l = 5;
@@ -212,10 +271,6 @@ Entity const * lookUpNewTarget(State const &state_p, Handle const &sourceHandle_
 		|| !ent_l->_model._isUnit
 		|| team_l == state_p.getPlayer(ent_l->_player)->_team)
 		{
-			// Logger::getDebug() << " lookUpNewTarget :: ent_l->_alive "<< ent_l->_alive << std::endl;
-			// Logger::getDebug() << " lookUpNewTarget :: ent_l->_model._isUnit "<< ent_l->_model._isUnit << std::endl;
-			// Logger::getDebug() << " lookUpNewTarget :: state_p.getPlayer(ent_l->_player)->_team "<< state_p.getPlayer(ent_l->_player)->_team << std::endl;
-			// Logger::getDebug() << " lookUpNewTarget :: skip "<< ent_l->_handle << std::endl;
 			// NA
 		}
 		else
@@ -224,7 +279,6 @@ Entity const * lookUpNewTarget(State const &state_p, Handle const &sourceHandle_
 			if(closest_l == nullptr
 			|| sqDis_l > curSqDis_l)
 			{
-				// Logger::getDebug() << " lookUpNewTarget :: update closest with "<< ent_l->_handle <<" distance (sq) = " << curSqDis_l << std::endl;
 				closest_l = ent_l;
 				sqDis_l = curSqDis_l;
 			}

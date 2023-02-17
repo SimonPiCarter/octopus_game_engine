@@ -42,7 +42,7 @@ namespace octopus
 			unsigned long _reload { 10 };
 			/// @brief time waiting since last command for entity
 			/// used to auto attack nearby enemies
-			unsigned long _waiting { 50 };
+			unsigned long _waiting { 1000 };
 
 			/// @brief entity model
 			EntityModel const &_model;
@@ -82,6 +82,11 @@ namespace octopus
 
 			/// @brief if frozen ou static
 			bool isFrozen() const;
+
+			/// @brief get the time since buff of the given buff
+			/// @param idBuff_p the if od the buff to test
+			/// @return the time since the buff (return limit max if not found)
+			unsigned long getTimeSinceBuff(std::string const &idBuff_p) const;
 	};
 }
 

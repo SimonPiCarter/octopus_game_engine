@@ -15,6 +15,7 @@ struct ListenerData;
 class Player;
 class Trigger;
 struct TriggerData;
+struct TyppedBuff;
 
 /// @brief represent the whole world
 /// @warning a State must only be modified through step apply and revert!
@@ -108,6 +109,7 @@ private:
 	unsigned long _pathGridStatus {0};
 };
 
+Entity const * lookUpNewBuffTarget(State const &state_p, Handle const &sourceHandle_p, double range_p, TyppedBuff const &buff_p);
 Entity const * lookUpNewTarget(State const &state_p, Handle const &sourceHandle_p);
 Entity const * lookUpDeposit(State const &state_p, Handle const &sourceHandle_p, Handle const &res_p);
 Entity const * lookUpNewResource(State const &state_p, Handle const &sourceHandle_p, Handle const &res_p);

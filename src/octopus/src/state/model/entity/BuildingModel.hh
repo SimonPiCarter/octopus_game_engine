@@ -44,6 +44,23 @@ namespace octopus
 			return false;
 		}
 
+		bool isAnyDeposit() const
+		{
+			for(auto && pair_l : _deposit)
+			{
+				if(pair_l.second)
+				{
+					return true;
+				}
+			}
+			return false;
+		}
+
+		bool isProduction() const
+		{
+			return !_unitModels.empty();
+		}
+
 		virtual bool checkLegality(Building const &, State const &) const
 		{
 			return true;

@@ -2,6 +2,7 @@
 #define __UnitModel__
 
 #include "EntityModel.hh"
+#include "state/entity/Buff.hh"
 
 namespace octopus
 {
@@ -19,6 +20,9 @@ namespace octopus
 		unsigned long _productionTime {0};
 
 		double _gatherRate { 1. };
+
+		/// @brief the buffer info of this unit
+		Buffer _buffer;
 	};
 } // namespace octopus
 
