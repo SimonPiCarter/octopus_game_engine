@@ -37,6 +37,7 @@ Controller::Controller(
 	std::lock_guard<std::mutex> lock_l(_mutex);
 
 	_ongoingStep = 1;
+	updateCommitedCommand();
 	_lastHandledStep = 0;
 	_compiledSteps.push_back(new Step());
 
