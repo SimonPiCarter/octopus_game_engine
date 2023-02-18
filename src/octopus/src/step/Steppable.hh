@@ -40,6 +40,7 @@ namespace octopus
 	class CommandDelSubAttackStep;
 	class CommandDepositChangeStep;
 	class CommandHarvestingChangeStep;
+	class CommandHarvestTimeSinceHarvestStep;
 	class CommandIncrementNoProgressStep;
 	class CommandMoveUpdateStep;
 	class CommandMoveStepSinceUpdateIncrementStep;
@@ -102,6 +103,7 @@ namespace octopus
 			virtual void visit(CommandDelSubAttackStep const *steppable_p) = 0;
 			virtual void visit(CommandDepositChangeStep const *steppable_p) = 0;
 			virtual void visit(CommandHarvestingChangeStep const *steppable_p) = 0;
+			virtual void visit(CommandHarvestTimeSinceHarvestStep const *steppable_p) = 0;
 			virtual void visit(CommandIncrementNoProgressStep const *steppable_p) = 0;
 			virtual void visit(CommandMoveUpdateStep const *steppable_p) = 0;
 			virtual void visit(CommandMoveStepSinceUpdateIncrementStep const *steppable_p) = 0;

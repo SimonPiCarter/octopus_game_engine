@@ -23,9 +23,9 @@ public:
 		visitor_p->visit(this);
 	}
 
-	Handle _handle {0};
-	Handle _res {0};
-	double _qty {0};
+	Handle const _handle {0};
+	Handle const _res {0};
+	double const _qty {0};
 };
 
 class UnitHarvestTypeStep : public Steppable
@@ -43,10 +43,10 @@ public:
 		visitor_p->visit(this);
 	}
 
-	Handle _handle {0};
-	double _oldVal {0.};
-	ResourceType _old {ResourceType::Food};
-	ResourceType _new {ResourceType::Food};
+	Handle const _handle {0};
+	double const _oldVal {0.};
+	ResourceType const _old {ResourceType::Food};
+	ResourceType const _new {ResourceType::Food};
 };
 
 class UnitHarvestDropStep : public Steppable
@@ -65,9 +65,9 @@ public:
 		visitor_p->visit(this);
 	}
 
-	Handle _handle {0};
-	double _qty {0};
-	double _dropped {0};
+	Handle const _handle {0};
+	double const _qty {0};
+	double const _dropped {0};
 };
 
 } // namespace octopus

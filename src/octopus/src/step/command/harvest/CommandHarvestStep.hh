@@ -68,6 +68,27 @@ public:
 	bool _new {0};
 };
 
+class CommandHarvestTimeSinceHarvestStep : public Steppable
+{
+public:
+	/// @brief dropped is the qty buffed
+	CommandHarvestTimeSinceHarvestStep(Handle const &handle_p, double old_p, double new_p)
+		: _handle(handle_p), _old(old_p), _new(new_p) {}
+
+	virtual void apply(State &state_p) const override;
+	virtual void revert(State &state_p) const override;
+
+	virtual bool isNoOp() const override;
+	virtual void visit(SteppableVisitor * visitor_p) const override
+	{
+		visitor_p->visit(this);
+	}
+
+	Handle const _handle {0};
+	double const _old {0};
+	double const _new {0};
+};
+
 } // namespace octopus
 
 

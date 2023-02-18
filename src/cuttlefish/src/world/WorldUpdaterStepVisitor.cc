@@ -13,14 +13,15 @@
 #include "state/State.hh"
 #include "step/building/BuildingCancelStep.hh"
 #include "step/building/BuildingStep.hh"
-#include "step/entity/spawn/EntitySpawnStep.hh"
-#include "step/entity/spawn/BuildingSpawnStep.hh"
-#include "step/entity/spawn/ResourceSpawnStep.hh"
-#include "step/entity/spawn/UnitSpawnStep.hh"
+#include "step/command/harvest/CommandHarvestStep.hh"
 #include "step/entity/EntityHitPointChangeStep.hh"
 #include "step/entity/EntityMoveStep.hh"
-#include "step/unit/UnitHarvestStep.hh"
+#include "step/entity/spawn/BuildingSpawnStep.hh"
+#include "step/entity/spawn/EntitySpawnStep.hh"
+#include "step/entity/spawn/ResourceSpawnStep.hh"
+#include "step/entity/spawn/UnitSpawnStep.hh"
 #include "step/player/PlayerAddOptionDivinityStep.hh"
+#include "step/unit/UnitHarvestStep.hh"
 
 
 namespace cuttlefish
@@ -85,8 +86,10 @@ void WorldUpdaterStepVisitor::visit(octopus::UnitHarvestQuantityStep const *step
 	{
 		clear(steppable_p->_res);
 	}
+}
 
-
+void WorldUpdaterStepVisitor::visit(octopus::CommandHarvestTimeSinceHarvestStep const *steppable_p)
+{
 	if(_world._sprites[steppable_p->_handle])
 	{
 		// Update state of sprite harvesting

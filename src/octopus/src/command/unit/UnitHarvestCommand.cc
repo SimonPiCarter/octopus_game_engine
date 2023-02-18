@@ -123,7 +123,15 @@ bool UnitHarvestCommand::applyCommand(Step & step_p, State const &state_p, Comma
 			{
 				step_p.addSteppable(new UnitHarvestTypeStep(_source, data_l._resource, unit_l->_typeOfResource, res_l->_type));
 			}
-			step_p.addSteppable(new UnitHarvestQuantityStep(_source, data_l._resource, unit_l->_unitModel._gatherRate));
+			if(data_l._timeSinceHarvest + 1.00001 >= unit_l->_unitModel._timeToHarvest)
+			{
+				step_p.addSteppable(new UnitHarvestQuantityStep(_source, data_l._resource, 1.));
+				step_p.addSteppable(new CommandHarvestTimeSinceHarvestStep(_source, data_l._timeSinceHarvest, 0.));
+			}
+			else
+			{
+				step_p.addSteppable(new CommandHarvestTimeSinceHarvestStep(_source, data_l._timeSinceHarvest, data_l._timeSinceHarvest+1.));
+			}
 		}
 		else
 		{

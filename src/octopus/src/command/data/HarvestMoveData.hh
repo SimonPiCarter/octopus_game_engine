@@ -25,6 +25,9 @@ struct HarvestMoveData : public MoveData
 	Handle _deposit {0};
 	/// @brief boolean to tell if on the way to deposit or not
 	bool _harvesting { true };
+
+	/// @brief time since harvest
+	double _timeSinceHarvest {0.};
 };
 
 } // namespace octopus

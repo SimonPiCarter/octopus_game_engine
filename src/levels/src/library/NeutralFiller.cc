@@ -16,7 +16,7 @@ void neutralFiller(Library &lib_p)
         unitModel_l._isUnit = true;
         unitModel_l._isBuilder = true;
         unitModel_l._productionTime = 2000;
-        unitModel_l._gatherRate = 0.01;
+        unitModel_l._timeToHarvest = 100;
         unitModel_l._cost[ResourceType::Food] = 50;
         unitModel_l._cost[ResourceType::Steel] = 0;
         unitModel_l._cost[ResourceType::Gas] = 0;

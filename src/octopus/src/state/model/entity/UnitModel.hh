@@ -19,7 +19,8 @@ namespace octopus
 		/// @brief production time in steps
 		unsigned long _productionTime {0};
 
-		double _gatherRate { 1. };
+		/// @brief step time required to harvest 1 resource
+		unsigned long _timeToHarvest {1};
 
 		/// @brief the buffer info of this unit
 		Buffer _buffer;

@@ -70,4 +70,25 @@ bool CommandHarvestingChangeStep::isNoOp() const
 	return _new == _old;
 }
 
+void CommandHarvestTimeSinceHarvestStep::apply(State &state_p) const
+{
+	Commandable * ent_l = state_p.getCommandable(this->_handle);
+	Logger::getDebug() << "CommandHarvestTimeSinceHarvestStep :: apply " << this->_handle <<std::endl;
+	HarvestMoveData *data_l = dynamic_cast<HarvestMoveData*>(ent_l->getFrontQueue()._data);
+	data_l->_timeSinceHarvest = _new;
+}
+
+void CommandHarvestTimeSinceHarvestStep::revert(State &state_p) const
+{
+	Commandable * ent_l = state_p.getCommandable(this->_handle);
+	Logger::getDebug() << "CommandHarvestTimeSinceHarvestStep :: revert " << this->_handle <<std::endl;
+	HarvestMoveData *data_l = dynamic_cast<HarvestMoveData*>(ent_l->getFrontQueue()._data);
+	data_l->_timeSinceHarvest = _old;
+}
+
+bool CommandHarvestTimeSinceHarvestStep::isNoOp() const
+{
+	return _old == _new;
+}
+
 } // namespace octopus

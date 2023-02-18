@@ -39,6 +39,7 @@ public:
 	virtual void visit(octopus::UnitSpawnStep const *step_p) override;
 	virtual void visit(octopus::BuildingCancelStep const *) override;
 	virtual void visit(octopus::UnitHarvestQuantityStep const *step_p) override;
+	virtual void visit(octopus::CommandHarvestTimeSinceHarvestStep const *) override;
 	virtual void visit(octopus::EntityHitPointChangeStep const *step_p) override;
 	virtual void visit(octopus::EntityMoveStep const *step_p) override;
 	virtual void visit(octopus::BuildingStep const *steppable_p) override;
