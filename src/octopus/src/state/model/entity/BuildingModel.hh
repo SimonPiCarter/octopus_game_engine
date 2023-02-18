@@ -14,13 +14,7 @@ namespace octopus
 
 	struct BuildingModel : public EntityModel
 	{
-		BuildingModel(bool isStatic_p, double ray_p, double hpMax_p)
-			: EntityModel(isStatic_p, ray_p, 0., hpMax_p)
-		{
-			_isBuilding = true;
-			_stepSpeed = 0.;
-			_damage = 0.;
-		}
+		BuildingModel(bool isStatic_p, double ray_p, double hpMax_p);
 
 		std::map<ResourceType, bool> _deposit;
 
@@ -34,37 +28,16 @@ namespace octopus
 		std::list<UnitModel const *> _unitModels;
 
 		/// @brief safe getter for the deposit map
-		bool isDeposit(ResourceType type_p) const
-		{
-			auto && it_l = _deposit.find(type_p);
-			if(it_l != _deposit.end())
-			{
-				return it_l->second;
-			}
-			return false;
-		}
+		bool isDeposit(ResourceType type_p) const;
 
-		bool isAnyDeposit() const
-		{
-			for(auto && pair_l : _deposit)
-			{
-				if(pair_l.second)
-				{
-					return true;
-				}
-			}
-			return false;
-		}
+		bool isAnyDeposit() const;
 
-		bool isProduction() const
-		{
-			return !_unitModels.empty();
-		}
+		bool isProduction() const;
 
-		virtual bool checkLegality(Building const &, State const &) const
-		{
-			return true;
-		}
+		virtual bool checkLegality(Building const &, State const &) const;
+
+		/// @brief responsible for checking the grid in state
+		virtual bool checkGrid(Building const &building_p, State const &state_p) const;
 	};
 } // namespace octopus
 
