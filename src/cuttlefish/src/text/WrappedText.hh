@@ -19,7 +19,7 @@ namespace cuttlefish
 
 		/// @brief set the text of this wrapped text
 		/// @note every $ in the text trigger an accessible text portion which can be updated
-		/// every updatable text should be updated with mono word content if possible
+		/// every updatable text should be updated with mono word content if possible (it will always be on the same line)
 		void setText(std::string const & text_p, SDL_Color const &color_p);
 
 		/// @brief update text and refresh segmented text positions
@@ -46,6 +46,8 @@ namespace cuttlefish
 		/// @brief map to access texts
 		std::unordered_map<std::string, Text *> _mapText;
 		std::list<Text *> _segments;
+
+		std::string _oldText;
 	};
 
 } // namespace cuttlefish

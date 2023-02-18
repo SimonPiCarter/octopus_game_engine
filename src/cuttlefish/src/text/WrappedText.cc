@@ -37,6 +37,12 @@ void split(const std::string &s, char delim, Out result) {
 
 void WrappedText::setText(std::string const & text_p, SDL_Color const &color_p)
 {
+	if(text_p == _oldText)
+	{
+		return;
+	}
+	_oldText = text_p;
+	clean();
 	// split text
 	std::vector<std::string> words_l;
 	split(text_p, ' ', std::back_inserter(words_l));
@@ -44,6 +50,11 @@ void WrappedText::setText(std::string const & text_p, SDL_Color const &color_p)
 	// for every word
 	for(std::string word_l : words_l)
 	{
+		// if new line
+		if(word_l.find("$$") != std::string::npos)
+		{
+			_segments.emplace_back(nullptr);
+		}
 		// if updatable text
 		if(word_l.find("$") != std::string::npos)
 		{
@@ -85,24 +96,39 @@ void WrappedText::refresh()
 	_cursorY = _y;
 
 	bool first_l = true;
+	// remember last height to enable new line with no text ($$)
+	int lastHeight = 0;
 
 	for(Text *text_l : _segments)
 	{
-		text_l->setPosition(_cursorX, _cursorY);
+		if(text_l)
+		{
+			text_l->setPosition(_cursorX, _cursorY);
 
-		// new line if too wide
-		// if first do not skip new line
-		if(_cursorX + text_l->getWidth() - _x > _w && !first_l)
+			// new line if too wide
+			// if first do not skip new line
+			if(_cursorX + text_l->getWidth() - _x > _w && !first_l)
+			{
+				// update cursor to start of new line
+				_cursorY += text_l->getHeight();
+				_cursorX = _x;
+				// update position after update
+				text_l->setPosition(_cursorX, _cursorY);
+			}
+			_cursorX += text_l->getWidth() + 10;
+
+			first_l = false;
+			// update height
+			lastHeight = text_l->getHeight();
+		}
+		// new line
+		else
 		{
 			// update cursor to start of new line
-			_cursorY += text_l->getHeight();
+			_cursorY += lastHeight;
 			_cursorX = _x;
-			// update position after update
-			text_l->setPosition(_cursorX, _cursorY);
+			first_l = true;
 		}
-		_cursorX += text_l->getWidth() + 10;
-
-		first_l = false;
 	}
 }
 
@@ -110,7 +136,11 @@ void WrappedText::display(Window& window_p) const
 {
 	for(Text const *segment_l : _segments)
 	{
-		segment_l->display(window_p);
+		// new line segment are null : need to test
+		if(segment_l)
+		{
+			segment_l->display(window_p);
+		}
 	}
 }
 

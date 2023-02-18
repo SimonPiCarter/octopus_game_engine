@@ -10,8 +10,9 @@
 // cuttlefish
 #include "clicMode/BuildClicMode.hh"
 #include "clicMode/StandardClicMode.hh"
-#include "panel/Panel.hh"
+#include "panel/DescPanel.hh"
 #include "panel/DivinityPanel.hh"
+#include "panel/Panel.hh"
 #include "sprite/Sprite.hh"
 #include "sprite/SpriteLibrary.hh"
 #include "text/Text.hh"
@@ -209,6 +210,11 @@ int main( int argc, char* args[] )
 	divPanel_l.addOptionInfo(octopus::DivinityType::Divinity_4, 1, 4);
 	divPanel_l.addOptionInfo(octopus::DivinityType::Divinity_5, 2, 3);
 
+	DescPanel descPanel_l(&window_l, SCREEN_WIDTH-260, SCREEN_HEIGHT-520,
+		window_l.loadTexture("resources/background.png"));
+	descPanel_l.setText("ceci est un texte de test avec un parametre param $param");
+	bool descActive_l = false;
+
 	SpriteLibrary spriteLib_l;
 	// tile map
 	spriteLib_l.registerSpriteTemplate("tiles", window_l.loadTexture("resources/tiles.png"), 1., 0, 0, 64, 64, {1, 1}, {2,2}, 1);
@@ -299,6 +305,24 @@ int main( int argc, char* args[] )
 				if(e.button.y > SCREEN_HEIGHT - margin_l)
 				{
 					dY = camSpeed_l;
+				}
+				SpriteModel const * spriteModel_l = panel_l.getSpriteModel(window_l, e.button.x, e.button.y);
+
+				if(spriteModel_l)
+				{
+					if(spriteModel_l->unitModel)
+					{
+						descPanel_l.setText(getDesc(*spriteModel_l->unitModel));
+					}
+					if(spriteModel_l->buildingModel)
+					{
+						descPanel_l.setText(getDesc(*spriteModel_l->buildingModel));
+					}
+					descActive_l = true;
+				}
+				else
+				{
+					descActive_l = false;
 				}
 			}
 			//User requests quit_l
@@ -452,6 +476,10 @@ int main( int argc, char* args[] )
 		currentClicMode_l->display(window_l, elapsed_l, mouseX, mouseY);
 
 		panel_l.render(window_l);
+		if(descActive_l)
+		{
+			descPanel_l.render(window_l);
+		}
 
 		octopus::Player const * player_l = state_l.getPlayer(0);
 
