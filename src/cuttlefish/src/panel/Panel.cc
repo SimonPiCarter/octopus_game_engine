@@ -132,11 +132,11 @@ void Panel::render(Window &window_p)
 			_textStats.updateText("hp_val", ss_l.str());
 
 			ss_l.str("");
-			ss_l<<_lastSelection->_model._damage;
+			ss_l<<_lastSelection->getDamage();
 			_textStats.updateText("dmg_val", ss_l.str());
 
 			ss_l.str("");
-			ss_l<<_lastSelection->_model._armor;
+			ss_l<<_lastSelection->getArmor();
 			_textStats.updateText("armor_val", ss_l.str());
 
 			// display stats on selection
