@@ -102,4 +102,19 @@ TEST(buffCommandTest, simple_speed)
 	state_l = controller_l.queryState();
 
 	EXPECT_NEAR(1., state_l->getEntity(0)->getStepSpeed(), 1e-5);
+
+	// Queue a new command to reset buff
+	controller_l.commitCommand(new EntityBuffCommand(0, 0, buff_l));
+
+	// update time to 5 seconds (22)
+	// buff should not be reverted
+	controller_l.update(5.);
+
+	// updated until synced up
+	while(!controller_l.loop_body()) {}
+
+	state_l = controller_l.queryState();
+
+	// should be buffed again
+	EXPECT_NEAR(2., state_l->getEntity(0)->getStepSpeed(), 1e-5);
 }

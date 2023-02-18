@@ -18,7 +18,14 @@ void EntityBuffStep::apply(State &state_p) const
 	if(ent_l->_timeSinceBuff.find(_buff._id) != ent_l->_timeSinceBuff.end())
 	{
 		Logger::getDebug() << "EntityBuffStep :: update time since buff"<<std::endl;
-		ent_l->_timeSinceBuff[_buff._id] = std::min(ent_l->_timeSinceBuff[_buff._id], 1ul);
+		if(ent_l->_timeSinceBuff[_buff._id] >= _buff._duration)
+		{
+			ent_l->_timeSinceBuff[_buff._id] = 0;
+		}
+		else
+		{
+			ent_l->_timeSinceBuff[_buff._id] = std::min(ent_l->_timeSinceBuff[_buff._id], 1ul);
+		}
 	}
 	else
 	{
