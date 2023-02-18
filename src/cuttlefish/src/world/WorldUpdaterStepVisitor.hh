@@ -75,6 +75,8 @@ public:
 	virtual void visit(octopus::PlayerSpendResourceStep const *) override {}
 	virtual void visit(octopus::ProductionPaidStep const *) override {}
 	virtual void visit(octopus::ProductionProgressionStep const *) override {}
+	virtual void visit(octopus::StateTemplePositionAddStep const *) override {}
+	virtual void visit(octopus::StateTemplePositionRemoveStep const *) override {}
 	virtual void visit(octopus::TickingStep const *) override {}
 	virtual void visit(octopus::TriggerCountChange const *) override {}
 	virtual void visit(octopus::TriggerEnableChange const *) override {}

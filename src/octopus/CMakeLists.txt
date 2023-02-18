@@ -39,6 +39,7 @@ add_library(octopus
 	${CMAKE_CURRENT_SOURCE_DIR}/src/state/entity/Unit.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/state/model/requirements/Requirements.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/state/model/entity/EntityModel.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/src/state/model/entity/TempleModel.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/state/player/Player.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/state/ResourceType.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/state/State.cc
@@ -75,6 +76,8 @@ add_library(octopus
 	${CMAKE_CURRENT_SOURCE_DIR}/src/step/player/PlayerResetOptionDivinityStep.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/step/player/PlayerSpawnStep.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/step/player/PlayerSpendResourceStep.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/src/step/state/StateTemplePositionAddStep.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/src/step/state/StateTemplePositionRemoveStep.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/step/trigger/TriggerCountChange.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/step/trigger/TriggerEnableChange.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/step/trigger/TriggerEntityAddStep.cc

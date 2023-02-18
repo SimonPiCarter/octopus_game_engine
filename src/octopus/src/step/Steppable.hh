@@ -69,6 +69,8 @@ namespace octopus
 	class ProductionPaidStep;
 	class ProductionProgressionStep;
 	class ResourceSpawnStep;
+	class StateTemplePositionAddStep;
+	class StateTemplePositionRemoveStep;
 	class TickingStep;
 	class TriggerCountChange;
 	class TriggerEnableChange;
@@ -134,6 +136,8 @@ namespace octopus
 			virtual void visit(ProductionPaidStep const *steppable_p) = 0;
 			virtual void visit(ProductionProgressionStep const *steppable_p) = 0;
 			virtual void visit(ResourceSpawnStep const *steppable_p) = 0;
+			virtual void visit(StateTemplePositionAddStep const *steppable_p) = 0;
+			virtual void visit(StateTemplePositionRemoveStep const *steppable_p) = 0;
 			virtual void visit(TickingStep const *steppable_p) = 0;
 			virtual void visit(TriggerCountChange const *steppable_p) = 0;
 			virtual void visit(TriggerEnableChange const *steppable_p) = 0;

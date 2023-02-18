@@ -79,6 +79,9 @@ public:
 	/// @note basically divide by grid point size and floor value
 	long getGridIndex(double idx_p) const;
 
+	std::list<Vector> &getTemplePosition() { return _templePosition; }
+	const std::list<Vector> &getTemplePosition() const { return _templePosition; }
+
 	unsigned long const _id;
 private:
 	State(State const &state_p) = delete;
@@ -102,6 +105,9 @@ private:
 	std::vector<std::vector<AbstractBitset *> > _grid;
 	unsigned long const _gridSize;
 	unsigned long const _gridPointSize;
+
+	/// @brief list of position where temple are allowed
+	std::list<Vector> _templePosition;
 
 	/// @brief grid for pathing purpose
 	Grid _pathGrid;
