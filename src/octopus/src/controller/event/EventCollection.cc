@@ -6,6 +6,7 @@
 #include "logger/Logger.hh"
 #include "state/entity/Building.hh"
 #include "step/building/BuildingStep.hh"
+#include "step/entity/spawn/EntitySpawnStep.hh"
 #include "step/entity/spawn/UnitSpawnStep.hh"
 #include "step/entity/EntityHitPointChangeStep.hh"
 
@@ -42,15 +43,22 @@ void EventCollection::visit(BuildingStep const *step_p)
 	{
 		Logger::getDebug() << "\ttrigger"<<std::endl;
 		_finishedHandles.insert(step_p->_handle);
-		_listEventEntityModelFinished.push_back(new EventEntityModelFinished(ent_l->_model, ent_l->_player));
+		_listEventEntityModelFinished.push_back(new EventEntityModelFinished(*ent_l, ent_l->_model, ent_l->_player));
 	}
+}
+
+void EventCollection::visit(EntitySpawnStep const *step_p)
+{
+	Logger::getDebug() << "EventCollection :: visit EntitySpawnStep " << step_p->getHandle() <<std::endl;
+	Logger::getDebug() << "\ttrigger"<<std::endl;
+	_listEventEntityModelFinished.push_back(new EventEntityModelFinished(*_state.getEntity(step_p->getHandle()), step_p->getModel()._model, step_p->getModel()._player));
 }
 
 void EventCollection::visit(UnitSpawnStep const *step_p)
 {
 	Logger::getDebug() << "EventCollection :: visit UnitSpawnStep " << step_p->getHandle() <<std::endl;
 	Logger::getDebug() << "\ttrigger"<<std::endl;
-	_listEventEntityModelFinished.push_back(new EventEntityModelFinished(step_p->getModel()._model, step_p->getModel()._player));
+	_listEventEntityModelFinished.push_back(new EventEntityModelFinished(*_state.getEntity(step_p->getHandle()), step_p->getModel()._model, step_p->getModel()._player));
 }
 
 void EventCollection::visit(EntityHitPointChangeStep const *step_p)
@@ -66,7 +74,7 @@ void EventCollection::visit(EntityHitPointChangeStep const *step_p)
 	{
 		Logger::getDebug() << "\ttrigger"<<std::endl;
 		_diedHandles.insert(step_p->_handle);
-		_listEventEntityModelDied.push_back(new EventEntityModelDied(ent_l->_model, ent_l->_player));
+		_listEventEntityModelDied.push_back(new EventEntityModelDied(*ent_l, ent_l->_model, ent_l->_player));
 	}
 }
 

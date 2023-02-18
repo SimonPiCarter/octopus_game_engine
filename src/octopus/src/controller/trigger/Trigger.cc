@@ -30,6 +30,7 @@ void Trigger::compile(EventCollection const &collection_p, Step &step_p, Trigger
 		{
 			listener_l->compile(collection_p, step_p, !_isOneShot, *listData_l);
 		}
+		++listenerHandle_l;
 	}
 }
 
@@ -52,6 +53,7 @@ void Trigger::reset(Step &step_p, TriggerData const &data_p) const
 	{
 		ListenerData const * listData_l = data_p._listenerData[listenerHandle_l];
 		listener_l->reset(step_p, *listData_l);
+		++listenerHandle_l;
 	}
 }
 

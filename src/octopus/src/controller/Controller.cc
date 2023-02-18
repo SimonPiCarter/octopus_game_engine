@@ -138,7 +138,7 @@ bool Controller::loop_body()
 					step_l.addSteppable(new TriggerSpawn(trigger_l));
 				}
 			}
-			handleTriggers(*_backState->_state, step_l);
+			handleTriggers(*_backState->_state, step_l, getStepBeforeLastCompiledStep());
 
 			octopus::compact(step_l);
 
@@ -273,12 +273,12 @@ void Controller::updateCommitedCommand()
 	}
 }
 
-void Controller::handleTriggers(State const &state_p, Step &step_p)
+void Controller::handleTriggers(State const &state_p, Step &step_p, Step const &prevStep_p)
 {
 	Logger::getDebug() << "handleTriggers :: start "<<std::endl;
-	// compute event and triggers
+	// compute event and triggers (visit last step)
 	EventCollection visitor_l(state_p);
-	visitAll(step_p, visitor_l);
+	visitAll(prevStep_p, visitor_l);
 
 	Handle curHandle_l = 0;
 	for(Trigger const * trigger_l : state_p.getTriggers())
@@ -296,7 +296,7 @@ void Controller::handleTriggers(State const &state_p, Step &step_p)
 			for(size_t count_l = 0 ; count_l < trigger_l->getCount(data_l) ; ++count_l)
 			{
 				Logger::getDebug() << "handleTriggers :: trigger on trigger "<<curHandle_l<<std::endl;
-				trigger_l->trigger(step_p);
+				trigger_l->trigger(state_p, step_p, count_l);
 			}
 
 			// handle reset or disabling
@@ -319,6 +319,18 @@ void Controller::handleTriggers(State const &state_p, Step &step_p)
 
 		++curHandle_l;
 	}
+}
+
+Step const & Controller::getStepBeforeLastCompiledStep() const
+{
+	if(_compiledSteps.empty()
+	|| _compiledSteps.back() == _compiledSteps.front())
+	{
+		return _initialStep;
+	}
+	auto &&rit_l = _compiledSteps.rbegin();
+	++rit_l;
+	return **rit_l;
 }
 
 } // namespace octopus

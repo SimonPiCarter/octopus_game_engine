@@ -11,6 +11,7 @@ namespace octopus
 class EventCollection;
 class Listener;
 struct ListenerData;
+class State;
 class Step;
 class Steppable;
 
@@ -43,7 +44,10 @@ public:
 
 	TriggerData * newTriggerData(Handle const &triggerHandle_p) const;
 
-	virtual void trigger(Step &step_p) const = 0;
+	/// @brief trigger
+	/// @param step_p the step to fill with steps from the trigger
+	/// @param count_p the current count of the trigger in the same step (this can be used to access data for this occurence of trigger)
+	virtual void trigger(State const &, Step &step_p, unsigned long count_p) const = 0;
 
 	std::list<Listener *> const _listeners;
 

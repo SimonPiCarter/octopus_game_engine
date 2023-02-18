@@ -131,7 +131,9 @@ private:
 	/// @brief one shot trigger lists
 	std::unordered_map<unsigned long, std::list<Trigger *> > _queuedTriggers;
 
-	void handleTriggers(State const &state_p, Step &step_p);
+	void handleTriggers(State const &state_p, Step &step_p, Step const &prevStep_p);
+
+	Step const &getStepBeforeLastCompiledStep() const;
 };
 
 } // namespace octopus

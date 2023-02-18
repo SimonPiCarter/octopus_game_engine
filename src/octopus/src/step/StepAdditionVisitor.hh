@@ -62,6 +62,8 @@ public:
     virtual void visit(TickingStep const *) {}
     virtual void visit(TriggerCountChange const *) {}
     virtual void visit(TriggerEnableChange const *) {}
+    virtual void visit(TriggerEntityAddStep const *) {}
+    virtual void visit(TriggerEntityResetStep const *) {}
     virtual void visit(TriggerSpawn const *) {}
     virtual void visit(TriggerStepCountChange const *) {}
     virtual void visit(UnitHarvestDropStep const *) {}

@@ -1,12 +1,14 @@
 #ifndef __Listener__
 #define __Listener__
 
+#include <vector>
 #include "state/Handle.hh"
 
 namespace octopus
 {
 class EventCollection;
 struct EntityModel;
+class Entity;
 class Step;
 
 struct ListenerData
@@ -29,6 +31,15 @@ struct ListenerStepCountData : public ListenerData
 {
 	ListenerStepCountData(Handle const triggerHandle_p, Handle const listenerHandle_p) : ListenerData(triggerHandle_p, listenerHandle_p) {}
 	unsigned long _elapsedStep {0};
+};
+
+/// @brief data for Listeners triggering on Entity
+/// this data stores all entity triggering events
+struct ListenerEntityData : public ListenerData
+{
+	ListenerEntityData(Handle const triggerHandle_p, Handle const listenerHandle_p) : ListenerData(triggerHandle_p, listenerHandle_p) {}
+
+	std::vector<Entity const *> _entities;
 };
 
 /// @brief a trigger add steppable to the controller
@@ -69,7 +80,17 @@ protected:
 	unsigned long const _stepCount;
 };
 
-class ListenerEntityModelDied : public Listener
+class ListenerEntity : public Listener
+{
+public:
+	/// @brief reset the data to initial state
+	virtual void reset(Step &step_p, ListenerData const &data_p) const override;
+
+	virtual ListenerData * newData(Handle const triggerHandle_p, Handle const listenerHandle_p) const override
+		{ return new ListenerEntityData(triggerHandle_p, listenerHandle_p); }
+};
+
+class ListenerEntityModelDied : public ListenerEntity
 {
 public:
 	ListenerEntityModelDied(EntityModel const * model_p, unsigned long player_p) :
@@ -79,14 +100,13 @@ public:
 	/// @param count_p if set to true will count the number of time completed
 	virtual void compile(EventCollection const &controller_p, Step &step_p, bool count_p, ListenerData const &data_p) const override;
 
-	virtual ListenerData * newData(Handle const triggerHandle_p, Handle const listenerHandle_p) const override
-		{ return new ListenerData(triggerHandle_p, listenerHandle_p); }
-
 	EntityModel const * const _model;
 	unsigned long const _player;
 };
 
-class ListenerEntityModelFinished : public Listener
+/// @brief
+/// @note cannot extend ListenerEntity because spawn events do not have an entity created yet
+class ListenerEntityModelFinished : public ListenerEntity
 {
 public:
 	ListenerEntityModelFinished(EntityModel const * model_p, unsigned long player_p) :
@@ -95,9 +115,6 @@ public:
 	/// @brief compile listener steps based on events in controller
 	/// @param count_p if set to true will count the number of time completed
 	virtual void compile(EventCollection const &controller_p, Step &step_p, bool count_p, ListenerData const &data_p) const override;
-
-	virtual ListenerData * newData(Handle const triggerHandle_p, Handle const listenerHandle_p) const override
-		{ return new ListenerData(triggerHandle_p, listenerHandle_p); }
 
 	EntityModel const * const _model;
 	unsigned long const _player;

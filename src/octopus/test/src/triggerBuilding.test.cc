@@ -28,7 +28,7 @@ class TestTriggerBuildingTrigger : public OneShotTrigger
 public:
 	TestTriggerBuildingTrigger(std::list<Listener *> const &listeners_p) : OneShotTrigger(listeners_p) {}
 
-	virtual void trigger(Step &step_p) const override
+	virtual void trigger(State const &, Step &step_p, unsigned long) const override
 	{
 		std::map<ResourceType, double> map_l;
 		map_l[ResourceType::Food] = -10.;

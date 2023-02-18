@@ -29,6 +29,7 @@ public:
 	// may create event
 	virtual void visit(BuildingStep const *);
 	virtual void visit(EntityHitPointChangeStep const *);
+	virtual void visit(EntitySpawnStep const *);
 	virtual void visit(UnitSpawnStep const *);
 
 	/// NA
@@ -57,7 +58,6 @@ public:
 	virtual void visit(EntityBuffStep const *) {}
 	virtual void visit(EntityMoveStep const *) {}
 	virtual void visit(EntityUpdateWaitingStep const *) {}
-	virtual void visit(EntitySpawnStep const *) {}
 	virtual void visit(MissingResourceStep const *) {}
 	virtual void visit(PlayerAddBuildingModel const *) {}
 	virtual void visit(PlayerAddOptionDivinityStep const *) {}
@@ -72,6 +72,8 @@ public:
 	virtual void visit(TickingStep const *) {}
 	virtual void visit(TriggerCountChange const *) {}
 	virtual void visit(TriggerEnableChange const *) {}
+	virtual void visit(TriggerEntityAddStep const *) {}
+	virtual void visit(TriggerEntityResetStep const *) {}
 	virtual void visit(TriggerSpawn const *) {}
 	virtual void visit(TriggerStepCountChange const *) {}
 	virtual void visit(UnitHarvestDropStep const *) {}

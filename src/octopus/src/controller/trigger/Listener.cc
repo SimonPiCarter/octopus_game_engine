@@ -7,6 +7,8 @@
 #include "step/Step.hh"
 #include "step/trigger/TriggerCountChange.hh"
 #include "step/trigger/TriggerStepCountChange.hh"
+#include "step/trigger/TriggerEntityAddStep.hh"
+#include "step/trigger/TriggerEntityResetStep.hh"
 
 namespace octopus
 {
@@ -25,7 +27,7 @@ void Listener::reset(Step &step_p, ListenerData const &data_p) const
 	step_p.addSteppable(new TriggerCountChange(data_p._triggerHandle, data_p._listenerHandle, data_p._count, 0));
 }
 
-void ListenerStepCount::compile(EventCollection const &controller_p, Step &step_p, bool count_p, ListenerData const &data_p) const
+void ListenerStepCount::compile(EventCollection const &, Step &step_p, bool count_p, ListenerData const &data_p) const
 {
 	unsigned long steps_l = static_cast<ListenerStepCountData const &>(data_p)._elapsedStep;
 
@@ -43,6 +45,13 @@ void ListenerStepCount::reset(Step &step_p, ListenerData const &data_p) const
 	step_p.addSteppable(new TriggerStepCountChange(data_p._triggerHandle, data_p._listenerHandle, steps_l, 0));
 }
 
+void ListenerEntity::reset(Step &step_p, ListenerData const &data_p) const
+{
+	Listener::reset(step_p, data_p);
+	std::vector<Entity const *> const &list_l = static_cast<ListenerEntityData const &>(data_p)._entities;
+	step_p.addSteppable(new TriggerEntityResetStep(data_p._triggerHandle, data_p._listenerHandle, list_l));
+}
+
 void ListenerEntityModelDied::compile(EventCollection const &controller_p, Step &step_p, bool count_p, ListenerData const &data_p) const
 {
 	unsigned long count_l = 0;
@@ -51,6 +60,7 @@ void ListenerEntityModelDied::compile(EventCollection const &controller_p, Step 
 		// pointer comparison
 		if(&event_l->_model == _model && event_l->_player == _player)
 		{
+			step_p.addSteppable(new TriggerEntityAddStep(data_p._triggerHandle, data_p._listenerHandle, &event_l->_entity));
 			++count_l;
 			if(!count_p)
 			{
@@ -69,6 +79,7 @@ void ListenerEntityModelFinished::compile(EventCollection const &controller_p, S
 		// pointer comparison
 		if(&event_l->_model == _model && event_l->_player == _player)
 		{
+			step_p.addSteppable(new TriggerEntityAddStep(data_p._triggerHandle, data_p._listenerHandle, &event_l->_entity));
 			++count_l;
 			if(!count_p)
 			{

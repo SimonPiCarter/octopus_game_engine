@@ -77,6 +77,8 @@ add_library(octopus
 	${CMAKE_CURRENT_SOURCE_DIR}/src/step/player/PlayerSpendResourceStep.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/step/trigger/TriggerCountChange.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/step/trigger/TriggerEnableChange.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/src/step/trigger/TriggerEntityAddStep.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/src/step/trigger/TriggerEntityResetStep.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/step/trigger/TriggerSpawn.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/step/trigger/TriggerStepCountChange.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/step/unit/UnitHarvestStep.cc

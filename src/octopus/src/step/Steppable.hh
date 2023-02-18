@@ -72,6 +72,8 @@ namespace octopus
 	class TickingStep;
 	class TriggerCountChange;
 	class TriggerEnableChange;
+	class TriggerEntityAddStep;
+	class TriggerEntityResetStep;
 	class TriggerSpawn;
 	class TriggerStepCountChange;
 	class UnitHarvestDropStep;
@@ -135,6 +137,8 @@ namespace octopus
 			virtual void visit(TickingStep const *steppable_p) = 0;
 			virtual void visit(TriggerCountChange const *steppable_p) = 0;
 			virtual void visit(TriggerEnableChange const *steppable_p) = 0;
+			virtual void visit(TriggerEntityAddStep const *steppable_p) = 0;
+			virtual void visit(TriggerEntityResetStep const *steppable_p) = 0;
 			virtual void visit(TriggerSpawn const *steppable_p) = 0;
 			virtual void visit(TriggerStepCountChange const *steppable_p) = 0;
 			virtual void visit(UnitHarvestDropStep const *steppable_p) = 0;

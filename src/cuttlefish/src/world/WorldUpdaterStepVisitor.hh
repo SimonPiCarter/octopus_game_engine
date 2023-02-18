@@ -78,6 +78,8 @@ public:
 	virtual void visit(octopus::TickingStep const *) override {}
 	virtual void visit(octopus::TriggerCountChange const *) override {}
 	virtual void visit(octopus::TriggerEnableChange const *) override {}
+	virtual void visit(octopus::TriggerEntityAddStep const *) override {}
+	virtual void visit(octopus::TriggerEntityResetStep const *) override {}
 	virtual void visit(octopus::TriggerSpawn const *) override {}
 	virtual void visit(octopus::TriggerStepCountChange const *) override {}
 	virtual void visit(octopus::UnitHarvestDropStep const *) override {}
