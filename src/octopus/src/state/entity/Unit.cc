@@ -29,9 +29,12 @@ void Unit::runCommands(Step & step_p, State const &state_p)
 			step_p.addSteppable(new EntityUpdateWaitingStep(_handle, _waiting, 0));
 			// check for target
 			Entity const * target_l = lookUpNewBuffTarget(state_p, _handle, _unitModel._buffer._range, _unitModel._buffer._buff);
-			// buff
-			Logger::getDebug() << " Entity::runCommands :: add buff command" << _handle << " -> " << target_l->_handle <<"("<<_unitModel._buffer._buff._id<<")"<< std::endl;
-			step_p.addSteppable(new CommandSpawnStep(new EntityBuffCommand(_commandableHandle, target_l->_handle, _unitModel._buffer._buff)));
+			if(target_l)
+			{
+				// buff
+				Logger::getDebug() << " Entity::runCommands :: add buff command" << _handle << " -> " << target_l->_handle <<"("<<_unitModel._buffer._buff._id<<")"<< std::endl;
+				step_p.addSteppable(new CommandSpawnStep(new EntityBuffCommand(_commandableHandle, target_l->_handle, _unitModel._buffer._buff)));
+			}
 		}
 	}
 	// If no command we check for target if we have damage
@@ -50,7 +53,7 @@ void Unit::runCommands(Step & step_p, State const &state_p)
 			}
 		}
 	}
-	if(_waiting < 1000)
+	if(_waiting < 100000)
 	{
 		step_p.addSteppable(new EntityUpdateWaitingStep(_handle, _waiting, _waiting+1));
 	}

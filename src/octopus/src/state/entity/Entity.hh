@@ -42,7 +42,7 @@ namespace octopus
 			unsigned long _reload { 10 };
 			/// @brief time waiting since last command for entity
 			/// used to auto attack nearby enemies
-			unsigned long _waiting { 1000 };
+			unsigned long _waiting { 100000 };
 
 			/// @brief entity model
 			EntityModel const &_model;
