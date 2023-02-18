@@ -82,6 +82,7 @@ protected:
 	int const _iconsPerLine;
 
 	SegmentedText _textStats;
+	SegmentedText _textQtyRes;
 	SegmentedText _textResources;
 };
 } // namespace octopus

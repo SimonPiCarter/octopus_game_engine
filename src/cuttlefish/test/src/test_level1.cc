@@ -176,8 +176,9 @@ int main( int argc, char* args[] )
 	double dY = 0.;
 	double camSpeed_l = 400.;
 
-	Panel panel_l(&window_l, SCREEN_WIDTH-200, SCREEN_HEIGHT-200,
-		window_l.loadTexture("resources/background.png"), window_l.loadTexture("resources/grid.png"), 3);
+	Panel panel_l(&window_l, SCREEN_WIDTH-260, SCREEN_HEIGHT-260,
+		window_l.loadTexture("resources/background.png"), window_l.loadTexture("resources/grid.png"), 4);
+
 	panel_l.addSpriteInfo("worker", 2, 1);
 	panel_l.addSpriteInfo("command_center", 1, 0);
 	panel_l.addSpriteInfo("deposit", 0, 0);
