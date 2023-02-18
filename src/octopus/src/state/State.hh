@@ -132,7 +132,7 @@ void updateGrid(State &state_p, Entity const *ent_p, bool set_p);
 
 /// @brief check if the grid elements corresponding to the entity
 /// are free
-bool checkGrid(State const &state_p, Entity const *ent_p);
+bool checkGrid(State const &state_p, Entity const *ent_p, bool ignoreAbandonedTemples_p);
 
 std::list<Vector> computePath(State const & state_p, Handle const &handle_p, Vector const &target_p, std::list<Entity const *> const &ignored_p = {});
 

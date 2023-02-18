@@ -20,6 +20,9 @@ namespace octopus
 		/// @param state_p the state to be tested
 		/// @return true if the temple can be placed
 		virtual bool checkLegality(Building const &building_p, State const &state_p) const override;
+
+		/// @brief responsible for checking the grid in state
+		virtual bool checkGrid(Building const &building_p, State const &state_p) const;
 	};
 } // namespace octopus
 

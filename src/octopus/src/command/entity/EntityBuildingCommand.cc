@@ -62,7 +62,7 @@ bool EntityBuildingCommand::applyCommand(Step & step_p, State const &state_p, Co
 		return true;
 	}
 
-	if(building_l->isBlueprint() && !checkGrid(state_p, building_l))
+	if(building_l->isBlueprint() && !building_l->_buildingModel.checkGrid(*building_l, state_p))
 	{
 		Logger::getDebug() << "EntityBuildingCommand:: space taken"<<std::endl;
 		step_p.addSteppable(new BuildingCancelStep(_target, true, building_l->_canceled));

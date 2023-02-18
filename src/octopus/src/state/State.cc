@@ -453,7 +453,7 @@ void updateGrid(State &state_p, Entity const *ent_p, bool set_p)
 	}
 }
 
-bool checkGrid(State const &state_p, Entity const *ent_p)
+bool checkGrid(State const &state_p, Entity const *ent_p, bool ignoreAbandonedTemples_p)
 {
 	long size_l = state_p.getGridSize();
 	// fill positional grid
@@ -471,9 +471,19 @@ bool checkGrid(State const &state_p, Entity const *ent_p)
 			for(size_t y = box_l._lowerY ; y < box_l._upperY; ++y)
 			{
 				GridNode const *node_l = state_p.getPathGrid().getNode(x, y);
-				if(!node_l->isFree())
+				// only check free if we do not check abandonned temples
+				if(!node_l->isFree() && !ignoreAbandonedTemples_p)
 				{
 					return false;
+				}
+				if(ignoreAbandonedTemples_p)
+				{
+					// if content and is not an abandonned temple
+					if(node_l->getContent()
+					&& !node_l->getContent()->_model._isAbandonedTemple)
+					{
+						return false;
+					}
 				}
 			}
 		}

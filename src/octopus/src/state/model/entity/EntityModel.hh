@@ -41,6 +41,9 @@ namespace octopus
 
 		bool _isBuilder { false };
 
+		/// @brief those buildings are ignored when testing grid for TempleModel
+		bool _isAbandonedTemple {false};
+
 		std::map<ResourceType, double> _cost;
 		/// @brief requirements
 		Requirements _requirements;

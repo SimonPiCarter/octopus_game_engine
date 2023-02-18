@@ -52,6 +52,6 @@ bool BuildingModel::checkLegality(Building const &, State const &) const
 
 bool BuildingModel::checkGrid(Building const &building_p, State const &state_p) const
 {
-	return octopus::checkGrid(state_p, &building_p);
+	return octopus::checkGrid(state_p, &building_p, false);
 }
 } // namespace octopus
