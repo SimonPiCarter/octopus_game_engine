@@ -251,7 +251,7 @@ int main( int argc, char* args[] )
 							std::pair<bool, octopus::DivinityType> option_l = divPanel_l.getOption(window_l, e.button.x, e.button.y);
 							if(option_l.first)
 							{
-								octopus::PlayerChoseDivinityCommand * command_l = new octopus::PlayerChoseDivinityCommand(0, 0, option_l.second, true);
+								octopus::PlayerChoseDivinityCommand * command_l = new octopus::PlayerChoseDivinityCommand(0, option_l.second);
 								controller_l.commitCommand(command_l);
 								divPanel_l.popOptionLayer();
 							}

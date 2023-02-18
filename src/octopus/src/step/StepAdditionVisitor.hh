@@ -52,7 +52,7 @@ public:
     virtual void visit(PlayerAddOptionDivinityStep const *) {}
     virtual void visit(PlayerAnchorDivinityStep const *) {}
     virtual void visit(PlayerLevelUpDivinityStep const *) {}
-    virtual void visit(PlayerResetOptionDivinityStep const *) {}
+    virtual void visit(PlayerResetOptionDivinityStep const *);
     virtual void visit(PlayerSpawnStep const *) {}
     virtual void visit(PlayerSpendResourceStep const *);
     virtual void visit(ProductionPaidStep const *) {}

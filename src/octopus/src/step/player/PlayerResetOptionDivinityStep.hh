@@ -5,6 +5,7 @@
 
 #include "step/Steppable.hh"
 #include "state/DivinityType.hh"
+#include "state/player/DivinityOption.hh"
 
 namespace octopus
 {
@@ -13,8 +14,8 @@ namespace octopus
 class PlayerResetOptionDivinityStep : public Steppable
 {
 public:
-	PlayerResetOptionDivinityStep(unsigned long player_p, std::map<DivinityType, unsigned long> const &options_p)
-		: _player(player_p), _options(options_p) {}
+	PlayerResetOptionDivinityStep(unsigned long player_p, DivinityOption const option_p)
+		: _player(player_p), _option(option_p) {}
 
 	virtual void apply(State &state_p) const override;
 	virtual void revert(State &state_p) const override;
@@ -27,7 +28,7 @@ public:
 
 	unsigned long const _player {0};
 
-	std::map<DivinityType, unsigned long> const _options;
+	DivinityOption const _option;
 };
 
 } // namespace octopus

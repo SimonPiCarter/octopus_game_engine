@@ -34,6 +34,9 @@ namespace octopus
 			double getResourceSpent(unsigned long player_p, ResourceType res_p) const;
 
 			const std::map<ResourceType, double> & getResourceSpent(unsigned long player_p) const;
+
+			unsigned long & getDivOptionSpent(unsigned long player_p);
+			unsigned long getDivOptionSpent(unsigned long player_p) const;
 		private:
 			std::list<EntityMoveStep *> _listEntityMoveStep;
 
@@ -41,6 +44,9 @@ namespace octopus
 
 			/// @brief a map of map of resource spent (player, resource) -> value spent this step
 			std::map<unsigned long, std::map<ResourceType, double> > _spent;
+
+			/// @brief a map of number of div option spent in this step (player) -> number of div option spent this step
+			std::map<unsigned long, unsigned long> _divOptionsSpent;
 	};
 
 	/// @brief apply the step

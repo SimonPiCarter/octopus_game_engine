@@ -8,6 +8,8 @@
 #include "state/ResourceType.hh"
 #include "state/DivinityType.hh"
 
+#include "DivinityOption.hh"
+
 namespace octopus
 {
 	struct BuildingModel;
@@ -35,7 +37,7 @@ namespace octopus
 			/// @brief the anchor for every divinity
 			std::map<DivinityType, double> _divAnchor;
 			/// @brief the options currently available to the player
-			std::map<DivinityType, unsigned long> _divOptions;
+			std::list<DivinityOption> _divOptions;
 
 			///
 			/// Unlock info
@@ -49,7 +51,7 @@ namespace octopus
 	/// @brief safe getter for resource of a player
 	double getResource(Player const &player_p, ResourceType type_p);
 	/// @brief safe getter for divinity option of a player
-	unsigned long getDivOption(Player const &player_p, DivinityType type_p);
+	bool getDivOption(DivinityOption const &option_p, DivinityType type_p);
 	/// @brief safe getter for divinity level of a player
 	unsigned long getDivLvl(Player const &player_p, DivinityType type_p);
 	/// @brief safe getter for divinity anchor of a player

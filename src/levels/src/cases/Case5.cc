@@ -83,7 +83,7 @@ public:
 		std::set<DivinityType> set_l(vector_l.begin(), vector_l.end());
 
 
-		step_p.addSteppable(new PlayerAddOptionDivinityStep(_player, set_l));
+		step_p.addSteppable(new PlayerAddOptionDivinityStep(_player, set_l, true));
 	}
 private:
 	unsigned long const _player;
@@ -130,8 +130,10 @@ std::list<Steppable *> Case5(Library &lib_p)
 	res5_l._resource = 500.;
 
 	std::map<ResourceType, double> mapRes_l;
-	mapRes_l[octopus::ResourceType::Food] = -200;
-	mapRes_l[octopus::ResourceType::Steel] = -200;
+	mapRes_l[octopus::ResourceType::Gas] = -1000;
+	mapRes_l[octopus::ResourceType::Ether] = -1000;
+	mapRes_l[octopus::ResourceType::Food] = -1000;
+	mapRes_l[octopus::ResourceType::Steel] = -1000;
 
 	Trigger * divTrigger_l = new Case5DivinitiesOptionTrigger(new ListenerEntityModelFinished(&lib_p.getBuildingModel("temple"), 0), 0);
 

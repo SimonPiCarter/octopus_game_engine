@@ -15,14 +15,14 @@ double getResource(Player const &player_p, ResourceType type_p)
 	return 0.;
 }
 
-unsigned long getDivOption(Player const &player_p, DivinityType type_p)
+bool getDivOption(DivinityOption const &option_p, DivinityType type_p)
 {
-	auto &&it_l = player_p._divOptions.find(type_p);
-	if(it_l != player_p._divOptions.end())
+	auto &&it_l = option_p._types.find(type_p);
+	if(it_l != option_p._types.end())
 	{
-		return it_l->second;
+		return true;
 	}
-	return 0;
+	return false;
 }
 
 unsigned long getDivLvl(Player const &player_p, DivinityType type_p)

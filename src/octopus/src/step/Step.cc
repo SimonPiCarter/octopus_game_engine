@@ -82,6 +82,21 @@ const std::map<ResourceType, double> & Step::getResourceSpent(unsigned long play
 	return itPlayer_l->second;
 }
 
+unsigned long & Step::getDivOptionSpent(unsigned long player_p)
+{
+	return _divOptionsSpent[player_p];
+}
+
+unsigned long Step::getDivOptionSpent(unsigned long player_p) const
+{
+	auto &&itPlayer_l = _divOptionsSpent.find(player_p);
+	if(itPlayer_l == _divOptionsSpent.end())
+	{
+		return 0;
+	}
+	return itPlayer_l->second;
+}
+
 void apply(Step const & step_p, State &state_p)
 {
 	// apply all steppables

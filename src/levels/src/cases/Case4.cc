@@ -169,7 +169,7 @@ public:
 		std::set<DivinityType> set_l(vector_l.begin(), vector_l.end());
 
 
-		step_p.addSteppable(new PlayerAddOptionDivinityStep(_player, set_l));
+		step_p.addSteppable(new PlayerAddOptionDivinityStep(_player, set_l, true));
 	}
 private:
 	unsigned long const _player;
