@@ -227,11 +227,11 @@ int main( int argc, char* args[] )
 	spriteLib_l.registerSpriteTemplate("resource_gas", window_l.loadTexture("resources/gas_prop1.png"), 2., 64, 64, 128, 128, {20, 1}, {0.1, 1.5}, 1);
 
 	// neutral
-	spriteLib_l.registerSpriteTemplate("command_center", window_l.loadTexture("resources/building.png"), 2., 32, 32, 64, 64, {2, 2, 2, 2}, {0.25, 0.5, 0.5, 0.5}, 1);
-	spriteLib_l.registerSpriteTemplate("deposit", window_l.loadTexture("resources/building.png"), 1., 32, 32, 64, 64, {2, 2, 2, 2}, {0.25, 0.5, 0.5, 0.5}, 1);
-	spriteLib_l.registerSpriteTemplate("ether_deposit", window_l.loadTexture("resources/building.png"), 1., 32, 32, 64, 64, {2, 2, 2, 2}, {0.25, 0.5, 0.5, 0.5}, 1);
-	spriteLib_l.registerSpriteTemplate("temple", window_l.loadTexture("resources/building.png"), 1., 32, 32, 64, 64, {2, 2, 2, 2}, {0.25, 0.5, 0.5, 0.5}, 1);
-	spriteLib_l.registerSpriteTemplate("worker", window_l.loadTexture("resources/circle.png"), 0.5, 32, 32, 64, 64, {2, 2}, {0.25, 1}, 1);
+	spriteLib_l.registerSpriteTemplate("command_center", window_l.loadTexture("resources/command_center.png"), 2., 32, 32, 64, 64, {2, 2, 2, 2}, {0.25, 0.5, 0.5, 0.5}, 1);
+	spriteLib_l.registerSpriteTemplate("deposit", window_l.loadTexture("resources/deposit.png"), 1., 32, 32, 64, 64, {2, 2, 2, 2}, {0.25, 0.5, 0.5, 0.5}, 1);
+	spriteLib_l.registerSpriteTemplate("ether_deposit", window_l.loadTexture("resources/ether_deposit.png"), 1., 32, 32, 64, 64, {2, 2, 2, 2}, {0.25, 0.5, 0.5, 0.5}, 1);
+	spriteLib_l.registerSpriteTemplate("temple", window_l.loadTexture("resources/temple.png"), 1., 32, 32, 64, 64, {2, 2, 2, 2}, {0.25, 0.5, 0.5, 0.5}, 1);
+	spriteLib_l.registerSpriteTemplate("worker", window_l.loadTexture("resources/worker.png"), 0.5, 32, 32, 64, 64, {2, 2}, {0.25, 1}, 1);
 
 	spriteLib_l.registerSpriteTemplate("div_armor_well", window_l.loadTexture("resources/well_2.png"), 1., 32, 32, 64, 64, {6, 1, 1, 1}, {0.25, 0.5, 0.5, 0.5}, 1);
 	spriteLib_l.registerSpriteTemplate("div_fire_well", window_l.loadTexture("resources/well_4.png"), 1., 32, 32, 64, 64, {6, 1, 1, 1}, {0.25, 0.5, 0.5, 0.5}, 1);
