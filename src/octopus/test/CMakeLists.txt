@@ -34,6 +34,7 @@ target_sources (unit_tests
 	src/commandQueue.test.cc
 	src/conflictSolver.test.cc
 	src/controller.test.cc
+	src/divinityCommand.test.cc
 	src/entityMoveStep.test.cc
 	src/entitySpawnStep.test.cc
 	src/grid.test.cc
