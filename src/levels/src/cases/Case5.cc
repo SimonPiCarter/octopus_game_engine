@@ -130,6 +130,9 @@ std::list<Steppable *> Case5(Library &lib_p)
 	res5_l._type = ResourceType::Gas;
 	res5_l._resource = 500.;
 
+	Building abandonnedTemple_l({23, 20}, true, lib_p.getBuildingModel("abandonned_temple"));
+
+
 	std::map<ResourceType, double> mapRes_l;
 	mapRes_l[octopus::ResourceType::Gas] = -1000;
 	mapRes_l[octopus::ResourceType::Ether] = -1000;
@@ -163,6 +166,7 @@ std::list<Steppable *> Case5(Library &lib_p)
 		new UnitSpawnStep(unit_l),
 		new UnitSpawnStep(unit_l),
 		new TriggerSpawn(divTrigger_l),
+		new BuildingSpawnStep(abandonnedTemple_l, true),
 		new StateTemplePositionAddStep(Vector {23,20})
 	};
 

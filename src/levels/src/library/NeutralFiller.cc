@@ -90,4 +90,14 @@ void neutralFiller(Library &lib_p)
 
         lib_p.registerTempleModel("temple", buildingModel_l);
     }
+    {
+        // abandonned temple (should match size of temple)
+        BuildingModel buildingModel_l { true, 0.9, 1000. };
+        buildingModel_l._isStatic = true;
+        buildingModel_l._isAbandonedTemple = true;
+        buildingModel_l._buildingTime = 2000;
+        buildingModel_l._armor = 5;
+
+        lib_p.registerBuildingModel("abandonned_temple", buildingModel_l);
+    }
 }
