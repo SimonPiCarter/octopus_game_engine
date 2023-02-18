@@ -67,14 +67,15 @@ void World::display(Window &window_p, double elapsed_p)
 
 Sprite * World::getSprite(Window const &window_p, int x, int y) const
 {
+	Sprite * return_l = nullptr;
 	for(Sprite * sprite_l : _listSprite)
 	{
 		if(sprite_l->isInside(window_p, x, y))
 		{
-			return sprite_l;
+			return_l = sprite_l;
 		}
 	}
-	return nullptr;
+	return return_l;
 }
 
 std::list<Sprite *> World::getSprites(Window const &window_p, int lx, int ly, int ux, int uy) const
