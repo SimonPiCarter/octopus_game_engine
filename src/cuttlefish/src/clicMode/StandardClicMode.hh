@@ -23,6 +23,15 @@ public:
 		}
 	}
 
+	virtual void reset(SDL_Event const &e)
+	{
+		if(e.type == SDL_MOUSEBUTTONUP && e.button.button == SDL_BUTTON_LEFT)
+		{
+			_downX = -1;
+			_downY = -1;
+		}
+	}
+
 	/// @brief handle mouse
 	/// @return true if the clic mode is over
 	bool handleMouseUp(SDL_Event const & e, Selection &selection_p, World &world_p, Panel &panel_p,

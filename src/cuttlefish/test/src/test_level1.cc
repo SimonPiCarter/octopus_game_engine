@@ -426,6 +426,7 @@ int main( int argc, char* args[] )
 						break;
 				}
 			}
+			currentClicMode_l->reset(e);
 		}
 		x += dX * elapsed_l;
 		y += dY * elapsed_l;
