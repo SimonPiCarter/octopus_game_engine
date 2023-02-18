@@ -1,8 +1,9 @@
 #include "LibraryFillers.hh"
 
 #include "library/Library.hh"
-#include "state/model/entity/UnitModel.hh"
 #include "state/model/entity/BuildingModel.hh"
+#include "state/model/entity/TempleModel.hh"
+#include "state/model/entity/UnitModel.hh"
 #include "state/DivinityType.hh"
 #include "state/ResourceType.hh"
 
@@ -79,7 +80,7 @@ void neutralFiller(Library &lib_p)
     }
     {
         // temple
-        BuildingModel buildingModel_l { true, 0.9, 1000. };
+        TempleModel buildingModel_l { true, 0.9, 1000. };
         buildingModel_l._isBuilding = true;
         buildingModel_l._isStatic = true;
         buildingModel_l._buildingTime = 2000;
@@ -87,6 +88,6 @@ void neutralFiller(Library &lib_p)
         buildingModel_l._cost[ResourceType::Gas] = 50;
         buildingModel_l._armor = 5;
 
-        lib_p.registerBuildingModel("temple", buildingModel_l);
+        lib_p.registerTempleModel("temple", buildingModel_l);
     }
 }

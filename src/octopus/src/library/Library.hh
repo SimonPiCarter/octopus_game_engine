@@ -8,11 +8,12 @@ namespace octopus
 {
 
 struct EntityModel;
-struct BuildingModel;;
-struct UnitModel;;
+struct BuildingModel;
+struct TempleModel;
+struct UnitModel;
 
 /// @brief This class is storing resources like
-/// EntityModel, UnitModel, BuildingModel
+/// EntityModel, UnitModel, BuildingModel, TempleModel
 class Library
 {
 public:
@@ -21,6 +22,7 @@ public:
 	void registerEntityModel(std::string const &id_p, EntityModel const &model_p);
 	EntityModel const & getEntityModel(std::string const &id_p) const;
 	void registerBuildingModel(std::string const &id_p, BuildingModel const &model_p);
+	void registerTempleModel(std::string const &id_p, TempleModel const &model_p);
 	BuildingModel const & getBuildingModel(std::string const &id_p) const;
 	void registerUnitModel(std::string const &id_p, UnitModel const &model_p);
 	UnitModel const & getUnitModel(std::string const &id_p) const;

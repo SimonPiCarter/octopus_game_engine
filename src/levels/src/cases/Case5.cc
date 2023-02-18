@@ -21,6 +21,7 @@
 #include "step/player/PlayerSpendResourceStep.hh"
 #include "step/player/PlayerAddOptionDivinityStep.hh"
 #include "step/trigger/TriggerSpawn.hh"
+#include "step/state/StateTemplePositionAddStep.hh"
 
 #include "library/LibraryFillers.hh"
 
@@ -161,7 +162,8 @@ std::list<Steppable *> Case5(Library &lib_p)
 		new UnitSpawnStep(unit_l),
 		new UnitSpawnStep(unit_l),
 		new UnitSpawnStep(unit_l),
-		new TriggerSpawn(divTrigger_l)
+		new TriggerSpawn(divTrigger_l),
+		new StateTemplePositionAddStep(Vector {23,20})
 	};
 
 	return spawners_l;

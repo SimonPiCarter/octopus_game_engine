@@ -2,6 +2,7 @@
 
 #include "state/model/entity/BuildingModel.hh"
 #include "state/model/entity/EntityModel.hh"
+#include "state/model/entity/TempleModel.hh"
 #include "state/model/entity/UnitModel.hh"
 
 namespace octopus
@@ -28,6 +29,12 @@ EntityModel const & Library::getEntityModel(std::string const &id_p) const
 void Library::registerBuildingModel(std::string const &id_p, BuildingModel const &model_p)
 {
 	_mapBuildingModel[id_p] = new BuildingModel(model_p);
+	_mapBuildingModel[id_p]->_id = id_p;
+}
+
+void Library::registerTempleModel(std::string const &id_p, TempleModel const &model_p)
+{
+	_mapBuildingModel[id_p] = new TempleModel(model_p);
 	_mapBuildingModel[id_p]->_id = id_p;
 }
 
