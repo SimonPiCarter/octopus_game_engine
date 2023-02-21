@@ -218,7 +218,8 @@ int main( int argc, char* args[] )
 
 	SpriteLibrary spriteLib_l;
 	// tile map
-	spriteLib_l.registerSpriteTemplate("tiles", window_l.loadTexture("resources/tiles.png"), 1., 0, 0, 64, 64, {1, 1}, {2,2}, 1);
+	/// @todo go back to tiles.png
+	spriteLib_l.registerSpriteTemplate("tiles", window_l.loadTexture("resources/tiles2.png"), 1., 0, 0, 64, 64, {1, 1}, {2,2}, 1);
 	spriteLib_l.registerSpriteTemplate("details", window_l.loadTexture("resources/details.png"), 1., 0, 0, 64, 64, {1}, {2}, 1);
 
 	// resources
