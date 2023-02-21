@@ -23,6 +23,7 @@ add_library(cuttlefish
 	${CMAKE_CURRENT_SOURCE_DIR}/src/text/Text.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/text/SegmentedText.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/text/WrappedText.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/src/texture/RenderTexture.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/texture/Texture.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/tilemap/Tilemap.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/window/Window.cc
