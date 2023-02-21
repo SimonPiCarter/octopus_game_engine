@@ -33,6 +33,9 @@ public:
 
     void render(Window & window_p, double elapsed_p);
 
+    void renderScaled(Window & window_p, double scaledX_p, double scaledY_p);
+
+
 protected:
     /// @brief internal state for tiles (state per tile)
     std::vector<std::vector<int> > _tiles;
