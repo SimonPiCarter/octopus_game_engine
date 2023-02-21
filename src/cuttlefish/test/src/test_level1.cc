@@ -18,6 +18,7 @@
 #include "text/Text.hh"
 #include "text/WrappedText.hh"
 #include "texture/Texture.hh"
+#include "texture/RenderTexture.hh"
 #include "tilemap/Tilemap.hh"
 #include "window/Window.hh"
 #include "world/World.hh"
@@ -256,6 +257,17 @@ int main( int argc, char* args[] )
 
 	Tilemap tilemap_l(50, spriteLib_l, "tiles", "details");
 	tilemap_l.generate();
+
+
+	RenderTexture rTexture_l;
+	rTexture_l.createBlank(SCREEN_WIDTH, SCREEN_WIDTH, window_l.getRenderer());
+
+	rTexture_l.startRendering(window_l.getRenderer());
+
+	background_l->render(window_l.getRenderer(), 0, 0, SCREEN_WIDTH, SCREEN_WIDTH );
+	tilemap_l.renderScaled(window_l, SCREEN_WIDTH/(50.*64.), SCREEN_WIDTH/(50.*64.));
+
+	rTexture_l.stopRendering(window_l.getRenderer());
 
 	// Text for resource
 	Text textResource_l(&window_l, {0,0,0}, 300, 0);
@@ -503,6 +515,8 @@ int main( int argc, char* args[] )
 		textSteps_l.display(window_l);
 
 		world_l.getSelection().render(window_l);
+
+		rTexture_l.render(window_l.getRenderer(), 0, SCREEN_HEIGHT-SCREEN_WIDTH/4, SCREEN_WIDTH/4, SCREEN_WIDTH/4, nullptr);
 
 		window_l.draw();
 	}
