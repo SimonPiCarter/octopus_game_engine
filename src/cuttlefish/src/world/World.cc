@@ -120,4 +120,9 @@ void World::clearSpriteFromSelections(Sprite * sprite_p)
 	}
 }
 
+std::list<Sprite *> const &World::getListSprite() const
+{
+	return _listSprite;
+}
+
 }

@@ -48,6 +48,9 @@ public:
 	/// and the camera position
 	octopus::Vector getWorldVector(int x, int y) const;
 
+	/// @brief get the window size in world unit
+	octopus::Vector getWindowSize() const;
+
 private:
 	std::map<std::string, Texture *> _mapTexture;
 
@@ -62,6 +65,8 @@ private:
 
 	TTF_Font* _font {nullptr};
 
+	int _width {0};
+	int _height {0};
 
 	// display fps
 	bool _displayFps {false};

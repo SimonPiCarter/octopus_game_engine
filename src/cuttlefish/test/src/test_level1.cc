@@ -168,7 +168,9 @@ int main( int argc, char* args[] )
 	octopus::Library lib_l;
 	std::list<octopus::Steppable *> spawners_l = Case5(lib_l);
 
-	octopus::Controller controller_l(spawners_l, 0.01);
+	unsigned long gridSize_l = 1;
+	unsigned long fullWorldSize_l = 50 * gridSize_l;
+	octopus::Controller controller_l(spawners_l, 0.01, {}, gridSize_l);
 
 	std::thread controllerThread_l(controllerLoop, std::ref(controller_l), std::ref(quit_l), std::ref(paused_l));
 
@@ -219,8 +221,8 @@ int main( int argc, char* args[] )
 	SpriteLibrary spriteLib_l;
 	// tile map
 	/// @todo go back to tiles.png
-	spriteLib_l.registerSpriteTemplate("tiles", window_l.loadTexture("resources/tiles2.png"), 1., 0, 0, 64, 64, {1, 1}, {2,2}, 1);
-	spriteLib_l.registerSpriteTemplate("details", window_l.loadTexture("resources/details.png"), 1., 0, 0, 64, 64, {1}, {2}, 1);
+	spriteLib_l.registerSpriteTemplate("tiles", window_l.loadTexture("resources/tiles.png"), 0.5, 0, 0, 64, 64, {1, 1}, {2,2}, 1);
+	spriteLib_l.registerSpriteTemplate("details", window_l.loadTexture("resources/details.png"), 0.5, 0, 0, 64, 64, {1}, {2}, 1);
 
 	// resources
 	spriteLib_l.registerSpriteTemplate("resource_steel", window_l.loadTexture("resources/steel_prop1.png"), 2., 128, 128, 256, 256, {10, 10}, {0.2,0.2}, 1);
@@ -256,10 +258,10 @@ int main( int argc, char* args[] )
 	spriteLib_l.registerSpriteTemplate("div_swarm_2", window_l.loadTexture("resources/soldier3_2.png"), 0.5, 32, 32, 64, 64, {2, 2}, {0.25, 1}, 1);
 	spriteLib_l.registerSpriteTemplate("div_swarm_3", window_l.loadTexture("resources/soldier3_3.png"), 0.5, 32, 32, 64, 64, {2, 2}, {0.25, 1}, 1);
 
-	Tilemap tilemap_l(50, spriteLib_l, "tiles", "details");
+	Tilemap tilemap_l(fullWorldSize_l, spriteLib_l, "tiles", "details");
 	tilemap_l.generate();
 
-	Minimap minimap_l(window_l, 0, SCREEN_HEIGHT-SCREEN_WIDTH/4, SCREEN_WIDTH/4, SCREEN_WIDTH/4, tilemap_l, {});
+	Minimap minimap_l(window_l, 0, SCREEN_HEIGHT-SCREEN_WIDTH/4, SCREEN_WIDTH/4, SCREEN_WIDTH/4, tilemap_l, fullWorldSize_l, {"resources/me.png"});
 
 	// Text for resource
 	Text textResource_l(&window_l, {0,0,0}, 300, 0);
@@ -508,7 +510,7 @@ int main( int argc, char* args[] )
 
 		world_l.getSelection().render(window_l);
 
-		minimap_l.render(world_l, window_l);
+		minimap_l.render(state_l, world_l, window_l);
 
 		window_l.draw();
 	}

@@ -1,8 +1,14 @@
 #ifndef __minimap__
 #define __minimap__
 
-#include <unordered_map>
+#include <vector>
 #include "texture/RenderTexture.hh"
+
+namespace octopus
+{
+class State;
+} // namespace octopus
+
 
 namespace cuttlefish
 {
@@ -16,9 +22,9 @@ class World;
 class Minimap
 {
 public:
-	Minimap(Window &window_p, int x, int y, int w, int h, Tilemap &tilemap_p, std::unordered_map<std::string, std::string> const &map_p);
+	Minimap(Window &window_p, int x, int y, int w, int h, Tilemap &tilemap_p, unsigned long worldSize_p, std::vector<std::string> const &vec_p);
 
-	void render(World const &world_p, Window &window_p);
+	void render(octopus::State const &state_p, World const &world_p, Window &window_p);
 
 private:
 	int const _x;
@@ -29,8 +35,8 @@ private:
 	/// @brief the texture of the background (rendered once)
 	RenderTexture _background;
 
-	/// @brief a correspondance map between models and texture (for dynamic info)
-	std::unordered_map<std::string, std::string> const _mapModelToTexture;
+	/// @brief a correspondance map between teams and texture (for dynamic info)
+	std::vector<std::string> const _vecTeamToTexture;
 };
 
 } // namespace cuttlefish
