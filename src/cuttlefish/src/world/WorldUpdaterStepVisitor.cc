@@ -107,9 +107,10 @@ void WorldUpdaterStepVisitor::visit(octopus::EntityHitPointChangeStep const *ste
 
 void WorldUpdaterStepVisitor::visit(octopus::EntityMoveStep const *steppable_p)
 {
+	octopus::Entity const * ent_l = _state->getEntity(steppable_p->_handle);
 	if(_world._sprites[steppable_p->_handle])
 	{
-		_world._sprites[steppable_p->_handle]->move(steppable_p->_move.x*32, steppable_p->_move.y*32);
+		_world._sprites[steppable_p->_handle]->setPosition(ent_l->_pos.x*32, ent_l->_pos.y*32);
 	}
 }
 
