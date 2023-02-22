@@ -31,7 +31,8 @@ BufferedState::~BufferedState()
 Controller::Controller(
 	std::list<Steppable *> const &initSteppables_p,
 	double timePerStep_p,
-	std::list<Command *> const &initCommands_p)
+	std::list<Command *> const &initCommands_p,
+	unsigned long gridSize_p)
 	: _timePerStep(timePerStep_p)
 {
 	std::lock_guard<std::mutex> lock_l(_mutex);
@@ -41,9 +42,9 @@ Controller::Controller(
 	_lastHandledStep = 0;
 	_compiledSteps.push_back(new Step());
 
-	_backState = new BufferedState { 0, _compiledSteps.begin(), new State(0) };
-	_bufferState = new BufferedState { 0, _compiledSteps.begin(), new State(1) };
-	_frontState = new BufferedState { 0, _compiledSteps.begin(), new State(2) };
+	_backState = new BufferedState { 0, _compiledSteps.begin(), new State(0, gridSize_p) };
+	_bufferState = new BufferedState { 0, _compiledSteps.begin(), new State(1, gridSize_p) };
+	_frontState = new BufferedState { 0, _compiledSteps.begin(), new State(2, gridSize_p) };
 
 	// add steppable
 	for(Steppable * steppable_l : initSteppables_p)
@@ -179,7 +180,6 @@ bool Controller::loop_body()
 			upToDate_l = false;
 		}
 	}
-	Logger::getDebug() << "up to date " << " "<<upToDate_l<< std::endl;
 	return upToDate_l;
 }
 
