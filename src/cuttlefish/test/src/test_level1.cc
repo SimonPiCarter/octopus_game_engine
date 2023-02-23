@@ -168,7 +168,7 @@ int main( int argc, char* args[] )
 	octopus::Library lib_l;
 	std::list<octopus::Steppable *> spawners_l = Case5(lib_l);
 
-	unsigned long gridSize_l = 1;
+	unsigned long gridSize_l = 5;
 	unsigned long fullWorldSize_l = 50 * gridSize_l;
 	octopus::Controller controller_l(spawners_l, 0.01, {}, gridSize_l);
 
@@ -264,6 +264,9 @@ int main( int argc, char* args[] )
 
 	Minimap minimap_l(window_l, 0, SCREEN_HEIGHT-SCREEN_WIDTH/4, SCREEN_WIDTH/4, SCREEN_WIDTH/4, tilemap_l, fullWorldSize_l, {"resources/me.png"});
 
+	// true if the minimap has been clicked
+	bool minimapClicked_l = false;
+
 	// Text for resource
 	Text textResource_l(&window_l, {0,0,0}, 300, 0);
 	Text textDivLvl_l(&window_l, {0,0,0}, 200, 30);
@@ -296,7 +299,7 @@ int main( int argc, char* args[] )
 			{
 				dX = 0;
 				dY = 0;
-				int margin_l = 40;
+				int margin_l = 5;
 				if(e.button.x < margin_l)
 				{
 					dX = - camSpeed_l;
@@ -331,6 +334,14 @@ int main( int argc, char* args[] )
 				{
 					descActive_l = false;
 				}
+
+				if(minimapClicked_l)
+				{
+					octopus::Vector pos_l = getCameraPosition(e.button.x, e.button.y, minimap_l, window_l, state_l.getWorldSize());
+					x = pos_l.x;
+					y = pos_l.y;
+					minimapClicked_l = minimap_l.isInside(e.button.x, e.button.y);
+				}
 			}
 			//User requests quit_l
 			if( e.type == SDL_QUIT )
@@ -339,7 +350,14 @@ int main( int argc, char* args[] )
 			}
 			if (e.type == SDL_MOUSEBUTTONDOWN)
 			{
-				if(!panel_l.getBackground()->isInside(window_l, e.button.x, e.button.y)
+				if(minimap_l.isInside(e.button.x, e.button.y))
+				{
+					octopus::Vector pos_l = getCameraPosition(e.button.x, e.button.y, minimap_l, window_l, state_l.getWorldSize());
+					x = pos_l.x;
+					y = pos_l.y;
+					minimapClicked_l = true;
+				}
+				else if(!panel_l.getBackground()->isInside(window_l, e.button.x, e.button.y)
 				&& (!divPanel_l.getBackground()->isInside(window_l, e.button.x, e.button.y) || !divPanel_l.isActive()))
 				{
 					currentClicMode_l->handleMouseDown(e);
@@ -347,6 +365,7 @@ int main( int argc, char* args[] )
 			}
 			if (e.type == SDL_MOUSEBUTTONUP)
 			{
+				minimapClicked_l = false;
 				if(divPanel_l.isActive())
 				{
 					std::pair<bool, octopus::DivinityType> option_l = divPanel_l.getOption(window_l, e.button.x, e.button.y);
