@@ -36,6 +36,7 @@ void Sprite::setState(int state_p)
 void Sprite::setStateNoReset(int state_p)
 {
 	_state = state_p;
+	_frame = _frame % _nbFramesPerState.at(_state);
 }
 
 void Sprite::setFrame(int frame_p)
