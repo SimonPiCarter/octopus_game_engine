@@ -14,6 +14,7 @@
 #include "panel/DescPanel.hh"
 #include "panel/DivinityPanel.hh"
 #include "panel/Panel.hh"
+#include "panel/StatsPanel.hh"
 #include "sprite/Sprite.hh"
 #include "sprite/SpriteLibrary.hh"
 #include "text/Text.hh"
@@ -202,6 +203,39 @@ int main( int argc, char* args[] )
 		panel_l.addSpriteInfo("div_swarm_2", 4, 2);
 		panel_l.addSpriteInfo("div_swarm_3", 4, 3);
 
+	StatsPanel statsPanel_l(&window_l, SCREEN_WIDTH-520, SCREEN_HEIGHT-260,
+		window_l.loadTexture("resources/background.png"), window_l.loadTexture("resources/grid.png"), 4, world_l.getSelection());
+
+	// resources
+	statsPanel_l.addSpriteInfo("resource_steel", 2, 4);
+	statsPanel_l.addSpriteInfo("resource_food", 2, 4);
+	statsPanel_l.addSpriteInfo("resource_ether", 2, 4);
+	statsPanel_l.addSpriteInfo("resource_gas", 2, 4);
+
+	statsPanel_l.addSpriteInfo("worker", 2, 1);
+	statsPanel_l.addSpriteInfo("command_center", 1, 0);
+	statsPanel_l.addSpriteInfo("deposit", 0, 0);
+	statsPanel_l.addSpriteInfo("ether_deposit", 1, 1);
+	statsPanel_l.addSpriteInfo("temple", 0, 4);
+	statsPanel_l.addSpriteInfo("abandonned_temple", 2, 4);
+
+	statsPanel_l.addSpriteInfo("div_armor_well", 1, 4);
+		statsPanel_l.addSpriteInfo("div_armor_1", 3, 3);
+		statsPanel_l.addSpriteInfo("div_armor_2", 3, 4);
+		statsPanel_l.addSpriteInfo("div_armor_3", 4, 0);
+	statsPanel_l.addSpriteInfo("div_fire_well", 2, 3);
+		statsPanel_l.addSpriteInfo("div_fire_1", 4, 4);
+		statsPanel_l.addSpriteInfo("div_fire_2", 5, 0);
+		statsPanel_l.addSpriteInfo("div_fire_3", 5, 1);
+	statsPanel_l.addSpriteInfo("div_raid_well", 1, 3);
+		statsPanel_l.addSpriteInfo("div_raid_1", 3, 0);
+		statsPanel_l.addSpriteInfo("div_raid_2", 3, 1);
+		statsPanel_l.addSpriteInfo("div_raid_3", 3, 2);
+	statsPanel_l.addSpriteInfo("div_swarm_well", 2, 0);
+		statsPanel_l.addSpriteInfo("div_swarm_1", 4, 1);
+		statsPanel_l.addSpriteInfo("div_swarm_2", 4, 2);
+		statsPanel_l.addSpriteInfo("div_swarm_3", 4, 3);
+
 	DivinityPanel divPanel_l(&window_l, SCREEN_WIDTH-SCREEN_WIDTH/2-200, SCREEN_HEIGHT-SCREEN_HEIGHT/2-200,
 		window_l.loadTexture("resources/background.png"), window_l.loadTexture("resources/grid.png"), 0);
 	divPanel_l.addOptionInfo(octopus::DivinityType::Divinity_1, 2, 0);
@@ -353,6 +387,7 @@ int main( int argc, char* args[] )
 					minimapClicked_l = true;
 				}
 				else if(!panel_l.getBackground()->isInside(window_l, e.button.x, e.button.y)
+				&& !statsPanel_l.getBackground()->isInside(window_l, e.button.x, e.button.y)
 				&& (!divPanel_l.getBackground()->isInside(window_l, e.button.x, e.button.y) || !divPanel_l.isActive()))
 				{
 					currentClicMode_l->handleMouseDown(e);
@@ -396,10 +431,11 @@ int main( int argc, char* args[] )
 							}
 						}
 					}
-					else if(panel_l.getBackground()->isInside(window_l, e.button.x, e.button.y))
-					{
-						// NA (skip selection and move command)
-					}
+					// else if(panel_l.getBackground()->isInside(window_l, e.button.x, e.button.y)
+					// 	 || statsPanel_l.getBackground()->isInside(window_l, e.button.x, e.button.y))
+					// {
+					// 	// NA (skip selection and move command)
+					// }
 					else
 					{
 						if( currentClicMode_l->handleMouseUp(e, selection_l, world_l, panel_l, window_l, state_l, controller_l) )
@@ -498,6 +534,8 @@ int main( int argc, char* args[] )
 		currentClicMode_l->display(window_l, elapsed_l, mouseX, mouseY);
 
 		panel_l.render(window_l);
+		statsPanel_l.refresh(window_l, state_l);
+		statsPanel_l.render(window_l);
 		if(descActive_l)
 		{
 			descPanel_l.render(window_l);
