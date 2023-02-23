@@ -7,10 +7,13 @@
 #include "window/Window.hh"
 #include "sprite/Sprite.hh"
 
+#include "state/State.hh"
+#include "state/entity/Entity.hh"
+
 namespace cuttlefish
 {
 
-void Selection::removeSprite(Sprite * sprite_p)
+void Selection::removeSprite(Sprite * sprite_p, octopus::State const &state_p)
 {
 	_sprites.remove(sprite_p);
 	if(_sprite == sprite_p)
@@ -24,6 +27,8 @@ void Selection::removeSprite(Sprite * sprite_p)
 			_sprite = nullptr;
 		}
 	}
+	octopus::Entity const * ent_l = state_p.getEntity(sprite_p->getHandle());
+	_spritesPerModel[ent_l->_model._id].remove(sprite_p);
 }
 
 void displaySelection(Window &window_p, Sprite const *sprite_p)
@@ -54,16 +59,22 @@ void Selection::clear()
 	_sprite = nullptr;
 }
 
-void addToSelection(Selection &selection_p, std::list<Sprite *> const &sprites_p)
+void addToSelection(Selection &selection_p, std::list<Sprite *> const &sprites_p, octopus::State const &state_p)
 {
 	selection_p._sprites.insert(selection_p._sprites.end(), sprites_p.begin(), sprites_p.end());
 	if(!selection_p._sprites.empty())
 	{
 		selection_p._sprite = *selection_p._sprites.begin();
 	}
+	// update model lists
+	for(Sprite * sprite_l : sprites_p)
+	{
+		octopus::Entity const * ent_l = state_p.getEntity(sprite_l->getHandle());
+		selection_p._spritesPerModel[ent_l->_model._id].push_back(sprite_l);
+	}
 }
 
-void replaceSelection(Selection &selection_p, std::list<Sprite *> const &sprites_p)
+void replaceSelection(Selection &selection_p, std::list<Sprite *> const &sprites_p, octopus::State const &state_p)
 {
 	selection_p._sprites = sprites_p;
 	if(!selection_p._sprites.empty())
@@ -73,6 +84,13 @@ void replaceSelection(Selection &selection_p, std::list<Sprite *> const &sprites
 	else
 	{
 		selection_p._sprite = nullptr;
+	}
+	// update model lists
+	selection_p._spritesPerModel.clear();
+	for(Sprite * sprite_l : sprites_p)
+	{
+		octopus::Entity const * ent_l = state_p.getEntity(sprite_l->getHandle());
+		selection_p._spritesPerModel[ent_l->_model._id].push_back(sprite_l);
 	}
 }
 

@@ -2,6 +2,13 @@
 #define __Selection__
 
 #include <list>
+#include <unordered_map>
+
+namespace octopus
+{
+class State;
+} // namespace octopus
+
 
 namespace cuttlefish
 {
@@ -12,11 +19,15 @@ class Window;
 class Selection
 {
 public:
+	/// @brief main unit selection
 	Sprite *_sprite {nullptr};
 
 	std::list<Sprite *> _sprites;
 
-	void removeSprite(Sprite * sprite_p);
+	/// @brief contains sprites for models selected
+	std::unordered_map<std::string, std::list<Sprite *> > _spritesPerModel;
+
+	void removeSprite(Sprite * sprite_p, octopus::State const &state_p);
 
 	void render(Window &window_p) const;
 
@@ -25,13 +36,13 @@ public:
 };
 
 /// @brief add the list of sprite to the current selection
-/// @note remove duplicated if necessary
-void addToSelection(Selection &selection_p, std::list<Sprite *> const &sprites_p);
+/// @note remove duplicated if necessary @todo
+void addToSelection(Selection &selection_p, std::list<Sprite *> const &sprites_p, octopus::State const &state_p);
 
 /// @brief replace the selection with the list of sprite
 /// @note update main selected if necessary
-/// @note remove duplicated if any
-void replaceSelection(Selection &selection_p, std::list<Sprite *> const &sprites_p);
+/// @note remove duplicated if any @todo
+void replaceSelection(Selection &selection_p, std::list<Sprite *> const &sprites_p, octopus::State const &state_p);
 
 } // namespace cuttlefish
 

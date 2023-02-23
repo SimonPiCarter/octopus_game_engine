@@ -112,12 +112,12 @@ void World::useSelection(unsigned long idx_p)
 	}
 }
 
-void World::clearSpriteFromSelections(Sprite * sprite_p)
+void World::clearSpriteFromSelections(Sprite * sprite_p, octopus::State const &state_p)
 {
-	getSelection().removeSprite(sprite_p);
+	getSelection().removeSprite(sprite_p, state_p);
 	for(auto &&pair_l : _selections)
 	{
-		pair_l.second.removeSprite(sprite_p);
+		pair_l.second.removeSprite(sprite_p, state_p);
 	}
 }
 
