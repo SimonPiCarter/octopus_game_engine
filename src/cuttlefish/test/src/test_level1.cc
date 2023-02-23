@@ -145,8 +145,11 @@ int main( int argc, char* args[] )
 {
 	cuttlefish::Window window_l;
 
+	unsigned long gridSize_l = 5;
+	unsigned long fullWorldSize_l = 50 * gridSize_l;
+
 	//Start up SDL and create window
-	if( !window_l.init(SCREEN_WIDTH, SCREEN_HEIGHT) )
+	if( !window_l.init(SCREEN_WIDTH, SCREEN_HEIGHT, fullWorldSize_l) )
 	{
 		printf( "Failed to initialize!\n" );
 		return 1;
@@ -168,8 +171,6 @@ int main( int argc, char* args[] )
 	octopus::Library lib_l;
 	std::list<octopus::Steppable *> spawners_l = Case5(lib_l);
 
-	unsigned long gridSize_l = 5;
-	unsigned long fullWorldSize_l = 50 * gridSize_l;
 	octopus::Controller controller_l(spawners_l, 0.01, {}, gridSize_l);
 
 	std::thread controllerThread_l(controllerLoop, std::ref(controller_l), std::ref(quit_l), std::ref(paused_l));
@@ -340,7 +341,6 @@ int main( int argc, char* args[] )
 					octopus::Vector pos_l = getCameraPosition(e.button.x, e.button.y, minimap_l, window_l, state_l.getWorldSize());
 					x = pos_l.x;
 					y = pos_l.y;
-					minimapClicked_l = minimap_l.isInside(e.button.x, e.button.y);
 				}
 			}
 			//User requests quit_l
@@ -365,7 +365,7 @@ int main( int argc, char* args[] )
 			}
 			if (e.type == SDL_MOUSEBUTTONUP)
 			{
-				minimapClicked_l = false;
+
 				if(divPanel_l.isActive())
 				{
 					std::pair<bool, octopus::DivinityType> option_l = divPanel_l.getOption(window_l, e.button.x, e.button.y);
@@ -376,7 +376,7 @@ int main( int argc, char* args[] )
 						divPanel_l.popOptionLayer();
 					}
 				}
-				else
+				else if(!minimapClicked_l)
 				{
 					SpriteModel const * spriteModel_l = panel_l.getSpriteModel(window_l, e.button.x, e.button.y);
 
@@ -414,6 +414,7 @@ int main( int argc, char* args[] )
 						}
 					}
 				}
+				minimapClicked_l = false;
 			}
 			if( e.type == SDL_KEYDOWN)
 			{
@@ -480,6 +481,7 @@ int main( int argc, char* args[] )
 		}
 		x += dX * elapsed_l;
 		y += dY * elapsed_l;
+		window_l.clampCamera(x, y);
 		window_l.setCamera(x, y);
 		window_l.clear();
 

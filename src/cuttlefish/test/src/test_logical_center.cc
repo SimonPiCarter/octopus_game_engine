@@ -33,7 +33,7 @@ int main( int argc, char* args[] )
 	cuttlefish::Window window_l;
 
 	//Start up SDL and create window
-	if( !window_l.init(SCREEN_WIDTH, SCREEN_HEIGHT) )
+	if( !window_l.init(SCREEN_WIDTH, SCREEN_HEIGHT, 50) )
 	{
 		printf( "Failed to initialize!\n" );
 		return 1;

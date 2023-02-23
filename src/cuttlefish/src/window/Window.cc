@@ -9,7 +9,7 @@
 namespace cuttlefish
 {
 
-bool Window::init(int width_l, int height_l)
+bool Window::init(int width_p, int height_p, unsigned long worldSize_p)
 {
 	//Initialization flag
 	bool success = true;
@@ -23,7 +23,7 @@ bool Window::init(int width_l, int height_l)
 	else
 	{
 		//Create window
-		_window = SDL_CreateWindow( "Cuttlefish", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, width_l, height_l, SDL_WINDOW_SHOWN );
+		_window = SDL_CreateWindow( "Cuttlefish", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, width_p, height_p, SDL_WINDOW_SHOWN );
 		if( _window == nullptr )
 		{
 			std::cout<< "Window could not be created! SDL Error: "<< SDL_GetError() <<std::endl;
@@ -31,8 +31,9 @@ bool Window::init(int width_l, int height_l)
 		}
 		else
 		{
-			_width = width_l;
-			_height = height_l;
+			_width = width_p;
+			_height = height_p;
+			_worldSize = worldSize_p;
 			//Create renderer for window
 			_renderer = SDL_CreateRenderer( _window, -1, SDL_RENDERER_ACCELERATED );
 			if( _renderer == nullptr )
@@ -44,7 +45,7 @@ bool Window::init(int width_l, int height_l)
 			{
 				//Initialize renderer color
 				SDL_SetRenderDrawColor( _renderer, 0xFF, 0xFF, 0xFF, 0xFF );
-				SDL_Rect clip_l {0, 0, width_l, height_l};
+				SDL_Rect clip_l {0, 0, width_p, height_p};
 				SDL_RenderSetClipRect(_renderer, &clip_l);
 
 				//Initialize PNG loading
@@ -149,6 +150,16 @@ void Window::deleteTexture(std::string const &path_p)
 		delete _mapTexture[path_p];
 		_mapTexture[path_p] = nullptr;
 	}
+}
+
+void Window::clampCamera(double &x_r, double &y_r)
+{
+	// clamp position
+	octopus::Vector winsize_l {double(_width), double(_height)};
+	octopus::Vector max_l = getPixelVector(_worldSize, _worldSize) - winsize_l;
+
+	x_r = std::max(0., std::min(max_l.x, x_r));
+	y_r = std::max(0., std::min(max_l.y, y_r));
 }
 
 void Window::setCamera(int x, int y)

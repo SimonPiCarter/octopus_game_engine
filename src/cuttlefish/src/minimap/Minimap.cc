@@ -70,7 +70,10 @@ octopus::Vector Minimap::getRatioInside(int x, int y) const
 octopus::Vector getCameraPosition(int x, int y, Minimap const &minimap_p, Window const &window_p, unsigned long worldSize_p)
 {
 	octopus::Vector ratio_l = minimap_p.getRatioInside(x, y);
-	return window_p.getPixelVector(ratio_l.x * worldSize_p - window_p.getWindowSize().x/2, ratio_l.y * worldSize_p - window_p.getWindowSize().y/2);
+
+	octopus::Vector pos_l = window_p.getPixelVector(ratio_l.x * worldSize_p - window_p.getWindowSize().x/2, ratio_l.y * worldSize_p - window_p.getWindowSize().y/2);
+
+	return pos_l;
 }
 
 } // cuttlefish

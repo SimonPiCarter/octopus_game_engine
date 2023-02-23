@@ -23,7 +23,7 @@ class Window
 {
 public:
 	/// @brief initialize window and renderer
-	bool init(int width_l, int height_l);
+	bool init(int width_p, int height_p, unsigned long worldSize_p);
 
 	void close();
 
@@ -38,6 +38,8 @@ public:
 	void deleteTexture(std::string const &path_p);
 
 	SDL_Point const &getCamera() const { return _camera; }
+	/// @brief update given parameters to clamp them into the world
+	void clampCamera(double &x_r, double &y_r);
 	void setCamera(int x, int y);
 
 	void displayFps(bool display_p) { _displayFps = display_p; }
@@ -71,6 +73,7 @@ private:
 
 	int _width {0};
 	int _height {0};
+	unsigned long _worldSize {0};
 
 	// display fps
 	bool _displayFps {false};
