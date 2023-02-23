@@ -26,7 +26,8 @@ State::State() : _id(0), _gridSize(50), _gridPointSize(1), _pathGrid(_gridSize*_
 	}
 }
 
-State::State(unsigned long id_p) : _id(id_p), _gridSize(50), _gridPointSize(1), _pathGrid(_gridSize*_gridPointSize, _gridSize*_gridPointSize, 1., 1.)
+State::State(unsigned long id_p, unsigned long gridSize_p)
+	: _id(id_p), _gridSize(50), _gridPointSize(gridSize_p), _pathGrid(_gridSize*_gridPointSize, _gridSize*_gridPointSize, 1., 1.)
 {
 	_grid.reserve(_gridSize);
 	for(size_t i = 0 ; i < _gridSize ; ++ i)
@@ -153,6 +154,11 @@ std::vector<std::vector<AbstractBitset *> > & State::getGrid()
 unsigned long State::getGridSize() const
 {
 	return _gridSize;
+}
+
+unsigned long State::getWorldSize() const
+{
+	return _gridSize * _gridPointSize;
 }
 
 Grid &State::getPathGrid()

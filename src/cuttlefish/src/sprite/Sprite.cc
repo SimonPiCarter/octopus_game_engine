@@ -54,14 +54,14 @@ void Sprite::update(double elapsedTime_l)
 	}
 }
 
-void Sprite::render(Window &window_p)
+void Sprite::render(Window &window_p, double scaleX_p, double scaleY_p, bool forceAbsolute_p)
 {
 	double ratio_l = _height/_width;
 	SDL_Rect final_l {
-		int(_x - _logicalX * _scale),
-		int(_y - _logicalY * ratio_l * _scale),
-		int(64 * _scale),
-		int(64 * ratio_l * _scale),
+		int(std::floor((_x - _logicalX * _scale) * scaleX_p)),
+		int(std::floor((_y - _logicalY * ratio_l * _scale) * scaleY_p)),
+		int(std::ceil((64. * _scale) * scaleX_p)),
+		int(std::ceil((64. * ratio_l * _scale) * scaleY_p)),
 	};
 
 	SDL_Rect clip_l {
@@ -71,7 +71,7 @@ void Sprite::render(Window &window_p)
 		_height,
 	};
 	SDL_Point const &cam_l = window_p.getCamera();
-	if(_absolute)
+	if(_absolute || forceAbsolute_p)
 	{
 		_texture->render(window_p.getRenderer(), final_l.x, final_l.y, final_l.h, final_l.w, &clip_l);
 	}

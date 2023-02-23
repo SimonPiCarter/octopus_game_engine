@@ -50,7 +50,7 @@ void Tilemap::generate()
 
             _sprites.push_back(_lib.createSprite(0, _idTiles, false));
             _sprites.back()->setState(_tiles[i][j]);
-            _sprites.back()->setPosition(template_l.width*i, template_l.height*j);
+            _sprites.back()->setPosition(template_l.width*template_l.scale*i, template_l.height*template_l.scale*j);
         }
     }
 }
@@ -61,6 +61,14 @@ void Tilemap::render(Window & window_p, double elapsed_p)
     {
         sprite_l->update(elapsed_p);
         sprite_l->render(window_p);
+    }
+}
+
+void Tilemap::renderScaled(Window & window_p, double scaledX_p, double scaledY_p)
+{
+    for(Sprite *sprite_l :_sprites)
+    {
+        sprite_l->render(window_p, scaledX_p, scaledY_p, true);
     }
 }
 

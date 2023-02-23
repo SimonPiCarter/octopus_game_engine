@@ -15,6 +15,7 @@ find_package(SDL2_ttf 2.0.18 REQUIRED)
 add_library(cuttlefish
 	${CMAKE_CURRENT_SOURCE_DIR}/src/clicMode/BuildClicMode.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/clicMode/StandardClicMode.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/src/minimap/Minimap.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/panel/DescPanel.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/panel/DivinityPanel.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/panel/Panel.cc
@@ -23,6 +24,7 @@ add_library(cuttlefish
 	${CMAKE_CURRENT_SOURCE_DIR}/src/text/Text.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/text/SegmentedText.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/text/WrappedText.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/src/texture/RenderTexture.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/texture/Texture.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/tilemap/Tilemap.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/window/Window.cc

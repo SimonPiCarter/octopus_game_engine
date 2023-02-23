@@ -60,6 +60,8 @@ public:
 	/// @brief remove a sprite from all selections
 	void clearSpriteFromSelections(Sprite * sprite_p);
 
+	std::list<Sprite *> const &getListSprite() const;
+
 private:
 	/// @brief sprite of every entity
 	/// content can be nullptr in case of sprite

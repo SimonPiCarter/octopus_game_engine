@@ -23,7 +23,8 @@ class State
 {
 public:
 	State();
-	explicit State(unsigned long id_p);
+	/// @brief create a state with the given id and each grid node with the given size
+	State(unsigned long id_p, unsigned long gridSize_p);
 	~State();
 
 	bool hasEntity(Handle const &handle_p) const;
@@ -65,6 +66,7 @@ public:
 	std::vector<TriggerData *> const &getTriggersData() const { return _triggersData; }
 
 	unsigned long getGridSize() const;
+	unsigned long getWorldSize() const;
 
 	Grid &getPathGrid();
 	Grid const &getPathGrid() const;

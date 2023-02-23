@@ -46,7 +46,9 @@ class Sprite
 
 		/// @brief render sprite with its logical center on (x, y)
 		/// call texture render using a clip based on state and frame
-		void render( Window &window_p );
+		/// @param scale_p allow to scale final position and size
+		/// @param forceAbsolute_p force absolute drawing
+		void render( Window &window_p, double scaleX_p=1., double scaleY_p=1., bool forceAbsolute_p=false );
 
 		/// @brief check if the position in on the sprite
 		bool isInside(Window const &window_p, int x, int y) const;

@@ -19,6 +19,10 @@ Unit::Unit(Vector const &pos_p, bool frozen_p, UnitModel const &model_p)
 
 void Unit::runCommands(Step & step_p, State const &state_p)
 {
+	if(_waiting < 100000)
+	{
+		step_p.addSteppable(new EntityUpdateWaitingStep(_handle, _waiting, _waiting+1));
+	}
 	// if no command and buff we check for target
 	if(!getQueue().hasCurrentCommand() && _unitModel._buffer._active )
 	{
@@ -52,10 +56,6 @@ void Unit::runCommands(Step & step_p, State const &state_p)
 				step_p.addSteppable(new CommandSpawnStep(new EntityAttackCommand(_commandableHandle, _handle, target_l->_handle)));
 			}
 		}
-	}
-	if(_waiting < 100000)
-	{
-		step_p.addSteppable(new EntityUpdateWaitingStep(_handle, _waiting, _waiting+1));
 	}
 	Commandable::runCommands(step_p, state_p);
 }

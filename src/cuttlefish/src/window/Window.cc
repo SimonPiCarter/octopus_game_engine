@@ -23,7 +23,7 @@ bool Window::init(int width_l, int height_l)
 	else
 	{
 		//Create window
-		_window = SDL_CreateWindow( "SDL Tutorial", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, width_l, height_l, SDL_WINDOW_SHOWN );
+		_window = SDL_CreateWindow( "Cuttlefish", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, width_l, height_l, SDL_WINDOW_SHOWN );
 		if( _window == nullptr )
 		{
 			std::cout<< "Window could not be created! SDL Error: "<< SDL_GetError() <<std::endl;
@@ -31,6 +31,8 @@ bool Window::init(int width_l, int height_l)
 		}
 		else
 		{
+			_width = width_l;
+			_height = height_l;
 			//Create renderer for window
 			_renderer = SDL_CreateRenderer( _window, -1, SDL_RENDERER_ACCELERATED );
 			if( _renderer == nullptr )
@@ -159,5 +161,11 @@ octopus::Vector Window::getWorldVector(int x, int y) const
 {
 	return {(x + _camera.x)/32., (y + _camera.y)/32. };
 }
+
+octopus::Vector Window::getWindowSize() const
+{
+	return {_width/32., _height/32.};
+}
+
 
 } // cuttlefish

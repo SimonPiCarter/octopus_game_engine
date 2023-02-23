@@ -43,12 +43,13 @@ bool EntityMoveCommand::applyCommand(Step & step_p, State const &state_p, Comman
 	unsigned long gridStatus_l = state_p.getPathGridStatus();
 	if((gridStatus_l > data_l._gridStatus
 	&& data_l._stepSinceUpdate > 100)
-	|| (data_l._gridStatus == 0 && _init))
+	|| (data_l._gridStatus == 0 && _init && data_l._stepSinceUpdate == 0))
 	{
 		// compute new path
 		std::list<Vector> path_l = computePath(state_p, _source, data_l._finalPoint);
 		step_p.addSteppable(new CommandDataWaypointSetStep(_handleCommand, waypoints_l, path_l));
 		step_p.addSteppable(new CommandMoveUpdateStep(_handleCommand, data_l._stepSinceUpdate, data_l._gridStatus, gridStatus_l));
+		step_p.addSteppable(new CommandMoveStepSinceUpdateIncrementStep(_handleCommand));
 
 		return false;
 	}
