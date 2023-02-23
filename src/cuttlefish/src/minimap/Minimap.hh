@@ -7,6 +7,8 @@
 
 #include "utils/Vector.hh"
 
+struct SDL_Surface;
+
 namespace octopus
 {
 class State;
@@ -26,6 +28,7 @@ class Minimap
 {
 public:
 	Minimap(Window &window_p, int x, int y, int w, int h, Tilemap &tilemap_p, unsigned long worldSize_p, std::vector<std::string> const &vec_p);
+	~Minimap();
 
 	void render(octopus::State const &state_p, World const &world_p, Window &window_p);
 
@@ -49,6 +52,11 @@ private:
 
 	/// @brief a correspondance map between players and texture (for dynamic info)
 	std::vector<std::string> const _vecPlayerToTexture;
+
+	///
+	/// Fog of war
+	///
+	SDL_Surface * _fogSurface {nullptr};
 };
 
 /// @brief get camera position based on the mouse position and the minimap

@@ -1,7 +1,8 @@
 #include <gtest/gtest.h>
 
-#include <step/entity/EntityMoveStep.hh>
-#include <state/State.hh>
+#include "step/entity/EntityMoveStep.hh"
+#include "state/State.hh"
+#include "state/player/Player.hh"
 
 ///
 /// This test suite aims at checking that EntityMoveStep works properly
@@ -14,6 +15,7 @@ using namespace octopus;
 TEST(entityMoveStepTest, simple)
 {
 	State state_l;
+	state_l.getPlayers().push_back(new Player());
 
 	octopus::EntityModel unitModel_l { false, 1., 1., 10. };
 	state_l.addEntity(new Entity { { 3, 3. }, false, unitModel_l});
@@ -37,6 +39,7 @@ TEST(entityMoveStepTest, simple)
 TEST(entityMoveStepTest, simple_two)
 {
 	State state_l;
+	state_l.getPlayers().push_back(new Player());
 
 	octopus::EntityModel unitModel_l { false, 1., 1., 10. };
 	state_l.addEntity(new Entity { { 3, 3. }, false, unitModel_l});

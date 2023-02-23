@@ -1,8 +1,9 @@
 #include <gtest/gtest.h>
 
-#include <step/entity/EntityMoveStep.hh>
-#include <step/entity/spawn/EntitySpawnStep.hh>
-#include <state/State.hh>
+#include "step/entity/EntityMoveStep.hh"
+#include "step/entity/spawn/EntitySpawnStep.hh"
+#include "state/State.hh"
+#include "state/player/Player.hh"
 
 ///
 /// This test suite aims at checking that EntitySpawnStep works properly
@@ -15,6 +16,7 @@ using namespace octopus;
 TEST(entityStepTest, simple)
 {
 	State state_l;
+	state_l.getPlayers().push_back(new Player());
 
 	octopus::EntityModel unitModel_l { false, 1., 1., 10. };
 	EntitySpawnStep step_l(Entity { { 3, 4. }, false, unitModel_l});

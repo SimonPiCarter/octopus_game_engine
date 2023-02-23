@@ -4,6 +4,7 @@
 #include "step/Step.hh"
 #include "step/entity/EntityMoveStep.hh"
 #include "state/State.hh"
+#include "state/player/Player.hh"
 #include "logger/Logger.hh"
 
 using namespace octopus;
@@ -12,6 +13,8 @@ TEST(conflictSolverTest, simple)
 {
 	State state_l;
 	Step step_l;
+
+	state_l.getPlayers().push_back(new Player());
 
 	octopus::EntityModel unitModel_l { false, 1., 1., 10. };
 	octopus::EntityModel buildingModel_l { true, 1., 1., 10. };

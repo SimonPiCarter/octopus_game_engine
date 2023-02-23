@@ -1,12 +1,13 @@
 #include <gtest/gtest.h>
 
-#include <command/CommandData.hh>
-#include <command/entity/EntityMoveCommand.hh>
-#include <command/data/MoveData.hh>
-#include <step/entity/EntityMoveStep.hh>
-#include <step/Step.hh>
-#include <state/State.hh>
-#include <utils/Vector.hh>
+#include "command/CommandData.hh"
+#include "command/entity/EntityMoveCommand.hh"
+#include "command/data/MoveData.hh"
+#include "step/entity/EntityMoveStep.hh"
+#include "state/player/Player.hh"
+#include "step/Step.hh"
+#include "state/State.hh"
+#include "utils/Vector.hh"
 
 ///
 /// This test suite aims at checking that EntityMoveCommand works properly
@@ -24,6 +25,7 @@ using namespace octopus;
 TEST(moveCommandTest, simple)
 {
 	State state_l;
+	state_l.getPlayers().push_back(new Player());
 
 	octopus::EntityModel unitModel_l { false, 0.9, 1., 10. };
 	state_l.addEntity(new Entity { { 3, 3. }, false, unitModel_l});

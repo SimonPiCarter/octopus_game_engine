@@ -155,14 +155,9 @@ int main( int argc, char* args[] )
 		return 1;
 	}
 	window_l.displayFps(true);
-	Texture const * background_l = window_l.loadTexture("resources/wp3386769.jpg");
-	//Load media
-	if( !background_l )
-	{
-		printf( "Failed to load media!\n" );
-		return 1;
-	}
+	Texture const * background_l = window_l.loadTexture("resources/background.png");
 
+	//SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "1");
 	bool quit_l = false;
 	bool paused_l = false;
 
@@ -272,7 +267,7 @@ int main( int argc, char* args[] )
 	Text textResource_l(&window_l, {0,0,0}, 300, 0);
 	Text textDivLvl_l(&window_l, {0,0,0}, 200, 30);
 	Text textDivAnchor_l(&window_l, {0,0,0}, 200, 60);
-	Text textSteps_l(&window_l, {0,0,0}, 750, 0);
+	Text textSteps_l(&window_l, {0,0,0}, 850, 0);
 
 	StandardClicMode standardClicMode_l;
 	ClicMode * currentClicMode_l = &standardClicMode_l;
@@ -485,11 +480,6 @@ int main( int argc, char* args[] )
 		window_l.setCamera(x, y);
 		window_l.clear();
 
-		//Render background texture to screen
-		background_l->render(window_l.getRenderer(), 0, 0, SCREEN_HEIGHT, SCREEN_WIDTH );
-
-
-
 		auto cur_l = std::chrono::steady_clock::now();
 		std::chrono::duration<double> elapsed_seconds_l = cur_l-last_l;
 		elapsed_l = elapsed_seconds_l.count();
@@ -498,6 +488,8 @@ int main( int argc, char* args[] )
 		tilemap_l.render(window_l, elapsed_l);
 
 		world_l.display(window_l, elapsed_l);
+
+		minimap_l.render(state_l, world_l, window_l);
 
 		int mouseX, mouseY;
 		SDL_GetMouseState(&mouseX, &mouseY);
@@ -509,7 +501,7 @@ int main( int argc, char* args[] )
 			descPanel_l.render(window_l);
 		}
 
-		octopus::Player const * player_l = state_l.getPlayer(0);
+		world_l.getSelection().render(window_l);
 
 		divPanel_l.refresh();
 		paused_l = divPanel_l.isActive();
@@ -517,6 +509,14 @@ int main( int argc, char* args[] )
 		{
 			divPanel_l.render(window_l);
 		}
+
+		///
+		/// Debug texts
+		///
+		octopus::Player const * player_l = state_l.getPlayer(0);
+
+		//Render background texture to screen
+		background_l->render(window_l.getRenderer(), 0, 0, 80, SCREEN_WIDTH );
 
 		textResource_l.setText(resourceStr(*player_l));
 		textResource_l.display(window_l);
@@ -529,10 +529,6 @@ int main( int argc, char* args[] )
 		ss_l << stateAndSteps_l._steps.size()<<"/"<<controller_l.getOngoingStep();
 		textSteps_l.setText(ss_l.str());
 		textSteps_l.display(window_l);
-
-		world_l.getSelection().render(window_l);
-
-		minimap_l.render(state_l, world_l, window_l);
 
 		window_l.draw();
 	}

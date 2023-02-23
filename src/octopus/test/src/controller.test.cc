@@ -2,9 +2,10 @@
 
 #include <command/entity/EntityMoveCommand.hh>
 #include <controller/Controller.hh>
+#include <step/command/CommandQueueStep.hh>
 #include <step/entity/EntityMoveStep.hh>
 #include <step/entity/spawn/EntitySpawnStep.hh>
-#include <step/command/CommandQueueStep.hh>
+#include <step/player/PlayerSpawnStep.hh>
 #include <state/State.hh>
 
 ///
@@ -15,7 +16,7 @@
 
 using namespace octopus;
 
-TEST(controlerTest, simple)
+TEST(controllerTest, simple)
 {
 	octopus::EntityModel unitModel_l { false, 1., 1., 10. };
 
@@ -23,7 +24,7 @@ TEST(controlerTest, simple)
 	EntityMoveCommand * command_l = new EntityMoveCommand(0, 0, {4, 4}, 0, { {4, 3}, {4, 4}});
 	CommandSpawnStep * commandSpawn_l = new CommandSpawnStep(command_l);
 
-	Controller controller_l({spawn_l, commandSpawn_l}, 1.);
+	Controller controller_l({new PlayerSpawnStep(0, 0), spawn_l, commandSpawn_l}, 1.);
 
 	State const *a = controller_l.getBackState();
 	State const *b = controller_l.getBufferState();

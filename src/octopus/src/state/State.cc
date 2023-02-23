@@ -13,7 +13,7 @@
 namespace octopus
 {
 
-State::State() : _id(0), _gridSize(50), _gridPointSize(1), _pathGrid(_gridSize*_gridPointSize, _gridSize*_gridPointSize, 1., 1.)
+State::State() : _id(0), _gridSize(50), _gridPointSize(1), _pathGrid(_gridSize*_gridPointSize, _gridSize*_gridPointSize, 1., 1.), _visionHandler(_gridSize*_gridPointSize)
 {
 	_grid.reserve(_gridSize);
 	for(size_t i = 0 ; i < _gridSize ; ++ i)
@@ -27,7 +27,7 @@ State::State() : _id(0), _gridSize(50), _gridPointSize(1), _pathGrid(_gridSize*_
 }
 
 State::State(unsigned long id_p, unsigned long gridSize_p)
-	: _id(id_p), _gridSize(50), _gridPointSize(gridSize_p), _pathGrid(_gridSize*_gridPointSize, _gridSize*_gridPointSize, 1., 1.)
+	: _id(id_p), _gridSize(50), _gridPointSize(gridSize_p), _pathGrid(_gridSize*_gridPointSize, _gridSize*_gridPointSize, 1., 1.), _visionHandler(_gridSize*_gridPointSize)
 {
 	_grid.reserve(_gridSize);
 	for(size_t i = 0 ; i < _gridSize ; ++ i)
@@ -457,6 +457,13 @@ void updateGrid(State &state_p, Entity const *ent_p, bool set_p)
 			}
 		}
 	}
+
+	state_p.getVisionHandler().updateVision(state_p, *ent_p, set_p);
+}
+
+void updateExplorationGrid(State &state_p, Entity const *ent_p, bool set_p)
+{
+	state_p.getVisionHandler().updateExploration(state_p, *ent_p, set_p);
 }
 
 bool checkGrid(State const &state_p, Entity const *ent_p, bool ignoreAbandonedTemples_p)

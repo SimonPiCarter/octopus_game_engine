@@ -48,6 +48,9 @@ namespace octopus
 		/// @brief requirements
 		Requirements _requirements;
 
+		/// @brief distance of line of sight
+		double _lineOfSight { 5 };
+
 		/// @brief id to be set up when library loads a model
 		std::string _id;
 	};
