@@ -489,6 +489,8 @@ int main( int argc, char* args[] )
 
 		world_l.display(window_l, elapsed_l);
 
+		world_l.getSelection().render(window_l);
+
 		minimap_l.render(state_l, world_l, window_l);
 
 		int mouseX, mouseY;
@@ -500,8 +502,6 @@ int main( int argc, char* args[] )
 		{
 			descPanel_l.render(window_l);
 		}
-
-		world_l.getSelection().render(window_l);
 
 		divPanel_l.refresh();
 		paused_l = divPanel_l.isActive();
