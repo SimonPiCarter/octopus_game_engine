@@ -58,7 +58,7 @@ public:
 	void useSelection(unsigned long idx_p);
 
 	/// @brief remove a sprite from all selections
-	void clearSpriteFromSelections(Sprite * sprite_p);
+	void clearSpriteFromSelections(Sprite * sprite_p, octopus::State const &state_p);
 
 	std::list<Sprite *> const &getListSprite() const;
 

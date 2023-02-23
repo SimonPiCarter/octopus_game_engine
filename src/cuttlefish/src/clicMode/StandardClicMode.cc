@@ -61,22 +61,22 @@ bool StandardClicMode::handleMouseUp(SDL_Event const & e, Selection &selection_p
 
 			if(add_l)
 			{
-				addToSelection(selection_p, newSelection_l);
+				addToSelection(selection_p, newSelection_l, state_p);
 			}
 			else
 			{
-				replaceSelection(selection_p, newSelection_l);
+				replaceSelection(selection_p, newSelection_l, state_p);
 			}
 		}
 		else if(sprite_l)
 		{
 			if(add_l)
 			{
-				addToSelection(selection_p, {sprite_l});
+				addToSelection(selection_p, {sprite_l}, state_p);
 			}
 			else
 			{
-				replaceSelection(selection_p, {sprite_l});
+				replaceSelection(selection_p, {sprite_l}, state_p);
 			}
 		}
 		else
