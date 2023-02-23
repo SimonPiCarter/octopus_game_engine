@@ -1,10 +1,12 @@
-#ifndef __Panel__
-#define __Panel__
+#ifndef __StatsPanel__
+#define __StatsPanel__
 
 #include <list>
 #include <map>
+#include "Panel.hh"
 #include "sprite/Sprite.hh"
 #include "text/SegmentedText.hh"
+#include "world/Selection.hh"
 
 namespace octopus
 {
@@ -20,33 +22,20 @@ namespace cuttlefish
 class Texture;
 class Window;
 
-struct SpriteInfo
-{
-	int state {0};
-	int frame {0};
-};
-
-struct SpriteModel
-{
-	Sprite * sprite {nullptr};
-	octopus::UnitModel const * unitModel {nullptr};
-	octopus::BuildingModel const * buildingModel {nullptr};
-};
-
-/// @brief this class represent a Panel
-/// displaying the options for the building
-/// or unit
-/// Display a background and an image for each model
-class Panel
+/// @brief this class represent a StatsPanel
+/// It can display either
+/// stats when only one entity is selected
+/// selection when multiple entities are selected
+class StatsPanel
 {
 public:
-	Panel(Window* window_p, int x, int y, Texture const * background_p, Texture const *icons_p, int iconsPerLine_p);
-	~Panel();
+	StatsPanel(Window* window_p, int x, int y, Texture const * background_p, Texture const *icons_p, int iconsPerLine_p, Selection & selection_p);
+	~StatsPanel();
 
-	/// @brief refresh Panel if necessary
-	void refresh(Sprite const *selected_p, octopus::State const &state_p);
+	/// @brief refresh StatsPanel if necessary
+	void refresh(Window &window_p, octopus::State const &state_p);
 
-	/// @brief display panel
+	/// @brief display StatsPanel
 	void render(Window &window_p);
 
 	/// @brief add a sprite info for a given model
@@ -62,10 +51,16 @@ public:
 
 	Sprite const * getBackground() const { return _background; }
 protected:
-	/// @brief last selection
-	octopus::Entity const * _lastSelection {nullptr};
+	/// @brief selection
+	Selection & _selection;
+	/// @brief mono selection (only non null if mono selection)
+	octopus::Entity const * _monoSelection {nullptr};
+	/// @brief key of last selection for fast compare
+	SelectionKey _lastKey;
+
 	/// @brief sprites
 	std::list<SpriteModel> _sprites;
+	std::list<Text> _texts;
 	/// @brief sprite models used for grid coordinate access
 	std::map<std::pair<int, int>, SpriteModel *> _grid;
 
@@ -80,6 +75,10 @@ protected:
 	int _x;
 	int _y;
 	int const _iconsPerLine;
+
+	SegmentedText _textStats;
+	SegmentedText _textQtyRes;
+	SegmentedText _textResources;
 };
 } // namespace octopus
 

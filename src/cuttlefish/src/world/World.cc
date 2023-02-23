@@ -96,7 +96,7 @@ std::list<Sprite *> World::getSprites(Window const &window_p, int lx, int ly, in
 
 void World::addSelection(unsigned long idx_p)
 {
-	_selections[idx_p]._sprites.insert(_selections[idx_p]._sprites.end(), _selection._sprites.begin(), _selection._sprites.end());
+	addToSelection(_selections[idx_p], _selection);
 }
 
 void World::registerSelection(unsigned long idx_p)

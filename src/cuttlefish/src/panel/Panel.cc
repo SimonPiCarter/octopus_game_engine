@@ -13,24 +13,10 @@ namespace cuttlefish
 {
 
 Panel::Panel(Window* window_p, int x, int y, Texture const * background_p, Texture const *icons_p, int iconsPerLine_p) :
-	_x(x), _y(y), _icons(icons_p), _iconsPerLine(iconsPerLine_p), _textStats(window_p, x, y+120), _textQtyRes(window_p, x, y+185), _textResources(window_p, x, y+120)
+	_x(x), _y(y), _icons(icons_p), _iconsPerLine(iconsPerLine_p)
 {
 	_background = new Sprite(0, background_p, 260./64., 0, 0, 400, 400, {1}, {1}, true);
 	_background->setPosition(x, y);
-	_textStats.addText("hp", "hp : ", {0, 0, 0}, false);
-	_textStats.addText("hp_val", "", {0, 155, 0}, true);
-	_textStats.addText("dmg", "dmg : ", {0, 0, 0}, false);
-	_textStats.addText("dmg_val", "", {155, 0, 0}, true);
-	_textStats.addText("armor", "armor : ", {0, 0, 0}, false);
-	_textStats.addText("armor_val", "", {0, 0, 155}, true);
-
-	_textQtyRes.addText("res_type", "",{0, 0, 0}, false);
-	_textQtyRes.addText("spacer", " : ",{0, 0, 0}, false);
-	_textQtyRes.addText("qty_val", "",{0, 0, 0}, false);
-
-	_textResources.addText("res_type", "", {0, 0, 0}, true);
-	_textResources.addText("qty", "quantity : ", {0, 0, 0}, false);
-	_textResources.addText("qty_val", "", {0, 0, 0}, true);
 }
 
 Panel::~Panel()
@@ -126,53 +112,6 @@ void Panel::render(Window &window_p)
 	for(SpriteModel const & sprite_l : _sprites)
 	{
 		sprite_l.sprite->render(window_p);
-	}
-
-	if(_lastSelection)
-	{
-		if (_lastSelection->_model._isUnit || _lastSelection->_model._isBuilding)
-		{
-			std::stringstream ss_l;
-			ss_l<<_lastSelection->_hp<<"/"<<_lastSelection->_model._hpMax;
-			_textStats.updateText("hp_val", ss_l.str());
-
-			ss_l.str("");
-			ss_l<<_lastSelection->getDamage();
-			_textStats.updateText("dmg_val", ss_l.str());
-
-			ss_l.str("");
-			ss_l<<_lastSelection->getArmor();
-			_textStats.updateText("armor_val", ss_l.str());
-
-			// display stats on selection
-			_textStats.display(window_p);
-
-			if(_lastSelection->_model._isUnit)
-			{
-				octopus::Unit const *unit_l = static_cast<octopus::Unit const *>(_lastSelection);
-				if(unit_l->_quantityOfResource > 1e-5)
-				{
-					std::stringstream ss_l;
-					ss_l<<std::abs(std::ceil(unit_l->_quantityOfResource-1e-5));
-					_textQtyRes.updateText("qty_val", ss_l.str());
-					_textQtyRes.updateText("res_type", to_string(unit_l->_typeOfResource));
-					_textQtyRes.display(window_p);
-				}
-			}
-
-		}
-		else if (_lastSelection->_model._isResource)
-		{
-			octopus::Resource const * resource_l = dynamic_cast<octopus::Resource const *>(_lastSelection);
-			std::stringstream ss_l;
-			ss_l<<std::abs(std::ceil(resource_l->_resource-1e-5));
-			_textResources.updateText("qty_val", ss_l.str());
-
-			_textResources.updateText("res_type", to_string(resource_l->_type));
-
-			// display stats on selection
-			_textResources.display(window_p);
-		}
 	}
 }
 
