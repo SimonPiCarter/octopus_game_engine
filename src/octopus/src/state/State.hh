@@ -7,6 +7,8 @@
 #include "graph/Grid.hh"
 #include "utils/DynamicBitset.hh"
 
+#include "vision/VisionHandler.hh"
+
 namespace octopus
 {
 class Commandable;
@@ -84,6 +86,9 @@ public:
 	std::list<Vector> &getTemplePosition() { return _templePosition; }
 	const std::list<Vector> &getTemplePosition() const { return _templePosition; }
 
+	VisionHandler &getVisionHandler() { return _visionHandler; }
+	const VisionHandler &getVisionHandler() const { return _visionHandler; }
+
 	unsigned long const _id;
 private:
 	State(State const &state_p) = delete;
@@ -115,6 +120,8 @@ private:
 	Grid _pathGrid;
 	/// @brief used to know if grid has changed
 	unsigned long _pathGridStatus {0};
+
+	VisionHandler _visionHandler;
 };
 
 Entity const * lookUpNewBuffTarget(State const &state_p, Handle const &sourceHandle_p, double range_p, TyppedBuff const &buff_p);
