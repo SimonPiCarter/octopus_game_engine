@@ -41,6 +41,8 @@ private:
 	int const _w;
 	int const _h;
 
+	/// @brief cadre around the minimap
+	Texture const * _cadre;
 
 	/// @brief the texture of the background (rendered once)
 	RenderTexture _background;

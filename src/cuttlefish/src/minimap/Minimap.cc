@@ -16,6 +16,8 @@ Minimap::Minimap(Window &window_p, int x, int y, int w, int h,
 				Tilemap &tilemap_p, unsigned long worldSize_p, std::vector<std::string> const &map_p)
 	: _x(x), _y(y), _w(w), _h(h), _vecPlayerToTexture(map_p)
 {
+	_cadre = window_p.loadTexture("resources/background.png");
+
 	int resolution_l = 1024;
 	_background.createBlank(resolution_l, resolution_l, window_p.getRenderer());
 
@@ -28,6 +30,7 @@ Minimap::Minimap(Window &window_p, int x, int y, int w, int h,
 
 void Minimap::render(octopus::State const &state_p, World const &world_p, Window &window_p)
 {
+	_cadre->render(window_p.getRenderer(), _x-2, _y-2, _w+4, _h+4, nullptr);
 	_background.render(window_p.getRenderer(), _x, _y, _w, _h, nullptr);
 
 	for(Sprite const *sprite_l : world_p.getListSprite())
