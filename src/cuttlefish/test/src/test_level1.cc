@@ -155,14 +155,9 @@ int main( int argc, char* args[] )
 		return 1;
 	}
 	window_l.displayFps(true);
-	Texture const * background_l = window_l.loadTexture("resources/wp3386769.jpg");
-	//Load media
-	if( !background_l )
-	{
-		printf( "Failed to load media!\n" );
-		return 1;
-	}
+	Texture const * background_l = window_l.loadTexture("resources/background.png");
 
+	//SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "1");
 	bool quit_l = false;
 	bool paused_l = false;
 
@@ -485,11 +480,6 @@ int main( int argc, char* args[] )
 		window_l.setCamera(x, y);
 		window_l.clear();
 
-		//Render background texture to screen
-		background_l->render(window_l.getRenderer(), 0, 0, SCREEN_HEIGHT, SCREEN_WIDTH );
-
-
-
 		auto cur_l = std::chrono::steady_clock::now();
 		std::chrono::duration<double> elapsed_seconds_l = cur_l-last_l;
 		elapsed_l = elapsed_seconds_l.count();
@@ -524,6 +514,9 @@ int main( int argc, char* args[] )
 		/// Debug texts
 		///
 		octopus::Player const * player_l = state_l.getPlayer(0);
+
+		//Render background texture to screen
+		background_l->render(window_l.getRenderer(), 0, 0, 80, SCREEN_WIDTH );
 
 		textResource_l.setText(resourceStr(*player_l));
 		textResource_l.display(window_l);
