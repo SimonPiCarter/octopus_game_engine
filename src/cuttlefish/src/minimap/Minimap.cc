@@ -26,10 +26,38 @@ Minimap::Minimap(Window &window_p, int x, int y, int w, int h,
 	tilemap_p.renderScaled(window_p, resolution_l/(worldSize_p*32.), resolution_l/(worldSize_p*32.));
 
 	_background.stopRendering(window_p.getRenderer());
+
+	_fogSurface = SDL_CreateRGBSurfaceWithFormat(0, worldSize_p, worldSize_p, 32, SDL_PIXELFORMAT_RGBA8888);
+}
+
+Minimap::~Minimap()
+{
+	SDL_FreeSurface(_fogSurface);
 }
 
 void Minimap::render(octopus::State const &state_p, World const &world_p, Window &window_p)
 {
+
+	// fog rendering
+	SDL_LockSurface(_fogSurface);
+	Uint32 *pixels = (Uint32 *)_fogSurface->pixels;
+	for(unsigned long i = 0; i < state_p.getWorldSize(); ++i)
+	{
+		for(unsigned long j = 0; j < state_p.getWorldSize(); ++j)
+		{
+			Uint8 alpha_l = state_p.getVisionHandler().isVisible(0, i, j)?0:120;
+			if(!state_p.getVisionHandler().isExplored(0, i, j))
+			{
+				alpha_l = 255;
+			}
+			pixels[j * state_p.getWorldSize() + i] = SDL_MapRGBA(_fogSurface->format, 0, 0, 0, alpha_l);
+		}
+	}
+
+	SDL_UnlockSurface(_fogSurface);
+
+	SDL_Texture * fog_l = SDL_CreateTextureFromSurface(window_p.getRenderer(), _fogSurface);
+
 	_cadre->render(window_p.getRenderer(), _x-2, _y-2, _w+4, _h+4, nullptr);
 	_background.render(window_p.getRenderer(), _x, _y, _w, _h, nullptr);
 
@@ -45,6 +73,15 @@ void Minimap::render(octopus::State const &state_p, World const &world_p, Window
 
 		window_p.loadTexture(_vecPlayerToTexture.at(ent_l->_player))->render(window_p.getRenderer(), x_l, y_l, w_l, h_l, nullptr);
 	}
+
+
+	//Render texture to screen
+	SDL_Rect rect_l {_x, _y, _w, _h};
+	SDL_RenderCopy( window_p.getRenderer(), fog_l, NULL, &rect_l );
+
+	SDL_DestroyTexture( fog_l );
+
+	// camera rendering
 	SDL_Rect cam_l;
 	cam_l.x = _x + window_p.getWorldVector(0, 0).x*_w/state_p.getWorldSize();
 	cam_l.y = _y + window_p.getWorldVector(0, 0).y*_h/state_p.getWorldSize();

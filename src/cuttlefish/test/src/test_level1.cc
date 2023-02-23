@@ -272,7 +272,7 @@ int main( int argc, char* args[] )
 	Text textResource_l(&window_l, {0,0,0}, 300, 0);
 	Text textDivLvl_l(&window_l, {0,0,0}, 200, 30);
 	Text textDivAnchor_l(&window_l, {0,0,0}, 200, 60);
-	Text textSteps_l(&window_l, {0,0,0}, 750, 0);
+	Text textSteps_l(&window_l, {0,0,0}, 850, 0);
 
 	StandardClicMode standardClicMode_l;
 	ClicMode * currentClicMode_l = &standardClicMode_l;
@@ -499,6 +499,8 @@ int main( int argc, char* args[] )
 
 		world_l.display(window_l, elapsed_l);
 
+		minimap_l.render(state_l, world_l, window_l);
+
 		int mouseX, mouseY;
 		SDL_GetMouseState(&mouseX, &mouseY);
 		currentClicMode_l->display(window_l, elapsed_l, mouseX, mouseY);
@@ -509,7 +511,7 @@ int main( int argc, char* args[] )
 			descPanel_l.render(window_l);
 		}
 
-		octopus::Player const * player_l = state_l.getPlayer(0);
+		world_l.getSelection().render(window_l);
 
 		divPanel_l.refresh();
 		paused_l = divPanel_l.isActive();
@@ -517,6 +519,11 @@ int main( int argc, char* args[] )
 		{
 			divPanel_l.render(window_l);
 		}
+
+		///
+		/// Debug texts
+		///
+		octopus::Player const * player_l = state_l.getPlayer(0);
 
 		textResource_l.setText(resourceStr(*player_l));
 		textResource_l.display(window_l);
@@ -529,10 +536,6 @@ int main( int argc, char* args[] )
 		ss_l << stateAndSteps_l._steps.size()<<"/"<<controller_l.getOngoingStep();
 		textSteps_l.setText(ss_l.str());
 		textSteps_l.display(window_l);
-
-		world_l.getSelection().render(window_l);
-
-		minimap_l.render(state_l, world_l, window_l);
 
 		window_l.draw();
 	}
