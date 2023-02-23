@@ -58,6 +58,20 @@ void Minimap::render(octopus::State const &state_p, World const &world_p, Window
 
 	SDL_Texture * fog_l = SDL_CreateTextureFromSurface(window_p.getRenderer(), _fogSurface);
 
+	// display fog in game
+	SDL_Rect cutFog_l;
+	cutFog_l.x = std::floor(window_p.getWorldVector(0, 0).x);
+	cutFog_l.y = std::floor(window_p.getWorldVector(0, 0).y);
+	cutFog_l.w = std::ceil(window_p.getWindowSize().x+1.);
+	cutFog_l.h = std::ceil(window_p.getWindowSize().y+1.);
+	SDL_Rect posFog_l;
+	posFog_l.x = window_p.getPixelVector(cutFog_l.x - window_p.getWorldVector(0, 0).x, cutFog_l.y - window_p.getWorldVector(0, 0).y).x;
+	posFog_l.y = window_p.getPixelVector(cutFog_l.x - window_p.getWorldVector(0, 0).x, cutFog_l.y - window_p.getWorldVector(0, 0).y).y;
+	posFog_l.w = window_p.getPixelVector(cutFog_l.w, cutFog_l.h).x;
+	posFog_l.h = window_p.getPixelVector(cutFog_l.w, cutFog_l.h).y;
+
+	SDL_RenderCopy( window_p.getRenderer(), fog_l, &cutFog_l, &posFog_l );
+
 	_cadre->render(window_p.getRenderer(), _x-2, _y-2, _w+4, _h+4, nullptr);
 	_background.render(window_p.getRenderer(), _x, _y, _w, _h, nullptr);
 
