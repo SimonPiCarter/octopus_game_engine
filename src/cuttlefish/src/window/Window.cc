@@ -162,6 +162,11 @@ octopus::Vector Window::getWorldVector(int x, int y) const
 	return {(x + _camera.x)/32., (y + _camera.y)/32. };
 }
 
+octopus::Vector Window::getPixelVector(double x, double y) const
+{
+	return { x * 32, y * 32 };
+}
+
 octopus::Vector Window::getWindowSize() const
 {
 	return {_width/32., _height/32.};

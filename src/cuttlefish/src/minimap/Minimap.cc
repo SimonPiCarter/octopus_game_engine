@@ -8,13 +8,13 @@
 
 #include "state/State.hh"
 #include "state/entity/Entity.hh"
-#include "state/player/Player.hh"
 
 namespace cuttlefish
 {
 
-Minimap::Minimap(Window &window_p, int x, int y, int w, int h, Tilemap &tilemap_p, unsigned long worldSize_p, std::vector<std::string> const &map_p)
-	: _x(x), _y(y), _w(w), _h(h), _vecTeamToTexture(map_p)
+Minimap::Minimap(Window &window_p, int x, int y, int w, int h,
+				Tilemap &tilemap_p, unsigned long worldSize_p, std::vector<std::string> const &map_p)
+	: _x(x), _y(y), _w(w), _h(h), _vecPlayerToTexture(map_p)
 {
 	int resolution_l = 1024;
 	_background.createBlank(resolution_l, resolution_l, window_p.getRenderer());
@@ -33,7 +33,6 @@ void Minimap::render(octopus::State const &state_p, World const &world_p, Window
 	for(Sprite const *sprite_l : world_p.getListSprite())
 	{
 		octopus::Entity const *ent_l = state_p.getEntity(sprite_l->getHandle());
-		octopus::Player const *player_l = state_p.getPlayer(ent_l->_player);
 
 		double x_l = _x + ent_l->_pos.x*_w/state_p.getWorldSize();
 		double y_l = _y + ent_l->_pos.y*_h/state_p.getWorldSize();
@@ -41,7 +40,7 @@ void Minimap::render(octopus::State const &state_p, World const &world_p, Window
 		double w_l = std::max(1., ent_l->_model._ray*_w/state_p.getWorldSize());
 		double h_l = std::max(1., ent_l->_model._ray*_h/state_p.getWorldSize());
 
-		window_p.loadTexture(_vecTeamToTexture.at(player_l->_team))->render(window_p.getRenderer(), x_l, y_l, w_l, h_l, nullptr);
+		window_p.loadTexture(_vecPlayerToTexture.at(ent_l->_player))->render(window_p.getRenderer(), x_l, y_l, w_l, h_l, nullptr);
 	}
 	SDL_Rect cam_l;
 	cam_l.x = _x + window_p.getWorldVector(0, 0).x*_w/state_p.getWorldSize();
@@ -50,6 +49,25 @@ void Minimap::render(octopus::State const &state_p, World const &world_p, Window
 	cam_l.h = window_p.getWindowSize().y*_h/state_p.getWorldSize();
 	SDL_SetRenderDrawColor(window_p.getRenderer(), 255, 255, 255, 255);
 	SDL_RenderDrawRect(window_p.getRenderer(), &cam_l);
+}
+
+bool Minimap::isInside(int x, int y) const
+{
+	return x >= _x
+		&& y >= _y
+		&& x <= _x+_w
+		&& y <= _y+_h;
+}
+
+octopus::Vector Minimap::getRatioInside(int x, int y) const
+{
+	return { (x - _x) / double(_w), (y -_y) / double(_h) };
+}
+
+octopus::Vector getCameraPosition(int x, int y, Minimap const &minimap_p, Window const &window_p, unsigned long worldSize_p)
+{
+	octopus::Vector ratio_l = minimap_p.getRatioInside(x, y);
+	return window_p.getPixelVector(ratio_l.x * worldSize_p - window_p.getWindowSize().x/2, ratio_l.y * worldSize_p - window_p.getWindowSize().y/2);
 }
 
 } // cuttlefish

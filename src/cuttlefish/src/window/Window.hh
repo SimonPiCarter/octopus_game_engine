@@ -48,6 +48,10 @@ public:
 	/// and the camera position
 	octopus::Vector getWorldVector(int x, int y) const;
 
+	/// @return pixel position based on a given world position
+	/// @note works in absolute coordinate
+	octopus::Vector getPixelVector(double x, double y) const;
+
 	/// @brief get the window size in world unit
 	octopus::Vector getWindowSize() const;
 

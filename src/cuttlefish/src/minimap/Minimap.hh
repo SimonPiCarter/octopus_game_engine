@@ -2,7 +2,10 @@
 #define __minimap__
 
 #include <vector>
+#include "texture/Texture.hh"
 #include "texture/RenderTexture.hh"
+
+#include "utils/Vector.hh"
 
 namespace octopus
 {
@@ -26,18 +29,28 @@ public:
 
 	void render(octopus::State const &state_p, World const &world_p, Window &window_p);
 
+	/// @brief check if the coordinate is inside the minimap
+	bool isInside(int x, int y) const;
+
+	/// @brief return the ratio position inside the minimap
+	octopus::Vector getRatioInside(int x, int y) const;
+
 private:
 	int const _x;
 	int const _y;
 	int const _w;
 	int const _h;
 
+
 	/// @brief the texture of the background (rendered once)
 	RenderTexture _background;
 
-	/// @brief a correspondance map between teams and texture (for dynamic info)
-	std::vector<std::string> const _vecTeamToTexture;
+	/// @brief a correspondance map between players and texture (for dynamic info)
+	std::vector<std::string> const _vecPlayerToTexture;
 };
+
+/// @brief get camera position based on the mouse position and the minimap
+octopus::Vector getCameraPosition(int x, int y, Minimap const &minimap_p, Window const &window_p, unsigned long worldSize_p);
 
 } // namespace cuttlefish
 
