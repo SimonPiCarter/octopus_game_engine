@@ -137,7 +137,13 @@ Entity const * lookUpNewResource(State const &state_p, Handle const &sourceHandl
 /// @return true iif player has enough resource
 bool checkResource(State const &state_p, unsigned long player_p, std::map<ResourceType, double> const & cost_p, std::map<ResourceType, double> const & spent_p);
 
+/// @brief update positional and current vision grid info based on the entity and the set parameter
 void updateGrid(State &state_p, Entity const *ent_p, bool set_p);
+
+/// @brief update the global vision grid based on the entity and the set parameter
+/// the global vision is used to know wether a node has been explored at this point
+/// it is like the current vision but not reset when moving or dying
+void updateExplorationGrid(State &state_p, Entity const *ent_p, bool set_p);
 
 /// @brief check if the grid elements corresponding to the entity
 /// are free

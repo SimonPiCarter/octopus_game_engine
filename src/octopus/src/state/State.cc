@@ -461,6 +461,11 @@ void updateGrid(State &state_p, Entity const *ent_p, bool set_p)
 	state_p.getVisionHandler().updateVision(state_p, *ent_p, set_p);
 }
 
+void updateExplorationGrid(State &state_p, Entity const *ent_p, bool set_p)
+{
+	state_p.getVisionHandler().updateExploration(state_p, *ent_p, set_p);
+}
+
 bool checkGrid(State const &state_p, Entity const *ent_p, bool ignoreAbandonedTemples_p)
 {
 	long size_l = state_p.getGridSize();

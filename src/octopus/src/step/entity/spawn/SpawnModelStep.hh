@@ -48,6 +48,7 @@ public:
 		if(ent_l->_alive)
 		{
 			updateGrid(state_p, ent_l, true);
+			updateExplorationGrid(state_p, ent_l, true);
 		}
 	}
 	virtual void revert(State &state_p) const override
@@ -56,6 +57,7 @@ public:
 		Entity * ent_l = state_p.getEntity(this->_handle);
 		if(ent_l->_alive)
 		{
+			updateExplorationGrid(state_p, ent_l, false);
 			updateGrid(state_p, ent_l, false);
 		}
 		ent_l->_alive = false;

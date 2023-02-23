@@ -14,6 +14,7 @@ void EntityMoveStep::apply(State &state_p) const
 	updateGrid(state_p, ent_l, false);
 	ent_l->_pos += this->_move;
 	updateGrid(state_p, ent_l, true);
+	updateExplorationGrid(state_p, ent_l, true);
 
 }
 
@@ -22,6 +23,7 @@ void EntityMoveStep::revert(State &state_p) const
 	Entity * ent_l = state_p.getEntity(this->_handle);
 	Logger::getDebug() << "EntityMoveStep :: " << this->_handle << " " << ent_l->_pos << " - "<<this->_move<<std::endl;
 
+	updateExplorationGrid(state_p, ent_l, false);
 	updateGrid(state_p, ent_l, false);
 	ent_l->_pos -= this->_move;
 	updateGrid(state_p, ent_l, true);
