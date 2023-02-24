@@ -21,7 +21,9 @@
 #include "step/player/PlayerSpendResourceStep.hh"
 #include "step/player/PlayerAddOptionDivinityStep.hh"
 #include "step/trigger/TriggerSpawn.hh"
+#include "step/state/StateDrawStep.hh"
 #include "step/state/StateTemplePositionAddStep.hh"
+#include "step/state/StateWinStep.hh"
 
 #include "library/LibraryFillers.hh"
 
@@ -93,6 +95,30 @@ private:
 	mutable std::mt19937 _gen;
 };
 
+class Case5WinTrigger : public OneShotTrigger
+{
+public:
+	Case5WinTrigger(Listener * listener_p, unsigned long team_p) : OneShotTrigger({listener_p}), _team(team_p) {}
+
+	virtual void trigger(State const &state_p, Step &step_p, unsigned long) const override
+	{
+		step_p.addSteppable(new StateWinStep(state_p.isOver(), state_p.hasWinningTeam(), state_p.getWinningTeam(), _team));
+	}
+private:
+	unsigned long const _team;
+};
+
+class Case5DrawTrigger : public OneShotTrigger
+{
+public:
+	Case5DrawTrigger(Listener * listener_p) : OneShotTrigger({listener_p}) {}
+
+	virtual void trigger(State const &state_p, Step &step_p, unsigned long) const override
+	{
+		step_p.addSteppable(new StateDrawStep(state_p.isOver(), state_p.hasWinningTeam()));
+	}
+};
+
 std::list<Steppable *> Case5(Library &lib_p)
 {
 	createResource(lib_p);
@@ -140,6 +166,9 @@ std::list<Steppable *> Case5(Library &lib_p)
 	mapRes_l[octopus::ResourceType::Steel] = -1000;
 
 	Trigger * divTrigger_l = new Case5DivinitiesOptionTrigger(new ListenerEntityModelFinished(&lib_p.getBuildingModel("temple"), 0), 0);
+	Trigger * winTrigger_l = new Case5WinTrigger(new ListenerEntityModelFinished(&lib_p.getBuildingModel("temple"), 0), 0);
+	Trigger * loseTrigger_l = new Case5WinTrigger(new ListenerEntityModelFinished(&lib_p.getBuildingModel("ether_deposit"), 0), 1);
+	Trigger * drawTrigger_l = new Case5DrawTrigger(new ListenerEntityModelFinished(&lib_p.getBuildingModel("deposit"), 0));
 
 	std::list<Steppable *> spawners_l =
 	{
@@ -166,6 +195,9 @@ std::list<Steppable *> Case5(Library &lib_p)
 		new UnitSpawnStep(unit_l),
 		new UnitSpawnStep(unit_l),
 		new TriggerSpawn(divTrigger_l),
+		new TriggerSpawn(winTrigger_l),
+		new TriggerSpawn(loseTrigger_l),
+		new TriggerSpawn(drawTrigger_l),
 		new BuildingSpawnStep(abandonnedTemple_l, true),
 		new StateTemplePositionAddStep(Vector {23,20})
 	};

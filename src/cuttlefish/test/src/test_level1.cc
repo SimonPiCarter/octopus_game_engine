@@ -312,6 +312,9 @@ int main( int argc, char* args[] )
 
 	auto last_l = std::chrono::steady_clock::now();
 	double elapsed_l = 0.;
+
+	bool draw_l = false;
+	unsigned long winningTeam_l = 0;
 	//Event handler
 	SDL_Event e;
 	//While application is running
@@ -321,6 +324,14 @@ int main( int argc, char* args[] )
 		octopus::StateAndSteps stateAndSteps_l = controller_l.queryStateAndSteps();
 		octopus::State const &state_l = *stateAndSteps_l._state;
 		world_l.handleStep(window_l, panel_l, divPanel_l, stateAndSteps_l, spriteLib_l);
+
+		// quit loop if state is over
+		if(state_l.isOver())
+		{
+			draw_l = !state_l.hasWinningTeam();
+			winningTeam_l = state_l.getWinningTeam();
+			quit_l = true;
+		}
 
 		//Handle events on queue
 		while( SDL_PollEvent( &e ) != 0 )
@@ -569,6 +580,19 @@ int main( int argc, char* args[] )
 		textSteps_l.display(window_l);
 
 		window_l.draw();
+	}
+
+	if(draw_l)
+	{
+		std::cout<<"ended in a draw"<<std::endl;
+	}
+	else if (winningTeam_l == 0)
+	{
+		std::cout<<"won"<<std::endl;
+	}
+	else
+	{
+		std::cout<<"lost"<<std::endl;
 	}
 
 	controllerThread_l.join();
