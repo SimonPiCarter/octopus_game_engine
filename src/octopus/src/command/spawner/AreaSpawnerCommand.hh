@@ -16,15 +16,15 @@ struct EntityModel;
 struct AreaSpawn
 {
 	/// @brief left position of the area in the world
-	unsigned long x;
+	unsigned long x{ 0 };
 	/// @brief top position of the area in the world
-	unsigned long y;
+	unsigned long y{ 0 };
 	/// @brief width and height of the area in the world
-	unsigned long size;
+	unsigned long size{ 1 };
 	/// @brief the list of model to spawn in the area
 	std::list<std::pair<EntityModel *, unsigned long> > models;
 	/// @brief the player id for units and buildings
-	unsigned long player;
+	unsigned long player{ 0 };
 };
 
 /// @brief This command will spawn models randomly in the given areas
