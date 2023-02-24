@@ -43,6 +43,8 @@ target_sources (unit_tests
 	src/queueCommand.test.cc
 	src/resourceSpentSimultaneous.test.cc
 	src/spawningGrid.test.cc
+	src/stateDrawStep.test.cc
+	src/stateWinStep.test.cc
 	src/triggerBuilding.test.cc
 	src/triggerTime.test.cc
 	src/triggerUnitSpawn.test.cc
