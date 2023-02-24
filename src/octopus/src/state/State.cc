@@ -530,4 +530,34 @@ std::list<Vector> computePath(State const & state_p, Handle const &handle_p, Vec
 	return waypoints_l;
 }
 
+void State::setIsOver(bool over_p)
+{
+	_isOver = over_p;
 }
+
+void State::setHasWinner(bool hasWinner_p)
+{
+	_hasWinner = hasWinner_p;
+}
+
+void State::setWinningTeam(unsigned long team_p)
+{
+	_winningTeam = team_p;
+}
+
+bool State::isOver() const
+{
+	return _isOver;
+}
+
+bool State::isDraw() const
+{
+	return !_hasWinner;
+}
+
+unsigned long State::getWinningTeam() const
+{
+	return _winningTeam;
+}
+
+} // octopus

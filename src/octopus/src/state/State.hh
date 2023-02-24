@@ -90,6 +90,20 @@ public:
 	const VisionHandler &getVisionHandler() const { return _visionHandler; }
 
 	unsigned long const _id;
+
+	/// @brief set the over boolean
+	void setIsOver(bool over_p);
+	/// @brief set the hasWinner boolean
+	void setHasWinner(bool hasWinner_p);
+	/// @brief set the winning team
+	void setWinningTeam(unsigned long team_p);
+
+	/// @brief check if the state represent a game over
+	bool isOver() const;
+	/// @brief check if the state represent a draw
+	bool isDraw() const;
+	/// @brief return the winning team
+	unsigned long getWinningTeam() const;
 private:
 	State(State const &state_p) = delete;
 
@@ -121,7 +135,15 @@ private:
 	/// @brief used to know if grid has changed
 	unsigned long _pathGridStatus {0};
 
+	/// @brief the vision handler for this step
 	VisionHandler _visionHandler;
+
+	/// @brief true if the game is over
+	bool _isOver {false};
+	/// @brief true if there is a winning team
+	bool _hasWinner {false};
+	/// @brief the idx of the winning team
+	unsigned long _winningTeam {0};
 };
 
 Entity const * lookUpNewBuffTarget(State const &state_p, Handle const &sourceHandle_p, double range_p, TyppedBuff const &buff_p);

@@ -79,8 +79,10 @@ add_library(octopus
 	${CMAKE_CURRENT_SOURCE_DIR}/src/step/player/PlayerResetOptionDivinityStep.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/step/player/PlayerSpawnStep.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/step/player/PlayerSpendResourceStep.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/src/step/state/StateDrawStep.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/step/state/StateTemplePositionAddStep.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/step/state/StateTemplePositionRemoveStep.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/src/step/state/StateWinStep.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/step/trigger/TriggerCountChange.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/step/trigger/TriggerEnableChange.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/step/trigger/TriggerEntityAddStep.cc
