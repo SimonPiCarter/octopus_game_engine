@@ -4,6 +4,7 @@
 #include <list>
 #include <set>
 #include <map>
+#include <string>
 
 namespace octopus
 {
