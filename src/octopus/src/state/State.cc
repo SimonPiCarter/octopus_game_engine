@@ -550,9 +550,9 @@ bool State::isOver() const
 	return _isOver;
 }
 
-bool State::isDraw() const
+bool State::hasWinningTeam() const
 {
-	return !_hasWinner;
+	return _hasWinner;
 }
 
 unsigned long State::getWinningTeam() const

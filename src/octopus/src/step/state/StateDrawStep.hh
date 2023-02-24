@@ -2,7 +2,6 @@
 #define __StateDrawStep__
 
 #include "step/Steppable.hh"
-#include "utils/Vector.hh"
 
 namespace octopus
 {

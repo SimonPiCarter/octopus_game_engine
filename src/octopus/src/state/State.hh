@@ -101,7 +101,7 @@ public:
 	/// @brief check if the state represent a game over
 	bool isOver() const;
 	/// @brief check if the state represent a draw
-	bool isDraw() const;
+	bool hasWinningTeam() const;
 	/// @brief return the winning team
 	unsigned long getWinningTeam() const;
 private:
