@@ -40,6 +40,9 @@ protected:
     /// @brief internal state for tiles (state per tile)
     std::vector<std::vector<int> > _tiles;
 
+    /// @brief fast access for sprite (to avoid rendring all tiles)
+    std::vector<std::vector<Sprite *> > _mapSprites;
+
     /// @brief internal state for details
     std::vector<DetailInfo> _details;
 

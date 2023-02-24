@@ -2,6 +2,7 @@
 
 #include "sprite/SpriteLibrary.hh"
 #include "sprite/Sprite.hh"
+#include "window/Window.hh"
 
 namespace cuttlefish
 {
@@ -27,12 +28,14 @@ void Tilemap::generate()
     }
     _sprites.clear();
     _tiles.clear();
+    _mapSprites.clear();
     _details.clear();
 
     // create tiles map
     for(unsigned long i = 0 ; i < _size ; ++ i)
     {
         _tiles.emplace_back(_size, 0);
+        _mapSprites.emplace_back(_size, nullptr);
     }
 
     /// fill tiles
@@ -51,16 +54,26 @@ void Tilemap::generate()
             _sprites.push_back(_lib.createSprite(0, _idTiles, false));
             _sprites.back()->setState(_tiles[i][j]);
             _sprites.back()->setPosition(template_l.width*template_l.scale*i, template_l.height*template_l.scale*j);
+
+            _mapSprites[i][j] = _sprites.back();
         }
     }
 }
 
 void Tilemap::render(Window & window_p, double elapsed_p)
 {
-    for(Sprite *sprite_l :_sprites)
+    unsigned long minX_l = std::floor(window_p.getWorldVector(0, 0).x);
+    unsigned long maxX_l = minX_l + std::ceil(window_p.getWindowSize().x) + 1;
+    unsigned long minY_l = std::floor(window_p.getWorldVector(0, 0).y);
+    unsigned long maxY_l = minY_l + std::ceil(window_p.getWindowSize().y) + 1;
+
+    for(unsigned long x = minX_l ; x <= maxX_l ; ++x )
     {
-        sprite_l->update(elapsed_p);
-        sprite_l->render(window_p);
+        for(unsigned long y = minY_l ; y <= maxY_l ; ++y )
+        {
+            _mapSprites[x][y]->update(elapsed_p);
+            _mapSprites[x][y]->render(window_p);
+        }
     }
 }
 
