@@ -10,7 +10,7 @@ namespace octopus
 
 namespace cuttlefish
 {
-class Sprite;
+class Picture;
 class Texture;
 class Window;
 
@@ -29,9 +29,9 @@ public:
 
 	void setText(std::string const &text_p);
 
-	Sprite const * getBackground() const { return _background; }
+	Picture const * getBackground() const { return _background; }
 protected:
-	Sprite * _background;
+	Picture * _background;
 
 	int _x;
 	int _y;

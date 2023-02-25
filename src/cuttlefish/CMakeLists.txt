@@ -20,6 +20,7 @@ add_library(cuttlefish
 	${CMAKE_CURRENT_SOURCE_DIR}/src/panel/DivinityPanel.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/panel/Panel.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/panel/StatsPanel.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/src/sprite/Picture.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/sprite/Sprite.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/sprite/SpriteLibrary.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/text/Text.cc

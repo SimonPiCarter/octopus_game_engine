@@ -49,7 +49,7 @@ public:
 	/// @note return nullptr if no match
 	SpriteModel const * getSpriteModelOnGrid(int x, int y) const;
 
-	Sprite const * getBackground() const { return _background; }
+	Picture const * getBackground() const { return _background; }
 protected:
 	/// @brief selection
 	Selection & _selection;
@@ -64,7 +64,7 @@ protected:
 	/// @brief sprite models used for grid coordinate access
 	std::map<std::pair<int, int>, SpriteModel *> _grid;
 
-	Sprite * _background;
+	Picture * _background;
 
 	/// @brief map of sprite info (state/frame)
 	/// for models
