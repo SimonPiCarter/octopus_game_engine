@@ -1,4 +1,4 @@
-#include "level1.hh"
+#include "game.hh"
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
@@ -126,7 +126,7 @@ void controllerLoop(octopus::Controller &controller_p, bool const &over_p, bool 
 namespace cuttlefish
 {
 
-void runLevel1(Window &window_p)
+void runGame(Window &window_p)
 {
 	unsigned long gridSize_l = 5;
 	unsigned long fullWorldSize_l = 50 * gridSize_l;

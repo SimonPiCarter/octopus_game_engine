@@ -5,7 +5,7 @@ namespace cuttlefish
 {
     class Window;
 
-    void runLevel1(Window &window_p);
+    void runGame(Window &window_p);
 } // namespace cuttlefish
 
 
