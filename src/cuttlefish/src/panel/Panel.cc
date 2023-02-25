@@ -15,7 +15,7 @@ namespace cuttlefish
 Panel::Panel(Window* window_p, int x, int y, Texture const * background_p, Texture const *icons_p, int iconsPerLine_p) :
 	_x(x), _y(y), _icons(icons_p), _iconsPerLine(iconsPerLine_p)
 {
-	_background = new Sprite(0, background_p, 260./64., 0, 0, 400, 400, {1}, {1}, true);
+	_background = new Picture(background_p, 260./64., 0, 0, 400, 400, {1}, {1}, true);
 	_background->setPosition(x, y);
 }
 
@@ -64,7 +64,7 @@ void Panel::refresh(Sprite const *sprite_p, octopus::State const &state_p)
 		std::list<octopus::BuildingModel const *> buildingGrid_l = getAvailableBuildingModels(player_l);
 		for(octopus::BuildingModel const * model_l : buildingGrid_l)
 		{
-			Sprite *sprite_l = new Sprite(0, _icons, 1, 0, 0, 64, 64, {1}, {1}, true);
+			Picture *sprite_l = new Picture(_icons, 1, 0, 0, 64, 64, {1}, {1}, true);
 			SpriteInfo const &info_l = _mapIcons.at(model_l->_id);
 			sprite_l->setState(info_l.state);
 			sprite_l->setFrame(info_l.frame);
@@ -80,7 +80,7 @@ void Panel::refresh(Sprite const *sprite_p, octopus::State const &state_p)
 			static_cast<octopus::BuildingModel const &>(_lastSelection->_model), player_l);
 		for(octopus::UnitModel const * model_l : unitGrid_l)
 		{
-			Sprite *sprite_l = new Sprite(0, _icons, 1, 0, 0, 64, 64, {1}, {1}, true);
+			Picture *sprite_l = new Picture(_icons, 1, 0, 0, 64, 64, {1}, {1}, true);
 			SpriteInfo const &info_l = _mapIcons.at(model_l->_id);
 			sprite_l->setState(info_l.state);
 			sprite_l->setFrame(info_l.frame);

@@ -1,7 +1,7 @@
 #include "DescPanel.hh"
 
 #include "texture/Texture.hh"
-#include "sprite/Sprite.hh"
+#include "sprite/Picture.hh"
 
 #include "state/State.hh"
 #include "state/model/entity/EntityModel.hh"
@@ -12,7 +12,7 @@ namespace cuttlefish
 DescPanel::DescPanel(Window* window_p, int x, int y, Texture const * background_p) :
 	_x(x), _y(y), _desc(window_p, x+2, y+2, 256)
 {
-	_background = new Sprite(0, background_p, 260./64., 0, 0, 400, 400, {1}, {1}, true);
+	_background = new Picture(background_p, 260./64., 0, 0, 400, 400, {1}, {1}, true);
 	_background->setPosition(x, y);
 }
 

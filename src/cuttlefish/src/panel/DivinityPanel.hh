@@ -52,7 +52,7 @@ public:
 	/// @note return a boolean false if no match as firt element of the pair
 	std::pair<bool, octopus::DivinityType> getOptionOnGrid(int x, int y) const;
 
-	Sprite const * getBackground() const { return _background; }
+	Picture const * getBackground() const { return _background; }
 
 	bool isActive() const { return !_options.empty(); }
 
@@ -61,11 +61,11 @@ public:
 	void popOptionLayer();
 protected:
 	/// @brief sprites and options used
-	std::list<std::pair<Sprite *, octopus::DivinityType> > _options;
+	std::list<std::pair<Picture *, octopus::DivinityType> > _options;
 	/// @brief sprite models used for grid coordinate access
 	std::map<std::pair<int, int>, octopus::DivinityType> _grid;
 
-	Sprite * _background;
+	Picture * _background;
 
 	/// @brief map of sprite info (state/frame)
 	/// for models

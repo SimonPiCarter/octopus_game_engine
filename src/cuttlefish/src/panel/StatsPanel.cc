@@ -22,7 +22,7 @@ StatsPanel::StatsPanel(Window* window_p, int x, int y, Texture const * backgroun
 	_textResources(window_p, x, y+120),
 	_selection(selection_p)
 {
-	_background = new Sprite(0, background_p, 260./64., 0, 0, 400, 400, {1}, {1}, true);
+	_background = new Picture(background_p, 260./64., 0, 0, 400, 400, {1}, {1}, true);
 	_background->setPosition(x, y);
 	_textStats.addText("name", "", {0, 0, 0}, true);
 	_textStats.addText("hp", "hp : ", {0, 0, 0}, false);
@@ -96,7 +96,7 @@ void StatsPanel::refresh(Window &window_p, octopus::State const &state_p)
 			}
 			octopus::Entity const * ent_l = state_p.getEntity((*set_l.begin())->getHandle());
 
-			Sprite *sprite_l = new Sprite(0, _icons, 1, 0, 0, 64, 64, {1}, {1}, true);
+			Picture *sprite_l = new Picture(_icons, 1, 0, 0, 64, 64, {1}, {1}, true);
 			SpriteInfo const &info_l = _mapIcons.at(ent_l->_model._id);
 			sprite_l->setState(info_l.state);
 			sprite_l->setFrame(info_l.frame);
