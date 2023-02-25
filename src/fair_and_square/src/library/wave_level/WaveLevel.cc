@@ -6,7 +6,7 @@
 
 #include "controller/trigger/Trigger.hh"
 #include "controller/trigger/Listener.hh"
-#include "command/entity/EntityMoveCommand.hh"
+#include "command/entity/EntityAttackMoveCommand.hh"
 #include "library/Library.hh"
 #include "state/entity/Building.hh"
 #include "state/entity/Unit.hh"
@@ -19,9 +19,40 @@
 #include "step/entity/spawn/BuildingSpawnStep.hh"
 #include "step/player/PlayerSpawnStep.hh"
 #include "step/player/PlayerSpendResourceStep.hh"
+#include "step/state/StateWinStep.hh"
 #include "step/trigger/TriggerSpawn.hh"
 
 using namespace octopus;
+
+class WaveSpawn : public OneShotTrigger
+{
+public:
+	WaveSpawn(Listener * listener_p, Library const &lib_p, unsigned long wave_p) : OneShotTrigger({listener_p}), _lib(lib_p), _wave(wave_p) {}
+
+	virtual void trigger(State const &state_p, Step &step_p, unsigned long) const override
+	{
+		for(unsigned long i = 0 ; i < _wave * 10 ; ++ i)
+		{
+			Unit unit_l({ 35., 35. }, false, _lib.getUnitModel("square"));
+			unit_l._player = 1;
+			Handle handle_l = getNextHandle(step_p, state_p);
+			step_p.addSteppable(new UnitSpawnStep(handle_l, unit_l));
+			step_p.addSteppable(new CommandSpawnStep(new EntityAttackMoveCommand(handle_l, handle_l, {7., 20.}, 0, {{7., 20.}}, true )));
+		}
+
+		step_p.addSteppable(new TriggerSpawn(new WaveSpawn(new ListenerStepCount(0.1*60*100), _lib, _wave+1)));
+
+		// win after 10 waves
+		if(_wave == 10)
+		{
+			step_p.addSteppable(new StateWinStep(state_p.isOver(), state_p.hasWinningTeam(), state_p.getWinningTeam(), 0));
+		}
+	}
+
+private:
+	Library const &_lib;
+	unsigned long const _wave;
+};
 
 std::list<Steppable *> WaveLevel(Library &lib_p)
 {
@@ -46,6 +77,8 @@ std::list<Steppable *> WaveLevel(Library &lib_p)
 	mapRes_l[octopus::ResourceType::Food] = -200;
 	mapRes_l[octopus::ResourceType::Steel] = -200;
 
+	Trigger * trigger_l = new WaveSpawn(new ListenerStepCount(0.1*60*100), lib_p, 1);
+
 	std::list<Steppable *> spawners_l =
 	{
 		new PlayerSpawnStep(0, 0),
@@ -62,6 +95,7 @@ std::list<Steppable *> WaveLevel(Library &lib_p)
 		new UnitSpawnStep(6, unit_l),
 		new UnitSpawnStep(7, unit_l),
 		new UnitSpawnStep(8, unit_l),
+		new TriggerSpawn(trigger_l),
 	};
 
 	return spawners_l;
