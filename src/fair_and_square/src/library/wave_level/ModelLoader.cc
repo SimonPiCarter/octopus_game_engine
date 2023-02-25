@@ -84,7 +84,7 @@ void createCircle(Library &lib_p)
 
 void createCommandCenter(Library &lib_p)
 {
-	BuildingModel buildingModel_l { true, 1.9, 10. };
+	BuildingModel buildingModel_l { true, 1.9, 5000. };
 	buildingModel_l._isBuilding = true;
 	buildingModel_l._isStatic = true;
 	buildingModel_l._deposit[ResourceType::Food] = true;
@@ -100,7 +100,7 @@ void createCommandCenter(Library &lib_p)
 
 void createBarrack(Library &lib_p)
 {
-	BuildingModel buildingModel_l { true, 0.9, 10. };
+	BuildingModel buildingModel_l { true, 0.9, 1000. };
 	buildingModel_l._isBuilding = true;
 	buildingModel_l._isStatic = true;
 	buildingModel_l._unitModels.push_back(&lib_p.getUnitModel("square"));
