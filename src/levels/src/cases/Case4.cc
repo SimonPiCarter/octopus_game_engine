@@ -5,6 +5,7 @@
 #include "controller/trigger/Trigger.hh"
 #include "controller/trigger/Listener.hh"
 #include "command/building/BuildingUnitProductionCommand.hh"
+#include "command/entity/EntityMoveCommand.hh"
 #include "library/Library.hh"
 #include "state/entity/Building.hh"
 #include "state/entity/Unit.hh"
@@ -121,22 +122,30 @@ public:
 		{
 			Unit unit_l({ 5, 35. }, false, _lib.getUnitModel("soldier"));
 			unit_l._player = 1;
-			step_p.addSteppable(new UnitSpawnStep(getNextHandle(step_p, state_p), unit_l));
+			Handle handle_l = getNextHandle(step_p, state_p);
+			step_p.addSteppable(new UnitSpawnStep(handle_l, unit_l));
+			step_p.addSteppable(new CommandSpawnStep(new EntityMoveCommand(handle_l, handle_l, {25., 35.}, 0, {{25., 35.}} )));
 		}
 		{
 			Unit unit_l({ 6, 35. }, false, _lib.getUnitModel("soldier"));
 			unit_l._player = 1;
-			step_p.addSteppable(new UnitSpawnStep(getNextHandle(step_p, state_p), unit_l));
+			Handle handle_l = getNextHandle(step_p, state_p);
+			step_p.addSteppable(new UnitSpawnStep(handle_l, unit_l));
+			step_p.addSteppable(new CommandSpawnStep(new EntityMoveCommand(handle_l, handle_l, {25., 35.}, 0, {{25., 35.}} )));
 		}
 		{
 			Unit unit_l({ 5, 36. }, false, _lib.getUnitModel("soldier"));
 			unit_l._player = 1;
-			step_p.addSteppable(new UnitSpawnStep(getNextHandle(step_p, state_p), unit_l));
+			Handle handle_l = getNextHandle(step_p, state_p);
+			step_p.addSteppable(new UnitSpawnStep(handle_l, unit_l));
+			step_p.addSteppable(new CommandSpawnStep(new EntityMoveCommand(handle_l, handle_l, {25., 35.}, 0, {{25., 35.}} )));
 		}
 		{
 			Unit unit_l({ 6, 36. }, false, _lib.getUnitModel("soldier"));
 			unit_l._player = 1;
-			step_p.addSteppable(new UnitSpawnStep(getNextHandle(step_p, state_p), unit_l));
+			Handle handle_l = getNextHandle(step_p, state_p);
+			step_p.addSteppable(new UnitSpawnStep(handle_l, unit_l));
+			step_p.addSteppable(new CommandSpawnStep(new EntityMoveCommand(handle_l, handle_l, {25., 35.}, 0, {{25., 35.}} )));
 		}
 
 		step_p.addSteppable(new TriggerSpawn(new Case4TriggerSpawn(new ListenerStepCount(200), _lib)));
