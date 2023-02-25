@@ -9,7 +9,6 @@ cmake_minimum_required (VERSION 3.14.0)
 # ============================================================================
 
 add_library(levels
-	${CMAKE_CURRENT_SOURCE_DIR}/src/cases/Case1.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/cases/Case2.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/cases/Case3.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/cases/Case4.cc

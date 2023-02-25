@@ -47,6 +47,7 @@ add_subdirectory(src/octopus)
 
 if(GRAPHICS)
 	add_subdirectory(src/cuttlefish)
+	add_subdirectory(src/fair_and_square)
 endif()
 
 add_subdirectory(src/levels)
