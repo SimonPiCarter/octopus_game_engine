@@ -19,7 +19,7 @@ TEST(entityStepTest, simple)
 	state_l.getPlayers().push_back(new Player());
 
 	octopus::EntityModel unitModel_l { false, 1., 1., 10. };
-	EntitySpawnStep step_l(Entity { { 3, 4. }, false, unitModel_l});
+	EntitySpawnStep step_l(0, Entity { { 3, 4. }, false, unitModel_l});
 
 	EXPECT_EQ(0u, state_l.getEntities().size());
 

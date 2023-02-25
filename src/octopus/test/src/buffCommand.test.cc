@@ -20,7 +20,7 @@ TEST(buffCommandTest, simple_speed)
 {
 	octopus::EntityModel unitModel_l { false, 1., 1., 10. };
 
-	EntitySpawnStep * spawn0_l = new EntitySpawnStep(Entity { { 3, 3. }, false, unitModel_l});
+	EntitySpawnStep * spawn0_l = new EntitySpawnStep(0, Entity { { 3, 3. }, false, unitModel_l});
 
 	TyppedBuff buff_l;
 	buff_l._duration = 10;

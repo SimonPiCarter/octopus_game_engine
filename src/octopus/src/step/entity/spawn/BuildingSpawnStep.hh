@@ -9,7 +9,7 @@ namespace octopus
 class BuildingSpawnStep : public SpawnModelStep<Building>
 {
 public:
-	explicit BuildingSpawnStep(Building const &model_p, bool builtAlready_p);
+	explicit BuildingSpawnStep(Handle const &handle_p, Building const &model_p, bool builtAlready_p);
 	virtual void visit(SteppableVisitor * visitor_p) const override
 	{
 		visitor_p->visit(this);

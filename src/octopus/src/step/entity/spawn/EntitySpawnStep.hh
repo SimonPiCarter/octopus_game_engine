@@ -9,7 +9,7 @@ namespace octopus
 class EntitySpawnStep : public SpawnModelStep<Entity>
 {
 public:
-	explicit EntitySpawnStep(Entity const &model_p);
+	explicit EntitySpawnStep(Handle const &handle_p, Entity const &model_p);
 	virtual void visit(SteppableVisitor * visitor_p) const override
 	{
 		visitor_p->visit(this);

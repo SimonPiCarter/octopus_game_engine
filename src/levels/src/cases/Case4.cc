@@ -116,27 +116,27 @@ class Case4TriggerSpawn : public OneShotTrigger
 public:
 	Case4TriggerSpawn(Listener * listener_p, Library const &lib_p) : OneShotTrigger({listener_p}), _lib(lib_p) {}
 
-	virtual void trigger(State const &, Step &step_p, unsigned long) const override
+	virtual void trigger(State const &state_p, Step &step_p, unsigned long) const override
 	{
 		{
 			Unit unit_l({ 5, 35. }, false, _lib.getUnitModel("soldier"));
 			unit_l._player = 1;
-			step_p.addSteppable(new UnitSpawnStep(unit_l));
+			step_p.addSteppable(new UnitSpawnStep(getNextHandle(step_p, state_p), unit_l));
 		}
 		{
 			Unit unit_l({ 6, 35. }, false, _lib.getUnitModel("soldier"));
 			unit_l._player = 1;
-			step_p.addSteppable(new UnitSpawnStep(unit_l));
+			step_p.addSteppable(new UnitSpawnStep(getNextHandle(step_p, state_p), unit_l));
 		}
 		{
 			Unit unit_l({ 5, 36. }, false, _lib.getUnitModel("soldier"));
 			unit_l._player = 1;
-			step_p.addSteppable(new UnitSpawnStep(unit_l));
+			step_p.addSteppable(new UnitSpawnStep(getNextHandle(step_p, state_p), unit_l));
 		}
 		{
 			Unit unit_l({ 6, 36. }, false, _lib.getUnitModel("soldier"));
 			unit_l._player = 1;
-			step_p.addSteppable(new UnitSpawnStep(unit_l));
+			step_p.addSteppable(new UnitSpawnStep(getNextHandle(step_p, state_p), unit_l));
 		}
 
 		step_p.addSteppable(new TriggerSpawn(new Case4TriggerSpawn(new ListenerStepCount(200), _lib)));
@@ -235,12 +235,12 @@ std::list<Steppable *> Case4(Library &lib_p)
 		new PlayerAddBuildingModel(0, lib_p.getBuildingModel("div_raid_well")),
 		new PlayerAddBuildingModel(0, lib_p.getBuildingModel("div_swarm_well")),
 		new PlayerSpendResourceStep(0, mapRes_l),
-		new BuildingSpawnStep(building_l, true),
-		new ResourceSpawnStep(res1_l),
-		new ResourceSpawnStep(res2_l),
-		new ResourceSpawnStep(res3_l),
-		new ResourceSpawnStep(res4_l),
-		new UnitSpawnStep(unit_l),
+		new BuildingSpawnStep(0, building_l, true),
+		new ResourceSpawnStep(1, res1_l),
+		new ResourceSpawnStep(2, res2_l),
+		new ResourceSpawnStep(3, res3_l),
+		new ResourceSpawnStep(4, res4_l),
+		new UnitSpawnStep(5, unit_l),
 		new TriggerSpawn(trigger_l),
 		new TriggerSpawn(divTrigger_l)
 	};

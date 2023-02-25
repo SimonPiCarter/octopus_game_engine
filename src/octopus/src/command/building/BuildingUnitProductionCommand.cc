@@ -67,7 +67,7 @@ bool BuildingUnitProductionCommand::applyCommand(Step & step_p, State const &sta
 
 		Unit unit_l(building_l->_pos + building_l->_buildingModel._productionOutput, false, data_l._model);
 		unit_l._player = building_l->_player;
-		step_p.addSteppable(new UnitSpawnStep(unit_l));
+		step_p.addSteppable(new UnitSpawnStep(getNextHandle(step_p, state_p), unit_l));
 
 		return true;
 	}

@@ -29,7 +29,7 @@ class TestTriggerTimeTrigger : public OneShotTrigger
 public:
 	TestTriggerTimeTrigger(std::list<Listener *> const &listeners_p, EntityModel const &model_p) : OneShotTrigger(listeners_p), _model(model_p) {}
 
-	virtual void trigger(State const &, Step &step_p, unsigned long) const override
+	virtual void trigger(State const &state_p, Step &step_p, unsigned long) const override
 	{
 		std::map<ResourceType, double> map_l;
 		map_l[ResourceType::Food] = -10.;
@@ -38,7 +38,7 @@ public:
 
 		Entity unit_l({ 5, 5. }, false, _model);
 		unit_l._player = 0;
-		step_p.addSteppable(new EntitySpawnStep(unit_l));
+		step_p.addSteppable(new EntitySpawnStep(getNextHandle(step_p, state_p), unit_l));
 	}
 private:
 	EntityModel const &_model;

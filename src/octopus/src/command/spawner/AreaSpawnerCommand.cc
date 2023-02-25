@@ -18,7 +18,7 @@ AreaSpawnerCommand::AreaSpawnerCommand(std::list<AreaSpawn> const &spawns_p)
 	, _gen(42)
 {}
 
-void spawn(Step & step_p, EntityModel const *model_p, Option const &option_p, unsigned long player_p)
+void spawn(State const &state_p, Step & step_p, EntityModel const *model_p, Option const &option_p, unsigned long player_p)
 {
 	Vector pos_l {option_p.x + std::ceil(2*model_p->_ray)/2., option_p.y + std::ceil(2*model_p->_ray)/2. };
 	if(model_p->_isUnit)
@@ -27,7 +27,7 @@ void spawn(Step & step_p, EntityModel const *model_p, Option const &option_p, un
 		Unit unit_l(pos_l, false, *dynamic_cast<UnitModel const *>(model_p));
 		unit_l._player = player_p;
 
-		step_p.addSteppable(new UnitSpawnStep(unit_l));
+		step_p.addSteppable(new UnitSpawnStep(getNextHandle(step_p, state_p), unit_l));
 	}
 	else if(model_p->_isBuilding)
 	{
@@ -35,7 +35,7 @@ void spawn(Step & step_p, EntityModel const *model_p, Option const &option_p, un
 		Building building_l(pos_l, model_p->_isStatic, *dynamic_cast<BuildingModel const *>(model_p));
 		building_l._player = player_p;
 
-		step_p.addSteppable(new BuildingSpawnStep(building_l, true));
+		step_p.addSteppable(new BuildingSpawnStep(getNextHandle(step_p, state_p), building_l, true));
 	}
 	else
 	{
@@ -43,7 +43,7 @@ void spawn(Step & step_p, EntityModel const *model_p, Option const &option_p, un
 		Entity entity_l(pos_l, model_p->_isStatic, *model_p);
 		entity_l._player = player_p;
 
-		step_p.addSteppable(new EntitySpawnStep(entity_l));
+		step_p.addSteppable(new EntitySpawnStep(getNextHandle(step_p, state_p), entity_l));
 	}
 }
 
@@ -91,7 +91,7 @@ void AreaSpawnerCommand::registerCommand(Step & step_p, State const &state_p)
 				unsigned long optionIdx_l = random(0,options_l.size());
 
 				// add spawn to step
-				spawn(step_p, model_l, options_l[optionIdx_l], spawn_l.player);
+				spawn(state_p, step_p, model_l, options_l[optionIdx_l], spawn_l.player);
 				/// update grid from spawn
 				update(grid_l, model_l, options_l[optionIdx_l]);
 			}
@@ -127,7 +127,7 @@ void AreaSpawnerCommand::registerCommand(Step & step_p, State const &state_p)
 				unsigned long optionIdx_l = random(0,options_l.size());
 
 				// add spawn to step
-				spawn(step_p, model_l, options_l[optionIdx_l], spawn_l.player);
+				spawn(state_p, step_p, model_l, options_l[optionIdx_l], spawn_l.player);
 				// we do not update grid for non static
 			}
 		}

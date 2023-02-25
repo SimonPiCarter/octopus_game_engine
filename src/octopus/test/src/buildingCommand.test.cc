@@ -40,8 +40,8 @@ TEST(buildingCommandTest, simple)
 	Building building_l({1,3}, true, depositModel_l);
 	building_l._alive = false;
 
-	UnitSpawnStep * spawn0_l = new UnitSpawnStep(unit_l);
-	BuildingSpawnStep * spawn1_l = new BuildingSpawnStep(building_l, false);
+	UnitSpawnStep * spawn0_l = new UnitSpawnStep(0, unit_l);
+	BuildingSpawnStep * spawn1_l = new BuildingSpawnStep(1, building_l, false);
 
 	// unit harvest
 	EntityBuildingCommand * command_l = new EntityBuildingCommand(0, 0, 1, {1, 3}, 0, {{1, 3}});
@@ -106,8 +106,8 @@ TEST(buildingCommandTest, cancelled)
 
 	Controller controller_l({
 		new PlayerSpawnStep(0, 0),
-		new UnitSpawnStep(unit1_l),
-		new UnitSpawnStep(unit2_l)
+		new UnitSpawnStep(0, unit1_l),
+		new UnitSpawnStep(1, unit2_l)
 	}, 1.);
 
 	// loop to spawn everything

@@ -24,4 +24,26 @@ void StepAdditionVisitor::visit(PlayerResetOptionDivinityStep const *step_p)
     ++_step.getDivOptionSpent(step_p->_player);
 }
 
+void StepAdditionVisitor::visit(BuildingSpawnStep const *step_p)
+{
+    _step.addEntitySpawned();
+}
+
+void StepAdditionVisitor::visit(EntitySpawnStep const *step_p)
+{
+    _step.addEntitySpawned();
+}
+
+void StepAdditionVisitor::visit(ResourceSpawnStep const *step_p)
+{
+    _step.addEntitySpawned();
+}
+
+void StepAdditionVisitor::visit(UnitSpawnStep const *step_p)
+{
+    _step.addEntitySpawned();
+}
+
+
+
 }
