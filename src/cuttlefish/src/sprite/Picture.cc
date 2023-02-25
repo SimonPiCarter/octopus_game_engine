@@ -56,7 +56,7 @@ void Picture::update(double elapsedTime_l)
 
 void Picture::render(Window &window_p, double scaleX_p, double scaleY_p, bool forceAbsolute_p)
 {
-	double ratio_l = _height/_width;
+	double ratio_l = double(_height)/double(_width);
 	SDL_Rect final_l {
 		int(std::floor((_x - _logicalX * _scale) * scaleX_p)),
 		int(std::floor((_y - _logicalY * ratio_l * _scale) * scaleY_p)),
@@ -83,12 +83,13 @@ void Picture::render(Window &window_p, double scaleX_p, double scaleY_p, bool fo
 
 bool Picture::isInside(Window const &window_p, int x, int y) const
 {
+	double ratio_l = double(_height)/double(_width);
 	// rectangle of drawing
 	SDL_Rect final_l {
 		int(_x - _logicalX * _scale),
-		int(_y - _logicalY * _scale),
+		int(_y - _logicalY * ratio_l * _scale),
 		int(64. * _scale),
-		int(64. * _scale),
+		int(64. * ratio_l *_scale),
 	};
 
 	if(x >= final_l.x && x <= final_l.x + final_l.w
@@ -144,7 +145,8 @@ double Picture::getWidth() const
 
 double Picture::getHeight() const
 {
-	return 64. * _scale;
+	double ratio_l = double(_height)/double(_width);
+	return 64. * _scale * ratio_l;
 }
 
 void Picture::setPosition(double x, double y)
