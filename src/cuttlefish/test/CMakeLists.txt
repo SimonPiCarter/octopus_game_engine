@@ -30,6 +30,7 @@ target_link_libraries(test_panel PUBLIC cuttlefish)
 
 add_executable(test_level1
 ${CMAKE_CURRENT_SOURCE_DIR}/src/test_level1.cc
+${CMAKE_CURRENT_SOURCE_DIR}/src/game/level1.cc
 )
 
 target_link_libraries(test_level1 PUBLIC cuttlefish)
