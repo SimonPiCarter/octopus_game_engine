@@ -46,6 +46,9 @@ public:
 
 	TTF_Font* getFont() { return _font; }
 
+	void setWorldSize(unsigned long worldSize_p) { _worldSize = worldSize_p; }
+	unsigned long getWorldSize() const { return _worldSize; }
+
 	/// @brief return the position in the world given the coordinate on the window
 	/// and the camera position
 	octopus::Vector getWorldVector(int x, int y) const;
@@ -56,6 +59,9 @@ public:
 
 	/// @brief get the window size in world unit
 	octopus::Vector getWindowSize() const;
+
+	int getWidth() const { return _width; }
+	int getHeight() const { return _height; }
 
 private:
 	std::map<std::string, Texture *> _mapTexture;
