@@ -49,8 +49,6 @@ std::string resourceStr(octopus::Player const &player_p)
 	std::stringstream ss_l;
 	ss_l << "Food   : "<<stringify(std::abs(std::floor(1e-5+octopus::getResource(player_p, octopus::ResourceType::Food))))<<" | ";
 	ss_l << "Steel  : "<<stringify(std::abs(std::floor(1e-5+octopus::getResource(player_p, octopus::ResourceType::Steel))))<<" | ";
-	ss_l << "Ether  : "<<stringify(std::abs(std::floor(1e-5+octopus::getResource(player_p, octopus::ResourceType::Ether))))<<" | ";
-	ss_l << "Gas : "<<stringify(std::abs(std::floor(1e-5+octopus::getResource(player_p, octopus::ResourceType::Gas))))<<" | ";
 	return ss_l.str();
 }
 
@@ -59,11 +57,6 @@ std::string divAnchorStr(octopus::Player const &player_p)
 	std::stringstream ss_l;
 	ss_l << "anc | ";
 	ss_l << "div1 : "<<stringify(int(octopus::getDivAnchor(player_p, octopus::DivinityType::Divinity_1)))<<" | ";
-	ss_l << "div2 : "<<stringify(int(octopus::getDivAnchor(player_p, octopus::DivinityType::Divinity_2)))<<" | ";
-	ss_l << "div3 : "<<stringify(int(octopus::getDivAnchor(player_p, octopus::DivinityType::Divinity_3)))<<" | ";
-	ss_l << "div4 : "<<stringify(int(octopus::getDivAnchor(player_p, octopus::DivinityType::Divinity_4)))<<" | ";
-	ss_l << "div5 : "<<stringify(int(octopus::getDivAnchor(player_p, octopus::DivinityType::Divinity_5)))<<" | ";
-	ss_l << "div6 : "<<stringify(int(octopus::getDivAnchor(player_p, octopus::DivinityType::Divinity_6)))<<" | ";
 	return ss_l.str();
 }
 
@@ -72,11 +65,6 @@ std::string divLvlStr(octopus::Player const &player_p)
 	std::stringstream ss_l;
 	ss_l << "lvl | ";
 	ss_l << "div1 : "<<stringify(octopus::getDivLvl(player_p, octopus::DivinityType::Divinity_1))<<" | ";
-	ss_l << "div2 : "<<stringify(octopus::getDivLvl(player_p, octopus::DivinityType::Divinity_2))<<" | ";
-	ss_l << "div3 : "<<stringify(octopus::getDivLvl(player_p, octopus::DivinityType::Divinity_3))<<" | ";
-	ss_l << "div4 : "<<stringify(octopus::getDivLvl(player_p, octopus::DivinityType::Divinity_4))<<" | ";
-	ss_l << "div5 : "<<stringify(octopus::getDivLvl(player_p, octopus::DivinityType::Divinity_5))<<" | ";
-	ss_l << "div6 : "<<stringify(octopus::getDivLvl(player_p, octopus::DivinityType::Divinity_6))<<" | ";
 	return ss_l.str();
 }
 
@@ -232,8 +220,8 @@ void runLevel1(Window &window_p)
 
 	// Text for resource
 	Text textResource_l(&window_p, {0,0,0}, 300, 0);
-	Text textDivLvl_l(&window_p, {0,0,0}, 200, 30);
-	Text textDivAnchor_l(&window_p, {0,0,0}, 200, 60);
+	Text textDivLvl_l(&window_p, {0,0,0}, 550, 0);
+	Text textDivAnchor_l(&window_p, {0,0,0}, 700, 0);
 	Text textSteps_l(&window_p, {0,0,0}, 850, 0);
 
 	StandardClicMode standardClicMode_l;
@@ -498,7 +486,7 @@ void runLevel1(Window &window_p)
 		octopus::Player const * player_l = state_l.getPlayer(0);
 
 		//Render background texture to screen
-		background_l->render(window_p.getRenderer(), 0, 0, 80, window_p.getWidth() );
+		background_l->render(window_p.getRenderer(), 0, 0, 30, window_p.getWidth() );
 
 		textResource_l.setText(resourceStr(*player_l));
 		textResource_l.display(window_p);

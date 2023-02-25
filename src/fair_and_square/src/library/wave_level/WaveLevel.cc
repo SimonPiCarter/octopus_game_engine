@@ -58,6 +58,10 @@ std::list<Steppable *> WaveLevel(Library &lib_p)
 		new ResourceSpawnStep(2, res2_l),
 		new ResourceSpawnStep(3, res3_l),
 		new UnitSpawnStep(4, unit_l),
+		new UnitSpawnStep(5, unit_l),
+		new UnitSpawnStep(6, unit_l),
+		new UnitSpawnStep(7, unit_l),
+		new UnitSpawnStep(8, unit_l),
 	};
 
 	return spawners_l;
