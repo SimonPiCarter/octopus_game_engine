@@ -23,6 +23,8 @@ int main()
 	double elapsed_l = 0.;
     bool over_l = false;
 
+	octopus::Logger::getNormal()<<"Playing"<<std::endl;
+
 	while(!over_l)
 	{
         // update controller
@@ -39,6 +41,8 @@ int main()
 		elapsed_l = elapsed_seconds_l.count();
 		last_l = cur_l;
 	}
+
+	octopus::Logger::getNormal()<<"Done"<<std::endl;
 
 	octopus::LoggerHandler logger_l = octopus::Logger::getNormal();
 	streamMetrics(logger_l, controller_l.getMetrics());
