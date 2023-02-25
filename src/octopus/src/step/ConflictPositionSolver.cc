@@ -62,8 +62,17 @@ bool updateStepFromConflictPosition(Step &step_p, State const &state_p)
 	for(EntityMoveStep *step_l: step_p.getEntityMoveStep())
 	{
 		Entity const *ent_l = state_p.getEntity(step_l->_handle);
-		mapMoveStep_l[ent_l->_handle] = step_l;
-		newPos_l[ent_l->_handle] = ent_l->_pos + step_l->_move;
+		if(mapMoveStep_l[ent_l->_handle] != nullptr)
+		{
+			mapMoveStep_l[ent_l->_handle]->_move += step_l->_move;
+			step_l->_move = Vector {0,0};
+			newPos_l[ent_l->_handle] = ent_l->_pos + mapMoveStep_l[ent_l->_handle]->_move;
+		}
+		else
+		{
+			mapMoveStep_l[ent_l->_handle] = step_l;
+			newPos_l[ent_l->_handle] = ent_l->_pos + step_l->_move;
+		}
 	}
 
 	// fill up move steps when missing
@@ -95,8 +104,13 @@ bool updateStepFromConflictPosition(Step &step_p, State const &state_p)
 	//////////////////////////////
 
 	// check every entity with one another
-	for(EntityMoveStep *stepA_l: step_p.getEntityMoveStep())
+	for(EntityMoveStep *stepA_l: mapMoveStep_l)
 	{
+		if(stepA_l == nullptr)
+		{
+			continue;
+		}
+
 		Entity const * entA_l = state_p.getEntity(stepA_l->_handle);
 
 		if(entA_l->isIgnoringCollision())
