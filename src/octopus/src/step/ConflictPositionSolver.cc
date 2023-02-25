@@ -175,7 +175,15 @@ bool updateStepFromConflictPosition(Step &step_p, State const &state_p)
 				}
 				else
 				{
-					normalizedAxis_l = Vector { double(gen_l.nextFromRange(-10, 10)), double(gen_l.nextFromRange(-10, 10))};
+					normalizedAxis_l = Vector { double(gen_l.nextFromRange(1, 10)), double(gen_l.nextFromRange(1, 10))};
+					if(gen_l.nextFromRange(0, 1) > 0)
+					{
+						normalizedAxis_l.x = -normalizedAxis_l.x;
+					}
+					if(gen_l.nextFromRange(0, 1) > 0)
+					{
+						normalizedAxis_l.y = -normalizedAxis_l.y;
+					}
 					normalizedAxis_l = normalizedAxis_l / length(normalizedAxis_l);
 				}
 				double coefA_l = 0.5;
