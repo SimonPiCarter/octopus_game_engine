@@ -3,8 +3,8 @@
 namespace octopus
 {
 
-UnitSpawnStep::UnitSpawnStep(Unit const &model_p)
-	: SpawnModelStep(model_p)
+UnitSpawnStep::UnitSpawnStep(Handle const &handle_p, Unit const &model_p)
+	: SpawnModelStep(handle_p, model_p)
 {}
 
 } // namespace octopus

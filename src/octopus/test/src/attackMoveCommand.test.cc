@@ -38,8 +38,8 @@ TEST(attackMoveCommandTest, simple)
 	Entity ent_l { { 11, 3. }, false, unitModel_l};
 	ent_l._player = 1;
 
-	EntitySpawnStep * spawn0_l = new EntitySpawnStep(Entity { { 3, 3. }, false, unitModel_l});
-	EntitySpawnStep * spawn1_l = new EntitySpawnStep(ent_l);
+	EntitySpawnStep * spawn0_l = new EntitySpawnStep(0, Entity { { 3, 3. }, false, unitModel_l});
+	EntitySpawnStep * spawn1_l = new EntitySpawnStep(1, ent_l);
 
 	// entity 0 attack entity 1
 	EntityAttackMoveCommand * command_l = new EntityAttackMoveCommand(0, 0, {9, 3}, 0, {{9, 3}});

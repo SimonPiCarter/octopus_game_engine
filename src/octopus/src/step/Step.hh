@@ -6,6 +6,7 @@
 #include <map>
 
 #include "state/ResourceType.hh"
+#include "state/Handle.hh"
 
 namespace octopus
 {
@@ -37,6 +38,11 @@ namespace octopus
 
 			unsigned long & getDivOptionSpent(unsigned long player_p);
 			unsigned long getDivOptionSpent(unsigned long player_p) const;
+
+			/// @brief add an entity spawned
+			void addEntitySpawned();
+			/// @brief get the number of entity spawned in this step
+			unsigned long getEntitySpawned() const;
 		private:
 			std::list<EntityMoveStep *> _listEntityMoveStep;
 
@@ -47,6 +53,9 @@ namespace octopus
 
 			/// @brief a map of number of div option spent in this step (player) -> number of div option spent this step
 			std::map<unsigned long, unsigned long> _divOptionsSpent;
+
+			/// @brief a map of entity spawned in this step
+			unsigned long _entitySpawned {0};
 	};
 
 	/// @brief apply the step
@@ -62,6 +71,12 @@ namespace octopus
 
 	/// @brief visit all steppable in the step
 	void visitAll(Step const &step_p, SteppableVisitor &visitor_p);
+
+	/// @brief get the next handle to spawn an entity/commandable
+	/// @param step_p the step to be applied
+	/// @param state_p the state on which the step is gonna be applied
+	/// @return the next handle
+	Handle getNextHandle(Step const &step_p, State const &state_p);
 }
 
 #endif

@@ -21,7 +21,7 @@ Step::~Step()
 void Step::addEntityMoveStep(EntityMoveStep * step_p)
 {
 	_listEntityMoveStep.push_back(step_p);
-	_listSteppable.push_back(step_p);
+	this->addSteppable(step_p);
 }
 
 void Step::addSteppable(Steppable * step_p)
@@ -97,6 +97,16 @@ unsigned long Step::getDivOptionSpent(unsigned long player_p) const
 	return itPlayer_l->second;
 }
 
+void Step::addEntitySpawned()
+{
+	++_entitySpawned;
+}
+
+unsigned long Step::getEntitySpawned() const
+{
+	return _entitySpawned;
+}
+
 void apply(Step const & step_p, State &state_p)
 {
 	// apply all steppables
@@ -139,6 +149,11 @@ void visitAll(Step const &step_p, SteppableVisitor &visitor_p)
 	{
 		visitor_p(steppable_l);
 	}
+}
+
+Handle getNextHandle(Step const &step_p, State const &state_p)
+{
+	return step_p.getEntitySpawned() + state_p.getEntities().size();
 }
 
 } // namespace octopus

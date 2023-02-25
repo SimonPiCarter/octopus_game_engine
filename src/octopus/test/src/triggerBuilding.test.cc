@@ -61,8 +61,8 @@ TEST(triggerBuildingTest, simple)
 
 	Controller controller_l({
 		new PlayerSpawnStep(0, 0),
-		new UnitSpawnStep(unit_l),
-		new BuildingSpawnStep(building_l, false),
+		new UnitSpawnStep(0, unit_l),
+		new BuildingSpawnStep(1, building_l, false),
 		new CommandSpawnStep(command_l)
 	}, 1.);
 

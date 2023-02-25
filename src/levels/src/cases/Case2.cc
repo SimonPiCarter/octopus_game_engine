@@ -46,29 +46,22 @@ std::list<Steppable *> Case2(Library &lib_p)
 
 	Building deposit_l({1, 20}, true, lib_p.getBuildingModel("deposit"));
 
-	// unit harvest
-	UnitHarvestCommand * command0_l = new UnitHarvestCommand(0, 0, 5, {20, 20}, 0, {{20, 20}});
-	UnitHarvestCommand * command1_l = new UnitHarvestCommand(1, 1, 5, {20, 20}, 0, {{20, 20}});
-	UnitHarvestCommand * command2_l = new UnitHarvestCommand(2, 2, 5, {20, 20}, 0, {{20, 20}});
-	UnitHarvestCommand * command3_l = new UnitHarvestCommand(3, 3, 5, {20, 20}, 0, {{20, 20}});
-	UnitHarvestCommand * command4_l = new UnitHarvestCommand(4, 4, 5, {20, 20}, 0, {{20, 20}});
-
 	std::list<Steppable *> spawners_l =
 	{
 		new PlayerSpawnStep(0, 0),
-		new UnitSpawnStep(unit_l),
-		new UnitSpawnStep(unit_l),
-		new UnitSpawnStep(unit_l),
-		new UnitSpawnStep(unit_l),
-		new UnitSpawnStep(unit_l),
-		new ResourceSpawnStep(res_l),
-		new ResourceSpawnStep(res2_l),
-		new BuildingSpawnStep(deposit_l, true),
-		new CommandSpawnStep(command0_l),
-		new CommandSpawnStep(command1_l),
-		new CommandSpawnStep(command2_l),
-		new CommandSpawnStep(command3_l),
-		new CommandSpawnStep(command4_l)
+		new UnitSpawnStep(0, unit_l),
+		new UnitSpawnStep(1, unit_l),
+		new UnitSpawnStep(2, unit_l),
+		new UnitSpawnStep(3, unit_l),
+		new UnitSpawnStep(4, unit_l),
+		new ResourceSpawnStep(5, res_l),
+		new ResourceSpawnStep(6, res2_l),
+		new BuildingSpawnStep(7, deposit_l, true),
+		new CommandSpawnStep(new UnitHarvestCommand(0, 0, 5, {20, 20}, 0, {{20, 20}})),
+		new CommandSpawnStep(new UnitHarvestCommand(1, 1, 5, {20, 20}, 0, {{20, 20}})),
+		new CommandSpawnStep(new UnitHarvestCommand(2, 2, 5, {20, 20}, 0, {{20, 20}})),
+		new CommandSpawnStep(new UnitHarvestCommand(3, 3, 5, {20, 20}, 0, {{20, 20}})),
+		new CommandSpawnStep(new UnitHarvestCommand(4, 4, 5, {20, 20}, 0, {{20, 20}}))
 	};
 
 	return spawners_l;

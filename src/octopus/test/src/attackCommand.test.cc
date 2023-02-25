@@ -20,8 +20,8 @@ TEST(attackCommandTest, simple)
 {
 	octopus::EntityModel unitModel_l { false, 1., 1., 10. };
 
-	EntitySpawnStep * spawn0_l = new EntitySpawnStep(Entity { { 3, 3. }, false, unitModel_l});
-	EntitySpawnStep * spawn1_l = new EntitySpawnStep(Entity { { 11, 3. }, false, unitModel_l});
+	EntitySpawnStep * spawn0_l = new EntitySpawnStep(0, Entity { { 3, 3. }, false, unitModel_l});
+	EntitySpawnStep * spawn1_l = new EntitySpawnStep(1, Entity { { 11, 3. }, false, unitModel_l});
 
 	// entity 0 attack entity 1
 	EntityAttackCommand * command_l = new EntityAttackCommand(0, 0, 1);

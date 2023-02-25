@@ -20,7 +20,7 @@ public:
         steppable_p->visit(this);
     }
 
-    virtual void visit(BuildingSpawnStep const *) {}
+    virtual void visit(BuildingSpawnStep const *);
     virtual void visit(BuildingStep const *) {}
     virtual void visit(BuildingCancelStep const *) {}
     virtual void visit(CommandAddSubAttackStep const *) {}
@@ -47,7 +47,7 @@ public:
     virtual void visit(EntityHitPointChangeStep const *) {}
     virtual void visit(EntityMoveStep const *) {}
     virtual void visit(EntityUpdateWaitingStep const *) {}
-    virtual void visit(EntitySpawnStep const *) {}
+    virtual void visit(EntitySpawnStep const *);
     virtual void visit(MissingResourceStep const *) {}
     virtual void visit(PlayerAddBuildingModel const *) {}
     virtual void visit(PlayerAddOptionDivinityStep const *) {}
@@ -58,7 +58,7 @@ public:
     virtual void visit(PlayerSpendResourceStep const *);
     virtual void visit(ProductionPaidStep const *) {}
     virtual void visit(ProductionProgressionStep const *) {}
-    virtual void visit(ResourceSpawnStep const *) {}
+    virtual void visit(ResourceSpawnStep const *);
 	virtual void visit(StateDrawStep const *) override {}
 	virtual void visit(StateTemplePositionAddStep const *) override {}
     virtual void visit(StateTemplePositionRemoveStep const *) {}
@@ -73,7 +73,7 @@ public:
     virtual void visit(UnitHarvestDropStep const *) {}
     virtual void visit(UnitHarvestQuantityStep const *) {}
     virtual void visit(UnitHarvestTypeStep const *) {}
-    virtual void visit(UnitSpawnStep const *) {}
+    virtual void visit(UnitSpawnStep const *);
 private:
     Step &_step;
 };

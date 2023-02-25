@@ -60,11 +60,11 @@ TEST(autoBuffCommandTest, simple)
 	Controller controller_l({
 		new PlayerSpawnStep(0, 0),
 		new PlayerSpawnStep(1, 1),
-		new UnitSpawnStep(ent1_l),
-		new UnitSpawnStep(ent2_l),
-		new UnitSpawnStep(ent3_l),
-		new UnitSpawnStep(ent4_l),
-		new UnitSpawnStep(ent5_l)
+		new UnitSpawnStep(0, ent1_l),
+		new UnitSpawnStep(1, ent2_l),
+		new UnitSpawnStep(2, ent3_l),
+		new UnitSpawnStep(3, ent4_l),
+		new UnitSpawnStep(4, ent5_l)
 	}, 1.);
 
 	// query state

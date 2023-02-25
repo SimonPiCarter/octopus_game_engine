@@ -48,8 +48,8 @@ TEST(resourceSpentSimultaneousTest, simple_ok)
 	Controller controller_l({
             new PlayerSpawnStep(0, 0),
 			new PlayerSpendResourceStep(0, mapRes_l),
-            new BuildingSpawnStep(production1_l, true),
-            new BuildingSpawnStep(production2_l, true),
+            new BuildingSpawnStep(0, production1_l, true),
+            new BuildingSpawnStep(1, production2_l, true),
         }, 1.);
 
 	controller_l.commitCommand(new BuildingUnitProductionCommand(1, 1, unitModel_l));
@@ -106,8 +106,8 @@ TEST(resourceSpentSimultaneousTest, simple_ko)
 	Controller controller_l({
             new PlayerSpawnStep(0, 0),
 			new PlayerSpendResourceStep(0, mapRes_l),
-            new BuildingSpawnStep(production1_l, true),
-            new BuildingSpawnStep(production2_l, true)
+            new BuildingSpawnStep(0, production1_l, true),
+            new BuildingSpawnStep(1, production2_l, true)
         }, 1.);
 
 	controller_l.commitCommand(new BuildingUnitProductionCommand(1, 1, unitModel_l));
