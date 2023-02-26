@@ -57,6 +57,10 @@ State::~State()
 			delete _grid.at(i).at(j);
 		}
 	}
+	for(TriggerData *triggerData_l : _triggersData)
+	{
+		delete triggerData_l;
+	}
 }
 bool State::hasEntity(Handle const &handle_p) const
 {

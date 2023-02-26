@@ -15,6 +15,7 @@ class VisionHandler
 {
 public:
 	VisionHandler(unsigned long size_p);
+	~VisionHandler();
 
 	/// @brief check if the given node is visible for a given team
 	bool isVisible(unsigned long team_p, unsigned long x, unsigned long y) const;

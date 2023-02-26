@@ -14,6 +14,14 @@ namespace octopus
 VisionHandler::VisionHandler(unsigned long size_p) : _size(size_p)
 {}
 
+VisionHandler::~VisionHandler()
+{
+	for(VisionGrid * grid_l : _grid)
+	{
+		delete grid_l;
+	}
+}
+
 bool VisionHandler::isVisible(unsigned long team_p, unsigned long x, unsigned long y) const
 {
 	if(team_p < _grid.size())
