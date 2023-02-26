@@ -14,6 +14,7 @@
 #include "step/building/BuildingCancelStep.hh"
 #include "step/building/BuildingStep.hh"
 #include "step/command/harvest/CommandHarvestStep.hh"
+#include "step/command/CommandWindUpDiffStep.hh"
 #include "step/entity/EntityHitPointChangeStep.hh"
 #include "step/entity/EntityMoveStep.hh"
 #include "step/entity/spawn/BuildingSpawnStep.hh"
@@ -131,6 +132,16 @@ void WorldUpdaterStepVisitor::visit(octopus::BuildingStep const *steppable_p)
 void WorldUpdaterStepVisitor::visit(octopus::PlayerAddOptionDivinityStep const *steppable_p)
 {
 	_divPanel.addOptionLayer(steppable_p->_player, steppable_p->_types);
+}
+
+void WorldUpdaterStepVisitor::visit(octopus::CommandWindUpDiffStep const *steppable_p)
+{
+	octopus::Entity const * ent_l = _state->getEntity(steppable_p->_handle);
+	if(_world._sprites[steppable_p->_handle])
+	{
+		// set wind up state
+		_world._sprites[steppable_p->_handle]->setStateNoReset(1);
+	}
 }
 
 }

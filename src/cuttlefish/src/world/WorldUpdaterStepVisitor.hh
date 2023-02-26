@@ -44,6 +44,7 @@ public:
 	virtual void visit(octopus::EntityMoveStep const *step_p) override;
 	virtual void visit(octopus::BuildingStep const *steppable_p) override;
 	virtual void visit(octopus::PlayerAddOptionDivinityStep const *steppable_p) override;
+	virtual void visit(octopus::CommandWindUpDiffStep const *) override;
 
 	virtual void visit(octopus::CommandAddSubAttackStep const *) override {}
 	virtual void visit(octopus::CommandDataWaypointAddStep const *) override {}
@@ -62,7 +63,6 @@ public:
 	virtual void visit(octopus::CommandSpawnStep const *) override {}
 	virtual void visit(octopus::CommandStorageStep const *) override {}
 	virtual void visit(octopus::CommandUpdateLastPosStep const *) override {}
-	virtual void visit(octopus::CommandWindUpDiffStep const *) override {}
 	virtual void visit(octopus::EntityAttackStep const *) override {}
 	virtual void visit(octopus::EntityBuffStep const *) override {}
 	virtual void visit(octopus::EntityUpdateWaitingStep const *) override {}
