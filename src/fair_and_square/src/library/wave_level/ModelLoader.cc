@@ -42,7 +42,7 @@ void createSquare(Library &lib_p)
     unitModel_l._damage = 10;
     unitModel_l._armor = 0;
     unitModel_l._range = 0.5;
-    unitModel_l._fullReload = 400.;
+    unitModel_l._fullReload = 100.;
     unitModel_l._windup = 50.;
 
     lib_p.registerUnitModel("square", unitModel_l);

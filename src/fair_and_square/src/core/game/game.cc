@@ -202,13 +202,13 @@ void runGame(Window &window_p)
 	spriteLib_l.registerSpriteTemplate("resource_food", window_p.loadTexture("resources/food_prop1.png"), 2., 64, 64, 128, 128, {2, 2}, {0.5, 1.}, 1);
 
 	// neutral
-	spriteLib_l.registerSpriteTemplate("command_center", window_p.loadTexture("resources/command_center.png"), 2., 32, 32, 64, 64, {2, 2, 2, 2}, {0.25, 0.5, 0.5, 0.5}, 1);
+	spriteLib_l.registerSpriteTemplate("command_center", window_p.loadTexture("resources/fair_and_square/command_center.png"), 2., 64, 64, 128, 128, {8, 2, 2, 2}, {0.25, 0.5, 0.5, 0.5}, 1);
 	spriteLib_l.registerSpriteTemplate("barrack", window_p.loadTexture("resources/deposit.png"), 1., 32, 32, 64, 64, {2, 2, 2, 2}, {0.25, 0.5, 0.5, 0.5}, 1);
 	spriteLib_l.registerSpriteTemplate("worker", window_p.loadTexture("resources/worker.png"), 0.5, 32, 32, 64, 64, {2, 2}, {0.25, 1}, 1);
 
-	spriteLib_l.registerSpriteTemplate("square", window_p.loadTexture("resources/fair_and_square/square.png"), 0.5, 16, 16, 32, 32, {8, 1}, {0.25, 1}, 1);
-	spriteLib_l.registerSpriteTemplate("triangle", window_p.loadTexture("resources/fair_and_square/triangle.png"), 0.5, 16, 16, 32, 32, {8, 1}, {0.25, 1}, 1);
-	spriteLib_l.registerSpriteTemplate("circle", window_p.loadTexture("resources/fair_and_square/circle.png"), 0.5, 16, 16, 32, 32, {8, 1}, {0.25, 1}, 1);
+	spriteLib_l.registerSpriteTemplate("square", window_p.loadTexture("resources/fair_and_square/square.png"), 0.5, 16, 16, 32, 32, {8, 8}, {0.25, 0.5/7.}, 1);
+	spriteLib_l.registerSpriteTemplate("triangle", window_p.loadTexture("resources/fair_and_square/triangle.png"), 0.5, 16, 16, 32, 32, {8, 8}, {0.25, 0.5/7.}, 1);
+	spriteLib_l.registerSpriteTemplate("circle", window_p.loadTexture("resources/fair_and_square/circle.png"), 0.5, 16, 16, 32, 32, {8, 8}, {0.25, 0.5/7.}, 1);
 
 	Tilemap tilemap_l(fullWorldSize_l, spriteLib_l, "tiles", "details");
 	tilemap_l.generate();
