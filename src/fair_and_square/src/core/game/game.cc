@@ -206,9 +206,9 @@ void runGame(Window &window_p)
 	spriteLib_l.registerSpriteTemplate("barrack", window_p.loadTexture("resources/deposit.png"), 1., 32, 32, 64, 64, {2, 2, 2, 2}, {0.25, 0.5, 0.5, 0.5}, 1);
 	spriteLib_l.registerSpriteTemplate("worker", window_p.loadTexture("resources/worker.png"), 0.5, 32, 32, 64, 64, {2, 2}, {0.25, 1}, 1);
 
-	spriteLib_l.registerSpriteTemplate("square", window_p.loadTexture("resources/soldier2_1.png"), 0.5, 32, 32, 64, 64, {2, 2}, {0.25, 1}, 1);
-	spriteLib_l.registerSpriteTemplate("triangle", window_p.loadTexture("resources/soldier4_1.png"), 0.5, 32, 32, 64, 64, {2, 2}, {0.25, 1}, 1);
-	spriteLib_l.registerSpriteTemplate("circle", window_p.loadTexture("resources/soldier1_1.png"), 0.5, 32, 32, 64, 64, {2, 2}, {0.25, 1}, 1);
+	spriteLib_l.registerSpriteTemplate("square", window_p.loadTexture("resources/fair_and_square/square.png"), 0.5, 16, 16, 32, 32, {8, 1}, {0.25, 1}, 1);
+	spriteLib_l.registerSpriteTemplate("triangle", window_p.loadTexture("resources/fair_and_square/triangle.png"), 0.5, 16, 16, 32, 32, {8, 1}, {0.25, 1}, 1);
+	spriteLib_l.registerSpriteTemplate("circle", window_p.loadTexture("resources/fair_and_square/circle.png"), 0.5, 16, 16, 32, 32, {8, 1}, {0.25, 1}, 1);
 
 	Tilemap tilemap_l(fullWorldSize_l, spriteLib_l, "tiles", "details");
 	tilemap_l.generate();
