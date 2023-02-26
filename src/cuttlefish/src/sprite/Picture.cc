@@ -35,7 +35,6 @@ void Picture::setState(int state_p)
 void Picture::setStateNoReset(int state_p)
 {
 	_state = state_p;
-	_frame = _frame % _nbFramesPerState.at(_state);
 }
 
 void Picture::setFrame(int frame_p)
@@ -46,6 +45,7 @@ void Picture::setFrame(int frame_p)
 void Picture::update(double elapsedTime_l)
 {
 	_timeIntoFrame += elapsedTime_l;
+	_frame = _frame % _nbFramesPerState.at(_state);
 
 	while(_timeIntoFrame > _timePerFramePerState.at(_state))
 	{
