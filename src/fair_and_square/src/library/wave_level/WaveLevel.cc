@@ -7,6 +7,7 @@
 #include "controller/trigger/Trigger.hh"
 #include "controller/trigger/Listener.hh"
 #include "command/entity/EntityAttackMoveCommand.hh"
+#include "command/spawner/AreaSpawnerCommand.hh"
 #include "library/Library.hh"
 #include "state/entity/Building.hh"
 #include "state/entity/Unit.hh"
@@ -66,7 +67,7 @@ public:
 	}
 };
 
-std::list<Steppable *> WaveLevel(Library &lib_p)
+std::list<Steppable *> WaveLevelSteps(Library &lib_p)
 {
 	loadModels(lib_p);
 
@@ -117,4 +118,43 @@ std::list<Steppable *> WaveLevel(Library &lib_p)
 	};
 
 	return spawners_l;
+}
+
+std::list<Command *> WaveLevelCommands(Library &lib_p)
+{
+	std::list<AreaSpawn> spawners_l;
+
+	Resource res2_l({21,17}, true, lib_p.getEntityModel("resource_food"));
+	res2_l._type = ResourceType::Food;
+	res2_l._resource = 500.;
+	res2_l._player = 2;
+
+	Resource res3_l({15,17}, true, lib_p.getEntityModel("resource_steel"));
+	res3_l._type = ResourceType::Steel;
+	res3_l._resource = 500.;
+	res3_l._player = 2;
+
+	AreaSpawn area_l;
+	area_l.x = 25;
+	area_l.y = 5;
+	area_l.size = 20;
+	area_l.entities.emplace_back(new Resource(res3_l), 1);
+	area_l.entities.emplace_back(new Resource(res2_l), 3);
+	spawners_l.push_back(area_l);
+
+	area_l.x = 5;
+	area_l.y = 25;
+	area_l.size = 20;
+	area_l.entities.clear();
+	area_l.entities.emplace_back(new Resource(res3_l), 1);
+	area_l.entities.emplace_back(new Resource(res2_l), 3);
+	spawners_l.push_back(area_l);
+
+	AreaSpawnerCommand * spawnCommand_l = new AreaSpawnerCommand(spawners_l);
+
+	std::list<Command *> commands_l {
+		new AreaSpawnerCommand(spawners_l),
+	};
+
+	return commands_l;
 }

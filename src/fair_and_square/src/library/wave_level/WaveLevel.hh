@@ -5,11 +5,13 @@
 
 namespace octopus
 {
+	class Command;
 	class Steppable;
 	class Library;
 } // namespace octopus
 
 
-std::list<octopus::Steppable *> WaveLevel(octopus::Library &lib_p);
+std::list<octopus::Steppable *> WaveLevelSteps(octopus::Library &lib_p);
+std::list<octopus::Command *> WaveLevelCommands(octopus::Library &lib_p);
 
 #endif

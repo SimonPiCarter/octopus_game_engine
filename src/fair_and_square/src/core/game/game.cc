@@ -142,9 +142,10 @@ void runGame(Window &window_p)
 	World world_l;
 
 	octopus::Library lib_l;
-	std::list<octopus::Steppable *> spawners_l = WaveLevel(lib_l);
+	std::list<octopus::Steppable *> spawners_l = WaveLevelSteps(lib_l);
+	std::list<octopus::Command *> commands_l = WaveLevelCommands(lib_l);
 
-	octopus::Controller controller_l(spawners_l, 0.01, {}, gridSize_l);
+	octopus::Controller controller_l(spawners_l, 0.01, commands_l, gridSize_l);
 
 	std::thread controllerThread_l(controllerLoop, std::ref(controller_l), std::ref(quit_l), std::ref(paused_l));
 

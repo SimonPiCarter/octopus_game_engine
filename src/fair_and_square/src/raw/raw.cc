@@ -13,9 +13,10 @@ int main()
 	unsigned long gridSize_l = 5;
 
 	octopus::Library lib_l;
-	std::list<octopus::Steppable *> spawners_l = WaveLevel(lib_l);
+	std::list<octopus::Steppable *> spawners_l = WaveLevelSteps(lib_l);
+	std::list<octopus::Command *> commands_l = WaveLevelCommands(lib_l);
 
-	octopus::Controller controller_l(spawners_l, 0.01, {}, gridSize_l);
+	octopus::Controller controller_l(spawners_l, 0.01, commands_l, gridSize_l);
 
 	using namespace std::chrono_literals;
 
