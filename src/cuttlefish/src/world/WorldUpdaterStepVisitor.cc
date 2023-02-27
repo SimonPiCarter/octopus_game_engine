@@ -9,6 +9,7 @@
 #include "panel/DivinityPanel.hh"
 
 // octopus
+#include "command/data/AttackMoveData.hh"
 #include "state/entity/Entity.hh"
 #include "state/State.hh"
 #include "step/building/BuildingCancelStep.hh"
@@ -137,16 +138,14 @@ void WorldUpdaterStepVisitor::visit(octopus::PlayerAddOptionDivinityStep const *
 void WorldUpdaterStepVisitor::visit(octopus::CommandWindUpDiffStep const *steppable_p)
 {
 	octopus::Entity const * ent_l = _state->getEntity(steppable_p->_handle);
+	octopus::AttackMoveData const *data_l = dynamic_cast<octopus::AttackMoveData const *>(ent_l->getFrontQueue()._data);
 	if(_world._sprites[steppable_p->_handle])
 	{
 		// set wind up state
-		if(steppable_p->_diff < 0)
+		if(data_l->_windup == 1)
 		{
 			_world._sprites[steppable_p->_handle]->setState(1);
-		}
-		else
-		{
-			_world._sprites[steppable_p->_handle]->setStateNoReset(1);
+			_world._sprites[steppable_p->_handle]->queueState(0);
 		}
 	}
 }

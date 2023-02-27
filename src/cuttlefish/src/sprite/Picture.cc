@@ -37,6 +37,17 @@ void Picture::setStateNoReset(int state_p)
 	_state = state_p;
 }
 
+void Picture::queueState(int state_p)
+{
+	_hasStateQueuedUp = true;
+	_stateNext = state_p;
+}
+
+bool Picture::hasStateQueued() const
+{
+	return _hasStateQueuedUp;
+}
+
 void Picture::setFrame(int frame_p)
 {
 	_frame = frame_p;
@@ -51,6 +62,11 @@ void Picture::update(double elapsedTime_l)
 	{
 		_timeIntoFrame -= _timePerFramePerState.at(_state);
 		_frame = (_frame + 1) % _nbFramesPerState.at(_state);
+		if(_frame == 0 && _hasStateQueuedUp)
+		{
+			_hasStateQueuedUp = false;
+			_state = _stateNext;
+		}
 	}
 }
 

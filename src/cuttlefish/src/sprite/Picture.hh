@@ -37,6 +37,13 @@ class Picture
 		/// @warning this may result in out of bound frame selection (if the frame is > to frame of the new state)
 		void setStateNoReset(int state_p);
 
+		/// @brief queue state after this one
+		/// @param state_p next state
+		void queueState(int state_p);
+
+		/// @brief return true if a state is queued
+		bool hasStateQueued() const;
+
 		/// @brief update frame to given value
 		/// @note mainly used for icons
 		void setFrame(int frame_p);
@@ -101,6 +108,10 @@ class Picture
 		int _state {0};
 		/// @brief current frame
 		int _frame {0};
+		/// @brief boolean to know if one state is queued up
+		bool _hasStateQueuedUp {false};
+		/// @brief the state queued up after current is over
+		int _stateNext {0};
 };
 
 } // namespace cuttlefish

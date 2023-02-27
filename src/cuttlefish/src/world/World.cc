@@ -38,7 +38,10 @@ void World::handleStep(Window &window_p, Panel &panel_p, DivinityPanel &divPanel
 		for(Sprite * sprite_l : _listSprite)
 		{
 			// reset steps state
-			sprite_l->setStateNoReset(0);
+			if(!sprite_l->hasStateQueued())
+			{
+				sprite_l->setStateNoReset(0);
+			}
 
 			octopus::Entity const &entity_l = *steps_p._state->getEntity(sprite_l->getHandle());
 			if(entity_l._model._isBuilding
