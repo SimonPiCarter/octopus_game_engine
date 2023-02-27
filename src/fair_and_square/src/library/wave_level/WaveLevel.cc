@@ -11,6 +11,7 @@
 #include "state/entity/Building.hh"
 #include "state/entity/Unit.hh"
 #include "state/entity/Resource.hh"
+#include "state/model/entity/BuildingModel.hh"
 #include "state/State.hh"
 #include "step/Step.hh"
 #include "step/command/CommandQueueStep.hh"
@@ -40,7 +41,7 @@ public:
 			step_p.addSteppable(new CommandSpawnStep(new EntityAttackMoveCommand(handle_l, handle_l, {7., 20.}, 0, {{7., 20.}}, true )));
 		}
 
-		step_p.addSteppable(new TriggerSpawn(new WaveSpawn(new ListenerStepCount(0.1*60*100), _lib, _wave+1)));
+		step_p.addSteppable(new TriggerSpawn(new WaveSpawn(new ListenerStepCount(3*60*100), _lib, _wave+1)));
 
 		// win after 10 waves
 		if(_wave == 10)
@@ -52,6 +53,17 @@ public:
 private:
 	Library const &_lib;
 	unsigned long const _wave;
+};
+
+class LoseTrigger : public OneShotTrigger
+{
+public:
+	LoseTrigger(Listener * listener_p) : OneShotTrigger({listener_p}) {}
+
+	virtual void trigger(State const &state_p, Step &step_p, unsigned long) const override
+	{
+		step_p.addSteppable(new StateWinStep(state_p.isOver(), state_p.hasWinningTeam(), state_p.getWinningTeam(), 1));
+	}
 };
 
 std::list<Steppable *> WaveLevel(Library &lib_p)
@@ -77,7 +89,8 @@ std::list<Steppable *> WaveLevel(Library &lib_p)
 	mapRes_l[octopus::ResourceType::Food] = -200;
 	mapRes_l[octopus::ResourceType::Steel] = -200;
 
-	Trigger * trigger_l = new WaveSpawn(new ListenerStepCount(0.1*60*100), lib_p, 1);
+	Trigger * triggerWave_l = new WaveSpawn(new ListenerStepCount(3*60*100), lib_p, 1);
+	Trigger * triggerLose_l = new LoseTrigger(new ListenerEntityModelDied(&lib_p.getBuildingModel("command_center"), 0));
 
 	std::list<Steppable *> spawners_l =
 	{
@@ -95,7 +108,8 @@ std::list<Steppable *> WaveLevel(Library &lib_p)
 		new UnitSpawnStep(6, unit_l),
 		new UnitSpawnStep(7, unit_l),
 		new UnitSpawnStep(8, unit_l),
-		new TriggerSpawn(trigger_l),
+		new TriggerSpawn(triggerWave_l),
+		new TriggerSpawn(triggerLose_l),
 	};
 
 	return spawners_l;
