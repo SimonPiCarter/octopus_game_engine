@@ -10,8 +10,8 @@
 
 namespace octopus
 {
-struct BuildingModel;;
-struct EntityModel;
+struct BuildingModel;
+struct Entity;
 
 struct AreaSpawn
 {
@@ -22,9 +22,7 @@ struct AreaSpawn
 	/// @brief width and height of the area in the world
 	unsigned long size{ 1 };
 	/// @brief the list of model to spawn in the area
-	std::list<std::pair<EntityModel *, unsigned long> > models;
-	/// @brief the player id for units and buildings
-	unsigned long player{ 0 };
+	std::list<std::pair<Entity *, unsigned long> > entities;
 };
 
 /// @brief This command will spawn models randomly in the given areas

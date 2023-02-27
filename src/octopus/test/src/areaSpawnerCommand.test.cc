@@ -5,6 +5,8 @@
 #include "controller/Controller.hh"
 #include "state/model/entity/BuildingModel.hh"
 #include "state/model/entity/UnitModel.hh"
+#include "state/entity/Unit.hh"
+#include "state/entity/Building.hh"
 #include "state/State.hh"
 #include "step/command/CommandQueueStep.hh"
 #include "step/player/PlayerSpawnStep.hh"
@@ -20,22 +22,24 @@ TEST(areaSpawnerCommandTest, simple)
 {
 	UnitModel unitModel_l { false, 0.5, 1., 10. };
 	BuildingModel buildingModel_l { true, 1., 10. };
+	Unit unit_l({0,0}, false, unitModel_l);
+	Building building_l({0,0}, false, buildingModel_l);
 
 	std::list<AreaSpawn> spawners_l;
 	AreaSpawn area_l;
 	area_l.x = 2;
 	area_l.y = 5;
 	area_l.size = 10;
-	area_l.models.emplace_back(&unitModel_l, 3);
-	area_l.models.emplace_back(&buildingModel_l, 3);
+	area_l.entities.emplace_back(&unit_l, 3);
+	area_l.entities.emplace_back(&building_l, 3);
 	spawners_l.push_back(area_l);
 
 	area_l.x = 2;
 	area_l.y = 7;
 	area_l.size = 10;
-	area_l.models.clear();
-	area_l.models.emplace_back(&unitModel_l, 2);
-	area_l.models.emplace_back(&buildingModel_l, 1);
+	area_l.entities.clear();
+	area_l.entities.emplace_back(&unit_l, 2);
+	area_l.entities.emplace_back(&building_l, 1);
 	spawners_l.push_back(area_l);
 
 	AreaSpawnerCommand * spawnCommand_l = new AreaSpawnerCommand(spawners_l);
