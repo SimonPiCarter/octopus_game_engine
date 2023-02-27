@@ -247,8 +247,13 @@ Entity const * lookUpNewBuffTarget(State const &state_p, Handle const &sourceHan
 Entity const * lookUpNewTarget(State const &state_p, Handle const &sourceHandle_p)
 {
 	double matchDistance_l = 5;
+
 	double sqDis_l = 0.;
 	Entity const * closest_l = nullptr;
+
+	double sqDisBuilding_l = 0.;
+	Entity const * closestBuilding_l = nullptr;
+
 	Entity const * source_l = state_p.getEntity(sourceHandle_p);
 	unsigned long team_l = state_p.getPlayer(source_l->_player)->_team;
 
@@ -278,12 +283,21 @@ Entity const * lookUpNewTarget(State const &state_p, Handle const &sourceHandle_
 		Entity const * ent_l = state_p.getEntity(handle_p);
 		if(ent_l == source_l
 		|| !ent_l->_alive
-		|| !ent_l->_model._isUnit
 		|| team_l == state_p.getPlayer(ent_l->_player)->_team)
 		{
 			// NA
 		}
-		else
+		else if(ent_l->_model._isBuilding)
+		{
+			double curSqDis_l = square_length(ent_l->_pos - source_l->_pos);
+			if(closest_l == nullptr
+			|| sqDis_l > curSqDis_l)
+			{
+				closestBuilding_l = ent_l;
+				sqDisBuilding_l = curSqDis_l;
+			}
+		}
+		else if(ent_l->_model._isUnit)
 		{
 			double curSqDis_l = square_length(ent_l->_pos - source_l->_pos);
 			if(closest_l == nullptr
@@ -300,10 +314,16 @@ Entity const * lookUpNewTarget(State const &state_p, Handle const &sourceHandle_
 	// reset target if too far
 	if(sqDis_l > matchDistance_l*matchDistance_l)
 	{
-		Logger::getDebug() << " lookUpNewTarget :: reset because too far "<< std::endl;
+		Logger::getDebug() << " lookUpNewTarget :: reset because too far (unit) "<< std::endl;
 		closest_l = nullptr;
 	}
-	return closest_l;
+	// reset target if too far
+	if(sqDisBuilding_l > matchDistance_l*matchDistance_l)
+	{
+		Logger::getDebug() << " lookUpNewTarget :: reset because too far (building) "<< std::endl;
+		closestBuilding_l = nullptr;
+	}
+	return closest_l?closest_l:closestBuilding_l;
 }
 
 
