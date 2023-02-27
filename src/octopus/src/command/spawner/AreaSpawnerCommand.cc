@@ -19,6 +19,17 @@ AreaSpawnerCommand::AreaSpawnerCommand(std::list<AreaSpawn> const &spawns_p)
 	, _gen(42)
 {}
 
+AreaSpawnerCommand::~AreaSpawnerCommand()
+{
+	for(AreaSpawn const &spawn_l : _spawns)
+	{
+		for(std::pair<Entity *, unsigned long> const &pair_l : spawn_l.entities)
+		{
+			delete pair_l.first;
+		}
+	}
+}
+
 void spawn(State const &state_p, Step & step_p, Entity const *model_p, Option const &option_p)
 {
 	Vector pos_l {option_p.x + std::ceil(2*model_p->_model._ray)/2., option_p.y + std::ceil(2*model_p->_model._ray)/2. };

@@ -30,16 +30,16 @@ TEST(areaSpawnerCommandTest, simple)
 	area_l.x = 2;
 	area_l.y = 5;
 	area_l.size = 10;
-	area_l.entities.emplace_back(&unit_l, 3);
-	area_l.entities.emplace_back(&building_l, 3);
+	area_l.entities.emplace_back(new Unit(unit_l), 3);
+	area_l.entities.emplace_back(new Building(building_l), 3);
 	spawners_l.push_back(area_l);
 
 	area_l.x = 2;
 	area_l.y = 7;
 	area_l.size = 10;
 	area_l.entities.clear();
-	area_l.entities.emplace_back(&unit_l, 2);
-	area_l.entities.emplace_back(&building_l, 1);
+	area_l.entities.emplace_back(new Unit(unit_l), 2);
+	area_l.entities.emplace_back(new Building(building_l), 1);
 	spawners_l.push_back(area_l);
 
 	AreaSpawnerCommand * spawnCommand_l = new AreaSpawnerCommand(spawners_l);

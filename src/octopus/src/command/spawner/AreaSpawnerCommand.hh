@@ -32,6 +32,7 @@ class AreaSpawnerCommand : public Command
 {
 public:
 	AreaSpawnerCommand(std::list<AreaSpawn> const &spawns_p);
+	~AreaSpawnerCommand();
 
 	virtual void registerCommand(Step & step_p, State const &state_p) override;
 
