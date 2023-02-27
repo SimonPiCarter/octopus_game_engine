@@ -76,14 +76,17 @@ std::list<Steppable *> WaveLevel(Library &lib_p)
 	Resource res1_l({20,20}, true, lib_p.getEntityModel("resource_food"));
 	res1_l._type = ResourceType::Food;
 	res1_l._resource = 500.;
+	res1_l._player = 2;
 
 	Resource res2_l({21,17}, true, lib_p.getEntityModel("resource_food"));
 	res2_l._type = ResourceType::Food;
 	res2_l._resource = 500.;
+	res2_l._player = 2;
 
 	Resource res3_l({15,17}, true, lib_p.getEntityModel("resource_steel"));
 	res3_l._type = ResourceType::Steel;
 	res3_l._resource = 500.;
+	res3_l._player = 2;
 
 	std::map<ResourceType, double> mapRes_l;
 	mapRes_l[octopus::ResourceType::Food] = -200;
@@ -96,6 +99,7 @@ std::list<Steppable *> WaveLevel(Library &lib_p)
 	{
 		new PlayerSpawnStep(0, 0),
 		new PlayerSpawnStep(1, 1),
+		new PlayerSpawnStep(2, 2),
 		new PlayerAddBuildingModel(0, lib_p.getBuildingModel("command_center")),
 		new PlayerAddBuildingModel(0, lib_p.getBuildingModel("barrack")),
 		new PlayerSpendResourceStep(0, mapRes_l),
