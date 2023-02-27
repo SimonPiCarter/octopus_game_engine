@@ -234,6 +234,7 @@ void runGame(Window &window_p)
 	auto last_l = std::chrono::steady_clock::now();
 	double elapsed_l = 0.;
 
+	bool over_l = false;
 	bool draw_l = false;
 	unsigned long winningTeam_l = 0;
 	//Event handler
@@ -249,6 +250,7 @@ void runGame(Window &window_p)
 		// quit loop if state is over
 		if(state_l.isOver())
 		{
+			over_l = true;
 			draw_l = !state_l.hasWinningTeam();
 			winningTeam_l = state_l.getWinningTeam();
 			quit_l = true;
@@ -503,7 +505,11 @@ void runGame(Window &window_p)
 		window_p.draw();
 	}
 
-	if(draw_l)
+	if(!over_l)
+	{
+		std::cout<<"was not over"<<std::endl;
+	}
+	else if(draw_l)
 	{
 		std::cout<<"ended in a draw"<<std::endl;
 	}
