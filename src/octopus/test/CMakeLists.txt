@@ -37,6 +37,7 @@ target_sources (unit_tests
 	src/divinityCommand.test.cc
 	src/entityMoveStep.test.cc
 	src/entitySpawnStep.test.cc
+	src/fixed.test.cc
 	src/grid.test.cc
 	src/harvestCommand.test
 	src/moveCommand.test.cc
