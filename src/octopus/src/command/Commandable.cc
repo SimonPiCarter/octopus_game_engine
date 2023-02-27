@@ -47,6 +47,11 @@ CommandBundle & Commandable::getFrontQueue()
 	return _queue.getFrontCommand();
 }
 
+CommandBundle const & Commandable::getFrontQueue() const
+{
+	return _queue.getFrontCommand();
+}
+
 CommandQueue &Commandable::getQueue()
 {
 	return _queue;

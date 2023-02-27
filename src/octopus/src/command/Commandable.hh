@@ -35,6 +35,7 @@ public:
 	virtual void runCommands(Step & step_p, State const &state_p);
 
 	CommandBundle & getFrontQueue();
+	CommandBundle const & getFrontQueue() const;
 	CommandQueue & getQueue();
 	const CommandQueue & getQueue() const;
 
