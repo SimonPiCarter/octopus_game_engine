@@ -39,7 +39,7 @@ void WorldUpdaterStepVisitor::spawn(octopus::Handle const &handle_p)
 	const octopus::EntityModel &model_l = entity_l._model;
 
 	Sprite * sprite_l = _lib.createSprite(handle_p, model_l._id, false);
-	sprite_l->setPosition(entity_l._pos.x*32, entity_l._pos.y*32);
+	sprite_l->setPosition(entity_l._pos.x.to_double()*32., entity_l._pos.y.to_double()*32.);
 
 	_world._sprites[handle_p] = sprite_l;
 	_world._listSprite.push_back(sprite_l);
@@ -117,7 +117,7 @@ void WorldUpdaterStepVisitor::visit(octopus::EntityMoveStep const *steppable_p)
 	octopus::Entity const * ent_l = _state->getEntity(steppable_p->_handle);
 	if(_world._sprites[steppable_p->_handle])
 	{
-		_world._sprites[steppable_p->_handle]->setPosition(ent_l->_pos.x*32, ent_l->_pos.y*32);
+		_world._sprites[steppable_p->_handle]->setPosition(ent_l->_pos.x.to_double()*32, ent_l->_pos.y.to_double()*32);
 	}
 }
 

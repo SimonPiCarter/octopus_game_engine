@@ -303,8 +303,8 @@ void runGame(Window &window_p)
 				if(minimapClicked_l)
 				{
 					octopus::Vector pos_l = getCameraPosition(e.button.x, e.button.y, minimap_l, window_p, state_l.getWorldSize());
-					x = pos_l.x;
-					y = pos_l.y;
+					x = pos_l.x.to_double();
+					y = pos_l.y.to_double();
 				}
 			}
 			//User requests quit_l
@@ -317,8 +317,8 @@ void runGame(Window &window_p)
 				if(minimap_l.isInside(e.button.x, e.button.y))
 				{
 					octopus::Vector pos_l = getCameraPosition(e.button.x, e.button.y, minimap_l, window_p, state_l.getWorldSize());
-					x = pos_l.x;
-					y = pos_l.y;
+					x = pos_l.x.to_double();
+					y = pos_l.y.to_double();
 					minimapClicked_l = true;
 				}
 				else if(!panel_l.getBackground()->isInside(window_p, e.button.x, e.button.y)

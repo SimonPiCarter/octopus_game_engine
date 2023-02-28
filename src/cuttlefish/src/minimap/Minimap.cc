@@ -60,15 +60,19 @@ void Minimap::render(octopus::State const &state_p, World const &world_p, Window
 
 	// display fog in game
 	SDL_Rect cutFog_l;
-	cutFog_l.x = std::floor(window_p.getWorldVector(0, 0).x);
-	cutFog_l.y = std::floor(window_p.getWorldVector(0, 0).y);
-	cutFog_l.w = std::ceil(window_p.getWindowSize().x+1.);
-	cutFog_l.h = std::ceil(window_p.getWindowSize().y+1.);
+	cutFog_l.x = window_p.getWorldVector(0, 0).x.to_int();
+	cutFog_l.y = window_p.getWorldVector(0, 0).y.to_int();
+	cutFog_l.w = (window_p.getWindowSize().x+1.).to_int();
+	cutFog_l.h = (window_p.getWindowSize().y+1.).to_int();
 	SDL_Rect posFog_l;
-	posFog_l.x = window_p.getPixelVector(cutFog_l.x - window_p.getWorldVector(0, 0).x, cutFog_l.y - window_p.getWorldVector(0, 0).y).x;
-	posFog_l.y = window_p.getPixelVector(cutFog_l.x - window_p.getWorldVector(0, 0).x, cutFog_l.y - window_p.getWorldVector(0, 0).y).y;
-	posFog_l.w = window_p.getPixelVector(cutFog_l.w, cutFog_l.h).x;
-	posFog_l.h = window_p.getPixelVector(cutFog_l.w, cutFog_l.h).y;
+	// position of the fog on screen
+	octopus::Vector vec_l = window_p.getPixelVector(
+		cutFog_l.x - window_p.getWorldVector(0, 0).x.to_double(),
+		cutFog_l.y - window_p.getWorldVector(0, 0).y.to_double());
+	posFog_l.x = vec_l.x.to_int();
+	posFog_l.y = vec_l.y.to_int();
+	posFog_l.w = window_p.getPixelVector(cutFog_l.w, cutFog_l.h).x.to_int();
+	posFog_l.h = window_p.getPixelVector(cutFog_l.w, cutFog_l.h).y.to_int();
 
 	SDL_RenderCopy( window_p.getRenderer(), fog_l, &cutFog_l, &posFog_l );
 
@@ -79,8 +83,8 @@ void Minimap::render(octopus::State const &state_p, World const &world_p, Window
 	{
 		octopus::Entity const *ent_l = state_p.getEntity(sprite_l->getHandle());
 
-		double x_l = _x + ent_l->_pos.x*_w/state_p.getWorldSize();
-		double y_l = _y + ent_l->_pos.y*_h/state_p.getWorldSize();
+		double x_l = _x + ent_l->_pos.x.to_double()*_w/state_p.getWorldSize();
+		double y_l = _y + ent_l->_pos.y.to_double()*_h/state_p.getWorldSize();
 
 		double w_l = std::max(1., ent_l->_model._ray*_w/state_p.getWorldSize());
 		double h_l = std::max(1., ent_l->_model._ray*_h/state_p.getWorldSize());
@@ -97,10 +101,10 @@ void Minimap::render(octopus::State const &state_p, World const &world_p, Window
 
 	// camera rendering
 	SDL_Rect cam_l;
-	cam_l.x = _x + window_p.getWorldVector(0, 0).x*_w/state_p.getWorldSize();
-	cam_l.y = _y + window_p.getWorldVector(0, 0).y*_h/state_p.getWorldSize();
-	cam_l.w = window_p.getWindowSize().x*_w/state_p.getWorldSize();
-	cam_l.h = window_p.getWindowSize().y*_h/state_p.getWorldSize();
+	cam_l.x = _x + window_p.getWorldVector(0, 0).x.to_double()*_w/state_p.getWorldSize();
+	cam_l.y = _y + window_p.getWorldVector(0, 0).y.to_double()*_h/state_p.getWorldSize();
+	cam_l.w = window_p.getWindowSize().x.to_double()*_w/state_p.getWorldSize();
+	cam_l.h = window_p.getWindowSize().y.to_double()*_h/state_p.getWorldSize();
 	SDL_SetRenderDrawColor(window_p.getRenderer(), 255, 255, 255, 255);
 	SDL_RenderDrawRect(window_p.getRenderer(), &cam_l);
 }
@@ -122,7 +126,9 @@ octopus::Vector getCameraPosition(int x, int y, Minimap const &minimap_p, Window
 {
 	octopus::Vector ratio_l = minimap_p.getRatioInside(x, y);
 
-	octopus::Vector pos_l = window_p.getPixelVector(ratio_l.x * worldSize_p - window_p.getWindowSize().x/2, ratio_l.y * worldSize_p - window_p.getWindowSize().y/2);
+	octopus::Vector pos_l = window_p.getPixelVector(
+		ratio_l.x.to_double() * worldSize_p - window_p.getWindowSize().x.to_double()/2.,
+		ratio_l.y.to_double() * worldSize_p - window_p.getWindowSize().y.to_double()/2.);
 
 	return pos_l;
 }
