@@ -179,17 +179,17 @@ void State::incrementPathGridStatus()
 	++_pathGridStatus;
 }
 
-long State::getGridIndex(double idx_p) const
+long State::getGridIndex(Fixed idx_p) const
 {
 	long size_l = getGridSize();
-	return std::min(std::max(0l, long(idx_p/_gridPointSize)), size_l-1);
+	return std::min(std::max(0l, long((idx_p/_gridPointSize).to_int())), size_l-1);
 }
 
 Entity const * lookUpNewBuffTarget(State const &state_p, Handle const &sourceHandle_p, double range_p, TyppedBuff const &buff_p)
 {
 	Entity const * source_l = state_p.getEntity(sourceHandle_p);
-	double matchDistance_l = range_p + source_l->_model._ray;
-	double sqDis_l = 0.;
+	Fixed matchDistance_l = range_p + source_l->_model._ray;
+	Fixed sqDis_l = 0.;
 	unsigned long timeSinceBuff_l = 0;
 	Entity const * best_l = nullptr;
 	unsigned long team_l = state_p.getPlayer(source_l->_player)->_team;
@@ -218,7 +218,7 @@ Entity const * lookUpNewBuffTarget(State const &state_p, Handle const &sourceHan
 				}
 				bitset_l[handle_p] = true;
 				Entity const * ent_l = state_p.getEntity(handle_p);
-				double curSqDis_l = square_length(ent_l->_pos - source_l->_pos);
+				Fixed curSqDis_l = square_length(ent_l->_pos - source_l->_pos);
 				if(ent_l != source_l
 				&& ent_l->_alive
 				&& buff_p.isApplying(state_p, *source_l, *ent_l)
@@ -248,10 +248,10 @@ Entity const * lookUpNewTarget(State const &state_p, Handle const &sourceHandle_
 {
 	double matchDistance_l = 5;
 
-	double sqDis_l = 0.;
+	Fixed sqDis_l = 0.;
 	Entity const * closest_l = nullptr;
 
-	double sqDisBuilding_l = 0.;
+	Fixed sqDisBuilding_l = 0.;
 	Entity const * closestBuilding_l = nullptr;
 
 	Entity const * source_l = state_p.getEntity(sourceHandle_p);
@@ -289,7 +289,7 @@ Entity const * lookUpNewTarget(State const &state_p, Handle const &sourceHandle_
 		}
 		else if(ent_l->_model._isBuilding)
 		{
-			double curSqDis_l = square_length(ent_l->_pos - source_l->_pos);
+			Fixed curSqDis_l = square_length(ent_l->_pos - source_l->_pos);
 			if(closestBuilding_l == nullptr
 			|| sqDisBuilding_l > curSqDis_l)
 			{
@@ -299,7 +299,7 @@ Entity const * lookUpNewTarget(State const &state_p, Handle const &sourceHandle_
 		}
 		else if(ent_l->_model._isUnit)
 		{
-			double curSqDis_l = square_length(ent_l->_pos - source_l->_pos);
+			Fixed curSqDis_l = square_length(ent_l->_pos - source_l->_pos);
 			if(closest_l == nullptr
 			|| sqDis_l > curSqDis_l)
 			{
@@ -341,7 +341,7 @@ Entity const * lookUpNewTarget(State const &state_p, Handle const &sourceHandle_
 
 Entity const * lookUpDeposit(State const &state_p, Handle const &sourceHandle_p, Handle const &res_p)
 {
-	double sqDis_l = 0.;
+	Fixed sqDis_l = 0.;
 	Entity const * closest_l = nullptr;
 	Entity const * source_l = state_p.getEntity(sourceHandle_p);
 
@@ -368,7 +368,7 @@ Entity const * lookUpDeposit(State const &state_p, Handle const &sourceHandle_p,
 			continue;
 		}
 
-		double curSqDis_l = square_length(ent_l->_pos - source_l->_pos);
+		Fixed curSqDis_l = square_length(ent_l->_pos - source_l->_pos);
 		if(closest_l == nullptr
 		|| sqDis_l > curSqDis_l)
 		{
@@ -381,7 +381,7 @@ Entity const * lookUpDeposit(State const &state_p, Handle const &sourceHandle_p,
 
 Entity const * lookUpNewResource(State const &state_p, Handle const &sourceHandle_p, Handle const &res_p)
 {
-	double sqDis_l = 0.;
+	Fixed sqDis_l = 0.;
 	Entity const * closest_l = nullptr;
 	Entity const * source_l = state_p.getEntity(sourceHandle_p);
 
@@ -405,7 +405,7 @@ Entity const * lookUpNewResource(State const &state_p, Handle const &sourceHandl
 			continue;
 		}
 
-		double curSqDis_l = square_length(ent_l->_pos - origRes_l->_pos);
+		Fixed curSqDis_l = square_length(ent_l->_pos - origRes_l->_pos);
 		if(closest_l == nullptr
 		|| sqDis_l > curSqDis_l)
 		{
@@ -457,9 +457,9 @@ void updateGrid(State &state_p, Entity const *ent_p, bool set_p)
 					  state_p.getGridIndex(ent_p->_pos.y-ent_p->_model._ray),
 					  state_p.getGridIndex(ent_p->_pos.y+ent_p->_model._ray+0.999)
 					};
-	for(size_t x = box_l._lowerX ; x <= box_l._upperX; ++x)
+	for(long x = box_l._lowerX ; x <= box_l._upperX; ++x)
 	{
-		for(size_t y = box_l._lowerY ; y <= box_l._upperY; ++y)
+		for(long y = box_l._lowerY ; y <= box_l._upperY; ++y)
 		{
 			state_p.getGrid()[x][y]->set(ent_p->_handle, set_p);
 		}
@@ -471,14 +471,14 @@ void updateGrid(State &state_p, Entity const *ent_p, bool set_p)
 		state_p.incrementPathGridStatus();
 		// Canot use grid index because it uses custom size
 		// because each node has a size of 1
-		Box<size_t> boxNode_l { size_t(std::max(0., ent_p->_pos.x-ent_p->_model._ray)),
-						size_t(std::max(0., ent_p->_pos.x+ent_p->_model._ray+0.999)),
-						size_t(std::max(0., ent_p->_pos.y-ent_p->_model._ray)),
-						size_t(std::max(0., ent_p->_pos.y+ent_p->_model._ray+0.999))
+		Box<long long> boxNode_l { std::max(Fixed(0.), ent_p->_pos.x-ent_p->_model._ray).to_int(),
+						std::max(Fixed(0.), ent_p->_pos.x+ent_p->_model._ray+0.999).to_int(),
+						std::max(Fixed(0.), ent_p->_pos.y-ent_p->_model._ray).to_int(),
+						std::max(Fixed(0.), ent_p->_pos.y+ent_p->_model._ray+0.999).to_int()
 						};
-		for(size_t x = boxNode_l._lowerX ; x < boxNode_l._upperX; ++x)
+		for(long long x = boxNode_l._lowerX ; x < boxNode_l._upperX; ++x)
 		{
-			for(size_t y = boxNode_l._lowerY ; y < boxNode_l._upperY; ++y)
+			for(long long y = boxNode_l._lowerY ; y < boxNode_l._upperY; ++y)
 			{
 				GridNode *node_l = state_p.getPathGrid().getNode(x, y);
 				if(set_p)
@@ -504,20 +504,20 @@ void updateExplorationGrid(State &state_p, Entity const *ent_p, bool set_p)
 
 bool checkGrid(State const &state_p, Entity const *ent_p, bool ignoreAbandonedTemples_p)
 {
-	long size_l = state_p.getGridSize();
+	long long size_l = state_p.getGridSize();
 	// fill positional grid
-	Box<long> box_l { std::min(std::max(0l, long(ent_p->_pos.x-ent_p->_model._ray)), size_l),
-					  std::min(std::max(0l, long(ent_p->_pos.x+ent_p->_model._ray+0.999)), size_l),
-					  std::min(std::max(0l, long(ent_p->_pos.y-ent_p->_model._ray)), size_l),
-					  std::min(std::max(0l, long(ent_p->_pos.y+ent_p->_model._ray+0.999)), size_l)
+	Box<long long> box_l { std::min(std::max(0ll, (ent_p->_pos.x-ent_p->_model._ray).to_int()), size_l),
+					  std::min(std::max(0ll, (ent_p->_pos.x+ent_p->_model._ray+0.999).to_int()), size_l),
+					  std::min(std::max(0ll, (ent_p->_pos.y-ent_p->_model._ray).to_int()), size_l),
+					  std::min(std::max(0ll, (ent_p->_pos.y+ent_p->_model._ray+0.999).to_int()), size_l)
 					};
 
 	// only chekc grid if static
 	if(ent_p->_model._isStatic)
 	{
-		for(size_t x = box_l._lowerX ; x < box_l._upperX; ++x)
+		for(long long x = box_l._lowerX ; x < box_l._upperX; ++x)
 		{
-			for(size_t y = box_l._lowerY ; y < box_l._upperY; ++y)
+			for(long long y = box_l._lowerY ; y < box_l._upperY; ++y)
 			{
 				GridNode const *node_l = state_p.getPathGrid().getNode(x, y);
 				// only check free if we do not check abandonned temples

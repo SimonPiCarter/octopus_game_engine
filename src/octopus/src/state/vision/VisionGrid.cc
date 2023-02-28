@@ -23,10 +23,10 @@ bool VisionGrid::isExplored(unsigned long x, unsigned long y) const
 void VisionGrid::updateVision(const Entity &ent_p, bool set_p)
 {
 	// comptue a box to avoid checking full map
-	Box<long> box_l { long(ent_p._pos.x - (ent_p._model._lineOfSight+1) ),
-					  long(ent_p._pos.x + (ent_p._model._lineOfSight+1) ),
-					  long(ent_p._pos.y - (ent_p._model._lineOfSight+1) ),
-					  long(ent_p._pos.y + (ent_p._model._lineOfSight+1) )
+	Box<long> box_l { long(ent_p._pos.x.to_int() - (ent_p._model._lineOfSight+1) ),
+					  long(ent_p._pos.x.to_int() + (ent_p._model._lineOfSight+1) ),
+					  long(ent_p._pos.y.to_int() - (ent_p._model._lineOfSight+1) ),
+					  long(ent_p._pos.y.to_int() + (ent_p._model._lineOfSight+1) )
 					};
 
 	// check distance on all nodes in the subbox
@@ -34,7 +34,7 @@ void VisionGrid::updateVision(const Entity &ent_p, bool set_p)
 	{
 		for(size_t y = std::max(0l, box_l._lowerY) ; y <= std::min<long>(box_l._upperY, _grid.size()-1); ++y)
 		{
-			double dist_l = square_length(ent_p._pos - Vector(x + 0.5, y + 0.5));
+			Fixed dist_l = square_length(ent_p._pos - Vector(x + 0.5, y + 0.5));
 			if(dist_l < ent_p._model._lineOfSight*ent_p._model._lineOfSight)
 			{
 				if(set_p)
@@ -53,10 +53,10 @@ void VisionGrid::updateVision(const Entity &ent_p, bool set_p)
 void VisionGrid::updateExploration(const Entity &ent_p, bool set_p)
 {
 	// comptue a box to avoid checking full map
-	Box<long> box_l { long(ent_p._pos.x - (ent_p._model._lineOfSight+1) ),
-					  long(ent_p._pos.x + (ent_p._model._lineOfSight+1) ),
-					  long(ent_p._pos.y - (ent_p._model._lineOfSight+1) ),
-					  long(ent_p._pos.y + (ent_p._model._lineOfSight+1) )
+	Box<long> box_l { long(ent_p._pos.x.to_int() - (ent_p._model._lineOfSight+1) ),
+					  long(ent_p._pos.x.to_int() + (ent_p._model._lineOfSight+1) ),
+					  long(ent_p._pos.y.to_int() - (ent_p._model._lineOfSight+1) ),
+					  long(ent_p._pos.y.to_int() + (ent_p._model._lineOfSight+1) )
 					};
 
 	// check distance on all nodes in the subbox
@@ -64,7 +64,7 @@ void VisionGrid::updateExploration(const Entity &ent_p, bool set_p)
 	{
 		for(size_t y = std::max(0l, box_l._lowerY) ; y <= std::min<long>(box_l._upperY, _exploration.size()-1); ++y)
 		{
-			double dist_l = square_length(ent_p._pos - Vector(x + 0.5, y + 0.5));
+			Fixed dist_l = square_length(ent_p._pos - Vector(x + 0.5, y + 0.5));
 			if(dist_l < ent_p._model._lineOfSight*ent_p._model._lineOfSight)
 			{
 				_exploration[x][y] = set_p;

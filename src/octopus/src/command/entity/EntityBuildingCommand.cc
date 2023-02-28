@@ -25,13 +25,13 @@ EntityBuildingCommand::EntityBuildingCommand(Handle const &commandHandle_p, Hand
 
 bool isInRange(State const &state_p, Entity const * ent_p, Building const * building_p)
 {
-	Box<double> boxA_l { building_p->_pos.x - building_p->_model._ray, building_p->_pos.x + building_p->_model._ray,
+	Box<Fixed> boxA_l { building_p->_pos.x - building_p->_model._ray, building_p->_pos.x + building_p->_model._ray,
 						building_p->_pos.y - building_p->_model._ray, building_p->_pos.y + building_p->_model._ray };
-	Box<double> boxB_l { ent_p->_pos.x - ent_p->_model._ray, ent_p->_pos.x + ent_p->_model._ray,
+	Box<Fixed> boxB_l { ent_p->_pos.x - ent_p->_model._ray, ent_p->_pos.x + ent_p->_model._ray,
 						ent_p->_pos.y - ent_p->_model._ray, ent_p->_pos.y + ent_p->_model._ray };
 
 	// Use 0.1 as a margin for range resource check
-	Box<double> intersect_l = { std::max(boxA_l._lowerX, boxB_l._lowerX)-0.1,
+	Box<Fixed> intersect_l = { std::max(boxA_l._lowerX, boxB_l._lowerX)-0.1,
 						std::min(boxA_l._upperX, boxB_l._upperX),
 						std::max(boxA_l._lowerY, boxB_l._lowerY)-0.1,
 						std::min(boxA_l._upperY, boxB_l._upperY) };

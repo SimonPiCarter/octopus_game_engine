@@ -443,12 +443,12 @@ public: // binary math operators, effects underlying bit pattern since these
 	}
 
 public: // conversion to basic types
-	constexpr int to_int() const {
+	constexpr long long to_int() const {
 		return (data_ & integer_mask) >> fractional_bits;
 	}
 
-	constexpr unsigned int to_uint() const {
-		return static_cast<unsigned int>(data_ & integer_mask) >> fractional_bits;
+	constexpr unsigned long long to_uint() const {
+		return static_cast<unsigned long long>(data_ & integer_mask) >> fractional_bits;
 	}
 
 	constexpr float to_float() const {
@@ -664,10 +664,20 @@ constexpr bool operator!=(Number lhs, fixed<I, F> rhs) {
 }
 
 template <size_t I, size_t F>
+fixed<I, F> abs(fixed<I, F> const &v)
+{
+	if(v < 0)
+	{
+		return -v;
+	}
+	return v;
+}
+
+template <size_t I, size_t F>
 fixed<I, F> square_root(fixed<I, F> v)
 {
 	fixed<I, F> res_l(1.);
-	fixed<I, F> epsilon_l(0.001);
+	fixed<I, F> epsilon_l(0.000001);
 
 	int i = 0;
 	fixed<I, F> delta_l = res_l * res_l - v;
@@ -683,5 +693,11 @@ fixed<I, F> square_root(fixed<I, F> v)
 }
 
 #undef CONSTEXPR14
+
+namespace octopus
+{
+	typedef numeric::fixed<32, 32> Fixed;
+} // namespace octopus
+
 
 #endif

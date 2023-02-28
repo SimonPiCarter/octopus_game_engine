@@ -36,8 +36,8 @@ TEST(attackCommandTest, simple)
 	// query state
 	State const * state_l = controller_l.queryState();
 
-	EXPECT_NEAR(3., state_l->getEntity(0)->_pos.x, 1e-5);
-	EXPECT_NEAR(3., state_l->getEntity(0)->_pos.y, 1e-5);
+	EXPECT_NEAR(3., state_l->getEntity(0)->_pos.x.to_double(), 1e-5);
+	EXPECT_NEAR(3., state_l->getEntity(0)->_pos.y.to_double(), 1e-5);
 
 	// update time to 1second (1)
 	controller_l.update(1.);
@@ -47,8 +47,8 @@ TEST(attackCommandTest, simple)
 
 	state_l = controller_l.queryState();
 
-	EXPECT_NEAR(4., state_l->getEntity(0)->_pos.x, 1e-5);
-	EXPECT_NEAR(3., state_l->getEntity(0)->_pos.y, 1e-5);
+	EXPECT_NEAR(4., state_l->getEntity(0)->_pos.x.to_double(), 1e-5);
+	EXPECT_NEAR(3., state_l->getEntity(0)->_pos.y.to_double(), 1e-5);
 
 	// update time to 2 seconds (3)
 	controller_l.update(2.);
@@ -58,8 +58,8 @@ TEST(attackCommandTest, simple)
 
 	state_l = controller_l.queryState();
 
-	EXPECT_NEAR(6., state_l->getEntity(0)->_pos.x, 1e-5);
-	EXPECT_NEAR(3., state_l->getEntity(0)->_pos.y, 1e-5);
+	EXPECT_NEAR(6., state_l->getEntity(0)->_pos.x.to_double(), 1e-5);
+	EXPECT_NEAR(3., state_l->getEntity(0)->_pos.y.to_double(), 1e-5);
 	EXPECT_NEAR(10., state_l->getEntity(1)->_hp, 1e-5);
 
 	// update time to 2 seconds (5)

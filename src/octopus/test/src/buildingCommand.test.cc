@@ -52,8 +52,8 @@ TEST(buildingCommandTest, simple)
 	// query state
 	State const * state_l = controller_l.queryState();
 
-	EXPECT_NEAR(5., state_l->getEntity(0)->_pos.x, 1e-5);
-	EXPECT_NEAR(3., state_l->getEntity(0)->_pos.y, 1e-5);
+	EXPECT_NEAR(5., state_l->getEntity(0)->_pos.x.to_double(), 1e-5);
+	EXPECT_NEAR(3., state_l->getEntity(0)->_pos.y.to_double(), 1e-5);
 
 	// update time to 2 seconds (2)
 	controller_l.update(2.);
@@ -63,8 +63,8 @@ TEST(buildingCommandTest, simple)
 
 	state_l = controller_l.queryState();
 
-	EXPECT_NEAR(3., state_l->getEntity(0)->_pos.x, 1e-5);
-	EXPECT_NEAR(3., state_l->getEntity(0)->_pos.y, 1e-5);
+	EXPECT_NEAR(3., state_l->getEntity(0)->_pos.x.to_double(), 1e-5);
+	EXPECT_NEAR(3., state_l->getEntity(0)->_pos.y.to_double(), 1e-5);
 	Building const * build_l = static_cast<Building const *>(state_l->getEntity(1));
 	EXPECT_FALSE(build_l->_alive);
 
@@ -76,8 +76,8 @@ TEST(buildingCommandTest, simple)
 
 	state_l = controller_l.queryState();
 
-	EXPECT_NEAR(3., state_l->getEntity(0)->_pos.x, 1e-5);
-	EXPECT_NEAR(3., state_l->getEntity(0)->_pos.y, 1e-5);
+	EXPECT_NEAR(3., state_l->getEntity(0)->_pos.x.to_double(), 1e-5);
+	EXPECT_NEAR(3., state_l->getEntity(0)->_pos.y.to_double(), 1e-5);
 	build_l = static_cast<Building const *>(state_l->getEntity(1));
 	EXPECT_NEAR(2., build_l->_buildingProgress, 1e-5);
 	EXPECT_TRUE(build_l->_alive);
@@ -126,8 +126,8 @@ TEST(buildingCommandTest, cancelled)
 	// query state
 	State const * state_l = controller_l.queryState();
 
-	EXPECT_NEAR(5., state_l->getEntity(0)->_pos.x, 1e-5);
-	EXPECT_NEAR(3., state_l->getEntity(0)->_pos.y, 1e-5);
+	EXPECT_NEAR(5., state_l->getEntity(0)->_pos.x.to_double(), 1e-5);
+	EXPECT_NEAR(3., state_l->getEntity(0)->_pos.y.to_double(), 1e-5);
 
 	// update time to 3 seconds (4)
 	controller_l.update(3.);
@@ -137,10 +137,10 @@ TEST(buildingCommandTest, cancelled)
 
 	state_l = controller_l.queryState();
 
-	EXPECT_NEAR(3., state_l->getEntity(0)->_pos.x, 1e-5);
-	EXPECT_NEAR(3., state_l->getEntity(0)->_pos.y, 1e-5);
-	EXPECT_NEAR(6., state_l->getEntity(1)->_pos.x, 1e-5);
-	EXPECT_NEAR(3., state_l->getEntity(1)->_pos.y, 1e-5);
+	EXPECT_NEAR(3., state_l->getEntity(0)->_pos.x.to_double(), 1e-5);
+	EXPECT_NEAR(3., state_l->getEntity(0)->_pos.y.to_double(), 1e-5);
+	EXPECT_NEAR(6., state_l->getEntity(1)->_pos.x.to_double(), 1e-5);
+	EXPECT_NEAR(3., state_l->getEntity(1)->_pos.y.to_double(), 1e-5);
 	Building const * build_l = static_cast<Building const *>(state_l->getEntity(2));
 	EXPECT_FALSE(build_l->_alive);
 
@@ -152,11 +152,11 @@ TEST(buildingCommandTest, cancelled)
 
 	state_l = controller_l.queryState();
 
-	EXPECT_NEAR(3., state_l->getEntity(0)->_pos.x, 1e-5);
-	EXPECT_NEAR(3., state_l->getEntity(0)->_pos.y, 1e-5);
+	EXPECT_NEAR(3., state_l->getEntity(0)->_pos.x.to_double(), 1e-5);
+	EXPECT_NEAR(3., state_l->getEntity(0)->_pos.y.to_double(), 1e-5);
 	// entity 1 stopped because blueprint got cancelled
-	EXPECT_NEAR(5., state_l->getEntity(1)->_pos.x, 1e-5);
-	EXPECT_NEAR(3., state_l->getEntity(1)->_pos.y, 1e-5);
+	EXPECT_NEAR(5., state_l->getEntity(1)->_pos.x.to_double(), 1e-5);
+	EXPECT_NEAR(3., state_l->getEntity(1)->_pos.y.to_double(), 1e-5);
 	build_l = static_cast<Building const *>(state_l->getEntity(2));
 	EXPECT_NEAR(2., build_l->_buildingProgress, 1e-5);
 	EXPECT_TRUE(build_l->_alive);

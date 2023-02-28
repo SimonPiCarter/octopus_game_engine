@@ -42,7 +42,7 @@ EntityMoveStep createEntityMoveStep(Entity const &ent_p)
 EntityMoveStep createEntityMoveStep(Entity const &ent_p, Vector const &target_p, double stepSpeed_p)
 {
 	Vector move_l = target_p - ent_p._pos;
-	double length_l = length(move_l);
+	Fixed length_l = length(move_l);
 	if(length_l > 1e-3)
 	{
 		move_l /=  length_l;
