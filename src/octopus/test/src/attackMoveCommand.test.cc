@@ -32,6 +32,7 @@ using namespace octopus;
 ///
 TEST(attackMoveCommandTest, simple)
 {
+	Logger::enable_debug();
 	octopus::EntityModel unitModel_l { false, 1., 1., 10. };
 	unitModel_l._isUnit = true;
 
@@ -54,8 +55,8 @@ TEST(attackMoveCommandTest, simple)
 	// query state
 	State const * state_l = controller_l.queryState();
 
-	EXPECT_NEAR(3., state_l->getEntity(0)->_pos.x, 1e-5);
-	EXPECT_NEAR(3., state_l->getEntity(0)->_pos.y, 1e-5);
+	EXPECT_NEAR(3., state_l->getEntity(0)->_pos.x.to_double(), 1e-5);
+	EXPECT_NEAR(3., state_l->getEntity(0)->_pos.y.to_double(), 1e-5);
 
 	// update time to 1second (1)
 	controller_l.update(1.);
@@ -65,8 +66,8 @@ TEST(attackMoveCommandTest, simple)
 
 	state_l = controller_l.queryState();
 
-	EXPECT_NEAR(4., state_l->getEntity(0)->_pos.x, 1e-5);
-	EXPECT_NEAR(3., state_l->getEntity(0)->_pos.y, 1e-5);
+	EXPECT_NEAR(4., state_l->getEntity(0)->_pos.x.to_double(), 1e-5);
+	EXPECT_NEAR(3., state_l->getEntity(0)->_pos.y.to_double(), 1e-5);
 
 	// update time to 2 seconds (3)
 	controller_l.update(2.);
@@ -76,8 +77,8 @@ TEST(attackMoveCommandTest, simple)
 
 	state_l = controller_l.queryState();
 
-	EXPECT_NEAR(6., state_l->getEntity(0)->_pos.x, 1e-5);
-	EXPECT_NEAR(3., state_l->getEntity(0)->_pos.y, 1e-5);
+	EXPECT_NEAR(6., state_l->getEntity(0)->_pos.x.to_double(), 1e-5);
+	EXPECT_NEAR(3., state_l->getEntity(0)->_pos.y.to_double(), 1e-5);
 	EXPECT_NEAR(10., state_l->getEntity(1)->_hp, 1e-5);
 
 	// update time to 3 seconds (6)

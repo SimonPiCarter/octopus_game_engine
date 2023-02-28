@@ -67,14 +67,14 @@ bool EntityAttackCommand::applyCommand(Step & step_p, State const &state_p, Comm
 		// direction (source -> target)
 		Vector dir_l = entTarget_l->_pos - entSource_l->_pos;
 		// square distances
-		double sqDistance_l = square_length(dir_l);
+		Fixed sqDistance_l = square_length(dir_l);
 		// range squared (+ ray of target), we do not add ray of source because we might stop earlier to attack anyway plus move command
 		// stops as soon as source touch target point
-		double sqRange_l = (entSource_l->_model._range + entTarget_l->_model._ray) * (entSource_l->_model._range +  + entTarget_l->_model._ray);
+		Fixed sqRange_l = (entSource_l->_model._range + entTarget_l->_model._ray) * (entSource_l->_model._range +  + entTarget_l->_model._ray);
 		// ratio of direction to keep (square rooted)
-		double ratio_l = std::sqrt(sqRange_l/sqDistance_l);
+		Fixed ratio_l = numeric::square_root(sqRange_l/sqDistance_l);
 
-		Vector closest_l = entSource_l->_pos + dir_l * (1 - ratio_l);
+		Vector closest_l = entSource_l->_pos + dir_l * (1. - ratio_l);
 
 		Logger::getDebug() << "\t\tEntityAttackCommand:: adding move step "<< _source << " target " << closest_l << " speed " <<entSource_l->getStepSpeed()<<std::endl;
 		// add move command
@@ -120,10 +120,10 @@ bool EntityAttackCommand::inRange(State const &state_p, Handle const & target_p)
 	// direction (source -> target)
 	Vector dir_l = entTarget_l->_pos - entSource_l->_pos;
 	// square distances
-	double sqDistance_l = square_length(dir_l);
+	Fixed sqDistance_l = square_length(dir_l);
 	// range squared (+ rays)
-	double rangeAndRays_l = entSource_l->_model._range + entTarget_l->_model._ray + entSource_l->_model._ray;
-	double sqRange_l = rangeAndRays_l * rangeAndRays_l;
+	Fixed rangeAndRays_l = entSource_l->_model._range + entTarget_l->_model._ray + entSource_l->_model._ray;
+	Fixed sqRange_l = rangeAndRays_l * rangeAndRays_l;
 
 	return sqDistance_l < sqRange_l + 1e-5;
 }

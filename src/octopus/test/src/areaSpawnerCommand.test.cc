@@ -57,25 +57,25 @@ TEST(areaSpawnerCommandTest, simple)
 
 	ASSERT_EQ(9u, state_l->getEntities().size());
 	/// buildings
-	EXPECT_NEAR(3., state_l->getEntity(0)->_pos.x, 1e-5);
-	EXPECT_NEAR(6., state_l->getEntity(0)->_pos.y, 1e-5);
-	EXPECT_NEAR(3., state_l->getEntity(1)->_pos.x, 1e-5);
-	EXPECT_NEAR(8., state_l->getEntity(1)->_pos.y, 1e-5);
-	EXPECT_NEAR(3. , state_l->getEntity(2)->_pos.x, 1e-5);
-	EXPECT_NEAR(10., state_l->getEntity(2)->_pos.y, 1e-5);
-	EXPECT_NEAR(3. , state_l->getEntity(3)->_pos.x, 1e-5);
-	EXPECT_NEAR(12., state_l->getEntity(3)->_pos.y, 1e-5);
+	EXPECT_NEAR(3., state_l->getEntity(0)->_pos.x.to_double(), 1e-5);
+	EXPECT_NEAR(6., state_l->getEntity(0)->_pos.y.to_double(), 1e-5);
+	EXPECT_NEAR(3., state_l->getEntity(1)->_pos.x.to_double(), 1e-5);
+	EXPECT_NEAR(8., state_l->getEntity(1)->_pos.y.to_double(), 1e-5);
+	EXPECT_NEAR(3. , state_l->getEntity(2)->_pos.x.to_double(), 1e-5);
+	EXPECT_NEAR(10., state_l->getEntity(2)->_pos.y.to_double(), 1e-5);
+	EXPECT_NEAR(3. , state_l->getEntity(3)->_pos.x.to_double(), 1e-5);
+	EXPECT_NEAR(12., state_l->getEntity(3)->_pos.y.to_double(), 1e-5);
 
 	/// units
-	EXPECT_NEAR(2.5 , state_l->getEntity(4)->_pos.x, 1e-5);
-	EXPECT_NEAR(13.5, state_l->getEntity(4)->_pos.y, 1e-5);
-	EXPECT_NEAR(2.5 , state_l->getEntity(5)->_pos.x, 1e-5);
-	EXPECT_NEAR(13.5, state_l->getEntity(5)->_pos.y, 1e-5);
-	EXPECT_NEAR(2.5 , state_l->getEntity(6)->_pos.x, 1e-5);
-	EXPECT_NEAR(13.5, state_l->getEntity(6)->_pos.y, 1e-5);
-	EXPECT_NEAR(2.5 , state_l->getEntity(7)->_pos.x, 1e-5);
-	EXPECT_NEAR(13.5, state_l->getEntity(7)->_pos.y, 1e-5);
-	EXPECT_NEAR(2.5 , state_l->getEntity(8)->_pos.x, 1e-5);
-	EXPECT_NEAR(13.5, state_l->getEntity(8)->_pos.y, 1e-5);
+	EXPECT_NEAR(2.5 , state_l->getEntity(4)->_pos.x.to_double(), 1e-5);
+	EXPECT_NEAR(13.5, state_l->getEntity(4)->_pos.y.to_double(), 1e-5);
+	EXPECT_NEAR(2.5 , state_l->getEntity(5)->_pos.x.to_double(), 1e-5);
+	EXPECT_NEAR(13.5, state_l->getEntity(5)->_pos.y.to_double(), 1e-5);
+	EXPECT_NEAR(2.5 , state_l->getEntity(6)->_pos.x.to_double(), 1e-5);
+	EXPECT_NEAR(13.5, state_l->getEntity(6)->_pos.y.to_double(), 1e-5);
+	EXPECT_NEAR(2.5 , state_l->getEntity(7)->_pos.x.to_double(), 1e-5);
+	EXPECT_NEAR(13.5, state_l->getEntity(7)->_pos.y.to_double(), 1e-5);
+	EXPECT_NEAR(2.5 , state_l->getEntity(8)->_pos.x.to_double(), 1e-5);
+	EXPECT_NEAR(13.5, state_l->getEntity(8)->_pos.y.to_double(), 1e-5);
 
 }

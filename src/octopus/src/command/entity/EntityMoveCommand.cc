@@ -85,8 +85,8 @@ bool EntityMoveCommand::applyCommand(Step & step_p, State const &state_p, Comman
 	}
 
 	// check for progress
-	double sqLastDiff_l = square_length(next_l - data_l._lastPos);
-	double sqCurDiff_l = square_length(next_l - ent_l->_pos);
+	Fixed sqLastDiff_l = square_length(next_l - data_l._lastPos);
+	Fixed sqCurDiff_l = square_length(next_l - ent_l->_pos);
 	// no progress
 	if(sqLastDiff_l + 1e-3 < sqCurDiff_l)
 	{

@@ -81,7 +81,7 @@ public:
 
 	/// @brief get grid index from world position
 	/// @note basically divide by grid point size and floor value
-	long getGridIndex(double idx_p) const;
+	long getGridIndex(Fixed idx_p) const;
 
 	std::list<Vector> &getTemplePosition() { return _templePosition; }
 	const std::list<Vector> &getTemplePosition() const { return _templePosition; }

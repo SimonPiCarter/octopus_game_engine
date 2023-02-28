@@ -48,8 +48,8 @@ TEST(autoAttackCommandTest, simple)
 	// query state
 	State const * state_l = controller_l.queryState();
 
-	EXPECT_NEAR(3., state_l->getEntity(0)->_pos.x, 1e-5);
-	EXPECT_NEAR(3., state_l->getEntity(0)->_pos.y, 1e-5);
+	EXPECT_NEAR(3., state_l->getEntity(0)->_pos.x.to_double(), 1e-5);
+	EXPECT_NEAR(3., state_l->getEntity(0)->_pos.y.to_double(), 1e-5);
 
 	// update time to 1second (1)
 	controller_l.update(1.);
@@ -59,8 +59,8 @@ TEST(autoAttackCommandTest, simple)
 
 	state_l = controller_l.queryState();
 
-	EXPECT_NEAR(3., state_l->getEntity(0)->_pos.x, 1e-5);
-	EXPECT_NEAR(3., state_l->getEntity(0)->_pos.y, 1e-5);
+	EXPECT_NEAR(3., state_l->getEntity(0)->_pos.x.to_double(), 1e-5);
+	EXPECT_NEAR(3., state_l->getEntity(0)->_pos.y.to_double(), 1e-5);
 
 	// update time to 1second (2)
 	controller_l.update(2.);
@@ -70,8 +70,8 @@ TEST(autoAttackCommandTest, simple)
 
 	state_l = controller_l.queryState();
 
-	EXPECT_NEAR(5., state_l->getEntity(0)->_pos.x, 1e-5);
-	EXPECT_NEAR(3., state_l->getEntity(0)->_pos.y, 1e-5);
+	EXPECT_NEAR(5., state_l->getEntity(0)->_pos.x.to_double(), 1e-5);
+	EXPECT_NEAR(3., state_l->getEntity(0)->_pos.y.to_double(), 1e-5);
 
 	// update time to 2 seconds (5)
 	controller_l.update(2.);
@@ -81,8 +81,8 @@ TEST(autoAttackCommandTest, simple)
 
 	state_l = controller_l.queryState();
 
-	EXPECT_NEAR(5., state_l->getEntity(0)->_pos.x, 1e-5);
-	EXPECT_NEAR(3., state_l->getEntity(0)->_pos.y, 1e-5);
+	EXPECT_NEAR(5., state_l->getEntity(0)->_pos.x.to_double(), 1e-5);
+	EXPECT_NEAR(3., state_l->getEntity(0)->_pos.y.to_double(), 1e-5);
 	EXPECT_NEAR(10., state_l->getEntity(1)->_hp, 1e-5);
 
 	// update time to 1 seconds (6)
@@ -125,8 +125,8 @@ TEST(autoAttackCommandTest, simple)
 
 	state_l = controller_l.queryState();
 
-	EXPECT_NEAR(5., state_l->getEntity(0)->_pos.x, 1e-5);
-	EXPECT_NEAR(4., state_l->getEntity(0)->_pos.y, 1e-5);
+	EXPECT_NEAR(5., state_l->getEntity(0)->_pos.x.to_double(), 1e-5);
+	EXPECT_NEAR(4., state_l->getEntity(0)->_pos.y.to_double(), 1e-5);
 
 	// update time to 1 second (22)
 	controller_l.update(1.);
@@ -135,8 +135,8 @@ TEST(autoAttackCommandTest, simple)
 
 	state_l = controller_l.queryState();
 
-	EXPECT_NEAR(5., state_l->getEntity(0)->_pos.x, 1e-5);
-	EXPECT_NEAR(5., state_l->getEntity(0)->_pos.y, 1e-5);
+	EXPECT_NEAR(5., state_l->getEntity(0)->_pos.x.to_double(), 1e-5);
+	EXPECT_NEAR(5., state_l->getEntity(0)->_pos.y.to_double(), 1e-5);
 
 	// Next damage should be -> reload time + windup
 	// 10 + 3 (13) after last attack (happened on time step 19)
@@ -149,8 +149,8 @@ TEST(autoAttackCommandTest, simple)
 
 	state_l = controller_l.queryState();
 
-	EXPECT_NEAR(5., state_l->getEntity(0)->_pos.x, 1e-5);
-	EXPECT_NEAR(5., state_l->getEntity(0)->_pos.y, 1e-5);
+	EXPECT_NEAR(5., state_l->getEntity(0)->_pos.x.to_double(), 1e-5);
+	EXPECT_NEAR(5., state_l->getEntity(0)->_pos.y.to_double(), 1e-5);
 	// wind up should just be over but no damage still
 	EXPECT_NEAR(10., state_l->getEntity(2)->_hp, 1e-5);
 

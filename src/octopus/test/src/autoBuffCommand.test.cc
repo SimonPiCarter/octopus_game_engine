@@ -70,8 +70,8 @@ TEST(autoBuffCommandTest, simple)
 	// query state
 	State const * state_l = controller_l.queryState();
 
-	EXPECT_NEAR(3., state_l->getEntity(0)->_pos.x, 1e-5);
-	EXPECT_NEAR(3., state_l->getEntity(0)->_pos.y, 1e-5);
+	EXPECT_NEAR(3., state_l->getEntity(0)->_pos.x.to_double(), 1e-5);
+	EXPECT_NEAR(3., state_l->getEntity(0)->_pos.y.to_double(), 1e-5);
 
 	// update time to 2 second (2)
 	// 1 step buff the entity (auto buff)
@@ -84,8 +84,8 @@ TEST(autoBuffCommandTest, simple)
 	state_l = controller_l.queryState();
 
 	// no move
-	EXPECT_NEAR(3., state_l->getEntity(0)->_pos.x, 1e-5);
-	EXPECT_NEAR(3., state_l->getEntity(0)->_pos.y, 1e-5);
+	EXPECT_NEAR(3., state_l->getEntity(0)->_pos.x.to_double(), 1e-5);
+	EXPECT_NEAR(3., state_l->getEntity(0)->_pos.y.to_double(), 1e-5);
 
 	// not buffed
 	EXPECT_NEAR(1., state_l->getEntity(0)->getStepSpeed(), 1e-5);
