@@ -312,13 +312,13 @@ Entity const * lookUpNewTarget(State const &state_p, Handle const &sourceHandle_
 	}
 	}
 	// reset target if too far
-	if(sqDis_l > matchDistance_l*matchDistance_l)
+	if(sqDis_l > matchDistance_l*matchDistance_l + 1e-5)
 	{
 		Logger::getDebug() << " lookUpNewTarget :: reset because too far (unit) "<< std::endl;
 		closest_l = nullptr;
 	}
 	// reset target if too far
-	if(sqDisBuilding_l > matchDistance_l*matchDistance_l)
+	if(sqDisBuilding_l > matchDistance_l*matchDistance_l + 1e-5)
 	{
 		Logger::getDebug() << " lookUpNewTarget :: reset because too far (building) "<< std::endl;
 		closestBuilding_l = nullptr;
