@@ -32,6 +32,7 @@ using namespace octopus;
 ///
 TEST(attackMoveCommandTest, simple)
 {
+	Logger::enable_debug();
 	octopus::EntityModel unitModel_l { false, 1., 1., 10. };
 	unitModel_l._isUnit = true;
 
