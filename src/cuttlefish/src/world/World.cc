@@ -61,10 +61,21 @@ void World::handleStep(Window &window_p, Panel &panel_p, DivinityPanel &divPanel
 
 void World::display(Window &window_p, double elapsed_p)
 {
+	std::map<long, std::list<Sprite *> > mapSprite_l;
 	for(Sprite * sprite_l : _listSprite)
 	{
 		sprite_l->update(elapsed_p);
-		sprite_l->render(window_p);
+
+		mapSprite_l[long(sprite_l->getY())].push_back(sprite_l);
+	}
+
+	for(auto &&pair_l : mapSprite_l)
+	{
+		std::list<Sprite*> const &list_l = pair_l.second;
+		for(Sprite * sprite_l : list_l)
+		{
+			sprite_l->render(window_p);
+		}
 	}
 }
 
