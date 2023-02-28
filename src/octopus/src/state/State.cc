@@ -323,6 +323,18 @@ Entity const * lookUpNewTarget(State const &state_p, Handle const &sourceHandle_
 		Logger::getDebug() << " lookUpNewTarget :: reset because too far (building) "<< std::endl;
 		closestBuilding_l = nullptr;
 	}
+	if(closest_l)
+	{
+		Logger::getDebug() << " lookUpNewTarget :: found unit "<< std::endl;
+	}
+	else if(closestBuilding_l)
+	{
+		Logger::getDebug() << " lookUpNewTarget :: found building "<< std::endl;
+	}
+	else
+	{
+		Logger::getDebug() << " lookUpNewTarget :: found none "<< std::endl;
+	}
 	return closest_l?closest_l:closestBuilding_l;
 }
 
