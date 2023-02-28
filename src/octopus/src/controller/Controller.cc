@@ -89,7 +89,7 @@ bool Controller::loop_body()
 	if(_backState->_stepHandled < _ongoingStep - 1)
 	{
 		upToDate_l = false;
-		Logger::getDebug() << "step back state on step "<< _backState->_stepHandled << " " <<_backState->_state<< std::endl;
+		Logger::getDebug() << "step back state on step "<< _backState->_stepHandled << " " <<_backState->_state->_id<< std::endl;
 		// increment number of step hadled
 		++_backState->_stepHandled;
 
@@ -100,7 +100,7 @@ bool Controller::loop_body()
 			Step &step_l = *_compiledSteps.back();
 
 			// if step was not handled already
-			Logger::getDebug() << "compiling step " << _backState->_stepHandled << " on state "<<_backState->_state<< std::endl;
+			Logger::getDebug() << "compiling step " << _backState->_stepHandled << " on state "<<_backState->_state->_id<< std::endl;
 
 			const std::chrono::time_point<std::chrono::steady_clock> start_l = std::chrono::steady_clock::now();
 
@@ -125,7 +125,7 @@ bool Controller::loop_body()
 				cmd_l->registerCommand(step_l, *_backState->_state);
 			}
 
-			Logger::getDebug() << "processing step " << _backState->_stepHandled << " on state "<<_backState->_state<< std::endl;
+			Logger::getDebug() << "processing step " << _backState->_stepHandled << " on state "<<_backState->_state->_id<< std::endl;
 
 			for(size_t i = 0; i < 1 && octopus::updateStepFromConflictPosition(step_l, *_backState->_state) ; ++ i) {}
 
@@ -152,7 +152,7 @@ bool Controller::loop_body()
 			_metrics._timeCompilingSteps += std::chrono::nanoseconds( std::chrono::steady_clock::now() - start_l ).count();
 		}
 
-		Logger::getDebug() << "apply step" << " "<<_backState->_state<< std::endl;
+		Logger::getDebug() << "apply step" << " "<<_backState->_state->_id<< std::endl;
 
 		const std::chrono::time_point<std::chrono::steady_clock> start_l = std::chrono::steady_clock::now();
 
@@ -167,7 +167,7 @@ bool Controller::loop_body()
 		_metrics._timeApplyingSteps += std::chrono::nanoseconds( std::chrono::steady_clock::now() - start_l ).count();
 
 		// update last handled step
-		Logger::getDebug() << "last handled step = " << _backState->_stepHandled << " for state "<<_backState->_state<< std::endl;
+		Logger::getDebug() << "last handled step = " << _backState->_stepHandled << " for state "<<_backState->_state->_id<< std::endl;
 	}
 
 	{
@@ -175,7 +175,7 @@ bool Controller::loop_body()
 		std::lock_guard<std::mutex> lock_l(_mutex);
 		if(_backState->_stepHandled > _bufferState->_stepHandled)
 		{
-			Logger::getDebug() << "swap state" << " "<<_backState->_state<< std::endl;
+			Logger::getDebug() << "swap state" << " "<<_backState->_state->_id<< std::endl;
 			std::swap(_bufferState, _backState);
 			upToDate_l = false;
 		}
