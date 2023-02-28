@@ -290,8 +290,8 @@ Entity const * lookUpNewTarget(State const &state_p, Handle const &sourceHandle_
 		else if(ent_l->_model._isBuilding)
 		{
 			double curSqDis_l = square_length(ent_l->_pos - source_l->_pos);
-			if(closest_l == nullptr
-			|| sqDis_l > curSqDis_l)
+			if(closestBuilding_l == nullptr
+			|| sqDisBuilding_l > curSqDis_l)
 			{
 				closestBuilding_l = ent_l;
 				sqDisBuilding_l = curSqDis_l;
