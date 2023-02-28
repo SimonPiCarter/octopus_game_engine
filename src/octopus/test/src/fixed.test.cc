@@ -1,5 +1,6 @@
 #include <gtest/gtest.h>
 #include <iostream>
+#include <cmath>
 #include "utils/Fixed.hh"
 
 using fixed = numeric::fixed<16, 16>;
@@ -17,5 +18,5 @@ TEST(fixedTest, simple)
 
     EXPECT_TRUE(square_root(fixed(16.)) == fixed(4.));
 
-    EXPECT_TRUE(square_root(fixed(16.47)) == fixed(sqrt(16.47)));
+    EXPECT_TRUE(square_root(fixed(16.47)) == fixed(std::sqrt(16.47)));
 }
