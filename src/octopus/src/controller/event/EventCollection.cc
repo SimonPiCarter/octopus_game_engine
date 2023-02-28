@@ -63,13 +63,14 @@ void EventCollection::visit(UnitSpawnStep const *step_p)
 
 void EventCollection::visit(EntityHitPointChangeStep const *step_p)
 {
-	Logger::getDebug() << "EventCollection :: visit EntityHitPointChangeStep " << step_p->_handle <<std::endl;
-
 	Entity const * ent_l = _state.getEntity(step_p->_handle);
 
 	_hpChange[step_p->_handle] += step_p->_delta;
 
-	if(ent_l->_hp > 0. && ent_l->_hp + _hpChange[step_p->_handle] < 1e-3
+	Logger::getDebug() << "EventCollection :: visit EntityHitPointChangeStep " << step_p->_handle
+					   << " : "<<int(ent_l->_hp) << " - > " << int(ent_l->_hp + _hpChange[step_p->_handle]) <<std::endl;
+
+	if(int(ent_l->_hp) > 0 && int(ent_l->_hp + _hpChange[step_p->_handle]) <= 0
 	&& _diedHandles.find(step_p->_handle) == _diedHandles.end())
 	{
 		Logger::getDebug() << "\ttrigger"<<std::endl;
