@@ -7,58 +7,36 @@
 namespace octopus
 {
 
-bool isCardinal(ValueNode const &child_p, ValueNode const &parent_p)
+bool isCanonical(ValueNode const &child_p, ValueNode const &parent_p)
 {
-	return child_p.x == parent_p.x || child_p.y == parent_p.y;
+	return child_p.y == parent_p.y;
 }
 
-bool isDiagonal(ValueNode const &child_p, ValueNode const &parent_p)
+bool isCardinal(ValueNode const &child_p, ValueNode const &parent_p)
 {
-	return !isCardinal(child_p, parent_p);
+	return !isCanonical(child_p, parent_p);
 }
 
 bool isJumpPoint(ValueNode const &child_p, ValueNode const &parent_p, std::vector<std::vector<GridNode *> > const &grid_p)
 {
-	if(isDiagonal(child_p, parent_p))
+	if(isCanonical(child_p, parent_p))
 	{
 		return false;
 	}
 
-	long dx = long(child_p.x) - long(parent_p.x);
-	if(dx == 0)
+	if(parent_p.x < grid_p.size() - 1
+	&& child_p.x < grid_p.size() - 1
+	&& !grid_p[parent_p.x+1][parent_p.y]->isFree()
+	&& grid_p[child_p.x+1][child_p.y]->isFree())
 	{
-		if(parent_p.x < grid_p.size() - 1
-		&& child_p.x < grid_p.size() - 1
-		&& !grid_p[parent_p.x+1][parent_p.y]->isFree()
-		&& grid_p[child_p.x+1][child_p.y]->isFree())
-		{
-			return true;
-		}
-		if(parent_p.x > 0
-		&& child_p.x > 0
-		&& !grid_p[parent_p.x-1][parent_p.y]->isFree()
-		&& grid_p[child_p.x-1][child_p.y]->isFree())
-		{
-			return true;
-		}
+		return true;
 	}
-	// dy == 0
-	else
+	if(parent_p.x > 0
+	&& child_p.x > 0
+	&& !grid_p[parent_p.x-1][parent_p.y]->isFree()
+	&& grid_p[child_p.x-1][child_p.y]->isFree())
 	{
-		if(parent_p.y < grid_p[parent_p.x].size() - 1
-		&& child_p.y < grid_p[child_p.x].size() - 1
-		&& !grid_p[parent_p.x][parent_p.y+1]->isFree()
-		&& grid_p[child_p.x][child_p.y+1]->isFree())
-		{
-			return true;
-		}
-		if(parent_p.y > 0
-		&& child_p.y > 0
-		&& !grid_p[parent_p.x][parent_p.y-1]->isFree()
-		&& grid_p[child_p.x][child_p.y-1]->isFree())
-		{
-			return true;
-		}
+		return true;
 	}
 	return false;
 }
@@ -72,14 +50,12 @@ ValueNode apply(ValueNode const &child_p, ValueNode const &parent_p, std::vector
 
 ValueNode apply_first_cardinal(ValueNode const &child_p, ValueNode const &parent_p, std::vector<std::vector<GridNode *> > const &grid_p)
 {
-	long dx = long(child_p.x) - long(parent_p.x);
-	return ValueNode {child_p.x + dx, child_p.y, 0.};
+	return ValueNode {child_p.x, child_p.y + 1, 0.};
 }
 
 ValueNode apply_second_cardinal(ValueNode const &child_p, ValueNode const &parent_p, std::vector<std::vector<GridNode *> > const &grid_p)
 {
-	long dy = long(child_p.y) - long(parent_p.y);
-	return ValueNode {child_p.x, child_p.y + dy, 0.};
+	return ValueNode {child_p.x, child_p.y - 1, 0.};
 }
 
 struct canonical_entries
@@ -137,26 +113,6 @@ void canonical_ordering(ValueNode const &child_p, ValueNode const &parent_p, Fix
 		next_l = child_p;
 		next_l.y -= 1;
 		entries_p.emplace_front(next_l, child_p, cost_p + 1);
-
-		next_l = child_p;
-		next_l.x += 1;
-		next_l.y += 1;
-		entries_p.emplace_front(next_l, child_p, cost_p + 1.5);
-
-		next_l = child_p;
-		next_l.x -= 1;
-		next_l.y += 1;
-		entries_p.emplace_front(next_l, child_p, cost_p + 1.5);
-
-		next_l = child_p;
-		next_l.x += 1;
-		next_l.y -= 1;
-		entries_p.emplace_front(next_l, child_p, cost_p + 1.5);
-
-		next_l = child_p;
-		next_l.x -= 1;
-		next_l.y -= 1;
-		entries_p.emplace_front(next_l, child_p, cost_p + 1.5);
 	}
 	else if(isJumpPoint(child_p, parent_p, grid_p))
 	{
@@ -165,11 +121,11 @@ void canonical_ordering(ValueNode const &child_p, ValueNode const &parent_p, Fix
 		new_l.cost = cost_p;
 		open_p.insert(new_l);
 	}
-	else if(isDiagonal(child_p, parent_p))
+	else if(isCanonical(child_p, parent_p))
 	{
-		// apply the diagonal
+		// apply the cardinal
 		ValueNode next_l = apply(child_p, parent_p, grid_p);
-		entries_p.emplace_front(next_l, child_p, cost_p + 1.5);
+		entries_p.emplace_front(next_l, child_p, cost_p + 1);
 		// apply first cardinal
 		next_l = apply_first_cardinal(child_p, parent_p, grid_p);
 		entries_p.emplace_front(next_l, child_p, cost_p + 1.);

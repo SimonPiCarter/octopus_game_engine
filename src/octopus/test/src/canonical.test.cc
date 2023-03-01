@@ -17,10 +17,10 @@ TEST(canonicalTest, empty)
 	EXPECT_NEAR(0, val_l[3][3].to_double(), 1e-5);
 	EXPECT_NEAR(1., val_l[4][3].to_double(), 1e-5);
 	EXPECT_NEAR(1., val_l[3][4].to_double(), 1e-5);
-	EXPECT_NEAR(1.5, val_l[4][4].to_double(), 1e-5);
-	EXPECT_NEAR(9., val_l[9][9].to_double(), 1e-5);
-	EXPECT_NEAR(7.5, val_l[8][8].to_double(), 1e-5);
 	//stream(std::cout, val_l);
+	EXPECT_NEAR(2., val_l[4][4].to_double(), 1e-5);
+	EXPECT_NEAR(12., val_l[9][9].to_double(), 1e-5);
+	EXPECT_NEAR(10, val_l[8][8].to_double(), 1e-5);
 }
 
 TEST(canonicalTest, borders)
