@@ -65,12 +65,15 @@ void EventCollection::visit(EntityHitPointChangeStep const *step_p)
 {
 	Entity const * ent_l = _state.getEntity(step_p->_handle);
 
+	int newHp_l = ent_l->_hp - _hpChange[step_p->_handle];
+	int hp_l = newHp_l - step_p->_delta;
+
 	_hpChange[step_p->_handle] += step_p->_delta;
 
 	Logger::getDebug() << "EventCollection :: visit EntityHitPointChangeStep " << step_p->_handle
-					   << " : "<<int(ent_l->_hp) << " - > " << int(ent_l->_hp + _hpChange[step_p->_handle]) <<std::endl;
+					   << " : "<<hp_l << " => " << newHp_l <<std::endl;
 
-	if(int(ent_l->_hp) > 0 && int(ent_l->_hp + _hpChange[step_p->_handle]) <= 0
+	if(newHp_l <= 0 && hp_l > 0
 	&& _diedHandles.find(step_p->_handle) == _diedHandles.end())
 	{
 		Logger::getDebug() << "\ttrigger"<<std::endl;
