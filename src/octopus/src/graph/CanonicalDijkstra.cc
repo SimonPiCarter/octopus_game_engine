@@ -61,15 +61,6 @@ ValueNode apply_second_cardinal(ValueNode const &child_p, ValueNode const &paren
 	return ValueNode {child_p.x, child_p.y - 1, 0.};
 }
 
-struct canonical_entries
-{
-	canonical_entries(ValueNode const &child_p, ValueNode const &parent_p, Fixed const &cost_p)
-		: child(child_p), parent(parent_p), cost(cost_p) {}
-	ValueNode child;
-	ValueNode parent;
-	Fixed cost;
-};
-
 void canonical_ordering(ValueNode const &child_p, ValueNode const &parent_p, Fixed cost_p,
 	ValueGrid &closed_p, std::set<ValueNode, ValueSorter> &open_p, std::vector<std::vector<GridNode *> > const &grid_p,
 	std::list<canonical_entries> &entries_p)
@@ -371,6 +362,70 @@ std::ostream &stream(std::ostream & os_p, FlowField const &field_p)
 		os_p<<std::endl;
 	}
 	return os_p;
+}
+
+FlowFieldComputation::FlowFieldComputation(std::vector<std::vector<GridNode *> > const &grid_p, long x_p, long y_p)
+	: x(x_p)
+	, y(y_p)
+	, grid(grid_p)
+{
+	/// init all node in closed with -1 (to mean +infinity)
+	for(long i = 0 ; i < grid_p.size() ; ++i)
+	{
+		valueGrid.emplace_back(grid_p[i].size(), Fixed(-1.));
+	}
+
+	open = buildOpenNodes(grid_p, x, y);
+}
+
+/// @brief compute some iterations for flow field
+/// @return the number of remaining iteration if finished
+long long FlowFieldComputation::compute(long long iter_p)
+{
+	long long iterRemaining_l = iter_p;
+
+	// finish entries if any
+	while(!entries.empty() && iterRemaining_l > 0)
+	{
+		canonical_entries entry_l = entries.front();
+		entries.pop_front();
+
+		--iterRemaining_l;
+		canonical_ordering(entry_l.child, entry_l.parent, entry_l.cost, valueGrid, open, grid, entries);
+	}
+
+	while(!open.empty() && iterRemaining_l > 0)
+	{
+		ValueNode best_l = *open.begin();
+		open.erase(open.begin());
+
+		--iterRemaining_l;
+		canonical_ordering(best_l, best_l, best_l.cost, valueGrid, open, grid, entries);
+
+		while(!entries.empty() && iterRemaining_l > 0)
+		{
+			canonical_entries entry_l = entries.front();
+			entries.pop_front();
+
+			--iterRemaining_l;
+			canonical_ordering(entry_l.child, entry_l.parent, entry_l.cost, valueGrid, open, grid, entries);
+		}
+	}
+
+	// if over we compute the flow field
+	if(over())
+	{
+		result = flow_field(valueGrid);
+	}
+
+	// return the number of iteration remaining for next query
+	return iterRemaining_l;
+}
+
+/// @return true if the flow field has been computed
+bool FlowFieldComputation::over() const
+{
+	return entries.empty() && open.empty();
 }
 
 }
