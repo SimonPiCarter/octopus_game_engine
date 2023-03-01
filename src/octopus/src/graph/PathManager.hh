@@ -5,6 +5,7 @@
 #include <set>
 #include <vector>
 #include <map>
+#include <thread>
 
 #include "graph/CanonicalDijkstra.hh"
 
@@ -29,6 +30,12 @@ struct FlowFieldResult
 class PathManager
 {
 public:
+	/// @brief wait for end of computing
+	void joinCompute();
+
+	/// @brief compute in a new thread
+	void startCompute(long long iter_p);
+
 	/// @brief compute a given number of iteration of flow field
 	void compute(long long iter_p);
 
@@ -47,11 +54,15 @@ public:
 
 	std::vector<std::vector<GridNode *> > const & getInternalGrid() const { return _internalGrid; }
 protected:
+	/// @brief thread for parallel computing
+	std::thread _thread;
+	bool _opened {false};
+
 	/// @brief all grid node storred by indexes
 	std::vector<std::vector<GridNode *> > _internalGrid;
 
 	/// @brief used to know if grid has changed
-	unsigned long _gridStatus {0};
+	long long _gridStatus {-1};
 
 	/// @brief list of queued queries
 	std::list<FlowFieldQuery> _queries;

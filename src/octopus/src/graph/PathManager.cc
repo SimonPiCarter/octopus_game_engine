@@ -1,7 +1,27 @@
 #include "PathManager.hh"
 
+#include <functional>
+
 namespace octopus
 {
+
+
+/// @brief wait for end of computing
+void PathManager::joinCompute()
+{
+	if(_opened)
+	{
+		_thread.join();
+		_opened = false;
+	}
+}
+
+/// @brief compute in a new thread
+void PathManager::startCompute(long long iter_p)
+{
+	_thread = std::thread([this, iter_p] { compute(iter_p); });
+	_opened = true;
+}
 
 /// @brief compute a given number of iteration of flow field
 /// by poping queries
@@ -27,6 +47,7 @@ void PathManager::compute(long long iter_p)
 		// end it if over
 		if(query_l.computation->over())
 		{
+			std::cout<<"over"<<std::endl;
 			// add result
 			FlowFieldResult & result_l = _completed[std::make_pair(query_l.x, query_l.y)];
 			result_l.status = query_l.status;
@@ -52,6 +73,7 @@ void PathManager::queryFlowField(long x, long y)
 	// add to query
 	if(_setQueries.insert(std::make_pair(x,y)).second)
 	{
+		std::cout<<"insert"<<std::endl;
 		_queries.push_back(FlowFieldQuery{x, y, 0});
 	}
 }
@@ -72,14 +94,17 @@ FlowField const * PathManager::getFlowField(long x, long y) const
 void PathManager::initFromGrid(std::vector<std::vector<GridNode *> > const &grid_p, unsigned long status_p)
 {
 	// skip if same status
-	if(_gridStatus >= status_p)
+	if(_gridStatus >= (long long)status_p)
 	{
 		return;
 	}
+	_internalGrid.clear();
 	for(size_t i = 0 ; i < grid_p.size() ; ++i)
 	{
+		_internalGrid.emplace_back(grid_p[i].size(), nullptr);
 		for(size_t j = 0 ; j < grid_p[i].size() ; ++ j)
 		{
+			_internalGrid[i][j] = new GridNode(grid_p[i][j]->getPosition());
 			_internalGrid[i][j]->setFree(grid_p[i][j]->isFree());
 			_internalGrid[i][j]->setContent(grid_p[i][j]->getContent());
 		}
