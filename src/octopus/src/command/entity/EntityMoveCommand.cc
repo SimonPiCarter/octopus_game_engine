@@ -10,6 +10,8 @@
 #include "step/command/CommandUpdateLastPosStep.hh"
 #include "step/command/CommandMoveUpdateStep.hh"
 #include "step/entity/EntityMoveStep.hh"
+#include "graph/CanonicalDijkstra.hh"
+#include "graph/PathManager.hh"
 
 namespace octopus
 {
@@ -24,7 +26,7 @@ EntityMoveCommand::EntityMoveCommand(Handle const &commandHandle_p, Handle const
 	, _init(init_p)
 {}
 
-bool EntityMoveCommand::applyCommand(Step & step_p, State const &state_p, CommandData const *data_p) const
+bool EntityMoveCommand::applyCommand(Step & step_p, State const &state_p, CommandData const *data_p, PathManager &pathManager_p) const
 {
 	MoveData const &data_l = *static_cast<MoveData const *>(data_p);
 	std::list<Vector> const &waypoints_l =  data_l._waypoints;
@@ -59,26 +61,21 @@ bool EntityMoveCommand::applyCommand(Step & step_p, State const &state_p, Comman
 	/// Update waypoints based on current position
 	/// Waypoint must be within two steps
 	///
-	auto it_l = waypoints_l.begin();
-	Vector next_l = *it_l;
-	Vector delta_l = ent_l->_pos - next_l;
-	// Check entity position
-	while(square_length(delta_l) < ent_l->_model._ray*ent_l->_model._ray)
+	pathManager_p.queryFlowField(data_l._finalPoint.x.to_int(), data_l._finalPoint.y.to_int());
+	FlowField const * field_l = pathManager_p.getFlowField(data_l._finalPoint.x.to_int(), data_l._finalPoint.y.to_int());
+	// stream(std::cout, grid_l);
+	// stream(std::cout, field_l);
+	Vector next_l = data_l._finalPoint;
+	if(field_l)
 	{
-		// pop front
-		step_p.addSteppable(new CommandDataWaypointRemoveStep(_handleCommand, *it_l));
-		// go next
-		++it_l;
-		if(it_l == waypoints_l.end())
-		{
-			break;
-		}
-		next_l = *it_l;
-		delta_l = ent_l->_pos - next_l;
+		next_l = ent_l->_pos + direction(ent_l->_pos.x, ent_l->_pos.y, *field_l);
 	}
+	Vector delta_l = ent_l->_pos - data_l._finalPoint;
+	// std::cout<<next_l<<std::endl;
+	// std::cout<<delta_l<<std::endl;
 
 	// No more waypoint -> terminate
-	if(it_l == waypoints_l.end())
+	if(square_length(delta_l) < ent_l->_model._ray*ent_l->_model._ray)
 	{
 		Logger::getDebug() << "no waypoint" << std::endl;
 		return true;

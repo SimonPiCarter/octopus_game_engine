@@ -80,7 +80,7 @@ bool inRange(State const &state_p, Unit const * unit_p, Handle const res_p)
 	return false;
 }
 
-bool UnitHarvestCommand::applyCommand(Step & step_p, State const &state_p, CommandData const *data_p) const
+bool UnitHarvestCommand::applyCommand(Step & step_p, State const &state_p, CommandData const *data_p, PathManager &pathManager_p) const
 {
 	Logger::getDebug() << "UnitHarvestCommand:: apply Command "<<_source <<std::endl;
 	HarvestMoveData const &data_l = *static_cast<HarvestMoveData const *>(data_p);
@@ -137,7 +137,7 @@ bool UnitHarvestCommand::applyCommand(Step & step_p, State const &state_p, Comma
 		{
 			Logger::getDebug() << "UnitHarvestCommand:: move to resource"<<std::endl;
 			// apply move
-			_subMoveCommand.applyCommand(step_p, state_p, data_p);
+			_subMoveCommand.applyCommand(step_p, state_p, data_p, pathManager_p);
 		}
 		return false;
 	}
@@ -182,7 +182,7 @@ bool UnitHarvestCommand::applyCommand(Step & step_p, State const &state_p, Comma
 		{
 			Logger::getDebug() << "UnitHarvestCommand:: move to deposit"<<std::endl;
 			// apply move
-			_subMoveCommand.applyCommand(step_p, state_p, data_p);
+			_subMoveCommand.applyCommand(step_p, state_p, data_p, pathManager_p);
 		}
 	}
 

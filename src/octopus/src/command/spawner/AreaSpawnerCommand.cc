@@ -155,7 +155,7 @@ void AreaSpawnerCommand::registerCommand(Step & step_p, State const &state_p)
 	step_p.addSteppable(new CommandStorageStep(this));
 }
 
-bool AreaSpawnerCommand::applyCommand(Step &, State const &, CommandData const *) const
+bool AreaSpawnerCommand::applyCommand(Step &, State const &, CommandData const *, PathManager &) const
 {
 	// NA
 	return true;

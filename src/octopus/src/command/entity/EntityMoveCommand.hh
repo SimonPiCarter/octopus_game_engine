@@ -25,7 +25,7 @@ public:
 	/// remove reached waypoint and create a step to the next waypoint
 	/// multiple waypoint may be removed at once last waypoint
 	/// is removed terminate
-	virtual bool applyCommand(Step & step_p, State const &state_p, CommandData const *data_p) const override;
+	virtual bool applyCommand(Step & step_p, State const &state_p, CommandData const *data_p, PathManager &pathManager_p) const override;
 
 	Vector const &getFinalPoint() const { return _finalPoint; }
 	unsigned long const &getGridStatus() const { return _gridStatus; }
