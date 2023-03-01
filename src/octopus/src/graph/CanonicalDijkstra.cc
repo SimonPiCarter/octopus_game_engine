@@ -1,5 +1,6 @@
 #include "CanonicalDijkstra.hh"
 
+#include <list>
 #include <set>
 #include <cassert>
 
@@ -81,8 +82,18 @@ ValueNode apply_second_cardinal(ValueNode const &child_p, ValueNode const &paren
 	return ValueNode {child_p.x, child_p.y + dy, 0.};
 }
 
+struct canonical_entries
+{
+	canonical_entries(ValueNode const &child_p, ValueNode const &parent_p, Fixed const &cost_p)
+		: child(child_p), parent(parent_p), cost(cost_p) {}
+	ValueNode child;
+	ValueNode parent;
+	Fixed cost;
+};
+
 void canonical_ordering(ValueNode const &child_p, ValueNode const &parent_p, Fixed cost_p,
-	ValueGrid &closed_p, std::set<ValueNode, ValueSorter> &open_p, std::vector<std::vector<GridNode *> > const &grid_p)
+	ValueGrid &closed_p, std::set<ValueNode, ValueSorter> &open_p, std::vector<std::vector<GridNode *> > const &grid_p,
+	std::list<canonical_entries> &entries_p)
 {
 	// skip out of bound
 	if(child_p.x < 0 || child_p.y < 0 || child_p.x >= grid_p.size() || child_p.y >= grid_p[child_p.x].size())
@@ -113,39 +124,39 @@ void canonical_ordering(ValueNode const &child_p, ValueNode const &parent_p, Fix
 	{
 		ValueNode next_l = child_p;
 		next_l.x += 1;
-		canonical_ordering(next_l, child_p, cost_p + 1, closed_p, open_p, grid_p);
+		entries_p.emplace_front(next_l, child_p, cost_p + 1);
 
 		next_l = child_p;
 		next_l.x -= 1;
-		canonical_ordering(next_l, child_p, cost_p + 1, closed_p, open_p, grid_p);
+		entries_p.emplace_front(next_l, child_p, cost_p + 1);
 
 		next_l = child_p;
 		next_l.y += 1;
-		canonical_ordering(next_l, child_p, cost_p + 1, closed_p, open_p, grid_p);
+		entries_p.emplace_front(next_l, child_p, cost_p + 1);
 
 		next_l = child_p;
 		next_l.y -= 1;
-		canonical_ordering(next_l, child_p, cost_p + 1, closed_p, open_p, grid_p);
+		entries_p.emplace_front(next_l, child_p, cost_p + 1);
 
 		next_l = child_p;
 		next_l.x += 1;
 		next_l.y += 1;
-		canonical_ordering(next_l, child_p, cost_p + 1.5, closed_p, open_p, grid_p);
+		entries_p.emplace_front(next_l, child_p, cost_p + 1.5);
 
 		next_l = child_p;
 		next_l.x -= 1;
 		next_l.y += 1;
-		canonical_ordering(next_l, child_p, cost_p + 1.5, closed_p, open_p, grid_p);
+		entries_p.emplace_front(next_l, child_p, cost_p + 1.5);
 
 		next_l = child_p;
 		next_l.x += 1;
 		next_l.y -= 1;
-		canonical_ordering(next_l, child_p, cost_p + 1.5, closed_p, open_p, grid_p);
+		entries_p.emplace_front(next_l, child_p, cost_p + 1.5);
 
 		next_l = child_p;
 		next_l.x -= 1;
 		next_l.y -= 1;
-		canonical_ordering(next_l, child_p, cost_p + 1.5, closed_p, open_p, grid_p);
+		entries_p.emplace_front(next_l, child_p, cost_p + 1.5);
 	}
 	else if(isJumpPoint(child_p, parent_p, grid_p))
 	{
@@ -158,19 +169,19 @@ void canonical_ordering(ValueNode const &child_p, ValueNode const &parent_p, Fix
 	{
 		// apply the diagonal
 		ValueNode next_l = apply(child_p, parent_p, grid_p);
-		canonical_ordering(next_l, child_p, cost_p + 1.5, closed_p, open_p, grid_p);
+		entries_p.emplace_front(next_l, child_p, cost_p + 1.5);
 		// apply first cardinal
 		next_l = apply_first_cardinal(child_p, parent_p, grid_p);
-		canonical_ordering(next_l, child_p, cost_p + 1., closed_p, open_p, grid_p);
+		entries_p.emplace_front(next_l, child_p, cost_p + 1.);
 		// apply second cardinal
 		next_l = apply_second_cardinal(child_p, parent_p, grid_p);
-		canonical_ordering(next_l, child_p, cost_p + 1., closed_p, open_p, grid_p);
+		entries_p.emplace_front(next_l, child_p, cost_p + 1.);
 	}
 	else if(isCardinal(child_p, parent_p))
 	{
 		// apply the cardinal
 		ValueNode next_l = apply(child_p, parent_p, grid_p);
-		canonical_ordering(next_l, child_p, cost_p + 1, closed_p, open_p, grid_p);
+		entries_p.emplace_front(next_l, child_p, cost_p + 1);
 	}
 }
 
@@ -186,11 +197,20 @@ ValueGrid canonical_dijkstra(std::vector<std::vector<GridNode *> > const &grid_p
 
 	open_l.insert(ValueNode{x, y, 0.});
 
+	/// @brief all entries for every node opened
+	std::list<canonical_entries> entries_l;
+
 	while(!open_l.empty())
 	{
 		ValueNode best_l = *open_l.begin();
 		open_l.erase(open_l.begin());
-		canonical_ordering(best_l, best_l, best_l.cost, grid_l, open_l, grid_p);
+		canonical_ordering(best_l, best_l, best_l.cost, grid_l, open_l, grid_p, entries_l);
+		while(!entries_l.empty())
+		{
+			canonical_entries entry_l = entries_l.front();
+			entries_l.pop_front();
+			canonical_ordering(entry_l.child, entry_l.parent, entry_l.cost, grid_l, open_l, grid_p, entries_l);
+		}
 	}
 
 	return grid_l;
