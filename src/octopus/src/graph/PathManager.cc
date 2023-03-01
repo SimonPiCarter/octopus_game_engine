@@ -47,7 +47,6 @@ void PathManager::compute(long long iter_p)
 		// end it if over
 		if(query_l.computation->over())
 		{
-			std::cout<<"over"<<std::endl;
 			// add result
 			FlowFieldResult & result_l = _completed[std::make_pair(query_l.x, query_l.y)];
 			result_l.status = query_l.status;
@@ -73,7 +72,6 @@ void PathManager::queryFlowField(long x, long y)
 	// add to query
 	if(_setQueries.insert(std::make_pair(x,y)).second)
 	{
-		std::cout<<"insert"<<std::endl;
 		_queries.push_back(FlowFieldQuery{x, y, 0});
 	}
 }
