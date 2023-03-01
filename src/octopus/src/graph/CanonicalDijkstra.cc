@@ -1,6 +1,7 @@
 #include "CanonicalDijkstra.hh"
 
 #include <set>
+#include <cassert>
 
 namespace octopus
 {
@@ -195,13 +196,77 @@ ValueGrid canonical_dijkstra(std::vector<std::vector<GridNode *> > const &grid_p
 	return grid_l;
 }
 
+Vector compute_field(ValueGrid const &grid_p, long x, long y)
+{
+	Fixed dx = 0;
+	Fixed dy = 0;
+	Fixed best_l(-1);
+	for(long i = -1 ; i < 2 ; ++i)
+	{
+		// skip out of bound
+		if(x+i < 0 || x+i >= grid_p.size())
+		{
+			continue;
+		}
+		for(long j = -1 ; j < 2 ; ++j)
+		{
+			// skip out of bound
+			if(y+j < 0 || y+j >= grid_p[x+i].size())
+			{
+				continue;
+			}
+			if((best_l < 0.
+			|| best_l > grid_p[x+i][y+j])
+			&& grid_p[x+i][y+j] >= 0.)
+			{
+				dx = i;
+				dy = j;
+				best_l = grid_p[x+i][y+j];
+			}
+		}
+	}
+	return {dx, dy};
+}
+
+FlowField flow_field(ValueGrid const &grid_p)
+{
+	FlowField result_l;
+	for(long i = 0 ; i < grid_p.size() ; ++i)
+	{
+		result_l.emplace_back(grid_p[i].size(), Vector{0., 0.});
+		for(long j = 0 ; j < grid_p[i].size() ; ++j)
+		{
+			if(grid_p[i][j] >= 0)
+			{
+				result_l[i][j] = compute_field(grid_p, i, j);
+			}
+		}
+	}
+	return result_l;
+}
+
 std::ostream &stream(std::ostream & os_p, ValueGrid const &grid_p)
 {
 	for(size_t i = 0; i < grid_p.size() ; ++ i)
 	{
 		for(size_t j = 0; j < grid_p.size() ; ++ j)
 		{
+			assert(grid_p[j].size() > i);
 			os_p<<grid_p[j][i]<<",\t";
+		}
+		os_p<<std::endl;
+	}
+	return os_p;
+}
+
+std::ostream &stream(std::ostream & os_p, FlowField const &field_p)
+{
+	for(size_t i = 0; i < field_p.size() ; ++ i)
+	{
+		for(size_t j = 0; j < field_p.size() ; ++ j)
+		{
+			assert(field_p[j].size() > i);
+			os_p<<field_p[j][i]<<",\t";
 		}
 		os_p<<std::endl;
 	}

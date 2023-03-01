@@ -5,6 +5,7 @@
 
 #include "GridNode.hh"
 #include "utils/Fixed.hh"
+#include "utils/Vector.hh"
 
 namespace octopus
 {
@@ -53,7 +54,15 @@ typedef std::vector<std::vector<Fixed> > ValueGrid;
 /// @brief compute a value grid to access the node in position x and y
 ValueGrid canonical_dijkstra(std::vector<std::vector<GridNode *> > const &grid_p, long x, long y);
 
+
+/// @brief store a flow field
+typedef std::vector<std::vector<Vector> > FlowField;
+
+/// @brief compute a flow field based on a ValueGrid
+FlowField flow_field(ValueGrid const &grid_p);
+
 std::ostream &stream(std::ostream & os_p, ValueGrid const &grid_p);
+std::ostream &stream(std::ostream & os_p, FlowField const &field_p);
 
 } // namespace octopus
 
