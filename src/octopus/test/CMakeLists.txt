@@ -31,6 +31,7 @@ target_sources (unit_tests
 	src/buffCommand.test.cc
 	src/buffStep.test.cc
 	src/buildingCommand.test.cc
+	src/canonical.test.cc
 	src/commandQueue.test.cc
 	src/conflictSolver.test.cc
 	src/controller.test.cc
