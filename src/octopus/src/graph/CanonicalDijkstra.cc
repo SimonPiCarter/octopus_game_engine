@@ -291,7 +291,7 @@ FlowField flow_field(ValueGrid const &grid_p)
 	return result_l;
 }
 
-Vector direction(Fixed x, Fixed y, FlowField &field_p)
+Vector direction(Fixed x, Fixed y, FlowField const &field_p)
 {
 	long long floorX_l = (x+0.5).to_int();
 	long long floorY_l = (y+0.5).to_int();
