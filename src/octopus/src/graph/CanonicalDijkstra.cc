@@ -1,8 +1,11 @@
 #include "CanonicalDijkstra.hh"
 
+#include <map>
 #include <list>
 #include <set>
 #include <cassert>
+
+#include "utils/Box.hh"
 
 namespace octopus
 {
@@ -141,9 +144,88 @@ void canonical_ordering(ValueNode const &child_p, ValueNode const &parent_p, Fix
 	}
 }
 
+Box<long> getBoxFromContent(std::vector<std::vector<GridNode *> > const &grid_p, long x, long y)
+{
+	Entity const * content_l = grid_p[x][y]->getContent();
+	Box<long> box_l;
+
+	for(long mx = x ; mx >= 0 ; --mx)
+	{
+		if(grid_p[mx][y]->getContent() != content_l)
+		{
+			box_l._lowerX = mx;
+			break;
+		}
+	}
+	for(long mx = x ; mx < grid_p.size() ; ++mx)
+	{
+		if(grid_p[mx][y]->getContent() != content_l)
+		{
+			box_l._upperX = mx;
+			break;
+		}
+	}
+
+	for(long my = y ; my >= 0 ; --my)
+	{
+		if(grid_p[x][my]->getContent() != content_l)
+		{
+			box_l._lowerY = my;
+			break;
+		}
+	}
+	for(long my = y ; my < grid_p[x].size() ; ++my)
+	{
+		if(grid_p[x][my]->getContent() != content_l)
+		{
+			box_l._upperY = my;
+			break;
+		}
+	}
+
+	return box_l;
+}
+
+std::set<ValueNode, ValueSorter> buildOpenNodes(std::vector<std::vector<GridNode *> > const &grid_p, long x, long y)
+{
+	if(grid_p[x][y]->isFree())
+	{
+		return {ValueNode{x, y, 0.}};
+	}
+	Box<long> box_l = getBoxFromContent(grid_p, x, y);
+
+	std::set<ValueNode, ValueSorter> open_l;
+
+	// increase search
+	for(long extension_l = 0; extension_l < 100 ; ++extension_l)
+	{
+		for(long i = box_l._lowerX-extension_l; i <= box_l._upperX+extension_l ; ++ i)
+		{
+			if(i >= 0 && i < grid_p.size())
+			{
+				for(long j = box_l._lowerY-extension_l; j <= box_l._upperY+extension_l ; ++ j)
+				{
+					if(j >= 0 && j < grid_p[i].size()
+					&& grid_p[i][j]->isFree())
+					{
+						open_l.insert(ValueNode{i, j, 0.});
+					}
+				}
+			}
+		}
+
+		// found empty > return
+		if(!open_l.empty())
+		{
+			return open_l;
+		}
+	}
+
+	return open_l;
+}
+
 ValueGrid canonical_dijkstra(std::vector<std::vector<GridNode *> > const &grid_p, long x, long y)
 {
-	std::set<ValueNode, ValueSorter> open_l;
 	ValueGrid grid_l;
 	/// init all node in closed with -1 (to mean +infinity)
 	for(long i = 0 ; i < grid_p.size() ; ++i)
@@ -151,7 +233,7 @@ ValueGrid canonical_dijkstra(std::vector<std::vector<GridNode *> > const &grid_p
 		grid_l.emplace_back(grid_p[i].size(), Fixed(-1.));
 	}
 
-	open_l.insert(ValueNode{x, y, 0.});
+	std::set<ValueNode, ValueSorter> open_l(buildOpenNodes(grid_p, x, y));
 
 	/// @brief all entries for every node opened
 	std::list<canonical_entries> entries_l;
@@ -176,15 +258,15 @@ Vector compute_field(ValueGrid const &grid_p, long x, long y)
 {
 	Fixed dx = 0;
 	Fixed dy = 0;
-	Fixed best_l(-1);
-	for(long i = -1 ; i < 2 ; ++i)
+	Fixed best_l(grid_p[x][y]);
+	for(long i : {0, -1, 1})
 	{
 		// skip out of bound
 		if(x+i < 0 || x+i >= grid_p.size())
 		{
 			continue;
 		}
-		for(long j = -1 ; j < 2 ; ++j)
+		for(long j : {0, -1, 1})
 		{
 			// skip out of bound
 			if(y+j < 0 || y+j >= grid_p[x+i].size())
@@ -212,14 +294,56 @@ FlowField flow_field(ValueGrid const &grid_p)
 		result_l.emplace_back(grid_p[i].size(), Vector{0., 0.});
 		for(long j = 0 ; j < grid_p[i].size() ; ++j)
 		{
-			if(grid_p[i][j] >= 0)
-			{
-				result_l[i][j] = compute_field(grid_p, i, j);
-			}
+			result_l[i][j] = compute_field(grid_p, i, j);
 		}
 	}
 	return result_l;
 }
+
+Vector direction(Fixed x, Fixed y, FlowField &field_p)
+{
+	long long floorX_l = (x+0.5).to_int();
+	long long floorY_l = (y+0.5).to_int();
+
+	Fixed ratioX_l = x - floorX_l + 0.5;
+	Fixed ratioY_l = y - floorY_l + 0.5;
+
+	// direction is the sum of all vectors ponderated by the position in the floored node
+
+	// coef based on dx and dy
+	std::map<long, Fixed> coefX_l;
+	coefX_l[-1] = 1. - ratioX_l;
+	coefX_l[0] = 1.;
+	coefX_l[1] = ratioX_l;
+	std::map<long, Fixed> coefY_l;
+	coefY_l[-1] = 1. - ratioY_l;
+	coefY_l[0] = 1.;
+	coefY_l[1] = ratioY_l;
+
+	Vector result_l;
+	for(long i = -1 ; i < 2 ; ++i)
+	{
+		// skip out of bound
+		if(x+i < 0 || x+i >= field_p.size())
+		{
+			continue;
+		}
+		for(long j = -1 ; j < 2 ; ++j)
+		{
+			// skip out of bound
+			if(y+j < 0 || y+j >= field_p[floorX_l+i].size())
+			{
+				continue;
+			}
+
+			result_l += field_p[floorX_l+i][floorY_l+j] * coefX_l[i] * coefY_l[j];
+		}
+
+	}
+
+	return result_l;
+}
+
 
 std::ostream &stream(std::ostream & os_p, ValueGrid const &grid_p)
 {

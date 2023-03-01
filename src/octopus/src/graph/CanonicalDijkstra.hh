@@ -61,6 +61,9 @@ typedef std::vector<std::vector<Vector> > FlowField;
 /// @brief compute a flow field based on a ValueGrid
 FlowField flow_field(ValueGrid const &grid_p);
 
+/// @brief comptute direction based on flow field by adding all vectors
+Vector direction(Fixed x, Fixed y, FlowField &field_p);
+
 std::ostream &stream(std::ostream & os_p, ValueGrid const &grid_p);
 std::ostream &stream(std::ostream & os_p, FlowField const &field_p);
 
