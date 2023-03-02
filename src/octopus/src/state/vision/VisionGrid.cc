@@ -22,55 +22,69 @@ bool VisionGrid::isExplored(unsigned long x, unsigned long y) const
 
 void VisionGrid::updateVision(const Entity &ent_p, bool set_p)
 {
-	// comptue a box to avoid checking full map
-	Box<long> box_l { long(ent_p._pos.x.to_int() - (ent_p._model._lineOfSight+1) ),
-					  long(ent_p._pos.x.to_int() + (ent_p._model._lineOfSight+1) ),
-					  long(ent_p._pos.y.to_int() - (ent_p._model._lineOfSight+1) ),
-					  long(ent_p._pos.y.to_int() + (ent_p._model._lineOfSight+1) )
-					};
+	VisionPattern const &pattern_l = getPattern(ent_p._model._lineOfSight);
 
-	// check distance on all nodes in the subbox
-	for(size_t x = std::max(0l, box_l._lowerX) ; x <= std::max(0l, std::min<long>(box_l._upperX, _grid.size()-1)); ++x)
+	for(std::pair<unsigned long, unsigned long> const &pair_l : pattern_l)
 	{
-		for(size_t y = std::max(0l, box_l._lowerY) ; y <= std::max(0l, std::min<long>(box_l._upperY, _grid.size()-1)); ++y)
+		unsigned long x = std::max(0l, std::min<long>(pair_l.first+ent_p._pos.x.to_int(), _grid.size()-1));
+		unsigned long y = std::max(0l, std::min<long>(pair_l.second+ent_p._pos.y.to_int(), _grid[x].size()-1));
+
+		if(set_p)
 		{
-			Fixed dist_l = square_length(ent_p._pos - Vector(x + 0.5, y + 0.5));
-			if(dist_l < ent_p._model._lineOfSight*ent_p._model._lineOfSight)
-			{
-				if(set_p)
-				{
-					++_grid[x][y];
-				}
-				else
-				{
-					--_grid[x][y];
-				}
-			}
+			++_grid[x][y];
+		}
+		else
+		{
+			--_grid[x][y];
 		}
 	}
 }
 
 void VisionGrid::updateExploration(const Entity &ent_p, bool set_p)
 {
-	// comptue a box to avoid checking full map
-	Box<long> box_l { long(ent_p._pos.x.to_int() - (ent_p._model._lineOfSight+1) ),
-					  long(ent_p._pos.x.to_int() + (ent_p._model._lineOfSight+1) ),
-					  long(ent_p._pos.y.to_int() - (ent_p._model._lineOfSight+1) ),
-					  long(ent_p._pos.y.to_int() + (ent_p._model._lineOfSight+1) )
+	VisionPattern const &pattern_l = getPattern(ent_p._model._lineOfSight);
+
+	for(std::pair<long, long> const &pair_l : pattern_l)
+	{
+		unsigned long x = std::max(0l, std::min<long>(pair_l.first+ent_p._pos.x.to_int(), _grid.size()-1));
+		unsigned long y = std::max(0l, std::min<long>(pair_l.second+ent_p._pos.y.to_int(), _grid[x].size()-1));
+
+		_exploration[x][y] = set_p;
+	}
+}
+
+VisionPattern const &VisionGrid::getPattern(long lineOfSight_p)
+{
+	// check cache
+	auto && it_l = _patterns.find(lineOfSight_p);
+	if(it_l != _patterns.end())
+	{
+		return it_l->second;
+	}
+
+	VisionPattern & pattern_l = _patterns[lineOfSight_p];
+
+	// compute a box to avoid checking full map
+	Box<long> box_l { - (lineOfSight_p+1),
+					  lineOfSight_p+1,
+					  - (lineOfSight_p+1),
+					  lineOfSight_p+1
 					};
 
+	Fixed ref_l(lineOfSight_p*lineOfSight_p);
 	// check distance on all nodes in the subbox
-	for(size_t x = std::max(0l, box_l._lowerX) ; x <= std::max(0l, std::min<long>(box_l._upperX, _grid.size()-1)); ++x)
+	for(long x = box_l._lowerX; x <= box_l._upperX; ++x)
 	{
-		for(size_t y = std::max(0l, box_l._lowerY) ; y <= std::max(0l, std::min<long>(box_l._upperY, _grid.size()-1)); ++y)
+		for(long y = box_l._lowerY; y <= box_l._upperY; ++y)
 		{
-			Fixed dist_l = square_length(ent_p._pos - Vector(x + 0.5, y + 0.5));
-			if(dist_l < ent_p._model._lineOfSight*ent_p._model._lineOfSight)
+			if(square_length(Vector(x, y)) < ref_l)
 			{
-				_exploration[x][y] = set_p;
+				pattern_l.push_back(std::make_pair(x, y));
 			}
 		}
 	}
+
+	return pattern_l;
 }
 
 } // octopus

@@ -2,10 +2,13 @@
 #define __VisionGrid__
 
 #include <vector>
+#include <unordered_map>
 
 namespace octopus
 {
 class Entity;
+
+typedef std::vector<std::pair<long, long> > VisionPattern;
 
 /// @brief this class is spposed to handle
 /// vision
@@ -46,6 +49,11 @@ protected:
 
 	/// @brief track if a node has been explored already
 	std::vector<std::vector<bool> > _exploration;
+
+	/// @brief cache vision pattern based on line of sight
+	std::unordered_map<long, VisionPattern> _patterns;
+
+	VisionPattern const &getPattern(long lineOfSight_p);
 };
 
 } // octopus
