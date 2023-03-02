@@ -34,7 +34,7 @@ bool shouldStopAttacking(AttackMoveData const &attackMoveData_p, Entity const *e
 	return square_length(diff_l) > maxSqDistance_l;
 }
 
-bool EntityAttackMoveCommand::applyCommand(Step & step_p, State const &state_p, CommandData const *data_p) const
+bool EntityAttackMoveCommand::applyCommand(Step & step_p, State const &state_p, CommandData const *data_p, PathManager &pathManager_p) const
 {
 	Logger::getDebug() << "EntityAttackMoveCommand:: apply Command "<<_source <<std::endl;
 	AttackMoveData const &attackMoveData_l = *static_cast<AttackMoveData const *>(data_p);
@@ -43,7 +43,7 @@ bool EntityAttackMoveCommand::applyCommand(Step & step_p, State const &state_p, 
 
 	if(subAttackCommand_l)
 	{
-		if(!subAttackCommand_l->applyCommand(step_p, state_p, data_p))
+		if(!subAttackCommand_l->applyCommand(step_p, state_p, data_p, pathManager_p))
 		{
 			if(!shouldStopAttacking(attackMoveData_l, ent_l))
 			{
@@ -67,7 +67,7 @@ bool EntityAttackMoveCommand::applyCommand(Step & step_p, State const &state_p, 
 	}
 
 	// run move command
-	return _subMoveCommand.applyCommand(step_p, state_p, data_p);
+	return _subMoveCommand.applyCommand(step_p, state_p, data_p, pathManager_p);
 }
 
 } // namespace octopus

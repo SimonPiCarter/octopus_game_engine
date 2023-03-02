@@ -48,7 +48,7 @@ void BuildingUnitProductionCommand::registerCommand(Step & step_p, State const &
 	}
 }
 
-bool BuildingUnitProductionCommand::applyCommand(Step & step_p, State const &state_p, CommandData const *data_p) const
+bool BuildingUnitProductionCommand::applyCommand(Step & step_p, State const &state_p, CommandData const *data_p, PathManager &) const
 {
 	// get data
 	UnitProductionData const &data_l = *static_cast<UnitProductionData const *>(data_p);

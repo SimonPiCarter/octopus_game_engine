@@ -142,7 +142,7 @@ void WorldUpdaterStepVisitor::visit(octopus::CommandWindUpDiffStep const *steppa
 	if(_world._sprites[steppable_p->_handle])
 	{
 		// set wind up state
-		if(data_l->_windup == 1)
+		if(data_l && data_l->_windup == 1)
 		{
 			_world._sprites[steppable_p->_handle]->setState(1);
 			_world._sprites[steppable_p->_handle]->queueState(0);

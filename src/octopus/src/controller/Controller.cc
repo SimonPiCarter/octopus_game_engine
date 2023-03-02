@@ -68,6 +68,7 @@ Controller::Controller(
 
 Controller::~Controller()
 {
+	_pathManager.joinCompute();
 	delete _backState;
 	delete _bufferState;
 	delete _frontState;
@@ -104,12 +105,14 @@ bool Controller::loop_body()
 
 			const std::chrono::time_point<std::chrono::steady_clock> start_l = std::chrono::steady_clock::now();
 
+			_pathManager.joinCompute();
+
 			// apply all commands
 			for(Commandable * cmdable_l : _backState->_state->getEntities())
 			{
 				if(cmdable_l->isActive())
 				{
-					cmdable_l->runCommands(step_l, *_backState->_state);
+					cmdable_l->runCommands(step_l, *_backState->_state, _pathManager);
 				}
 			}
 
@@ -142,6 +145,10 @@ bool Controller::loop_body()
 			handleTriggers(*_backState->_state, step_l, getStepBeforeLastCompiledStep());
 
 			octopus::compact(step_l);
+
+			// compute paths (update grid)
+			_pathManager.initFromGrid(_backState->_state->getPathGrid().getInternalGrid(), _backState->_state->getPathGridStatus());
+			_pathManager.startCompute(5000);
 
 			// Prepare next step
 			_compiledSteps.push_back(new Step());

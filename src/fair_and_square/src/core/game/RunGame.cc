@@ -1,4 +1,4 @@
-#include "game.hh"
+#include "RunGame.hh"
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
@@ -40,7 +40,7 @@
 #include "step/entity/spawn/EntitySpawnStep.hh"
 #include "step/Step.hh"
 
-#include "library/wave_level/WaveLevel.hh"
+#include "library/levels/WaveLevel.hh"
 
 using namespace cuttlefish;
 
@@ -112,9 +112,9 @@ void controllerLoop(octopus::Controller &controller_p, bool const &over_p, bool 
 		if(!paused_p)
 		{
 			// update controller
-			controller_p.update(elapsed_l);
+			controller_p.update(std::min(0.01, elapsed_l));
 		}
-		controller_p.loop_body();
+		while(!controller_p.loop_body()) {}
 
 		auto cur_l = std::chrono::steady_clock::now();
 		std::chrono::duration<double> elapsed_seconds_l = cur_l-last_l;

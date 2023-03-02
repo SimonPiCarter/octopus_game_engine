@@ -9,6 +9,7 @@
 #include "Metrics.hh"
 #include "trigger/Trigger.hh"
 #include "step/Step.hh"
+#include "graph/PathManager.hh"
 
 namespace octopus
 {
@@ -105,6 +106,9 @@ private:
 	BufferedState * _backState {nullptr};
 	BufferedState * _bufferState {nullptr};
 	BufferedState * _frontState {nullptr};
+
+	/// @brief path manager
+	PathManager _pathManager;
 
 	/// @brief required time per step
 	double const _timePerStep {0.1};

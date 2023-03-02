@@ -4,6 +4,7 @@
 #include <command/CommandQueue.hh>
 #include <state/State.hh>
 #include <step/Step.hh>
+#include <graph/PathManager.hh>
 
 ///
 /// This test suite aims at checking that EntityMoveStep works properly
@@ -20,7 +21,7 @@ class TestCommand : public Command
 public:
 	TestCommand(unsigned long val_p, std::vector<unsigned long> &vec_p) : Command(0), _val(val_p), _vec(vec_p) {}
 
-	virtual bool applyCommand(Step &, State const &, CommandData const * data_p) const
+	virtual bool applyCommand(Step &, State const &, CommandData const * data_p, PathManager &) const override
 	{
 		_vec.push_back(static_cast<CommandDataWithData<unsigned long> const *>(data_p)->_data);
 
@@ -42,6 +43,7 @@ TEST(commandQueueTest, throw_test)
 {
 	State state_l;
 	Step step_l;
+	PathManager pathManager_l;
 
 	std::vector<unsigned long> vec_l;
 
@@ -55,6 +57,7 @@ TEST(commandQueueTest, simple)
 {
 	State state_l;
 	Step step_l;
+	PathManager pathManager_l;
 
 	std::vector<unsigned long> vec_l;
 
@@ -69,7 +72,7 @@ TEST(commandQueueTest, simple)
 
 	while(it_l != queue_l.getEnd())
 	{
-		if(it_l->_cmd->applyCommand(step_l, state_l, it_l->_data))
+		if(it_l->_cmd->applyCommand(step_l, state_l, it_l->_data, pathManager_l))
 		{
 			++it_l;
 			queue_l.nextCommand();
@@ -89,6 +92,7 @@ TEST(commandQueueTest, multiple)
 {
 	State state_l;
 	Step step_l;
+	PathManager pathManager_l;
 
 	std::vector<unsigned long> vec_l;
 
@@ -107,7 +111,7 @@ TEST(commandQueueTest, multiple)
 
 	while(it_l != queue_l.getEnd())
 	{
-		if(it_l->_cmd->applyCommand(step_l, state_l, it_l->_data))
+		if(it_l->_cmd->applyCommand(step_l, state_l, it_l->_data, pathManager_l))
 		{
 			++it_l;
 			queue_l.nextCommand();
@@ -129,6 +133,7 @@ TEST(commandQueueTest, multiple_on_multiple_call)
 {
 	State state_l;
 	Step step_l;
+	PathManager pathManager_l;
 
 	std::vector<unsigned long> vec_l;
 
@@ -144,7 +149,7 @@ TEST(commandQueueTest, multiple_on_multiple_call)
 
 	while(it_l != queue_l.getEnd())
 	{
-		if(it_l->_cmd->applyCommand(step_l, state_l, it_l->_data))
+		if(it_l->_cmd->applyCommand(step_l, state_l, it_l->_data, pathManager_l))
 		{
 			++it_l;
 			queue_l.nextCommand();
@@ -169,7 +174,7 @@ TEST(commandQueueTest, multiple_on_multiple_call)
 
 	while(it_l != queue_l.getEnd())
 	{
-		if(it_l->_cmd->applyCommand(step_l, state_l, it_l->_data))
+		if(it_l->_cmd->applyCommand(step_l, state_l, it_l->_data, pathManager_l))
 		{
 			++it_l;
 			queue_l.nextCommand();
@@ -191,6 +196,7 @@ TEST(commandQueueTest, multiple_override)
 {
 	State state_l;
 	Step step_l;
+	PathManager pathManager_l;
 
 	std::vector<unsigned long> vec_l;
 
@@ -209,7 +215,7 @@ TEST(commandQueueTest, multiple_override)
 
 	while(it_l != queue_l.getEnd())
 	{
-		if(it_l->_cmd->applyCommand(step_l, state_l, it_l->_data))
+		if(it_l->_cmd->applyCommand(step_l, state_l, it_l->_data, pathManager_l))
 		{
 			++it_l;
 			queue_l.nextCommand();
@@ -229,6 +235,7 @@ TEST(commandQueueTest, multiple_override_reverted)
 {
 	State state_l;
 	Step step_l;
+	PathManager pathManager_l;
 
 	std::vector<unsigned long> vec_l;
 
@@ -249,7 +256,7 @@ TEST(commandQueueTest, multiple_override_reverted)
 
 	while(it_l != queue_l.getEnd())
 	{
-		if(it_l->_cmd->applyCommand(step_l, state_l, it_l->_data))
+		if(it_l->_cmd->applyCommand(step_l, state_l, it_l->_data, pathManager_l))
 		{
 			++it_l;
 			queue_l.nextCommand();
@@ -270,6 +277,7 @@ TEST(commandQueueTest, multiple_override_reverted_throw)
 {
 	State state_l;
 	Step step_l;
+	PathManager pathManager_l;
 
 	std::vector<unsigned long> vec_l;
 
@@ -290,6 +298,7 @@ TEST(commandQueueTest, multiple_override_reverted_all)
 {
 	State state_l;
 	Step step_l;
+	PathManager pathManager_l;
 
 	std::vector<unsigned long> vec_l;
 
@@ -316,7 +325,7 @@ TEST(commandQueueTest, multiple_override_reverted_all)
 
 	while(it_l != queue_l.getEnd())
 	{
-		if(it_l->_cmd->applyCommand(step_l, state_l, it_l->_data))
+		if(it_l->_cmd->applyCommand(step_l, state_l, it_l->_data, pathManager_l))
 		{
 			++it_l;
 			queue_l.nextCommand();

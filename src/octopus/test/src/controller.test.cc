@@ -21,10 +21,13 @@ TEST(controllerTest, simple)
 	octopus::EntityModel unitModel_l { false, 1., 1., 10. };
 
 	EntitySpawnStep * spawn_l = new EntitySpawnStep(0, Entity { { 3, 3. }, false, unitModel_l});
-	EntityMoveCommand * command_l = new EntityMoveCommand(0, 0, {4, 4}, 0, { {4, 3}, {4, 4}});
+	EntityMoveCommand * command_l = new EntityMoveCommand(0, 0, {4, 3}, 0, { {4, 3}});
+	EntityMoveCommand * command2_l = new EntityMoveCommand(0, 0, {4, 4}, 0, { {4, 4}});
+	command2_l->setQueued(true);
 	CommandSpawnStep * commandSpawn_l = new CommandSpawnStep(command_l);
+	CommandSpawnStep * commandSpawn2_l = new CommandSpawnStep(command2_l);
 
-	Controller controller_l({new PlayerSpawnStep(0, 0), spawn_l, commandSpawn_l}, 1.);
+	Controller controller_l({new PlayerSpawnStep(0, 0), spawn_l, commandSpawn_l, commandSpawn2_l}, 1.);
 
 	State const *a = controller_l.getBackState();
 	State const *b = controller_l.getBufferState();

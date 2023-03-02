@@ -6,6 +6,7 @@
 
 namespace octopus
 {
+class PathManager;
 class Step;
 class State;
 
@@ -25,7 +26,7 @@ public:
 
 	/// @brief compile command or info into the step
 	/// @return true if command is over
-	virtual bool applyCommand(Step & step_p, State const &state_p, CommandData const * data_p) const = 0;
+	virtual bool applyCommand(Step & step_p, State const &state_p, CommandData const * data_p, PathManager &pathManager_p) const = 0;
 
 	/// @brief create data supporting the command actions
 	virtual CommandData * newData() const = 0;
