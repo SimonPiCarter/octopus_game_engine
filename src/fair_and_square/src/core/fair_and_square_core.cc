@@ -7,10 +7,11 @@
 #include <thread>
 #include <sstream>
 
+#include "logger/Logger.hh"
 // cuttlefish
 #include "window/Window.hh"
 
-#include "game/game.hh"
+#include "game/RunGame.hh"
 
 #include "menu/Menu.hh"
 #include "sprite/Picture.hh"
@@ -33,6 +34,7 @@ void quit(bool &quit_p)
 
 int main( int argc, char* args[] )
 {
+	//octopus::Logger::enable_debug();
 	cuttlefish::Window window_l;
 
 	//Start up SDL and create window

@@ -1,10 +1,11 @@
+#include "WaveLevel.hh"
+
 #include <iostream>
 #include <fstream>
 #include <random>
 
-#include "ModelLoader.hh"
+#include "library/model/ModelLoader.hh"
 
-#include "controller/trigger/Trigger.hh"
 #include "controller/trigger/Listener.hh"
 #include "command/entity/EntityAttackMoveCommand.hh"
 #include "command/spawner/AreaSpawnerCommand.hh"
@@ -25,47 +26,6 @@
 #include "step/trigger/TriggerSpawn.hh"
 
 using namespace octopus;
-
-class WaveSpawn : public OneShotTrigger
-{
-public:
-	WaveSpawn(Listener * listener_p, Library const &lib_p, unsigned long wave_p) : OneShotTrigger({listener_p}), _lib(lib_p), _wave(wave_p) {}
-
-	virtual void trigger(State const &state_p, Step &step_p, unsigned long) const override
-	{
-		for(unsigned long i = 0 ; i < _wave * 10 ; ++ i)
-		{
-			Unit unit_l({ 35., 35. }, false, _lib.getUnitModel("square"));
-			unit_l._player = 1;
-			Handle handle_l = getNextHandle(step_p, state_p);
-			step_p.addSteppable(new UnitSpawnStep(handle_l, unit_l));
-			step_p.addSteppable(new CommandSpawnStep(new EntityAttackMoveCommand(handle_l, handle_l, {7., 20.}, 0, {{7., 20.}}, true )));
-		}
-
-		step_p.addSteppable(new TriggerSpawn(new WaveSpawn(new ListenerStepCount(3*60*100), _lib, _wave+1)));
-
-		// win after 10 waves
-		if(_wave == 10)
-		{
-			step_p.addSteppable(new StateWinStep(state_p.isOver(), state_p.hasWinningTeam(), state_p.getWinningTeam(), 0));
-		}
-	}
-
-private:
-	Library const &_lib;
-	unsigned long const _wave;
-};
-
-class LoseTrigger : public OneShotTrigger
-{
-public:
-	LoseTrigger(Listener * listener_p) : OneShotTrigger({listener_p}) {}
-
-	virtual void trigger(State const &state_p, Step &step_p, unsigned long) const override
-	{
-		step_p.addSteppable(new StateWinStep(state_p.isOver(), state_p.hasWinningTeam(), state_p.getWinningTeam(), 1));
-	}
-};
 
 std::list<Steppable *> WaveLevelSteps(Library &lib_p)
 {
@@ -93,7 +53,8 @@ std::list<Steppable *> WaveLevelSteps(Library &lib_p)
 	mapRes_l[octopus::ResourceType::Food] = -200;
 	mapRes_l[octopus::ResourceType::Steel] = -200;
 
-	Trigger * triggerWave_l = new WaveSpawn(new ListenerStepCount(3*60*100), lib_p, 1);
+	unsigned long stepCount_l = 3*60*100;
+	Trigger * triggerWave_l = new WaveSpawn(new ListenerStepCount(stepCount_l), lib_p, 1, stepCount_l, 10);
 	Trigger * triggerLose_l = new LoseTrigger(new ListenerEntityModelDied(&lib_p.getBuildingModel("command_center"), 0));
 
 	std::list<Steppable *> spawners_l =
@@ -157,4 +118,45 @@ std::list<Command *> WaveLevelCommands(Library &lib_p)
 	};
 
 	return commands_l;
+}
+
+/////////////////////////////////////////////
+/////////////////////////////////////////////
+/// 				Triggers			  ///
+/////////////////////////////////////////////
+/////////////////////////////////////////////
+
+WaveSpawn::WaveSpawn(Listener * listener_p, Library const &lib_p, unsigned long wave_p, unsigned long stepWait_p, unsigned long finalWave_p) :
+		OneShotTrigger({listener_p}),
+		_lib(lib_p),
+		_wave(wave_p),
+		_stepWait(stepWait_p),
+		_finalWave(finalWave_p)
+{}
+
+void WaveSpawn::trigger(State const &state_p, Step &step_p, unsigned long) const
+{
+	for(unsigned long i = 0 ; i < _wave * 10 ; ++ i)
+	{
+		Unit unit_l({ 35., 35. }, false, _lib.getUnitModel("square"));
+		unit_l._player = 0;
+		Handle handle_l = getNextHandle(step_p, state_p);
+		step_p.addSteppable(new UnitSpawnStep(handle_l, unit_l));
+		step_p.addSteppable(new CommandSpawnStep(new EntityAttackMoveCommand(handle_l, handle_l, {7., 20.}, 0, {{7., 20.}}, true )));
+	}
+
+	step_p.addSteppable(new TriggerSpawn(new WaveSpawn(new ListenerStepCount(_stepWait), _lib, _wave+1, _stepWait, _finalWave)));
+
+	// win after 10 waves
+	if(_wave == _finalWave)
+	{
+		step_p.addSteppable(new StateWinStep(state_p.isOver(), state_p.hasWinningTeam(), state_p.getWinningTeam(), 0));
+	}
+}
+
+LoseTrigger::LoseTrigger(Listener * listener_p) : OneShotTrigger({listener_p}) {}
+
+void LoseTrigger::trigger(State const &state_p, Step &step_p, unsigned long) const
+{
+	step_p.addSteppable(new StateWinStep(state_p.isOver(), state_p.hasWinningTeam(), state_p.getWinningTeam(), 1));
 }

@@ -9,8 +9,8 @@ cmake_minimum_required (VERSION 3.14.0)
 # ============================================================================
 
 add_library(fair_and_square_lib
-	${CMAKE_CURRENT_SOURCE_DIR}/src/library/wave_level/ModelLoader.cc
-	${CMAKE_CURRENT_SOURCE_DIR}/src/library/wave_level/WaveLevel.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/src/library/model/ModelLoader.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/src/library/levels/WaveLevel.cc
 )
 
 target_link_libraries(fair_and_square_lib PUBLIC octopus)
@@ -21,15 +21,15 @@ target_include_directories(fair_and_square_lib
 )
 
 add_executable(fair_and_square_raw
-		${CMAKE_CURRENT_SOURCE_DIR}/src/raw/raw.cc
+		${CMAKE_CURRENT_SOURCE_DIR}/src/raw/fair_and_square_raw.cc
 	)
 
 target_link_libraries(fair_and_square_raw PUBLIC fair_and_square_lib)
 
 if(GRAPHICS)
 	add_executable(fair_and_square
-		${CMAKE_CURRENT_SOURCE_DIR}/src/core/game/game.cc
-		${CMAKE_CURRENT_SOURCE_DIR}/src/core/core.cc
+		${CMAKE_CURRENT_SOURCE_DIR}/src/core/game/RunGame.cc
+		${CMAKE_CURRENT_SOURCE_DIR}/src/core/fair_and_square_core.cc
 	)
 	target_link_libraries(fair_and_square PUBLIC fair_and_square_lib cuttlefish)
 endif()

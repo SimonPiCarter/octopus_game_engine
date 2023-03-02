@@ -1,5 +1,5 @@
 
-#include "library/wave_level/WaveLevel.hh"
+#include "library/levels/WaveLevel.hh"
 
 // octopus
 #include "controller/Controller.hh"

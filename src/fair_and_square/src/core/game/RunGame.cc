@@ -1,4 +1,4 @@
-#include "game.hh"
+#include "RunGame.hh"
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
@@ -40,7 +40,7 @@
 #include "step/entity/spawn/EntitySpawnStep.hh"
 #include "step/Step.hh"
 
-#include "library/wave_level/WaveLevel.hh"
+#include "library/levels/WaveLevel.hh"
 
 using namespace cuttlefish;
 
