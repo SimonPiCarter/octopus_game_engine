@@ -277,6 +277,52 @@ Vector compute_field(ValueGrid const &grid_p, long x, long y)
 	return {dx, dy};
 }
 
+Vector obstacle_field(ValueGrid const &grid_p, long x, long y)
+{
+	Fixed dx = 0;
+	Fixed dy = 0;
+	for(long i : {0, -1, 1})
+	{
+		bool oob_l = false;
+		// skip out of bound
+		if(x+i < 0 || x+i >= grid_p.size())
+		{
+			oob_l = true;
+		}
+		for(long j : {0, -1, 1})
+		{
+			// skip out of bound
+			if(!oob_l
+			&&(y+j < 0 || y+j >= grid_p[x+i].size()))
+			{
+				oob_l = true;
+			}
+			if(!oob_l && grid_p[x+i][y+j] >= 0. )
+			{
+				dx += i;
+				dy += j;
+			}
+		}
+	}
+	if(dx < 1e-3)
+	{
+		dx = -1.;
+	}
+	else if(dx > 1e-3)
+	{
+		dx = 1.;
+	}
+	if(dy < 1e-3)
+	{
+		dy = -1.;
+	}
+	else if(dy > 1e-3)
+	{
+		dy = 1.;
+	}
+	return {dx, dy};
+}
+
 FlowField flow_field(ValueGrid const &grid_p)
 {
 	FlowField result_l;
@@ -285,7 +331,14 @@ FlowField flow_field(ValueGrid const &grid_p)
 		result_l.emplace_back(grid_p[i].size(), Vector{0., 0.});
 		for(long j = 0 ; j < grid_p[i].size() ; ++j)
 		{
-			result_l[i][j] = compute_field(grid_p, i, j);
+			if(grid_p[i][j] >= 0.)
+			{
+				result_l[i][j] = compute_field(grid_p, i, j);
+			}
+			else
+			{
+				result_l[i][j] = obstacle_field(grid_p, i, j);
+			}
 		}
 	}
 	return result_l;
