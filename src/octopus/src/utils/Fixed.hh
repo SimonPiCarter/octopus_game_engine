@@ -696,7 +696,7 @@ fixed<I, F> square_root(fixed<I, F> v)
 
 namespace octopus
 {
-	typedef numeric::fixed<32, 32> Fixed;
+	typedef numeric::fixed<16, 16> Fixed;
 } // namespace octopus
 
 
