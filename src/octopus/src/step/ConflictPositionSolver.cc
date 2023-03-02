@@ -384,7 +384,7 @@ bool updateStepFromConflictPosition(Step &step_p, State const &state_p)
 		{
 			continue;
 		}
-		Logger::getDebug() << " conflict solver :: "<<ent_l->_handle<< " absolute correction : "<<mapAbsoluteCorrection_l[ent_l->_handle]<<std::endl;
+		Logger::getDebug() << " conflict solver :: "<<ent_l->_handle<<" move "<<ent_l->_move<<" absolute correction : "<<mapAbsoluteCorrection_l[ent_l->_handle]<<std::endl;
 		ent_l->_move = ent_l->_move + mapAbsoluteCorrection_l[ent_l->_handle];
 	}
 
