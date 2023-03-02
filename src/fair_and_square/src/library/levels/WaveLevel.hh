@@ -14,7 +14,7 @@ namespace octopus
 } // namespace octopus
 
 
-std::list<octopus::Steppable *> WaveLevelSteps(octopus::Library &lib_p);
+std::list<octopus::Steppable *> WaveLevelSteps(octopus::Library &lib_p, unsigned long waveCount_p, unsigned long stepCount_p);
 std::list<octopus::Command *> WaveLevelCommands(octopus::Library &lib_p);
 
 class WaveSpawn : public octopus::OneShotTrigger

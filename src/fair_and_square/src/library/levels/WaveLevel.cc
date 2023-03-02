@@ -27,7 +27,7 @@
 
 using namespace octopus;
 
-std::list<Steppable *> WaveLevelSteps(Library &lib_p)
+std::list<Steppable *> WaveLevelSteps(Library &lib_p, unsigned long waveCount_p, unsigned long stepCount_p)
 {
 	loadModels(lib_p);
 
@@ -53,8 +53,7 @@ std::list<Steppable *> WaveLevelSteps(Library &lib_p)
 	mapRes_l[octopus::ResourceType::Food] = -200;
 	mapRes_l[octopus::ResourceType::Steel] = -200;
 
-	unsigned long stepCount_l = 3*60*100;
-	Trigger * triggerWave_l = new WaveSpawn(new ListenerStepCount(stepCount_l), lib_p, 1, stepCount_l, 10);
+	Trigger * triggerWave_l = new WaveSpawn(new ListenerStepCount(stepCount_p), lib_p, 1, stepCount_p, waveCount_p);
 	Trigger * triggerLose_l = new LoseTrigger(new ListenerEntityModelDied(&lib_p.getBuildingModel("command_center"), 0));
 
 	std::list<Steppable *> spawners_l =
