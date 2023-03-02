@@ -70,7 +70,7 @@ class Controller
 
 public:
 	Controller(std::list<Steppable *> const &initSteppables_p, double timePerStep_p,
-		std::list<Command *> const &initCommands_p = {}, unsigned long gridSize_p=1);
+		std::list<Command *> const &initCommands_p = {}, unsigned long gridPointSize_p=1, unsigned long gridSize_p=50);
 	~Controller();
 
 	/// @brief returns true once buffer and back states are up to date

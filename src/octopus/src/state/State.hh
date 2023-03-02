@@ -26,7 +26,7 @@ class State
 public:
 	State();
 	/// @brief create a state with the given id and each grid node with the given size
-	State(unsigned long id_p, unsigned long gridSize_p);
+	State(unsigned long id_p, unsigned long gridSize_p, unsigned long gridPointSize_p);
 	~State();
 
 	bool hasEntity(Handle const &handle_p) const;
