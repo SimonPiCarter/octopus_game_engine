@@ -293,11 +293,11 @@ FlowField flow_field(ValueGrid const &grid_p)
 
 Vector direction(Fixed x, Fixed y, FlowField const &field_p)
 {
-	long long floorX_l = (x+0.5).to_int();
-	long long floorY_l = (y+0.5).to_int();
+	long long floorX_l = (x).to_int();
+	long long floorY_l = (y).to_int();
 
-	Fixed ratioX_l = x - floorX_l + 0.5;
-	Fixed ratioY_l = y - floorY_l + 0.5;
+	Fixed ratioX_l = x - floorX_l;
+	Fixed ratioY_l = y - floorY_l;
 
 	// direction is the sum of all vectors ponderated by the position in the floored node
 
