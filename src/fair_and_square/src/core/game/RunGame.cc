@@ -100,12 +100,14 @@ void commandFromSpriteModel(SpriteModel const *spriteModel_l, octopus::Library c
 	}
 }
 
-void controllerLoop(octopus::Controller &controller_p, bool const &over_p, bool const &paused_p)
+void controllerLoop(octopus::Controller &controller_p, bool const &over_p, bool const &paused_p, long &ratio_p)
 {
 	using namespace std::chrono_literals;
 
 	auto last_l = std::chrono::steady_clock::now();
 	double elapsed_l = 0.;
+	double full_l = 0.;
+	double lostTime_l = 0.;
 	while(!over_p)
 	{
 		// if paused do not update controller
@@ -113,6 +115,7 @@ void controllerLoop(octopus::Controller &controller_p, bool const &over_p, bool 
 		{
 			// update controller
 			controller_p.update(std::min(0.01, elapsed_l));
+			lostTime_l += elapsed_l - std::min(0.01, elapsed_l);
 		}
 		while(!controller_p.loop_body()) {}
 
@@ -120,6 +123,14 @@ void controllerLoop(octopus::Controller &controller_p, bool const &over_p, bool 
 		std::chrono::duration<double> elapsed_seconds_l = cur_l-last_l;
 		elapsed_l = elapsed_seconds_l.count();
 		last_l = cur_l;
+
+		full_l += elapsed_l;
+		if(full_l > 1.)
+		{
+			full_l = 0.;
+			ratio_p = (1. - lostTime_l)*100.;
+			lostTime_l = 0;
+		}
 	}
 }
 
@@ -138,16 +149,18 @@ void runGame(Window &window_p)
 	//SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "1");
 	bool quit_l = false;
 	bool paused_l = false;
+	// ratio in % of time used (higher the better, gives % of speed on runtime)
+	long ratio_l = 100;
 
 	World world_l;
 
 	octopus::Library lib_l;
-	std::list<octopus::Steppable *> spawners_l = WaveLevelSteps(lib_l, 10, 3*60*100);
+	std::list<octopus::Steppable *> spawners_l = WaveLevelSteps(lib_l, 10, 0.1*60*100);
 	std::list<octopus::Command *> commands_l = WaveLevelCommands(lib_l);
 
 	octopus::Controller controller_l(spawners_l, 0.01, commands_l, gridSize_l);
 
-	std::thread controllerThread_l(controllerLoop, std::ref(controller_l), std::ref(quit_l), std::ref(paused_l));
+	std::thread controllerThread_l(controllerLoop, std::ref(controller_l), std::ref(quit_l), std::ref(paused_l), std::ref(ratio_l));
 
 	double x = 0.;
 	double y = 0.;
@@ -220,10 +233,10 @@ void runGame(Window &window_p)
 	bool minimapClicked_l = false;
 
 	// Text for resource
-	Text textResource_l(&window_p, {0,0,0}, 300, 0);
-	Text textDivLvl_l(&window_p, {0,0,0}, 550, 0);
-	Text textDivAnchor_l(&window_p, {0,0,0}, 700, 0);
-	Text textSteps_l(&window_p, {0,0,0}, 850, 0);
+	Text textResource_l(&window_p, {0,0,0}, 250, 0);
+	Text textDivLvl_l(&window_p, {0,0,0}, 500, 0);
+	Text textDivAnchor_l(&window_p, {0,0,0}, 650, 0);
+	Text textSteps_l(&window_p, {0,0,0}, 0, 20);
 
 	StandardClicMode standardClicMode_l;
 	ClicMode * currentClicMode_l = &standardClicMode_l;
@@ -489,7 +502,7 @@ void runGame(Window &window_p)
 		octopus::Player const * player_l = state_l.getPlayer(0);
 
 		//Render background texture to screen
-		background_l->render(window_p.getRenderer(), 0, 0, 30, window_p.getWidth() );
+		background_l->render(window_p.getRenderer(), 0, 0, 50, window_p.getWidth() );
 
 		textResource_l.setText(resourceStr(*player_l));
 		textResource_l.display(window_p);
@@ -499,7 +512,7 @@ void runGame(Window &window_p)
 		textDivAnchor_l.display(window_p);
 
 		std::stringstream ss_l;
-		ss_l << stateAndSteps_l._steps.size()<<"/"<<controller_l.getOngoingStep();
+		ss_l << stateAndSteps_l._steps.size()<<"/"<<controller_l.getOngoingStep()<<" ratio : "<<ratio_l << "%";
 		textSteps_l.setText(ss_l.str());
 		textSteps_l.display(window_p);
 
