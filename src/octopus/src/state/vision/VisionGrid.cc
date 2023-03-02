@@ -30,9 +30,9 @@ void VisionGrid::updateVision(const Entity &ent_p, bool set_p)
 					};
 
 	// check distance on all nodes in the subbox
-	for(size_t x = std::max(0l, box_l._lowerX) ; x <= std::min<long>(box_l._upperX, _grid.size()-1); ++x)
+	for(size_t x = std::max(0l, box_l._lowerX) ; x <= std::max(0l, std::min<long>(box_l._upperX, _grid.size()-1)); ++x)
 	{
-		for(size_t y = std::max(0l, box_l._lowerY) ; y <= std::min<long>(box_l._upperY, _grid.size()-1); ++y)
+		for(size_t y = std::max(0l, box_l._lowerY) ; y <= std::max(0l, std::min<long>(box_l._upperY, _grid.size()-1)); ++y)
 		{
 			Fixed dist_l = square_length(ent_p._pos - Vector(x + 0.5, y + 0.5));
 			if(dist_l < ent_p._model._lineOfSight*ent_p._model._lineOfSight)
@@ -60,9 +60,9 @@ void VisionGrid::updateExploration(const Entity &ent_p, bool set_p)
 					};
 
 	// check distance on all nodes in the subbox
-	for(size_t x = std::max(0l, box_l._lowerX) ; x <= std::min<long>(box_l._upperX, _exploration.size()-1); ++x)
+	for(size_t x = std::max(0l, box_l._lowerX) ; x <= std::max(0l, std::min<long>(box_l._upperX, _grid.size()-1)); ++x)
 	{
-		for(size_t y = std::max(0l, box_l._lowerY) ; y <= std::min<long>(box_l._upperY, _exploration.size()-1); ++y)
+		for(size_t y = std::max(0l, box_l._lowerY) ; y <= std::max(0l, std::min<long>(box_l._upperY, _grid.size()-1)); ++y)
 		{
 			Fixed dist_l = square_length(ent_p._pos - Vector(x + 0.5, y + 0.5));
 			if(dist_l < ent_p._model._lineOfSight*ent_p._model._lineOfSight)
