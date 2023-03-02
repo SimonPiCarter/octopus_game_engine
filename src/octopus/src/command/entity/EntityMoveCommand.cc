@@ -77,27 +77,25 @@ bool EntityMoveCommand::applyCommand(Step & step_p, State const &state_p, Comman
 		return true;
 	}
 
-	// check for progress
-	Fixed sqLastDiff_l = square_length(next_l - data_l._lastPos);
-	Fixed sqCurDiff_l = square_length(next_l - ent_l->_pos);
-	// no progress
-	if(sqLastDiff_l + 1e-3 < sqCurDiff_l)
+	// add step to record last position
+	// If no progress for too long we stop
+	if(data_l._countSinceProgress == 500)
 	{
-		// add step to increment count since progress
-		step_p.addSteppable(new CommandIncrementNoProgressStep(_handleCommand, data_l._countSinceProgress, data_l._countSinceProgress+1));
-	}
-	else
-	{
+		// check for progress
+		Fixed sqLastDiff_l = square_length(ent_l->_pos - data_l._lastPos);
+		// no progress
+		if(sqLastDiff_l < 0.5)
+		{
+			return true;
+		}
+		step_p.addSteppable(new CommandUpdateLastPosStep(_handleCommand, _source, data_l._lastPos));
 		// reset no progress count
 		step_p.addSteppable(new CommandIncrementNoProgressStep(_handleCommand, data_l._countSinceProgress, 0));
 	}
-	// add step to record last position
-	step_p.addSteppable(new CommandUpdateLastPosStep(_handleCommand, _source, data_l._lastPos));
-	// If no progress for too long we stop
-	if(data_l._countSinceProgress > 50)
+	else
 	{
-		Logger::getDebug() << "no progress since 50 steps" << std::endl;
-		return true;
+		// add step to increment count since progress
+		step_p.addSteppable(new CommandIncrementNoProgressStep(_handleCommand, data_l._countSinceProgress, data_l._countSinceProgress+1));
 	}
 
 	Logger::getDebug() << "Adding move step orig = "<<ent_l->_pos<<" target = "<<next_l<<" step speed = " << ent_l->getStepSpeed() << std::endl;
