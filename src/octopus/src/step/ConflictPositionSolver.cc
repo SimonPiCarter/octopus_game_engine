@@ -168,7 +168,7 @@ bool updateStepFromConflictPosition(Step &step_p, State const &state_p)
 				}
 
 				Vector normalizedAxis_l { 1., 0.};
-				if(length_l > 1e-3)
+				if(axis_l.x > 1e-3 || axis_l.y > 1e-3)
 				{
 					// Normalized axis from B to A
 					normalizedAxis_l = axis_l / length_l;
