@@ -71,7 +71,10 @@ typedef std::vector<std::vector<Vector> > FlowField;
 /// @brief compute a flow field based on a ValueGrid
 FlowField flow_field(ValueGrid const &grid_p);
 
-/// @brief comptute direction based on flow field by adding all vectors
+/// @brief get the direction directly on the field of the position
+Vector unitary_direction(Fixed x, Fixed y, FlowField const &field_p);
+
+/// @brief compute direction based on flow field by adding all vectors around the position (8 neighbours)
 Vector direction(Fixed x, Fixed y, FlowField const &field_p);
 
 std::ostream &stream(std::ostream & os_p, ValueGrid const &grid_p);

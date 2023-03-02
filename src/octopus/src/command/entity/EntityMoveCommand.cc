@@ -40,33 +40,20 @@ bool EntityMoveCommand::applyCommand(Step & step_p, State const &state_p, Comman
 	Entity const * ent_l = state_p.getEntity(_source);
 
 	///
-	/// Check if we need to update
-	///
-	unsigned long gridStatus_l = state_p.getPathGridStatus();
-	if((gridStatus_l > data_l._gridStatus
-	&& data_l._stepSinceUpdate > 100)
-	|| (data_l._gridStatus == 0 && _init && data_l._stepSinceUpdate == 0))
-	{
-		// compute new path
-		std::list<Vector> path_l = computePath(state_p, _source, data_l._finalPoint);
-		step_p.addSteppable(new CommandDataWaypointSetStep(_handleCommand, waypoints_l, path_l));
-		step_p.addSteppable(new CommandMoveUpdateStep(_handleCommand, data_l._stepSinceUpdate, data_l._gridStatus, gridStatus_l));
-		step_p.addSteppable(new CommandMoveStepSinceUpdateIncrementStep(_handleCommand));
-
-		return false;
-	}
-	step_p.addSteppable(new CommandMoveStepSinceUpdateIncrementStep(_handleCommand));
-
-	///
 	/// Update waypoints based on current position
 	/// Waypoint must be within two steps
 	///
 	pathManager_p.queryFlowField(data_l._finalPoint.x.to_int(), data_l._finalPoint.y.to_int());
 	FlowField const * field_l = pathManager_p.getFlowField(data_l._finalPoint.x.to_int(), data_l._finalPoint.y.to_int());
 	Vector next_l = data_l._finalPoint;
-	if(field_l)
+	if(field_l )
 	{
-		next_l = ent_l->_pos + direction(ent_l->_pos.x, ent_l->_pos.y, *field_l);
+		// direction directly on the square
+		Vector unitDir_l = unitary_direction(ent_l->_pos.x, ent_l->_pos.y, *field_l);
+		if(unitDir_l.x > 1e-5 || unitDir_l.x < -1e-5 || unitDir_l.y > 1e-5 || unitDir_l.y < -1e-5)
+		{
+			next_l = ent_l->_pos + direction(ent_l->_pos.x, ent_l->_pos.y, *field_l);
+		}
 	}
 	Vector delta_l = ent_l->_pos - data_l._finalPoint;
 
