@@ -18,6 +18,8 @@ struct Metrics
 	double _timeApplyingSteps {0.};
 	/// @brief time in nano seconds
 	double _timeCompilingSteps {0.};
+	double _maxTimeCompilingSteps {0.};
+	size_t _spikeCompilingSteps {0};
 	size_t _nbEntities {0};
 	size_t _nbCommandables {0};
 };

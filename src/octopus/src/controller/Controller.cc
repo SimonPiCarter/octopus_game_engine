@@ -156,8 +156,17 @@ bool Controller::loop_body()
 			_compiledSteps.back()->addSteppable(new TickingStep());
 			_lastHandledStep = _backState->_stepHandled;
 
+			auto &&time_l = std::chrono::nanoseconds( std::chrono::steady_clock::now() - start_l ).count();
 			_metrics._nbStepsCompiled += 1;
-			_metrics._timeCompilingSteps += std::chrono::nanoseconds( std::chrono::steady_clock::now() - start_l ).count();
+			_metrics._timeCompilingSteps += time_l;
+			if(time_l > _timePerStep * 1e9)
+			{
+				++_metrics._spikeCompilingSteps;
+			}
+			if(time_l > _metrics._maxTimeCompilingSteps)
+			{
+				_metrics._maxTimeCompilingSteps = time_l;
+			}
 		}
 
 		Logger::getDebug() << "apply step" << " "<<_backState->_state->_id<< std::endl;
