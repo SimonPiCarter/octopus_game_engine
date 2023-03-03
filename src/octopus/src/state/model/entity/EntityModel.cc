@@ -13,5 +13,15 @@ std::map<ResourceType, double> getReverseCostMap(std::map<ResourceType, double> 
 	return reversedCost_l;
 }
 
+double getBonus(std::string const &id_p, EntityModel const &model_p)
+{
+	auto &&it_l = model_p._bonusDamage.find(id_p);
+	if(it_l != model_p._bonusDamage.end())
+	{
+		return it_l->second;
+	}
+	return 0.;
+}
+
 } // namespace octopus
 

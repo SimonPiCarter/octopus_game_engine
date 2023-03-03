@@ -71,8 +71,10 @@ namespace octopus
 			double getStepSpeed() const;
 			/// @brief get step speed updated using buffing info
 			double getFullReload() const;
-			/// @brief get damage updated using buffing info
-			double getDamage() const;
+			/// @brief get damage updated using buffing info and bonus from type
+			double getDamage(EntityModel const &target_p) const;
+			/// @brief get damage updated using buffing info but not bonus from type
+			double getDamageNoBonus() const;
 			/// @brief get armor updated using buffing info
 			double getArmor() const;
 			/// @brief get production updated using buffing info

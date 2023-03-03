@@ -36,7 +36,11 @@ double Entity::getFullReload() const
 	return ( _model._fullReload + _buffFullReload._offset )* ( 1. + _buffFullReload._coef );
 }
 
-double Entity::getDamage() const
+double Entity::getDamage(EntityModel const &target_p) const
+{
+	return ( _model._damage + _buffDamage._offset )* ( 1. + _buffDamage._coef ) + getBonus(target_p._id, _model);
+}
+double Entity::getDamageNoBonus() const
 {
 	return ( _model._damage + _buffDamage._offset )* ( 1. + _buffDamage._coef );
 }

@@ -157,7 +157,7 @@ void StatsPanel::render(Window &window_p)
 			_textStats.updateText("hp_val", ss_l.str());
 
 			ss_l.str("");
-			ss_l<<_monoSelection->getDamage();
+			ss_l<<_monoSelection->getDamageNoBonus();
 			_textStats.updateText("dmg_val", ss_l.str());
 
 			ss_l.str("");
