@@ -40,10 +40,6 @@ unsigned long long to_uint(double const &f) {
 	return static_cast<unsigned long long>(f);
 }
 
-float to_float(double const &f) {
-	return float(f);
-}
-
 double to_double(double const &f) {
 	return f;
 }
