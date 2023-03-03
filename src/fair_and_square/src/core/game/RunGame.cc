@@ -513,7 +513,9 @@ void runGame(Window &window_p)
 		textDivAnchor_l.display(window_p);
 
 		std::stringstream ss_l;
-		ss_l << stateAndSteps_l._steps.size()<<"/"<<controller_l.getOngoingStep()<<" ratio : "<<ratio_l << "%";
+		ss_l << stateAndSteps_l._steps.size()<<"/"<<controller_l.getOngoingStep()
+		<<"     ratio : "<<ratio_l << "%"
+		<<"     entity count : "<<state_l.getEntities().size();
 		textSteps_l.setText(ss_l.str());
 		textSteps_l.display(window_p);
 
