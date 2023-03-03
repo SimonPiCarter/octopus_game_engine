@@ -33,11 +33,11 @@ namespace octopus
 {
 
 long long to_int(double const &f) {
-	return long long(f);
+	return static_cast<long long>(f);
 }
 
 unsigned long long to_uint(double const &f) {
-	return unsigned long long(f);
+	return static_cast<unsigned long long>(f);
 }
 
 float to_float(double const &f) {
