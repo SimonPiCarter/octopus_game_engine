@@ -83,7 +83,7 @@ void Tilemap::renderScaled(Window & window_p, double scaledX_p, double scaledY_p
 {
     for(Sprite *sprite_l :_sprites)
     {
-        sprite_l->render(window_p, scaledX_p, scaledY_p, true);
+        sprite_l->renderScaled(window_p, scaledX_p, scaledY_p);
     }
 }
 

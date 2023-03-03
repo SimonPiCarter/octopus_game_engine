@@ -50,12 +50,12 @@ int main( int argc, char* args[] )
 
 	cuttlefish::Menu menu_l(SCREEN_WIDTH/2, 200, 5);
 
-	Picture * button1_l = new Picture(window_l.loadTexture("resources/button.png"), 4., 128, 32, 256, 64, {1, 1 ,1}, {1, 1, 1}, true);
+	Picture * button1_l = new Picture(window_l.loadTexture("resources/button.png"), 256, 64, {1, 1 ,1}, {1, 1, 1});
 	Text * text1_l = new Text(&window_l, {0, 0, 0}, 0, 0);
 	text1_l->setText("Play");
 	menu_l.addButton(button1_l, text1_l, std::bind(runLevel1, std::ref(window_l)));
 
-	Picture * button2_l = new Picture(window_l.loadTexture("resources/button.png"), 4., 128, 32, 256, 64, {1, 1 ,1}, {1, 1, 1}, true);
+	Picture * button2_l = new Picture(window_l.loadTexture("resources/button.png"), 256, 64, {1, 1 ,1}, {1, 1, 1});
 	Text * text2_l = new Text(&window_l, {0, 0, 0}, 0, 0);
 	text2_l->setText("Quit");
 	menu_l.addButton(button2_l, text2_l, std::bind(quit, std::ref(quit_l)));

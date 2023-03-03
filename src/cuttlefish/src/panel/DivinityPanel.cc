@@ -13,8 +13,8 @@ namespace cuttlefish
 DivinityPanel::DivinityPanel(Window* window_p, int x, int y, Texture const * background_p, Texture const *icons_p, unsigned long player_p) :
 	_x(x), _y(y), _player(player_p), _icons(icons_p)
 {
-	_background = new Picture(background_p, 200./64., 0, 0, 400, 400, {1}, {1}, true);
-	_background->setPosition(x, y);
+	_background = new Picture(background_p, 400, 400, {1}, {1});
+	_background->setDestination(x, y, 200., 200.);
 }
 
 DivinityPanel::~DivinityPanel()
@@ -46,7 +46,7 @@ void DivinityPanel::refresh()
 
 	for(octopus::DivinityType type_l : newDivTypes_l)
 	{
-		Picture *sprite_l = new Picture(_icons, 1, 0, 0, 64, 64, {1}, {1}, true);
+		Picture *sprite_l = new Picture(_icons, 64, 64, {1}, {1});
 
 		OptionInfo const &info_l = _mapIcons.at(type_l);
 		sprite_l->setState(info_l.state);
@@ -63,7 +63,7 @@ void DivinityPanel::refresh()
 		int x = idx_l;
 
 		Picture *sprite_l = pair_l.first;
-		sprite_l->setPosition(_x + x * 65, _y);
+		sprite_l->setDestination(_x + x * 65, _y, 64, 64);
 		_grid[{x,0}] = pair_l.second;
 		++idx_l;
 	}
@@ -71,10 +71,10 @@ void DivinityPanel::refresh()
 
 void DivinityPanel::render(Window &window_p)
 {
-	_background->render(window_p);
+	_background->display(window_p);
 	for(auto &&pair_l : _options)
 	{
-		pair_l.first->render(window_p);
+		pair_l.first->display(window_p);
 	}
 }
 

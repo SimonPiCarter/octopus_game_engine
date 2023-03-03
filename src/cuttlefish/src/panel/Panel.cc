@@ -15,8 +15,8 @@ namespace cuttlefish
 Panel::Panel(Window* window_p, int x, int y, Texture const * background_p, Texture const *icons_p, int iconsPerLine_p) :
 	_x(x), _y(y), _icons(icons_p), _iconsPerLine(iconsPerLine_p)
 {
-	_background = new Picture(background_p, 260./64., 0, 0, 400, 400, {1}, {1}, true);
-	_background->setPosition(x, y);
+	_background = new Picture(background_p, 400, 400, {1}, {1});
+	_background->setDestination(x, y, 260, 260);
 }
 
 Panel::~Panel()
@@ -64,7 +64,7 @@ void Panel::refresh(Sprite const *sprite_p, octopus::State const &state_p)
 		std::list<octopus::BuildingModel const *> buildingGrid_l = getAvailableBuildingModels(player_l);
 		for(octopus::BuildingModel const * model_l : buildingGrid_l)
 		{
-			Picture *sprite_l = new Picture(_icons, 1, 0, 0, 64, 64, {1}, {1}, true);
+			Picture *sprite_l = new Picture(_icons, 64, 64, {1}, {1});
 			SpriteInfo const &info_l = _mapIcons.at(model_l->_id);
 			sprite_l->setState(info_l.state);
 			sprite_l->setFrame(info_l.frame);
@@ -80,7 +80,7 @@ void Panel::refresh(Sprite const *sprite_p, octopus::State const &state_p)
 			static_cast<octopus::BuildingModel const &>(_lastSelection->_model), player_l);
 		for(octopus::UnitModel const * model_l : unitGrid_l)
 		{
-			Picture *sprite_l = new Picture(_icons, 1, 0, 0, 64, 64, {1}, {1}, true);
+			Picture *sprite_l = new Picture(_icons, 64, 64, {1}, {1});
 			SpriteInfo const &info_l = _mapIcons.at(model_l->_id);
 			sprite_l->setState(info_l.state);
 			sprite_l->setFrame(info_l.frame);
@@ -100,7 +100,7 @@ void Panel::refresh(Sprite const *sprite_p, octopus::State const &state_p)
 		int x = idx_l % _iconsPerLine;
 		int y = idx_l/_iconsPerLine;
 
-		sprite_l.sprite->setPosition(_x + x * 65, _y + y * 65);
+		sprite_l.sprite->setDestination(_x + x * 65, _y + y * 65, 64, 64);
 		_grid[{x,y}] = &sprite_l;
 		++idx_l;
 	}
@@ -108,10 +108,10 @@ void Panel::refresh(Sprite const *sprite_p, octopus::State const &state_p)
 
 void Panel::render(Window &window_p)
 {
-	_background->render(window_p);
+	_background->display(window_p);
 	for(SpriteModel const & sprite_l : _sprites)
 	{
-		sprite_l.sprite->render(window_p);
+		sprite_l.sprite->display(window_p);
 	}
 }
 
