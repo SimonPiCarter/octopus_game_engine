@@ -22,18 +22,18 @@ TEST(entityMoveStepTest, simple)
 
 	EntityMoveStep step_l(0, {1, 2});
 
-	EXPECT_NEAR(3., state_l.getEntity(0)->_pos.x.to_double(), 1e-5);
-	EXPECT_NEAR(3., state_l.getEntity(0)->_pos.y.to_double(), 1e-5);
+	EXPECT_NEAR(3., to_double(state_l.getEntity(0)->_pos.x), 1e-5);
+	EXPECT_NEAR(3., to_double(state_l.getEntity(0)->_pos.y), 1e-5);
 
 	step_l.apply(state_l);
 
-	EXPECT_NEAR(4., state_l.getEntity(0)->_pos.x.to_double(), 1e-5);
-	EXPECT_NEAR(5., state_l.getEntity(0)->_pos.y.to_double(), 1e-5);
+	EXPECT_NEAR(4., to_double(state_l.getEntity(0)->_pos.x), 1e-5);
+	EXPECT_NEAR(5., to_double(state_l.getEntity(0)->_pos.y), 1e-5);
 
 	step_l.revert(state_l);
 
-	EXPECT_NEAR(3., state_l.getEntity(0)->_pos.x.to_double(), 1e-5);
-	EXPECT_NEAR(3., state_l.getEntity(0)->_pos.y.to_double(), 1e-5);
+	EXPECT_NEAR(3., to_double(state_l.getEntity(0)->_pos.x), 1e-5);
+	EXPECT_NEAR(3., to_double(state_l.getEntity(0)->_pos.y), 1e-5);
 }
 
 TEST(entityMoveStepTest, simple_two)
@@ -47,18 +47,18 @@ TEST(entityMoveStepTest, simple_two)
 	EntityMoveStep step_l(0, {1, 2});
 	EntityMoveStep step2_l(0, {5, 7});
 
-	EXPECT_NEAR(3., state_l.getEntity(0)->_pos.x.to_double(), 1e-5);
-	EXPECT_NEAR(3., state_l.getEntity(0)->_pos.y.to_double(), 1e-5);
+	EXPECT_NEAR(3., to_double(state_l.getEntity(0)->_pos.x), 1e-5);
+	EXPECT_NEAR(3., to_double(state_l.getEntity(0)->_pos.y), 1e-5);
 
 	step_l.apply(state_l);
 	step2_l.apply(state_l);
 
-	EXPECT_NEAR(9., state_l.getEntity(0)->_pos.x.to_double(), 1e-5);
-	EXPECT_NEAR(12., state_l.getEntity(0)->_pos.y.to_double(), 1e-5);
+	EXPECT_NEAR(9., to_double(state_l.getEntity(0)->_pos.x), 1e-5);
+	EXPECT_NEAR(12., to_double(state_l.getEntity(0)->_pos.y), 1e-5);
 
 	step2_l.revert(state_l);
 	step_l.revert(state_l);
 
-	EXPECT_NEAR(3., state_l.getEntity(0)->_pos.x.to_double(), 1e-5);
-	EXPECT_NEAR(3., state_l.getEntity(0)->_pos.y.to_double(), 1e-5);
+	EXPECT_NEAR(3., to_double(state_l.getEntity(0)->_pos.x), 1e-5);
+	EXPECT_NEAR(3., to_double(state_l.getEntity(0)->_pos.y), 1e-5);
 }

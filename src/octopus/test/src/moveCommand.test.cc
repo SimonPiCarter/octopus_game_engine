@@ -61,8 +61,8 @@ TEST(moveCommandTest, simple)
 
 	// Now on 4,3
 
-	EXPECT_NEAR(4., state_l.getEntity(0)->_pos.x.to_double(), 1e-5);
-	EXPECT_NEAR(3., state_l.getEntity(0)->_pos.y.to_double(), 1e-5);
+	EXPECT_NEAR(4., to_double(state_l.getEntity(0)->_pos.x), 1e-5);
+	EXPECT_NEAR(3., to_double(state_l.getEntity(0)->_pos.y), 1e-5);
 
 	///
 	/// Step 2
@@ -78,8 +78,8 @@ TEST(moveCommandTest, simple)
 
 	// Still on 4,3
 
-	EXPECT_NEAR(4., state_l.getEntity(0)->_pos.x.to_double(), 1e-5);
-	EXPECT_NEAR(3., state_l.getEntity(0)->_pos.y.to_double(), 1e-5);
+	EXPECT_NEAR(4., to_double(state_l.getEntity(0)->_pos.x), 1e-5);
+	EXPECT_NEAR(3., to_double(state_l.getEntity(0)->_pos.y), 1e-5);
 
 	///
 	/// Step 3

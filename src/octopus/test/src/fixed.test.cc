@@ -23,11 +23,12 @@ TEST(fixedTest, simple)
 
 TEST(fixedTest, small)
 {
-	numeric::fixed<32, 32> a32(-0.23742109769955277);
-	numeric::fixed<32, 32> b32(-0.078310100361704826);
+	numeric::fixed<32, 32> a32(-0.23);
+	numeric::fixed<32, 32> b32(-0.07);
 
 	std::cout<<a32<<std::endl;
 	std::cout<<b32<<std::endl;
+	std::cout<<a32+b32<<std::endl;
 
 	numeric::fixed<32, 32> square_a32 = a32 * a32;
 	numeric::fixed<32, 32> square_b32 = b32 * b32;

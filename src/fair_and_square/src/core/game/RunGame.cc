@@ -43,6 +43,7 @@
 #include "library/levels/WaveLevel.hh"
 
 using namespace cuttlefish;
+using octopus::to_double;
 
 std::string resourceStr(octopus::Player const &player_p)
 {
@@ -316,8 +317,8 @@ void runGame(Window &window_p)
 				if(minimapClicked_l)
 				{
 					octopus::Vector pos_l = getCameraPosition(e.button.x, e.button.y, minimap_l, window_p, state_l.getWorldSize());
-					x = pos_l.x.to_double();
-					y = pos_l.y.to_double();
+					x = to_double(pos_l.x);
+					y = to_double(pos_l.y);
 				}
 			}
 			//User requests quit_l
@@ -330,8 +331,8 @@ void runGame(Window &window_p)
 				if(minimap_l.isInside(e.button.x, e.button.y))
 				{
 					octopus::Vector pos_l = getCameraPosition(e.button.x, e.button.y, minimap_l, window_p, state_l.getWorldSize());
-					x = pos_l.x.to_double();
-					y = pos_l.y.to_double();
+					x = to_double(pos_l.x);
+					y = to_double(pos_l.y);
 					minimapClicked_l = true;
 				}
 				else if(!panel_l.getBackground()->isInside(window_p, e.button.x, e.button.y)

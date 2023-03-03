@@ -346,16 +346,16 @@ FlowField flow_field(ValueGrid const &grid_p)
 
 Vector unitary_direction(Fixed x, Fixed y, FlowField const &field_p)
 {
-	long long floorX_l = (x).to_int();
-	long long floorY_l = (y).to_int();
+	long long floorX_l = to_int(x);
+	long long floorY_l = to_int(y);
 
 	return field_p[floorX_l][floorY_l] ;
 }
 
 Vector direction(Fixed x, Fixed y, FlowField const &field_p)
 {
-	long long floorX_l = (x).to_int();
-	long long floorY_l = (y).to_int();
+	long long floorX_l = to_int(x);
+	long long floorY_l = to_int(y);
 
 	Fixed ratioX_l = x - floorX_l;
 	Fixed ratioY_l = y - floorY_l;

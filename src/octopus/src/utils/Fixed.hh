@@ -690,6 +690,9 @@ fixed<I, F> square_root(fixed<I, F> v)
 	return res_l;
 }
 
+double square_root(double d);
+double abs(double d);
+
 }
 
 #undef CONSTEXPR14
@@ -697,6 +700,35 @@ fixed<I, F> square_root(fixed<I, F> v)
 namespace octopus
 {
 	typedef numeric::fixed<16, 16> Fixed;
+
+	template <size_t I, size_t F>
+	long long to_int(numeric::fixed<I, F> const &f) {
+		return f.to_int();
+	}
+
+	template <size_t I, size_t F>
+	unsigned long long to_uint(numeric::fixed<I, F> const &f) {
+		return f.to_uint();
+	}
+
+	template <size_t I, size_t F>
+	float to_float(numeric::fixed<I, F> const &f) {
+		return f.to_float();
+	}
+
+	template <size_t I, size_t F>
+	double to_double(numeric::fixed<I, F> const &f) {
+		return f.to_double();
+	}
+
+	long long to_int(double const &f);
+
+	unsigned long long to_uint(double const &f);
+
+	float to_float(double const &f);
+
+	double to_double(double const &f);
+
 } // namespace octopus
 
 

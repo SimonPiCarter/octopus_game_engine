@@ -14,12 +14,12 @@ TEST(canonicalTest, empty)
 	Grid grid_l(10, 10, 1., 1., true);
 	ValueGrid val_l = canonical_dijkstra(grid_l.getInternalGrid(), 3, 3);
 
-	EXPECT_NEAR(0, val_l[3][3].to_double(), 1e-5);
-	EXPECT_NEAR(1., val_l[4][3].to_double(), 1e-5);
-	EXPECT_NEAR(1., val_l[3][4].to_double(), 1e-5);
-	EXPECT_NEAR(2., val_l[4][4].to_double(), 1e-5);
-	EXPECT_NEAR(12., val_l[9][9].to_double(), 1e-5);
-	EXPECT_NEAR(10, val_l[8][8].to_double(), 1e-5);
+	EXPECT_NEAR(0, to_double(val_l[3][3]), 1e-5);
+	EXPECT_NEAR(1., to_double(val_l[4][3]), 1e-5);
+	EXPECT_NEAR(1., to_double(val_l[3][4]), 1e-5);
+	EXPECT_NEAR(2., to_double(val_l[4][4]), 1e-5);
+	EXPECT_NEAR(12., to_double(val_l[9][9]), 1e-5);
+	EXPECT_NEAR(10, to_double(val_l[8][8]), 1e-5);
 }
 
 TEST(canonicalTest, empty_computation)
@@ -47,12 +47,12 @@ TEST(canonicalTest, empty_computation)
 
 	ValueGrid &val_l = computer_l.valueGrid;
 
-	EXPECT_NEAR(0, val_l[3][3].to_double(), 1e-5);
-	EXPECT_NEAR(1., val_l[4][3].to_double(), 1e-5);
-	EXPECT_NEAR(1., val_l[3][4].to_double(), 1e-5);
-	EXPECT_NEAR(2., val_l[4][4].to_double(), 1e-5);
-	EXPECT_NEAR(12., val_l[9][9].to_double(), 1e-5);
-	EXPECT_NEAR(10, val_l[8][8].to_double(), 1e-5);
+	EXPECT_NEAR(0, to_double(val_l[3][3]), 1e-5);
+	EXPECT_NEAR(1., to_double(val_l[4][3]), 1e-5);
+	EXPECT_NEAR(1., to_double(val_l[3][4]), 1e-5);
+	EXPECT_NEAR(2., to_double(val_l[4][4]), 1e-5);
+	EXPECT_NEAR(12., to_double(val_l[9][9]), 1e-5);
+	EXPECT_NEAR(10, to_double(val_l[8][8]), 1e-5);
 	stream(std::cout, val_l);
 }
 
@@ -74,9 +74,9 @@ TEST(canonicalTest, borders)
 
 	ValueGrid val_l = canonical_dijkstra(grid_l.getInternalGrid(), 0, 0);
 
-	EXPECT_NEAR(-1., val_l[3][3].to_double(), 1e-5);
-	EXPECT_NEAR(-1, val_l[8][8].to_double(), 1e-5);
-	EXPECT_NEAR(18, val_l[9][9].to_double(), 1e-5);
+	EXPECT_NEAR(-1., to_double(val_l[3][3]), 1e-5);
+	EXPECT_NEAR(-1, to_double(val_l[8][8]), 1e-5);
+	EXPECT_NEAR(18, to_double(val_l[9][9]), 1e-5);
 
 	stream(std::cout, val_l);
 
