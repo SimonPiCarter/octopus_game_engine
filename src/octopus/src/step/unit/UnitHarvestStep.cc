@@ -23,7 +23,7 @@ void updateFromResource(State &state_p, Resource *res_p)
 	{
 		if(!res_p->_alive)
 		{
-			updateGrid(state_p, res_p, false);
+			updateGrid(state_p, res_p, true);
 		}
 		res_p->_alive = true;
 	}
