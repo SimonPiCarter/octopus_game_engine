@@ -43,6 +43,12 @@ bool octopus::same_direction(Vector const & a, Vector const & b)
 	return diff_l < 1e-3 && diff_l > -1e-3;
 }
 
+bool is_zero(Vector const &v)
+{
+	return v.x > -1e-4 && v.x < 1e-4
+		&& v.y > -1e-4 && v.y < 1e-4;
+}
+
 octopus::Vector operator+(octopus::Vector const & a, octopus::Vector const & b)
 {
 	return octopus::Vector { a.x + b.x, a.y + b.y} ;

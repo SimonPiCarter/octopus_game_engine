@@ -23,6 +23,8 @@ namespace octopus
 	Fixed square_length(Vector const &vec_p);
 
 	bool same_direction(Vector const & a, Vector const & b);
+
+	bool is_zero(Vector const &v);
 }
 
 octopus::Vector operator+(octopus::Vector const & a, octopus::Vector const & b);

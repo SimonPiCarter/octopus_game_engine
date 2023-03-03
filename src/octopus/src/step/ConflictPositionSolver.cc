@@ -226,7 +226,7 @@ bool updateStepFromConflictPosition(Step &step_p, State const &state_p)
 	for(EntityMoveStep *ent_l: step_p.getEntityMoveStep())
 	{
 		// if update
-		if(mapCorrection_l[ent_l->_handle] != Vector {0,0})
+		if(!is_zero(mapCorrection_l[ent_l->_handle]))
 		{
 			updated_l = true;
 		}
@@ -376,7 +376,7 @@ bool updateStepFromConflictPosition(Step &step_p, State const &state_p)
 	for(EntityMoveStep *ent_l: step_p.getEntityMoveStep())
 	{
 		// if update
-		if(mapAbsoluteCorrection_l[ent_l->_handle] != Vector {0,0})
+		if(!is_zero(mapAbsoluteCorrection_l[ent_l->_handle]))
 		{
 			updated_l = true;
 		}
