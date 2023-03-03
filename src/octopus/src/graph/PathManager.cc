@@ -96,13 +96,24 @@ void PathManager::initFromGrid(std::vector<std::vector<GridNode *> > const &grid
 	{
 		return;
 	}
+	if(_internalGrid.empty())
+	{
+		_internalGrid.reserve(grid_p.size());
+		for(size_t i = 0 ; i < grid_p.size() ; ++i)
+		{
+			_internalGrid.push_back(std::vector<GridNode *>());
+			_internalGrid.back().reserve(grid_p[i].size());
+			for(size_t j = 0 ; j < grid_p[i].size() ; ++ j)
+			{
+				_internalGrid[i].emplace_back(new GridNode(grid_p[i][j]->getPosition()));
+			}
+		}
+	}
 	_internalGrid.clear();
 	for(size_t i = 0 ; i < grid_p.size() ; ++i)
 	{
-		_internalGrid.emplace_back(grid_p[i].size(), nullptr);
 		for(size_t j = 0 ; j < grid_p[i].size() ; ++ j)
 		{
-			_internalGrid[i][j] = new GridNode(grid_p[i][j]->getPosition());
 			_internalGrid[i][j]->setFree(grid_p[i][j]->isFree());
 			_internalGrid[i][j]->setContent(grid_p[i][j]->getContent());
 		}
