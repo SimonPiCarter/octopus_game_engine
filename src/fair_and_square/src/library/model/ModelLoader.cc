@@ -45,6 +45,8 @@ void createSquare(Library &lib_p)
     unitModel_l._fullReload = 100.;
     unitModel_l._windup = 50.;
 
+    unitModel_l._bonusDamage["triangle"] = 5.;
+
     lib_p.registerUnitModel("square", unitModel_l);
 }
 
@@ -62,6 +64,8 @@ void createTriangle(Library &lib_p)
     unitModel_l._fullReload = 400.;
     unitModel_l._windup = 50.;
 
+    unitModel_l._bonusDamage["circle"] = 5.;
+
     lib_p.registerUnitModel("triangle", unitModel_l);
 }
 
@@ -78,6 +82,8 @@ void createCircle(Library &lib_p)
     unitModel_l._range = 0.1;
     unitModel_l._fullReload = 400.;
     unitModel_l._windup = 50.;
+
+    unitModel_l._bonusDamage["square"] = 10.;
 
     lib_p.registerUnitModel("circle", unitModel_l);
 }
