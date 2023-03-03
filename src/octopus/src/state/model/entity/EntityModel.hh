@@ -2,6 +2,7 @@
 #define __EntityModel__
 
 #include <map>
+#include <unordered_map>
 #include "state/model/requirements/Requirements.hh"
 #include "state/ResourceType.hh"
 
@@ -32,6 +33,8 @@ namespace octopus
 		/// @brief reload time in steps
 		unsigned long _fullReload { 10 };
 
+		std::unordered_map<std::string, double> _bonusDamage;
+
 		/// @brief time to wind up an attack
 		unsigned long _windup { 3 };
 
@@ -56,6 +59,8 @@ namespace octopus
 	};
 
 	std::map<ResourceType, double> getReverseCostMap(std::map<ResourceType, double> const &cost_p);
+
+	double getBonus(std::string const &id_p, EntityModel const &model_p);
 } // namespace octopus
 
 
