@@ -11,7 +11,7 @@
 namespace octopus
 {
 struct BuildingModel;
-struct Entity;
+class Entity;
 
 struct AreaSpawn
 {

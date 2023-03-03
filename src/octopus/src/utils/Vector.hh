@@ -10,7 +10,6 @@ namespace octopus
 	struct Vector
 	{
 		Vector();
-		Vector(double x_p, double y_p);
 		Vector(Fixed x_p, Fixed y_p);
 
 		Fixed x {0.};

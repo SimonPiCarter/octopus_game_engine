@@ -43,8 +43,8 @@ bool EntityMoveCommand::applyCommand(Step & step_p, State const &state_p, Comman
 	/// Update waypoints based on current position
 	/// Waypoint must be within two steps
 	///
-	pathManager_p.queryFlowField(data_l._finalPoint.x.to_int(), data_l._finalPoint.y.to_int());
-	FlowField const * field_l = pathManager_p.getFlowField(data_l._finalPoint.x.to_int(), data_l._finalPoint.y.to_int());
+	pathManager_p.queryFlowField(to_int(data_l._finalPoint.x), to_int(data_l._finalPoint.y));
+	FlowField const * field_l = pathManager_p.getFlowField(to_int(data_l._finalPoint.x), to_int(data_l._finalPoint.y));
 	Vector next_l = data_l._finalPoint;
 	if(field_l )
 	{

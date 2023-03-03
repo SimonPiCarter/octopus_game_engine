@@ -4,6 +4,8 @@
 #include "sprite/Sprite.hh"
 #include "window/Window.hh"
 
+using octopus::to_int;
+
 namespace cuttlefish
 {
 
@@ -62,14 +64,14 @@ void Tilemap::generate()
 
 void Tilemap::render(Window & window_p, double elapsed_p)
 {
-    long long minX_l = window_p.getWorldVector(0, 0).x.to_int();
-    long long maxX_l = minX_l + window_p.getWindowSize().x.to_int() + 1;
-    long long minY_l = window_p.getWorldVector(0, 0).y.to_int();
-    long long maxY_l = minY_l + window_p.getWindowSize().y.to_int() + 1;
+    long long minX_l = to_int(window_p.getWorldVector(0, 0).x);
+    long long maxX_l = minX_l + to_int(window_p.getWindowSize().x) + 1;
+    long long minY_l = to_int(window_p.getWorldVector(0, 0).y);
+    long long maxY_l = minY_l + to_int(window_p.getWindowSize().y) + 1;
 
-    for(long long x = minX_l ; x <= maxX_l ; ++x )
+    for(long long x = minX_l ; x <= maxX_l && x < _mapSprites.size(); ++x )
     {
-        for(long long y = minY_l ; y <= maxY_l ; ++y )
+        for(long long y = minY_l ; y <= maxY_l && x < _mapSprites[x].size(); ++y )
         {
             _mapSprites[x][y]->update(elapsed_p);
             _mapSprites[x][y]->render(window_p);

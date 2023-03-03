@@ -60,8 +60,8 @@ TEST(harvestCommandTest, simple)
 	// query state
 	State const * state_l = controller_l.queryState();
 
-	EXPECT_NEAR(5, state_l->getEntity(0)->_pos.x.to_double(), 1e-5);
-	EXPECT_NEAR(3, state_l->getEntity(0)->_pos.y.to_double(), 1e-5);
+	EXPECT_NEAR(5, to_double(state_l->getEntity(0)->_pos.x), 1e-5);
+	EXPECT_NEAR(3, to_double(state_l->getEntity(0)->_pos.y), 1e-5);
 
 	// update time to 1second (1)
 	controller_l.update(1.);
@@ -71,8 +71,8 @@ TEST(harvestCommandTest, simple)
 
 	state_l = controller_l.queryState();
 
-	EXPECT_NEAR(6, state_l->getEntity(0)->_pos.x.to_double(), 1e-5);
-	EXPECT_NEAR(3, state_l->getEntity(0)->_pos.y.to_double(), 1e-5);
+	EXPECT_NEAR(6, to_double(state_l->getEntity(0)->_pos.x), 1e-5);
+	EXPECT_NEAR(3, to_double(state_l->getEntity(0)->_pos.y), 1e-5);
 
 	// update time to 1 seconds (2)
 	controller_l.update(1.);
@@ -82,8 +82,8 @@ TEST(harvestCommandTest, simple)
 
 	state_l = controller_l.queryState();
 
-	EXPECT_NEAR(7, state_l->getEntity(0)->_pos.x.to_double(), 1e-5);
-	EXPECT_NEAR(3, state_l->getEntity(0)->_pos.y.to_double(), 1e-5);
+	EXPECT_NEAR(7, to_double(state_l->getEntity(0)->_pos.x), 1e-5);
+	EXPECT_NEAR(3, to_double(state_l->getEntity(0)->_pos.y), 1e-5);
 
 	// update time to 1 seconds (3)
 	controller_l.update(1.);
@@ -94,8 +94,8 @@ TEST(harvestCommandTest, simple)
 	state_l = controller_l.queryState();
 	Unit const * stateUnit_l = static_cast<Unit const *>(state_l->getEntity(0));
 
-	EXPECT_NEAR(7, state_l->getEntity(0)->_pos.x.to_double(), 1e-5);
-	EXPECT_NEAR(3, state_l->getEntity(0)->_pos.y.to_double(), 1e-5);
+	EXPECT_NEAR(7, to_double(state_l->getEntity(0)->_pos.x), 1e-5);
+	EXPECT_NEAR(3, to_double(state_l->getEntity(0)->_pos.y), 1e-5);
 	EXPECT_EQ(ResourceType::Food, stateUnit_l->_typeOfResource);
 	EXPECT_NEAR(1., stateUnit_l->_quantityOfResource, 1e-5);
 
@@ -108,8 +108,8 @@ TEST(harvestCommandTest, simple)
 	state_l = controller_l.queryState();
 	stateUnit_l = static_cast<Unit const *>(state_l->getEntity(0));
 
-	EXPECT_NEAR(7, state_l->getEntity(0)->_pos.x.to_double(), 1e-5);
-	EXPECT_NEAR(3, state_l->getEntity(0)->_pos.y.to_double(), 1e-5);
+	EXPECT_NEAR(7, to_double(state_l->getEntity(0)->_pos.x), 1e-5);
+	EXPECT_NEAR(3, to_double(state_l->getEntity(0)->_pos.y), 1e-5);
 	EXPECT_EQ(ResourceType::Food, stateUnit_l->_typeOfResource);
 	EXPECT_NEAR(10., stateUnit_l->_quantityOfResource, 1e-5);
 
@@ -122,8 +122,8 @@ TEST(harvestCommandTest, simple)
 	state_l = controller_l.queryState();
 	stateUnit_l = static_cast<Unit const *>(state_l->getEntity(0));
 
-	EXPECT_NEAR(6, state_l->getEntity(0)->_pos.x.to_double(), 1e-5);
-	EXPECT_NEAR(3, state_l->getEntity(0)->_pos.y.to_double(), 1e-5);
+	EXPECT_NEAR(6, to_double(state_l->getEntity(0)->_pos.x), 1e-5);
+	EXPECT_NEAR(3, to_double(state_l->getEntity(0)->_pos.y), 1e-5);
 	EXPECT_EQ(ResourceType::Food, stateUnit_l->_typeOfResource);
 	EXPECT_NEAR(10., stateUnit_l->_quantityOfResource, 1e-5);
 
@@ -136,8 +136,8 @@ TEST(harvestCommandTest, simple)
 	state_l = controller_l.queryState();
 	stateUnit_l = static_cast<Unit const *>(state_l->getEntity(0));
 
-	EXPECT_NEAR(3, state_l->getEntity(0)->_pos.x.to_double(), 1e-5);
-	EXPECT_NEAR(3, state_l->getEntity(0)->_pos.y.to_double(), 1e-5);
+	EXPECT_NEAR(3, to_double(state_l->getEntity(0)->_pos.x), 1e-5);
+	EXPECT_NEAR(3, to_double(state_l->getEntity(0)->_pos.y), 1e-5);
 	EXPECT_EQ(ResourceType::Food, stateUnit_l->_typeOfResource);
 	EXPECT_NEAR(10., stateUnit_l->_quantityOfResource, 1e-5);
 
@@ -151,8 +151,8 @@ TEST(harvestCommandTest, simple)
 	stateUnit_l = static_cast<Unit const *>(state_l->getEntity(0));
 	Player const * player_l = state_l->getPlayer(0);
 
-	EXPECT_NEAR(3, state_l->getEntity(0)->_pos.x.to_double(), 1e-5);
-	EXPECT_NEAR(3, state_l->getEntity(0)->_pos.y.to_double(), 1e-5);
+	EXPECT_NEAR(3, to_double(state_l->getEntity(0)->_pos.x), 1e-5);
+	EXPECT_NEAR(3, to_double(state_l->getEntity(0)->_pos.y), 1e-5);
 	EXPECT_EQ(ResourceType::Food, stateUnit_l->_typeOfResource);
 	EXPECT_NEAR(0., stateUnit_l->_quantityOfResource, 1e-5);
 	EXPECT_NEAR(10., getResource(*player_l, ResourceType::Food), 1e-5);
@@ -171,8 +171,8 @@ TEST(harvestCommandTest, simple)
 	stateUnit_l = static_cast<Unit const *>(state_l->getEntity(0));
 	player_l = state_l->getPlayer(0);
 
-	EXPECT_NEAR(3, state_l->getEntity(0)->_pos.x.to_double(), 1e-5);
-	EXPECT_NEAR(3, state_l->getEntity(0)->_pos.y.to_double(), 1e-5);
+	EXPECT_NEAR(3, to_double(state_l->getEntity(0)->_pos.x), 1e-5);
+	EXPECT_NEAR(3, to_double(state_l->getEntity(0)->_pos.y), 1e-5);
 	EXPECT_EQ(ResourceType::Food, stateUnit_l->_typeOfResource);
 	EXPECT_NEAR(10., stateUnit_l->_quantityOfResource, 1e-5);
 	EXPECT_NEAR(10., getResource(*player_l, ResourceType::Food), 1e-5);
@@ -187,8 +187,8 @@ TEST(harvestCommandTest, simple)
 	stateUnit_l = static_cast<Unit const *>(state_l->getEntity(0));
 	player_l = state_l->getPlayer(0);
 
-	EXPECT_NEAR(3, state_l->getEntity(0)->_pos.x.to_double(), 1e-5);
-	EXPECT_NEAR(3, state_l->getEntity(0)->_pos.y.to_double(), 1e-5);
+	EXPECT_NEAR(3, to_double(state_l->getEntity(0)->_pos.x), 1e-5);
+	EXPECT_NEAR(3, to_double(state_l->getEntity(0)->_pos.y), 1e-5);
 	EXPECT_EQ(ResourceType::Food, stateUnit_l->_typeOfResource);
 	EXPECT_NEAR(0., stateUnit_l->_quantityOfResource, 1e-5);
 	EXPECT_NEAR(20., getResource(*player_l, ResourceType::Food), 1e-5);
@@ -205,8 +205,8 @@ TEST(harvestCommandTest, simple)
 	stateUnit_l = static_cast<Unit const *>(state_l->getEntity(0));
 	player_l = state_l->getPlayer(0);
 
-	EXPECT_NEAR(3, state_l->getEntity(0)->_pos.x.to_double(), 1e-5);
-	EXPECT_NEAR(3, state_l->getEntity(0)->_pos.y.to_double(), 1e-5);
+	EXPECT_NEAR(3, to_double(state_l->getEntity(0)->_pos.x), 1e-5);
+	EXPECT_NEAR(3, to_double(state_l->getEntity(0)->_pos.y), 1e-5);
 	EXPECT_EQ(ResourceType::Food, stateUnit_l->_typeOfResource);
 	EXPECT_NEAR(0., stateUnit_l->_quantityOfResource, 1e-5);
 	EXPECT_NEAR(20., getResource(*player_l, ResourceType::Food), 1e-5);
@@ -265,8 +265,8 @@ TEST(harvestCommandTest, simple_new_res)
 	Unit const * stateUnit_l = static_cast<Unit const *>(state_l->getEntity(0));
 	Player const * player_l = state_l->getPlayer(0);
 
-	EXPECT_NEAR(3, state_l->getEntity(0)->_pos.x.to_double(), 1e-5);
-	EXPECT_NEAR(3, state_l->getEntity(0)->_pos.y.to_double(), 1e-5);
+	EXPECT_NEAR(3, to_double(state_l->getEntity(0)->_pos.x), 1e-5);
+	EXPECT_NEAR(3, to_double(state_l->getEntity(0)->_pos.y), 1e-5);
 	EXPECT_EQ(ResourceType::Food, stateUnit_l->_typeOfResource);
 	EXPECT_NEAR(0., stateUnit_l->_quantityOfResource, 1e-5);
 	EXPECT_NEAR(10., getResource(*player_l, ResourceType::Food), 1e-5);
@@ -286,8 +286,8 @@ TEST(harvestCommandTest, simple_new_res)
 	stateUnit_l = static_cast<Unit const *>(state_l->getEntity(0));
 	player_l = state_l->getPlayer(0);
 
-	EXPECT_NEAR(3, state_l->getEntity(0)->_pos.x.to_double(), 1e-5);
-	EXPECT_NEAR(3, state_l->getEntity(0)->_pos.y.to_double(), 1e-5);
+	EXPECT_NEAR(3, to_double(state_l->getEntity(0)->_pos.x), 1e-5);
+	EXPECT_NEAR(3, to_double(state_l->getEntity(0)->_pos.y), 1e-5);
 	EXPECT_EQ(ResourceType::Food, stateUnit_l->_typeOfResource);
 	EXPECT_NEAR(10., stateUnit_l->_quantityOfResource, 1e-5);
 	EXPECT_NEAR(10., getResource(*player_l, ResourceType::Food), 1e-5);
@@ -302,8 +302,8 @@ TEST(harvestCommandTest, simple_new_res)
 	stateUnit_l = static_cast<Unit const *>(state_l->getEntity(0));
 	player_l = state_l->getPlayer(0);
 
-	EXPECT_NEAR(3, state_l->getEntity(0)->_pos.x.to_double(), 1e-5);
-	EXPECT_NEAR(3, state_l->getEntity(0)->_pos.y.to_double(), 1e-5);
+	EXPECT_NEAR(3, to_double(state_l->getEntity(0)->_pos.x), 1e-5);
+	EXPECT_NEAR(3, to_double(state_l->getEntity(0)->_pos.y), 1e-5);
 	EXPECT_EQ(ResourceType::Food, stateUnit_l->_typeOfResource);
 	EXPECT_NEAR(0., stateUnit_l->_quantityOfResource, 1e-5);
 	EXPECT_NEAR(20., getResource(*player_l, ResourceType::Food), 1e-5);
@@ -320,8 +320,8 @@ TEST(harvestCommandTest, simple_new_res)
 	stateUnit_l = static_cast<Unit const *>(state_l->getEntity(0));
 	player_l = state_l->getPlayer(0);
 
-	EXPECT_NEAR(3, state_l->getEntity(0)->_pos.x.to_double(), 1e-5);
-	EXPECT_NEAR(3, state_l->getEntity(0)->_pos.y.to_double(), 1e-5);
+	EXPECT_NEAR(3, to_double(state_l->getEntity(0)->_pos.x), 1e-5);
+	EXPECT_NEAR(3, to_double(state_l->getEntity(0)->_pos.y), 1e-5);
 	EXPECT_EQ(ResourceType::Food, stateUnit_l->_typeOfResource);
 	EXPECT_NEAR(0., stateUnit_l->_quantityOfResource, 1e-5);
 	EXPECT_NEAR(20., getResource(*player_l, ResourceType::Food), 1e-5);

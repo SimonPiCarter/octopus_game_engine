@@ -5,16 +5,13 @@
 octopus::Vector::Vector()
 	: x(0.) , y(0.)
 {}
-octopus::Vector::Vector(double x_p, double y_p)
-	: x(x_p) , y(y_p)
-{}
 octopus::Vector::Vector(Fixed x_p, Fixed y_p)
 	: x(x_p) , y(y_p)
 {}
 
 octopus::Fixed octopus::length(Vector const &vec_p)
 {
-	return square_root(octopus::square_length(vec_p));
+	return numeric::square_root(octopus::square_length(vec_p));
 }
 
 octopus::Fixed octopus::square_length(Vector const &vec_p)

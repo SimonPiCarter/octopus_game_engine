@@ -51,8 +51,8 @@ GridNode const * Grid::getNode(Vector const &vec_p) const
 		throw std::logic_error("Cannot handle negative coordinate");
 	}
 	// get index from coordinate
-	size_t x = (vec_p.x/_stepX).to_uint();
-	size_t y = (vec_p.y/_stepY).to_uint();
+	size_t x = to_uint(vec_p.x/_stepX);
+	size_t y = to_uint(vec_p.y/_stepY);
 
 	return getNode(x, y);
 }

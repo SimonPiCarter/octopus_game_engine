@@ -182,7 +182,7 @@ void State::incrementPathGridStatus()
 long State::getGridIndex(Fixed idx_p) const
 {
 	long size_l = getGridSize();
-	return std::min(std::max(0l, long((idx_p/_gridPointSize).to_int())), size_l-1);
+	return std::min(std::max(0l, long(to_int(idx_p/_gridPointSize))), size_l-1);
 }
 
 Entity const * lookUpNewBuffTarget(State const &state_p, Handle const &sourceHandle_p, double range_p, TyppedBuff const &buff_p)
@@ -471,10 +471,10 @@ void updateGrid(State &state_p, Entity const *ent_p, bool set_p)
 		state_p.incrementPathGridStatus();
 		// Canot use grid index because it uses custom size
 		// because each node has a size of 1
-		Box<long long> boxNode_l { std::max(Fixed(0.), ent_p->_pos.x-ent_p->_model._ray).to_int(),
-						std::max(Fixed(0.), ent_p->_pos.x+ent_p->_model._ray+0.999).to_int(),
-						std::max(Fixed(0.), ent_p->_pos.y-ent_p->_model._ray).to_int(),
-						std::max(Fixed(0.), ent_p->_pos.y+ent_p->_model._ray+0.999).to_int()
+		Box<long long> boxNode_l { to_int(std::max(Fixed(0.), ent_p->_pos.x-ent_p->_model._ray)),
+								   to_int(std::max(Fixed(0.), ent_p->_pos.x+ent_p->_model._ray+0.999)),
+								   to_int(std::max(Fixed(0.), ent_p->_pos.y-ent_p->_model._ray)),
+								   to_int(std::max(Fixed(0.), ent_p->_pos.y+ent_p->_model._ray+0.999))
 						};
 		for(long long x = boxNode_l._lowerX ; x < boxNode_l._upperX; ++x)
 		{
@@ -506,10 +506,10 @@ bool checkGrid(State const &state_p, Entity const *ent_p, bool ignoreAbandonedTe
 {
 	long long size_l = state_p.getGridSize();
 	// fill positional grid
-	Box<long long> box_l { std::min(std::max(0ll, (ent_p->_pos.x-ent_p->_model._ray).to_int()), size_l),
-					  std::min(std::max(0ll, (ent_p->_pos.x+ent_p->_model._ray+0.999).to_int()), size_l),
-					  std::min(std::max(0ll, (ent_p->_pos.y-ent_p->_model._ray).to_int()), size_l),
-					  std::min(std::max(0ll, (ent_p->_pos.y+ent_p->_model._ray+0.999).to_int()), size_l)
+	Box<long long> box_l { std::min(std::max(0ll, to_int((ent_p->_pos.x-ent_p->_model._ray))), size_l),
+					  	   std::min(std::max(0ll, to_int((ent_p->_pos.x+ent_p->_model._ray+0.999))), size_l),
+					  	   std::min(std::max(0ll, to_int((ent_p->_pos.y-ent_p->_model._ray))), size_l),
+					  	   std::min(std::max(0ll, to_int((ent_p->_pos.y+ent_p->_model._ray+0.999))), size_l)
 					};
 
 	// only chekc grid if static

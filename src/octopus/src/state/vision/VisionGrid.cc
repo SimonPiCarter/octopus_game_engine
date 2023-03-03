@@ -26,8 +26,8 @@ void VisionGrid::updateVision(const Entity &ent_p, bool set_p)
 
 	for(std::pair<unsigned long, unsigned long> const &pair_l : pattern_l)
 	{
-		unsigned long x = std::max(0l, std::min<long>(pair_l.first+ent_p._pos.x.to_int(), _grid.size()-1));
-		unsigned long y = std::max(0l, std::min<long>(pair_l.second+ent_p._pos.y.to_int(), _grid[x].size()-1));
+		unsigned long x = std::max(0l, std::min<long>(to_int(pair_l.first+ent_p._pos.x), _grid.size()-1));
+		unsigned long y = std::max(0l, std::min<long>(to_int(pair_l.second+ent_p._pos.y), _grid[x].size()-1));
 
 		if(set_p)
 		{
@@ -46,8 +46,8 @@ void VisionGrid::updateExploration(const Entity &ent_p, bool set_p)
 
 	for(std::pair<long, long> const &pair_l : pattern_l)
 	{
-		unsigned long x = std::max(0l, std::min<long>(pair_l.first+ent_p._pos.x.to_int(), _grid.size()-1));
-		unsigned long y = std::max(0l, std::min<long>(pair_l.second+ent_p._pos.y.to_int(), _grid[x].size()-1));
+		unsigned long x = std::max(0l, std::min<long>(to_int(pair_l.first+ent_p._pos.x), _grid.size()-1));
+		unsigned long y = std::max(0l, std::min<long>(to_int(pair_l.second+ent_p._pos.y), _grid[x].size()-1));
 
 		_exploration[x][y] = set_p;
 	}
