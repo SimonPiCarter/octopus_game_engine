@@ -109,7 +109,6 @@ void PathManager::initFromGrid(std::vector<std::vector<GridNode *> > const &grid
 			}
 		}
 	}
-	_internalGrid.clear();
 	for(size_t i = 0 ; i < grid_p.size() ; ++i)
 	{
 		for(size_t j = 0 ; j < grid_p[i].size() ; ++ j)
