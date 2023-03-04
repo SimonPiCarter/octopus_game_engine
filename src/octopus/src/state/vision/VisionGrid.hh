@@ -48,7 +48,7 @@ protected:
 	std::vector<std::vector<long> > _grid;
 
 	/// @brief track if a node has been explored already
-	std::vector<std::vector<bool> > _exploration;
+	std::vector<std::vector<long> > _exploration;
 
 	/// @brief cache vision pattern based on line of sight
 	std::unordered_map<long, VisionPattern> _patterns;

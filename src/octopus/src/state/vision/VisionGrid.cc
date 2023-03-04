@@ -7,7 +7,7 @@
 namespace octopus
 {
 
-VisionGrid::VisionGrid(unsigned long size_p) : _grid(size_p, std::vector<long>(size_p, 0)), _exploration(size_p, std::vector<bool>(size_p, 0))
+VisionGrid::VisionGrid(unsigned long size_p) : _grid(size_p, std::vector<long>(size_p, 0)), _exploration(size_p, std::vector<long>(size_p, 0))
 {}
 
 bool VisionGrid::isVisible(unsigned long x, unsigned long y) const
@@ -17,7 +17,7 @@ bool VisionGrid::isVisible(unsigned long x, unsigned long y) const
 
 bool VisionGrid::isExplored(unsigned long x, unsigned long y) const
 {
-	return _exploration.at(x).at(y);
+	return _exploration.at(x).at(y) > 0;
 }
 
 void VisionGrid::updateVision(const Entity &ent_p, bool set_p)
@@ -49,7 +49,14 @@ void VisionGrid::updateExploration(const Entity &ent_p, bool set_p)
 		unsigned long x = std::max(0l, std::min<long>(to_int(pair_l.first+ent_p._pos.x), _grid.size()-1));
 		unsigned long y = std::max(0l, std::min<long>(to_int(pair_l.second+ent_p._pos.y), _grid[x].size()-1));
 
-		_exploration[x][y] = set_p;
+		if(set_p)
+		{
+			++_exploration[x][y];
+		}
+		else
+		{
+			--_exploration[x][y];
+		}
 	}
 }
 
