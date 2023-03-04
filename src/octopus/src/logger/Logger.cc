@@ -23,10 +23,14 @@ LoggerHandler Logger::getNormal()
 	return LoggerHandler(_mutex, true);
 }
 
-LoggerHandler Logger::getDebug()
+DebugLoggerHandler Logger::getDebug()
 {
-	return LoggerHandler(_mutex, _debug);
+	return DebugLoggerHandler(_mutex, false);
 }
 
 }
 
+octopus::LoggerVoider operator<<(octopus::LoggerVoider voider_p, std::ostream& (*pf)(std::ostream&))
+{
+	return voider_p;
+}
