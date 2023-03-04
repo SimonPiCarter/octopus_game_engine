@@ -78,25 +78,26 @@ void cleanClicMode(ClicMode const * clicMode_p, ClicMode const * stdClicMode_p)
 	}
 }
 
-void commandFromSpriteModel(SpriteModel const *spriteModel_l, octopus::Library const &lib_l, SpriteLibrary const &spriteLib_l,
-	Selection const &selection_l, octopus::Controller &controller_l, ClicMode *&clicMode_r, ClicMode const & stdClicMode_p)
+void commandFromSpriteModel(SpriteModel const *spriteModel_p, octopus::State const &state_p, SpriteLibrary const &spriteLib_p,
+	Selection const &selection_p, octopus::Controller &controller_p, ClicMode *&clicMode_r, ClicMode const & stdClicMode_p)
 {
-	if(spriteModel_l)
+	if(spriteModel_p)
 	{
-		if(spriteModel_l->unitModel)
+		if(spriteModel_p->unitModel)
 		{
+			SpriteEntity const * ent_l = getBestProductionBuilding(selection_p, state_p, spriteModel_p->unitModel);
 			octopus::BuildingUnitProductionCommand * command_l = new octopus::BuildingUnitProductionCommand(
-					selection_l._sprite->getHandle(),
-					selection_l._sprite->getHandle(),
-					lib_l.getUnitModel(spriteModel_l->unitModel->_id)
+					ent_l->getHandle(),
+					ent_l->getHandle(),
+					*spriteModel_p->unitModel
 				);
 			command_l->setQueued(true);
-			controller_l.commitCommand(command_l);
+			controller_p.commitCommand(command_l);
 		}
-		if(spriteModel_l->buildingModel)
+		if(spriteModel_p->buildingModel)
 		{
 			cleanClicMode(clicMode_r, &stdClicMode_p);
-			clicMode_r = new BuildClicMode(*spriteModel_l->buildingModel, spriteLib_l);
+			clicMode_r = new BuildClicMode(*spriteModel_p->buildingModel, spriteLib_p);
 		}
 	}
 }
@@ -156,7 +157,7 @@ void runGame(Window &window_p)
 	World world_l;
 
 	octopus::Library lib_l;
-	std::list<octopus::Steppable *> spawners_l = WaveLevelSteps(lib_l, 10, 0.1*60*100);
+	std::list<octopus::Steppable *> spawners_l = WaveLevelSteps(lib_l, 10, 3*60*100);
 	std::list<octopus::Command *> commands_l = WaveLevelCommands(lib_l);
 
 	octopus::Controller controller_l(spawners_l, 0.01, commands_l, gridSize_l);
@@ -382,21 +383,7 @@ void runGame(Window &window_p)
 					{
 						if(e.button.button == SDL_BUTTON_LEFT)
 						{
-							if(spriteModel_l->unitModel)
-							{
-								octopus::BuildingUnitProductionCommand * command_l = new octopus::BuildingUnitProductionCommand(
-									selection_l._sprite->getHandle(),
-									selection_l._sprite->getHandle(),
-									lib_l.getUnitModel(spriteModel_l->unitModel->_id)
-								);
-								command_l->setQueued(true);
-								controller_l.commitCommand(command_l);
-							}
-							if(spriteModel_l->buildingModel)
-							{
-								cleanClicMode(currentClicMode_l, &standardClicMode_l);
-								currentClicMode_l = new BuildClicMode(*spriteModel_l->buildingModel, spriteLib_l);
-							}
+							commandFromSpriteModel(spriteModel_l, state_l, spriteLib_l, selection_l, controller_l, currentClicMode_l, standardClicMode_l);
 						}
 					}
 					//
@@ -426,28 +413,28 @@ void runGame(Window &window_p)
 					case SDLK_a:
 					{
 						SpriteModel const * spriteModel_l = panel_l.getSpriteModelOnGrid(0, 0);
-						commandFromSpriteModel(spriteModel_l, lib_l, spriteLib_l, selection_l, controller_l,
+						commandFromSpriteModel(spriteModel_l, state_l, spriteLib_l, selection_l, controller_l,
 							currentClicMode_l, standardClicMode_l);
 						break;
 					}
 					case SDLK_z:
 					{
 						SpriteModel const * spriteModel_l = panel_l.getSpriteModelOnGrid(1, 0);
-						commandFromSpriteModel(spriteModel_l, lib_l, spriteLib_l, selection_l, controller_l,
+						commandFromSpriteModel(spriteModel_l, state_l, spriteLib_l, selection_l, controller_l,
 							currentClicMode_l, standardClicMode_l);
 						break;
 					}
 					case SDLK_e:
 					{
 						SpriteModel const * spriteModel_l = panel_l.getSpriteModelOnGrid(2, 0);
-						commandFromSpriteModel(spriteModel_l, lib_l, spriteLib_l, selection_l, controller_l,
+						commandFromSpriteModel(spriteModel_l, state_l, spriteLib_l, selection_l, controller_l,
 							currentClicMode_l, standardClicMode_l);
 						break;
 					}
 					case SDLK_q:
 					{
 						SpriteModel const * spriteModel_l = panel_l.getSpriteModelOnGrid(0, 1);
-						commandFromSpriteModel(spriteModel_l, lib_l, spriteLib_l, selection_l, controller_l,
+						commandFromSpriteModel(spriteModel_l, state_l, spriteLib_l, selection_l, controller_l,
 							currentClicMode_l, standardClicMode_l);
 						break;
 					}
