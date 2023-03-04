@@ -80,12 +80,12 @@ void Texture::render(SDL_Renderer* renderer, int x, int y, int h, int w, SDL_Rec
 
 }
 
-int Texture::getWidth()
+int Texture::getWidth() const
 {
 	return mWidth;
 }
 
-int Texture::getHeight()
+int Texture::getHeight() const
 {
 	return mHeight;
 }
