@@ -16,7 +16,7 @@ struct FlowFieldQuery
 {
 	~FlowFieldQuery() { delete computation; }
 	long x {0}, y {0};
-	unsigned long status {0};
+	long long status {0};
 
 	FlowFieldComputation * computation {nullptr};
 };
@@ -24,7 +24,8 @@ struct FlowFieldQuery
 struct FlowFieldResult
 {
 	FlowField result;
-	unsigned long status {0};
+	// Less than -1 to trigger query even when non intialized
+	long long status {-10};
 };
 
 class PathManager
