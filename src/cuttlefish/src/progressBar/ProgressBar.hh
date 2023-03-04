@@ -35,6 +35,9 @@ public:
     /// @brief set bar position
     void setPosition(int x, int y);
 
+    int getWidth() const { return _w; }
+    int getHeight() const { return _h; }
+
 private:
     /// @brief The picture of the background
     Picture * const _background;
