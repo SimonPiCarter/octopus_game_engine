@@ -208,6 +208,9 @@ void runGame(Window &window_p)
 	bool descActive_l = false;
 
 	SpriteLibrary spriteLib_l;
+	// hp bar
+	spriteLib_l.setHpBarBackground(window_p.loadTexture("resources/fair_and_square/hp_bar_back.png"));
+	spriteLib_l.setHpBarFilling(window_p.loadTexture("resources/fair_and_square/hp_bar_fill.png"));
 	// tile map
 	spriteLib_l.registerSpriteTemplate("tiles", window_p.loadTexture("resources/tiles.png"), 0.5, 0, 0, 64, 64, {1, 1}, {2,2}, 1);
 	spriteLib_l.registerSpriteTemplate("details", window_p.loadTexture("resources/details.png"), 0.5, 0, 0, 64, 64, {1}, {2}, 1);
