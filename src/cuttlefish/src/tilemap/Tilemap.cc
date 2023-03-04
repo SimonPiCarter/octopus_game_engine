@@ -64,10 +64,11 @@ void Tilemap::generate()
 
 void Tilemap::render(Window & window_p, double elapsed_p)
 {
-    long long minX_l = to_int(window_p.getWorldVector(0, 0).x);
-    long long maxX_l = minX_l + to_int(window_p.getWindowSize().x) + 1;
-    long long minY_l = to_int(window_p.getWorldVector(0, 0).y);
-    long long maxY_l = minY_l + to_int(window_p.getWindowSize().y) + 1;
+    double ratio_l = 32./(_lib.getSpriteTemplate(_idTiles).width*_lib.getSpriteTemplate(_idTiles).scale);
+    long long minX_l = to_int(window_p.getWorldVector(0, 0).x*ratio_l);
+    long long maxX_l = minX_l + to_int(window_p.getWindowSize().x*ratio_l) + 1;
+    long long minY_l = to_int(window_p.getWorldVector(0, 0).y*ratio_l);
+    long long maxY_l = minY_l + to_int(window_p.getWindowSize().y*ratio_l) + 1;
 
     for(long long x = minX_l ; x <= maxX_l && x < _mapSprites.size(); ++x )
     {
