@@ -231,7 +231,7 @@ void runGame(Window &window_p)
 	Tilemap tilemap_l(fullWorldSize_l, spriteLib_l, "tiles", "details");
 	tilemap_l.generate();
 
-	Minimap minimap_l(window_p, 0, window_p.getHeight()-window_p.getWidth()/4, window_p.getWidth()/4, window_p.getWidth()/4, tilemap_l, fullWorldSize_l, {"resources/me.png", "resources/enemy.png", "resources/ally.png"});
+	Minimap minimap_l(window_p, 0, window_p.getHeight()-250, 250, 250, tilemap_l, fullWorldSize_l, {"resources/me.png", "resources/enemy.png", "resources/ally.png"});
 
 	// true if the minimap has been clicked
 	bool minimapClicked_l = false;

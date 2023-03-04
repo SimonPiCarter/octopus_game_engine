@@ -18,8 +18,8 @@
 #include "text/Text.hh"
 #include "texture/Texture.hh"
 
-#define SCREEN_WIDTH 1024
-#define SCREEN_HEIGHT 820
+#define SCREEN_WIDTH 1600
+#define SCREEN_HEIGHT 800
 
 using namespace cuttlefish;
 
