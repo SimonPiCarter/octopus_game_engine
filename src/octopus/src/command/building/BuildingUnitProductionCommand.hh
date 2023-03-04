@@ -26,6 +26,8 @@ public:
 
 	virtual CommandData * newData() const override { return new UnitProductionData(_model); }
 
+	UnitModel const &getModel() const { return _model; }
+
 private:
 	Handle const _source;
 
