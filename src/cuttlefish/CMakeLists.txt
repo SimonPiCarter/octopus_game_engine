@@ -17,6 +17,7 @@ add_library(cuttlefish
 	${CMAKE_CURRENT_SOURCE_DIR}/src/clicMode/StandardClicMode.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/menu/Menu.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/minimap/Minimap.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/src/progressBar/ProgressBar.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/panel/DescPanel.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/panel/DivinityPanel.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/panel/Panel.cc
