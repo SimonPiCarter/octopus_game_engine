@@ -17,9 +17,9 @@ StatsPanel::StatsPanel(Window* window_p, int x, int y, Texture const * backgroun
 	_y(y),
 	_icons(icons_p),
 	_iconsPerLine(iconsPerLine_p),
-	_textStats(window_p, x, y+80),
-	_textQtyRes(window_p, x, y+185),
-	_textResources(window_p, x, y+120),
+	_textStats(window_p, x, y+5),
+	_textResources(window_p, x, y+45),
+	_textQtyRes(window_p, x+150, y+45),
 	_selection(selection_p)
 {
 	_background = new Picture(background_p, 400, 400, {1}, {1});
