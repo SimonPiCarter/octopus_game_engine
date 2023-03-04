@@ -71,7 +71,7 @@ void Tilemap::render(Window & window_p, double elapsed_p)
 
     for(long long x = minX_l ; x <= maxX_l && x < _mapSprites.size(); ++x )
     {
-        for(long long y = minY_l ; y <= maxY_l && x < _mapSprites[x].size(); ++y )
+        for(long long y = minY_l ; y <= maxY_l && y < _mapSprites[x].size(); ++y )
         {
             _mapSprites[x][y]->update(elapsed_p);
             _mapSprites[x][y]->render(window_p);
