@@ -214,12 +214,12 @@ void runGame(Window &window_p)
 	spriteLib_l.setHpBarBackground(window_p.loadTexture("resources/fair_and_square/hp_bar_back.png"));
 	spriteLib_l.setHpBarFilling(window_p.loadTexture("resources/fair_and_square/hp_bar_fill.png"));
 	// tile map
-	spriteLib_l.registerSpriteTemplate("tiles", window_p.loadTexture("resources/tiles.png"), 0.5, 0, 0, 64, 64, {1, 1}, {2,2}, 1);
-	spriteLib_l.registerSpriteTemplate("details", window_p.loadTexture("resources/details.png"), 0.5, 0, 0, 64, 64, {1}, {2}, 1);
+	spriteLib_l.registerSpriteTemplate("tiles", window_p.loadTexture("resources/fair_and_square/tiles.png"), 1., 0, 0, 64, 64, std::vector<int>(16, 1), std::vector<double>(16, 1), 1);
+	spriteLib_l.registerSpriteTemplate("details", window_p.loadTexture("resources/fair_and_square/details.png"), 0.5, 0, 0, 64, 64, {1}, {2}, 1);
 
 	// resources
 	spriteLib_l.registerSpriteTemplate("resource_steel", window_p.loadTexture("resources/steel_prop1.png"), 2., 128, 128, 256, 256, {10, 10}, {0.2,0.2}, 1);
-	spriteLib_l.registerSpriteTemplate("resource_food", window_p.loadTexture("resources/food_prop1.png"), 2., 64, 64, 128, 128, {2, 2}, {0.5, 1.}, 1);
+	spriteLib_l.registerSpriteTemplate("resource_food", window_p.loadTexture("resources/fair_and_square/food_prop2.png"), 2., 64, 64, 128, 128, {2, 2}, {0.5, 1.}, 1);
 
 	// neutral
 	spriteLib_l.registerSpriteTemplate("command_center", window_p.loadTexture("resources/fair_and_square/command_center.png"), 2., 64, 64, 128, 128, {8, 2, 2, 2}, {0.25, 0.5, 0.5, 0.5}, 1);
