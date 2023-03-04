@@ -3,24 +3,28 @@
 
 #include <iostream>
 
+#include "Fixed.hh"
+
 namespace octopus
 {
 	struct Vector
 	{
 		Vector();
-		Vector(double x_p, double y_p);
+		Vector(Fixed x_p, Fixed y_p);
 
-		double x {0.};
-		double y {0.};
+		Fixed x {0.};
+		Fixed y {0.};
 
 		bool operator==(octopus::Vector const & other_p) const;
 		bool operator!=(octopus::Vector const & other_p) const;
 	};
 
-	double length(Vector const &vec_p);
-	double square_length(Vector const &vec_p);
+	Fixed length(Vector const &vec_p);
+	Fixed square_length(Vector const &vec_p);
 
 	bool same_direction(Vector const & a, Vector const & b);
+
+	bool is_zero(Vector const &v);
 }
 
 octopus::Vector operator+(octopus::Vector const & a, octopus::Vector const & b);
@@ -29,11 +33,11 @@ octopus::Vector & operator+=(octopus::Vector & a, octopus::Vector const & b);
 octopus::Vector operator-(octopus::Vector const & a, octopus::Vector const & b);
 octopus::Vector & operator-=(octopus::Vector & a, octopus::Vector const & b);
 
-octopus::Vector operator/(octopus::Vector const & a, double const & b);
-octopus::Vector & operator/=(octopus::Vector & a, double const & b);
+octopus::Vector operator/(octopus::Vector const & a, octopus::Fixed const & b);
+octopus::Vector & operator/=(octopus::Vector & a, octopus::Fixed const & b);
 
-octopus::Vector operator*(octopus::Vector const & a, double const & b);
-octopus::Vector & operator*=(octopus::Vector & a, double const & b);
+octopus::Vector operator*(octopus::Vector const & a, octopus::Fixed const & b);
+octopus::Vector & operator*=(octopus::Vector & a, octopus::Fixed const & b);
 
 
 std::ostream &operator<<(std::ostream &os_p, octopus::Vector const &vec_p);

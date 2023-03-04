@@ -4,6 +4,8 @@
 #include "sprite/Sprite.hh"
 #include "window/Window.hh"
 
+using octopus::to_int;
+
 namespace cuttlefish
 {
 
@@ -51,7 +53,7 @@ void Tilemap::generate()
         {
             _tiles[i][j] = dist_l(_gen);
 
-            _sprites.push_back(_lib.createSprite(0, _idTiles, false));
+            _sprites.push_back(_lib.createSprite(_idTiles, false));
             _sprites.back()->setState(_tiles[i][j]);
             _sprites.back()->setPosition(template_l.width*template_l.scale*i, template_l.height*template_l.scale*j);
 
@@ -62,14 +64,14 @@ void Tilemap::generate()
 
 void Tilemap::render(Window & window_p, double elapsed_p)
 {
-    unsigned long minX_l = std::floor(window_p.getWorldVector(0, 0).x);
-    unsigned long maxX_l = minX_l + std::ceil(window_p.getWindowSize().x) + 1;
-    unsigned long minY_l = std::floor(window_p.getWorldVector(0, 0).y);
-    unsigned long maxY_l = minY_l + std::ceil(window_p.getWindowSize().y) + 1;
+    long long minX_l = to_int(window_p.getWorldVector(0, 0).x);
+    long long maxX_l = minX_l + to_int(window_p.getWindowSize().x) + 1;
+    long long minY_l = to_int(window_p.getWorldVector(0, 0).y);
+    long long maxY_l = minY_l + to_int(window_p.getWindowSize().y) + 1;
 
-    for(unsigned long x = minX_l ; x <= maxX_l ; ++x )
+    for(long long x = minX_l ; x <= maxX_l && x < _mapSprites.size(); ++x )
     {
-        for(unsigned long y = minY_l ; y <= maxY_l ; ++y )
+        for(long long y = minY_l ; y <= maxY_l && y < _mapSprites[x].size(); ++y )
         {
             _mapSprites[x][y]->update(elapsed_p);
             _mapSprites[x][y]->render(window_p);
@@ -81,7 +83,7 @@ void Tilemap::renderScaled(Window & window_p, double scaledX_p, double scaledY_p
 {
     for(Sprite *sprite_l :_sprites)
     {
-        sprite_l->render(window_p, scaledX_p, scaledY_p, true);
+        sprite_l->renderScaled(window_p, scaledX_p, scaledY_p);
     }
 }
 

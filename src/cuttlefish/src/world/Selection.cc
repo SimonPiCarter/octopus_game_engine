@@ -4,21 +4,24 @@
 #include <SDL2/SDL_image.h>
 
 #include "texture/Texture.hh"
+#include "sprite/SpriteEntity.hh"
 #include "window/Window.hh"
-#include "sprite/Sprite.hh"
 
+#include "command/building/BuildingUnitProductionCommand.hh"
+#include "command/CommandQueue.hh"
 #include "state/State.hh"
+#include "state/entity/Building.hh"
 #include "state/entity/Entity.hh"
 
 namespace cuttlefish
 {
 
-bool SpriteComparator::operator()(Sprite const *a, Sprite const *b) const
+bool SpriteComparator::operator()(SpriteEntity const *a, SpriteEntity const *b) const
 {
 	return a->getHandle() < b->getHandle();
 }
 
-void Selection::removeSprite(Sprite * sprite_p, octopus::State const &state_p)
+void Selection::removeSprite(SpriteEntity * sprite_p, octopus::State const &state_p)
 {
 	_sprites.erase(sprite_p);
 	if(_sprite == sprite_p)
@@ -36,7 +39,7 @@ void Selection::removeSprite(Sprite * sprite_p, octopus::State const &state_p)
 	_spritesPerModel[ent_l->_model._id].erase(sprite_p);
 }
 
-void displaySelection(Window &window_p, Sprite const *sprite_p)
+void displaySelection(Window &window_p, SpriteEntity const *sprite_p)
 {
 	SDL_Rect final_l {
 		int(sprite_p->getX() - sprite_p->getWidth()/2),
@@ -52,7 +55,7 @@ void displaySelection(Window &window_p, Sprite const *sprite_p)
 
 void Selection::render(Window &window_p) const
 {
-	for(Sprite const * sprite_l : _sprites)
+	for(SpriteEntity const * sprite_l : _sprites)
 	{
 		displaySelection(window_p, sprite_l);
 	}
@@ -77,7 +80,7 @@ SelectionKey Selection::key() const
 	return key_l;
 }
 
-void addToSelection(Selection &selection_p, std::list<Sprite *> const &sprites_p, octopus::State const &state_p)
+void addToSelection(Selection &selection_p, std::list<SpriteEntity *> const &sprites_p, octopus::State const &state_p)
 {
 	selection_p._sprites.insert(sprites_p.begin(), sprites_p.end());
 	if(!selection_p._sprites.empty())
@@ -85,7 +88,7 @@ void addToSelection(Selection &selection_p, std::list<Sprite *> const &sprites_p
 		selection_p._sprite = *selection_p._sprites.begin();
 	}
 	// update model lists
-	for(Sprite * sprite_l : sprites_p)
+	for(SpriteEntity * sprite_l : sprites_p)
 	{
 		octopus::Entity const * ent_l = state_p.getEntity(sprite_l->getHandle());
 		selection_p._spritesPerModel[ent_l->_model._id].insert(sprite_l);
@@ -106,7 +109,7 @@ void addToSelection(Selection &selection_p, Selection &other_p)
 	}
 }
 
-void replaceSelection(Selection &selection_p, std::list<Sprite *> const &sprites_p, octopus::State const &state_p)
+void replaceSelection(Selection &selection_p, std::list<SpriteEntity *> const &sprites_p, octopus::State const &state_p)
 {
 	selection_p._sprites.clear();
 	selection_p._sprites.insert(sprites_p.begin(), sprites_p.end());
@@ -120,11 +123,69 @@ void replaceSelection(Selection &selection_p, std::list<Sprite *> const &sprites
 	}
 	// update model lists
 	selection_p._spritesPerModel.clear();
-	for(Sprite * sprite_l : sprites_p)
+	for(SpriteEntity * sprite_l : sprites_p)
 	{
 		octopus::Entity const * ent_l = state_p.getEntity(sprite_l->getHandle());
 		selection_p._spritesPerModel[ent_l->_model._id].insert(sprite_l);
 	}
+}
+
+unsigned long remainingQueueTime(octopus::Building const &building_p)
+{
+	// remaining queue time
+	unsigned long time_l = 0;
+
+	if(building_p.getQueue().hasCommand())
+	{
+		auto it_l = building_p.getQueue().getCurrentCommand();
+		while(it_l != building_p.getQueue().getEnd())
+		{
+			octopus::BuildingUnitProductionCommand const *cmd_l = dynamic_cast<octopus::BuildingUnitProductionCommand const *>(it_l->_cmd);
+			octopus::UnitProductionData const *data_l = dynamic_cast<octopus::UnitProductionData const *>(it_l->_data);
+			if(cmd_l && data_l
+			&& data_l->_completeTime > data_l->_progression)
+			{
+				time_l += data_l->_completeTime - data_l->_progression;
+			}
+			++it_l;
+		}
+	}
+
+	return time_l;
+}
+
+SpriteEntity const * getBestProductionBuilding(Selection const &selection_p, octopus::State const &state_p, octopus::UnitModel const *model_p)
+{
+	SpriteEntity const  * bestSpriteEnt_l = nullptr;
+	unsigned long lowestQueue_l = 0;
+	for(SpriteEntity const * spriteEnt_l : selection_p._sprites)
+	{
+		// check ent
+		octopus::Entity const *ent_l = state_p.getEntity(spriteEnt_l->getHandle());
+		// skip non building
+		if(!ent_l->_model._isBuilding)
+		{
+			continue;
+		}
+		octopus::Building const *building_l = dynamic_cast<octopus::Building const *>(ent_l);
+
+		// skip if cannot produce building
+		if(!building_l->_buildingModel.canProduce(model_p))
+		{
+			continue;
+		}
+
+		// get production time queued up
+		unsigned long queueTime_l = remainingQueueTime(*building_l);
+
+		if(!bestSpriteEnt_l || queueTime_l < lowestQueue_l)
+		{
+			bestSpriteEnt_l = spriteEnt_l;
+			lowestQueue_l = queueTime_l;
+		}
+	}
+
+	return bestSpriteEnt_l;
 }
 
 } // cuttlefish

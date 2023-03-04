@@ -25,13 +25,13 @@ EntityBuildingCommand::EntityBuildingCommand(Handle const &commandHandle_p, Hand
 
 bool isInRange(State const &state_p, Entity const * ent_p, Building const * building_p)
 {
-	Box<double> boxA_l { building_p->_pos.x - building_p->_model._ray, building_p->_pos.x + building_p->_model._ray,
+	Box<Fixed> boxA_l { building_p->_pos.x - building_p->_model._ray, building_p->_pos.x + building_p->_model._ray,
 						building_p->_pos.y - building_p->_model._ray, building_p->_pos.y + building_p->_model._ray };
-	Box<double> boxB_l { ent_p->_pos.x - ent_p->_model._ray, ent_p->_pos.x + ent_p->_model._ray,
+	Box<Fixed> boxB_l { ent_p->_pos.x - ent_p->_model._ray, ent_p->_pos.x + ent_p->_model._ray,
 						ent_p->_pos.y - ent_p->_model._ray, ent_p->_pos.y + ent_p->_model._ray };
 
 	// Use 0.1 as a margin for range resource check
-	Box<double> intersect_l = { std::max(boxA_l._lowerX, boxB_l._lowerX)-0.1,
+	Box<Fixed> intersect_l = { std::max(boxA_l._lowerX, boxB_l._lowerX)-0.1,
 						std::min(boxA_l._upperX, boxB_l._upperX),
 						std::max(boxA_l._lowerY, boxB_l._lowerY)-0.1,
 						std::min(boxA_l._upperY, boxB_l._upperY) };
@@ -44,7 +44,7 @@ bool isInRange(State const &state_p, Entity const * ent_p, Building const * buil
 	return false;
 }
 
-bool EntityBuildingCommand::applyCommand(Step & step_p, State const &state_p, CommandData const *data_p) const
+bool EntityBuildingCommand::applyCommand(Step & step_p, State const &state_p, CommandData const *data_p, PathManager &pathManager_p) const
 {
 	Logger::getDebug() << "EntityBuildingCommand:: apply Command "<<_source <<std::endl;
 	MoveData const &moveData_l = *static_cast<MoveData const *>(data_p);
@@ -94,7 +94,7 @@ bool EntityBuildingCommand::applyCommand(Step & step_p, State const &state_p, Co
 	{
 		Logger::getDebug() << "EntityBuildingCommand:: moving"<<std::endl;
 		// run move command
-		_subMoveCommand.applyCommand(step_p, state_p, data_p);
+		_subMoveCommand.applyCommand(step_p, state_p, data_p, pathManager_p);
 	}
 	// If in range build after grid check
 	else

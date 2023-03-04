@@ -10,8 +10,8 @@
 
 namespace octopus
 {
-struct BuildingModel;;
-struct EntityModel;
+struct BuildingModel;
+class Entity;
 
 struct AreaSpawn
 {
@@ -22,9 +22,7 @@ struct AreaSpawn
 	/// @brief width and height of the area in the world
 	unsigned long size{ 1 };
 	/// @brief the list of model to spawn in the area
-	std::list<std::pair<EntityModel *, unsigned long> > models;
-	/// @brief the player id for units and buildings
-	unsigned long player{ 0 };
+	std::list<std::pair<Entity *, unsigned long> > entities;
 };
 
 /// @brief This command will spawn models randomly in the given areas
@@ -34,11 +32,12 @@ class AreaSpawnerCommand : public Command
 {
 public:
 	AreaSpawnerCommand(std::list<AreaSpawn> const &spawns_p);
+	~AreaSpawnerCommand();
 
 	virtual void registerCommand(Step & step_p, State const &state_p) override;
 
 	/// @brief
-	virtual bool applyCommand(Step & step_p, State const &state_p, CommandData const *data_p) const override;
+	virtual bool applyCommand(Step & step_p, State const &state_p, CommandData const *data_p, PathManager &pathManager_p) const override;
 
 	virtual CommandData * newData() const override { return nullptr; }
 

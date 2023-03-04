@@ -17,12 +17,16 @@ add_library(cuttlefish
 	${CMAKE_CURRENT_SOURCE_DIR}/src/clicMode/StandardClicMode.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/menu/Menu.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/minimap/Minimap.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/src/progressBar/ProgressBar.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/panel/DescPanel.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/panel/DivinityPanel.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/panel/Panel.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/panel/StatsPanel.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/src/panel/stats/ProductionPicture.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/src/panel/stats/SelectionPicture.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/sprite/Picture.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/sprite/Sprite.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/src/sprite/SpriteEntity.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/sprite/SpriteLibrary.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/text/Text.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/text/SegmentedText.cc

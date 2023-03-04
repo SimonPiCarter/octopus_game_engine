@@ -26,7 +26,7 @@ class State
 public:
 	State();
 	/// @brief create a state with the given id and each grid node with the given size
-	State(unsigned long id_p, unsigned long gridSize_p);
+	State(unsigned long id_p, unsigned long gridSize_p, unsigned long gridPointSize_p);
 	~State();
 
 	bool hasEntity(Handle const &handle_p) const;
@@ -81,7 +81,7 @@ public:
 
 	/// @brief get grid index from world position
 	/// @note basically divide by grid point size and floor value
-	long getGridIndex(double idx_p) const;
+	long getGridIndex(Fixed idx_p) const;
 
 	std::list<Vector> &getTemplePosition() { return _templePosition; }
 	const std::list<Vector> &getTemplePosition() const { return _templePosition; }

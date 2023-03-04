@@ -12,6 +12,7 @@
 #include "clicMode/StandardClicMode.hh"
 #include "logger/Logger.hh"
 #include "panel/Panel.hh"
+#include "panel/StatsPanel.hh"
 #include "panel/DivinityPanel.hh"
 #include "sprite/Sprite.hh"
 #include "sprite/SpriteLibrary.hh"
@@ -187,6 +188,17 @@ int main( int argc, char* args[] )
 			panel_l.addSpriteInfo("barrack", 0, 1);
 			panel_l.addSpriteInfo("temple", 0, 4);
 
+
+			StatsPanel statsPanel_l(&window_l, window_l.getWidth()-520, window_l.getHeight()-260,
+				window_l.loadTexture("resources/background.png"), window_l.loadTexture("resources/grid.png"), nullptr, nullptr, 4, world_l.getSelection());
+
+			// resources
+			statsPanel_l.addSpriteInfo("unit", 2, 1);
+			statsPanel_l.addSpriteInfo("soldier", 2, 2);
+			statsPanel_l.addSpriteInfo("building", 1, 0);
+			statsPanel_l.addSpriteInfo("barrack", 0, 1);
+			statsPanel_l.addSpriteInfo("temple", 0, 4);
+
 			DivinityPanel divPanel_l(&window_l, SCREEN_WIDTH-SCREEN_WIDTH/2-200, SCREEN_HEIGHT-SCREEN_HEIGHT/2-200,
 				window_l.loadTexture("resources/background.png"), window_l.loadTexture("resources/grid.png"), 0);
 			divPanel_l.addOptionInfo(octopus::DivinityType::Divinity_1, 1, 3);
@@ -227,7 +239,7 @@ int main( int argc, char* args[] )
 				// query a new state if available
 				octopus::StateAndSteps stateAndSteps_l = controller_l.queryStateAndSteps();
 				octopus::State const &state_l = *stateAndSteps_l._state;
-				world_l.handleStep(window_l, panel_l, divPanel_l, stateAndSteps_l, spriteLib_l);
+				world_l.handleStep(window_l, panel_l, statsPanel_l, divPanel_l, stateAndSteps_l, spriteLib_l);
 
 				//Handle events on queue
 				while( SDL_PollEvent( &e ) != 0 )

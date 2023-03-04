@@ -2,12 +2,15 @@
 
 #include "window/Window.hh"
 #include "world/World.hh"
-#include "sprite/Sprite.hh"
+#include "sprite/SpriteEntity.hh"
 #include "texture/Texture.hh"
 #include "tilemap/Tilemap.hh"
 
 #include "state/State.hh"
 #include "state/entity/Entity.hh"
+
+using octopus::to_double;
+using octopus::to_int;
 
 namespace cuttlefish
 {
@@ -60,27 +63,31 @@ void Minimap::render(octopus::State const &state_p, World const &world_p, Window
 
 	// display fog in game
 	SDL_Rect cutFog_l;
-	cutFog_l.x = std::floor(window_p.getWorldVector(0, 0).x);
-	cutFog_l.y = std::floor(window_p.getWorldVector(0, 0).y);
-	cutFog_l.w = std::ceil(window_p.getWindowSize().x+1.);
-	cutFog_l.h = std::ceil(window_p.getWindowSize().y+1.);
+	cutFog_l.x = to_int(window_p.getWorldVector(0, 0).x);
+	cutFog_l.y = to_int(window_p.getWorldVector(0, 0).y);
+	cutFog_l.w = to_int((window_p.getWindowSize().x+2.));
+	cutFog_l.h = to_int((window_p.getWindowSize().y+2.));
 	SDL_Rect posFog_l;
-	posFog_l.x = window_p.getPixelVector(cutFog_l.x - window_p.getWorldVector(0, 0).x, cutFog_l.y - window_p.getWorldVector(0, 0).y).x;
-	posFog_l.y = window_p.getPixelVector(cutFog_l.x - window_p.getWorldVector(0, 0).x, cutFog_l.y - window_p.getWorldVector(0, 0).y).y;
-	posFog_l.w = window_p.getPixelVector(cutFog_l.w, cutFog_l.h).x;
-	posFog_l.h = window_p.getPixelVector(cutFog_l.w, cutFog_l.h).y;
+	// position of the fog on screen
+	octopus::Vector vec_l = window_p.getPixelVector(
+		cutFog_l.x - to_double(window_p.getWorldVector(0, 0).x),
+		cutFog_l.y - to_double(window_p.getWorldVector(0, 0).y));
+	posFog_l.x = to_int(vec_l.x);
+	posFog_l.y = to_int(vec_l.y);
+	posFog_l.w = to_int(window_p.getPixelVector(cutFog_l.w, cutFog_l.h).x);
+	posFog_l.h = to_int(window_p.getPixelVector(cutFog_l.w, cutFog_l.h).y);
 
 	SDL_RenderCopy( window_p.getRenderer(), fog_l, &cutFog_l, &posFog_l );
 
 	_cadre->render(window_p.getRenderer(), _x-2, _y-2, _w+4, _h+4, nullptr);
 	_background.render(window_p.getRenderer(), _x, _y, _w, _h, nullptr);
 
-	for(Sprite const *sprite_l : world_p.getListSprite())
+	for(SpriteEntity const *sprite_l : world_p.getListSprite())
 	{
 		octopus::Entity const *ent_l = state_p.getEntity(sprite_l->getHandle());
 
-		double x_l = _x + ent_l->_pos.x*_w/state_p.getWorldSize();
-		double y_l = _y + ent_l->_pos.y*_h/state_p.getWorldSize();
+		double x_l = _x + to_double(ent_l->_pos.x)*_w/state_p.getWorldSize();
+		double y_l = _y + to_double(ent_l->_pos.y)*_h/state_p.getWorldSize();
 
 		double w_l = std::max(1., ent_l->_model._ray*_w/state_p.getWorldSize());
 		double h_l = std::max(1., ent_l->_model._ray*_h/state_p.getWorldSize());
@@ -97,10 +104,10 @@ void Minimap::render(octopus::State const &state_p, World const &world_p, Window
 
 	// camera rendering
 	SDL_Rect cam_l;
-	cam_l.x = _x + window_p.getWorldVector(0, 0).x*_w/state_p.getWorldSize();
-	cam_l.y = _y + window_p.getWorldVector(0, 0).y*_h/state_p.getWorldSize();
-	cam_l.w = window_p.getWindowSize().x*_w/state_p.getWorldSize();
-	cam_l.h = window_p.getWindowSize().y*_h/state_p.getWorldSize();
+	cam_l.x = _x + to_double(window_p.getWorldVector(0, 0).x)*_w/state_p.getWorldSize();
+	cam_l.y = _y + to_double(window_p.getWorldVector(0, 0).y)*_h/state_p.getWorldSize();
+	cam_l.w = to_double(window_p.getWindowSize().x)*_w/state_p.getWorldSize();
+	cam_l.h = to_double(window_p.getWindowSize().y)*_h/state_p.getWorldSize();
 	SDL_SetRenderDrawColor(window_p.getRenderer(), 255, 255, 255, 255);
 	SDL_RenderDrawRect(window_p.getRenderer(), &cam_l);
 }
@@ -120,11 +127,14 @@ octopus::Vector Minimap::getRatioInside(int x, int y) const
 
 octopus::Vector getCameraPosition(int x, int y, Minimap const &minimap_p, Window const &window_p, unsigned long worldSize_p)
 {
+	octopus::Vector pos_l = getPosition(x, y, minimap_p, window_p, worldSize_p) - window_p.getWindowSize()/2.;
+	return window_p.getPixelVector(to_double(pos_l.x), to_double(pos_l.y));
+}
+
+octopus::Vector getPosition(int x, int y, Minimap const &minimap_p, Window const &window_p, unsigned long worldSize_p)
+{
 	octopus::Vector ratio_l = minimap_p.getRatioInside(x, y);
-
-	octopus::Vector pos_l = window_p.getPixelVector(ratio_l.x * worldSize_p - window_p.getWindowSize().x/2, ratio_l.y * worldSize_p - window_p.getWindowSize().y/2);
-
-	return pos_l;
+	return ratio_l * worldSize_p;
 }
 
 } // cuttlefish

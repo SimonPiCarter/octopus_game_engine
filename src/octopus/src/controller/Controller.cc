@@ -32,6 +32,7 @@ Controller::Controller(
 	std::list<Steppable *> const &initSteppables_p,
 	double timePerStep_p,
 	std::list<Command *> const &initCommands_p,
+	unsigned long gridPointSize_p,
 	unsigned long gridSize_p)
 	: _timePerStep(timePerStep_p)
 {
@@ -42,9 +43,9 @@ Controller::Controller(
 	_lastHandledStep = 0;
 	_compiledSteps.push_back(new Step());
 
-	_backState = new BufferedState { 0, _compiledSteps.begin(), new State(0, gridSize_p) };
-	_bufferState = new BufferedState { 0, _compiledSteps.begin(), new State(1, gridSize_p) };
-	_frontState = new BufferedState { 0, _compiledSteps.begin(), new State(2, gridSize_p) };
+	_backState = new BufferedState { 0, _compiledSteps.begin(), new State(0, gridSize_p, gridPointSize_p) };
+	_bufferState = new BufferedState { 0, _compiledSteps.begin(), new State(1, gridSize_p, gridPointSize_p) };
+	_frontState = new BufferedState { 0, _compiledSteps.begin(), new State(2, gridSize_p, gridPointSize_p) };
 
 	// add steppable
 	for(Steppable * steppable_l : initSteppables_p)
@@ -68,6 +69,7 @@ Controller::Controller(
 
 Controller::~Controller()
 {
+	_pathManager.joinCompute();
 	delete _backState;
 	delete _bufferState;
 	delete _frontState;
@@ -89,7 +91,7 @@ bool Controller::loop_body()
 	if(_backState->_stepHandled < _ongoingStep - 1)
 	{
 		upToDate_l = false;
-		Logger::getDebug() << "step back state on step "<< _backState->_stepHandled << " " <<_backState->_state<< std::endl;
+		Logger::getDebug() << "step back state on step "<< _backState->_stepHandled << " " <<_backState->_state->_id<< std::endl;
 		// increment number of step hadled
 		++_backState->_stepHandled;
 
@@ -100,16 +102,18 @@ bool Controller::loop_body()
 			Step &step_l = *_compiledSteps.back();
 
 			// if step was not handled already
-			Logger::getDebug() << "compiling step " << _backState->_stepHandled << " on state "<<_backState->_state<< std::endl;
+			Logger::getDebug() << "compiling step " << _backState->_stepHandled << " on state "<<_backState->_state->_id<< std::endl;
 
 			const std::chrono::time_point<std::chrono::steady_clock> start_l = std::chrono::steady_clock::now();
+
+			_pathManager.joinCompute();
 
 			// apply all commands
 			for(Commandable * cmdable_l : _backState->_state->getEntities())
 			{
 				if(cmdable_l->isActive())
 				{
-					cmdable_l->runCommands(step_l, *_backState->_state);
+					cmdable_l->runCommands(step_l, *_backState->_state, _pathManager);
 				}
 			}
 
@@ -125,7 +129,7 @@ bool Controller::loop_body()
 				cmd_l->registerCommand(step_l, *_backState->_state);
 			}
 
-			Logger::getDebug() << "processing step " << _backState->_stepHandled << " on state "<<_backState->_state<< std::endl;
+			Logger::getDebug() << "processing step " << _backState->_stepHandled << " on state "<<_backState->_state->_id<< std::endl;
 
 			for(size_t i = 0; i < 1 && octopus::updateStepFromConflictPosition(step_l, *_backState->_state) ; ++ i) {}
 
@@ -143,16 +147,29 @@ bool Controller::loop_body()
 
 			octopus::compact(step_l);
 
+			// compute paths (update grid)
+			_pathManager.initFromGrid(_backState->_state->getPathGrid().getInternalGrid(), _backState->_state->getPathGridStatus());
+			_pathManager.startCompute(5000);
+
 			// Prepare next step
 			_compiledSteps.push_back(new Step());
 			_compiledSteps.back()->addSteppable(new TickingStep());
 			_lastHandledStep = _backState->_stepHandled;
 
+			auto &&time_l = std::chrono::nanoseconds( std::chrono::steady_clock::now() - start_l ).count();
 			_metrics._nbStepsCompiled += 1;
-			_metrics._timeCompilingSteps += std::chrono::nanoseconds( std::chrono::steady_clock::now() - start_l ).count();
+			_metrics._timeCompilingSteps += time_l;
+			if(time_l > _timePerStep * 1e9)
+			{
+				++_metrics._spikeCompilingSteps;
+			}
+			if(time_l > _metrics._maxTimeCompilingSteps)
+			{
+				_metrics._maxTimeCompilingSteps = time_l;
+			}
 		}
 
-		Logger::getDebug() << "apply step" << " "<<_backState->_state<< std::endl;
+		Logger::getDebug() << "apply step" << " "<<_backState->_state->_id<< std::endl;
 
 		const std::chrono::time_point<std::chrono::steady_clock> start_l = std::chrono::steady_clock::now();
 
@@ -167,7 +184,7 @@ bool Controller::loop_body()
 		_metrics._timeApplyingSteps += std::chrono::nanoseconds( std::chrono::steady_clock::now() - start_l ).count();
 
 		// update last handled step
-		Logger::getDebug() << "last handled step = " << _backState->_stepHandled << " for state "<<_backState->_state<< std::endl;
+		Logger::getDebug() << "last handled step = " << _backState->_stepHandled << " for state "<<_backState->_state->_id<< std::endl;
 	}
 
 	{
@@ -175,7 +192,7 @@ bool Controller::loop_body()
 		std::lock_guard<std::mutex> lock_l(_mutex);
 		if(_backState->_stepHandled > _bufferState->_stepHandled)
 		{
-			Logger::getDebug() << "swap state" << " "<<_backState->_state<< std::endl;
+			Logger::getDebug() << "swap state" << " "<<_backState->_state->_id<< std::endl;
 			std::swap(_bufferState, _backState);
 			upToDate_l = false;
 		}

@@ -7,6 +7,14 @@
 namespace octopus
 {
 
+TriggerData::~TriggerData()
+{
+	for(ListenerData* data_l : _listenerData)
+	{
+		delete data_l;
+	}
+}
+
 Trigger::Trigger(std::list<Listener *> const &listeners_p, bool isOneShot_p)
 	: _listeners(listeners_p)
 	, _isOneShot(isOneShot_p)

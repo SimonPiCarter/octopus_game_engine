@@ -7,6 +7,7 @@
 #include "step/command/CommandQueueStep.hh"
 #include "step/entity/spawn/BuildingSpawnStep.hh"
 #include "step/entity/spawn/EntitySpawnStep.hh"
+#include "step/entity/spawn/ResourceSpawnStep.hh"
 #include "step/entity/spawn/UnitSpawnStep.hh"
 
 namespace octopus
@@ -18,38 +19,56 @@ AreaSpawnerCommand::AreaSpawnerCommand(std::list<AreaSpawn> const &spawns_p)
 	, _gen(42)
 {}
 
-void spawn(State const &state_p, Step & step_p, EntityModel const *model_p, Option const &option_p, unsigned long player_p)
+AreaSpawnerCommand::~AreaSpawnerCommand()
 {
-	Vector pos_l {option_p.x + std::ceil(2*model_p->_ray)/2., option_p.y + std::ceil(2*model_p->_ray)/2. };
-	if(model_p->_isUnit)
+	for(AreaSpawn const &spawn_l : _spawns)
+	{
+		for(std::pair<Entity *, unsigned long> const &pair_l : spawn_l.entities)
+		{
+			delete pair_l.first;
+		}
+	}
+}
+
+void spawn(State const &state_p, Step & step_p, Entity const *model_p, Option const &option_p)
+{
+	Vector pos_l {option_p.x + std::ceil(2*model_p->_model._ray)/2., option_p.y + std::ceil(2*model_p->_model._ray)/2. };
+	if(model_p->_model._isUnit)
 	{
 		Logger::getDebug()<<"AreaSpawnerCommand :: spawn unit at " << pos_l<<std::endl;
-		Unit unit_l(pos_l, false, *dynamic_cast<UnitModel const *>(model_p));
-		unit_l._player = player_p;
+		Unit unit_l(*dynamic_cast<Unit const *>(model_p));
+		unit_l._pos = pos_l;
 
 		step_p.addSteppable(new UnitSpawnStep(getNextHandle(step_p, state_p), unit_l));
 	}
-	else if(model_p->_isBuilding)
+	else if(model_p->_model._isBuilding)
 	{
 		Logger::getDebug()<<"AreaSpawnerCommand :: spawn building at " << pos_l<<std::endl;
-		Building building_l(pos_l, model_p->_isStatic, *dynamic_cast<BuildingModel const *>(model_p));
-		building_l._player = player_p;
+		Building building_l(*dynamic_cast<Building const *>(model_p));
+		building_l._pos = pos_l;
 
 		step_p.addSteppable(new BuildingSpawnStep(getNextHandle(step_p, state_p), building_l, true));
 	}
+	else if(model_p->_model._isResource)
+	{
+		Logger::getDebug()<<"AreaSpawnerCommand :: spawn resource at " << pos_l<<std::endl;
+		Resource res_l(*dynamic_cast<Resource const *>(model_p));
+		res_l._pos = pos_l;
+
+		step_p.addSteppable(new ResourceSpawnStep(getNextHandle(step_p, state_p), res_l));
+	}
 	else
 	{
-		Logger::getDebug()<<"AreaSpawnerCommand :: spawn entity  at " << pos_l<<std::endl;
-		Entity entity_l(pos_l, model_p->_isStatic, *model_p);
-		entity_l._player = player_p;
-
+		Logger::getDebug()<<"AreaSpawnerCommand :: spawn entity at " << pos_l<<std::endl;
+		Entity entity_l(*model_p);
+		entity_l._pos = pos_l;
 		step_p.addSteppable(new EntitySpawnStep(getNextHandle(step_p, state_p), entity_l));
 	}
 }
 
-void update(SpawningGrid &grid_p, EntityModel const *model_p, Option const &option_p)
+void update(SpawningGrid &grid_p, EntityModel const &model_p, Option const &option_p)
 {
-	grid_p.fillGrid(option_p.x, option_p.y, std::ceil(2*model_p->_ray));
+	grid_p.fillGrid(option_p.x, option_p.y, std::ceil(2*model_p._ray));
 }
 
 void AreaSpawnerCommand::registerCommand(Step & step_p, State const &state_p)
@@ -66,11 +85,11 @@ void AreaSpawnerCommand::registerCommand(Step & step_p, State const &state_p)
 	for(AreaSpawn const &spawn_l : _spawns)
 	{
 		// on every models
-		for(std::pair<EntityModel *, unsigned long> pair_l : spawn_l.models)
+		for(std::pair<Entity *, unsigned long> pair_l : spawn_l.entities)
 		{
-			EntityModel * model_l = pair_l.first;
+			Entity * model_l = pair_l.first;
 			// skip if not static
-			if(!model_l->_isStatic)
+			if(!model_l->_model._isStatic)
 			{
 				continue;
 			}
@@ -79,7 +98,7 @@ void AreaSpawnerCommand::registerCommand(Step & step_p, State const &state_p)
 			for(unsigned long i = 0 ; i < pair_l.second ; ++ i)
 			{
 				// size is 2*ray that we ceil
-				std::vector<Option> options_l = getOptions(spawn_l.x, spawn_l.y, spawn_l.size, spawn_l.size, grid_l, std::ceil(2*model_l->_ray));
+				std::vector<Option> options_l = getOptions(spawn_l.x, spawn_l.y, spawn_l.size, spawn_l.size, grid_l, std::ceil(2*model_l->_model._ray));
 
 				// no room to spawn
 				if(options_l.empty())
@@ -91,9 +110,9 @@ void AreaSpawnerCommand::registerCommand(Step & step_p, State const &state_p)
 				unsigned long optionIdx_l = random(0,options_l.size());
 
 				// add spawn to step
-				spawn(state_p, step_p, model_l, options_l[optionIdx_l], spawn_l.player);
+				spawn(state_p, step_p, model_l, options_l[optionIdx_l]);
 				/// update grid from spawn
-				update(grid_l, model_l, options_l[optionIdx_l]);
+				update(grid_l, model_l->_model, options_l[optionIdx_l]);
 			}
 		}
 	}
@@ -102,11 +121,11 @@ void AreaSpawnerCommand::registerCommand(Step & step_p, State const &state_p)
 	for(AreaSpawn const &spawn_l : _spawns)
 	{
 		// on every models
-		for(std::pair<EntityModel *, unsigned long> pair_l : spawn_l.models)
+		for(std::pair<Entity *, unsigned long> pair_l : spawn_l.entities)
 		{
-			EntityModel * model_l = pair_l.first;
+			Entity * model_l = pair_l.first;
 			// skip if static
-			if(model_l->_isStatic)
+			if(model_l->_model._isStatic)
 			{
 				continue;
 			}
@@ -115,7 +134,7 @@ void AreaSpawnerCommand::registerCommand(Step & step_p, State const &state_p)
 			for(unsigned long i = 0 ; i < pair_l.second ; ++ i)
 			{
 				// size is 2*ray that we ceil
-				std::vector<Option> options_l = getOptions(spawn_l.x, spawn_l.y, spawn_l.size, spawn_l.size, grid_l, std::ceil(2*model_l->_ray));
+				std::vector<Option> options_l = getOptions(spawn_l.x, spawn_l.y, spawn_l.size, spawn_l.size, grid_l, std::ceil(2*model_l->_model._ray));
 
 				// no room to spawn
 				if(options_l.empty())
@@ -127,7 +146,7 @@ void AreaSpawnerCommand::registerCommand(Step & step_p, State const &state_p)
 				unsigned long optionIdx_l = random(0,options_l.size());
 
 				// add spawn to step
-				spawn(state_p, step_p, model_l, options_l[optionIdx_l], spawn_l.player);
+				spawn(state_p, step_p, model_l, options_l[optionIdx_l]);
 				// we do not update grid for non static
 			}
 		}
@@ -136,7 +155,7 @@ void AreaSpawnerCommand::registerCommand(Step & step_p, State const &state_p)
 	step_p.addSteppable(new CommandStorageStep(this));
 }
 
-bool AreaSpawnerCommand::applyCommand(Step &, State const &, CommandData const *) const
+bool AreaSpawnerCommand::applyCommand(Step &, State const &, CommandData const *, PathManager &) const
 {
 	// NA
 	return true;

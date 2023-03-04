@@ -21,10 +21,13 @@ TEST(controllerTest, simple)
 	octopus::EntityModel unitModel_l { false, 1., 1., 10. };
 
 	EntitySpawnStep * spawn_l = new EntitySpawnStep(0, Entity { { 3, 3. }, false, unitModel_l});
-	EntityMoveCommand * command_l = new EntityMoveCommand(0, 0, {4, 4}, 0, { {4, 3}, {4, 4}});
+	EntityMoveCommand * command_l = new EntityMoveCommand(0, 0, {4, 3}, 0, { {4, 3}});
+	EntityMoveCommand * command2_l = new EntityMoveCommand(0, 0, {4, 4}, 0, { {4, 4}});
+	command2_l->setQueued(true);
 	CommandSpawnStep * commandSpawn_l = new CommandSpawnStep(command_l);
+	CommandSpawnStep * commandSpawn2_l = new CommandSpawnStep(command2_l);
 
-	Controller controller_l({new PlayerSpawnStep(0, 0), spawn_l, commandSpawn_l}, 1.);
+	Controller controller_l({new PlayerSpawnStep(0, 0), spawn_l, commandSpawn_l, commandSpawn2_l}, 1.);
 
 	State const *a = controller_l.getBackState();
 	State const *b = controller_l.getBufferState();
@@ -53,8 +56,8 @@ TEST(controllerTest, simple)
 	// query state
 	State const * state_l = controller_l.queryState();
 
-	EXPECT_NEAR(3., state_l->getEntity(0)->_pos.x, 1e-5);
-	EXPECT_NEAR(3., state_l->getEntity(0)->_pos.y, 1e-5);
+	EXPECT_NEAR(3., to_double(state_l->getEntity(0)->_pos.x), 1e-5);
+	EXPECT_NEAR(3., to_double(state_l->getEntity(0)->_pos.y), 1e-5);
 
 	// update time to 1second
 	controller_l.update(1.);
@@ -81,8 +84,8 @@ TEST(controllerTest, simple)
 	EXPECT_EQ(c, controller_l.getBufferState());
 	EXPECT_EQ(a, controller_l.getFrontState());
 
-	EXPECT_NEAR(4., state_l->getEntity(0)->_pos.x, 1e-5);
-	EXPECT_NEAR(3., state_l->getEntity(0)->_pos.y, 1e-5);
+	EXPECT_NEAR(4., to_double(state_l->getEntity(0)->_pos.x), 1e-5);
+	EXPECT_NEAR(3., to_double(state_l->getEntity(0)->_pos.y), 1e-5);
 
 	// update time to 1second
 	controller_l.update(1.);
@@ -107,8 +110,8 @@ TEST(controllerTest, simple)
 	EXPECT_EQ(b, controller_l.getBufferState());
 	EXPECT_EQ(a, controller_l.getFrontState());
 
-	EXPECT_NEAR(4., state_l->getEntity(0)->_pos.x, 1e-5);
-	EXPECT_NEAR(3., state_l->getEntity(0)->_pos.y, 1e-5);
+	EXPECT_NEAR(4., to_double(state_l->getEntity(0)->_pos.x), 1e-5);
+	EXPECT_NEAR(3., to_double(state_l->getEntity(0)->_pos.y), 1e-5);
 
 	EXPECT_FALSE(controller_l.loop_body());
 
@@ -131,8 +134,8 @@ TEST(controllerTest, simple)
 	EXPECT_EQ(b, controller_l.getBufferState());
 	EXPECT_EQ(a, controller_l.getFrontState());
 
-	EXPECT_NEAR(4., state_l->getEntity(0)->_pos.x, 1e-5);
-	EXPECT_NEAR(3., state_l->getEntity(0)->_pos.y, 1e-5);
+	EXPECT_NEAR(4., to_double(state_l->getEntity(0)->_pos.x), 1e-5);
+	EXPECT_NEAR(3., to_double(state_l->getEntity(0)->_pos.y), 1e-5);
 
 	EXPECT_FALSE(controller_l.loop_body());
 
@@ -155,7 +158,7 @@ TEST(controllerTest, simple)
 	EXPECT_EQ(a, controller_l.getBufferState());
 	EXPECT_EQ(c, controller_l.getFrontState());
 
-	EXPECT_NEAR(4., state_l->getEntity(0)->_pos.x, 1e-5);
-	EXPECT_NEAR(4., state_l->getEntity(0)->_pos.y, 1e-5);
+	EXPECT_NEAR(4., to_double(state_l->getEntity(0)->_pos.x), 1e-5);
+	EXPECT_NEAR(4., to_double(state_l->getEntity(0)->_pos.y), 1e-5);
 
 }

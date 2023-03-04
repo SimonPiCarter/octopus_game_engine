@@ -43,7 +43,7 @@ void Graph::buildEdge(mygraph_t &g, size_t i, size_t j, size_t k, size_t l,
 	bool inserted;
 
 	boost::tie(e, inserted) = add_edge(nodeIndex_p.at(from_l), nodeIndex_p.at(to_l), g);
-	g[e].weight = length(to_l->getPosition() - from_l->getPosition());
+	g[e].weight = to_double(length(to_l->getPosition() - from_l->getPosition()));
 	g[e].from = from_l;
 	g[e].to = to_l;
 }
@@ -139,9 +139,9 @@ public:
 	distance_heuristic(std::vector<GridNode const*> const &vec_p, Vertex goal_p) : _vec(vec_p), _goal(goal_p) {}
 	double operator()(Vertex u)
 	{
-		float dx = _vec.at(_goal)->getPosition().x - _vec.at(u)->getPosition().x;
-		float dy = _vec.at(_goal)->getPosition().y - _vec.at(u)->getPosition().y;
-		return ::sqrt(dx * dx + dy * dy);
+		Fixed dx = _vec.at(_goal)->getPosition().x - _vec.at(u)->getPosition().x;
+		Fixed dy = _vec.at(_goal)->getPosition().y - _vec.at(u)->getPosition().y;
+		return to_double(numeric::square_root(dx * dx + dy * dy));
 	}
 
 private:

@@ -16,9 +16,9 @@ std::vector<std::vector<GridNode *> > setUpGrid(size_t sizeX_p, size_t sizeY_p, 
 	return vec_l;
 }
 
-Grid::Grid(size_t sizeX_p, size_t sizeY_p, double stepX_p, double stepY_p) :
+Grid::Grid(size_t sizeX_p, size_t sizeY_p, double stepX_p, double stepY_p, bool noGraph_p) :
 	_internalGrid(setUpGrid(sizeX_p, sizeY_p, stepX_p, stepY_p)),
-	_graph(_internalGrid),
+	_graph(noGraph_p?std::vector<std::vector<GridNode *> >():_internalGrid),
 	_stepX(stepX_p),
 	_stepY(stepY_p)
 {}
@@ -51,8 +51,8 @@ GridNode const * Grid::getNode(Vector const &vec_p) const
 		throw std::logic_error("Cannot handle negative coordinate");
 	}
 	// get index from coordinate
-	size_t x = vec_p.x/_stepX;
-	size_t y = vec_p.y/_stepY;
+	size_t x = to_uint(vec_p.x/_stepX);
+	size_t y = to_uint(vec_p.y/_stepY);
 
 	return getNode(x, y);
 }

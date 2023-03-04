@@ -20,9 +20,9 @@
 namespace octopus
 {
 
-bool collision(Vector const &posA_p, Vector const &posB_p, double const &rayA_p, double const &rayB_p)
+bool collision(Vector const &posA_p, Vector const &posB_p, Fixed const &rayA_p, Fixed const &rayB_p)
 {
-	double const ray_l = rayA_p + rayB_p;
+	Fixed const ray_l = rayA_p + rayB_p;
 	// try quick win
 	if(posA_p.x - posB_p.x > ray_l
 	|| posB_p.x - posA_p.x > ray_l
@@ -36,8 +36,8 @@ bool collision(Vector const &posA_p, Vector const &posB_p, double const &rayA_p,
 	Vector axis_l = posA_p - posB_p;
 
 	// lenght between positions
-	double squareLength_l = square_length(axis_l);
-	double squareRay_l = ray_l * ray_l;
+	Fixed squareLength_l = square_length(axis_l);
+	Fixed squareRay_l = ray_l * ray_l;
 
 	return squareLength_l < squareRay_l;
 }
@@ -62,8 +62,17 @@ bool updateStepFromConflictPosition(Step &step_p, State const &state_p)
 	for(EntityMoveStep *step_l: step_p.getEntityMoveStep())
 	{
 		Entity const *ent_l = state_p.getEntity(step_l->_handle);
-		mapMoveStep_l[ent_l->_handle] = step_l;
-		newPos_l[ent_l->_handle] = ent_l->_pos + step_l->_move;
+		if(mapMoveStep_l[ent_l->_handle] != nullptr)
+		{
+			mapMoveStep_l[ent_l->_handle]->_move += step_l->_move;
+			step_l->_move = Vector {0,0};
+			newPos_l[ent_l->_handle] = ent_l->_pos + mapMoveStep_l[ent_l->_handle]->_move;
+		}
+		else
+		{
+			mapMoveStep_l[ent_l->_handle] = step_l;
+			newPos_l[ent_l->_handle] = ent_l->_pos + step_l->_move;
+		}
 	}
 
 	// fill up move steps when missing
@@ -95,8 +104,13 @@ bool updateStepFromConflictPosition(Step &step_p, State const &state_p)
 	//////////////////////////////
 
 	// check every entity with one another
-	for(EntityMoveStep *stepA_l: step_p.getEntityMoveStep())
+	for(EntityMoveStep *stepA_l: mapMoveStep_l)
 	{
+		if(stepA_l == nullptr)
+		{
+			continue;
+		}
+
 		Entity const * entA_l = state_p.getEntity(stepA_l->_handle);
 
 		if(entA_l->isIgnoringCollision())
@@ -144,31 +158,39 @@ bool updateStepFromConflictPosition(Step &step_p, State const &state_p)
 				Vector axis_l = (entA_l->_pos + stepA_l->_move) - (entB_l->_pos + stepB_l->_move);
 
 				// lenght between positions
-				double length_l = length(axis_l);
+				Fixed length_l = length(axis_l);
 
 				// collision distance (distance missing to avoid collision)
-				double distance_l = entA_l->_model._ray + entB_l->_model._ray - length_l;
+				Fixed distance_l = entA_l->_model._ray + entB_l->_model._ray - length_l;
 				if(distance_l < 0.)
 				{
 					throw std::logic_error("octopus :: Error collision but no distance to fix");
 				}
 
 				Vector normalizedAxis_l { 1., 0.};
-				if(length_l > 1e-3)
+				if(axis_l.x > 1e-3 || axis_l.y > 1e-3)
 				{
 					// Normalized axis from B to A
 					normalizedAxis_l = axis_l / length_l;
 				}
 				else
 				{
-					normalizedAxis_l = Vector { double(gen_l.nextFromRange(-10, 10)), double(gen_l.nextFromRange(-10, 10))};
+					normalizedAxis_l = Vector { double(gen_l.nextFromRange(1, 10)), double(gen_l.nextFromRange(1, 10))};
+					if(gen_l.nextFromRange(0, 1) > 0)
+					{
+						normalizedAxis_l.x = -normalizedAxis_l.x;
+					}
+					if(gen_l.nextFromRange(0, 1) > 0)
+					{
+						normalizedAxis_l.y = -normalizedAxis_l.y;
+					}
 					normalizedAxis_l = normalizedAxis_l / length(normalizedAxis_l);
 				}
-				double coefA_l = 0.5;
-				double coefB_l = 0.5;
+				Fixed coefA_l = 0.5;
+				Fixed coefB_l = 0.5;
 				if(square_length(stepA_l->_move) > 1e-5 || square_length(stepB_l->_move) > 1e-5)
 				{
-					coefA_l = std::sqrt(square_length(stepB_l->_move)/(square_length(stepA_l->_move)+square_length(stepB_l->_move)));
+					coefA_l = numeric::square_root(square_length(stepB_l->_move)/(square_length(stepA_l->_move)+square_length(stepB_l->_move)));
 					coefB_l = 1 - coefA_l;
 				}
 				if(entA_l->isFrozen() && entB_l->isFrozen())
@@ -204,7 +226,7 @@ bool updateStepFromConflictPosition(Step &step_p, State const &state_p)
 	for(EntityMoveStep *ent_l: step_p.getEntityMoveStep())
 	{
 		// if update
-		if(mapCorrection_l[ent_l->_handle] != Vector {0,0})
+		if(!is_zero(mapCorrection_l[ent_l->_handle]))
 		{
 			updated_l = true;
 		}
@@ -213,13 +235,13 @@ bool updateStepFromConflictPosition(Step &step_p, State const &state_p)
 			continue;
 		}
 		// ensure that move does not become too chaotic
-		double square_l = state_p.getEntity(ent_l->_handle)->getStepSpeed()*state_p.getEntity(ent_l->_handle)->getStepSpeed();
+		Fixed square_l = state_p.getEntity(ent_l->_handle)->getStepSpeed()*state_p.getEntity(ent_l->_handle)->getStepSpeed();
 		Vector origMove_l = ent_l->_move;
 		ent_l->_move = ent_l->_move + mapCorrection_l[ent_l->_handle] * 0.9;
-		double newSquare_l = square_length(ent_l->_move);
+		Fixed newSquare_l = square_length(ent_l->_move);
 		if(newSquare_l > square_l)
 		{
-			ent_l->_move = ent_l->_move * std::sqrt(square_l/newSquare_l);
+			ent_l->_move = ent_l->_move * numeric::square_root(square_l/newSquare_l);
 		}
 		// in case no move
 		// if(newSquare_l < 1e-3)
@@ -283,12 +305,12 @@ bool updateStepFromConflictPosition(Step &step_p, State const &state_p)
 				return false;
 			}
 			// if one of the two is a building we check on rectangle instead of circles
-			Box<double> boxA_l { newPos_l[entA_l->_handle].x - entA_l->_model._ray, newPos_l[entA_l->_handle].x + entA_l->_model._ray,
+			Box<Fixed> boxA_l { newPos_l[entA_l->_handle].x - entA_l->_model._ray, newPos_l[entA_l->_handle].x + entA_l->_model._ray,
 								newPos_l[entA_l->_handle].y - entA_l->_model._ray, newPos_l[entA_l->_handle].y + entA_l->_model._ray };
-			Box<double> boxB_l { newPos_l[entB_l->_handle].x - entB_l->_model._ray, newPos_l[entB_l->_handle].x + entB_l->_model._ray,
+			Box<Fixed> boxB_l { newPos_l[entB_l->_handle].x - entB_l->_model._ray, newPos_l[entB_l->_handle].x + entB_l->_model._ray,
 								newPos_l[entB_l->_handle].y - entB_l->_model._ray, newPos_l[entB_l->_handle].y + entB_l->_model._ray };
 
-			Box<double> intersect_l = { std::max(boxA_l._lowerX, boxB_l._lowerX),
+			Box<Fixed> intersect_l = { std::max(boxA_l._lowerX, boxB_l._lowerX),
 								std::min(boxA_l._upperX, boxB_l._upperX),
 								std::max(boxA_l._lowerY, boxB_l._lowerY),
 								std::min(boxA_l._upperY, boxB_l._upperY) };
@@ -297,16 +319,16 @@ bool updateStepFromConflictPosition(Step &step_p, State const &state_p)
 			&& intersect_l._lowerY < intersect_l._upperY)
 			{
 				// direction in regards of A
-				double dXRight_l = boxA_l._upperX - boxB_l._lowerX;
-				double dXLeft_l = boxA_l._lowerX - boxB_l._upperX;
-				double dYUp_l = boxA_l._upperY - boxB_l._lowerY;
-				double dYDown_l = boxA_l._lowerY - boxB_l._upperY;
+				Fixed dXRight_l = boxA_l._upperX - boxB_l._lowerX;
+				Fixed dXLeft_l = boxA_l._lowerX - boxB_l._upperX;
+				Fixed dYUp_l = boxA_l._upperY - boxB_l._lowerY;
+				Fixed dYDown_l = boxA_l._lowerY - boxB_l._upperY;
 
-				double dXRightAbs_l = std::abs(dXRight_l);
-				double dXLeftAbs_l = std::abs(dXLeft_l);
-				double dYUpAbs_l = std::abs(dYUp_l);
-				double dYDownAbs_l = std::abs(dYDown_l);
-				double min_l = std::min(dXRightAbs_l, std::min(dXLeftAbs_l, std::min(dYUpAbs_l, dYDownAbs_l)));
+				Fixed dXRightAbs_l = numeric::abs(dXRight_l);
+				Fixed dXLeftAbs_l = numeric::abs(dXLeft_l);
+				Fixed dYUpAbs_l = numeric::abs(dYUp_l);
+				Fixed dYDownAbs_l = numeric::abs(dYDown_l);
+				Fixed min_l = std::min(dXRightAbs_l, std::min(dXLeftAbs_l, std::min(dYUpAbs_l, dYDownAbs_l)));
 				// B -> A
 				Vector diff_l { 0, 0 };
 				if(min_l + 1e-5 >= dXRightAbs_l)
@@ -354,7 +376,7 @@ bool updateStepFromConflictPosition(Step &step_p, State const &state_p)
 	for(EntityMoveStep *ent_l: step_p.getEntityMoveStep())
 	{
 		// if update
-		if(mapAbsoluteCorrection_l[ent_l->_handle] != Vector {0,0})
+		if(!is_zero(mapAbsoluteCorrection_l[ent_l->_handle]))
 		{
 			updated_l = true;
 		}
@@ -362,10 +384,39 @@ bool updateStepFromConflictPosition(Step &step_p, State const &state_p)
 		{
 			continue;
 		}
-		Logger::getDebug() << " conflict solver :: "<<ent_l->_handle<< " absolute correction : "<<mapAbsoluteCorrection_l[ent_l->_handle]<<std::endl;
+		Logger::getDebug() << " conflict solver :: "<<ent_l->_handle<<" move "<<ent_l->_move<<" absolute correction : "<<mapAbsoluteCorrection_l[ent_l->_handle]<<std::endl;
 		ent_l->_move = ent_l->_move + mapAbsoluteCorrection_l[ent_l->_handle];
 	}
 
+
+	//////////////////////////////
+	// Update from map bounds
+	//////////////////////////////
+
+	for(EntityMoveStep *ent_l: step_p.getEntityMoveStep())
+	{
+		Entity const *entity_l = state_p.getEntity(ent_l->_handle);
+		if(entity_l->_pos.x + ent_l->_move.x < 0)
+		{
+			updated_l = true;
+			ent_l->_move.x = - entity_l->_pos.x + 1e-3 ;
+		}
+		else if(entity_l->_pos.x + ent_l->_move.x > state_p.getWorldSize())
+		{
+			updated_l = true;
+			ent_l->_move.x = state_p.getWorldSize() - entity_l->_pos.x ;
+		}
+		if(entity_l->_pos.y + ent_l->_move.y < 0)
+		{
+			updated_l = true;
+			ent_l->_move.y = - entity_l->_pos.y + 1e-3 ;
+		}
+		else if(entity_l->_pos.y + ent_l->_move.y > state_p.getWorldSize())
+		{
+			updated_l = true;
+			ent_l->_move.y = state_p.getWorldSize() - entity_l->_pos.y ;
+		}
+	}
 	return updated_l;
 }
 

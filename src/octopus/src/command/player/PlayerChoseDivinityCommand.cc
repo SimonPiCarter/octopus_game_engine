@@ -80,7 +80,7 @@ void PlayerChoseDivinityCommand::registerCommand(Step & step_p, State const &sta
 	}
 }
 
-bool PlayerChoseDivinityCommand::applyCommand(Step &, State const &, CommandData const *) const
+bool PlayerChoseDivinityCommand::applyCommand(Step &, State const &, CommandData const *, PathManager &) const
 {
 	return true;
 }

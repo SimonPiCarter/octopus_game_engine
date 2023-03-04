@@ -7,9 +7,10 @@
 
 namespace octopus
 {
+class Command;
 class Step;
 class State;
-class Command;
+class PathManager;
 
 
 /// @brief This class handle commandles :
@@ -32,9 +33,10 @@ public:
 	virtual bool isActive() const;
 
 	/// @brief run the commands in queue and pop them if terminated
-	virtual void runCommands(Step & step_p, State const &state_p);
+	virtual void runCommands(Step & step_p, State const &state_p, PathManager &pathManager_p);
 
 	CommandBundle & getFrontQueue();
+	CommandBundle const & getFrontQueue() const;
 	CommandQueue & getQueue();
 	const CommandQueue & getQueue() const;
 

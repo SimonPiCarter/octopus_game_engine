@@ -51,6 +51,7 @@ endif()
 
 add_subdirectory(src/levels)
 add_subdirectory(src/game)
+add_subdirectory(src/fair_and_square)
 
 # ============================================================================
 # Installation

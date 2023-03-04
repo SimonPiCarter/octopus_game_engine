@@ -45,6 +45,11 @@ bool BuildingModel::isProduction() const
 	return !_unitModels.empty();
 }
 
+bool BuildingModel::canProduce(UnitModel const * model_p) const
+{
+	return std::find(_unitModels.begin(), _unitModels.end(), model_p) != _unitModels.end();
+}
+
 bool BuildingModel::checkLegality(Building const &, State const &) const
 {
 	return true;
@@ -54,4 +59,5 @@ bool BuildingModel::checkGrid(Building const &building_p, State const &state_p) 
 {
 	return octopus::checkGrid(state_p, &building_p, false);
 }
+
 } // namespace octopus

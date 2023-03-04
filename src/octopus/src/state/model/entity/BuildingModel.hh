@@ -34,6 +34,8 @@ namespace octopus
 
 		bool isProduction() const;
 
+		bool canProduce(UnitModel const * model_p) const;
+
 		virtual bool checkLegality(Building const &, State const &) const;
 
 		/// @brief responsible for checking the grid in state

@@ -17,6 +17,7 @@ class Steppable;
 
 struct TriggerData
 {
+	~TriggerData();
 	bool _isEnabled {true};
 	std::vector<ListenerData*> _listenerData;
 };

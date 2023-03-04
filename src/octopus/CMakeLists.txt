@@ -90,12 +90,15 @@ add_library(octopus
 	${CMAKE_CURRENT_SOURCE_DIR}/src/step/trigger/TriggerSpawn.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/step/trigger/TriggerStepCountChange.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/step/unit/UnitHarvestStep.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/src/graph/CanonicalDijkstra.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/graph/Graph.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/graph/Grid.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/graph/GridNode.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/src/graph/PathManager.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/library/Library.cc
-	${CMAKE_CURRENT_SOURCE_DIR}/src/utils/Vector.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/utils/DynamicBitset.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/src/utils/Fixed.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/src/utils/Vector.cc
 )
 
 target_link_libraries(octopus PRIVATE Boost::graph)

@@ -6,6 +6,8 @@
 #include "texture/Texture.hh"
 #include "text/Text.hh"
 
+using octopus::to_double;
+
 namespace cuttlefish
 {
 
@@ -158,8 +160,8 @@ void Window::clampCamera(double &x_r, double &y_r)
 	octopus::Vector winsize_l {double(_width), double(_height)};
 	octopus::Vector max_l = getPixelVector(_worldSize, _worldSize) - winsize_l;
 
-	x_r = std::max(0., std::min(max_l.x, x_r));
-	y_r = std::max(0., std::min(max_l.y, y_r));
+	x_r = std::max(0., std::min(to_double(max_l.x), x_r));
+	y_r = std::max(0., std::min(to_double(max_l.y), y_r));
 }
 
 void Window::setCamera(int x, int y)

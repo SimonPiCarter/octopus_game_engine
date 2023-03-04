@@ -43,6 +43,7 @@
 #include "cases/Cases.hh"
 
 using namespace cuttlefish;
+using octopus::to_double;
 
 std::string resourceStr(octopus::Player const &player_p)
 {
@@ -193,7 +194,7 @@ void runLevel1(Window &window_p)
 		panel_l.addSpriteInfo("div_swarm_3", 4, 3);
 
 	StatsPanel statsPanel_l(&window_p, window_p.getWidth()-520, window_p.getHeight()-260,
-		window_p.loadTexture("resources/background.png"), window_p.loadTexture("resources/grid.png"), 4, world_l.getSelection());
+		window_p.loadTexture("resources/background.png"), window_p.loadTexture("resources/grid.png"), nullptr, nullptr, 4, world_l.getSelection());
 
 	// resources
 	statsPanel_l.addSpriteInfo("resource_steel", 2, 4);
@@ -312,7 +313,7 @@ void runLevel1(Window &window_p)
 		// query a new state if available
 		octopus::StateAndSteps stateAndSteps_l = controller_l.queryStateAndSteps();
 		octopus::State const &state_l = *stateAndSteps_l._state;
-		world_l.handleStep(window_p, panel_l, divPanel_l, stateAndSteps_l, spriteLib_l);
+		world_l.handleStep(window_p, panel_l, statsPanel_l, divPanel_l, stateAndSteps_l, spriteLib_l);
 
 		// quit loop if state is over
 		if(state_l.isOver())
@@ -368,8 +369,8 @@ void runLevel1(Window &window_p)
 				if(minimapClicked_l)
 				{
 					octopus::Vector pos_l = getCameraPosition(e.button.x, e.button.y, minimap_l, window_p, state_l.getWorldSize());
-					x = pos_l.x;
-					y = pos_l.y;
+					x = to_double(pos_l.x);
+					y = to_double(pos_l.y);
 				}
 			}
 			//User requests quit_l
@@ -382,8 +383,8 @@ void runLevel1(Window &window_p)
 				if(minimap_l.isInside(e.button.x, e.button.y))
 				{
 					octopus::Vector pos_l = getCameraPosition(e.button.x, e.button.y, minimap_l, window_p, state_l.getWorldSize());
-					x = pos_l.x;
-					y = pos_l.y;
+					x = to_double(pos_l.x);
+					y = to_double(pos_l.y);
 					minimapClicked_l = true;
 				}
 				else if(!panel_l.getBackground()->isInside(window_p, e.button.x, e.button.y)

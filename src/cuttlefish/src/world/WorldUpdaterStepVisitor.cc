@@ -3,17 +3,20 @@
 #include "logger/Logger.hh"
 #include "World.hh"
 #include "window/Window.hh"
-#include "sprite/Sprite.hh"
+#include "sprite/SpriteEntity.hh"
 #include "sprite/SpriteLibrary.hh"
 #include "panel/Panel.hh"
+#include "panel/StatsPanel.hh"
 #include "panel/DivinityPanel.hh"
 
 // octopus
+#include "command/data/AttackMoveData.hh"
 #include "state/entity/Entity.hh"
 #include "state/State.hh"
 #include "step/building/BuildingCancelStep.hh"
 #include "step/building/BuildingStep.hh"
 #include "step/command/harvest/CommandHarvestStep.hh"
+#include "step/command/CommandWindUpDiffStep.hh"
 #include "step/entity/EntityHitPointChangeStep.hh"
 #include "step/entity/EntityMoveStep.hh"
 #include "step/entity/spawn/BuildingSpawnStep.hh"
@@ -23,6 +26,8 @@
 #include "step/player/PlayerAddOptionDivinityStep.hh"
 #include "step/unit/UnitHarvestStep.hh"
 
+
+using octopus::to_double;
 
 namespace cuttlefish
 {
@@ -36,8 +41,8 @@ void WorldUpdaterStepVisitor::spawn(octopus::Handle const &handle_p)
 	}
 	const octopus::EntityModel &model_l = entity_l._model;
 
-	Sprite * sprite_l = _lib.createSprite(handle_p, model_l._id, false);
-	sprite_l->setPosition(entity_l._pos.x*32, entity_l._pos.y*32);
+	SpriteEntity * sprite_l = _lib.createSpriteEntity(handle_p, model_l._id, !model_l._isResource);
+	sprite_l->setPosition(to_double(entity_l._pos.x)*32., to_double(entity_l._pos.y)*32.);
 
 	_world._sprites[handle_p] = sprite_l;
 	_world._listSprite.push_back(sprite_l);
@@ -45,9 +50,15 @@ void WorldUpdaterStepVisitor::spawn(octopus::Handle const &handle_p)
 
 void WorldUpdaterStepVisitor::clear(octopus::Handle const &handle_p)
 {
+	// check if already cleared up
+	if(_world._sprites[handle_p] == nullptr)
+	{
+		return;
+	}
 	// update selection
 	_world.clearSpriteFromSelections(_world._sprites[handle_p], *_state);
 	_panel.refresh(_world.getSelection()._sprite, *_state);
+	_statsPanel.refresh(_window, *_state);
 
 	// remove sprite
 	_world._listSprite.remove(_world._sprites[handle_p]);
@@ -99,9 +110,15 @@ void WorldUpdaterStepVisitor::visit(octopus::CommandHarvestTimeSinceHarvestStep 
 
 void WorldUpdaterStepVisitor::visit(octopus::EntityHitPointChangeStep const *steppable_p)
 {
-	if(_state->getEntity(steppable_p->_handle)->_hp <= 0.)
+	octopus::Entity const * ent_l = _state->getEntity(steppable_p->_handle);
+	double hp_l = ent_l->_hp;
+	if(hp_l <= 0.)
 	{
 		clear(steppable_p->_handle);
+	}
+	else
+	{
+		_world._sprites[steppable_p->_handle]->setLifePercent(100*hp_l/ent_l->_model._hpMax);
 	}
 }
 
@@ -110,7 +127,7 @@ void WorldUpdaterStepVisitor::visit(octopus::EntityMoveStep const *steppable_p)
 	octopus::Entity const * ent_l = _state->getEntity(steppable_p->_handle);
 	if(_world._sprites[steppable_p->_handle])
 	{
-		_world._sprites[steppable_p->_handle]->setPosition(ent_l->_pos.x*32, ent_l->_pos.y*32);
+		_world._sprites[steppable_p->_handle]->setPosition(to_double(ent_l->_pos.x)*32, to_double(ent_l->_pos.y)*32);
 	}
 }
 
@@ -126,6 +143,25 @@ void WorldUpdaterStepVisitor::visit(octopus::BuildingStep const *steppable_p)
 void WorldUpdaterStepVisitor::visit(octopus::PlayerAddOptionDivinityStep const *steppable_p)
 {
 	_divPanel.addOptionLayer(steppable_p->_player, steppable_p->_types);
+}
+
+void WorldUpdaterStepVisitor::visit(octopus::CommandWindUpDiffStep const *steppable_p)
+{
+	octopus::Entity const * ent_l = _state->getEntity(steppable_p->_handle);
+	if (!ent_l->getQueue().hasCurrentCommand())
+	{
+		return;
+	}
+	octopus::AttackMoveData const *data_l = dynamic_cast<octopus::AttackMoveData const *>(ent_l->getFrontQueue()._data);
+	if(_world._sprites[steppable_p->_handle])
+	{
+		// set wind up state
+		if(data_l && data_l->_windup == 1)
+		{
+			_world._sprites[steppable_p->_handle]->setState(1);
+			_world._sprites[steppable_p->_handle]->queueState(0);
+		}
+	}
 }
 
 }

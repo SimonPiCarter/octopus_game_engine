@@ -8,19 +8,20 @@
 
 namespace octopus
 {
+class UnitModel;
 class State;
 } // namespace octopus
 
 
 namespace cuttlefish
 {
-class Sprite;
+class SpriteEntity;
 class Window;
 
 /// @brief safe comparator comparing handles
 struct SpriteComparator
 {
-	bool operator()(Sprite const *a, Sprite const *b) const;
+	bool operator()(SpriteEntity const *a, SpriteEntity const *b) const;
 };
 
 /// @brief key to fast compare selections
@@ -39,14 +40,14 @@ class Selection
 {
 public:
 	/// @brief main unit selection
-	Sprite *_sprite {nullptr};
+	SpriteEntity *_sprite {nullptr};
 
-	std::set<Sprite *, SpriteComparator> _sprites;
+	std::set<SpriteEntity *, SpriteComparator> _sprites;
 
 	/// @brief contains sprites for models selected
-	std::map<std::string, std::set<Sprite *, SpriteComparator> > _spritesPerModel;
+	std::map<std::string, std::set<SpriteEntity *, SpriteComparator> > _spritesPerModel;
 
-	void removeSprite(Sprite * sprite_p, octopus::State const &state_p);
+	void removeSprite(SpriteEntity * sprite_p, octopus::State const &state_p);
 
 	void render(Window &window_p) const;
 
@@ -57,16 +58,24 @@ public:
 	SelectionKey key() const;
 };
 
-/// @brief add the list of sprite to the current selection
+/// @brief add the list of spriteentity to the current selection
 /// @note remove duplicated if necessary @todo
-void addToSelection(Selection &selection_p, std::list<Sprite *> const &sprites_p, octopus::State const &state_p);
+void addToSelection(Selection &selection_p, std::list<SpriteEntity *> const &sprites_p, octopus::State const &state_p);
 
 void addToSelection(Selection &selection_p, Selection &other_p);
 
-/// @brief replace the selection with the list of sprite
+/// @brief replace the selection with the list of spriteentity
 /// @note update main selected if necessary
 /// @note remove duplicated if any @todo
-void replaceSelection(Selection &selection_p, std::list<Sprite *> const &sprites_p, octopus::State const &state_p);
+void replaceSelection(Selection &selection_p, std::list<SpriteEntity *> const &sprites_p, octopus::State const &state_p);
+
+/// @brief Get the best entity to produce the model, ie the building with the less queued up
+/// production
+/// @param selection_p the selection to search for the entity
+/// @param state_p the state required to check production
+/// @param model_p the model to look for
+/// @return the best entity to produce model
+SpriteEntity const * getBestProductionBuilding(Selection const &selection_p, octopus::State const &state_p, octopus::UnitModel const *model_p);
 
 } // namespace cuttlefish
 

@@ -17,7 +17,7 @@ Unit::Unit(Vector const &pos_p, bool frozen_p, UnitModel const &model_p)
 	, _unitModel(model_p)
 {}
 
-void Unit::runCommands(Step & step_p, State const &state_p)
+void Unit::runCommands(Step & step_p, State const &state_p, PathManager &pathManager_p)
 {
 	if(_waiting < 100000)
 	{
@@ -57,7 +57,7 @@ void Unit::runCommands(Step & step_p, State const &state_p)
 			}
 		}
 	}
-	Commandable::runCommands(step_p, state_p);
+	Commandable::runCommands(step_p, state_p, pathManager_p);
 }
 
 } // namespace octopus

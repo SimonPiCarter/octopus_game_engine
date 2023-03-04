@@ -22,9 +22,11 @@ public:
 	virtual void registerCommand(Step & step_p, State const &state_p) override;
 
 	/// @brief
-	virtual bool applyCommand(Step & step_p, State const &state_p, CommandData const *data_p) const override;
+	virtual bool applyCommand(Step & step_p, State const &state_p, CommandData const *data_p, PathManager &pathManager_p) const override;
 
 	virtual CommandData * newData() const override { return new UnitProductionData(_model); }
+
+	UnitModel const &getModel() const { return _model; }
 
 private:
 	Handle const _source;

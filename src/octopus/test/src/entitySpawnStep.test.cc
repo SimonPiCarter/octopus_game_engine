@@ -27,8 +27,8 @@ TEST(entityStepTest, simple)
 
 	ASSERT_EQ(1u, state_l.getEntities().size());
 	EXPECT_EQ(true, state_l.getEntity(0)->_alive);
-	EXPECT_NEAR(3., state_l.getEntity(0)->_pos.x, 1e-5);
-	EXPECT_NEAR(4., state_l.getEntity(0)->_pos.y, 1e-5);
+	EXPECT_NEAR(3., to_double(state_l.getEntity(0)->_pos.x), 1e-5);
+	EXPECT_NEAR(4., to_double(state_l.getEntity(0)->_pos.y), 1e-5);
 
 	step_l.revert(state_l);
 

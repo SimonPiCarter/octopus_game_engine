@@ -26,7 +26,7 @@ bool Commandable::isActive() const
 	return true;
 }
 
-void Commandable::runCommands(Step & step_p, State const &state_p)
+void Commandable::runCommands(Step & step_p, State const &state_p, PathManager &pathManager_p)
 {
 	if(!_queue.hasCommand())
 	{
@@ -35,7 +35,7 @@ void Commandable::runCommands(Step & step_p, State const &state_p)
 	CommandQueue::ConstQueueIterator it_l = _queue.getCurrentCommand();
 	// while we have commands and the front one is over go on
 	while(it_l != _queue.getEnd()
-	   && it_l->_cmd->applyCommand(step_p, state_p, it_l->_data))
+	   && it_l->_cmd->applyCommand(step_p, state_p, it_l->_data, pathManager_p))
 	{
 		++it_l;
 		step_p.addSteppable(new CommandNextStep(_commandableHandle));
@@ -43,6 +43,11 @@ void Commandable::runCommands(Step & step_p, State const &state_p)
 }
 
 CommandBundle & Commandable::getFrontQueue()
+{
+	return _queue.getFrontCommand();
+}
+
+CommandBundle const & Commandable::getFrontQueue() const
 {
 	return _queue.getFrontCommand();
 }

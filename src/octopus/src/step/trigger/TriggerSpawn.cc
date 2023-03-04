@@ -20,7 +20,7 @@ void TriggerSpawn::apply(State &state_p) const
 	std::vector<Trigger const *> & triggers_l = state_p.getTriggers();
 	std::vector<TriggerData *> & triggersData_l = state_p.getTriggersData();
 
-	// Create trigger data and registe trigger
+	// Create trigger data and register trigger
 	triggers_l.push_back(_trigger);
 	triggersData_l.push_back(_trigger->newTriggerData(triggers_l.size()-1));
 }

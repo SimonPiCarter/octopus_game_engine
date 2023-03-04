@@ -47,13 +47,13 @@ void UnitDropCommand::registerCommand(Step &step_p, State const &state_p)
 bool depostInRange(State const &state_p, Unit const * unit_p, Handle const res_p)
 {
 	Entity const * ent_l = state_p.getEntity(res_p);
-	Box<double> boxA_l { ent_l->_pos.x - ent_l->_model._ray, ent_l->_pos.x + ent_l->_model._ray,
+	Box<Fixed> boxA_l { ent_l->_pos.x - ent_l->_model._ray, ent_l->_pos.x + ent_l->_model._ray,
 						ent_l->_pos.y - ent_l->_model._ray, ent_l->_pos.y + ent_l->_model._ray };
-	Box<double> boxB_l { unit_p->_pos.x - unit_p->_model._ray, unit_p->_pos.x + unit_p->_model._ray,
+	Box<Fixed> boxB_l { unit_p->_pos.x - unit_p->_model._ray, unit_p->_pos.x + unit_p->_model._ray,
 						unit_p->_pos.y - unit_p->_model._ray, unit_p->_pos.y + unit_p->_model._ray };
 
 	// Use 0.1 as a margin for range resource check
-	Box<double> intersect_l = { std::max(boxA_l._lowerX, boxB_l._lowerX)-0.1,
+	Box<Fixed> intersect_l = { std::max(boxA_l._lowerX, boxB_l._lowerX)-0.1,
 						std::min(boxA_l._upperX, boxB_l._upperX),
 						std::max(boxA_l._lowerY, boxB_l._lowerY)-0.1,
 						std::min(boxA_l._upperY, boxB_l._upperY) };
@@ -66,7 +66,7 @@ bool depostInRange(State const &state_p, Unit const * unit_p, Handle const res_p
 	return false;
 }
 
-bool UnitDropCommand::applyCommand(Step & step_p, State const &state_p, CommandData const *data_p) const
+bool UnitDropCommand::applyCommand(Step & step_p, State const &state_p, CommandData const *data_p, PathManager &pathManager_p) const
 {
 	Logger::getDebug() << "UnitDropCommand:: apply Command "<<_source <<std::endl;
 	MoveData const &data_l = *static_cast<MoveData const *>(data_p);
@@ -92,7 +92,7 @@ bool UnitDropCommand::applyCommand(Step & step_p, State const &state_p, CommandD
 	{
 		Logger::getDebug() << "UnitDropCommand:: move to deposit"<<std::endl;
 		// apply move
-		_subMoveCommand.applyCommand(step_p, state_p, data_p);
+		_subMoveCommand.applyCommand(step_p, state_p, data_p, pathManager_p);
 	}
 
 	return false;

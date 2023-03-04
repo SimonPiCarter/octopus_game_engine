@@ -1,5 +1,7 @@
 #include "StatsPanel.hh"
 
+#include "command/building/BuildingUnitProductionCommand.hh"
+#include "command/CommandQueue.hh"
 #include "state/State.hh"
 #include "state/player/Player.hh"
 #include "state/entity/Entity.hh"
@@ -12,18 +14,19 @@
 namespace cuttlefish
 {
 
-StatsPanel::StatsPanel(Window* window_p, int x, int y, Texture const * background_p, Texture const *icons_p, int iconsPerLine_p, Selection &selection_p) :
+StatsPanel::StatsPanel(Window* window_p, int x, int y, Texture const * background_p, Texture const *icons_p, Texture const *barBack_p, Texture const *barFill_p, int iconsPerLine_p, Selection &selection_p) :
 	_x(x),
 	_y(y),
 	_icons(icons_p),
 	_iconsPerLine(iconsPerLine_p),
-	_textStats(window_p, x, y+80),
-	_textQtyRes(window_p, x, y+185),
-	_textResources(window_p, x, y+120),
+	_textStats(window_p, x, y+5),
+	_textResources(window_p, x, y+45),
+	_textQtyRes(window_p, x+150, y+45),
 	_selection(selection_p)
 {
-	_background = new Picture(background_p, 260./64., 0, 0, 400, 400, {1}, {1}, true);
-	_background->setPosition(x, y);
+	_background = new Picture(background_p, 400, 400, {1}, {1});
+	_background->setDestination(x, y, 261, 261);
+
 	_textStats.addText("name", "", {0, 0, 0}, true);
 	_textStats.addText("hp", "hp : ", {0, 0, 0}, false);
 	_textStats.addText("hp_val", "", {0, 155, 0}, true);
@@ -39,22 +42,42 @@ StatsPanel::StatsPanel(Window* window_p, int x, int y, Texture const * backgroun
 	_textResources.addText("res_type", "", {0, 0, 0}, true);
 	_textResources.addText("qty", "quantity : ", {0, 0, 0}, false);
 	_textResources.addText("qty_val", "", {0, 0, 0}, true);
+
+	if(barBack_p && barFill_p)
+	{
+		for(size_t idx_l = 0 ; idx_l < 2*_iconsPerLine ; ++ idx_l)
+		{
+			int x = idx_l % _iconsPerLine;
+			int y = idx_l/_iconsPerLine;
+
+			_productionPictures.push_back(new ProductionPicture());
+			_productionPictures.back()->_icon = new Picture(_icons, 64, 64, {1}, {1});
+			_productionPictures.back()->_bar = new ProgressBar(new Picture(barBack_p, 62, 6, {1}, {1}), new Picture(barFill_p, 62, 6, {1}, {1}), 62, 6, 1);
+
+			int posX_l = _x + 1 + x * 65;
+			// add offset to be at bottom of the panel
+			int posY_l = _y + 120 + y * 65;
+			_productionPictures.back()->_icon->setDestination(posX_l, posY_l, 64, 64);
+			// Pos + offset to have progress bar on the bottom
+			_productionPictures.back()->_bar->setPosition(posX_l, posY_l + 56);
+		}
+	}
 }
 
 StatsPanel::~StatsPanel()
 {
-	delete _background;
-	for(SpriteModel &sprite_l : _sprites)
+	for(ProductionPicture *ptr_l : _productionPictures)
 	{
-		delete sprite_l.sprite;
+		delete ptr_l;
 	}
+	delete _background;
 }
 
 void StatsPanel::refresh(Window &window_p, octopus::State const &state_p)
 {
-	// nothing to do
+	// nothing to do (when muliple selection)
 	SelectionKey curKey_l = _selection.key();
-	if(_lastKey == curKey_l)
+	if(_lastKey == curKey_l && _selection._sprites.size() > 1)
 	{
 		return;
 	}
@@ -63,12 +86,11 @@ void StatsPanel::refresh(Window &window_p, octopus::State const &state_p)
 	std::swap(_lastKey, curKey_l);
 
 	// clean up old panel
-	for(SpriteModel &sprite_l : _sprites)
+	for(SelectionPicture *ptr_l : _selectionPictures)
 	{
-		delete sprite_l.sprite;
+		delete ptr_l;
 	}
-	_sprites.clear();
-	_texts.clear();
+	_selectionPictures.clear();
 
 	// if nothing selected just return
 	if(_selection._sprites.empty())
@@ -89,62 +111,56 @@ void StatsPanel::refresh(Window &window_p, octopus::State const &state_p)
 		for(auto &&pair_l : _selection._spritesPerModel)
 		{
 			std::string const &id_l = pair_l.first;
-			std::set<Sprite *, SpriteComparator> const &set_l = pair_l.second;
+			std::set<SpriteEntity *, SpriteComparator> const &set_l = pair_l.second;
 			if(set_l.empty())
 			{
 				continue;
 			}
 			octopus::Entity const * ent_l = state_p.getEntity((*set_l.begin())->getHandle());
 
-			Picture *sprite_l = new Picture(_icons, 1, 0, 0, 64, 64, {1}, {1}, true);
+			Picture *sprite_l = new Picture(_icons, 64, 64, {1}, {1});
 			SpriteInfo const &info_l = _mapIcons.at(ent_l->_model._id);
 			sprite_l->setState(info_l.state);
 			sprite_l->setFrame(info_l.frame);
 
-			SpriteModel spriteModel_l;
-			spriteModel_l.sprite = sprite_l;
-			_sprites.push_back(spriteModel_l);
+			SelectionPicture * selectionPicture_l = new SelectionPicture();
+			selectionPicture_l->_icon = new SpriteModel();
+			selectionPicture_l->_icon->sprite = sprite_l;
+			selectionPicture_l->_icon->unitModel = dynamic_cast<octopus::UnitModel const *>(&ent_l->_model);
+			selectionPicture_l->_icon->buildingModel = dynamic_cast<octopus::BuildingModel const *>(&ent_l->_model);
 
-			_texts.emplace_back(&window_p, SDL_Color {0, 0, 0}, 0, 0);
-			_texts.back().setText(std::to_string(set_l.size()));
+			selectionPicture_l->_text = new Text(&window_p, SDL_Color {0, 0, 0}, 0, 0);
+			selectionPicture_l->_text->setText(std::to_string(set_l.size()));
+
+			_selectionPictures.push_back(selectionPicture_l);
 		}
 	}
 
 	// index used of position
 	size_t idx_l = 0;
 	_grid.clear();
-	// update position of sprites
-	for(SpriteModel & sprite_l : _sprites)
+	// update position of selection icons
+	for(SelectionPicture * selectionPicture_l : _selectionPictures)
 	{
 		int x = idx_l % _iconsPerLine;
 		int y = idx_l/_iconsPerLine;
 
-		sprite_l.sprite->setPosition(_x + x * 65, _y + y * 65);
-		_grid[{x,y}] = &sprite_l;
-		++idx_l;
-	}
-	idx_l = 0;
-	// update position of texts
-	for(Text & text_l : _texts)
-	{
-		int x = idx_l % _iconsPerLine;
-		int y = idx_l/_iconsPerLine;
+		selectionPicture_l->_icon->sprite->setDestination(_x + 1 + x * 65, _y + 1 + y * 65, 64, 64);
+		_grid[{x,y}] = selectionPicture_l->_icon;
 
-		text_l.setPosition(_x + x * 65, _y + y * 65);
+		selectionPicture_l->_text->setPosition(_x + x * 65, _y + y * 65);
+
 		++idx_l;
 	}
 }
 
 void StatsPanel::render(Window &window_p)
 {
-	_background->render(window_p);
-	for(SpriteModel const & sprite_l : _sprites)
+	_background->display(window_p);
+	for(SelectionPicture const * picture_l : _selectionPictures)
 	{
-		sprite_l.sprite->render(window_p);
-	}
-	for(Text const & text_l : _texts)
-	{
-		text_l.display(window_p);
+		picture_l->_icon->sprite->display(window_p);
+		picture_l->_text->display(window_p);
 	}
 
 	if(_monoSelection)
@@ -157,7 +173,7 @@ void StatsPanel::render(Window &window_p)
 			_textStats.updateText("hp_val", ss_l.str());
 
 			ss_l.str("");
-			ss_l<<_monoSelection->getDamage();
+			ss_l<<_monoSelection->getDamageNoBonus();
 			_textStats.updateText("dmg_val", ss_l.str());
 
 			ss_l.str("");
@@ -180,6 +196,27 @@ void StatsPanel::render(Window &window_p)
 				}
 			}
 
+			if(_monoSelection->getQueue().hasCommand())
+			{
+				auto it_l = _monoSelection->getQueue().getCurrentCommand();
+				size_t i = 0;
+				while(it_l != _monoSelection->getQueue().getEnd() && i < _productionPictures.size())
+				{
+					octopus::BuildingUnitProductionCommand const *cmd_l = dynamic_cast<octopus::BuildingUnitProductionCommand const *>(it_l->_cmd);
+					octopus::UnitProductionData const *data_l = dynamic_cast<octopus::UnitProductionData const *>(it_l->_data);
+					if(cmd_l && data_l)
+					{
+						SpriteInfo const &info_l = _mapIcons.at(cmd_l->getModel()._id);
+						_productionPictures[i]->_icon->setState(info_l.state);
+						_productionPictures[i]->_icon->setFrame(info_l.frame);
+						_productionPictures[i]->_icon->display(window_p);
+						_productionPictures[i]->_bar->setProgress(100.*data_l->_progression/data_l->_completeTime);
+						_productionPictures[i]->_bar->display(window_p);
+					}
+					++it_l;
+					++i;
+				}
+			}
 		}
 		else if (_monoSelection->_model._isResource)
 		{
@@ -204,11 +241,11 @@ void StatsPanel::addSpriteInfo(std::string const &model_p, int state_p, int fram
 
 SpriteModel const * StatsPanel::getSpriteModel(Window &window_p, int x, int y) const
 {
-	for(SpriteModel const & sprite_l : _sprites)
+	for(SelectionPicture const * selectionPicture_l : _selectionPictures)
 	{
-		if(sprite_l.sprite->isInside(window_p, x, y))
+		if(selectionPicture_l->_icon->sprite->isInside(window_p, x, y))
 		{
-			return &sprite_l;
+			return selectionPicture_l->_icon;
 		}
 	}
 	return nullptr;

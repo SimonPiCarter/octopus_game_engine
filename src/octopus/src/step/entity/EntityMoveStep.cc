@@ -9,7 +9,7 @@ namespace octopus
 void EntityMoveStep::apply(State &state_p) const
 {
 	Entity * ent_l = state_p.getEntity(this->_handle);
-	Logger::getDebug() << "EntityMoveStep :: "<< this->_handle << " " << ent_l->_pos << " + "<<this->_move<<std::endl;
+	Logger::getDebug() << "EntityMoveStep :: apply "<< this->_handle << " " << ent_l->_pos << " + "<<this->_move<<std::endl;
 
 	updateGrid(state_p, ent_l, false);
 	ent_l->_pos += this->_move;
@@ -21,7 +21,7 @@ void EntityMoveStep::apply(State &state_p) const
 void EntityMoveStep::revert(State &state_p) const
 {
 	Entity * ent_l = state_p.getEntity(this->_handle);
-	Logger::getDebug() << "EntityMoveStep :: " << this->_handle << " " << ent_l->_pos << " - "<<this->_move<<std::endl;
+	Logger::getDebug() << "EntityMoveStep :: revert " << this->_handle << " " << ent_l->_pos << " - "<<this->_move<<std::endl;
 
 	updateExplorationGrid(state_p, ent_l, false);
 	updateGrid(state_p, ent_l, false);
@@ -42,7 +42,7 @@ EntityMoveStep createEntityMoveStep(Entity const &ent_p)
 EntityMoveStep createEntityMoveStep(Entity const &ent_p, Vector const &target_p, double stepSpeed_p)
 {
 	Vector move_l = target_p - ent_p._pos;
-	double length_l = length(move_l);
+	Fixed length_l = length(move_l);
 	if(length_l > 1e-3)
 	{
 		move_l /=  length_l;
@@ -54,7 +54,7 @@ EntityMoveStep createEntityMoveStep(Entity const &ent_p, Vector const &target_p,
 
 bool isEntityMoveStepNoOp(EntityMoveStep const &step_p)
 {
-	return square_length(step_p._move) < 1e-5;
+	return is_zero(step_p._move);
 }
 
 } // namespace octopus

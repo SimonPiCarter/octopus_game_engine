@@ -31,12 +31,14 @@ target_sources (unit_tests
 	src/buffCommand.test.cc
 	src/buffStep.test.cc
 	src/buildingCommand.test.cc
+	src/canonical.test.cc
 	src/commandQueue.test.cc
 	src/conflictSolver.test.cc
 	src/controller.test.cc
 	src/divinityCommand.test.cc
 	src/entityMoveStep.test.cc
 	src/entitySpawnStep.test.cc
+	src/fixed.test.cc
 	src/grid.test.cc
 	src/harvestCommand.test
 	src/moveCommand.test.cc
