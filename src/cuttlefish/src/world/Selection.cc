@@ -4,10 +4,13 @@
 #include <SDL2/SDL_image.h>
 
 #include "texture/Texture.hh"
-#include "window/Window.hh"
 #include "sprite/SpriteEntity.hh"
+#include "window/Window.hh"
 
+#include "command/building/BuildingUnitProductionCommand.hh"
+#include "command/CommandQueue.hh"
 #include "state/State.hh"
+#include "state/entity/Building.hh"
 #include "state/entity/Entity.hh"
 
 namespace cuttlefish
@@ -125,6 +128,64 @@ void replaceSelection(Selection &selection_p, std::list<SpriteEntity *> const &s
 		octopus::Entity const * ent_l = state_p.getEntity(sprite_l->getHandle());
 		selection_p._spritesPerModel[ent_l->_model._id].insert(sprite_l);
 	}
+}
+
+unsigned long remainingQueueTime(octopus::Building const &building_p)
+{
+	// remaining queue time
+	unsigned long time_l = 0;
+
+	if(building_p.getQueue().hasCommand())
+	{
+		auto it_l = building_p.getQueue().getCurrentCommand();
+		while(it_l != building_p.getQueue().getEnd())
+		{
+			octopus::BuildingUnitProductionCommand const *cmd_l = dynamic_cast<octopus::BuildingUnitProductionCommand const *>(it_l->_cmd);
+			octopus::UnitProductionData const *data_l = dynamic_cast<octopus::UnitProductionData const *>(it_l->_data);
+			if(cmd_l && data_l
+			&& data_l->_completeTime > data_l->_progression)
+			{
+				time_l += data_l->_completeTime - data_l->_progression;
+			}
+			++it_l;
+		}
+	}
+
+	return time_l;
+}
+
+SpriteEntity const * getBestProductionBuilding(Selection const &selection_p, octopus::State const &state_p, octopus::UnitModel const *model_p)
+{
+	SpriteEntity const  * bestSpriteEnt_l = nullptr;
+	unsigned long lowestQueue_l = 0;
+	for(SpriteEntity const * spriteEnt_l : selection_p._sprites)
+	{
+		// check ent
+		octopus::Entity const *ent_l = state_p.getEntity(spriteEnt_l->getHandle());
+		// skip non building
+		if(!ent_l->_model._isBuilding)
+		{
+			continue;
+		}
+		octopus::Building const *building_l = dynamic_cast<octopus::Building const *>(ent_l);
+
+		// skip if cannot produce building
+		if(!building_l->_buildingModel.canProduce(model_p))
+		{
+			continue;
+		}
+
+		// get production time queued up
+		unsigned long queueTime_l = remainingQueueTime(*building_l);
+
+		if(!bestSpriteEnt_l || queueTime_l < lowestQueue_l)
+		{
+			bestSpriteEnt_l = spriteEnt_l;
+			lowestQueue_l = queueTime_l;
+		}
+	}
+
+	return bestSpriteEnt_l;
 }
 
 } // cuttlefish

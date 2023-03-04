@@ -8,6 +8,7 @@
 
 namespace octopus
 {
+class UnitModel;
 class State;
 } // namespace octopus
 
@@ -67,6 +68,14 @@ void addToSelection(Selection &selection_p, Selection &other_p);
 /// @note update main selected if necessary
 /// @note remove duplicated if any @todo
 void replaceSelection(Selection &selection_p, std::list<SpriteEntity *> const &sprites_p, octopus::State const &state_p);
+
+/// @brief Get the best entity to produce the model, ie the building with the less queued up
+/// production
+/// @param selection_p the selection to search for the entity
+/// @param state_p the state required to check production
+/// @param model_p the model to look for
+/// @return the best entity to produce model
+SpriteEntity const * getBestProductionBuilding(Selection const &selection_p, octopus::State const &state_p, octopus::UnitModel const *model_p);
 
 } // namespace cuttlefish
 
