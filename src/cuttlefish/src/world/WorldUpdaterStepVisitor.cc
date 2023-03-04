@@ -146,6 +146,10 @@ void WorldUpdaterStepVisitor::visit(octopus::PlayerAddOptionDivinityStep const *
 void WorldUpdaterStepVisitor::visit(octopus::CommandWindUpDiffStep const *steppable_p)
 {
 	octopus::Entity const * ent_l = _state->getEntity(steppable_p->_handle);
+	if (!ent_l->getQueue().hasCurrentCommand())
+	{
+		return;
+	}
 	octopus::AttackMoveData const *data_l = dynamic_cast<octopus::AttackMoveData const *>(ent_l->getFrontQueue()._data);
 	if(_world._sprites[steppable_p->_handle])
 	{
