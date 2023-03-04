@@ -47,7 +47,7 @@ TEST(triggerBuildingTest, simple)
 	UnitModel unitModel_l { false, 1., 1., 10. };
 	unitModel_l._isUnit = true;
 	unitModel_l._isBuilder = true;
-	Unit unit_l({ 5, 3. }, false, unitModel_l);
+	Unit unit_l({ 5, 3.5 }, false, unitModel_l);
 
 	BuildingModel depositModel_l { true, 1., 10. };
 	depositModel_l._isBuilding = true;
@@ -57,7 +57,7 @@ TEST(triggerBuildingTest, simple)
 	building_l._alive = false;
 
 	// unit building command
-	EntityBuildingCommand * command_l = new EntityBuildingCommand(0, 0, 1, {1, 3}, 0, {{1, 3}});
+	EntityBuildingCommand * command_l = new EntityBuildingCommand(0, 0, 1, {1, 3.5}, 0, {{1, 3.5}});
 
 	Controller controller_l({
 		new PlayerSpawnStep(0, 0),
