@@ -48,7 +48,7 @@ class Picture
 		void setFrame(int frame_p);
 
 		/// @brief update frame based on elapsed time and refresh rate
-		void update(double elapsedTime_l);
+		void update(double elapsedTime_p);
 
 		/// @brief render picture
 		/// call texture render using a clip based on state and frame
@@ -70,6 +70,7 @@ class Picture
 		void setDestination(int x, int y, int w, int h);
 
 		SDL_Rect const & getDestination() const;
+		SDL_Rect getClip() const;
 
 		//Getter SCREEN picture dimensions
 		int getWidth() const;

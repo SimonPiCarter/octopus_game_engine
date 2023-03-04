@@ -51,9 +51,9 @@ void Picture::setFrame(int frame_p)
 	_frame = frame_p;
 }
 
-void Picture::update(double elapsedTime_l)
+void Picture::update(double elapsedTime_p)
 {
-	_timeIntoFrame += elapsedTime_l;
+	_timeIntoFrame += elapsedTime_p;
 	_frame = _frame % _nbFramesPerState.at(_state);
 
 	while(_timeIntoFrame > _timePerFramePerState.at(_state))
@@ -70,13 +70,7 @@ void Picture::update(double elapsedTime_l)
 
 void Picture::display(Window &window_p)
 {
-	SDL_Rect clip_l {
-		_frame * _width,
-		_state * _height,
-		_width,
-		_height,
-	};
-
+	SDL_Rect clip_l(this->getClip());
 	_texture->render(window_p.getRenderer(), _dest.x, _dest.y, _dest.h, _dest.w, &clip_l);
 }
 
@@ -122,6 +116,18 @@ void Picture::setDestination(int x, int y, int w, int h)
 SDL_Rect const & Picture::getDestination() const
 {
 	return _dest;
+}
+
+SDL_Rect Picture::getClip() const
+{
+	SDL_Rect clip_l {
+		_frame * _width,
+		_state * _height,
+		_width,
+		_height,
+	};
+
+	return clip_l;
 }
 
 int Picture::getWidth() const
