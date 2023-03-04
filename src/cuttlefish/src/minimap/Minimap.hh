@@ -62,6 +62,9 @@ private:
 /// @brief get camera position based on the mouse position and the minimap
 octopus::Vector getCameraPosition(int x, int y, Minimap const &minimap_p, Window const &window_p, unsigned long worldSize_p);
 
+/// @brief get world position based on the mouse position and the minimap
+octopus::Vector getPosition(int x, int y, Minimap const &minimap_p, Window const &window_p, unsigned long worldSize_p);
+
 } // namespace cuttlefish
 
 

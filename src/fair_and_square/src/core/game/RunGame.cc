@@ -333,10 +333,13 @@ void runGame(Window &window_p)
 			{
 				if(minimap_l.isInside(e.button.x, e.button.y))
 				{
-					octopus::Vector pos_l = getCameraPosition(e.button.x, e.button.y, minimap_l, window_p, state_l.getWorldSize());
-					x = to_double(pos_l.x);
-					y = to_double(pos_l.y);
-					minimapClicked_l = true;
+					if(e.button.button == SDL_BUTTON_LEFT)
+					{
+						minimapClicked_l = true;
+						octopus::Vector pos_l = getCameraPosition(e.button.x, e.button.y, minimap_l, window_p, state_l.getWorldSize());
+						x = to_double(pos_l.x);
+						y = to_double(pos_l.y);
+					}
 				}
 				else if(!panel_l.getBackground()->isInside(window_p, e.button.x, e.button.y)
 				&& !statsPanel_l.getBackground()->isInside(window_p, e.button.x, e.button.y)
@@ -347,8 +350,16 @@ void runGame(Window &window_p)
 			}
 			if (e.type == SDL_MOUSEBUTTONUP)
 			{
-
-				if(divPanel_l.isActive())
+				if(minimap_l.isInside(e.button.x, e.button.y))
+				{
+					if(e.button.button == SDL_BUTTON_RIGHT)
+					{
+						// handle move command using right clic handle of the standard clic mode
+						octopus::Vector pos_l = getPosition(e.button.x, e.button.y, minimap_l, window_p, state_l.getWorldSize());
+						standardClicMode_l.handleRightClic(pos_l, selection_l, world_l, panel_l, window_p, state_l, controller_l, nullptr);
+					}
+				}
+				else if(divPanel_l.isActive())
 				{
 					std::pair<bool, octopus::DivinityType> option_l = divPanel_l.getOption(window_p, e.button.x, e.button.y);
 					if(option_l.first)
@@ -358,7 +369,7 @@ void runGame(Window &window_p)
 						divPanel_l.popOptionLayer();
 					}
 				}
-				else if(!minimapClicked_l)
+				else
 				{
 					SpriteModel const * spriteModel_l = panel_l.getSpriteModel(window_p, e.button.x, e.button.y);
 
