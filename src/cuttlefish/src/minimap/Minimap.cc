@@ -65,8 +65,8 @@ void Minimap::render(octopus::State const &state_p, World const &world_p, Window
 	SDL_Rect cutFog_l;
 	cutFog_l.x = to_int(window_p.getWorldVector(0, 0).x);
 	cutFog_l.y = to_int(window_p.getWorldVector(0, 0).y);
-	cutFog_l.w = to_int((window_p.getWindowSize().x+1.));
-	cutFog_l.h = to_int((window_p.getWindowSize().y+1.));
+	cutFog_l.w = to_int((window_p.getWindowSize().x+2.));
+	cutFog_l.h = to_int((window_p.getWindowSize().y+2.));
 	SDL_Rect posFog_l;
 	// position of the fog on screen
 	octopus::Vector vec_l = window_p.getPixelVector(
