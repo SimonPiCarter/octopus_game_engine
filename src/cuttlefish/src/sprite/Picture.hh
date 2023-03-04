@@ -4,6 +4,8 @@
 #include <string>
 #include <vector>
 
+#include <SDL2/SDL.h>
+
 namespace cuttlefish
 {
 
@@ -19,14 +21,11 @@ class Window;
 /// - number of frames per state
 /// - offset per state (width of one picture)
 /// - offset per frame (height of one picture)
-/// - logical center of the frame : a picture will be positioned on the screen with
-///   its logical center placed on the given point of the frame
 /// - The texture to be used (is gonna be shared among all pictures)
 class Picture
 {
 	public:
-		Picture(Texture const * texture_p, double scale_p, int logX_p, int logY_p, int width_p, int height_p,
-			std::vector<int> const &nbFramesPerState_p, std::vector<double> const &timePerFramePerState_p, bool absolute_p=false);
+		Picture(Texture const * texture_p, int width_p, int height_p, std::vector<int> const &nbFramesPerState_p, std::vector<double> const &timePerFramePerState_p);
         virtual ~Picture() {}
 
 		/// @brief update state and reset current frame and time into frame
@@ -49,13 +48,11 @@ class Picture
 		void setFrame(int frame_p);
 
 		/// @brief update frame based on elapsed time and refresh rate
-		void update(double elapsedTime_l);
+		void update(double elapsedTime_p);
 
-		/// @brief render picture with its logical center on (x, y)
+		/// @brief render picture
 		/// call texture render using a clip based on state and frame
-		/// @param scale_p allow to scale final position and size
-		/// @param forceAbsolute_p force absolute drawing
-		void render( Window &window_p, double scaleX_p=1., double scaleY_p=1., bool forceAbsolute_p=false );
+		void display( Window &window_p);
 
 		/// @brief check if the position in on the picture
 		bool isInside(Window const &window_p, int x, int y) const;
@@ -65,23 +62,27 @@ class Picture
 		/// @note x and y coordinates must be in absolute world coordinate
 		bool intersect(int lx, int ly, int ux, int uy) const;
 
-		//Gets picture dimensions
-		double getWidth() const;
-		double getHeight() const;
+		/// @brief set the destination on screen
+		/// @param x
+		/// @param y
+		/// @param w
+		/// @param h
+		void setDestination(int x, int y, int w, int h);
 
-		void setPosition(double x, double y);
-		void move(double dx, double dy);
-		double getX() const;
-		double getY() const;
+		SDL_Rect const & getDestination() const;
+		SDL_Rect getClip() const;
+
+		//Getter SCREEN picture dimensions
+		int getWidth() const;
+		int getHeight() const;
+
+		/// Getter texture picture dimension
+		int getTextureAtomicWidth() const;
+		int getTextureAtomicHeight() const;
 
 	protected:
 		//The underlying texture
 		Texture const * const _texture;
-
-		double const _scale;
-
-		int const _logicalX;
-		int const _logicalY;
 
 		//Image dimensions
 		int const _width;
@@ -92,15 +93,16 @@ class Picture
 
 		std::vector<double> const _timePerFramePerState;
 
-		/// @brief if true camera is not applied
-		bool const _absolute;
-
 		////
-		//// Dynamic data
+		//// Dynamic data for position
 		////
 
-		double _x {0};
-		double _y {0};
+		// destination on screen
+		SDL_Rect _dest;
+
+		////
+		//// Dynamic data for animation
+		////
 
 		/// @brief the time since frame has changed
 		double _timeIntoFrame {0.};

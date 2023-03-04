@@ -5,7 +5,7 @@
 
 #include "texture/Texture.hh"
 #include "window/Window.hh"
-#include "sprite/Sprite.hh"
+#include "sprite/SpriteEntity.hh"
 
 #include "state/State.hh"
 #include "state/entity/Entity.hh"
@@ -13,12 +13,12 @@
 namespace cuttlefish
 {
 
-bool SpriteComparator::operator()(Sprite const *a, Sprite const *b) const
+bool SpriteComparator::operator()(SpriteEntity const *a, SpriteEntity const *b) const
 {
 	return a->getHandle() < b->getHandle();
 }
 
-void Selection::removeSprite(Sprite * sprite_p, octopus::State const &state_p)
+void Selection::removeSprite(SpriteEntity * sprite_p, octopus::State const &state_p)
 {
 	_sprites.erase(sprite_p);
 	if(_sprite == sprite_p)
@@ -36,7 +36,7 @@ void Selection::removeSprite(Sprite * sprite_p, octopus::State const &state_p)
 	_spritesPerModel[ent_l->_model._id].erase(sprite_p);
 }
 
-void displaySelection(Window &window_p, Sprite const *sprite_p)
+void displaySelection(Window &window_p, SpriteEntity const *sprite_p)
 {
 	SDL_Rect final_l {
 		int(sprite_p->getX() - sprite_p->getWidth()/2),
@@ -52,7 +52,7 @@ void displaySelection(Window &window_p, Sprite const *sprite_p)
 
 void Selection::render(Window &window_p) const
 {
-	for(Sprite const * sprite_l : _sprites)
+	for(SpriteEntity const * sprite_l : _sprites)
 	{
 		displaySelection(window_p, sprite_l);
 	}
@@ -77,7 +77,7 @@ SelectionKey Selection::key() const
 	return key_l;
 }
 
-void addToSelection(Selection &selection_p, std::list<Sprite *> const &sprites_p, octopus::State const &state_p)
+void addToSelection(Selection &selection_p, std::list<SpriteEntity *> const &sprites_p, octopus::State const &state_p)
 {
 	selection_p._sprites.insert(sprites_p.begin(), sprites_p.end());
 	if(!selection_p._sprites.empty())
@@ -85,7 +85,7 @@ void addToSelection(Selection &selection_p, std::list<Sprite *> const &sprites_p
 		selection_p._sprite = *selection_p._sprites.begin();
 	}
 	// update model lists
-	for(Sprite * sprite_l : sprites_p)
+	for(SpriteEntity * sprite_l : sprites_p)
 	{
 		octopus::Entity const * ent_l = state_p.getEntity(sprite_l->getHandle());
 		selection_p._spritesPerModel[ent_l->_model._id].insert(sprite_l);
@@ -106,7 +106,7 @@ void addToSelection(Selection &selection_p, Selection &other_p)
 	}
 }
 
-void replaceSelection(Selection &selection_p, std::list<Sprite *> const &sprites_p, octopus::State const &state_p)
+void replaceSelection(Selection &selection_p, std::list<SpriteEntity *> const &sprites_p, octopus::State const &state_p)
 {
 	selection_p._sprites.clear();
 	selection_p._sprites.insert(sprites_p.begin(), sprites_p.end());
@@ -120,7 +120,7 @@ void replaceSelection(Selection &selection_p, std::list<Sprite *> const &sprites
 	}
 	// update model lists
 	selection_p._spritesPerModel.clear();
-	for(Sprite * sprite_l : sprites_p)
+	for(SpriteEntity * sprite_l : sprites_p)
 	{
 		octopus::Entity const * ent_l = state_p.getEntity(sprite_l->getHandle());
 		selection_p._spritesPerModel[ent_l->_model._id].insert(sprite_l);

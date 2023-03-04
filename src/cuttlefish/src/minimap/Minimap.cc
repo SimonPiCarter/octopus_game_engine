@@ -2,7 +2,7 @@
 
 #include "window/Window.hh"
 #include "world/World.hh"
-#include "sprite/Sprite.hh"
+#include "sprite/SpriteEntity.hh"
 #include "texture/Texture.hh"
 #include "tilemap/Tilemap.hh"
 
@@ -82,7 +82,7 @@ void Minimap::render(octopus::State const &state_p, World const &world_p, Window
 	_cadre->render(window_p.getRenderer(), _x-2, _y-2, _w+4, _h+4, nullptr);
 	_background.render(window_p.getRenderer(), _x, _y, _w, _h, nullptr);
 
-	for(Sprite const *sprite_l : world_p.getListSprite())
+	for(SpriteEntity const *sprite_l : world_p.getListSprite())
 	{
 		octopus::Entity const *ent_l = state_p.getEntity(sprite_l->getHandle());
 

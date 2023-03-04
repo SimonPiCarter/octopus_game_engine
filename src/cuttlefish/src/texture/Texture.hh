@@ -29,8 +29,8 @@ class Texture
 		void render( SDL_Renderer* renderer, int x, int y, int h, int w, SDL_Rect* clip = nullptr ) const;
 
 		//Gets image dimensions
-		int getWidth();
-		int getHeight();
+		int getWidth() const;
+		int getHeight() const;
 
 	private:
 		std::string _path;

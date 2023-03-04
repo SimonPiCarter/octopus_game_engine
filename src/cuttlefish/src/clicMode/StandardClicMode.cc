@@ -27,7 +27,7 @@ StandardClicMode::~StandardClicMode()
 bool StandardClicMode::handleMouseUp(SDL_Event const & e, Selection &selection_p, World &world_p, Panel &panel_p,
 	Window &window_p, octopus::State const &state_p, octopus::Controller &controller_p)
 {
-	Sprite * sprite_l = world_p.getSprite(window_p, e.button.x, e.button.y);
+	SpriteEntity * sprite_l = world_p.getSprite(window_p, e.button.x, e.button.y);
 
 	// true if selection need to be added to current selection
 	bool add_l = false;
@@ -41,11 +41,11 @@ bool StandardClicMode::handleMouseUp(SDL_Event const & e, Selection &selection_p
 		if(e.button.x != _downX
 		|| e.button.y != _downY)
 		{
-			std::list<Sprite *> newSelection_l = world_p.getSprites(window_p, _downX, _downY, e.button.x, e.button.y);
+			std::list<SpriteEntity *> newSelection_l = world_p.getSprites(window_p, _downX, _downY, e.button.x, e.button.y);
 
 			// filter units if both units and buildings have been boxed
-			std::list<Sprite *> units_l;
-			for(Sprite * sprite_l : newSelection_l)
+			std::list<SpriteEntity *> units_l;
+			for(SpriteEntity * sprite_l : newSelection_l)
 			{
 				const octopus::Entity * cur_l = state_p.getEntity(sprite_l->getHandle());
 				if(cur_l && cur_l->_model._isUnit)
@@ -88,7 +88,7 @@ bool StandardClicMode::handleMouseUp(SDL_Event const & e, Selection &selection_p
 	else if(e.button.button == SDL_BUTTON_RIGHT
 	&& selection_p._sprite)
 	{
-		for(Sprite * selected_l : selection_p._sprites)
+		for(SpriteEntity * selected_l : selection_p._sprites)
 		{
 			const octopus::Entity * cur_l = state_p.getEntity(selected_l->getHandle());
 			const octopus::Unit * unit_l = dynamic_cast<const octopus::Unit *>(cur_l);

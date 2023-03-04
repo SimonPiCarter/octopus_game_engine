@@ -22,8 +22,9 @@ StatsPanel::StatsPanel(Window* window_p, int x, int y, Texture const * backgroun
 	_textResources(window_p, x, y+120),
 	_selection(selection_p)
 {
-	_background = new Picture(background_p, 260./64., 0, 0, 400, 400, {1}, {1}, true);
-	_background->setPosition(x, y);
+	_background = new Picture(background_p, 400, 400, {1}, {1});
+	_background->setDestination(x, y, 260, 260);
+
 	_textStats.addText("name", "", {0, 0, 0}, true);
 	_textStats.addText("hp", "hp : ", {0, 0, 0}, false);
 	_textStats.addText("hp_val", "", {0, 155, 0}, true);
@@ -89,14 +90,14 @@ void StatsPanel::refresh(Window &window_p, octopus::State const &state_p)
 		for(auto &&pair_l : _selection._spritesPerModel)
 		{
 			std::string const &id_l = pair_l.first;
-			std::set<Sprite *, SpriteComparator> const &set_l = pair_l.second;
+			std::set<SpriteEntity *, SpriteComparator> const &set_l = pair_l.second;
 			if(set_l.empty())
 			{
 				continue;
 			}
 			octopus::Entity const * ent_l = state_p.getEntity((*set_l.begin())->getHandle());
 
-			Picture *sprite_l = new Picture(_icons, 1, 0, 0, 64, 64, {1}, {1}, true);
+			Picture *sprite_l = new Picture(_icons, 64, 64, {1}, {1});
 			SpriteInfo const &info_l = _mapIcons.at(ent_l->_model._id);
 			sprite_l->setState(info_l.state);
 			sprite_l->setFrame(info_l.frame);
@@ -119,7 +120,7 @@ void StatsPanel::refresh(Window &window_p, octopus::State const &state_p)
 		int x = idx_l % _iconsPerLine;
 		int y = idx_l/_iconsPerLine;
 
-		sprite_l.sprite->setPosition(_x + x * 65, _y + y * 65);
+		sprite_l.sprite->setDestination(_x + x * 65, _y + y * 65, 64, 64);
 		_grid[{x,y}] = &sprite_l;
 		++idx_l;
 	}
@@ -137,10 +138,10 @@ void StatsPanel::refresh(Window &window_p, octopus::State const &state_p)
 
 void StatsPanel::render(Window &window_p)
 {
-	_background->render(window_p);
+	_background->display(window_p);
 	for(SpriteModel const & sprite_l : _sprites)
 	{
-		sprite_l.sprite->render(window_p);
+		sprite_l.sprite->display(window_p);
 	}
 	for(Text const & text_l : _texts)
 	{

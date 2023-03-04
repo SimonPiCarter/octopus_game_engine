@@ -24,16 +24,22 @@ Menu::~Menu()
 
 void Menu::addButton(Picture *picture_p, Text *text_p, std::function<void(void)> callback_p)
 {
+    int w_l = picture_p->getWidth();
+    int h_l = picture_p->getHeight();
     // set position
     if(_buttons.empty())
     {
-        picture_p->setPosition(_x, _y);
+        picture_p->setDestination(_x - w_l/2, _y - h_l/2, w_l, h_l);
     }
     else
     {
-        picture_p->setPosition(_x, _buttons.back().picture->getY() + _buttons.back().picture->getHeight() + double(_spacing));
+        picture_p->setDestination(
+            _x - w_l/2,
+            _buttons.back().picture->getDestination().y + _buttons.back().picture->getHeight() + double(_spacing),
+            w_l,
+            h_l);
     }
-    text_p->setPosition(_x - text_p->getWidth()/2, picture_p->getY() - text_p->getHeight()/2);
+    text_p->setPosition(_x - text_p->getWidth()/2, picture_p->getDestination().y + h_l/2 - text_p->getHeight()/2);
 
     _buttons.push_back(Button {picture_p, text_p, callback_p});
 }
@@ -90,7 +96,7 @@ void Menu::display(double elapsedTime_p, Window &window_p)
     for(Button &button_l : _buttons)
     {
         button_l.picture->update(elapsedTime_p);
-        button_l.picture->render(window_p);
+        button_l.picture->display(window_p);
         button_l.text->display(window_p);
     }
 }

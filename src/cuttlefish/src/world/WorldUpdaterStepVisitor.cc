@@ -3,7 +3,7 @@
 #include "logger/Logger.hh"
 #include "World.hh"
 #include "window/Window.hh"
-#include "sprite/Sprite.hh"
+#include "sprite/SpriteEntity.hh"
 #include "sprite/SpriteLibrary.hh"
 #include "panel/Panel.hh"
 #include "panel/DivinityPanel.hh"
@@ -40,7 +40,7 @@ void WorldUpdaterStepVisitor::spawn(octopus::Handle const &handle_p)
 	}
 	const octopus::EntityModel &model_l = entity_l._model;
 
-	Sprite * sprite_l = _lib.createSprite(handle_p, model_l._id, false);
+	SpriteEntity * sprite_l = _lib.createSpriteEntity(handle_p, model_l._id, !model_l._isResource);
 	sprite_l->setPosition(to_double(entity_l._pos.x)*32., to_double(entity_l._pos.y)*32.);
 
 	_world._sprites[handle_p] = sprite_l;
@@ -108,9 +108,15 @@ void WorldUpdaterStepVisitor::visit(octopus::CommandHarvestTimeSinceHarvestStep 
 
 void WorldUpdaterStepVisitor::visit(octopus::EntityHitPointChangeStep const *steppable_p)
 {
-	if(_state->getEntity(steppable_p->_handle)->_hp <= 0.)
+	octopus::Entity const * ent_l = _state->getEntity(steppable_p->_handle);
+	double hp_l = ent_l->_hp;
+	if(hp_l <= 0.)
 	{
 		clear(steppable_p->_handle);
+	}
+	else
+	{
+		_world._sprites[steppable_p->_handle]->setLifePercent(100*hp_l/ent_l->_model._hpMax);
 	}
 }
 

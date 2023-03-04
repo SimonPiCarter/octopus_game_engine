@@ -1,6 +1,8 @@
 #include "SpriteLibrary.hh"
 
 #include "sprite/Sprite.hh"
+#include "sprite/SpriteEntity.hh"
+#include "texture/Texture.hh"
 
 namespace cuttlefish
 {
@@ -18,9 +20,9 @@ void SpriteLibrary::registerSpriteTemplate(std::string const &id_p, Texture cons
 	_mapTemplates[id_p].blueprint = blueprintState_p;
 }
 
-Sprite * SpriteLibrary::createSprite(octopus::Handle const &handle_p, std::string const &id_p, bool absolute_p) const
+Sprite * SpriteLibrary::createSprite(std::string const &id_p, bool absolute_p) const
 {
-	return new Sprite(handle_p,
+	return new Sprite(
 			_mapTemplates.at(id_p).texture,
 			_mapTemplates.at(id_p).scale,
 			_mapTemplates.at(id_p).logX,
@@ -30,6 +32,24 @@ Sprite * SpriteLibrary::createSprite(octopus::Handle const &handle_p, std::strin
 			_mapTemplates.at(id_p).nbFramesPerState,
 			_mapTemplates.at(id_p).timePerFramePerState,
 			absolute_p
+		);
+}
+
+SpriteEntity * SpriteLibrary::createSpriteEntity(octopus::Handle const &handle_p, std::string const &id_p, bool hpBar_p) const
+{
+	return new SpriteEntity(
+			handle_p,
+			_mapTemplates.at(id_p).texture,
+			_hpBarBackground && hpBar_p?new Picture(_hpBarBackground, _hpBarFilling->getWidth(), _hpBarFilling->getHeight(), {1}, {1}):nullptr,			// optional pictures
+			_hpBarFilling && hpBar_p?new Picture(_hpBarFilling, _hpBarFilling->getWidth(), _hpBarFilling->getHeight(), {1}, {1}):nullptr,				// optional pictures
+			_mapTemplates.at(id_p).scale,
+			_mapTemplates.at(id_p).logX,
+			_mapTemplates.at(id_p).logY,
+			_mapTemplates.at(id_p).width,
+			_mapTemplates.at(id_p).height,
+			_mapTemplates.at(id_p).nbFramesPerState,
+			_mapTemplates.at(id_p).timePerFramePerState,
+			false
 		);
 }
 
@@ -43,5 +63,14 @@ int SpriteLibrary::getBlueprintState(std::string const &id_p) const
 	return _mapTemplates.at(id_p).blueprint;
 }
 
+void SpriteLibrary::setHpBarBackground(Texture const * texture_p)
+{
+	_hpBarBackground = texture_p;
+}
+
+void SpriteLibrary::setHpBarFilling(Texture const * texture_p)
+{
+	_hpBarFilling = texture_p;
+}
 
 } // namespace cuttlefish

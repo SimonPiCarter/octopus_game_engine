@@ -18,7 +18,7 @@ namespace cuttlefish
 
 BuildClicMode::BuildClicMode(octopus::BuildingModel const &model_p, SpriteLibrary const &lib_p) : _model(model_p)
 {
-	_sprite = lib_p.createSprite(0, model_p._id, false);
+	_sprite = lib_p.createSprite(model_p._id, false);
 	if(lib_p.getBlueprintState(model_p._id) > 0)
 	{
 		_sprite->setState(lib_p.getBlueprintState(model_p._id));

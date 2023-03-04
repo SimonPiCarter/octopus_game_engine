@@ -83,7 +83,6 @@ bool EntityMoveCommand::applyCommand(Step & step_p, State const &state_p, Comman
 		// no progress
 		if(sqLastDiff_l < 0.5)
 		{
-			Logger::getNormal() << "stop move" <<std::endl;
 			return true;
 		}
 		step_p.addSteppable(new CommandUpdateLastPosStep(_handleCommand, _source, data_l._lastPos));

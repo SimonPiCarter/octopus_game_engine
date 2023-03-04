@@ -3,7 +3,7 @@
 
 #include <list>
 #include <map>
-#include "sprite/Sprite.hh"
+#include "sprite/SpriteEntity.hh"
 #include "text/SegmentedText.hh"
 
 namespace octopus
@@ -44,7 +44,7 @@ public:
 	~Panel();
 
 	/// @brief refresh Panel if necessary
-	void refresh(Sprite const *selected_p, octopus::State const &state_p);
+	void refresh(SpriteEntity const *selected_p, octopus::State const &state_p);
 
 	/// @brief display panel
 	void render(Window &window_p);

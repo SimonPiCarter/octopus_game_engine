@@ -1,6 +1,6 @@
 #include "World.hh"
 #include "WorldUpdaterStepVisitor.hh"
-#include "sprite/Sprite.hh"
+#include "sprite/SpriteEntity.hh"
 #include "sprite/SpriteLibrary.hh"
 
 #include <SDL2/SDL.h>
@@ -35,7 +35,7 @@ void World::handleStep(Window &window_p, Panel &panel_p, DivinityPanel &divPanel
 	// Every step missing
 	for(auto it_l = _lastIt ; it_l != steps_p._stepIt ; ++it_l)
 	{
-		for(Sprite * sprite_l : _listSprite)
+		for(SpriteEntity * sprite_l : _listSprite)
 		{
 			// reset steps state
 			if(!sprite_l->hasStateQueued())
@@ -61,8 +61,8 @@ void World::handleStep(Window &window_p, Panel &panel_p, DivinityPanel &divPanel
 
 void World::display(Window &window_p, double elapsed_p)
 {
-	std::map<long, std::list<Sprite *> > mapSprite_l;
-	for(Sprite * sprite_l : _listSprite)
+	std::map<long, std::list<SpriteEntity *> > mapSprite_l;
+	for(SpriteEntity * sprite_l : _listSprite)
 	{
 		sprite_l->update(elapsed_p);
 
@@ -71,18 +71,27 @@ void World::display(Window &window_p, double elapsed_p)
 
 	for(auto &&pair_l : mapSprite_l)
 	{
-		std::list<Sprite*> const &list_l = pair_l.second;
-		for(Sprite * sprite_l : list_l)
+		std::list<SpriteEntity*> const &list_l = pair_l.second;
+		for(SpriteEntity * sprite_l : list_l)
 		{
 			sprite_l->render(window_p);
 		}
 	}
+
+	for(auto &&pair_l : mapSprite_l)
+	{
+		std::list<SpriteEntity*> const &list_l = pair_l.second;
+		for(SpriteEntity * sprite_l : list_l)
+		{
+			sprite_l->renderLifeBar(window_p, elapsed_p);
+		}
+	}
 }
 
-Sprite * World::getSprite(Window const &window_p, int x, int y) const
+SpriteEntity * World::getSprite(Window const &window_p, int x, int y) const
 {
-	Sprite * return_l = nullptr;
-	for(Sprite * sprite_l : _listSprite)
+	SpriteEntity * return_l = nullptr;
+	for(SpriteEntity * sprite_l : _listSprite)
 	{
 		if(sprite_l->isInside(window_p, x, y))
 		{
@@ -92,14 +101,13 @@ Sprite * World::getSprite(Window const &window_p, int x, int y) const
 	return return_l;
 }
 
-std::list<Sprite *> World::getSprites(Window const &window_p, int lx, int ly, int ux, int uy) const
+std::list<SpriteEntity *> World::getSprites(Window const &window_p, int lx, int ly, int ux, int uy) const
 {
-	std::list<Sprite *> list_l;
+	std::list<SpriteEntity *> list_l;
 
-	for(Sprite * sprite_l : _listSprite)
+	for(SpriteEntity * sprite_l : _listSprite)
 	{
-		SDL_Point const &cam_l = window_p.getCamera();
-		if(sprite_l->intersect(lx + cam_l.x, ly + cam_l.y, ux + cam_l.x, uy + cam_l.y))
+		if(sprite_l->intersect(lx, ly, ux, uy))
 		{
 			list_l.push_back(sprite_l);
 		}
@@ -126,7 +134,7 @@ void World::useSelection(unsigned long idx_p)
 	}
 }
 
-void World::clearSpriteFromSelections(Sprite * sprite_p, octopus::State const &state_p)
+void World::clearSpriteFromSelections(SpriteEntity * sprite_p, octopus::State const &state_p)
 {
 	getSelection().removeSprite(sprite_p, state_p);
 	for(auto &&pair_l : _selections)
@@ -135,7 +143,7 @@ void World::clearSpriteFromSelections(Sprite * sprite_p, octopus::State const &s
 	}
 }
 
-std::list<Sprite *> const &World::getListSprite() const
+std::list<SpriteEntity *> const &World::getListSprite() const
 {
 	return _listSprite;
 }
