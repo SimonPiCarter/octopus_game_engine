@@ -35,14 +35,14 @@ TEST(attackMoveCommandTest, simple)
 	octopus::EntityModel unitModel_l { false, 1., 1., 10. };
 	unitModel_l._isUnit = true;
 
-	Entity ent_l { { 11, 3. }, false, unitModel_l};
+	Entity ent_l { { 11, 3.5 }, false, unitModel_l};
 	ent_l._player = 1;
 
-	EntitySpawnStep * spawn0_l = new EntitySpawnStep(0, Entity { { 3, 3. }, false, unitModel_l});
+	EntitySpawnStep * spawn0_l = new EntitySpawnStep(0, Entity { { 3, 3.5 }, false, unitModel_l});
 	EntitySpawnStep * spawn1_l = new EntitySpawnStep(1, ent_l);
 
 	// entity 0 attack entity 1
-	EntityAttackMoveCommand * command_l = new EntityAttackMoveCommand(0, 0, {9, 3}, 0, {{9, 3}});
+	EntityAttackMoveCommand * command_l = new EntityAttackMoveCommand(0, 0, {9, 3.5}, 0, {{9, 3.5}});
 	CommandSpawnStep * commandSpawn_l = new CommandSpawnStep(command_l);
 
 	Controller controller_l({new PlayerSpawnStep(0, 0), new PlayerSpawnStep(1, 1), spawn0_l, spawn1_l, commandSpawn_l}, 1.);
@@ -55,7 +55,7 @@ TEST(attackMoveCommandTest, simple)
 	State const * state_l = controller_l.queryState();
 
 	EXPECT_NEAR(3., to_double(state_l->getEntity(0)->_pos.x), 1e-5);
-	EXPECT_NEAR(3., to_double(state_l->getEntity(0)->_pos.y), 1e-5);
+	EXPECT_NEAR(3.5, to_double(state_l->getEntity(0)->_pos.y), 1e-5);
 
 	// update time to 1second (1)
 	controller_l.update(1.);
@@ -66,7 +66,7 @@ TEST(attackMoveCommandTest, simple)
 	state_l = controller_l.queryState();
 
 	EXPECT_NEAR(4., to_double(state_l->getEntity(0)->_pos.x), 1e-5);
-	EXPECT_NEAR(3., to_double(state_l->getEntity(0)->_pos.y), 1e-5);
+	EXPECT_NEAR(3.5, to_double(state_l->getEntity(0)->_pos.y), 1e-5);
 
 	// update time to 2 seconds (3)
 	controller_l.update(2.);
@@ -77,7 +77,7 @@ TEST(attackMoveCommandTest, simple)
 	state_l = controller_l.queryState();
 
 	EXPECT_NEAR(6., to_double(state_l->getEntity(0)->_pos.x), 1e-5);
-	EXPECT_NEAR(3., to_double(state_l->getEntity(0)->_pos.y), 1e-5);
+	EXPECT_NEAR(3.5, to_double(state_l->getEntity(0)->_pos.y), 1e-5);
 	EXPECT_NEAR(10., state_l->getEntity(1)->_hp, 1e-5);
 
 	// update time to 3 seconds (6)
