@@ -77,6 +77,15 @@ void World::display(Window &window_p, double elapsed_p)
 			sprite_l->render(window_p);
 		}
 	}
+
+	for(auto &&pair_l : mapSprite_l)
+	{
+		std::list<SpriteEntity*> const &list_l = pair_l.second;
+		for(SpriteEntity * sprite_l : list_l)
+		{
+			sprite_l->renderLifeBar(window_p, elapsed_p);
+		}
+	}
 }
 
 SpriteEntity * World::getSprite(Window const &window_p, int x, int y) const

@@ -108,9 +108,15 @@ void WorldUpdaterStepVisitor::visit(octopus::CommandHarvestTimeSinceHarvestStep 
 
 void WorldUpdaterStepVisitor::visit(octopus::EntityHitPointChangeStep const *steppable_p)
 {
-	if(_state->getEntity(steppable_p->_handle)->_hp <= 0.)
+	octopus::Entity const * ent_l = _state->getEntity(steppable_p->_handle);
+	double hp_l = ent_l->_hp;
+	if(hp_l <= 0.)
 	{
 		clear(steppable_p->_handle);
+	}
+	else
+	{
+		_world._sprites[steppable_p->_handle]->setLifePercent(hp_l/ent_l->_model._hpMax);
 	}
 }
 
