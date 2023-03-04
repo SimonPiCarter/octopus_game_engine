@@ -75,9 +75,9 @@ StatsPanel::~StatsPanel()
 
 void StatsPanel::refresh(Window &window_p, octopus::State const &state_p)
 {
-	// nothing to do
+	// nothing to do (when muliple selection)
 	SelectionKey curKey_l = _selection.key();
-	if(_lastKey == curKey_l)
+	if(_lastKey == curKey_l && _selection._sprites.size() > 1)
 	{
 		return;
 	}
