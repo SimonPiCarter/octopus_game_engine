@@ -37,7 +37,7 @@ public:
 			std::vector<int> const &nbFramesPerState_p, std::vector<double> const &timePerFramePerState_p, int blueprintState_p);
 
 	Sprite * createSprite(std::string const &id_p, bool absolute_p) const;
-	SpriteEntity * createSpriteEntity(octopus::Handle const &handle_p, std::string const &id_p, bool absolute_p) const;
+	SpriteEntity * createSpriteEntity(octopus::Handle const &handle_p, std::string const &id_p, bool hpBar_p) const;
 
 	SpriteTemplate const & getSpriteTemplate(std::string const &id_p) const;
 

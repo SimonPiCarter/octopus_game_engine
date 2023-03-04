@@ -35,13 +35,13 @@ Sprite * SpriteLibrary::createSprite(std::string const &id_p, bool absolute_p) c
 		);
 }
 
-SpriteEntity * SpriteLibrary::createSpriteEntity(octopus::Handle const &handle_p, std::string const &id_p, bool absolute_p) const
+SpriteEntity * SpriteLibrary::createSpriteEntity(octopus::Handle const &handle_p, std::string const &id_p, bool hpBar_p) const
 {
 	return new SpriteEntity(
 			handle_p,
 			_mapTemplates.at(id_p).texture,
-			_hpBarBackground?new Picture(_hpBarBackground, _hpBarFilling->getWidth(), _hpBarFilling->getHeight(), {1}, {1}):nullptr,		// optional pictures
-			_hpBarFilling?new Picture(_hpBarFilling, _hpBarFilling->getWidth(), _hpBarFilling->getHeight(), {1}, {1}):nullptr,				// optional pictures
+			_hpBarBackground && hpBar_p?new Picture(_hpBarBackground, _hpBarFilling->getWidth(), _hpBarFilling->getHeight(), {1}, {1}):nullptr,			// optional pictures
+			_hpBarFilling && hpBar_p?new Picture(_hpBarFilling, _hpBarFilling->getWidth(), _hpBarFilling->getHeight(), {1}, {1}):nullptr,				// optional pictures
 			_mapTemplates.at(id_p).scale,
 			_mapTemplates.at(id_p).logX,
 			_mapTemplates.at(id_p).logY,
@@ -49,7 +49,7 @@ SpriteEntity * SpriteLibrary::createSpriteEntity(octopus::Handle const &handle_p
 			_mapTemplates.at(id_p).height,
 			_mapTemplates.at(id_p).nbFramesPerState,
 			_mapTemplates.at(id_p).timePerFramePerState,
-			absolute_p
+			false
 		);
 }
 

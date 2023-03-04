@@ -40,7 +40,7 @@ void WorldUpdaterStepVisitor::spawn(octopus::Handle const &handle_p)
 	}
 	const octopus::EntityModel &model_l = entity_l._model;
 
-	SpriteEntity * sprite_l = _lib.createSpriteEntity(handle_p, model_l._id, false);
+	SpriteEntity * sprite_l = _lib.createSpriteEntity(handle_p, model_l._id, !model_l._isResource);
 	sprite_l->setPosition(to_double(entity_l._pos.x)*32., to_double(entity_l._pos.y)*32.);
 
 	_world._sprites[handle_p] = sprite_l;
