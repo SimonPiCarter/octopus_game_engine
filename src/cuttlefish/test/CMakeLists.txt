@@ -25,6 +25,16 @@ ${CMAKE_CURRENT_SOURCE_DIR}/src/test_panel.cc
 target_link_libraries(test_panel PUBLIC cuttlefish)
 
 # ===================
+# Test_panel
+# ===================
+
+add_executable(test_progress_bar
+${CMAKE_CURRENT_SOURCE_DIR}/src/test_progress_bar.cc
+)
+
+target_link_libraries(test_progress_bar PUBLIC cuttlefish)
+
+# ===================
 # Test_level1
 # ===================
 
