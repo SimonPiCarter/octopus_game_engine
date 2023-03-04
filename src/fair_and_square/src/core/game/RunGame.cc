@@ -169,7 +169,7 @@ void runGame(Window &window_p)
 	double dY = 0.;
 	double camSpeed_l = 400.;
 
-	Panel panel_l(&window_p, window_p.getWidth()-260, window_p.getHeight()-260,
+	Panel panel_l(&window_p, window_p.getWidth()-261, window_p.getHeight()-261,
 		window_p.loadTexture("resources/background.png"), window_p.loadTexture("resources/grid.png"), 4);
 
 	panel_l.addSpriteInfo("worker", 2, 1);
@@ -180,8 +180,9 @@ void runGame(Window &window_p)
 	panel_l.addSpriteInfo("triangle", 2, 3);
 	panel_l.addSpriteInfo("circle", 1, 3);
 
-	StatsPanel statsPanel_l(&window_p, window_p.getWidth()-520, window_p.getHeight()-260,
-		window_p.loadTexture("resources/background.png"), window_p.loadTexture("resources/grid.png"), 4, world_l.getSelection());
+	StatsPanel statsPanel_l(&window_p, window_p.getWidth()-522, window_p.getHeight()-261,
+		window_p.loadTexture("resources/background.png"), window_p.loadTexture("resources/grid.png"),
+		window_p.loadTexture("resources/fair_and_square/prod_bar_back.png"), window_p.loadTexture("resources/fair_and_square/prod_bar_fill.png"), 4, world_l.getSelection());
 
 	// resources
 	statsPanel_l.addSpriteInfo("resource_steel", 2, 4);
