@@ -98,8 +98,7 @@ std::list<SpriteEntity *> World::getSprites(Window const &window_p, int lx, int 
 
 	for(SpriteEntity * sprite_l : _listSprite)
 	{
-		SDL_Point const &cam_l = window_p.getCamera();
-		if(sprite_l->intersect(lx + cam_l.x, ly + cam_l.y, ux + cam_l.x, uy + cam_l.y))
+		if(sprite_l->intersect(lx, ly, ux, uy))
 		{
 			list_l.push_back(sprite_l);
 		}
