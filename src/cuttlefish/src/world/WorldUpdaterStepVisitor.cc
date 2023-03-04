@@ -6,6 +6,7 @@
 #include "sprite/SpriteEntity.hh"
 #include "sprite/SpriteLibrary.hh"
 #include "panel/Panel.hh"
+#include "panel/StatsPanel.hh"
 #include "panel/DivinityPanel.hh"
 
 // octopus
@@ -57,6 +58,7 @@ void WorldUpdaterStepVisitor::clear(octopus::Handle const &handle_p)
 	// update selection
 	_world.clearSpriteFromSelections(_world._sprites[handle_p], *_state);
 	_panel.refresh(_world.getSelection()._sprite, *_state);
+	_statsPanel.refresh(_window, *_state);
 
 	// remove sprite
 	_world._listSprite.remove(_world._sprites[handle_p]);
