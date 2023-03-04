@@ -25,7 +25,7 @@ LoggerHandler Logger::getNormal()
 
 DebugLoggerHandler Logger::getDebug()
 {
-	return DebugLoggerHandler(_mutex, false);
+	return DebugLoggerHandler(_mutex, _debug);
 }
 
 }
