@@ -1,8 +1,10 @@
 #ifndef __SpriteEntity__
 #define __SpriteEntity__
 
-#include "state/Handle.hh"
 #include "Sprite.hh"
+#include "progressBar/ProgressBar.hh"
+
+#include "state/Handle.hh"
 
 namespace cuttlefish
 {
@@ -11,13 +13,21 @@ namespace cuttlefish
 class SpriteEntity : public Sprite
 {
 	public:
-		SpriteEntity(octopus::Handle const &ent_p, Texture const * texture_p, double scale_p, int logX_p, int logY_p, int width_p, int height_p,
+		SpriteEntity(octopus::Handle const &ent_p, Texture const * texture_p, Picture *background_p, Picture *bar_p, double scale_p, int logX_p, int logY_p, int width_p, int height_p,
 			std::vector<int> const &nbFramesPerState_p, std::vector<double> const &timePerFramePerState_p, bool absolute_p=false);
+		~SpriteEntity();
 
 		octopus::Handle const & getHandle() const;
+
+		void renderLifeBar(Window &window_p, double elapsed_p);
+
+		void setLifePercent(int percent_p);
+
 	private:
 		/// @brief the handle of the entity displayed
 		octopus::Handle const _handle;
+
+		ProgressBar * _lifeBar;
 };
 
 } // namespace cuttlefish

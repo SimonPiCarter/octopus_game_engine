@@ -43,8 +43,14 @@ public:
 
 	int getBlueprintState(std::string const &id_p) const;
 
+	void setHpBarBackground(Texture const * texture_p);
+	void setHpBarFilling(Texture const * texture_p);
+
 private:
 	std::unordered_map<std::string, SpriteTemplate> _mapTemplates;
+
+	Texture const * _hpBarBackground;
+	Texture const * _hpBarFilling;
 };
 
 }

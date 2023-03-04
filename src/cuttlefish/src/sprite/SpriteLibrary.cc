@@ -2,6 +2,7 @@
 
 #include "sprite/Sprite.hh"
 #include "sprite/SpriteEntity.hh"
+#include "texture/Texture.hh"
 
 namespace cuttlefish
 {
@@ -39,6 +40,8 @@ SpriteEntity * SpriteLibrary::createSpriteEntity(octopus::Handle const &handle_p
 	return new SpriteEntity(
 			handle_p,
 			_mapTemplates.at(id_p).texture,
+			_hpBarBackground?new Picture(_hpBarBackground, _hpBarFilling->getWidth(), _hpBarFilling->getHeight(), {1}, {1}):nullptr,		// optional pictures
+			_hpBarFilling?new Picture(_hpBarFilling, _hpBarFilling->getWidth(), _hpBarFilling->getHeight(), {1}, {1}):nullptr,				// optional pictures
 			_mapTemplates.at(id_p).scale,
 			_mapTemplates.at(id_p).logX,
 			_mapTemplates.at(id_p).logY,
@@ -60,5 +63,14 @@ int SpriteLibrary::getBlueprintState(std::string const &id_p) const
 	return _mapTemplates.at(id_p).blueprint;
 }
 
+void SpriteLibrary::setHpBarBackground(Texture const * texture_p)
+{
+	_hpBarBackground = texture_p;
+}
+
+void SpriteLibrary::setHpBarFilling(Texture const * texture_p)
+{
+	_hpBarFilling = texture_p;
+}
 
 } // namespace cuttlefish
