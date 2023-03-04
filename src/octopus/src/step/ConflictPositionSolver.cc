@@ -388,6 +388,35 @@ bool updateStepFromConflictPosition(Step &step_p, State const &state_p)
 		ent_l->_move = ent_l->_move + mapAbsoluteCorrection_l[ent_l->_handle];
 	}
 
+
+	//////////////////////////////
+	// Update from map bounds
+	//////////////////////////////
+
+	for(EntityMoveStep *ent_l: step_p.getEntityMoveStep())
+	{
+		Entity const *entity_l = state_p.getEntity(ent_l->_handle);
+		if(entity_l->_pos.x + ent_l->_move.x < 0)
+		{
+			updated_l = true;
+			ent_l->_move.x = - entity_l->_pos.x + 1e-3 ;
+		}
+		else if(entity_l->_pos.x + ent_l->_move.x > state_p.getWorldSize())
+		{
+			updated_l = true;
+			ent_l->_move.x = state_p.getWorldSize() - entity_l->_pos.x ;
+		}
+		if(entity_l->_pos.y + ent_l->_move.y < 0)
+		{
+			updated_l = true;
+			ent_l->_move.y = - entity_l->_pos.y + 1e-3 ;
+		}
+		else if(entity_l->_pos.y + ent_l->_move.y > state_p.getWorldSize())
+		{
+			updated_l = true;
+			ent_l->_move.y = state_p.getWorldSize() - entity_l->_pos.y ;
+		}
+	}
 	return updated_l;
 }
 
