@@ -3,7 +3,7 @@
 #include "logger/Logger.hh"
 #include "World.hh"
 #include "window/Window.hh"
-#include "sprite/Sprite.hh"
+#include "sprite/SpriteEntity.hh"
 #include "sprite/SpriteLibrary.hh"
 #include "panel/Panel.hh"
 #include "panel/DivinityPanel.hh"
@@ -40,7 +40,7 @@ void WorldUpdaterStepVisitor::spawn(octopus::Handle const &handle_p)
 	}
 	const octopus::EntityModel &model_l = entity_l._model;
 
-	Sprite * sprite_l = _lib.createSprite(handle_p, model_l._id, false);
+	SpriteEntity * sprite_l = _lib.createSpriteEntity(handle_p, model_l._id, false);
 	sprite_l->setPosition(to_double(entity_l._pos.x)*32., to_double(entity_l._pos.y)*32.);
 
 	_world._sprites[handle_p] = sprite_l;

@@ -12,6 +12,7 @@ struct BuildingModel;;
 namespace cuttlefish
 {
 class SpriteLibrary;
+class Sprite;
 
 /// @brief This clic mode enable selection with left clic
 /// and move clic with right clic if anything is selected

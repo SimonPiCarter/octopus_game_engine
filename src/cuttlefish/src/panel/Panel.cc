@@ -28,7 +28,7 @@ Panel::~Panel()
 	}
 }
 
-void Panel::refresh(Sprite const *sprite_p, octopus::State const &state_p)
+void Panel::refresh(SpriteEntity const *sprite_p, octopus::State const &state_p)
 {
 	const octopus::Entity * selected_l = nullptr;
 	if(sprite_p)

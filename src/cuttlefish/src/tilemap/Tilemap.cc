@@ -53,7 +53,7 @@ void Tilemap::generate()
         {
             _tiles[i][j] = dist_l(_gen);
 
-            _sprites.push_back(_lib.createSprite(0, _idTiles, false));
+            _sprites.push_back(_lib.createSprite(_idTiles, false));
             _sprites.back()->setState(_tiles[i][j]);
             _sprites.back()->setPosition(template_l.width*template_l.scale*i, template_l.height*template_l.scale*j);
 

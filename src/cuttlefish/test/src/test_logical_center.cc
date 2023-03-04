@@ -61,36 +61,36 @@ int main( int argc, char* args[] )
 	spriteLib_l.registerSpriteTemplate("tree", window_l.loadTexture("resources/tree.png"), 2., 29, 106, 64, 128, {1}, {1.}, -1);
 
 
-	Sprite * ref_l = spriteLib_l.createSprite(0, "building", true);
+	Sprite * ref_l = spriteLib_l.createSprite("building", true);
 	ref_l->setPosition(128, 128);
-	Sprite * test_l = spriteLib_l.createSprite(0, "building", true);
+	Sprite * test_l = spriteLib_l.createSprite("building", true);
 	test_l->setPosition(256, 128);
-	Sprite * tree_l = spriteLib_l.createSprite(0, "tree", true);
+	Sprite * tree_l = spriteLib_l.createSprite("tree", true);
 	tree_l->setPosition(256, 128);
 
-	Sprite * ref0_l = spriteLib_l.createSprite(0, "building", true);
+	Sprite * ref0_l = spriteLib_l.createSprite("building", true);
 	ref0_l->setPosition(128, 256);
-	Sprite * test0_l = spriteLib_l.createSprite(0, "building_shifted_0", true);
+	Sprite * test0_l = spriteLib_l.createSprite("building_shifted_0", true);
 	test0_l->setPosition(256, 256);
 
-	Sprite * ref64_l = spriteLib_l.createSprite(0, "building", true);
+	Sprite * ref64_l = spriteLib_l.createSprite("building", true);
 	ref64_l->setPosition(128, 512);
-	Sprite * test64_l = spriteLib_l.createSprite(0, "building_shifted_64", true);
+	Sprite * test64_l = spriteLib_l.createSprite("building_shifted_64", true);
 	test64_l->setPosition(256, 512);
 
-	Sprite * ref2_l = spriteLib_l.createSprite(0, "building_2", true);
+	Sprite * ref2_l = spriteLib_l.createSprite("building_2", true);
 	ref2_l->setPosition(512+256, 128);
-	Sprite * test2_l = spriteLib_l.createSprite(0, "building_2", true);
+	Sprite * test2_l = spriteLib_l.createSprite("building_2", true);
 	test2_l->setPosition(512+256, 128);
 
-	Sprite * ref2_0_l = spriteLib_l.createSprite(0, "building_2", true);
+	Sprite * ref2_0_l = spriteLib_l.createSprite("building_2", true);
 	ref2_0_l->setPosition(512+256, 300);
-	Sprite * test2_0_l = spriteLib_l.createSprite(0, "building_2_shifted_0", true);
+	Sprite * test2_0_l = spriteLib_l.createSprite("building_2_shifted_0", true);
 	test2_0_l->setPosition(512+256, 300);
 
-	Sprite * ref2_64_l = spriteLib_l.createSprite(0, "building_2", true);
+	Sprite * ref2_64_l = spriteLib_l.createSprite("building_2", true);
 	ref2_64_l->setPosition(512+256, 512);
-	Sprite * test2_64_l = spriteLib_l.createSprite(0, "building_2_shifted_64", true);
+	Sprite * test2_64_l = spriteLib_l.createSprite("building_2_shifted_64", true);
 	test2_64_l->setPosition(512+256, 512);
 
 	auto last_l = std::chrono::steady_clock::now();

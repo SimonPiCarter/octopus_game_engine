@@ -1,6 +1,7 @@
 #include "SpriteLibrary.hh"
 
 #include "sprite/Sprite.hh"
+#include "sprite/SpriteEntity.hh"
 
 namespace cuttlefish
 {
@@ -18,9 +19,25 @@ void SpriteLibrary::registerSpriteTemplate(std::string const &id_p, Texture cons
 	_mapTemplates[id_p].blueprint = blueprintState_p;
 }
 
-Sprite * SpriteLibrary::createSprite(octopus::Handle const &handle_p, std::string const &id_p, bool absolute_p) const
+Sprite * SpriteLibrary::createSprite(std::string const &id_p, bool absolute_p) const
 {
-	return new Sprite(handle_p,
+	return new Sprite(
+			_mapTemplates.at(id_p).texture,
+			_mapTemplates.at(id_p).scale,
+			_mapTemplates.at(id_p).logX,
+			_mapTemplates.at(id_p).logY,
+			_mapTemplates.at(id_p).width,
+			_mapTemplates.at(id_p).height,
+			_mapTemplates.at(id_p).nbFramesPerState,
+			_mapTemplates.at(id_p).timePerFramePerState,
+			absolute_p
+		);
+}
+
+SpriteEntity * SpriteLibrary::createSpriteEntity(octopus::Handle const &handle_p, std::string const &id_p, bool absolute_p) const
+{
+	return new SpriteEntity(
+			handle_p,
 			_mapTemplates.at(id_p).texture,
 			_mapTemplates.at(id_p).scale,
 			_mapTemplates.at(id_p).logX,

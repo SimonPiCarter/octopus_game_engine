@@ -90,7 +90,7 @@ void StatsPanel::refresh(Window &window_p, octopus::State const &state_p)
 		for(auto &&pair_l : _selection._spritesPerModel)
 		{
 			std::string const &id_l = pair_l.first;
-			std::set<Sprite *, SpriteComparator> const &set_l = pair_l.second;
+			std::set<SpriteEntity *, SpriteComparator> const &set_l = pair_l.second;
 			if(set_l.empty())
 			{
 				continue;

@@ -9,23 +9,17 @@
 namespace cuttlefish
 {
 
-Sprite::Sprite(octopus::Handle const &ent_p, Texture const * texture_p, double scale_p, int logX_p, int logY_p,
+Sprite::Sprite(Texture const * texture_p, double scale_p, int logX_p, int logY_p,
 	int width_p, int height_p, std::vector<int> const &nbFramesPerState_p, std::vector<double> const &timePerFramePerState_p, bool absolute_p)
 	: Picture(texture_p, width_p, height_p, nbFramesPerState_p, timePerFramePerState_p)
 	, _scale(scale_p)
 	, _logicalX(logX_p * (64./width_p))
 	, _logicalY(logY_p * (64./height_p))
 	, _absolute(absolute_p)
-	, _handle(ent_p)
 {
 	_dest.w = 64 * _scale;
 	double ratio_l = double(_height)/double(_width);
 	_dest.h = 64 * ratio_l * _scale;
-}
-
-octopus::Handle const & Sprite::getHandle() const
-{
-	return _handle;
 }
 
 void Sprite::setPosition(double x, double y)
