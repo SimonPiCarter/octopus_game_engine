@@ -116,7 +116,7 @@ void WorldUpdaterStepVisitor::visit(octopus::EntityHitPointChangeStep const *ste
 	}
 	else
 	{
-		_world._sprites[steppable_p->_handle]->setLifePercent(hp_l/ent_l->_model._hpMax);
+		_world._sprites[steppable_p->_handle]->setLifePercent(100*hp_l/ent_l->_model._hpMax);
 	}
 }
 
