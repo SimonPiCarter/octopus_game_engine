@@ -38,6 +38,7 @@ TEST(resourceSpentSimultaneousTest, simple_ok)
 
 	BuildingModel buildingModel_l { true, 1., 10. };
 	buildingModel_l._isBuilding = true;
+	buildingModel_l._unitModels.push_back(&unitModel_l);
 
 	Building production1_l({1,3}, true, buildingModel_l);
 	Building production2_l({1,5}, true, buildingModel_l);
@@ -96,6 +97,7 @@ TEST(resourceSpentSimultaneousTest, simple_ko)
 
 	BuildingModel buildingModel_l { true, 1., 10. };
 	buildingModel_l._isBuilding = true;
+	buildingModel_l._unitModels.push_back(&unitModel_l);
 
 	Building production1_l({1,3}, true, buildingModel_l);
 	Building production2_l({1,5}, true, buildingModel_l);
