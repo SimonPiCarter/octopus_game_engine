@@ -236,6 +236,9 @@ void runGame(Window &window_p)
 	// true if the minimap has been clicked
 	bool minimapClicked_l = false;
 
+	// true if a clic was started outside of UI elemnts
+	bool clicStartedOnScreen_l = false;
+
 	// Text for resource
 	Text textResource_l(&window_p, {0,0,0}, 250, 0);
 	Text textDivLvl_l(&window_p, {0,0,0}, 500, 0);
@@ -346,20 +349,12 @@ void runGame(Window &window_p)
 				&& (!divPanel_l.getBackground()->isInside(window_p, e.button.x, e.button.y) || !divPanel_l.isActive()))
 				{
 					currentClicMode_l->handleMouseDown(e);
+					clicStartedOnScreen_l = true;
 				}
 			}
 			if (e.type == SDL_MOUSEBUTTONUP)
 			{
-				if(minimap_l.isInside(e.button.x, e.button.y))
-				{
-					if(e.button.button == SDL_BUTTON_RIGHT)
-					{
-						// handle move command using right clic handle of the standard clic mode
-						octopus::Vector pos_l = getPosition(e.button.x, e.button.y, minimap_l, window_p, state_l.getWorldSize());
-						standardClicMode_l.handleRightClic(pos_l, selection_l, world_l, panel_l, window_p, state_l, controller_l, nullptr);
-					}
-				}
-				else if(divPanel_l.isActive())
+				if(divPanel_l.isActive())
 				{
 					std::pair<bool, octopus::DivinityType> option_l = divPanel_l.getOption(window_p, e.button.x, e.button.y);
 					if(option_l.first)
@@ -367,6 +362,15 @@ void runGame(Window &window_p)
 						octopus::PlayerChoseDivinityCommand * command_l = new octopus::PlayerChoseDivinityCommand(0, option_l.second);
 						controller_l.commitCommand(command_l);
 						divPanel_l.popOptionLayer();
+					}
+				}
+				else if(minimap_l.isInside(e.button.x, e.button.y) && !clicStartedOnScreen_l)
+				{
+					if(e.button.button == SDL_BUTTON_RIGHT)
+					{
+						// handle move command using right clic handle of the standard clic mode
+						octopus::Vector pos_l = getPosition(e.button.x, e.button.y, minimap_l, window_p, state_l.getWorldSize());
+						standardClicMode_l.handleRightClic(pos_l, selection_l, world_l, panel_l, window_p, state_l, controller_l, nullptr);
 					}
 				}
 				else
@@ -394,11 +398,13 @@ void runGame(Window &window_p)
 							}
 						}
 					}
-					// else if(panel_l.getBackground()->isInside(window_p, e.button.x, e.button.y)
-					// 	 || statsPanel_l.getBackground()->isInside(window_p, e.button.x, e.button.y))
-					// {
-					// 	// NA (skip selection and move command)
-					// }
+					//
+					else if((panel_l.getBackground()->isInside(window_p, e.button.x, e.button.y)
+						 || statsPanel_l.getBackground()->isInside(window_p, e.button.x, e.button.y))
+						 && !clicStartedOnScreen_l)
+					{
+						// NA (skip selection and move command)
+					}
 					else
 					{
 						if( currentClicMode_l->handleMouseUp(e, selection_l, world_l, panel_l, window_p, state_l, controller_l) )
@@ -409,6 +415,7 @@ void runGame(Window &window_p)
 					}
 				}
 				minimapClicked_l = false;
+				clicStartedOnScreen_l = false;
 			}
 			if( e.type == SDL_KEYDOWN)
 			{
