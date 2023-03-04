@@ -51,12 +51,12 @@ namespace octopus
 }
 
 template<typename T>
-octopus::LoggerVoider &operator<<(octopus::LoggerVoider &voider_p, T)
+octopus::LoggerVoider operator<<(octopus::LoggerVoider voider_p, T)
 {
 	return voider_p;
 }
 
 // to handle std::endl
-octopus::LoggerVoider &operator<<(octopus::LoggerVoider& voider_p, std::ostream& (*pf)(std::ostream&));
+octopus::LoggerVoider operator<<(octopus::LoggerVoider voider_p, std::ostream& (*pf)(std::ostream&));
 
 #endif

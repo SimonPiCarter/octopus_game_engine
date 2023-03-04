@@ -30,7 +30,7 @@ DebugLoggerHandler Logger::getDebug()
 
 }
 
-octopus::LoggerVoider &operator<<(octopus::LoggerVoider& voider_p, std::ostream& (*pf)(std::ostream&))
+octopus::LoggerVoider operator<<(octopus::LoggerVoider voider_p, std::ostream& (*pf)(std::ostream&))
 {
 	return voider_p;
 }
