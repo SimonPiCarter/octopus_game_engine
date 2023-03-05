@@ -55,7 +55,7 @@ int main( int argc, char* args[] )
 	Picture * button1_l = new Picture(window_l.loadTexture("resources/button.png"), 256, 64, {1, 1 ,1}, {1, 1, 1});
 	Text * text1_l = new Text(&window_l, {0, 0, 0}, 0, 0);
 	text1_l->setText("Play");
-	menu_l.addButton(button1_l, text1_l, std::bind(runGame, std::ref(window_l)));
+	menu_l.addButton(button1_l, text1_l, std::bind(fas::runGame, std::ref(window_l)));
 
 	Picture * button2_l = new Picture(window_l.loadTexture("resources/button.png"), 256, 64, {1, 1 ,1}, {1, 1, 1});
 	Text * text2_l = new Text(&window_l, {0, 0, 0}, 0, 0);

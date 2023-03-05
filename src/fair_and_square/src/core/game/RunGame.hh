@@ -5,8 +5,14 @@ namespace cuttlefish
 {
     class Window;
 
-    void runGame(Window &window_p);
 } // namespace cuttlefish
+
+
+
+namespace fas
+{
+    void runGame(cuttlefish::Window &window_p);
+} // namespace fas
 
 
 

@@ -13,7 +13,9 @@
 #include "library/levels/WaveLevel.hh"
 #include "core/game/loader/ResourceLoader.hh"
 
-namespace cuttlefish
+using namespace cuttlefish;
+
+namespace fas
 {
 
 void runGame(Window &window_p)
