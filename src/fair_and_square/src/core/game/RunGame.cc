@@ -18,7 +18,7 @@ using namespace cuttlefish;
 namespace fas
 {
 
-void runGame(Window &window_p)
+void runGame(Window &window_p, unsigned long stepCount_p, unsigned long player_p)
 {
 	unsigned long gridSize_l = 50;
 	unsigned long gridPointSize_l = 5;
@@ -31,7 +31,7 @@ void runGame(Window &window_p)
 	World world_l;
 
 	octopus::Library lib_l;
-	std::list<octopus::Steppable *> spawners_l = WaveLevelSteps(lib_l, 10, 3*60*100);
+	std::list<octopus::Steppable *> spawners_l = WaveLevelSteps(lib_l, 10, stepCount_p, player_p);
 	std::list<octopus::Command *> commands_l = WaveLevelCommands(lib_l);
 
 	octopus::Controller controller_l(spawners_l, 0.01, commands_l, gridPointSize_l, gridSize_l);

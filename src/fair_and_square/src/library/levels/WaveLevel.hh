@@ -14,18 +14,19 @@ namespace octopus
 } // namespace octopus
 
 
-std::list<octopus::Steppable *> WaveLevelSteps(octopus::Library &lib_p, unsigned long waveCount_p, unsigned long stepCount_p);
+std::list<octopus::Steppable *> WaveLevelSteps(octopus::Library &lib_p, unsigned long waveCount_p, unsigned long stepCount_p, unsigned long player_p);
 std::list<octopus::Command *> WaveLevelCommands(octopus::Library &lib_p);
 
 class WaveSpawn : public octopus::OneShotTrigger
 {
 public:
-	WaveSpawn(octopus::Listener * listener_p, octopus::Library const &lib_p, unsigned long wave_p, unsigned long stepWait_p, unsigned long finalWave_p);
+	WaveSpawn(octopus::Listener * listener_p, octopus::Library const &lib_p, unsigned long wave_p, unsigned long stepWait_p, unsigned long finalWave_p, unsigned long player_p);
 
 	virtual void trigger(octopus::State const &state_p, octopus::Step &step_p, unsigned long) const override;
 
 private:
 	octopus::Library const &_lib;
+	unsigned long const _player;
 	unsigned long const _wave;
 
 	unsigned long const _stepWait;
