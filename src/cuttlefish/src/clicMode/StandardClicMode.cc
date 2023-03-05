@@ -3,11 +3,13 @@
 // octopus
 #include "command/unit/UnitDropCommand.hh"
 #include "command/unit/UnitHarvestCommand.hh"
+#include "command/entity/EntityAttackCommand.hh"
 #include "command/entity/EntityBuildingCommand.hh"
 #include "controller/Controller.hh"
 #include "state/entity/Building.hh"
 #include "state/entity/Entity.hh"
 #include "state/entity/Unit.hh"
+#include "state/player/Player.hh"
 #include "state/State.hh"
 
 // cuttlefish
@@ -123,11 +125,13 @@ void StandardClicMode::handleRightClic(octopus::Vector const &clicWorldPosition_
 	{
 		const octopus::Entity * cur_l = state_p.getEntity(selected_l->getHandle());
 		const octopus::Unit * unit_l = dynamic_cast<const octopus::Unit *>(cur_l);
+		const octopus::Player * player_l = state_p.getPlayer(cur_l->_player);
 		bool isStatic_l = cur_l->_model._isStatic;
 		if(!isStatic_l)
 		{
 			const octopus::Entity * target_l = nullptr;
 			const octopus::Building * targetBuilding_l = nullptr;
+			const octopus::Player * targetPlayer_l = nullptr;
 			if(sprite_p)
 			{
 				target_l = state_p.getEntity(sprite_p->getHandle());
@@ -135,6 +139,7 @@ void StandardClicMode::handleRightClic(octopus::Vector const &clicWorldPosition_
 				{
 					targetBuilding_l = dynamic_cast<const octopus::Building *>(target_l);
 				}
+				targetPlayer_l = state_p.getPlayer(target_l->_player);
 			}
 			if(target_l
 			&& target_l->_model._isResource)
@@ -147,6 +152,16 @@ void StandardClicMode::handleRightClic(octopus::Vector const &clicWorldPosition_
 					0,
 					{clicWorldPosition_p},
 					true
+				);
+				controller_p.commitCommand(command_l);
+			}
+			else if(target_l
+			&& player_l->_team != targetPlayer_l->_team)
+			{
+				octopus::EntityAttackCommand * command_l = new octopus::EntityAttackCommand(
+					selected_l->getHandle(),
+					selected_l->getHandle(),
+					sprite_p->getHandle()
 				);
 				controller_p.commitCommand(command_l);
 			}

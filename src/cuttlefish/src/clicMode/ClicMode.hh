@@ -32,7 +32,7 @@ public:
 
 	/// @brief handle mouse button down should only be used to store start of clic
 	virtual void handleMouseDown(SDL_Event const &) {}
-	/// @brief used to reset internal state based on events
+	/// @brief used to reset internal state based on events, called on every events
 	/// @note should not handle clics here
 	virtual void reset(SDL_Event const &) {}
 
