@@ -11,7 +11,9 @@ namespace cuttlefish
 
 namespace fas
 {
-    void runGame(cuttlefish::Window &window_p, unsigned long stepCount_p, unsigned long player_p);
+    void runWave(cuttlefish::Window &window_p, unsigned long stepCount_p, unsigned long player_p);
+
+    void runArena(cuttlefish::Window &window_p);
 } // namespace fas
 
 
