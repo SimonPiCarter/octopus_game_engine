@@ -1,5 +1,5 @@
-#ifndef __level1__
-#define __level1__
+#ifndef __RunGame__
+#define __RunGame__
 
 namespace cuttlefish
 {
