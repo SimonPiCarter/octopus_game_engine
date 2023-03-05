@@ -24,10 +24,10 @@ bool collision(Vector const &posA_p, Vector const &posB_p, Fixed const &rayA_p, 
 {
 	Fixed const ray_l = rayA_p + rayB_p;
 	// try quick win
-	if(posA_p.x - posB_p.x > ray_l
-	|| posB_p.x - posA_p.x > ray_l
-	|| posA_p.y - posB_p.y > ray_l
-	|| posB_p.y - posA_p.y > ray_l)
+	if(posA_p.x - posB_p.x > ray_l - 0.01
+	|| posB_p.x - posA_p.x > ray_l - 0.01
+	|| posA_p.y - posB_p.y > ray_l - 0.01
+	|| posB_p.y - posA_p.y > ray_l - 0.01)
 	{
 		return false;
 	}
@@ -39,7 +39,7 @@ bool collision(Vector const &posA_p, Vector const &posB_p, Fixed const &rayA_p, 
 	Fixed squareLength_l = square_length(axis_l);
 	Fixed squareRay_l = ray_l * ray_l;
 
-	return squareLength_l < squareRay_l;
+	return squareLength_l < squareRay_l - 0.01;
 }
 
 struct HandleHash
