@@ -27,8 +27,12 @@ class World;
 class Minimap
 {
 public:
-	Minimap(Window &window_p, int x, int y, int w, int h, Tilemap &tilemap_p, unsigned long worldSize_p, std::vector<std::string> const &vec_p);
+	Minimap(Window &window_p, int x, int y, int w, int h, std::vector<std::string> const &vec_p);
 	~Minimap();
+
+	/// @brief generate texture base on tile map
+	/// @note must be called after tilemap generation
+	void generate(Window &window_p, Tilemap &tilemap_p, unsigned long worldSize_p);
 
 	void render(octopus::State const &state_p, World const &world_p, Window &window_p);
 

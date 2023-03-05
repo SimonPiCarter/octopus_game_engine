@@ -16,11 +16,19 @@ namespace cuttlefish
 {
 
 Minimap::Minimap(Window &window_p, int x, int y, int w, int h,
-				Tilemap &tilemap_p, unsigned long worldSize_p, std::vector<std::string> const &map_p)
+				std::vector<std::string> const &map_p)
 	: _x(x), _y(y), _w(w), _h(h), _vecPlayerToTexture(map_p)
 {
 	_cadre = window_p.loadTexture("resources/background.png");
+}
 
+Minimap::~Minimap()
+{
+	SDL_FreeSurface(_fogSurface);
+}
+
+void Minimap::generate(Window &window_p, Tilemap &tilemap_p, unsigned long worldSize_p)
+{
 	int resolution_l = 1024;
 	_background.createBlank(resolution_l, resolution_l, window_p.getRenderer());
 
@@ -33,10 +41,6 @@ Minimap::Minimap(Window &window_p, int x, int y, int w, int h,
 	_fogSurface = SDL_CreateRGBSurfaceWithFormat(0, worldSize_p, worldSize_p, 32, SDL_PIXELFORMAT_RGBA8888);
 }
 
-Minimap::~Minimap()
-{
-	SDL_FreeSurface(_fogSurface);
-}
 
 void Minimap::render(octopus::State const &state_p, World const &world_p, Window &window_p)
 {

@@ -17,7 +17,7 @@ RessourceLoader::RessourceLoader(cuttlefish::Window &window_p, unsigned long ful
 		window_p.loadTexture("resources/background.png"))
 	, _spriteLib()
 	, _tilemap(fullWorldSize_p, _spriteLib, "tiles", "details")
-	, _minimap(window_p, 0, window_p.getHeight()-250, 250, 250, _tilemap, fullWorldSize_p, {"resources/me.png", "resources/enemy.png", "resources/ally.png"})
+	, _minimap(window_p, 0, window_p.getHeight()-250, 250, 250, {"resources/me.png", "resources/enemy.png", "resources/ally.png"})
 {
 	_panel.addSpriteInfo("worker", 2, 1);
 	_panel.addSpriteInfo("command_center", 1, 0);
@@ -67,6 +67,7 @@ RessourceLoader::RessourceLoader(cuttlefish::Window &window_p, unsigned long ful
 	_spriteLib.registerSpriteTemplate("circle", window_p.loadTexture("resources/fair_and_square/circle.png"), 0.5, 16, 16, 32, 32, {8, 8}, {0.25, 0.5/7.}, 1);
 
 	_tilemap.generate();
+	_minimap.generate(window_p, _tilemap, fullWorldSize_p);
 }
 
 } // namespace fas

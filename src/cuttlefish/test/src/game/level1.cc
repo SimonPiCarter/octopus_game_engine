@@ -282,7 +282,8 @@ void runLevel1(Window &window_p)
 	Tilemap tilemap_l(fullWorldSize_l, spriteLib_l, "tiles", "details");
 	tilemap_l.generate();
 
-	Minimap minimap_l(window_p, 0, window_p.getHeight()-window_p.getWidth()/4, window_p.getWidth()/4, window_p.getWidth()/4, tilemap_l, fullWorldSize_l, {"resources/me.png"});
+	Minimap minimap_l(window_p, 0, window_p.getHeight()-window_p.getWidth()/4, window_p.getWidth()/4, window_p.getWidth()/4, {"resources/me.png"});
+	minimap_l.generate(window_p, tilemap_l, fullWorldSize_l);
 
 	// true if the minimap has been clicked
 	bool minimapClicked_l = false;
