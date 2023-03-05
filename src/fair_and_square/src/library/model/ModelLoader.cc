@@ -26,7 +26,7 @@ void createWorker(Library &lib_p)
     unitModel_l._armor = 0;
     unitModel_l._range = 3.;
     unitModel_l._fullReload = 500.;
-    unitModel_l._windup = 100.;
+    unitModel_l._windup = 10.;
 
     lib_p.registerUnitModel("worker", unitModel_l);
 }
@@ -43,7 +43,7 @@ void createSquare(Library &lib_p)
     unitModel_l._armor = 0;
     unitModel_l._range = 0.5;
     unitModel_l._fullReload = 100.;
-    unitModel_l._windup = 50.;
+    unitModel_l._windup = 50;
 
     unitModel_l._bonusDamage["triangle"] = 5.;
 
@@ -61,8 +61,8 @@ void createTriangle(Library &lib_p)
     unitModel_l._damage = 5;
     unitModel_l._armor = 0;
     unitModel_l._range = 5;
-    unitModel_l._fullReload = 400.;
-    unitModel_l._windup = 50.;
+    unitModel_l._fullReload = 100.;
+    unitModel_l._windup = 50;
 
     unitModel_l._bonusDamage["circle"] = 5.;
 
@@ -80,8 +80,8 @@ void createCircle(Library &lib_p)
     unitModel_l._damage = 10;
     unitModel_l._armor = 3;
     unitModel_l._range = 0.1;
-    unitModel_l._fullReload = 400.;
-    unitModel_l._windup = 50.;
+    unitModel_l._fullReload = 100.;
+    unitModel_l._windup = 50;
 
     unitModel_l._bonusDamage["square"] = 10.;
 
