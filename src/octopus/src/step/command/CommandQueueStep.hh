@@ -4,6 +4,8 @@
 #include "state/Handle.hh"
 #include "step/Steppable.hh"
 
+#include <cstddef>
+
 namespace octopus
 {
 
