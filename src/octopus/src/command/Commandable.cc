@@ -6,6 +6,9 @@
 
 namespace octopus
 {
+Commandable::Commandable()
+{}
+
 Commandable::~Commandable()
 {}
 
@@ -33,12 +36,24 @@ void Commandable::runCommands(Step & step_p, State const &state_p, PathManager &
 		return;
 	}
 	CommandQueue::ConstQueueIterator it_l = _queue.getCurrentCommand();
+	if(_hasLastCommand && it_l != _queue.getEnd() && _lastCommand != it_l->_id)
+	{
+		CommandBundle const & cmd_l = _queue.getBundle(_lastCommand);
+		cmd_l._cmd->cleanUp(step_p, state_p, cmd_l._data);
+	}
 	// while we have commands and the front one is over go on
 	while(it_l != _queue.getEnd()
 	   && it_l->_cmd->applyCommand(step_p, state_p, it_l->_data, pathManager_p))
 	{
-		++it_l;
+		// clean up
+		it_l->_cmd->cleanUp(step_p, state_p, it_l->_data);
 		step_p.addSteppable(new CommandNextStep(_commandableHandle));
+		++it_l;
+	}
+	_hasLastCommand = true;
+	if(it_l != _queue.getEnd())
+	{
+		step_p.addSteppable(new CommandUpdateLastIdStep(_commandableHandle, _lastCommand, it_l->_id));
 	}
 }
 
@@ -60,6 +75,11 @@ CommandQueue &Commandable::getQueue()
 const CommandQueue &Commandable::getQueue() const
 {
 	return _queue;
+}
+
+void Commandable::setIdLast(size_t id_p)
+{
+	_lastCommand = id_p;
 }
 
 

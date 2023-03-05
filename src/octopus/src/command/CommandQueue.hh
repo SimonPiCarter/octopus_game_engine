@@ -13,6 +13,7 @@ struct CommandBundle
 {
 	Command * _cmd {nullptr};
 	CommandData * _data {nullptr};
+	size_t _id;
 };
 
 /// @brief This class represent a command queue
@@ -59,6 +60,9 @@ public:
 	void queueCommandLast(Command *cmd_p);
 	/// @brief this will just remove the last command of the queue
 	void unqueueCommandLast(Command *cmd_p);
+
+	/// @brief Get the bundle associated to the id
+	CommandBundle const &getBundle(size_t id_p) const;
 
 protected:
 	/// @brief list of all actions in the command queue

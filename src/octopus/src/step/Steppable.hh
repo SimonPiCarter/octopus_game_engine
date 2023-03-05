@@ -50,6 +50,7 @@ namespace octopus
 	class CommandSetPositionFromStep;
 	class CommandSpawnStep;
 	class CommandStorageStep;
+	class CommandUpdateLastIdStep;
 	class CommandUpdateLastPosStep;
 	class CommandWindUpDiffStep;
 	class EntityAttackStep;
@@ -120,6 +121,7 @@ namespace octopus
 			virtual void visit(CommandSpawnStep const *steppable_p) = 0;
 			virtual void visit(CommandStorageStep const *steppable_p) = 0;
 			virtual void visit(CommandUpdateLastPosStep const *steppable_p) = 0;
+			virtual void visit(CommandUpdateLastIdStep const *) = 0;
 			virtual void visit(CommandWindUpDiffStep const *steppable_p) = 0;
 			virtual void visit(EntityAttackStep const *steppable_p) = 0;
 			virtual void visit(EntityBuffStep const *steppable_p) = 0;

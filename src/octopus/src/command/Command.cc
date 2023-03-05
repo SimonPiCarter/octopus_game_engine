@@ -10,4 +10,7 @@ void Command::registerCommand(Step &step_p, State const &)
 {
 	step_p.addSteppable(new CommandSpawnStep(this));
 }
+
+void Command::cleanUp(Step & , State const &, CommandData const *) const {}
+
 }

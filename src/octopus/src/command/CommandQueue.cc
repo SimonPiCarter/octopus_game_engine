@@ -2,6 +2,7 @@
 #include "command/Command.hh"
 
 #include <stdexcept>
+#include <string>
 
 namespace octopus
 {
@@ -80,7 +81,7 @@ void CommandQueue::unqueueCommand(Command *cmd_p)
 void CommandQueue::queueCommandLast(Command *cmd_p)
 {
 	bool isEmpty_l = _commandQueue.empty() || getCurrentCommand() == getEnd();
-	_commandQueue.push_back({cmd_p, cmd_p->newData()});
+	_commandQueue.push_back({cmd_p, cmd_p->newData(), _commandQueue.size()});
 	// if context queue was empty
 	if(isEmpty_l)
 	{
@@ -103,6 +104,18 @@ void CommandQueue::unqueueCommandLast(Command *cmd_p)
 	{
 		_contextList.pop_front();
 	}
+}
+
+CommandBundle const &CommandQueue::getBundle(size_t id_p) const
+{
+	for(CommandBundle const & bundle_l: _commandQueue)
+	{
+		if(bundle_l._id == id_p)
+		{
+			return bundle_l;
+		}
+	}
+	throw std::logic_error("CommandQueue could not get bundle with id "+std::to_string(id_p));
 }
 
 } /// octopus

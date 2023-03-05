@@ -21,6 +21,7 @@ class PathManager;
 class Commandable
 {
 public:
+	Commandable();
 	virtual ~Commandable();
 
 	/// @brief add the command to the queue
@@ -40,9 +41,13 @@ public:
 	CommandQueue & getQueue();
 	const CommandQueue & getQueue() const;
 
+	void setIdLast(size_t id_p);
+
 	Handle _commandableHandle {0};
 private:
 	CommandQueue _queue;
+	bool _hasLastCommand {false};
+	size_t _lastCommand {0};
 };
 
 } // namespace octopus

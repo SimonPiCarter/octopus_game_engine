@@ -66,7 +66,28 @@ public:
 	}
 
 private:
-	Handle _handle {0};
+	Handle const _handle {0};
+};
+
+class CommandUpdateLastIdStep : public Steppable
+{
+public:
+	CommandUpdateLastIdStep(Handle const &handle_p, size_t oldIdLast_p, size_t newIdLast_p)
+		: _handle(handle_p), _oldIdLast(oldIdLast_p), _newIdLast(newIdLast_p) {}
+
+	virtual void apply(State &state_p) const override;
+	virtual void revert(State &state_p) const override;
+
+	virtual bool isNoOp() const override { return _oldIdLast == _newIdLast; }
+	virtual void visit(SteppableVisitor * visitor_p) const override
+	{
+		visitor_p->visit(this);
+	}
+
+private:
+	Handle const _handle {0};
+	size_t const _oldIdLast {0};
+	size_t const _newIdLast {0};
 };
 
 

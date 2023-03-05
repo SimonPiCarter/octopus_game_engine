@@ -40,6 +40,7 @@ public:
     virtual void visit(CommandSetPositionFromStep const *) {}
     virtual void visit(CommandSpawnStep const *) {}
     virtual void visit(CommandStorageStep const *) {}
+    virtual void visit(CommandUpdateLastIdStep const *) {}
     virtual void visit(CommandUpdateLastPosStep const *) {}
     virtual void visit(CommandWindUpDiffStep const *) {}
     virtual void visit(EntityAttackStep const *) {}

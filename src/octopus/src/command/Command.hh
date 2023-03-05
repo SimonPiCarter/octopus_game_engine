@@ -28,6 +28,14 @@ public:
 	/// @return true if command is over
 	virtual bool applyCommand(Step & step_p, State const &state_p, CommandData const * data_p, PathManager &pathManager_p) const = 0;
 
+	/// @brief compile clean up for command (may reset some state values for example)
+	/// is useful when command are interupted
+	/// @param step_p push actions in this step
+	/// @param state_p the state to use to get information
+	/// @param data_p date of the command
+	/// @note this will only be used on started commands when going to next command
+	virtual void cleanUp(Step & step_p, State const &state_p, CommandData const * data_p) const;
+
 	/// @brief create data supporting the command actions
 	virtual CommandData * newData() const = 0;
 

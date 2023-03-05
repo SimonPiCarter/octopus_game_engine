@@ -48,6 +48,7 @@ public:
 	virtual void visit(CommandMoveStepSinceUpdateIncrementStep const *) {}
 	virtual void visit(CommandNewTargetStep const *) {}
 	virtual void visit(CommandNextStep const *) {}
+	virtual void visit(CommandUpdateLastIdStep const *) override {}
 	virtual void visit(CommandResourceChangeStep const *) {}
 	virtual void visit(CommandSetPositionFromStep const *) {}
 	virtual void visit(CommandSpawnStep const *) {}

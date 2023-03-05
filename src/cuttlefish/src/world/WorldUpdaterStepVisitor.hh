@@ -59,6 +59,7 @@ public:
 	virtual void visit(octopus::CommandMoveStepSinceUpdateIncrementStep const *) {}
 	virtual void visit(octopus::CommandNewTargetStep const *) override {}
 	virtual void visit(octopus::CommandNextStep const *) override {}
+	virtual void visit(octopus::CommandUpdateLastIdStep const *) override {}
 	virtual void visit(octopus::CommandResourceChangeStep const *) override {}
 	virtual void visit(octopus::CommandSetPositionFromStep const *) override {}
 	virtual void visit(octopus::CommandSpawnStep const *) override {}
