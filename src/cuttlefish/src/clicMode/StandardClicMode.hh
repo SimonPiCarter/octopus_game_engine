@@ -1,6 +1,7 @@
 #ifndef __StandardClicMode__
 #define __StandardClicMode__
 
+#include <chrono>
 #include "ClicMode.hh"
 
 namespace octopus
@@ -52,6 +53,18 @@ public:
 private:
 	int _downX {-1};
 	int _downY {-1};
+
+	/// @brief check if box is buig enough to trigger box selection
+	bool isBoxEnough(int x, int y) const;
+
+	/// @brief check if double clic
+	/// @return true if time between two calls of this is small enough
+	/// @note cannot be const because it will update last clic time
+	bool isDoubleClic();
+	std::chrono::time_point<std::chrono::steady_clock> lastCallForDoubleClic_l;
+
+	/// @brief last clicked sprite for doubl clic handlin
+	SpriteEntity * _lastCickedSprite {nullptr};
 };
 
 } // namespace cuttlefish

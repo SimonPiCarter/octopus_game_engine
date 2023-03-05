@@ -37,11 +37,16 @@ bool StandardClicMode::handleMouseUp(SDL_Event const & e, Selection &selection_p
 	{
 		add_l = true;
 	}
+	bool all_l = false;
+	if(KMOD_CTRL & SDL_GetModState())
+	{
+		all_l = true;
+	}
 
 	if(e.button.button == SDL_BUTTON_LEFT)
 	{
-		if(e.button.x != _downX
-		|| e.button.y != _downY)
+		// box selection
+		if(isBoxEnough(e.button.x , e.button.y))
 		{
 			std::list<SpriteEntity *> newSelection_l = world_p.getSprites(window_p, _downX, _downY, e.button.x, e.button.y);
 
@@ -72,14 +77,36 @@ bool StandardClicMode::handleMouseUp(SDL_Event const & e, Selection &selection_p
 		}
 		else if(sprite_l)
 		{
+			std::list<SpriteEntity *> sprites_l = {sprite_l};
+			octopus::Entity const * ref_l = state_p.getEntity(sprite_l->getHandle());
+			// check for double clic
+			if((isDoubleClic() && _lastCickedSprite == sprite_l)
+			|| all_l)
+			{
+				// add every same player same model to selection
+				std::list<SpriteEntity *> allSprites_l = world_p.getSprites(window_p, 0, 0, window_p.getWidth(), window_p.getHeight());
+				// check for model
+				for(SpriteEntity * spriteEnt_l : allSprites_l)
+				{
+					octopus::Entity const * ent_l = state_p.getEntity(spriteEnt_l->getHandle());
+					// compare pointer for faster comparison
+					if(&ent_l->_model == &ref_l->_model
+					&& ent_l->_player == ref_l->_player
+					&& ent_l != ref_l)
+					{
+						sprites_l.push_back(spriteEnt_l);
+					}
+				}
+			}
 			if(add_l)
 			{
-				addToSelection(selection_p, {sprite_l}, state_p);
+				addToSelection(selection_p, sprites_l, state_p);
 			}
 			else
 			{
-				replaceSelection(selection_p, {sprite_l}, state_p);
+				replaceSelection(selection_p, sprites_l, state_p);
 			}
+			_lastCickedSprite = sprite_l;
 		}
 		else
 		{
@@ -101,7 +128,7 @@ bool StandardClicMode::handleMouseUp(SDL_Event const & e, Selection &selection_p
 /// @brief display sprites handled in this clic mode
 void StandardClicMode::display(Window & window_p, double , int x, int y)
 {
-	if(_downX > 0 && _downY > 0)
+	if(_downX > 0 && _downY > 0 && isBoxEnough(x, y))
 	{
 		int lx = std::min(x, _downX);
 		int ly = std::min(y, _downY);
@@ -211,6 +238,30 @@ void StandardClicMode::handleRightClic(octopus::Vector const &clicWorldPosition_
 		}
 	}
 }
+
+bool StandardClicMode::isBoxEnough(int x, int y) const
+{
+	int lx = std::min(x, _downX);
+	int ly = std::min(y, _downY);
+	int ux = std::max(x, _downX);
+	int uy = std::max(y, _downY);
+
+	return ux-lx > 5
+		|| uy-ly > 5;
+}
+
+bool StandardClicMode::isDoubleClic()
+{
+	auto cur_l = std::chrono::steady_clock::now();
+	std::chrono::duration<long long, std::nano> elapsed_nano_seconds_l = cur_l - lastCallForDoubleClic_l;
+
+	/// should be 0.5 seconds
+	bool isIt_l = elapsed_nano_seconds_l.count() < 500000000;
+	lastCallForDoubleClic_l = cur_l;
+
+	return isIt_l;
+}
+
 
 } // namespace cuttlefish
 
