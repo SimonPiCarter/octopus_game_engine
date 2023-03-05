@@ -20,6 +20,11 @@ void SpriteLibrary::registerSpriteTemplate(std::string const &id_p, Texture cons
 	_mapTemplates[id_p].blueprint = blueprintState_p;
 }
 
+void SpriteLibrary::registerAltTextureForTemplate(std::string const &id_p, unsigned long player_p, Texture const * texture_p)
+{
+	_mapTemplates[id_p].mapTexturePerPlayer[player_p] = texture_p;
+}
+
 Sprite * SpriteLibrary::createSprite(std::string const &id_p, bool absolute_p) const
 {
 	return new Sprite(
@@ -35,11 +40,17 @@ Sprite * SpriteLibrary::createSprite(std::string const &id_p, bool absolute_p) c
 		);
 }
 
-SpriteEntity * SpriteLibrary::createSpriteEntity(octopus::Handle const &handle_p, std::string const &id_p, bool hpBar_p) const
+SpriteEntity * SpriteLibrary::createSpriteEntity(octopus::Handle const &handle_p, std::string const &id_p, bool hpBar_p, unsigned long player_p) const
 {
+	Texture const *texture_l = _mapTemplates.at(id_p).texture;
+	if(_mapTemplates.at(id_p).mapTexturePerPlayer.find(player_p) != _mapTemplates.at(id_p).mapTexturePerPlayer.end()
+	&& _mapTemplates.at(id_p).mapTexturePerPlayer.at(player_p))
+	{
+		texture_l = _mapTemplates.at(id_p).mapTexturePerPlayer.at(player_p);
+	}
 	return new SpriteEntity(
 			handle_p,
-			_mapTemplates.at(id_p).texture,
+			texture_l,
 			_hpBarBackground && hpBar_p?new Picture(_hpBarBackground, _hpBarFilling->getWidth(), _hpBarFilling->getHeight(), {1}, {1}):nullptr,			// optional pictures
 			_hpBarFilling && hpBar_p?new Picture(_hpBarFilling, _hpBarFilling->getWidth(), _hpBarFilling->getHeight(), {1}, {1}):nullptr,				// optional pictures
 			_mapTemplates.at(id_p).scale,
