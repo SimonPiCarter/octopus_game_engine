@@ -8,6 +8,7 @@
 #include <sstream>
 
 // cuttlefish
+#include "clicMode/AttackMoveClicMode.hh"
 #include "clicMode/BuildClicMode.hh"
 #include "clicMode/StandardClicMode.hh"
 #include "minimap/Minimap.hh"
@@ -436,6 +437,12 @@ void runGame(Window &window_p)
 						SpriteModel const * spriteModel_l = panel_l.getSpriteModelOnGrid(0, 1);
 						commandFromSpriteModel(spriteModel_l, state_l, spriteLib_l, selection_l, controller_l,
 							currentClicMode_l, standardClicMode_l);
+						break;
+					}
+					case SDLK_SPACE:
+					{
+						cleanClicMode(currentClicMode_l, &standardClicMode_l);
+						currentClicMode_l = new AttackMoveClicMode();
 						break;
 					}
 					case SDLK_0:
