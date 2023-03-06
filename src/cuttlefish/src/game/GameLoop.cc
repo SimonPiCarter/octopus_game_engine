@@ -260,7 +260,7 @@ void GameLoop::runLoop(Window &window_p)
 			{
 				if(_minimap.isInside(e.button.x, e.button.y))
 				{
-					if(e.button.button == SDL_BUTTON_LEFT)
+					if(e.button.button == SDL_BUTTON_LEFT && !dynamic_cast<AttackMoveClicMode *>(currentClicMode_l))
 					{
 						minimapClicked_l = true;
 						octopus::Vector pos_l = getCameraPosition(e.button.x, e.button.y, _minimap, window_p, state_l.getWorldSize());
@@ -295,6 +295,17 @@ void GameLoop::runLoop(Window &window_p)
 						// handle move command using right clic handle of the standard clic mode
 						octopus::Vector pos_l = getPosition(e.button.x, e.button.y, _minimap, window_p, state_l.getWorldSize());
 						standardClicMode_l.handleRightClic(pos_l, selection_l, _world, _panel, window_p, state_l, _controller, nullptr);
+					} else if(e.button.button == SDL_BUTTON_LEFT)
+					{
+						AttackMoveClicMode * atkClicMode_l = dynamic_cast<AttackMoveClicMode *>(currentClicMode_l);
+						if(atkClicMode_l)
+						{
+							octopus::Vector pos_l = getPosition(e.button.x, e.button.y, _minimap, window_p, state_l.getWorldSize());
+							atkClicMode_l->handleLeftClic(pos_l, selection_l, _world, _panel, window_p, state_l, _controller, nullptr);
+							// release attack mode after
+							cleanClicMode(currentClicMode_l, &standardClicMode_l);
+							currentClicMode_l = &standardClicMode_l;
+						}
 					}
 				}
 				else
