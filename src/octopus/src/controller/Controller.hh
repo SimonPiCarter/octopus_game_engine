@@ -79,7 +79,7 @@ public:
 	/// @brief increment ongoing step if necessary
 	/// increment back buffer for as much as required
 	/// perform internal swaps if necessary
-	void update(double elapsedTime_p);
+	unsigned long update(double elapsedTime_p);
 
 	/// @brief update and return the front state
 	/// only swap the buffer and front state if buffer state is more advanced than front state

@@ -203,8 +203,9 @@ bool Controller::loop_body()
 /// @brief increment ongoing step if necessary
 /// increment back buffer for as much as required
 /// perform internal swaps if necessary
-void Controller::update(double elapsedTime_p)
+unsigned long Controller::update(double elapsedTime_p)
 {
+	unsigned long steps_l = 0;
 	// lock to avoid overlap
 	std::lock_guard<std::mutex> lock_l(_mutex);
 
@@ -212,10 +213,12 @@ void Controller::update(double elapsedTime_p)
 	_overTime += elapsedTime_p;
 	while (_overTime >= _timePerStep)
 	{
+		++steps_l;
 		_overTime -= _timePerStep;
 		++_ongoingStep;
 		updateCommitedCommand();
 	}
+	return steps_l;
 }
 
 /// @brief update and return the front state

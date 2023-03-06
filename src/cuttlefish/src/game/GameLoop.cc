@@ -110,15 +110,14 @@ void controllerLoop(octopus::Controller &controller_p, bool const &over_p, bool 
 	auto last_l = std::chrono::steady_clock::now();
 	double elapsed_l = 0.;
 	double full_l = 0.;
-	double lostTime_l = 0.;
+	long updated_l = 0;
 	while(!over_p)
 	{
 		// if paused do not update controller
 		if(!paused_p)
 		{
 			// update controller
-			controller_p.update(std::min(0.01, elapsed_l));
-			lostTime_l += elapsed_l - std::min(0.01, elapsed_l);
+			updated_l += controller_p.update(std::min(0.01, elapsed_l));
 		}
 		while(!controller_p.loop_body()) {}
 
@@ -130,9 +129,9 @@ void controllerLoop(octopus::Controller &controller_p, bool const &over_p, bool 
 		full_l += elapsed_l;
 		if(full_l > 1.)
 		{
+			ratio_p = updated_l;
 			full_l = 0.;
-			ratio_p = (1. - lostTime_l)*100.;
-			lostTime_l = 0;
+			updated_l = 0;
 		}
 	}
 }
@@ -452,7 +451,7 @@ void GameLoop::runLoop(Window &window_p)
 		std::stringstream ss_l;
 		ss_l << stateAndSteps_l._steps.size()<<"/"<<_controller.getOngoingStep()
 		<<"     ratio : "<<ratio_l << "%"
-		<<"     entity count : "<<state_l.getEntities().size();
+		<<"     entity count : "<<_world.getListSprite().size();
 		textSteps_l.setText(ss_l.str());
 		textSteps_l.display(window_p);
 
