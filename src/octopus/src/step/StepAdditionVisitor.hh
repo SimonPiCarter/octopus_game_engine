@@ -45,6 +45,7 @@ public:
     virtual void visit(CommandWindUpDiffStep const *) {}
     virtual void visit(EntityAttackStep const *) {}
     virtual void visit(EntityBuffStep const *) {}
+    virtual void visit(EntityFrozenStep const *) {}
     virtual void visit(EntityHitPointChangeStep const *) {}
     virtual void visit(EntityMoveStep const *) {}
     virtual void visit(EntityUpdateWaitingStep const *) {}

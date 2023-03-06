@@ -67,6 +67,7 @@ public:
 	virtual void visit(octopus::CommandUpdateLastPosStep const *) override {}
 	virtual void visit(octopus::EntityAttackStep const *) override {}
 	virtual void visit(octopus::EntityBuffStep const *) override {}
+	virtual void visit(octopus::EntityFrozenStep const *) {}
 	virtual void visit(octopus::EntityUpdateWaitingStep const *) override {}
 	virtual void visit(octopus::MissingResourceStep const *) override {}
 	virtual void visit(octopus::PlayerAddBuildingModel const *) override {}
