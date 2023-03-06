@@ -153,7 +153,7 @@ void GameLoop::runLoop(Window &window_p)
 	double y = 0.;
 	double dX = 0.;
 	double dY = 0.;
-	double camSpeed_l = 400.;
+	double camSpeed_l = 600.;
 
 	bool descActive_l = false;
 
