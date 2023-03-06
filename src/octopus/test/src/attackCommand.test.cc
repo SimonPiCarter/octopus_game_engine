@@ -24,7 +24,7 @@ TEST(attackCommandTest, simple)
 	EntitySpawnStep * spawn1_l = new EntitySpawnStep(1, Entity { { 11, 3. }, false, unitModel_l});
 
 	// entity 0 attack entity 1
-	EntityAttackCommand * command_l = new EntityAttackCommand(0, 0, 1);
+	EntityAttackCommand * command_l = new EntityAttackCommand(0, 0, 1, true);
 	CommandSpawnStep * commandSpawn_l = new CommandSpawnStep(command_l);
 
 	Controller controller_l({new PlayerSpawnStep(0, 0), spawn0_l, spawn1_l, commandSpawn_l}, 1.);
@@ -117,7 +117,7 @@ TEST(attackCommandTest, simple_bonus_dmg)
 	EntitySpawnStep * spawn1_l = new EntitySpawnStep(1, Entity { { 11, 3. }, false, unitModel_l});
 
 	// entity 0 attack entity 1
-	EntityAttackCommand * command_l = new EntityAttackCommand(0, 0, 1);
+	EntityAttackCommand * command_l = new EntityAttackCommand(0, 0, 1, true);
 	CommandSpawnStep * commandSpawn_l = new CommandSpawnStep(command_l);
 
 	Controller controller_l({new PlayerSpawnStep(0, 0), spawn0_l, spawn1_l, commandSpawn_l}, 1.);

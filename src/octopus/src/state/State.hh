@@ -146,6 +146,18 @@ private:
 	unsigned long _winningTeam {0};
 };
 
+/// @brief struct to represent a panel of targets within a range
+struct TargetPanel
+{
+	std::list<Entity const *> units;
+	std::list<Entity const *> buildings;
+	Fixed matchDistance {0.};
+};
+
+/// @brief look for new targets in a matching range
+/// @return all targets within range
+TargetPanel lookUpNewTargets(State const &state_p, Handle const &sourceHandle_p, Fixed matchDistance_p);
+
 Entity const * lookUpNewBuffTarget(State const &state_p, Handle const &sourceHandle_p, double range_p, TyppedBuff const &buff_p);
 Entity const * lookUpNewTarget(State const &state_p, Handle const &sourceHandle_p);
 Entity const * lookUpDeposit(State const &state_p, Handle const &sourceHandle_p, Handle const &res_p);

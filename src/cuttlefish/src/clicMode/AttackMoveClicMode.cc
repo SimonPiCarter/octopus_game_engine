@@ -53,7 +53,8 @@ bool AttackMoveClicMode::handleMouseUp(SDL_Event const & e, Selection &selection
 				octopus::EntityAttackCommand * command_l = new octopus::EntityAttackCommand(
 					cur_l->_handle,
 					cur_l->_handle,
-					target_l->_handle
+					target_l->_handle,
+					true
 				);
 				controller_p.commitCommand(command_l);
 			}

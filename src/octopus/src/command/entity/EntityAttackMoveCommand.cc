@@ -63,7 +63,7 @@ bool EntityAttackMoveCommand::applyCommand(Step & step_p, State const &state_p, 
 			step_p.addSteppable(new CommandSetPositionFromStep(_handleCommand, ent_l->_pos, attackMoveData_l._positionFromAttack));
 			/// steppable to update target
 			step_p.addSteppable(new CommandNewTargetStep(_handleCommand, target_l->_handle, attackMoveData_l._target));
-			step_p.addSteppable(new CommandAddSubAttackStep(_handleCommand, new EntityAttackCommand(_handleCommand, _source, target_l->_handle)));
+			step_p.addSteppable(new CommandAddSubAttackStep(_handleCommand, new EntityAttackCommand(_handleCommand, _source, target_l->_handle, false)));
 			return false;
 		}
 	}

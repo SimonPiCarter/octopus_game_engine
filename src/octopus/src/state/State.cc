@@ -244,6 +244,69 @@ Entity const * lookUpNewBuffTarget(State const &state_p, Handle const &sourceHan
 	return best_l;
 }
 
+TargetPanel lookUpNewTargets(State const &state_p, Handle const &sourceHandle_p, Fixed matchDistance_p)
+{
+	TargetPanel panel_l;
+	panel_l.matchDistance = matchDistance_p;
+
+	Entity const * source_l = state_p.getEntity(sourceHandle_p);
+	unsigned long team_l = state_p.getPlayer(source_l->_player)->_team;
+
+	Logger::getDebug() << " lookUpNewTargets :: start"<< std::endl;
+
+	Box<long> box_l {state_p.getGridIndex(source_l->_pos.x - matchDistance_p),
+					 state_p.getGridIndex(source_l->_pos.x + matchDistance_p),
+					 state_p.getGridIndex(source_l->_pos.y - matchDistance_p),
+					 state_p.getGridIndex(source_l->_pos.y + matchDistance_p)};
+	std::vector<bool> bitset_l(state_p.getEntities().size(), false);
+
+	// grid for fast access
+	std::vector<std::vector<AbstractBitset *> > const & grid_l = state_p.getGrid();
+
+	for(long x = box_l._lowerX ; x <= box_l._upperX; ++x)
+	{
+	for(long y = box_l._lowerY ; y <= box_l._upperY; ++y)
+	{
+	// for now look for closest entity
+	grid_l[x][y]->for_each([&] (int handle_p)
+	{
+		if(bitset_l.at(handle_p))
+		{
+			return false;
+		}
+		bitset_l[handle_p] = true;
+		Entity const * ent_l = state_p.getEntity(handle_p);
+		if(ent_l == source_l
+		|| !ent_l->_alive
+		|| team_l == state_p.getPlayer(ent_l->_player)->_team)
+		{
+			// NA
+		}
+		else if(ent_l->_model._isBuilding)
+		{
+			panel_l.buildings.push_back(ent_l);
+		}
+		else if(ent_l->_model._isUnit)
+		{
+			panel_l.units.push_back(ent_l);
+		}
+		return false;
+	});
+	}
+	}
+
+	auto remover_l = [&matchDistance_p, &source_l] (Entity const * entity_p)
+	{
+		Fixed curSqDis_l = square_length(entity_p->_pos - source_l->_pos);
+		return curSqDis_l > matchDistance_p*matchDistance_p + 1e-5;
+	};
+	/// remove out of range
+	panel_l.buildings.erase(std::remove_if(panel_l.buildings.begin(), panel_l.buildings.end(), remover_l), panel_l.buildings.end());
+	panel_l.units.erase(std::remove_if(panel_l.units.begin(), panel_l.units.end(), remover_l), panel_l.units.end());
+
+	return panel_l;
+}
+
 Entity const * lookUpNewTarget(State const &state_p, Handle const &sourceHandle_p)
 {
 	double matchDistance_l = 5;

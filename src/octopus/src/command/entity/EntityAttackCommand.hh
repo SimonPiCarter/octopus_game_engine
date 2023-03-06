@@ -18,7 +18,7 @@ namespace octopus
 class EntityAttackCommand : public Command
 {
 public:
-	EntityAttackCommand(Handle const &commandHandle_p, Handle const &source_p, Handle const &target_p);
+	EntityAttackCommand(Handle const &commandHandle_p, Handle const &source_p, Handle const &target_p, bool frozenTarget_p);
 
 	/// @brief
 	virtual bool applyCommand(Step & step_p, State const &state_p, CommandData const *data_p, PathManager &pathManager_p) const override;
@@ -31,6 +31,8 @@ private:
 	Handle const _source;
 	/// @brief initial target
 	Handle _target;
+	/// @brief if true we wont change target except when it dies
+	bool const _frozenTarget;
 
 	bool checkTarget(State const &state_p, Handle const & target_p) const;
 	bool inRange(State const &state_p, Handle const & target_p) const;

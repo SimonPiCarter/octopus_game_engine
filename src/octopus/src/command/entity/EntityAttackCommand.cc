@@ -9,6 +9,8 @@
 #include "step/Step.hh"
 #include "step/command/CommandWindUpDiffStep.hh"
 #include "step/command/CommandNewTargetStep.hh"
+#include "step/command/CommandIncrementNoProgressStep.hh"
+#include "step/command/CommandUpdateLastPosStep.hh"
 #include "step/entity/EntityAttackStep.hh"
 #include "step/entity/EntityHitPointChangeStep.hh"
 #include "step/entity/EntityMoveStep.hh"
@@ -18,10 +20,11 @@
 namespace octopus
 {
 
-EntityAttackCommand::EntityAttackCommand(Handle const &commandHandle_p, Handle const &source_p, Handle const &target_p)
+EntityAttackCommand::EntityAttackCommand(Handle const &commandHandle_p, Handle const &source_p, Handle const &target_p, bool frozenTarget_p)
 	: Command(commandHandle_p)
 	, _source(source_p)
 	, _target(target_p)
+	, _frozenTarget(frozenTarget_p)
 {}
 
 bool EntityAttackCommand::applyCommand(Step & step_p, State const &state_p, CommandData const *data_p, PathManager &pathManager_p) const
@@ -78,6 +81,23 @@ bool EntityAttackCommand::applyCommand(Step & step_p, State const &state_p, Comm
 		Vector closest_l = entSource_l->_pos + dir_l * (1. - ratio_l);
 
 		/// @todo check for closer target to reallocate aggro
+
+		// if entity is frozen and not in range it means target has run out of range
+		// scan for target closer only if target is not frozen
+		if(entSource_l->_frozen && !_frozenTarget)
+		{
+			// If target is dead we look for another target in range
+			Entity const * newTarget_l = lookUpNewTarget(state_p, _source);
+
+			// If target we update
+			if(newTarget_l && newTarget_l->_handle != curTarget_l)
+			{
+				Logger::getDebug() << "EntityAttackCommand:: new target found (out of range) "<<newTarget_l->_handle<<std::endl;
+				/// steppable to update target
+				step_p.addSteppable(new CommandNewTargetStep(_handleCommand, newTarget_l->_handle, curTarget_l));
+			}
+		}
+
 		/// @todo if no closer target try to move randomly (orthogonal move)
 
 		Logger::getDebug() << "\t\tEntityAttackCommand:: adding move step "<< _source << " target " << closest_l << " speed " <<entSource_l->getStepSpeed()<<std::endl;

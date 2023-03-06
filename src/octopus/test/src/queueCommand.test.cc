@@ -29,7 +29,7 @@ TEST(queueCommandTest, simple)
 	EntitySpawnStep * spawn1_l = new EntitySpawnStep(1, ent_l);
 
 	// entity 0 attack entity 1
-	EntityAttackCommand * command_l = new EntityAttackCommand(0, 0, 1);
+	EntityAttackCommand * command_l = new EntityAttackCommand(0, 0, 1, true);
 	CommandSpawnStep * commandSpawn_l = new CommandSpawnStep(command_l);
 
 	// move back

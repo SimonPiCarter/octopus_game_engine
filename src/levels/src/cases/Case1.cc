@@ -52,11 +52,11 @@ std::list<Steppable *> Case1(Library &lib_p)
 
 	for(unsigned long i = 1 ; i < 9 ; ++ i)
 	{
-		spawners_l.push_back(new CommandSpawnStep(new EntityAttackCommand(i, i, 9)));
+		spawners_l.push_back(new CommandSpawnStep(new EntityAttackCommand(i, i, 9, true)));
 	}
 	{
 		spawners_l.push_back(new CommandSpawnStep(new EntityMoveCommand(0, 0, {10, 5}, 0, {{2, 2}, {2, 5}, {10, 5}})));
-		EntityAttackCommand *cmd_l = new EntityAttackCommand(0, 0, 9);
+		EntityAttackCommand *cmd_l = new EntityAttackCommand(0, 0, 9, true);
 		cmd_l->setQueued(true);
 		spawners_l.push_back(new CommandSpawnStep(cmd_l));
 	}

@@ -188,7 +188,8 @@ void StandardClicMode::handleRightClic(octopus::Vector const &clicWorldPosition_
 				octopus::EntityAttackCommand * command_l = new octopus::EntityAttackCommand(
 					selected_l->getHandle(),
 					selected_l->getHandle(),
-					sprite_p->getHandle()
+					sprite_p->getHandle(),
+					true
 				);
 				controller_p.commitCommand(command_l);
 			}
