@@ -26,7 +26,7 @@ namespace octopus
 	class LoggerVoider {
 	public:
 		explicit LoggerVoider(std::mutex &, bool) {}
-		LoggerVoider(LoggerHandler const &) {}
+		LoggerVoider(LoggerVoider const &) {}
 	};
 
 	/// @brief use this if you want to be able to switch from debug to normal without rebuilding (slower at execution)
