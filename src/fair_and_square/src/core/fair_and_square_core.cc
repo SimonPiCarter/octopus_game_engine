@@ -52,25 +52,42 @@ int main( int argc, char* args[] )
 
 	cuttlefish::Menu menu_l(SCREEN_WIDTH/2, 200, 5);
 
-	Picture * button1_l = new Picture(window_l.loadTexture("resources/button.png"), 256, 64, {1, 1 ,1}, {1, 1, 1});
-	Text * text1_l = new Text(&window_l, {0, 0, 0}, 0, 0);
-	text1_l->setText("Play Wave Level (fast)");
-	menu_l.addButton(button1_l, text1_l, std::bind(fas::runWave, std::ref(window_l), 0.1*60*100, 0));
-
-	Picture * button1_2_l = new Picture(window_l.loadTexture("resources/button.png"), 256, 64, {1, 1 ,1}, {1, 1, 1});
-	Text * text1_2_l = new Text(&window_l, {0, 0, 0}, 0, 0);
-	text1_2_l->setText("Play Wave Level (real)");
-	menu_l.addButton(button1_2_l, text1_2_l, std::bind(fas::runWave, std::ref(window_l), 3*60*100, 1));
-
-	Picture * button1_3_l = new Picture(window_l.loadTexture("resources/button.png"), 256, 64, {1, 1 ,1}, {1, 1, 1});
-	Text * text1_3_l = new Text(&window_l, {0, 0, 0}, 0, 0);
-	text1_3_l->setText("Play Arena Level");
-	menu_l.addButton(button1_3_l, text1_3_l, std::bind(fas::runArena, std::ref(window_l)));
-
-	Picture * button2_l = new Picture(window_l.loadTexture("resources/button.png"), 256, 64, {1, 1 ,1}, {1, 1, 1});
-	Text * text2_l = new Text(&window_l, {0, 0, 0}, 0, 0);
-	text2_l->setText("Quit");
-	menu_l.addButton(button2_l, text2_l, std::bind(quit, std::ref(quit_l)));
+{
+	Picture * button_l = new Picture(window_l.loadTexture("resources/button.png"), 256, 64, {1, 1 ,1}, {1, 1, 1});
+	Text * text_l = new Text(&window_l, {0, 0, 0}, 0, 0);
+	text_l->setText("Play Wave Level (fast)");
+	menu_l.addButton(button_l, text_l, std::bind(fas::runWave, std::ref(window_l), 0.1*60*100, 0));
+}
+{
+	Picture * button_l = new Picture(window_l.loadTexture("resources/button.png"), 256, 64, {1, 1 ,1}, {1, 1, 1});
+	Text * text_l = new Text(&window_l, {0, 0, 0}, 0, 0);
+	text_l->setText("Play Wave Level (real)");
+	menu_l.addButton(button_l, text_l, std::bind(fas::runWave, std::ref(window_l), 3*60*100, 1));
+}
+{
+	Picture * button_l = new Picture(window_l.loadTexture("resources/button.png"), 256, 64, {1, 1 ,1}, {1, 1, 1});
+	Text * text_l = new Text(&window_l, {0, 0, 0}, 0, 0);
+	text_l->setText("Play Arena Level (5)");
+	menu_l.addButton(button_l, text_l, std::bind(fas::runArena, std::ref(window_l), 5));
+}
+{
+	Picture * button_l = new Picture(window_l.loadTexture("resources/button.png"), 256, 64, {1, 1 ,1}, {1, 1, 1});
+	Text * text_l = new Text(&window_l, {0, 0, 0}, 0, 0);
+	text_l->setText("Play Arena Level (50)");
+	menu_l.addButton(button_l, text_l, std::bind(fas::runArena, std::ref(window_l), 50));
+}
+{
+	Picture * button_l = new Picture(window_l.loadTexture("resources/button.png"), 256, 64, {1, 1 ,1}, {1, 1, 1});
+	Text * text_l = new Text(&window_l, {0, 0, 0}, 0, 0);
+	text_l->setText("Play Arena Level (500)");
+	menu_l.addButton(button_l, text_l, std::bind(fas::runArena, std::ref(window_l), 500));
+}
+{
+	Picture * button_l = new Picture(window_l.loadTexture("resources/button.png"), 256, 64, {1, 1 ,1}, {1, 1, 1});
+	Text * text_l = new Text(&window_l, {0, 0, 0}, 0, 0);
+	text_l->setText("Quit");
+	menu_l.addButton(button_l, text_l, std::bind(quit, std::ref(quit_l)));
+}
 
 	//Event handler
 	SDL_Event e;
