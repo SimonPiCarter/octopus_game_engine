@@ -58,10 +58,10 @@ void runWave(Window &window_p, unsigned long stepCount_p, unsigned long player_p
 	runGame(window_p, spawners_l, commands_l);
 }
 
-void runArena(cuttlefish::Window &window_p)
+void runArena(cuttlefish::Window &window_p, size_t number_p)
 {
 	octopus::Library lib_l;
-	std::list<octopus::Steppable *> spawners_l = ArenaLevelSteps(lib_l);
+	std::list<octopus::Steppable *> spawners_l = ArenaLevelSteps(lib_l, number_p);
 	std::list<octopus::Command *> commands_l = ArenaLevelCommands(lib_l);
 
 	runGame(window_p, spawners_l, commands_l);

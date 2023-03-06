@@ -27,7 +27,7 @@
 
 using namespace octopus;
 
-std::list<Steppable *> ArenaLevelSteps(Library &lib_p)
+std::list<Steppable *> ArenaLevelSteps(Library &lib_p, size_t number_p)
 {
 	loadModels(lib_p);
 
@@ -53,7 +53,7 @@ std::list<Steppable *> ArenaLevelSteps(Library &lib_p)
 	};
 
 	unsigned long id_l = 0;
-	for(size_t i = 0; i < 5 ; ++ i)
+	for(size_t i = 0; i < number_p ; ++ i)
 	{
 		spawners_l.push_back(new UnitSpawnStep(id_l++, square1_l));
 		spawners_l.push_back(new UnitSpawnStep(id_l++, circle2_l));
