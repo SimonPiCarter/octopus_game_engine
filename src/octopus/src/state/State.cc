@@ -539,9 +539,9 @@ void updateGrid(State &state_p, Entity const *ent_p, bool set_p)
 								   to_int(std::max(Fixed(0.), ent_p->_pos.y-ent_p->_model._ray)),
 								   to_int(std::max(Fixed(0.), ent_p->_pos.y+ent_p->_model._ray+0.999))
 						};
-		for(long long x = boxNode_l._lowerX ; x < boxNode_l._upperX; ++x)
+		for(long long x = boxNode_l._lowerX ; x < boxNode_l._upperX && x < state_p.getWorldSize() ; ++x)
 		{
-			for(long long y = boxNode_l._lowerY ; y < boxNode_l._upperY; ++y)
+			for(long long y = boxNode_l._lowerY ; y < boxNode_l._upperY && y < state_p.getWorldSize() ; ++y)
 			{
 				GridNode *node_l = state_p.getPathGrid().getNode(x, y);
 				if(set_p)
