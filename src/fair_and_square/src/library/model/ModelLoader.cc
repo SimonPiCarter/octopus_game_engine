@@ -34,7 +34,7 @@ void createWorker(Library &lib_p)
 void createSquare(Library &lib_p)
 {
     // square
-    UnitModel unitModel_l { false, 0.5, 0.1, 120. };
+    UnitModel unitModel_l { false, 0.5, 0.075, 120. };
     unitModel_l._isUnit = true;
     unitModel_l._productionTime = 2500;
     unitModel_l._cost[ResourceType::Food] = 25;
