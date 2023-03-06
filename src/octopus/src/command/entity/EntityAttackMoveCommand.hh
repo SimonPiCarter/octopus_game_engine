@@ -31,6 +31,8 @@ public:
 		return new AttackMoveData(0, _subMoveCommand.getFinalPoint(), _subMoveCommand.getGridStatus(), _subMoveCommand.getWaypoints());
 	}
 
+	virtual void cleanUp(Step & step_p, State const &state_p, CommandData const *data_p) const override;
+
 private:
 	Handle const _source;
 

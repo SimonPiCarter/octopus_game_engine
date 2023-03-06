@@ -72,5 +72,16 @@ bool EntityAttackMoveCommand::applyCommand(Step & step_p, State const &state_p, 
 	return _subMoveCommand.applyCommand(step_p, state_p, data_p, pathManager_p);
 }
 
+void EntityAttackMoveCommand::cleanUp(Step & step_p, State const &state_p, CommandData const *data_p) const
+{
+	AttackMoveData const &attackMoveData_l = *static_cast<AttackMoveData const *>(data_p);
+	EntityAttackCommand const * subAttackCommand_l = attackMoveData_l._subAttackCommand;
+	if(subAttackCommand_l)
+	{
+		subAttackCommand_l->cleanUp(step_p, state_p, data_p);
+	}
+	_subMoveCommand.cleanUp(step_p, state_p, data_p);
+}
+
 } // namespace octopus
 
