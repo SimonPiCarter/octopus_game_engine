@@ -1,5 +1,5 @@
-#ifndef __EntityHitPointChangeStep__
-#define __EntityHitPointChangeStep__
+#ifndef __EntityUpdateWaitingStep__
+#define __EntityUpdateWaitingStep__
 
 #include "state/entity/Entity.hh"
 #include "state/Handle.hh"
