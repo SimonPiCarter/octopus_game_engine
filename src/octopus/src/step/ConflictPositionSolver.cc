@@ -122,7 +122,7 @@ bool updateStepFromConflictPosition(Step &step_p, State const &state_p)
 		}
 
 		/// limit the number of collison to avoid huge slow downs at start up
-		size_t maxCol_l = 10;
+		size_t maxCol_l = 50;
 		size_t nbCol_l = 0;
 		Box<long> box_l {state_p.getGridIndex(newPos_l[entA_l->_handle].x-entA_l->_model._ray),
 						 state_p.getGridIndex(newPos_l[entA_l->_handle].x+entA_l->_model._ray+0.999),
