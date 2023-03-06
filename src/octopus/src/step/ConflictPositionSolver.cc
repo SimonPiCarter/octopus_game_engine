@@ -67,11 +67,13 @@ bool updateStepFromConflictPosition(Step &step_p, State const &state_p)
 			mapMoveStep_l[ent_l->_handle]->_move += step_l->_move;
 			step_l->_move = Vector {0,0};
 			newPos_l[ent_l->_handle] = ent_l->_pos + mapMoveStep_l[ent_l->_handle]->_move;
+			Logger::getDebug() << " conflict solver :: added entity move step info [ent "<<ent_l->_handle<<"] to "<<newPos_l[ent_l->_handle]<<std::endl;
 		}
 		else
 		{
 			mapMoveStep_l[ent_l->_handle] = step_l;
 			newPos_l[ent_l->_handle] = ent_l->_pos + step_l->_move;
+			Logger::getDebug() << " conflict solver :: update entity move step info [ent "<<ent_l->_handle<<"] to "<<newPos_l[ent_l->_handle]<<std::endl;
 		}
 	}
 
@@ -80,6 +82,7 @@ bool updateStepFromConflictPosition(Step &step_p, State const &state_p)
 	{
 		if(mapMoveStep_l[ent_l->_handle] == nullptr && ent_l->isActive())
 		{
+			Logger::getDebug() << " conflict solver :: add entity move step because none "<<ent_l->_handle<<std::endl;
 			EntityMoveStep *step_l = new EntityMoveStep(ent_l->_handle, {0, 0});
 			step_p.addEntityMoveStep(step_l);
 			mapMoveStep_l[ent_l->_handle] = step_l;
@@ -208,6 +211,8 @@ bool updateStepFromConflictPosition(Step &step_p, State const &state_p)
 					coefA_l = 1.;
 					coefB_l = 0.;
 				}
+				Logger::getDebug() << " conflict solver :: solving conflict [ent "<<stepA_l->_handle<<"] with "<<normalizedAxis_l * distance_l * coefA_l
+								   << " and [ent "<<stepB_l->_handle<<"] with"<<normalizedAxis_l * distance_l * coefB_l * -1.<<std::endl;
 				// updated steps, both doing half distance
 				mapCorrection_l[stepA_l->_handle] += normalizedAxis_l * distance_l * coefA_l;
 				mapCorrection_l[stepB_l->_handle] -= normalizedAxis_l * distance_l * coefB_l;
@@ -359,6 +364,8 @@ bool updateStepFromConflictPosition(Step &step_p, State const &state_p)
 					coefA_l = 1.;
 					coefB_l = 0.;
 				}
+				Logger::getDebug() << " conflict solver :: solving conflict [ent "<<stepA_l->_handle<<"] with "<<(diff_l * coefA_l * -1)
+								   << " and [ent "<<stepB_l->_handle<<"] with"<<diff_l * coefB_l<<std::endl;
 				// updated steps, both doing half distance
 				mapAbsoluteCorrection_l[stepA_l->_handle] -= diff_l * coefA_l;
 				mapAbsoluteCorrection_l[stepB_l->_handle] += diff_l * coefB_l;
