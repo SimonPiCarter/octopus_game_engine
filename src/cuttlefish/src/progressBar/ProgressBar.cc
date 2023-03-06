@@ -35,6 +35,11 @@ void ProgressBar::setProgress(int progress_p)
     _bar->setDestination(_bar->getDestination().x, _bar->getDestination().y, _maxW*_progress/100, _h-2*_margin);
 }
 
+int ProgressBar::getProgress() const
+{
+    return _progress;
+}
+
 void ProgressBar::setPosition(int x, int y)
 {
     _background->setDestination(x, y, _w, _h);

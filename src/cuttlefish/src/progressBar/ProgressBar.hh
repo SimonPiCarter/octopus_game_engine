@@ -32,6 +32,9 @@ public:
     /// @brief set progress value will be clamped between 0 and 100
     void setProgress(int progress_p);
 
+    /// @brief get progress of the progress bar
+    int getProgress() const;
+
     /// @brief set bar position
     void setPosition(int x, int y);
 
