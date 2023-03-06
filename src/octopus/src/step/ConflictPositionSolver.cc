@@ -121,6 +121,9 @@ bool updateStepFromConflictPosition(Step &step_p, State const &state_p)
 			continue;
 		}
 
+		/// limit the number of collison to avoid huge slow downs at start up
+		size_t maxCol_l = 10;
+		size_t nbCol_l = 0;
 		Box<long> box_l {state_p.getGridIndex(newPos_l[entA_l->_handle].x-entA_l->_model._ray),
 						 state_p.getGridIndex(newPos_l[entA_l->_handle].x+entA_l->_model._ray+0.999),
 						 state_p.getGridIndex(newPos_l[entA_l->_handle].y-entA_l->_model._ray),
@@ -134,6 +137,10 @@ bool updateStepFromConflictPosition(Step &step_p, State const &state_p)
 		grid_l[x][y]->for_each([&] (int handle_p)
 		{
 			if(handle_p >= stepA_l->_handle)
+			{
+				return true;
+			}
+			if(maxCol_l <= nbCol_l)
 			{
 				return true;
 			}
@@ -157,6 +164,7 @@ bool updateStepFromConflictPosition(Step &step_p, State const &state_p)
 			// check collision
 			else if(collision(newPos_l[entA_l->_handle], newPos_l[entB_l->_handle], entA_l->_model._ray, entB_l->_model._ray))
 			{
+				++nbCol_l;
 				// repulsion against axis between both (from B to A)
 				Vector axis_l = (entA_l->_pos + stepA_l->_move) - (entB_l->_pos + stepB_l->_move);
 
