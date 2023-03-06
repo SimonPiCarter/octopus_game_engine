@@ -42,7 +42,7 @@ protected:
 TEST(commandQueueTest, throw_test)
 {
 	State state_l;
-	Step step_l;
+	Step step_l(nullptr);
 	PathManager pathManager_l;
 
 	std::vector<unsigned long> vec_l;
@@ -56,7 +56,7 @@ TEST(commandQueueTest, throw_test)
 TEST(commandQueueTest, simple)
 {
 	State state_l;
-	Step step_l;
+	Step step_l(nullptr);
 	PathManager pathManager_l;
 
 	std::vector<unsigned long> vec_l;
@@ -91,7 +91,7 @@ TEST(commandQueueTest, simple)
 TEST(commandQueueTest, multiple)
 {
 	State state_l;
-	Step step_l;
+	Step step_l(nullptr);
 	PathManager pathManager_l;
 
 	std::vector<unsigned long> vec_l;
@@ -132,7 +132,7 @@ TEST(commandQueueTest, multiple)
 TEST(commandQueueTest, multiple_on_multiple_call)
 {
 	State state_l;
-	Step step_l;
+	Step step_l(nullptr);
 	PathManager pathManager_l;
 
 	std::vector<unsigned long> vec_l;
@@ -195,7 +195,7 @@ TEST(commandQueueTest, multiple_on_multiple_call)
 TEST(commandQueueTest, multiple_override)
 {
 	State state_l;
-	Step step_l;
+	Step step_l(nullptr);
 	PathManager pathManager_l;
 
 	std::vector<unsigned long> vec_l;
@@ -234,7 +234,7 @@ TEST(commandQueueTest, multiple_override)
 TEST(commandQueueTest, multiple_override_reverted)
 {
 	State state_l;
-	Step step_l;
+	Step step_l(nullptr);
 	PathManager pathManager_l;
 
 	std::vector<unsigned long> vec_l;
@@ -276,7 +276,7 @@ TEST(commandQueueTest, multiple_override_reverted)
 TEST(commandQueueTest, multiple_override_reverted_throw)
 {
 	State state_l;
-	Step step_l;
+	Step step_l(nullptr);
 	PathManager pathManager_l;
 
 	std::vector<unsigned long> vec_l;
@@ -297,7 +297,7 @@ TEST(commandQueueTest, multiple_override_reverted_throw)
 TEST(commandQueueTest, multiple_override_reverted_all)
 {
 	State state_l;
-	Step step_l;
+	Step step_l(nullptr);
 	PathManager pathManager_l;
 
 	std::vector<unsigned long> vec_l;

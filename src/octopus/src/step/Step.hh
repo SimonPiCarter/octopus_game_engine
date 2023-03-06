@@ -18,6 +18,7 @@ namespace octopus
 	class Step
 	{
 		public:
+			Step(Step const *prev_p) : _prev(prev_p) {}
 			~Step();
 
 			/// @brief add step and keep ownership
@@ -43,6 +44,10 @@ namespace octopus
 			void addEntitySpawned();
 			/// @brief get the number of entity spawned in this step
 			unsigned long getEntitySpawned() const;
+
+			/// @brief get previous step
+			/// @return previous step
+			Step const * getPrev() const { return _prev; }
 		private:
 			std::list<EntityMoveStep *> _listEntityMoveStep;
 
@@ -56,6 +61,8 @@ namespace octopus
 
 			/// @brief a map of entity spawned in this step
 			unsigned long _entitySpawned {0};
+
+			Step const * const _prev {nullptr};
 	};
 
 	/// @brief apply the step

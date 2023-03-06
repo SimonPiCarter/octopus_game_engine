@@ -13,7 +13,7 @@ using namespace octopus;
 TEST(conflictSolverTest, simple)
 {
 	State state_l;
-	Step step_l;
+	Step step_l(nullptr);
 
 	state_l.getPlayers().push_back(new Player());
 

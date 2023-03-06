@@ -35,13 +35,14 @@ Controller::Controller(
 	unsigned long gridPointSize_p,
 	unsigned long gridSize_p)
 	: _timePerStep(timePerStep_p)
+	, _initialStep(nullptr)
 {
 	std::lock_guard<std::mutex> lock_l(_mutex);
 
 	_ongoingStep = 1;
 	updateCommitedCommand();
 	_lastHandledStep = 0;
-	_compiledSteps.push_back(new Step());
+	_compiledSteps.push_back(new Step(&_initialStep));
 
 	_backState = new BufferedState { 0, _compiledSteps.begin(), new State(0, gridSize_p, gridPointSize_p) };
 	_bufferState = new BufferedState { 0, _compiledSteps.begin(), new State(1, gridSize_p, gridPointSize_p) };
@@ -152,7 +153,7 @@ bool Controller::loop_body()
 			_pathManager.startCompute(5000);
 
 			// Prepare next step
-			_compiledSteps.push_back(new Step());
+			_compiledSteps.push_back(new Step(_compiledSteps.back()));
 			_compiledSteps.back()->addSteppable(new TickingStep());
 			_lastHandledStep = _backState->_stepHandled;
 

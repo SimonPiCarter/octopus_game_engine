@@ -45,7 +45,7 @@ TEST(moveCommandTest, simple)
 	///
 	/// Step 1
 	///
-	Step step_l;
+	Step step_l(nullptr);
 
 	bool terminated_l = command_l.applyCommand(step_l, state_l, data_l, pathManager_l);
 	EXPECT_FALSE(terminated_l);
@@ -67,7 +67,7 @@ TEST(moveCommandTest, simple)
 	///
 	/// Step 2
 	///
-	Step step2_l;
+	Step step2_l(nullptr);
 
 	terminated_l = command_l.applyCommand(step2_l, state_l, data_l, pathManager_l);
 	EXPECT_TRUE(terminated_l);
@@ -84,7 +84,7 @@ TEST(moveCommandTest, simple)
 	///
 	/// Step 3
 	///
-	Step step3_l;
+	Step step3_l(nullptr);
 
 	terminated_l = command_l.applyCommand(step3_l, state_l, data_l, pathManager_l);
 	EXPECT_TRUE(terminated_l);
