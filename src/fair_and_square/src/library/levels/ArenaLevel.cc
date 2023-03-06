@@ -50,18 +50,14 @@ std::list<Steppable *> ArenaLevelSteps(Library &lib_p)
 	{
 		new PlayerSpawnStep(0, 0),
 		new PlayerSpawnStep(1, 1),
-		new UnitSpawnStep(0, square1_l),
-		new UnitSpawnStep(1, square1_l),
-		new UnitSpawnStep(2, square1_l),
-		new UnitSpawnStep(3, square1_l),
-		new UnitSpawnStep(4, square1_l),
-
-		new UnitSpawnStep(5, circle2_l),
-		new UnitSpawnStep(6, circle2_l),
-		new UnitSpawnStep(7, circle2_l),
-		new UnitSpawnStep(8, circle2_l),
-		new UnitSpawnStep(9, circle2_l),
 	};
+
+	unsigned long id_l = 0;
+	for(size_t i = 0; i < 5 ; ++ i)
+	{
+		spawners_l.push_back(new UnitSpawnStep(id_l++, square1_l));
+		spawners_l.push_back(new UnitSpawnStep(id_l++, circle2_l));
+	}
 
 	return spawners_l;
 }
