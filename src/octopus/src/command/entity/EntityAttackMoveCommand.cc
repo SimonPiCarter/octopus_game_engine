@@ -50,6 +50,8 @@ bool EntityAttackMoveCommand::applyCommand(Step & step_p, State const &state_p, 
 				return false;
 			}
 		}
+		/// clean up attack command
+		attackMoveData_l._subAttackCommand->cleanUp(step_p, state_p, data_p);
 		// get non const pointer here (required by the step)
 		step_p.addSteppable(new CommandDelSubAttackStep(_handleCommand, attackMoveData_l._subAttackCommand));
 	}

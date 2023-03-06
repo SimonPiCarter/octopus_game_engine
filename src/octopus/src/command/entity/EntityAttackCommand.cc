@@ -12,6 +12,7 @@
 #include "step/entity/EntityAttackStep.hh"
 #include "step/entity/EntityHitPointChangeStep.hh"
 #include "step/entity/EntityMoveStep.hh"
+#include "step/entity/EntityFrozenStep.hh"
 
 
 namespace octopus
@@ -76,6 +77,9 @@ bool EntityAttackCommand::applyCommand(Step & step_p, State const &state_p, Comm
 
 		Vector closest_l = entSource_l->_pos + dir_l * (1. - ratio_l);
 
+		/// @todo check for closer target to reallocate aggro
+		/// @todo if no closer target try to move randomly (orthogonal move)
+
 		Logger::getDebug() << "\t\tEntityAttackCommand:: adding move step "<< _source << " target " << closest_l << " speed " <<entSource_l->getStepSpeed()<<std::endl;
 		// add move command
 		step_p.addEntityMoveStep(new EntityMoveStep(createEntityMoveStep(*entSource_l, closest_l, entSource_l->getStepSpeed())));
@@ -103,7 +107,22 @@ bool EntityAttackCommand::applyCommand(Step & step_p, State const &state_p, Comm
 		Logger::getDebug() << "\tEntityAttackCommand:: in range (reloading)"<<std::endl;
 	}
 
+	if(inRange(state_p, curTarget_l) || windup_l > 0)
+	{
+		step_p.addSteppable(new EntityFrozenStep(_source, entSource_l->_frozen, true));
+	}
+	else
+	{
+		step_p.addSteppable(new EntityFrozenStep(_source, entSource_l->_frozen, false));
+	}
+
 	return false;
+}
+
+void EntityAttackCommand::cleanUp(Step & step_p, State const &state_p, CommandData const *) const
+{
+	Entity const * entSource_l = state_p.getEntity(_source);
+	step_p.addSteppable(new EntityFrozenStep(_source, entSource_l->_frozen, false));
 }
 
 bool EntityAttackCommand::checkTarget(State const &state_p, Handle const & target_p) const

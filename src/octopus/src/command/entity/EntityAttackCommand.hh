@@ -25,6 +25,8 @@ public:
 
 	virtual CommandData * newData() const override { return new AttackMoveData(_target, Vector{}, 0, {}); }
 
+	virtual void cleanUp(Step & step_p, State const &state_p, CommandData const *data_p) const override;
+
 private:
 	Handle const _source;
 	/// @brief initial target
