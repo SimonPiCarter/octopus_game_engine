@@ -28,6 +28,7 @@
 // octopus
 #include "command/building/BuildingUnitProductionCommand.hh"
 #include "command/entity/EntityMoveCommand.hh"
+#include "command/entity/EntityWaitCommand.hh"
 #include "command/unit/UnitHarvestCommand.hh"
 #include "command/player/PlayerChoseDivinityCommand.hh"
 #include "controller/Controller.hh"
@@ -363,6 +364,18 @@ void GameLoop::runLoop(Window &window_p)
 					{
 						cleanClicMode(currentClicMode_l, &standardClicMode_l);
 						currentClicMode_l = new AttackMoveClicMode();
+						break;
+					}
+					case SDLK_s:
+					{
+						for(SpriteEntity * spriteEnt_l : selection_l._sprites)
+						{
+							octopus::EntityWaitCommand * command_l = new octopus::EntityWaitCommand(
+									spriteEnt_l->getHandle(),
+									spriteEnt_l->getHandle()
+								);
+							_controller.commitCommand(command_l);
+						}
 						break;
 					}
 					case SDLK_0:
