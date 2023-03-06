@@ -59,7 +59,7 @@ void Panel::refresh(SpriteEntity const *sprite_p, octopus::State const &state_p)
 	octopus::Player const &player_l = *state_p.getPlayer(_lastSelection->_player);
 
 	// update
-	if(_lastSelection->_model._isUnit)
+	if(_lastSelection->_model._isBuilder)
 	{
 		std::list<octopus::BuildingModel const *> buildingGrid_l = getAvailableBuildingModels(player_l);
 		for(octopus::BuildingModel const * model_l : buildingGrid_l)
