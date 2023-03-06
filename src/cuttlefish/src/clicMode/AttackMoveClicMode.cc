@@ -24,7 +24,7 @@ AttackMoveClicMode::~AttackMoveClicMode()
 bool AttackMoveClicMode::handleMouseUp(SDL_Event const & e, Selection &selection_p, World &world_p, Panel &panel_p,
 	Window &window_p, octopus::State const &state_p, octopus::Controller &controller_p)
 {
-	SpriteEntity * sprite_l = world_p.getSprite(window_p, e.button.x, e.button.y);
+	SpriteEntity * sprite_l = world_p.getSprite(window_p, e.button.x, e.button.y, &state_p);
 
 	if(e.button.button == SDL_BUTTON_LEFT)
 	{

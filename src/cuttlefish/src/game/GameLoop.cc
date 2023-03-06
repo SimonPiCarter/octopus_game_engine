@@ -421,7 +421,7 @@ void GameLoop::runLoop(Window &window_p)
 
 		_tilemap.render(window_p, elapsed_l);
 
-		_world.display(window_p, elapsed_l);
+		_world.display(window_p, state_l, elapsed_l);
 
 		_world.getSelection().render(window_p);
 
@@ -449,7 +449,7 @@ void GameLoop::runLoop(Window &window_p)
 		///
 		/// Debug texts
 		///
-		octopus::Player const * player_l = state_l.getPlayer(0);
+		octopus::Player const * player_l = state_l.getPlayer(_world.getPlayer());
 
 		//Render background texture to screen
 		background_l->render(window_p.getRenderer(), 0, 0, 50, window_p.getWidth() );

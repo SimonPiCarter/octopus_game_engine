@@ -29,7 +29,7 @@ void runGame(Window &window_p, std::list<octopus::Steppable *> &spawners_p, std:
 
     Texture const * background_l = window_p.loadTexture("resources/background.png");
 
-	World world_l;
+	World world_l(0);
 
 	octopus::Controller controller_l(spawners_p, 0.01, commands_p, gridPointSize_l, gridSize_l);
 

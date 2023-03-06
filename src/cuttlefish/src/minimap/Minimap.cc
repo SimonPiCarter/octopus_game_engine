@@ -7,6 +7,7 @@
 #include "tilemap/Tilemap.hh"
 
 #include "state/State.hh"
+#include "state/player/Player.hh"
 #include "state/entity/Entity.hh"
 
 using octopus::to_double;
@@ -86,17 +87,26 @@ void Minimap::render(octopus::State const &state_p, World const &world_p, Window
 	_cadre->render(window_p.getRenderer(), _x-2, _y-2, _w+4, _h+4, nullptr);
 	_background.render(window_p.getRenderer(), _x, _y, _w, _h, nullptr);
 
+	octopus::Player const * player_l = state_p.getPlayer(world_p.getPlayer());
+
 	for(SpriteEntity const *sprite_l : world_p.getListSprite())
 	{
-		octopus::Entity const *ent_l = state_p.getEntity(sprite_l->getHandle());
+		octopus::Entity const &ent_l = *state_p.getEntity(sprite_l->getHandle());
 
-		double x_l = _x + to_double(ent_l->_pos.x)*_w/state_p.getWorldSize();
-		double y_l = _y + to_double(ent_l->_pos.y)*_h/state_p.getWorldSize();
+		// skip unit out of range
+		if(ent_l._model._isUnit
+		&& !state_p.getVisionHandler().isVisible(player_l->_team, ent_l))
+		{
+			continue;
+		}
 
-		double w_l = std::max(1., ent_l->_model._ray*_w/state_p.getWorldSize());
-		double h_l = std::max(1., ent_l->_model._ray*_h/state_p.getWorldSize());
+		double x_l = _x + to_double(ent_l._pos.x)*_w/state_p.getWorldSize();
+		double y_l = _y + to_double(ent_l._pos.y)*_h/state_p.getWorldSize();
 
-		window_p.loadTexture(_vecPlayerToTexture.at(ent_l->_player))->render(window_p.getRenderer(), x_l, y_l, w_l, h_l, nullptr);
+		double w_l = std::max(1., ent_l._model._ray*_w/state_p.getWorldSize());
+		double h_l = std::max(1., ent_l._model._ray*_h/state_p.getWorldSize());
+
+		window_p.loadTexture(_vecPlayerToTexture.at(ent_l._player))->render(window_p.getRenderer(), x_l, y_l, w_l, h_l, nullptr);
 	}
 
 

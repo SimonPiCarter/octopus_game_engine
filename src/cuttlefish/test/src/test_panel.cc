@@ -162,7 +162,7 @@ int main( int argc, char* args[] )
 	bool quit_l = false;
 	bool paused_l = false;
 
-	World world_l;
+	World world_l(0);
 
 	octopus::Library lib_l;
 	std::list<octopus::Steppable *> spawners_l = Case4(lib_l);
@@ -464,7 +464,7 @@ int main( int argc, char* args[] )
 
 		tilemap_l.render(window_l, elapsed_l);
 
-		world_l.display(window_l, elapsed_l);
+		world_l.display(window_l, state_l, elapsed_l);
 
 		int mouseX, mouseY;
 		SDL_GetMouseState(&mouseX, &mouseY);
@@ -472,7 +472,7 @@ int main( int argc, char* args[] )
 
 		panel_l.render(window_l);
 
-		octopus::Player const * player_l = state_l.getPlayer(0);
+		octopus::Player const * player_l = state_l.getPlayer(world_l.getPlayer());
 
 		divPanel_l.refresh();
 		paused_l = divPanel_l.isActive();

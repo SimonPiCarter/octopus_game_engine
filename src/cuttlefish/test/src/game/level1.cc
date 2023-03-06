@@ -152,7 +152,7 @@ void runLevel1(Window &window_p)
 	bool quit_l = false;
 	bool paused_l = false;
 
-	World world_l;
+	World world_l(0);
 
 	octopus::Library lib_l;
 	std::list<octopus::Steppable *> spawners_l = Case5(lib_l);
@@ -525,7 +525,7 @@ void runLevel1(Window &window_p)
 
 		tilemap_l.render(window_p, elapsed_l);
 
-		world_l.display(window_p, elapsed_l);
+		world_l.display(window_p, state_l, elapsed_l);
 
 		world_l.getSelection().render(window_p);
 
@@ -553,7 +553,7 @@ void runLevel1(Window &window_p)
 		///
 		/// Debug texts
 		///
-		octopus::Player const * player_l = state_l.getPlayer(0);
+		octopus::Player const * player_l = state_l.getPlayer(world_l.getPlayer());
 
 		//Render background texture to screen
 		background_l->render(window_p.getRenderer(), 0, 0, 80, window_p.getWidth() );

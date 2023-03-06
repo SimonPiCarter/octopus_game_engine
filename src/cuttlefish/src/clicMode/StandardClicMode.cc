@@ -29,7 +29,7 @@ StandardClicMode::~StandardClicMode()
 bool StandardClicMode::handleMouseUp(SDL_Event const & e, Selection &selection_p, World &world_p, Panel &panel_p,
 	Window &window_p, octopus::State const &state_p, octopus::Controller &controller_p)
 {
-	SpriteEntity * sprite_l = world_p.getSprite(window_p, e.button.x, e.button.y);
+	SpriteEntity * sprite_l = world_p.getSprite(window_p, e.button.x, e.button.y, &state_p);
 
 	// true if selection need to be added to current selection
 	bool add_l = false;
@@ -48,7 +48,7 @@ bool StandardClicMode::handleMouseUp(SDL_Event const & e, Selection &selection_p
 		// box selection
 		if(isBoxEnough(e.button.x , e.button.y))
 		{
-			std::list<SpriteEntity *> newSelection_l = world_p.getSprites(window_p, _downX, _downY, e.button.x, e.button.y);
+			std::list<SpriteEntity *> newSelection_l = world_p.getSprites(window_p, _downX, _downY, e.button.x, e.button.y, &state_p);
 
 			// filter units if both units and buildings have been boxed
 			std::list<SpriteEntity *> units_l;
@@ -84,7 +84,7 @@ bool StandardClicMode::handleMouseUp(SDL_Event const & e, Selection &selection_p
 			|| all_l)
 			{
 				// add every same player same model to selection
-				std::list<SpriteEntity *> allSprites_l = world_p.getSprites(window_p, 0, 0, window_p.getWidth(), window_p.getHeight());
+				std::list<SpriteEntity *> allSprites_l = world_p.getSprites(window_p, 0, 0, window_p.getWidth(), window_p.getHeight(), &state_p);
 				// check for model
 				for(SpriteEntity * spriteEnt_l : allSprites_l)
 				{

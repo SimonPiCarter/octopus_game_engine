@@ -10,6 +10,7 @@
 namespace octopus
 {
 	struct StateAndSteps;
+	class State;
 	class Step;
 }
 
@@ -28,21 +29,26 @@ class Window;
 class World
 {
 public:
+	/// @brief Create a world and set up the player playing on it
+	/// @param player_p player idx
+	World(unsigned long player_p) : _player(player_p) {}
 
 	/// @brief update all sprites from the steps given
 	/// only works if all previous steps have been handled this way
 	void handleStep(Window &window_p, Panel &panel_p, StatsPanel &statsPanel_p, DivinityPanel &divPanel_p, octopus::StateAndSteps const &steps_p, SpriteLibrary const &lib_p);
 
 	/// @brief update all sprites and
-	void display(Window &window_p, double elapsed_p);
+	void display(Window &window_p, octopus::State const &state_p, double elapsed_p);
 
 	/// @brief get sprite under coordinate on the window
+	/// @param state_p is optional, ifset only visible sprites will be returned
 	/// @return nullptr if no sprint under coordinate
-	SpriteEntity * getSprite(Window const &window_p, int x, int y) const;
+	SpriteEntity * getSprite(Window const &window_p, int x, int y, octopus::State const *state_p) const;
 
 	/// @brief get all sprites in the box on the window
+	/// @param state_p is optional, ifset only visible sprites will be returned
 	/// @return nullptr if no sprint under coordinate
-	std::list<SpriteEntity *> getSprites(Window const &window_p, int lx, int ly, int ux, int uy) const;
+	std::list<SpriteEntity *> getSprites(Window const &window_p, int lx, int ly, int ux, int uy, octopus::State const *state_p) const;
 
 	Selection &getSelection() { return _selection; }
 	Selection const &getSelection() const { return _selection; }
@@ -63,8 +69,13 @@ public:
 
 	std::list<SpriteEntity *> const &getListSprite() const;
 
+	unsigned long getPlayer() const { return _player; }
+
 private:
-	/// @brief sprite of every entity
+	/// @brief the player for this world
+	unsigned long const _player;
+
+		/// @brief sprite of every entity
 	/// content can be nullptr in case of sprite
 	/// reprensenting dead entities
 	std::vector<SpriteEntity *> _sprites;
@@ -77,6 +88,7 @@ private:
 	/// @brief group of controls
 	std::unordered_map<unsigned long, Selection> _selections;
 
+	/// @brief handlers for last step used
 	bool _first {true};
 	std::list<octopus::Step *>::const_iterator _lastIt;
 
