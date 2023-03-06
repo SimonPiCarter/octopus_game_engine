@@ -120,6 +120,19 @@ bool EntityAttackCommand::applyCommand(Step & step_p, State const &state_p, Comm
 			step_p.addSteppable(new EntityHitPointChangeStep(curTarget_l, std::min(-1., entTarget_l->getArmor() - entSource_l->getDamage(entTarget_l->_model))));
 			// reset reload time
 			step_p.addSteppable(new EntityAttackStep(_source, entSource_l->_reload));
+
+			// once we trigger attack if we attack a building check for a new target
+			if(entTarget_l->_model._isBuilding)
+			{
+				// If target is dead we look for another target in range
+				Entity const * newTarget_l = lookUpNewTarget(state_p, _source);
+				if(newTarget_l && newTarget_l->_model._isUnit)
+				{
+					Logger::getDebug() << "EntityAttackCommand:: new target found (out of range) "<<newTarget_l->_handle<<std::endl;
+					/// steppable to update target
+					step_p.addSteppable(new CommandNewTargetStep(_handleCommand, newTarget_l->_handle, curTarget_l));
+				}
+			}
 		}
 	}
 	else
