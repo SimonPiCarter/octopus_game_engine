@@ -18,6 +18,7 @@ namespace cuttlefish
 {
 class DivinityPanel;
 class Panel;
+class Picture;
 class SpriteEntity;
 class SpriteLibrary;
 class StatsPanel;
@@ -71,16 +72,28 @@ public:
 
 	unsigned long getPlayer() const { return _player; }
 
+
+	std::list<Picture *> const &getDyingPictures() const { return _dyingPictures; }
+	std::list<Picture *> &getDyingPictures() { return _dyingPictures; }
+
+	std::list<SpriteEntity *> const &getDyingSprites() const { return _dyingSprites; }
+	std::list<SpriteEntity *> &getDyingSprites() { return _dyingSprites; }
+
 private:
 	/// @brief the player for this world
 	unsigned long const _player;
 
-		/// @brief sprite of every entity
+	/// @brief sprite of every entity
 	/// content can be nullptr in case of sprite
 	/// reprensenting dead entities
 	std::vector<SpriteEntity *> _sprites;
 	/// @brief this list is kept to avoid iterating on a lot of dead sprites
 	std::list<SpriteEntity *> _listSprite;
+
+	/// @brief list of all picture that are going to be destroyed after one run
+	std::list<Picture *> _dyingPictures;
+	/// @brief list of all sprites that are going to be destroyed after one run
+	std::list<SpriteEntity *> _dyingSprites;
 
 	/// @brief current selection
 	Selection _selection;

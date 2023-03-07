@@ -77,12 +77,54 @@ void World::display(Window &window_p, octopus::State const &state_p, double elap
 		}
 	}
 
+	// update dying sprites and store them with other sprites
+	for(auto &&it_l = _dyingSprites.begin() ; it_l != _dyingSprites.end() ; )
+	{
+		SpriteEntity * sprite_l = *it_l;
+		sprite_l->update(elapsed_p);
+
+		if(sprite_l->isEnded())
+		{
+			delete *it_l;
+			it_l = _dyingSprites.erase(it_l);
+		}
+		else
+		{
+			octopus::Entity const &ent_l = *state_p.getEntity(sprite_l->getHandle());
+			// dispay if not unit or if in vision range
+			if(!ent_l._model._isUnit
+			|| state_p.getVisionHandler().isVisible(player_l->_team, ent_l))
+			{
+				mapSprite_l[long(sprite_l->getY())].push_back(sprite_l);
+			}
+			++it_l;
+		}
+	}
+
 	for(auto &&pair_l : mapSprite_l)
 	{
 		std::list<SpriteEntity*> const &list_l = pair_l.second;
 		for(SpriteEntity * sprite_l : list_l)
 		{
 			sprite_l->render(window_p);
+		}
+	}
+
+	// update dying pictures after everything else but before hp bar
+	for(auto &&it_l = _dyingPictures.begin() ; it_l != _dyingPictures.end() ; )
+	{
+		Picture * picture_l = *it_l;
+		picture_l->update(elapsed_p);
+
+		if(picture_l->isEnded())
+		{
+			delete *it_l;
+			it_l = _dyingPictures.erase(it_l);
+		}
+		else
+		{
+			picture_l->display(window_p);
+			++it_l;
 		}
 	}
 
