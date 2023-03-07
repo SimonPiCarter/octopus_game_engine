@@ -117,6 +117,20 @@ void createBarrack(Library &lib_p)
 	lib_p.registerBuildingModel("barrack", buildingModel_l);
 }
 
+void createDeposit(Library &lib_p)
+{
+	BuildingModel buildingModel_l { true, 0.9, 500. };
+	buildingModel_l._isBuilding = true;
+	buildingModel_l._isStatic = true;
+	buildingModel_l._buildingTime = 100;
+	buildingModel_l._cost[ResourceType::Steel] = 50;
+
+    buildingModel_l._deposit[ResourceType::Food] = true;
+    buildingModel_l._deposit[ResourceType::Steel] = true;
+
+	lib_p.registerBuildingModel("deposit", buildingModel_l);
+}
+
 void createResourceFood(Library &lib_p)
 {
 	EntityModel resModel_l { true, 1.8, 1., 10. };
@@ -141,6 +155,7 @@ void loadModels(octopus::Library &lib_p)
 	createCircle(lib_p);
 	createCommandCenter(lib_p);
 	createBarrack(lib_p);
+    createDeposit(lib_p);
 
 	createResourceFood(lib_p);
 	createResourceSteel(lib_p);

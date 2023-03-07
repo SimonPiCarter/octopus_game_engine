@@ -22,6 +22,7 @@ RessourceLoader::RessourceLoader(cuttlefish::Window &window_p, unsigned long ful
 	_panel.addSpriteInfo("worker", 2, 1);
 	_panel.addSpriteInfo("command_center", 1, 0);
 	_panel.addSpriteInfo("barrack", 0, 0);
+	_panel.addSpriteInfo("deposit", 0, 1);
 
 	_panel.addSpriteInfo("square", 1, 4);
 	_panel.addSpriteInfo("triangle", 2, 3);
@@ -34,6 +35,7 @@ RessourceLoader::RessourceLoader(cuttlefish::Window &window_p, unsigned long ful
 	_statsPanel.addSpriteInfo("worker", 2, 1);
 	_statsPanel.addSpriteInfo("command_center", 1, 0);
 	_statsPanel.addSpriteInfo("barrack", 0, 0);
+	_statsPanel.addSpriteInfo("deposit", 0, 1);
 
 	_statsPanel.addSpriteInfo("square", 1, 4);
 	_statsPanel.addSpriteInfo("triangle", 2, 3);
@@ -60,6 +62,7 @@ RessourceLoader::RessourceLoader(cuttlefish::Window &window_p, unsigned long ful
 	// neutral
 	_spriteLib.registerSpriteTemplate("command_center", window_p.loadTexture("resources/fair_and_square/command_center.png"), 2., 64, 64, 128, 128, {8, 2, 2, 2}, {0.25, 0.5, 0.5, 0.5}, 1);
 	_spriteLib.registerSpriteTemplate("barrack", window_p.loadTexture("resources/deposit.png"), 1., 32, 32, 64, 64, {2, 2, 2, 2}, {0.25, 0.5, 0.5, 0.5}, 1);
+	_spriteLib.registerSpriteTemplate("deposit", window_p.loadTexture("resources/deposit.png"), 1., 32, 32, 64, 64, {2, 2, 2, 2}, {0.25, 0.5, 0.5, 0.5}, 1);
 	_spriteLib.registerSpriteTemplate("worker", window_p.loadTexture("resources/worker.png"), 0.5, 32, 32, 64, 64, {2, 2}, {0.25, 1}, 1);
 
 	_spriteLib.registerSpriteTemplate("square", window_p.loadTexture("resources/fair_and_square/square.png"), 0.5, 16, 16, 32, 32, {8, 8, 8}, {0.25, 0.5/7., 0.05}, 1);
