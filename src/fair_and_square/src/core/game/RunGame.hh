@@ -1,6 +1,8 @@
 #ifndef __RunGame__
 #define __RunGame__
 
+#include <cstddef>
+
 namespace cuttlefish
 {
     class Window;
