@@ -11,11 +11,17 @@ void EntityMoveStep::apply(State &state_p) const
 	Entity * ent_l = state_p.getEntity(this->_handle);
 	Logger::getDebug() << "EntityMoveStep :: apply "<< this->_handle << " " << ent_l->_pos << " + "<<this->_move<<std::endl;
 
-	updateGrid(state_p, ent_l, false);
-	ent_l->_pos += this->_move;
-	updateGrid(state_p, ent_l, true);
-	updateExplorationGrid(state_p, ent_l, true);
-
+	if(ent_l->_alive)
+	{
+		updateGrid(state_p, ent_l, false);
+		ent_l->_pos += this->_move;
+		updateGrid(state_p, ent_l, true);
+		updateExplorationGrid(state_p, ent_l, true);
+	}
+	else
+	{
+		Logger::getDebug() << "EntityMoveStep :: skipped "<<std::endl;
+	}
 }
 
 void EntityMoveStep::revert(State &state_p) const
@@ -23,10 +29,17 @@ void EntityMoveStep::revert(State &state_p) const
 	Entity * ent_l = state_p.getEntity(this->_handle);
 	Logger::getDebug() << "EntityMoveStep :: revert " << this->_handle << " " << ent_l->_pos << " - "<<this->_move<<std::endl;
 
-	updateExplorationGrid(state_p, ent_l, false);
-	updateGrid(state_p, ent_l, false);
-	ent_l->_pos -= this->_move;
-	updateGrid(state_p, ent_l, true);
+	if(ent_l->_alive)
+	{
+		updateExplorationGrid(state_p, ent_l, false);
+		updateGrid(state_p, ent_l, false);
+		ent_l->_pos -= this->_move;
+		updateGrid(state_p, ent_l, true);
+	}
+	else
+	{
+		Logger::getDebug() << "EntityMoveStep :: skipped "<<std::endl;
+	}
 }
 
 bool EntityMoveStep::isNoOp() const
