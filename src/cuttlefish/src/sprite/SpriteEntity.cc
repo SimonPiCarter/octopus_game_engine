@@ -46,4 +46,15 @@ void SpriteEntity::setLifePercent(int percent_p)
 	}
 }
 
+bool SpriteEntity::hasDyingState() const
+{
+	return _hasDyingState;
+}
+
+void SpriteEntity::setDyingState(unsigned long state_p)
+{
+	_dyingState = state_p;
+	_hasDyingState = true;
+}
+
 } // cuttlefish
