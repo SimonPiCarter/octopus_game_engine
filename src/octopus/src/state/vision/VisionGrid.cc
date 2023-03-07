@@ -3,6 +3,7 @@
 #include "state/entity/Entity.hh"
 #include "state/model/entity/EntityModel.hh"
 #include "utils/Box.hh"
+#include "logger/Logger.hh"
 
 namespace octopus
 {
@@ -52,10 +53,12 @@ void VisionGrid::updateVision(const Entity &ent_p, bool set_p)
 
 		if(set_p)
 		{
+			Logger::getDebug() << "VisionGrid :: increasing vision count on [" << x << ", "<<y<<"] for entity "<<ent_p._handle<<std::endl;
 			++_grid[x][y];
 		}
 		else
 		{
+			Logger::getDebug() << "VisionGrid :: decresing vision count on [" << x << ", "<<y<<"] for entity "<<ent_p._handle<<std::endl;
 			--_grid[x][y];
 		}
 	}
