@@ -64,10 +64,10 @@ void Picture::update(double elapsedTime_p)
 		{
 			_hasStateQueuedUp = false;
 			_state = _stateNext;
-			if(_endAfterLastFrame)
-			{
-				_ended = true;
-			}
+		}
+		if(_frame == 0 && _endAfterLastFrame)
+		{
+			_ended = true;
 		}
 	}
 }
