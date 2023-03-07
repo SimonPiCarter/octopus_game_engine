@@ -127,6 +127,22 @@ void revert(Step const & step_p, State &state_p)
 
 void compact(Step & step_p)
 {
+	// first remove entity move step
+	for(auto it_l = step_p.getEntityMoveStep().begin(); it_l != step_p.getEntityMoveStep().end() ; )
+	{
+		// remove if no op
+		if((*it_l)->isNoOp())
+		{
+			step_p.getSteppable().remove(*it_l);
+			delete *it_l;
+			it_l = step_p.getEntityMoveStep().erase(it_l);
+		}
+		else
+		{
+			++it_l;
+		}
+	}
+
 	// remove no op steppables (warning only remove in global list)
 	for(auto it_l = step_p.getSteppable().begin(); it_l != step_p.getSteppable().end() ; )
 	{

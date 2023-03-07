@@ -58,6 +58,7 @@ bool updateStepFromConflictPosition(Step &step_p, State const &state_p)
 	/// map to access move step from entity
 	std::vector<EntityMoveStep *> mapMoveStep_l(state_p.getEntities().size(), nullptr);
 	std::vector<Vector> newPos_l(state_p.getEntities().size());
+	std::vector<Vector> prevMove_l(state_p.getEntities().size());
 
 	for(EntityMoveStep *step_l: step_p.getEntityMoveStep())
 	{
@@ -74,6 +75,16 @@ bool updateStepFromConflictPosition(Step &step_p, State const &state_p)
 			mapMoveStep_l[ent_l->_handle] = step_l;
 			newPos_l[ent_l->_handle] = ent_l->_pos + step_l->_move;
 			Logger::getDebug() << " conflict solver :: update entity move step info [ent "<<ent_l->_handle<<"] to "<<newPos_l[ent_l->_handle]<<std::endl;
+		}
+	}
+
+	if(step_p.getPrev())
+	{
+		Logger::getDebug() << " conflict solver :: handling prev step"<<std::endl;
+		for(EntityMoveStep *step_l : step_p.getPrev()->getEntityMoveStep())
+		{
+			Logger::getDebug() << " conflict solver :: adding [ent"<<step_l->_handle<<"] with move "<<step_l->_move<<std::endl;
+			prevMove_l[step_l->_handle] = step_l->_move;
 		}
 	}
 
