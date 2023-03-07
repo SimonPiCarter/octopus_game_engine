@@ -80,6 +80,11 @@ class Picture
 		int getTextureAtomicWidth() const;
 		int getTextureAtomicHeight() const;
 
+		void setEndAfterLastFrame(bool b);
+		bool isEndAfterLastFrame() const;
+
+		bool isEnded() const;
+
 	protected:
 		//The underlying texture
 		Texture const * const _texture;
@@ -114,6 +119,11 @@ class Picture
 		bool _hasStateQueuedUp {false};
 		/// @brief the state queued up after current is over
 		int _stateNext {0};
+		/// @brief boolean to tell that this Picture should end at next frame reset
+		bool _endAfterLastFrame {false};
+		/// @brief boolean to track if the picture ended (result of a frame reset with _endAfterLastFrame true)
+		/// @note picture will not render if this is set to true
+		bool _ended {false};
 };
 
 } // namespace cuttlefish

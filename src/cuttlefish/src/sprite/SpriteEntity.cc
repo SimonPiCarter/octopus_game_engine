@@ -29,7 +29,9 @@ octopus::Handle const & SpriteEntity::getHandle() const
 
 void SpriteEntity::renderLifeBar(Window &window_p, double elapsed_p)
 {
-	if(_lifeBar && _lifeBar->getProgress() != 100)
+	if(_lifeBar
+	&& _lifeBar->getProgress() != 100
+	&& _lifeBar->getProgress() != 0 )
 	{
 		// center life bar
 		_lifeBar->setPosition(_dest.x +_dest.w/2 - _lifeBar->getWidth()/2  , _dest.y-_lifeBar->getHeight()-1);
@@ -45,5 +47,22 @@ void SpriteEntity::setLifePercent(int percent_p)
 		_lifeBar->setProgress(percent_p);
 	}
 }
+
+bool SpriteEntity::hasDyingState() const
+{
+	return _hasDyingState;
+}
+
+void SpriteEntity::setDyingState(unsigned long state_p)
+{
+	_dyingState = state_p;
+	_hasDyingState = true;
+}
+
+unsigned long SpriteEntity::getDyingState() const
+{
+	return _dyingState;
+}
+
 
 } // cuttlefish

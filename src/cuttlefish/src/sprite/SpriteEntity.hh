@@ -23,11 +23,19 @@ class SpriteEntity : public Sprite
 
 		void setLifePercent(int percent_p);
 
+		bool hasDyingState() const;
+		void setDyingState(unsigned long state_p);
+
+		unsigned long getDyingState() const;
+
 	private:
 		/// @brief the handle of the entity displayed
 		octopus::Handle const _handle;
 
 		ProgressBar * _lifeBar;
+
+		unsigned long _dyingState {0};
+		bool _hasDyingState {false};
 };
 
 } // namespace cuttlefish

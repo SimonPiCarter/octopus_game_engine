@@ -65,13 +65,20 @@ void Picture::update(double elapsedTime_p)
 			_hasStateQueuedUp = false;
 			_state = _stateNext;
 		}
+		if(_frame == 0 && _endAfterLastFrame)
+		{
+			_ended = true;
+		}
 	}
 }
 
 void Picture::display(Window &window_p)
 {
-	SDL_Rect clip_l(this->getClip());
-	_texture->render(window_p.getRenderer(), _dest.x, _dest.y, _dest.h, _dest.w, &clip_l);
+	if(!_ended)
+	{
+		SDL_Rect clip_l(this->getClip());
+		_texture->render(window_p.getRenderer(), _dest.x, _dest.y, _dest.h, _dest.w, &clip_l);
+	}
 }
 
 bool Picture::isInside(Window const &window_p, int x, int y) const
@@ -146,6 +153,18 @@ int Picture::getTextureAtomicWidth() const
 int Picture::getTextureAtomicHeight() const
 {
 	return _height;
+}
+void Picture::setEndAfterLastFrame(bool b)
+{
+	_endAfterLastFrame = b;
+}
+bool Picture::isEndAfterLastFrame() const
+{
+	return _endAfterLastFrame;
+}
+bool Picture::isEnded() const
+{
+	return _ended;
 }
 
 } // cuttlefish

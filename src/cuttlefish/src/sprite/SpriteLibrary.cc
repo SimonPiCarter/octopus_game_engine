@@ -25,6 +25,11 @@ void SpriteLibrary::registerAltTextureForTemplate(std::string const &id_p, unsig
 	_mapTemplates[id_p].mapTexturePerPlayer[player_p] = texture_p;
 }
 
+void SpriteLibrary::addDyingState(std::string const &id_p, int state_p)
+{
+	_mapTemplates[id_p].dyingState = state_p;
+}
+
 Sprite * SpriteLibrary::createSprite(std::string const &id_p, bool absolute_p) const
 {
 	return new Sprite(
@@ -48,7 +53,7 @@ SpriteEntity * SpriteLibrary::createSpriteEntity(octopus::Handle const &handle_p
 	{
 		texture_l = _mapTemplates.at(id_p).mapTexturePerPlayer.at(player_p);
 	}
-	return new SpriteEntity(
+	SpriteEntity * sprite_l = new SpriteEntity(
 			handle_p,
 			texture_l,
 			_hpBarBackground && hpBar_p?new Picture(_hpBarBackground, _hpBarFilling->getWidth(), _hpBarFilling->getHeight(), {1}, {1}):nullptr,			// optional pictures
@@ -62,6 +67,12 @@ SpriteEntity * SpriteLibrary::createSpriteEntity(octopus::Handle const &handle_p
 			_mapTemplates.at(id_p).timePerFramePerState,
 			false
 		);
+
+	if(_mapTemplates.at(id_p).dyingState >= 0)
+	{
+		sprite_l->setDyingState(_mapTemplates.at(id_p).dyingState);
+	}
+	return sprite_l;
 }
 
 SpriteTemplate const & SpriteLibrary::getSpriteTemplate(std::string const &id_p) const
