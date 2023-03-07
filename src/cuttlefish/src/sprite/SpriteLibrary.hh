@@ -28,6 +28,9 @@ struct SpriteTemplate
 	/// @brief blue print state (-1 if not applicable)
 	int blueprint {-1};
 
+	/// @brief dying state (-1 if not applicable)
+	int dyingState {-1};
+
 	/// @brief enable oiverriding sprite per player id
 	std::unordered_map<unsigned long, Texture const *> mapTexturePerPlayer;
 };
@@ -40,6 +43,7 @@ public:
 			std::vector<int> const &nbFramesPerState_p, std::vector<double> const &timePerFramePerState_p, int blueprintState_p);
 
 	void registerAltTextureForTemplate(std::string const &id_p, unsigned long player_p, Texture const * texture_p);
+	void addDyingState(std::string const &id_p, int state_p);
 
 	Sprite * createSprite(std::string const &id_p, bool absolute_p) const;
 	SpriteEntity * createSpriteEntity(octopus::Handle const &handle_p, std::string const &id_p, bool hpBar_p, unsigned long player_p) const;
