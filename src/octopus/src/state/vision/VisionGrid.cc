@@ -46,6 +46,14 @@ void VisionGrid::updateVision(const Entity &ent_p, bool set_p)
 {
 	VisionPattern const &pattern_l = getPattern(ent_p._model._lineOfSight);
 
+	if(set_p)
+	{
+		Logger::getDebug() << "VisionGrid :: increasing vision count on " << ent_p._pos<<" for entity "<<ent_p._handle<<std::endl;
+	}
+	else
+	{
+		Logger::getDebug() << "VisionGrid :: decresing vision count on " << ent_p._pos<<" for entity "<<ent_p._handle<<std::endl;
+	}
 	for(std::pair<unsigned long, unsigned long> const &pair_l : pattern_l)
 	{
 		unsigned long x = std::max(0l, std::min<long>(to_int(pair_l.first+ent_p._pos.x), _grid.size()-1));
@@ -53,12 +61,10 @@ void VisionGrid::updateVision(const Entity &ent_p, bool set_p)
 
 		if(set_p)
 		{
-			Logger::getDebug() << "VisionGrid :: increasing vision count on [" << x << ", "<<y<<"] for entity "<<ent_p._handle<<std::endl;
 			++_grid[x][y];
 		}
 		else
 		{
-			Logger::getDebug() << "VisionGrid :: decresing vision count on [" << x << ", "<<y<<"] for entity "<<ent_p._handle<<std::endl;
 			--_grid[x][y];
 		}
 	}
