@@ -26,6 +26,8 @@ class SpriteEntity : public Sprite
 		bool hasDyingState() const;
 		void setDyingState(unsigned long state_p);
 
+		unsigned long getDyingState() const;
+
 	private:
 		/// @brief the handle of the entity displayed
 		octopus::Handle const _handle;

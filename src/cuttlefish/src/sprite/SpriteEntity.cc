@@ -57,4 +57,10 @@ void SpriteEntity::setDyingState(unsigned long state_p)
 	_hasDyingState = true;
 }
 
+unsigned long SpriteEntity::getDyingState() const
+{
+	return _dyingState;
+}
+
+
 } // cuttlefish
