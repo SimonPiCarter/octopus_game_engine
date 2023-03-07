@@ -60,10 +60,23 @@ void WorldUpdaterStepVisitor::clear(octopus::Handle const &handle_p)
 	_panel.refresh(_world.getSelection()._sprite, *_state);
 	_statsPanel.refresh(_window, *_state);
 
+	// store sprite
+	SpriteEntity * sprite_l = _world._sprites[handle_p];
 	// remove sprite
 	_world._listSprite.remove(_world._sprites[handle_p]);
-	delete _world._sprites[handle_p];
 	_world._sprites[handle_p] = nullptr;
+
+	// register as a dying sprite to the world
+	if(sprite_l->hasDyingState())
+	{
+		sprite_l->setState(sprite_l->getDyingState());
+		_world.getDyingSprites().push_back(sprite_l);
+	}
+	// else just delete it
+	else
+	{
+		delete sprite_l;
+	}
 }
 
 void WorldUpdaterStepVisitor::visit(octopus::EntitySpawnStep const *steppable_p)
