@@ -51,6 +51,7 @@ target_sources (unit_tests
 	src/triggerTime.test.cc
 	src/triggerUnitSpawn.test.cc
 	src/unitProductionCommand.test.cc
+	src/visionGridOnStep.test.cc
 )
 
 target_link_libraries (unit_tests
