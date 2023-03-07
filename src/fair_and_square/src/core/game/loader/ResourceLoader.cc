@@ -62,9 +62,10 @@ RessourceLoader::RessourceLoader(cuttlefish::Window &window_p, unsigned long ful
 	_spriteLib.registerSpriteTemplate("barrack", window_p.loadTexture("resources/deposit.png"), 1., 32, 32, 64, 64, {2, 2, 2, 2}, {0.25, 0.5, 0.5, 0.5}, 1);
 	_spriteLib.registerSpriteTemplate("worker", window_p.loadTexture("resources/worker.png"), 0.5, 32, 32, 64, 64, {2, 2}, {0.25, 1}, 1);
 
-	_spriteLib.registerSpriteTemplate("square", window_p.loadTexture("resources/fair_and_square/square.png"), 0.5, 16, 16, 32, 32, {8, 8}, {0.25, 0.5/7.}, 1);
+	_spriteLib.registerSpriteTemplate("square", window_p.loadTexture("resources/fair_and_square/square.png"), 0.5, 16, 16, 32, 32, {8, 8, 8}, {0.25, 0.5/7., 0.05}, 1);
 	_spriteLib.registerAltTextureForTemplate("square", 0, window_p.loadTexture("resources/fair_and_square/square_green.png"));
 	_spriteLib.registerAltTextureForTemplate("square", 1, window_p.loadTexture("resources/fair_and_square/square_red.png"));
+	_spriteLib.addDyingState("square", 2);
 	_spriteLib.registerSpriteTemplate("triangle", window_p.loadTexture("resources/fair_and_square/triangle.png"), 0.5, 16, 16, 32, 32, {8, 8}, {0.25, 0.5/7.}, 1);
 	_spriteLib.registerAltTextureForTemplate("triangle", 0, window_p.loadTexture("resources/fair_and_square/triangle_green.png"));
 	_spriteLib.registerAltTextureForTemplate("triangle", 1, window_p.loadTexture("resources/fair_and_square/triangle_red.png"));
