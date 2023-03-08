@@ -50,6 +50,31 @@ struct HandleHash
 	}
 };
 
+Fixed getRoot(Vector const &v, Vector const &d, Fixed sqR_p)
+{
+	// solve At^2 + Bt + C = 0
+	Fixed A = v.x + v.y;
+	Fixed B = 2 * d.x * v.x + 2 * d.y * v.y;
+	Fixed C = d.x*d.x + d.y*d.y - sqR_p;
+
+	Fixed delta = std::max(Fixed(0), B*B - 4*A*C);
+	Fixed t = - C / B;
+	if(A != 0)
+	{
+		Fixed sqrtDelta = numeric::square_root(delta);
+		Fixed t1 = - B - sqrtDelta / (2*A);
+		Fixed t2 = - B + sqrtDelta / (2*A);
+		t = t1 > t2 ? t1 : t2;
+	}
+
+	if(t < 0)
+	{
+		//std::cout<<"neg?? "<<t<<std::endl;
+		t = 0;
+	}
+	return t;
+}
+
 bool updateStepFromConflictPosition(Step &step_p, State const &state_p)
 {
 	RandomGen gen_l(42);
@@ -105,6 +130,8 @@ bool updateStepFromConflictPosition(Step &step_p, State const &state_p)
 	std::vector<Vector> mapCorrection_l(state_p.getEntities().size());
 	/// this correction should not been normalized in the end (used with buildings)
 	std::vector<Vector> mapAbsoluteCorrection_l(state_p.getEntities().size());
+	/// coef correction for movement
+	std::vector<Fixed> mapDelta_l(state_p.getEntities().size(), 1);
 
 	//////////////////////////////
 	// Set up bitset of collision
@@ -133,7 +160,7 @@ bool updateStepFromConflictPosition(Step &step_p, State const &state_p)
 		}
 
 		/// limit the number of collison to avoid huge slow downs at start up
-		size_t maxCol_l = 50;
+		size_t maxCol_l = 10;
 		size_t nbCol_l = 0;
 		Box<long> box_l {state_p.getGridIndex(newPos_l[entA_l->_handle].x-entA_l->_model._ray),
 						 state_p.getGridIndex(newPos_l[entA_l->_handle].x+entA_l->_model._ray+0.999),
@@ -173,68 +200,97 @@ bool updateStepFromConflictPosition(Step &step_p, State const &state_p)
 				return false;
 			}
 			// check collision
-			else if(collision(newPos_l[entA_l->_handle], newPos_l[entB_l->_handle], entA_l->_model._ray, entB_l->_model._ray))
+			else
 			{
-				++nbCol_l;
-				// repulsion against axis between both (from B to A)
-				Vector axis_l = (entA_l->_pos + stepA_l->_move) - (entB_l->_pos + stepB_l->_move);
+				bool curCol_l = collision(entA_l->_pos, entB_l->_pos, entA_l->_model._ray, entB_l->_model._ray);
+				bool colAtoB_l = collision(newPos_l[entA_l->_handle], entB_l->_pos, entA_l->_model._ray, entB_l->_model._ray);
+				bool colBtoA_l = collision(newPos_l[entB_l->_handle], entA_l->_pos, entA_l->_model._ray, entB_l->_model._ray);
 
-				// lenght between positions
-				Fixed length_l = length(axis_l);
+				Fixed curSqDist_l = square_length(entA_l->_pos - entB_l->_pos);
+				Fixed nexSqDist_l = square_length(newPos_l[entA_l->_handle] - newPos_l[entB_l->_handle]);
 
-				// collision distance (distance missing to avoid collision)
-				Fixed distance_l = entA_l->_model._ray + entB_l->_model._ray - length_l;
-				if(distance_l < 0.)
+				if(curCol_l && curSqDist_l >= nexSqDist_l)
 				{
-					throw std::logic_error("octopus :: Error collision but no distance to fix");
-				}
+					++nbCol_l;
+					// repulsion against axis between both (from B to A)
+					Vector axis_l = (entA_l->_pos + stepA_l->_move) - (entB_l->_pos + stepB_l->_move);
 
-				Vector normalizedAxis_l { 1., 0.};
-				if(axis_l.x > 1e-3 || axis_l.y > 1e-3)
-				{
-					// Normalized axis from B to A
-					normalizedAxis_l = axis_l / length_l;
+					// lenght between positions
+					Fixed length_l = length(axis_l);
+
+					// collision distance (distance missing to avoid collision)
+					Fixed distance_l = entA_l->_model._ray + entB_l->_model._ray - length_l;
+					if(distance_l < 0.)
+					{
+						throw std::logic_error("octopus :: Error collision but no distance to fix");
+					}
+
+					Vector normalizedAxis_l { 1., 0.};
+					if(axis_l.x > 1e-3 || axis_l.y > 1e-3)
+					{
+						// Normalized axis from B to A
+						normalizedAxis_l = axis_l / length_l;
+					}
+					else
+					{
+						normalizedAxis_l = Vector { double(gen_l.nextFromRange(1, 10)), double(gen_l.nextFromRange(1, 10))};
+						if(gen_l.nextFromRange(0, 1) > 0)
+						{
+							normalizedAxis_l.x = -normalizedAxis_l.x;
+						}
+						if(gen_l.nextFromRange(0, 1) > 0)
+						{
+							normalizedAxis_l.y = -normalizedAxis_l.y;
+						}
+						normalizedAxis_l = normalizedAxis_l / length(normalizedAxis_l);
+					}
+					Fixed coefA_l = 0.5;
+					Fixed coefB_l = 0.5;
+					if(square_length(stepA_l->_move) > 1e-5 || square_length(stepB_l->_move) > 1e-5)
+					{
+						coefA_l = numeric::square_root(square_length(stepB_l->_move)/(square_length(stepA_l->_move)+square_length(stepB_l->_move)));
+						coefB_l = 1 - coefA_l;
+					}
+					if(entA_l->isFrozen() && entB_l->isFrozen())
+					{
+						coefA_l = 0.;
+						coefB_l = 0.;
+					}
+					else if(entA_l->isFrozen())
+					{
+						coefA_l = 0.;
+						coefB_l = 1.;
+					}
+					else if(entB_l->isFrozen())
+					{
+						coefA_l = 1.;
+						coefB_l = 0.;
+					}
+					Logger::getDebug() << " conflict solver :: solving conflict [ent "<<stepA_l->_handle<<"] with "<<normalizedAxis_l * distance_l * coefA_l
+									<< " and [ent "<<stepB_l->_handle<<"] with"<<normalizedAxis_l * distance_l * coefB_l * -1.<<std::endl;
+					// updated steps, both doing half distance
+					mapCorrection_l[stepA_l->_handle] += normalizedAxis_l * distance_l * coefA_l;
+					mapCorrection_l[stepB_l->_handle] -= normalizedAxis_l * distance_l * coefB_l;
 				}
 				else
 				{
-					normalizedAxis_l = Vector { double(gen_l.nextFromRange(1, 10)), double(gen_l.nextFromRange(1, 10))};
-					if(gen_l.nextFromRange(0, 1) > 0)
+					Fixed r_l = entA_l->_model._ray + entB_l->_model._ray;
+					Fixed sqR_l = r_l * r_l;
+					if(colAtoB_l && curSqDist_l > nexSqDist_l)
 					{
-						normalizedAxis_l.x = -normalizedAxis_l.x;
+						Fixed t = getRoot(stepA_l->_move, entA_l->_pos - entB_l->_pos, sqR_l);
+
+						mapDelta_l[entA_l->_handle] = std::min(mapDelta_l[entA_l->_handle], t * 0.99);
 					}
-					if(gen_l.nextFromRange(0, 1) > 0)
+					if(colBtoA_l && curSqDist_l > nexSqDist_l)
 					{
-						normalizedAxis_l.y = -normalizedAxis_l.y;
+						Fixed t = getRoot(stepB_l->_move, entB_l->_pos - entA_l->_pos, sqR_l);
+
+						mapDelta_l[entB_l->_handle] = std::min(mapDelta_l[entB_l->_handle], t * 0.99);
 					}
-					normalizedAxis_l = normalizedAxis_l / length(normalizedAxis_l);
 				}
-				Fixed coefA_l = 0.5;
-				Fixed coefB_l = 0.5;
-				if(square_length(stepA_l->_move) > 1e-5 || square_length(stepB_l->_move) > 1e-5)
-				{
-					coefA_l = numeric::square_root(square_length(stepB_l->_move)/(square_length(stepA_l->_move)+square_length(stepB_l->_move)));
-					coefB_l = 1 - coefA_l;
-				}
-				if(entA_l->isFrozen() && entB_l->isFrozen())
-				{
-					coefA_l = 0.;
-					coefB_l = 0.;
-				}
-				else if(entA_l->isFrozen())
-				{
-					coefA_l = 0.;
-					coefB_l = 1.;
-				}
-				else if(entB_l->isFrozen())
-				{
-					coefA_l = 1.;
-					coefB_l = 0.;
-				}
-				Logger::getDebug() << " conflict solver :: solving conflict [ent "<<stepA_l->_handle<<"] with "<<normalizedAxis_l * distance_l * coefA_l
-								   << " and [ent "<<stepB_l->_handle<<"] with"<<normalizedAxis_l * distance_l * coefB_l * -1.<<std::endl;
-				// updated steps, both doing half distance
-				mapCorrection_l[stepA_l->_handle] += normalizedAxis_l * distance_l * coefA_l;
-				mapCorrection_l[stepB_l->_handle] -= normalizedAxis_l * distance_l * coefB_l;
+
+
 			}
 			return false;
 		});
@@ -247,8 +303,9 @@ bool updateStepFromConflictPosition(Step &step_p, State const &state_p)
 	//////////////////////////////
 
 	bool updated_l = false;
-	for(EntityMoveStep *ent_l: step_p.getEntityMoveStep())
+	for(EntityMoveStep *entStep_l: step_p.getEntityMoveStep())
 	{
+		Entity const *ent_l = state_p.getEntity(entStep_l->_handle);
 		// if update
 		if(!is_zero(mapCorrection_l[ent_l->_handle]))
 		{
@@ -256,28 +313,29 @@ bool updateStepFromConflictPosition(Step &step_p, State const &state_p)
 		}
 		else
 		{
+			entStep_l->_move = entStep_l->_move * mapDelta_l[ent_l->_handle];
+			newPos_l[ent_l->_handle] = ent_l->_pos + entStep_l->_move;
 			continue;
 		}
 		// ensure that move does not become too chaotic
 		Fixed square_l = state_p.getEntity(ent_l->_handle)->getStepSpeed()*state_p.getEntity(ent_l->_handle)->getStepSpeed();
-		Vector origMove_l = ent_l->_move;
-		ent_l->_move = ent_l->_move + mapCorrection_l[ent_l->_handle] * 0.9;
-		Fixed newSquare_l = square_length(ent_l->_move);
+		entStep_l->_move = mapCorrection_l[ent_l->_handle];
+		Fixed newSquare_l = square_length(entStep_l->_move);
 		if(newSquare_l > square_l)
 		{
-			ent_l->_move = ent_l->_move * numeric::square_root(square_l/newSquare_l);
+			entStep_l->_move = entStep_l->_move * numeric::square_root(square_l/newSquare_l);
 		}
+		// Vector origMove_l = entStep_l->_move;
 		// in case no move
 		// if(newSquare_l < 1e-3)
 		// {
 		// 	// try a small perpendicular move to avoid two entities to block each other
 		// 	Vector perpendicular_l {origMove_l.y, -origMove_l.x};
 		// 	double rdmFactr_l = gen_l.nextFromRange(5, 20)/100.;
-		// 	ent_l->_move += perpendicular_l * rdmFactr_l;
+		// 	entStep_l->_move += perpendicular_l * rdmFactr_l;
 		// }
 
-		Entity const *entA_l = state_p.getEntity(ent_l->_handle);
-		newPos_l[entA_l->_handle] = entA_l->_pos + ent_l->_move;
+		newPos_l[ent_l->_handle] = ent_l->_pos + entStep_l->_move;
 	}
 
 	//////////////////////////////
