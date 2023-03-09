@@ -11,6 +11,7 @@
 #include "step/command/harvest/CommandHarvestStep.hh"
 #include "step/command/CommandDataWaypointStep.hh"
 #include "step/command/CommandMoveUpdateStep.hh"
+#include "step/entity/EntityFrozenStep.hh"
 #include "step/unit/UnitHarvestStep.hh"
 #include "utils/Box.hh"
 
@@ -187,6 +188,11 @@ bool UnitHarvestCommand::applyCommand(Step & step_p, State const &state_p, Comma
 	}
 
 	return false;
+}
+
+void UnitHarvestCommand::cleanUp(Step & step_p, State const &state_p, CommandData const *data_p) const
+{
+	_subMoveCommand.cleanUp(step_p, state_p, data_p);
 }
 
 } // namespace octopus
