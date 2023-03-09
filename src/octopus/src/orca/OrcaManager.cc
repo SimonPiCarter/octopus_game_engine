@@ -86,7 +86,7 @@ void OrcaManager::setupStep(State const &state_p, Step &step_p)
 {
     for(octopus::Entity const * ent_l : state_p.getEntities())
     {
-        if(!ent_l->_alive)
+        if(!ent_l->_alive || ent_l->_model._isStatic)
         {
             continue;
         }
