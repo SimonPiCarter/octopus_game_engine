@@ -101,7 +101,12 @@ public:
 	Metrics const &getMetrics() const;
 
 	unsigned long getOngoingStep() const;
+
+	void enableORCA() { _orcaCollision = true; }
 private:
+	/// @brief set to true to enable orca Collision
+	/// way better performance but less predictible (should not be used in tests)
+	bool _orcaCollision {false};
 
 	BufferedState * _backState {nullptr};
 	BufferedState * _bufferState {nullptr};
