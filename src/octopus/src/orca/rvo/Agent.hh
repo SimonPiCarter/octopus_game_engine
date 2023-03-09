@@ -43,6 +43,11 @@
 #include "Definitions.hh"
 #include "RVOSimulator.hh"
 
+namespace octopus
+{
+	class EntityMoveStep;
+}
+
 namespace RVO {
 	/**
 	 * \brief      Defines an agent in the simulation.
@@ -104,8 +109,8 @@ namespace RVO {
 		Vector2 velocity_;
 
 		size_t id_;
-		std::mt19937 gen32_;
 
+		octopus::EntityMoveStep * moveStep_;
 
 		friend class KdTree;
 		friend class RVOSimulator;

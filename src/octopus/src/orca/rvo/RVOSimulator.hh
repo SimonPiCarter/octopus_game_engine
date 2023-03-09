@@ -44,6 +44,11 @@
 
 #include "Vector2.hh"
 
+namespace octopus
+{
+	class EntityMoveStep;
+}
+
 namespace RVO {
 	/**
 	 * \brief       Error value.
@@ -317,6 +322,8 @@ namespace RVO {
 		 */
 		const Vector2 &getAgentPosition(size_t agentNo) const;
 
+		octopus::EntityMoveStep * getAgentMoveStep(size_t agentNo);
+
 		/**
 		 * \brief      Returns the two-dimensional preferred velocity of a
 		 *             specified agent.
@@ -520,6 +527,8 @@ namespace RVO {
 		 *                             position.
 		 */
 		void setAgentPosition(size_t agentNo, const Vector2 &position);
+
+		void setAgentMoveStep(size_t agentNo, octopus::EntityMoveStep *moveStep);
 
 		/**
 		 * \brief      Sets the two-dimensional preferred velocity of a

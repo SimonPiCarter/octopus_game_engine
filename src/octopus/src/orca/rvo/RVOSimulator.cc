@@ -95,7 +95,6 @@ namespace RVO {
 		agent->velocity_ = defaultAgent_->velocity_;
 
 		agent->id_ = agents_.size();
-		agent->gen32_.seed(agents_.size());
 
 		agents_.push_back(agent);
 
@@ -258,6 +257,11 @@ namespace RVO {
 		return agents_[agentNo]->position_;
 	}
 
+	octopus::EntityMoveStep * RVOSimulator::getAgentMoveStep(size_t agentNo)
+	{
+		return agents_[agentNo]->moveStep_;
+	}
+
 	const Vector2 &RVOSimulator::getAgentPrefVelocity(size_t agentNo) const
 	{
 		return agents_[agentNo]->prefVelocity_;
@@ -361,6 +365,11 @@ namespace RVO {
 	void RVOSimulator::setAgentPosition(size_t agentNo, const Vector2 &position)
 	{
 		agents_[agentNo]->position_ = position;
+	}
+
+	void RVOSimulator::setAgentMoveStep(size_t agentNo, octopus::EntityMoveStep *moveStep)
+	{
+		agents_[agentNo]->moveStep_ = moveStep;
 	}
 
 	void RVOSimulator::setAgentPrefVelocity(size_t agentNo, const Vector2 &prefVelocity)

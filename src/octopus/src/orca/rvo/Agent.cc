@@ -349,17 +349,8 @@ namespace RVO {
 				}
 				else
 				{
-					std::uniform_int_distribution<> distrib(0, 1);
-					int sign_l = distrib(gen32_);
-					int axis_l = distrib(gen32_);
-					float x_l = axis_l==0?1.:0.;
-					float y_l = axis_l==0?0.:1.;
-					if(sign_l==0)
-					{
-						x_l = -x_l;
-						y_l = -y_l;
-					}
-					const Vector2 unitW = Vector2(x_l, y_l);
+					const Vector2 unitW = Vector2(std::cos(2.0 * 3.14 * double(id_) / double(sim_->getNumAgents())),
+											std::sin(2.0 * 3.14 * double(id_) / double(sim_->getNumAgents())));
 
 					line.direction = Vector2(unitW.y(), -unitW.x());
 					u = (combinedRadius * invTimeStep - wLength) * unitW;
