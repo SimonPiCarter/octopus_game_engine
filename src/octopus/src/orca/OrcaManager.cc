@@ -35,6 +35,8 @@ void OrcaManager::resetFromState(State const &state_p)
     // tear down sim
     delete _sim;
 
+    _mapHandleIdx.clear();
+
     // new sim
     _sim = new RVO::RVOSimulator();
 	/// Specify the global time step of the simulation.
@@ -65,7 +67,7 @@ void OrcaManager::resetFromState(State const &state_p)
 		    size_t idx_l = _sim->addAgent(RVO::Vector2(ent_l->_pos.x,ent_l->_pos.y));
             _sim->setAgentRadius(idx_l, ent_l->_model._ray);
 
-            mapHandleIdx_l[ent_l->_handle] = idx_l;
+            _mapHandleIdx[ent_l->_handle] = idx_l;
         }
     }
 
@@ -88,7 +90,7 @@ void OrcaManager::setupStep(State const &state_p, Step &step_p)
         {
             continue;
         }
-        size_t idx_l = mapHandleIdx_l[ent_l->_handle];
+        size_t idx_l = _mapHandleIdx[ent_l->_handle];
         if(ent_l->isFrozen())
         {
             _sim->setAgentMaxSpeed(idx_l, 0);
@@ -120,14 +122,14 @@ void OrcaManager::setupStep(State const &state_p, Step &step_p)
 
     for(octopus::EntityMoveStep *moveStep_l : step_p.getEntityMoveStep())
     {
-        size_t idx_l = mapHandleIdx_l[moveStep_l->_handle];
+        size_t idx_l = _mapHandleIdx[moveStep_l->_handle];
         _sim->setAgentMoveStep(idx_l, moveStep_l);
         _sim->setAgentPrefVelocity(idx_l, RVO::Vector2(moveStep_l->_move.x, moveStep_l->_move.y));
     }
 
     for(octopus::EntityMoveStep const *moveStep_l : step_p.getPrev()->getEntityMoveStep())
     {
-        size_t idx_l = mapHandleIdx_l[moveStep_l->_handle];
+        size_t idx_l = _mapHandleIdx[moveStep_l->_handle];
         _sim->setAgentVelocity(idx_l, RVO::Vector2(moveStep_l->_move.x, moveStep_l->_move.y));
     }
 }
@@ -141,7 +143,7 @@ void OrcaManager::commitStep(State const &state_p, Step &step_p)
 {
     for(octopus::EntityMoveStep *moveStep_l : step_p.getEntityMoveStep())
     {
-        size_t idx_l = mapHandleIdx_l[moveStep_l->_handle];
+        size_t idx_l = _mapHandleIdx[moveStep_l->_handle];
         octopus::Entity const * ent_l = state_p.getEntity(moveStep_l->_handle);
 
         RVO::Vector2 newPos_l = _sim->getAgentPosition(idx_l);

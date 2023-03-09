@@ -54,7 +54,7 @@ private:
     RVO::RVOSimulator *_sim {nullptr};
 
     /// @brief temporary mapping
-    std::unordered_map<octopus::Handle, size_t> mapHandleIdx_l;
+    std::unordered_map<octopus::Handle, size_t> _mapHandleIdx;
 };
 } // namespace octopus
 
