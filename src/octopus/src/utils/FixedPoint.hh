@@ -114,13 +114,13 @@ namespace octopus
 		template <class Number, class = typename std::enable_if<std::is_arithmetic<Number>::value>::type>
 		FixedPoint<e> &operator*=(Number const &f)
 		{
-			_data *= static_cast<long long>(f);
+			_data = static_cast<long long>(_data * f);
 			return *this;
 		}
 		template <class Number, class = typename std::enable_if<std::is_arithmetic<Number>::value>::type>
 		FixedPoint<e> &operator/=(Number const &f)
 		{
-			_data /= static_cast<long long>(f);
+			_data = static_cast<long long>(_data / f);
 			return *this;
 		}
 		template <class Number, class = typename std::enable_if<std::is_arithmetic<Number>::value>::type>
