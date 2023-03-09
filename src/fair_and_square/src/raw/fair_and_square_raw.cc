@@ -15,6 +15,7 @@ int main()
 	std::list<octopus::Command *> commands_l = WaveLevelCommands(lib_l);
 
 	octopus::Controller controller_l(spawners_l, 0.01, commands_l, 5, 100);
+	controller_l.enableORCA();
 
 	using namespace std::chrono_literals;
 
