@@ -1,6 +1,8 @@
 #ifndef __FixedPoint__
 #define __FixedPoint__
 
+#include <iostream>
+
 namespace octopus
 {
 	/// @brief store a real x e as an integer
@@ -204,6 +206,11 @@ octopus::FixedPoint<e> operator*(Number const &f, octopus::FixedPoint<e> const &
 	return fp * f;
 }
 template <long long e, class Number, class = typename std::enable_if<std::is_arithmetic<Number>::value>::type>
+octopus::FixedPoint<e> operator/(Number const &f, octopus::FixedPoint<e> const &fp)
+{
+	return octopus::FixedPoint<e>(f) / fp;
+}
+template <long long e, class Number, class = typename std::enable_if<std::is_arithmetic<Number>::value>::type>
 octopus::FixedPoint<e> operator+(Number const &f, octopus::FixedPoint<e> const &fp)
 {
 	return fp + f;
@@ -256,6 +263,16 @@ std::ostream &operator<<(std::ostream &os, octopus::FixedPoint<e> f) {
 	return os;
 }
 
+template <long long e>
+octopus::FixedPoint<e> sqr(octopus::FixedPoint<e> const &f) {
+	return f*f;
+}
+
+template <long long e>
+bool is_zero(octopus::FixedPoint<e> const &f) {
+	return std::abs(f.data()) < 1;
+}
+
 namespace numeric
 {
 
@@ -273,6 +290,7 @@ octopus::FixedPoint<e> square_root(octopus::FixedPoint<e> const &v)
 
 	int i = 0;
 	octopus::FixedPoint<e> delta_l = res_l * res_l - v;
+	/// @todo mettre 200?
 	while(i < 1000 && (delta_l < mepsilon_l || delta_l > epsilon_l))
 	{
 		res_l = (res_l + v / res_l) * octopus::FixedPoint<e>(e/2, true);
