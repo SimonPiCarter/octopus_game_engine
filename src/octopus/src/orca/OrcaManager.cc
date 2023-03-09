@@ -29,6 +29,10 @@ OrcaManager::~OrcaManager()
     delete _sim;
 }
 
+bool skipCollision(octopus::Entity const *ent_p)
+{
+    return !ent_p->_alive || ent_p->isIgnoringCollision();
+}
 
 void OrcaManager::resetFromState(State const &state_p)
 {
@@ -47,7 +51,7 @@ void OrcaManager::resetFromState(State const &state_p)
 
     for(octopus::Entity const * ent_l : state_p.getEntities())
     {
-        if(!ent_l->_alive)
+        if(skipCollision(ent_l))
         {
             continue;
         }
@@ -86,7 +90,7 @@ void OrcaManager::setupStep(State const &state_p, Step &step_p)
 {
     for(octopus::Entity const * ent_l : state_p.getEntities())
     {
-        if(!ent_l->_alive || ent_l->_model._isStatic)
+        if(skipCollision(ent_l) || ent_l->_model._isStatic)
         {
             continue;
         }
@@ -106,12 +110,20 @@ void OrcaManager::setupStep(State const &state_p, Step &step_p)
 	std::vector<EntityMoveStep *> mapMoveStep_l(state_p.getEntities().size(), nullptr);
     for(octopus::EntityMoveStep *moveStep_l : step_p.getEntityMoveStep())
     {
+        if(skipCollision(state_p.getEntity(moveStep_l->_handle)))
+        {
+            continue;
+        }
         mapMoveStep_l[moveStep_l->_handle] = moveStep_l;
     }
 
 	// fill up move steps when missing
 	for(Entity const * ent_l : state_p.getEntities())
 	{
+        if(skipCollision(ent_l))
+        {
+            continue;
+        }
 		if(mapMoveStep_l[ent_l->_handle] == nullptr && ent_l->isActive() && !ent_l->isFrozen())
 		{
 			EntityMoveStep *step_l = new EntityMoveStep(ent_l->_handle, {0, 0});
@@ -122,6 +134,10 @@ void OrcaManager::setupStep(State const &state_p, Step &step_p)
 
     for(octopus::EntityMoveStep *moveStep_l : step_p.getEntityMoveStep())
     {
+        if(skipCollision(state_p.getEntity(moveStep_l->_handle)))
+        {
+            continue;
+        }
         size_t idx_l = _mapHandleIdx[moveStep_l->_handle];
         _sim->setAgentMoveStep(idx_l, moveStep_l);
         _sim->setAgentPrefVelocity(idx_l, RVO::Vector2(moveStep_l->_move.x, moveStep_l->_move.y));
@@ -129,6 +145,10 @@ void OrcaManager::setupStep(State const &state_p, Step &step_p)
 
     for(octopus::EntityMoveStep const *moveStep_l : step_p.getPrev()->getEntityMoveStep())
     {
+        if(skipCollision(state_p.getEntity(moveStep_l->_handle)))
+        {
+            continue;
+        }
         size_t idx_l = _mapHandleIdx[moveStep_l->_handle];
         _sim->setAgentVelocity(idx_l, RVO::Vector2(moveStep_l->_move.x, moveStep_l->_move.y));
     }
@@ -143,6 +163,10 @@ void OrcaManager::commitStep(State const &state_p, Step &step_p)
 {
     for(octopus::EntityMoveStep *moveStep_l : step_p.getEntityMoveStep())
     {
+        if(skipCollision(state_p.getEntity(moveStep_l->_handle)))
+        {
+            continue;
+        }
         size_t idx_l = _mapHandleIdx[moveStep_l->_handle];
         octopus::Entity const * ent_l = state_p.getEntity(moveStep_l->_handle);
 
