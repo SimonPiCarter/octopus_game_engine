@@ -15,6 +15,7 @@
 #include "step/TickingStep.hh"
 #include "step/trigger/TriggerEnableChange.hh"
 #include "step/trigger/TriggerSpawn.hh"
+#include "orca/OrcaManager.hh"
 
 namespace octopus
 {
@@ -132,7 +133,18 @@ bool Controller::loop_body()
 
 			Logger::getDebug() << "processing step " << _backState->_stepHandled << " on state "<<_backState->_state->_id<< std::endl;
 
-			for(size_t i = 0; i < 1 && octopus::updateStepFromConflictPosition(step_l, *_backState->_state) ; ++ i) {}
+			if(_orcaCollision)
+			{
+				OrcaManager orcaManager_l(1, 35., 10, 10., 10.);
+				orcaManager_l.resetFromState(*_backState->_state);
+				orcaManager_l.setupStep(*_backState->_state, step_l);
+				orcaManager_l.doStep();
+				orcaManager_l.commitStep(*_backState->_state, step_l);
+			}
+			else
+			{
+				for(size_t i = 0; i < 1 && octopus::updateStepFromConflictPosition(step_l, *_backState->_state) ; ++ i) {}
+			}
 
 			// push new triggers
 			{

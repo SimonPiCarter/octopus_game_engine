@@ -27,6 +27,11 @@ add_library(octopus
 	${CMAKE_CURRENT_SOURCE_DIR}/src/command/unit/UnitDropCommand.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/command/unit/UnitHarvestCommand.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/logger/Logger.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/src/orca/OrcaManager.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/src/orca/rvo/Agent.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/src/orca/rvo/KdTree.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/src/orca/rvo/Obstacle.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/src/orca/rvo/RVOSimulator.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/controller/Controller.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/controller/Metrics.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/controller/event/EventCollection.cc

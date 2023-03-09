@@ -148,6 +148,13 @@ void StandardClicMode::display(Window & window_p, double , int x, int y)
 void StandardClicMode::handleRightClic(octopus::Vector const &clicWorldPosition_p, Selection &selection_p, World &world_p, Panel &panel_p,
 	Window &window_p, octopus::State const &state_p, octopus::Controller &controller_p, SpriteEntity * sprite_p)
 {
+	// mouse tick
+	Picture * tick_l = new Picture(window_p.loadTexture("resources/clic_marker.png"), 16, 16, {5}, {0.1});
+	tick_l->setEndAfterLastFrame(true);
+	octopus::Vector pixelPos_l = window_p.getPixelVector(to_double(clicWorldPosition_p.x), to_double(clicWorldPosition_p.y));
+	tick_l->setDestination(pixelPos_l.x.to_int()-16-window_p.getCamera().x, pixelPos_l.y.to_int()-16-window_p.getCamera().y, 32, 32);
+	world_p.getDyingPictures().push_back(tick_l);
+
 	for(SpriteEntity * selected_l : selection_p._sprites)
 	{
 		const octopus::Entity * cur_l = state_p.getEntity(selected_l->getHandle());

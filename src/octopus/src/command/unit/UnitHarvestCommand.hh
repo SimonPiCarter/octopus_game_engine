@@ -27,10 +27,7 @@ public:
 		return new HarvestMoveData(_resource, 0, _subMoveCommand.getFinalPoint(), _subMoveCommand.getGridStatus(), _subMoveCommand.getWaypoints());
 	}
 
-	virtual void cleanUp(Step & step_p, State const &state_p, CommandData const *data_p) const override
-	{
-		_subMoveCommand.cleanUp(step_p, state_p, data_p);
-	}
+	virtual void cleanUp(Step & step_p, State const &state_p, CommandData const *data_p) const override;
 private:
 	Handle const _source;
 	Handle const _resource;
