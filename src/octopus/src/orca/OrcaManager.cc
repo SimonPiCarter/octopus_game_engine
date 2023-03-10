@@ -88,6 +88,7 @@ void OrcaManager::resetFromState(State const &state_p)
 
 void OrcaManager::setupStep(State const &state_p, Step &step_p)
 {
+    // set or reset position, velocity and weight values
     for(octopus::Entity const * ent_l : state_p.getEntities())
     {
         if(skipCollision(ent_l) || ent_l->_model._isStatic)
@@ -103,10 +104,12 @@ void OrcaManager::setupStep(State const &state_p, Step &step_p)
         {
             _sim->setAgentMaxSpeed(idx_l, ent_l->_model._stepSpeed);
         }
+        // _sim->setAgentWeight(idx_l, 1);
         _sim->setAgentPrefVelocity(idx_l, RVO::Vector2(0, 0));
         _sim->setAgentPosition(idx_l, RVO::Vector2(ent_l->_pos.x, ent_l->_pos.y));
     }
 
+    // register move steps
 	std::vector<EntityMoveStep *> mapMoveStep_l(state_p.getEntities().size(), nullptr);
     for(octopus::EntityMoveStep *moveStep_l : step_p.getEntityMoveStep())
     {
@@ -118,6 +121,7 @@ void OrcaManager::setupStep(State const &state_p, Step &step_p)
     }
 
 	// fill up move steps when missing
+    // also update weights to be lower
 	for(Entity const * ent_l : state_p.getEntities())
 	{
         if(skipCollision(ent_l))
@@ -126,12 +130,16 @@ void OrcaManager::setupStep(State const &state_p, Step &step_p)
         }
 		if(mapMoveStep_l[ent_l->_handle] == nullptr && ent_l->isActive() && !ent_l->isFrozen())
 		{
+            size_t idx_l = _mapHandleIdx[ent_l->_handle];
+            // _sim->setAgentWeight(idx_l, 0.01);
+
 			EntityMoveStep *step_l = new EntityMoveStep(ent_l->_handle, {0, 0});
 			step_p.addEntityMoveStep(step_l);
 			mapMoveStep_l[ent_l->_handle] = step_l;
 		}
 	}
 
+    // set move step and prefered velocity from move steps
     for(octopus::EntityMoveStep *moveStep_l : step_p.getEntityMoveStep())
     {
         if(skipCollision(state_p.getEntity(moveStep_l->_handle)))
@@ -143,6 +151,7 @@ void OrcaManager::setupStep(State const &state_p, Step &step_p)
         _sim->setAgentPrefVelocity(idx_l, RVO::Vector2(moveStep_l->_move.x, moveStep_l->_move.y));
     }
 
+    // set known velocity based on last move step
     for(octopus::EntityMoveStep const *moveStep_l : step_p.getPrev()->getEntityMoveStep())
     {
         if(skipCollision(state_p.getEntity(moveStep_l->_handle)))
@@ -168,8 +177,17 @@ void OrcaManager::commitStep(State const &state_p, Step &step_p)
             continue;
         }
         size_t idx_l = _mapHandleIdx[moveStep_l->_handle];
-        moveStep_l->_move.x = _sim->getAgentVelocity(idx_l).x();
-        moveStep_l->_move.y = _sim->getAgentVelocity(idx_l).y();
+
+        if(RVO::absSq(_sim->getAgentVelocity(idx_l)) > 0.00001)
+        {
+            moveStep_l->_move.x = _sim->getAgentVelocity(idx_l).x();
+            moveStep_l->_move.y = _sim->getAgentVelocity(idx_l).y();
+        }
+        else
+        {
+            moveStep_l->_move = moveStep_l->_move * 0.2;
+        }
+
     }
 }
 
