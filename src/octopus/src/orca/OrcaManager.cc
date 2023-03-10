@@ -168,12 +168,8 @@ void OrcaManager::commitStep(State const &state_p, Step &step_p)
             continue;
         }
         size_t idx_l = _mapHandleIdx[moveStep_l->_handle];
-        octopus::Entity const * ent_l = state_p.getEntity(moveStep_l->_handle);
-
-        RVO::Vector2 newPos_l = _sim->getAgentPosition(idx_l);
-
-        moveStep_l->_move.x = newPos_l.x() - ent_l->_pos.x;
-        moveStep_l->_move.y = newPos_l.y() - ent_l->_pos.y;
+        moveStep_l->_move.x = _sim->getAgentVelocity(idx_l).x();
+        moveStep_l->_move.y = _sim->getAgentVelocity(idx_l).y();
     }
 }
 
