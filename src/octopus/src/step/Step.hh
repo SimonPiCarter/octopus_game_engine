@@ -18,7 +18,7 @@ namespace octopus
 	class Step
 	{
 		public:
-			Step(Step const *prev_p) : _prev(prev_p) {}
+			Step(Step const *prev_p) : _prev(prev_p), _id(prev_p?prev_p->_id+1:0) {}
 			~Step();
 
 			/// @brief add step and keep ownership
@@ -48,10 +48,15 @@ namespace octopus
 			/// @brief get previous step
 			/// @return previous step
 			Step const * getPrev() const { return _prev; }
+
+			unsigned long long getId() const { return _id; }
 		private:
 			std::list<EntityMoveStep *> _listEntityMoveStep;
 
 			std::list<Steppable *> _listSteppable;
+
+			/// @brief the id of the step (previous step + 1)
+			unsigned long long const _id {0};
 
 			/// @brief a map of map of resource spent (player, resource) -> value spent this step
 			std::map<unsigned long, std::map<ResourceType, double> > _spent;
@@ -63,6 +68,7 @@ namespace octopus
 			unsigned long _entitySpawned {0};
 
 			Step const * const _prev {nullptr};
+
 	};
 
 	/// @brief apply the step

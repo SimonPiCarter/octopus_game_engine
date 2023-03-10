@@ -48,6 +48,8 @@ public:
 		visitor_p->visit(this);
 	}
 
+	Command * getCmd() const { return _cmd; }
+
 private:
 	Command * const _cmd;
 };

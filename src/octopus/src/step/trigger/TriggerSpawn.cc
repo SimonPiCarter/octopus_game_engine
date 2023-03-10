@@ -8,11 +8,6 @@
 namespace octopus
 {
 
-TriggerSpawn::~TriggerSpawn()
-{
-	delete _trigger;
-}
-
 void TriggerSpawn::apply(State &state_p) const
 {
 	Logger::getDebug() << "TriggerSpawn :: apply " << std::endl;

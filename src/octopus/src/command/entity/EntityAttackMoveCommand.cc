@@ -53,7 +53,7 @@ bool EntityAttackMoveCommand::applyCommand(Step & step_p, State const &state_p, 
 		/// clean up attack command
 		attackMoveData_l._subAttackCommand->cleanUp(step_p, state_p, data_p);
 		// get non const pointer here (required by the step)
-		step_p.addSteppable(new CommandDelSubAttackStep(_handleCommand, attackMoveData_l._subAttackCommand));
+		step_p.addSteppable(new CommandDelSubAttackStep(_handleCommand, attackMoveData_l._subAttackCommand->getSource(), attackMoveData_l._subAttackCommand->getTarget()));
 	}
 	else
 	{
@@ -63,7 +63,7 @@ bool EntityAttackMoveCommand::applyCommand(Step & step_p, State const &state_p, 
 			step_p.addSteppable(new CommandSetPositionFromStep(_handleCommand, ent_l->_pos, attackMoveData_l._positionFromAttack));
 			/// steppable to update target
 			step_p.addSteppable(new CommandNewTargetStep(_handleCommand, target_l->_handle, attackMoveData_l._target));
-			step_p.addSteppable(new CommandAddSubAttackStep(_handleCommand, new EntityAttackCommand(_handleCommand, _source, target_l->_handle, false)));
+			step_p.addSteppable(new CommandAddSubAttackStep(_handleCommand, _source, target_l->_handle));
 			return false;
 		}
 	}

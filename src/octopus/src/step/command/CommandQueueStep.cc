@@ -11,12 +11,10 @@ namespace octopus
 
 CommandStorageStep::~CommandStorageStep()
 {
-	delete _cmd;
 }
 
 CommandSpawnStep::~CommandSpawnStep()
 {
-	delete _cmd;
 }
 
 void CommandSpawnStep::apply(State &state_p) const

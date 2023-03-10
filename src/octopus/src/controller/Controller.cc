@@ -15,6 +15,7 @@
 #include "step/TickingStep.hh"
 #include "step/trigger/TriggerEnableChange.hh"
 #include "step/trigger/TriggerSpawn.hh"
+#include "step/command/CommandQueueStep.hh"
 #include "orca/OrcaManager.hh"
 
 namespace octopus
@@ -27,6 +28,11 @@ BufferedState::BufferedState(unsigned long stepHandled_p, std::list<Step *>::ite
 BufferedState::~BufferedState()
 {
 	delete _state;
+}
+
+unsigned long long BufferedState::getNextStepToApplyId() const
+{
+	return (*_stepIt)->getId();
 }
 
 Controller::Controller(
@@ -49,14 +55,27 @@ Controller::Controller(
 	_bufferState = new BufferedState { 0, _compiledSteps.begin(), new State(1, gridSize_p, gridPointSize_p) };
 	_frontState = new BufferedState { 0, _compiledSteps.begin(), new State(2, gridSize_p, gridPointSize_p) };
 
+	_commitedCommands.push_back(new std::list<Command *>());
+	_triggers.push_back(std::list<Trigger const *>());
 	// add steppable
 	for(Steppable * steppable_l : initSteppables_p)
 	{
+		CommandSpawnStep * cmdSpawn_l = dynamic_cast<CommandSpawnStep *>(steppable_l);
+		if(cmdSpawn_l)
+		{
+			_commitedCommands[0]->push_back(cmdSpawn_l->getCmd());
+		}
+		TriggerSpawn * triggerSpawn_l = dynamic_cast<TriggerSpawn *>(steppable_l);
+		if(triggerSpawn_l)
+		{
+			_triggers[0].push_back(triggerSpawn_l->_trigger);
+		}
 		_initialStep.addSteppable(steppable_l);
 	}
 	// add commands
 	for(Command * cmd_l : initCommands_p)
 	{
+		_commitedCommands[0]->push_back(cmd_l);
 		cmd_l->registerCommand(_initialStep, *_backState->_state);
 	}
 
@@ -77,7 +96,18 @@ Controller::~Controller()
 	delete _frontState;
 	for(std::list<Command *> const *cmds_l : _commitedCommands)
 	{
+		for(Command * cmd_l : *cmds_l)
+		{
+			delete cmd_l;
+		}
 		delete cmds_l;
+	}
+	for(std::list<Trigger const *> const &triggers_l : _triggers)
+	{
+		for(Trigger const *trigger_l : triggers_l)
+		{
+			delete trigger_l;
+		}
 	}
 	for(Step * step_l : _compiledSteps)
 	{
@@ -124,7 +154,7 @@ bool Controller::loop_body()
 			{
 				// lock to avoid overlap
 				std::lock_guard<std::mutex> lock_l(_mutex);
-				commands_l = _commitedCommands.at(_backState->_stepHandled-1);
+				commands_l = _commitedCommands.at(_backState->_stepHandled);
 			}
 			for(Command * cmd_l : *commands_l)
 			{
@@ -147,18 +177,28 @@ bool Controller::loop_body()
 			}
 
 			// push new triggers
+			for(Trigger * trigger_l : _queuedTriggers[_backState->_stepHandled-1])
 			{
-				// lock to avoid overlap
-				std::lock_guard<std::mutex> lock_l(_mutex);
-
-				for(Trigger * trigger_l : _queuedTriggers[_backState->_stepHandled-1])
-				{
-					step_l.addSteppable(new TriggerSpawn(trigger_l));
-				}
+				step_l.addSteppable(new TriggerSpawn(trigger_l));
 			}
 			handleTriggers(*_backState->_state, step_l, getStepBeforeLastCompiledStep());
 
 			octopus::compact(step_l);
+
+			// register all commands
+			for(Steppable * steppable_l : step_l.getSteppable())
+			{
+				CommandSpawnStep * cmdSpawn_l = dynamic_cast<CommandSpawnStep *>(steppable_l);
+				if(cmdSpawn_l)
+				{
+					_commitedCommands[_backState->_stepHandled]->push_back(cmdSpawn_l->getCmd());
+				}
+				TriggerSpawn * triggerSpawn_l = dynamic_cast<TriggerSpawn *>(steppable_l);
+				if(triggerSpawn_l)
+				{
+					_triggers[_backState->_stepHandled].push_back(triggerSpawn_l->_trigger);
+				}
+			}
 
 			// compute paths (update grid)
 			_pathManager.initFromGrid(_backState->_state->getPathGrid().getInternalGrid(), _backState->_state->getPathGridStatus());
@@ -209,6 +249,20 @@ bool Controller::loop_body()
 			std::swap(_bufferState, _backState);
 			upToDate_l = false;
 		}
+	}
+
+	unsigned long long minId_l = _backState->getNextStepToApplyId();
+	{
+		// lock to avoid overlap
+		std::lock_guard<std::mutex> lock_l(_mutex);
+		minId_l = std::min(minId_l, _frontState->getNextStepToApplyId());
+		minId_l = std::min(minId_l, _bufferState->getNextStepToApplyId());
+	}
+	// free steps if necessary
+	while(_compiledSteps.size() > 100 && _compiledSteps.front()->getId() < minId_l)
+	{
+		delete _compiledSteps.front();
+		_compiledSteps.pop_front();
 	}
 	return upToDate_l;
 }
@@ -264,7 +318,7 @@ void Controller::commitCommand(Command * cmd_p)
 {
 	// lock to avoid multi swap
 	std::lock_guard<std::mutex> lock_l(_mutex);
-	_commitedCommands[_ongoingStep-1]->push_back(cmd_p);
+	_commitedCommands[_ongoingStep]->push_back(cmd_p);
 }
 
 /// @brief add a trigger on the ongoing step
@@ -300,9 +354,10 @@ unsigned long Controller::getOngoingStep() const
 
 void Controller::updateCommitedCommand()
 {
-	while(_commitedCommands.size() < _ongoingStep)
+	while(_commitedCommands.size() <= _ongoingStep)
 	{
 		_commitedCommands.push_back(new std::list<Command *>());
+		_triggers.push_back(std::list<Trigger const *>());
 	}
 }
 

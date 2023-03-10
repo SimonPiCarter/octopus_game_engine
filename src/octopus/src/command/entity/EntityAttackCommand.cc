@@ -158,6 +158,15 @@ void EntityAttackCommand::cleanUp(Step & step_p, State const &state_p, CommandDa
 	step_p.addSteppable(new EntityFrozenStep(_source, entSource_l->_frozen, false));
 }
 
+Handle const &EntityAttackCommand::getSource() const
+{
+	return _source;
+}
+Handle const &EntityAttackCommand::getTarget() const
+{
+	return _target;
+}
+
 bool EntityAttackCommand::checkTarget(State const &state_p, Handle const & target_p) const
 {
 	Entity const * entTarget_l = state_p.getEntity(target_p);

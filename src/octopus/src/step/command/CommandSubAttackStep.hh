@@ -13,9 +13,8 @@ class CommandAddSubAttackStep : public Steppable
 {
 public:
 	/// @brief take subCommand_p ownership
-	CommandAddSubAttackStep(Handle const &handle_p, EntityAttackCommand * subCommand_p)
-		: _handle(handle_p) , _subCommand(subCommand_p){}
-	~CommandAddSubAttackStep() { delete _subCommand; }
+	CommandAddSubAttackStep(Handle const &handle_p, Handle const &source_p, Handle const &target_p)
+		: _handle(handle_p) , _source(source_p) , _target(target_p){}
 
 	virtual void apply(State &state_p) const override;
 	virtual void revert(State &state_p) const override;
@@ -27,14 +26,19 @@ public:
 	}
 
 	Handle const _handle {0};
-	EntityAttackCommand * const _subCommand;
+	Handle const _source {0};
+	Handle const _target {0};
+
+	/// @brief store the command generated for assert purpose
+	/// requires mutable to be set up in const method
+	mutable EntityAttackCommand const * _cmd;
 };
 
 class CommandDelSubAttackStep : public Steppable
 {
 public:
-	CommandDelSubAttackStep(Handle const &handle_p, EntityAttackCommand * subCommand_p)
-		: _handle(handle_p) , _subCommand(subCommand_p){}
+	CommandDelSubAttackStep(Handle const &handle_p, Handle const &source_p, Handle const &target_p)
+		: _handle(handle_p) , _source(source_p), _target(target_p) {}
 
 	virtual void apply(State &state_p) const override;
 	virtual void revert(State &state_p) const override;
@@ -46,7 +50,8 @@ public:
 	}
 
 	Handle const _handle {0};
-	EntityAttackCommand * const _subCommand;
+	Handle const _source {0};
+	Handle const _target {0};
 };
 
 }

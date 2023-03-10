@@ -27,6 +27,8 @@ public:
 
 	virtual void cleanUp(Step & step_p, State const &state_p, CommandData const *data_p) const override;
 
+	Handle const &getSource() const;
+	Handle const &getTarget() const;
 private:
 	Handle const _source;
 	/// @brief initial target

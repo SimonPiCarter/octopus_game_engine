@@ -13,7 +13,6 @@ class TriggerSpawn : public Steppable
 public:
 	TriggerSpawn(Trigger *trigger_p)
 		: _trigger(trigger_p) {}
-	~TriggerSpawn();
 
 	virtual void apply(State &state_p) const override;
 	virtual void revert(State &state_p) const override;

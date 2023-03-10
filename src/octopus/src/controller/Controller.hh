@@ -24,6 +24,8 @@ struct BufferedState
 	BufferedState(unsigned long stepHandled_p, std::list<Step *>::iterator it_p, State *state_p);
 	~BufferedState();
 
+	unsigned long long getNextStepToApplyId() const;
+
 	unsigned long _stepHandled {0};
 	/// @brief iterator after the last handled step
 	std::list<Step *>::iterator _stepIt;
@@ -125,6 +127,8 @@ private:
 	unsigned long _lastHandledStep {0};
 	/// @brief list of commit commands for every step
 	std::vector<std::list<Command *> *> _commitedCommands;
+	/// @brief list of all triggers (for memory management)
+	std::vector<std::list<Trigger const *>> _triggers;
 	/// @brief initial step
 	Step _initialStep;
 	/// @brief list of compiled steps
