@@ -108,6 +108,8 @@ namespace RVO {
 		octopus::Fixed timeHorizonObst_;
 		Vector2 velocity_;
 
+		octopus::Fixed weight_ {1};
+
 		size_t id_;
 
 		octopus::EntityMoveStep * moveStep_;

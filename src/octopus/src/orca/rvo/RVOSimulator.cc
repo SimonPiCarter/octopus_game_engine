@@ -372,6 +372,11 @@ namespace RVO {
 		agents_[agentNo]->moveStep_ = moveStep;
 	}
 
+	void RVOSimulator::setAgentWeight(size_t agentNo, octopus::Fixed weight)
+	{
+		agents_[agentNo]->weight_ = weight;
+	}
+
 	void RVOSimulator::setAgentPrefVelocity(size_t agentNo, const Vector2 &prefVelocity)
 	{
 		agents_[agentNo]->prefVelocity_ = prefVelocity;

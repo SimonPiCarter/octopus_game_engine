@@ -356,8 +356,8 @@ namespace RVO {
 					u = (combinedRadius * invTimeStep - wLength) * unitW;
 				}
 			}
-
-			line.point = velocity_ + 0.5f * u;
+			octopus::Fixed weight_l = other->weight_ / (other->weight_ + weight_);
+			line.point = velocity_ + weight_l * u;
 			orcaLines_.push_back(line);
 		}
 

@@ -530,6 +530,8 @@ namespace RVO {
 
 		void setAgentMoveStep(size_t agentNo, octopus::EntityMoveStep *moveStep);
 
+		void setAgentWeight(size_t agentNo, octopus::Fixed weight);
+
 		/**
 		 * \brief      Sets the two-dimensional preferred velocity of a
 		 *             specified agent.
