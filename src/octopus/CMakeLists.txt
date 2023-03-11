@@ -15,6 +15,7 @@ add_library(octopus
 	${CMAKE_CURRENT_SOURCE_DIR}/src/command/Command.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/command/Commandable.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/command/CommandQueue.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/src/command/data/AttackMoveData.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/command/entity/EntityAttackCommand.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/command/entity/EntityAttackMoveCommand.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/command/entity/EntityBuffCommand.cc

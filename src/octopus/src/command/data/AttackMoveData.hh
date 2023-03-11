@@ -16,11 +16,7 @@ struct AttackMoveData : public MoveData
 {
 	AttackMoveData(Handle const &target_p, Vector const &finalPoint_p, unsigned long gridStatus_p, std::list<Vector> const &waypoints_p)
 		: MoveData(finalPoint_p, gridStatus_p, waypoints_p), _target(target_p) {}
-	~AttackMoveData()
-	{
-		delete _subAttackCommand;
-	}
-	///
+	~AttackMoveData();
 	/// Attack
 	///
 	// target of attack
