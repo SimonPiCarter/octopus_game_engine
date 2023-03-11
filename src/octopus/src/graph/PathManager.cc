@@ -62,6 +62,10 @@ void PathManager::compute(long long iter_p)
 /// @brief query a flow field computation
 void PathManager::queryFlowField(long x, long y)
 {
+	if(_internalGrid.empty())
+	{
+		return;
+	}
 	x = std::min<long>(std::max<long>(0, x) , _internalGrid.size()-1);
 	y = std::min<long>(std::max<long>(0, y) , _internalGrid[x].size()-1);
 	// check if up to date
