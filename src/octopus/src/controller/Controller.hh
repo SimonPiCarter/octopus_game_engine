@@ -127,6 +127,8 @@ private:
 	unsigned long _lastHandledStep {0};
 	/// @brief list of commit commands for every step
 	std::vector<std::list<Command *> *> _commitedCommands;
+	/// @brief memory handling list (per step of adding in case of rewind)
+	std::vector<std::list<Command *>> _commands;
 	/// @brief list of all triggers (for memory management)
 	std::vector<std::list<Trigger const *>> _triggers;
 	/// @brief initial step

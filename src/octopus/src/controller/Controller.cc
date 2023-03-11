@@ -57,6 +57,7 @@ Controller::Controller(
 
 	_commitedCommands.push_back(new std::list<Command *>());
 	_triggers.push_back(std::list<Trigger const *>());
+	_commands.push_back(std::list<Command *>());
 	// add steppable
 	for(Steppable * steppable_l : initSteppables_p)
 	{
@@ -96,11 +97,14 @@ Controller::~Controller()
 	delete _frontState;
 	for(std::list<Command *> const *cmds_l : _commitedCommands)
 	{
-		for(Command * cmd_l : *cmds_l)
+		delete cmds_l;
+	}
+	for(std::list<Command *> const &cmds_l : _commands)
+	{
+		for(Command * cmd_l : cmds_l)
 		{
 			delete cmd_l;
 		}
-		delete cmds_l;
 	}
 	for(std::list<Trigger const *> const &triggers_l : _triggers)
 	{
@@ -188,10 +192,16 @@ bool Controller::loop_body()
 			// register all commands
 			for(Steppable * steppable_l : step_l.getSteppable())
 			{
+				// store commands for memory handling
 				CommandSpawnStep * cmdSpawn_l = dynamic_cast<CommandSpawnStep *>(steppable_l);
+				CommandStorageStep * cmdstorage_l = dynamic_cast<CommandStorageStep *>(steppable_l);
 				if(cmdSpawn_l)
 				{
-					_commitedCommands[_backState->_stepHandled]->push_back(cmdSpawn_l->getCmd());
+					_commands[_backState->_stepHandled].push_back(cmdSpawn_l->getCmd());
+				}
+				if(cmdstorage_l)
+				{
+					_commands[_backState->_stepHandled].push_back(cmdstorage_l->getCmd());
 				}
 				TriggerSpawn * triggerSpawn_l = dynamic_cast<TriggerSpawn *>(steppable_l);
 				if(triggerSpawn_l)
@@ -358,6 +368,7 @@ void Controller::updateCommitedCommand()
 	{
 		_commitedCommands.push_back(new std::list<Command *>());
 		_triggers.push_back(std::list<Trigger const *>());
+		_commands.push_back(std::list<Command *>());
 	}
 }
 
