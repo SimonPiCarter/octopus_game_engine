@@ -137,9 +137,27 @@ WaveSpawn::WaveSpawn(Listener * listener_p, Library const &lib_p, unsigned long 
 
 void WaveSpawn::trigger(State const &state_p, Step &step_p, unsigned long) const
 {
+    std::mt19937 _gen(42*_wave);
+    std::uniform_int_distribution<> dist_l(0, 2);
+	std::string model_l = "square";
+	int random_l = dist_l(_gen);
+	if(random_l==1)
+	{
+		model_l = "triangle";
+	}
+	else if(random_l==2)
+	{
+		model_l = "circle";
+	}
+
+	// unsigned long n = _stepWait/100/20*_wave;
+	// unsigned long nbUnits_l = (10*n*n + 10 * n + 50)/50;
+	// unsigned long nLast = 6*_wave -6;
+	// unsigned long nbUnitsLast_l = (10*nLast*nLast + 10 * nLast + 50)/50;
+	// nbUnits_l = nbUnits_l - nbUnitsLast_l;
 	for(unsigned long i = 0 ; i < _wave * 10 ; ++ i)
 	{
-		Unit unit_l({ 35., 35. }, false, _lib.getUnitModel("square"));
+		Unit unit_l({ 35., 35. }, false, _lib.getUnitModel(model_l));
 		unit_l._player = _player;
 		Handle handle_l = getNextHandle(step_p, state_p);
 		step_p.addSteppable(new UnitSpawnStep(handle_l, unit_l));
