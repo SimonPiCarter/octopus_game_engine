@@ -56,7 +56,7 @@ private:
 	/// @brief random generator
 	std::mt19937 _gen;
 
-	bool _nonRandom;
+	bool _nonRandom {false};
 };
 
 } // namespace octopus
