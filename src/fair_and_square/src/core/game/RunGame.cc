@@ -54,7 +54,7 @@ void runWave(Window &window_p, unsigned long stepCount_p, unsigned long player_p
 {
 	octopus::Library lib_l;
 	std::list<octopus::Steppable *> spawners_l = WaveLevelSteps(lib_l, 10, stepCount_p, player_p);
-	std::list<octopus::Command *> commands_l = WaveLevelCommands(lib_l);
+	std::list<octopus::Command *> commands_l = WaveLevelCommands(lib_l, 250);
 
 	runGame(window_p, spawners_l, commands_l);
 }

@@ -27,6 +27,22 @@
 
 using namespace octopus;
 
+std::string genModelName(std::mt19937 &gen_p)
+{
+    std::uniform_int_distribution<> dist_l(0, 2);
+	std::string model_l = "square";
+	int random_l = dist_l(gen_p);
+	if(random_l==1)
+	{
+		model_l = "triangle";
+	}
+	else if(random_l==2)
+	{
+		model_l = "circle";
+	}
+	return model_l;
+}
+
 std::list<Steppable *> WaveLevelSteps(Library &lib_p, unsigned long waveCount_p, unsigned long stepCount_p, unsigned long player_p)
 {
 	loadModels(lib_p);
@@ -81,7 +97,7 @@ std::list<Steppable *> WaveLevelSteps(Library &lib_p, unsigned long waveCount_p,
 	return spawners_l;
 }
 
-std::list<Command *> WaveLevelCommands(Library &lib_p)
+std::list<Command *> WaveLevelCommands(Library &lib_p, unsigned long worldSize_p)
 {
 	std::list<AreaSpawn> spawners_l;
 
@@ -95,21 +111,32 @@ std::list<Command *> WaveLevelCommands(Library &lib_p)
 	res3_l._resource = 500.;
 	res3_l._player = 2;
 
-	AreaSpawn area_l;
-	area_l.x = 25;
-	area_l.y = 5;
-	area_l.size = 20;
-	area_l.entities.emplace_back(new Resource(res3_l), 1);
-	area_l.entities.emplace_back(new Resource(res2_l), 3);
-	spawners_l.push_back(area_l);
+    std::mt19937 gen_l(42);
 
-	area_l.x = 5;
-	area_l.y = 25;
-	area_l.size = 20;
-	area_l.entities.clear();
-	area_l.entities.emplace_back(new Resource(res3_l), 1);
-	area_l.entities.emplace_back(new Resource(res2_l), 3);
-	spawners_l.push_back(area_l);
+	for(unsigned long x = 0 ; x < worldSize_p/20 ; ++ x)
+	{
+		for(unsigned long y = 0 ; y < worldSize_p/20 ; ++ y)
+		{
+			// skip spawn
+			if(x==0 && y==0)
+			{
+				continue;
+			}
+			AreaSpawn area_l;
+			area_l.size = 20;
+			area_l.x = 5 + area_l.size*x;
+			area_l.y = 5 + area_l.size*y;
+			area_l.entities.emplace_back(new Resource(res3_l), 1);
+			area_l.entities.emplace_back(new Resource(res2_l), 3);
+			for(unsigned long c = 0 ; c < x+y ; ++ c)
+			{
+				Unit *unit_l = new Unit({0, 0}, false, lib_p.getUnitModel(genModelName(gen_l)));
+				unit_l->_player = 1;
+				area_l.entities.emplace_back(unit_l, 1);
+			}
+			spawners_l.push_back(area_l);
+		}
+	}
 
 	AreaSpawnerCommand * spawnCommand_l = new AreaSpawnerCommand(spawners_l);
 
@@ -137,18 +164,8 @@ WaveSpawn::WaveSpawn(Listener * listener_p, Library const &lib_p, unsigned long 
 
 void WaveSpawn::trigger(State const &state_p, Step &step_p, unsigned long) const
 {
-    std::mt19937 _gen(42*_wave);
-    std::uniform_int_distribution<> dist_l(0, 2);
-	std::string model_l = "square";
-	int random_l = dist_l(_gen);
-	if(random_l==1)
-	{
-		model_l = "triangle";
-	}
-	else if(random_l==2)
-	{
-		model_l = "circle";
-	}
+    std::mt19937 gen_l(42*_wave);
+	std::string model_l = genModelName(gen_l);
 
 	// unsigned long n = _stepWait/100/20*_wave;
 	// unsigned long nbUnits_l = (10*n*n + 10 * n + 50)/50;
