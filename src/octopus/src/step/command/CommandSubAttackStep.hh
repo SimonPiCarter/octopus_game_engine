@@ -31,7 +31,7 @@ public:
 
 	/// @brief store the command generated for assert purpose
 	/// requires mutable to be set up in const method
-	mutable EntityAttackCommand const * _cmd;
+	mutable EntityAttackCommand const * _cmd {nullptr};
 };
 
 class CommandDelSubAttackStep : public Steppable

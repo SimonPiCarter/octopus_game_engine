@@ -37,7 +37,7 @@ void CommandAddSubAttackStep::revert(State &state_p) const
 
 bool CommandAddSubAttackStep::isNoOp() const
 {
-	return _cmd == nullptr;
+	return false;
 }
 
 void CommandDelSubAttackStep::apply(State &state_p) const
