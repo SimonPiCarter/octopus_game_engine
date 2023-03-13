@@ -63,7 +63,7 @@ RessourceLoader::RessourceLoader(cuttlefish::Window &window_p, unsigned long ful
 	_spriteLib.registerSpriteTemplate("command_center", window_p.loadTexture("resources/fair_and_square/command_center.png"), 2., 64, 64, 128, 128, {8, 2, 2, 2}, {0.25, 0.5, 0.5, 0.5}, 1);
 	_spriteLib.registerSpriteTemplate("barrack", window_p.loadTexture("resources/deposit.png"), 1., 32, 32, 64, 64, {2, 2, 2, 2}, {0.25, 0.5, 0.5, 0.5}, 1);
 	_spriteLib.registerSpriteTemplate("deposit", window_p.loadTexture("resources/deposit.png"), 1., 32, 32, 64, 64, {2, 2, 2, 2}, {0.25, 0.5, 0.5, 0.5}, 1);
-	_spriteLib.registerSpriteTemplate("worker", window_p.loadTexture("resources/worker.png"), 0.5, 32, 32, 64, 64, {2, 2}, {0.25, 1}, 1);
+	_spriteLib.registerSpriteTemplate("worker", window_p.loadTexture("resources/fair_and_square/worker.png"), 0.5, 32, 32, 64, 64, {2, 2}, {0.5, 0.1}, 1);
 
 	_spriteLib.registerSpriteTemplate("square", window_p.loadTexture("resources/fair_and_square/square.png"), 0.5, 16, 16, 32, 32, {8, 8, 8}, {0.25, 0.5/7., 0.05}, 1);
 	_spriteLib.registerAltTextureForTemplate("square", 0, window_p.loadTexture("resources/fair_and_square/square_green.png"));
