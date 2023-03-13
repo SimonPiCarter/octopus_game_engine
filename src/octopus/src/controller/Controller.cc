@@ -346,6 +346,17 @@ void Controller::commitCommand(Command * cmd_p)
 	_commitedCommands[_ongoingStep]->push_back(cmd_p);
 }
 
+void Controller::commitCommandAsPlayer(Command * cmd_p, unsigned long player_p)
+{
+	// lock to avoid multi swap
+	std::lock_guard<std::mutex> lock_l(_mutex);
+	if(_frontState->_state->getEntity(cmd_p->getHandleCommand())
+	&& _frontState->_state->getEntity(cmd_p->getHandleCommand())->_player == player_p)
+	{
+		_commitedCommands[_ongoingStep]->push_back(cmd_p);
+	}
+}
+
 /// @brief add a trigger on the ongoing step
 void Controller::commitTrigger(Trigger * trigger_p)
 {

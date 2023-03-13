@@ -93,6 +93,10 @@ public:
 	/// @brief add a Command to the ongoing step
 	void commitCommand(Command * cmd_p);
 
+	/// @brief add a Command to the ongoing step
+	/// @note only accepts command matching the player (entity needs to match player)
+	void commitCommandAsPlayer(Command * cmd_p, unsigned long player_p);
+
 	/// @brief add a trigger on the ongoing step
 	void commitTrigger(Trigger * trigger_p);
 
