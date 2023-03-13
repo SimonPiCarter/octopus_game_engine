@@ -61,9 +61,9 @@ RessourceLoader::RessourceLoader(cuttlefish::Window &window_p, unsigned long ful
 
 	// neutral
 	_spriteLib.registerSpriteTemplate("command_center", window_p.loadTexture("resources/fair_and_square/command_center.png"), 2., 64, 64, 128, 128, {8, 2, 2, 2}, {0.25, 0.5, 0.5, 0.5}, 1);
-	_spriteLib.registerSpriteTemplate("barrack", window_p.loadTexture("resources/deposit.png"), 1., 32, 32, 64, 64, {2, 2, 2, 2}, {0.25, 0.5, 0.5, 0.5}, 1);
+	_spriteLib.registerSpriteTemplate("barrack", window_p.loadTexture("resources/fair_and_square/barrack.png"), 1., 32, 32, 64, 64, {16, 1, 1, 1}, {0.25, 0.5, 0.5, 0.5}, 1);
 	_spriteLib.registerSpriteTemplate("deposit", window_p.loadTexture("resources/deposit.png"), 1., 32, 32, 64, 64, {2, 2, 2, 2}, {0.25, 0.5, 0.5, 0.5}, 1);
-	_spriteLib.registerSpriteTemplate("worker", window_p.loadTexture("resources/fair_and_square/worker.png"), 0.5, 32, 32, 64, 64, {2, 2}, {0.5, 0.1}, 1);
+	_spriteLib.registerSpriteTemplate("worker", window_p.loadTexture("resources/fair_and_square/worker_v2.png"), 0.5, 32, 32, 64, 64, {2, 2}, {0.5, 0.1}, 1);
 	_spriteLib.registerAltTextureForTemplate("worker", 0, window_p.loadTexture("resources/fair_and_square/worker_v2_green.png"));
 	_spriteLib.registerAltTextureForTemplate("worker", 1, window_p.loadTexture("resources/fair_and_square/worker_v2_red.png"));
 
