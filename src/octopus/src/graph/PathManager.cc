@@ -5,6 +5,16 @@
 namespace octopus
 {
 
+PathManager::~PathManager()
+{
+	for(std::vector<GridNode *> vect_l : _internalGrid)
+	{
+		for(GridNode * node_l : vect_l)
+		{
+			delete node_l;
+		}
+	}
+}
 
 /// @brief wait for end of computing
 void PathManager::joinCompute()

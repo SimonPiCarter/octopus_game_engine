@@ -31,6 +31,8 @@ struct FlowFieldResult
 class PathManager
 {
 public:
+	~PathManager();
+
 	/// @brief wait for end of computing
 	void joinCompute();
 
