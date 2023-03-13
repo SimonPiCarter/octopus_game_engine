@@ -83,6 +83,21 @@ Controller::Controller(
 	octopus::updateStepFromConflictPosition(_initialStep, *_backState->_state);
 	octopus::compact(_initialStep);
 
+	for(Steppable * steppable_l : _initialStep.getSteppable())
+	{
+		// store commands for memory handling
+		CommandSpawnStep * cmdSpawn_l = dynamic_cast<CommandSpawnStep *>(steppable_l);
+		CommandStorageStep * cmdstorage_l = dynamic_cast<CommandStorageStep *>(steppable_l);
+		if(cmdSpawn_l)
+		{
+			_commands[0].push_back(cmdSpawn_l->getCmd());
+		}
+		if(cmdstorage_l)
+		{
+			_commands[0].push_back(cmdstorage_l->getCmd());
+		}
+	}
+
 	// apply step
 	apply(_initialStep, *_backState->_state);
 	apply(_initialStep, *_bufferState->_state);
