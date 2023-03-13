@@ -187,7 +187,7 @@ void StandardClicMode::handleRightClic(octopus::Vector const &clicWorldPosition_
 					{clicWorldPosition_p},
 					true
 				);
-				controller_p.commitCommand(command_l);
+				controller_p.commitCommandAsPlayer(command_l, world_p.getPlayer());
 			}
 			else if(target_l
 			&& player_l->_team != targetPlayer_l->_team)
@@ -198,7 +198,7 @@ void StandardClicMode::handleRightClic(octopus::Vector const &clicWorldPosition_
 					sprite_p->getHandle(),
 					true
 				);
-				controller_p.commitCommand(command_l);
+				controller_p.commitCommandAsPlayer(command_l, world_p.getPlayer());
 			}
 			else if(target_l
 			&& target_l->_model._isBuilding
@@ -213,7 +213,7 @@ void StandardClicMode::handleRightClic(octopus::Vector const &clicWorldPosition_
 					{clicWorldPosition_p},
 					true
 				);
-				controller_p.commitCommand(command_l);
+				controller_p.commitCommandAsPlayer(command_l, world_p.getPlayer());
 			}
 			else if(target_l && unit_l
 			&& targetBuilding_l
@@ -229,7 +229,7 @@ void StandardClicMode::handleRightClic(octopus::Vector const &clicWorldPosition_
 					{clicWorldPosition_p},
 					true
 				);
-				controller_p.commitCommand(command_l);
+				controller_p.commitCommandAsPlayer(command_l, world_p.getPlayer());
 			}
 			else
 			{
@@ -241,7 +241,7 @@ void StandardClicMode::handleRightClic(octopus::Vector const &clicWorldPosition_
 					{clicWorldPosition_p},
 					true
 				);
-				controller_p.commitCommand(command_l);
+				controller_p.commitCommandAsPlayer(command_l, world_p.getPlayer());
 			}
 		}
 	}

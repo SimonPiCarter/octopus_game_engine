@@ -76,7 +76,7 @@ void AttackMoveClicMode::handleLeftClic(octopus::Vector const &clicWorldPosition
 				target_l->_handle,
 				true
 			);
-			controller_p.commitCommand(command_l);
+			controller_p.commitCommandAsPlayer(command_l, world_p.getPlayer());
 		}
 		else
 		{
@@ -88,7 +88,7 @@ void AttackMoveClicMode::handleLeftClic(octopus::Vector const &clicWorldPosition
 				{clicWorldPosition_p},
 				true
 			);
-			controller_p.commitCommand(command_l);
+			controller_p.commitCommandAsPlayer(command_l, world_p.getPlayer());
 		}
 	}
 }

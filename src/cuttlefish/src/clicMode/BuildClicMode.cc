@@ -50,7 +50,7 @@ bool BuildClicMode::handleMouseUp(SDL_Event const & e, Selection &selection_p, W
 			cur_l->_player,
 			_model
 		);
-		controller_p.commitCommand(command_l);
+		controller_p.commitCommandAsPlayer(command_l, world_p.getPlayer());
 		return true;
 	}
 

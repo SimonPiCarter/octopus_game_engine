@@ -81,7 +81,7 @@ void cleanClicMode(ClicMode const * clicMode_p, ClicMode const * stdClicMode_p)
 }
 
 void commandFromSpriteModel(SpriteModel const *spriteModel_p, octopus::State const &state_p, SpriteLibrary const &spriteLib_p,
-	Selection const &selection_p, octopus::Controller &controller_p, ClicMode *&clicMode_r, ClicMode const & stdClicMode_p)
+	Selection const &selection_p, octopus::Controller &controller_p, ClicMode *&clicMode_r, ClicMode const & stdClicMode_p, World const &world_p)
 {
 	if(spriteModel_p)
 	{
@@ -94,7 +94,7 @@ void commandFromSpriteModel(SpriteModel const *spriteModel_p, octopus::State con
 					*spriteModel_p->unitModel
 				);
 			command_l->setQueued(true);
-			controller_p.commitCommand(command_l);
+			controller_p.commitCommandAsPlayer(command_l, world_p.getPlayer());
 		}
 		if(spriteModel_p->buildingModel)
 		{
@@ -284,7 +284,7 @@ void GameLoop::runLoop(Window &window_p)
 					if(option_l.first)
 					{
 						octopus::PlayerChoseDivinityCommand * command_l = new octopus::PlayerChoseDivinityCommand(0, option_l.second);
-						_controller.commitCommand(command_l);
+						_controller.commitCommandAsPlayer(command_l, _world.getPlayer());
 						_divinityPanel.popOptionLayer();
 					}
 				}
@@ -316,7 +316,7 @@ void GameLoop::runLoop(Window &window_p)
 					{
 						if(e.button.button == SDL_BUTTON_LEFT)
 						{
-							commandFromSpriteModel(spriteModel_l, state_l, _spriteLibrary, selection_l, _controller, currentClicMode_l, standardClicMode_l);
+							commandFromSpriteModel(spriteModel_l, state_l, _spriteLibrary, selection_l, _controller, currentClicMode_l, standardClicMode_l, _world);
 						}
 					}
 					//
@@ -347,28 +347,28 @@ void GameLoop::runLoop(Window &window_p)
 					{
 						SpriteModel const * spriteModel_l = _panel.getSpriteModelOnGrid(0, 0);
 						commandFromSpriteModel(spriteModel_l, state_l, _spriteLibrary, selection_l, _controller,
-							currentClicMode_l, standardClicMode_l);
+							currentClicMode_l, standardClicMode_l, _world);
 						break;
 					}
 					case SDLK_z:
 					{
 						SpriteModel const * spriteModel_l = _panel.getSpriteModelOnGrid(1, 0);
 						commandFromSpriteModel(spriteModel_l, state_l, _spriteLibrary, selection_l, _controller,
-							currentClicMode_l, standardClicMode_l);
+							currentClicMode_l, standardClicMode_l, _world);
 						break;
 					}
 					case SDLK_e:
 					{
 						SpriteModel const * spriteModel_l = _panel.getSpriteModelOnGrid(2, 0);
 						commandFromSpriteModel(spriteModel_l, state_l, _spriteLibrary, selection_l, _controller,
-							currentClicMode_l, standardClicMode_l);
+							currentClicMode_l, standardClicMode_l, _world);
 						break;
 					}
 					case SDLK_q:
 					{
 						SpriteModel const * spriteModel_l = _panel.getSpriteModelOnGrid(0, 1);
 						commandFromSpriteModel(spriteModel_l, state_l, _spriteLibrary, selection_l, _controller,
-							currentClicMode_l, standardClicMode_l);
+							currentClicMode_l, standardClicMode_l, _world);
 						break;
 					}
 					case SDLK_SPACE:
@@ -385,7 +385,7 @@ void GameLoop::runLoop(Window &window_p)
 									spriteEnt_l->getHandle(),
 									spriteEnt_l->getHandle()
 								);
-							_controller.commitCommand(command_l);
+							_controller.commitCommandAsPlayer(command_l, _world.getPlayer());
 						}
 						break;
 					}
