@@ -64,17 +64,21 @@ RessourceLoader::RessourceLoader(cuttlefish::Window &window_p, unsigned long ful
 	_spriteLib.registerSpriteTemplate("barrack", window_p.loadTexture("resources/deposit.png"), 1., 32, 32, 64, 64, {2, 2, 2, 2}, {0.25, 0.5, 0.5, 0.5}, 1);
 	_spriteLib.registerSpriteTemplate("deposit", window_p.loadTexture("resources/deposit.png"), 1., 32, 32, 64, 64, {2, 2, 2, 2}, {0.25, 0.5, 0.5, 0.5}, 1);
 	_spriteLib.registerSpriteTemplate("worker", window_p.loadTexture("resources/fair_and_square/worker.png"), 0.5, 32, 32, 64, 64, {2, 2}, {0.5, 0.1}, 1);
+	_spriteLib.registerAltTextureForTemplate("worker", 0, window_p.loadTexture("resources/fair_and_square/worker_v2_green.png"));
+	_spriteLib.registerAltTextureForTemplate("worker", 1, window_p.loadTexture("resources/fair_and_square/worker_v2_red.png"));
 
 	_spriteLib.registerSpriteTemplate("square", window_p.loadTexture("resources/fair_and_square/square.png"), 0.5, 16, 16, 32, 32, {8, 8, 8}, {0.25, 0.5/7., 0.05}, 1);
-	_spriteLib.registerAltTextureForTemplate("square", 0, window_p.loadTexture("resources/fair_and_square/square_green.png"));
-	_spriteLib.registerAltTextureForTemplate("square", 1, window_p.loadTexture("resources/fair_and_square/square_red.png"));
+	_spriteLib.registerAltTextureForTemplate("square", 0, window_p.loadTexture("resources/fair_and_square/square_v2_green.png"));
+	_spriteLib.registerAltTextureForTemplate("square", 1, window_p.loadTexture("resources/fair_and_square/square_v2_red.png"));
 	_spriteLib.addDyingState("square", 2);
-	_spriteLib.registerSpriteTemplate("triangle", window_p.loadTexture("resources/fair_and_square/triangle.png"), 0.5, 16, 16, 32, 32, {8, 8}, {0.25, 0.5/7.}, 1);
-	_spriteLib.registerAltTextureForTemplate("triangle", 0, window_p.loadTexture("resources/fair_and_square/triangle_green.png"));
-	_spriteLib.registerAltTextureForTemplate("triangle", 1, window_p.loadTexture("resources/fair_and_square/triangle_red.png"));
-	_spriteLib.registerSpriteTemplate("circle", window_p.loadTexture("resources/fair_and_square/circle.png"), 0.5, 16, 16, 32, 32, {8, 8}, {0.25, 0.5/7.}, 1);
-	_spriteLib.registerAltTextureForTemplate("circle", 0, window_p.loadTexture("resources/fair_and_square/circle_green.png"));
-	_spriteLib.registerAltTextureForTemplate("circle", 1, window_p.loadTexture("resources/fair_and_square/circle_red.png"));
+	_spriteLib.registerSpriteTemplate("triangle", window_p.loadTexture("resources/fair_and_square/triangle.png"), 0.5, 16, 16, 32, 32, {8, 8, 8}, {0.25, 0.5/7., 0.05}, 1);
+	_spriteLib.registerAltTextureForTemplate("triangle", 0, window_p.loadTexture("resources/fair_and_square/triangle_v2_green.png"));
+	_spriteLib.registerAltTextureForTemplate("triangle", 1, window_p.loadTexture("resources/fair_and_square/triangle_v2_red.png"));
+	_spriteLib.addDyingState("triangle", 2);
+	_spriteLib.registerSpriteTemplate("circle", window_p.loadTexture("resources/fair_and_square/circle.png"), 0.5, 16, 16, 32, 32, {8, 8, 8}, {0.25, 0.5/7., 0.05}, 1);
+	_spriteLib.registerAltTextureForTemplate("circle", 0, window_p.loadTexture("resources/fair_and_square/circle_v2_green.png"));
+	_spriteLib.registerAltTextureForTemplate("circle", 1, window_p.loadTexture("resources/fair_and_square/circle_v2_red.png"));
+	_spriteLib.addDyingState("circle", 2);
 
 	_tilemap.generate();
 	_minimap.generate(window_p, _tilemap, fullWorldSize_p);
