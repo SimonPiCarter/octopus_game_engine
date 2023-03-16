@@ -47,6 +47,7 @@ target_sources (unit_tests
 	src/spawningGrid.test.cc
 	src/stateDrawStep.test.cc
 	src/stateWinStep.test.cc
+	src/stepOptionsGenerator.test.cc
 	src/triggerBuilding.test.cc
 	src/triggerTime.test.cc
 	src/triggerUnitSpawn.test.cc
