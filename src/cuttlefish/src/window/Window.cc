@@ -26,6 +26,8 @@ bool Window::init(int width_p, int height_p, unsigned long worldSize_p)
 	{
 		//Create window
 		_window = SDL_CreateWindow( "Cuttlefish", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, width_p, height_p, SDL_WINDOW_SHOWN );
+
+		//SDL_SetWindowFullscreen(_window, SDL_WINDOW_FULLSCREEN);
 		if( _window == nullptr )
 		{
 			std::cout<< "Window could not be created! SDL Error: "<< SDL_GetError() <<std::endl;
