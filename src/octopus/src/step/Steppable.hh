@@ -6,6 +6,11 @@ namespace octopus
 	class State;
 	class SteppableVisitor;
 
+	/// @brief empty class to define a steppable data
+	struct SteppableData {
+		virtual ~SteppableData() {}
+	};
+
 	/// @brief define an interface for
 	/// apply and revert on a Steppable, they
 	/// are contained in a Step object that
@@ -19,15 +24,19 @@ namespace octopus
 		public:
 			virtual ~Steppable() {}
 			/// @brief apply this Steppable to the given state
-			virtual void apply(State &state_p) const = 0;
+			virtual void apply(State &state_p, SteppableData *data_p) const = 0;
 			/// @brief revert this Steppable to the given state
-			virtual void revert(State &state_p) const = 0;
+			virtual void revert(State &state_p, SteppableData *data_p) const = 0;
 
 			/// @brief return true if this Steppable does no operation on the State it would be applied
 			virtual bool isNoOp() const = 0;
 
 			/// @brief visitor method
 			virtual void visit(SteppableVisitor * visitor_p) const = 0;
+
+			/// @brief create an optional new SteppableData
+			/// @return nullptr if not required
+			virtual SteppableData * newData() const { return nullptr; }
 	};
 
 	class BuildingSpawnStep;

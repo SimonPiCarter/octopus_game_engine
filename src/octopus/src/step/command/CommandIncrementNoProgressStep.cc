@@ -8,7 +8,7 @@
 
 namespace octopus
 {
-void CommandIncrementNoProgressStep::apply(State &state_p) const
+void CommandIncrementNoProgressStep::apply(State &state_p, SteppableData *) const
 {
 	Commandable * ent_l = state_p.getCommandable(this->_handle);
 	Logger::getDebug() << "CommandIncrementNoProgressStep :: apply " << this->_handle <<std::endl;
@@ -20,7 +20,7 @@ void CommandIncrementNoProgressStep::apply(State &state_p) const
 	data_l->_countSinceProgress = _new;
 }
 
-void CommandIncrementNoProgressStep::revert(State &state_p) const
+void CommandIncrementNoProgressStep::revert(State &state_p, SteppableData *) const
 {
 	Commandable * ent_l = state_p.getCommandable(this->_handle);
 	Logger::getDebug() << "CommandIncrementNoProgressStep :: revert " << this->_handle <<std::endl;

@@ -11,8 +11,8 @@ class StateTemplePositionRemoveStep : public Steppable
 public:
     StateTemplePositionRemoveStep(Vector const &pos_p) : _pos(pos_p) {}
 
-	virtual void apply(State &state_p) const override;
-	virtual void revert(State &state_p) const override;
+	virtual void apply(State &state_p, SteppableData *) const override;
+	virtual void revert(State &state_p, SteppableData *) const override;
 
 	virtual bool isNoOp() const override
 	{

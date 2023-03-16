@@ -5,13 +5,13 @@
 
 namespace octopus
 {
-void StateDrawStep::apply(State &state_p) const
+void StateDrawStep::apply(State &state_p, SteppableData *) const
 {
 	Logger::getDebug() << "StateDrawStep :: apply " <<std::endl;
 	state_p.setIsOver(true);
 	state_p.setHasWinner(false);
 }
-void StateDrawStep::revert(State &state_p) const
+void StateDrawStep::revert(State &state_p, SteppableData *) const
 {
 	Logger::getDebug() << "StateDrawStep :: revert " <<std::endl;
 	state_p.setIsOver(_oldIsOver);

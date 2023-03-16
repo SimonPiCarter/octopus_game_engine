@@ -7,14 +7,14 @@
 namespace octopus
 {
 
-void BuildingCancelStep::apply(State &state_p) const
+void BuildingCancelStep::apply(State &state_p, SteppableData *) const
 {
 	Building * ent_l = static_cast<Building *>(state_p.getEntity(this->_handle));
 	Logger::getDebug() << "BuildingCancelStep :: apply " << _handle <<std::endl;
 	ent_l->_canceled = _new;
 }
 
-void BuildingCancelStep::revert(State &state_p) const
+void BuildingCancelStep::revert(State &state_p, SteppableData *) const
 {
 	Building * ent_l = static_cast<Building *>(state_p.getEntity(this->_handle));
 	Logger::getDebug() << "BuildingCancelStep :: revert " << _handle <<std::endl;

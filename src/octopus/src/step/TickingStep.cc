@@ -11,7 +11,7 @@ namespace octopus
 
 double const TickingStep::_anchorLoss = 0.01;
 
-void TickingStep::apply(State &state_p) const
+void TickingStep::apply(State &state_p, SteppableData *) const
 {
 	Logger::getDebug() << "TickingStep :: apply "<<std::endl;
 	for(Entity *ent_l : state_p.getEntities())
@@ -48,7 +48,7 @@ void TickingStep::apply(State &state_p) const
 	}
 }
 
-void TickingStep::revert(State &state_p) const
+void TickingStep::revert(State &state_p, SteppableData *) const
 {
 	Logger::getDebug() << "TickingStep :: revert "<<std::endl;
 	for(Entity *ent_l : state_p.getEntities())

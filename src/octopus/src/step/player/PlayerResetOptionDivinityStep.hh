@@ -17,8 +17,8 @@ public:
 	PlayerResetOptionDivinityStep(unsigned long player_p, DivinityOption const option_p)
 		: _player(player_p), _option(option_p) {}
 
-	virtual void apply(State &state_p) const override;
-	virtual void revert(State &state_p) const override;
+	virtual void apply(State &state_p, SteppableData *) const override;
+	virtual void revert(State &state_p, SteppableData *) const override;
 
 	virtual bool isNoOp() const override { return false; }
 	virtual void visit(SteppableVisitor * visitor_p) const override

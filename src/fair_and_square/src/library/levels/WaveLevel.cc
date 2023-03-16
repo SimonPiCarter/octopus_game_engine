@@ -128,10 +128,10 @@ std::list<Command *> WaveLevelCommands(Library &lib_p, unsigned long worldSize_p
 			area_l.y = 5 + area_l.size*y;
 			area_l.entities.emplace_back(new Resource(res3_l), 1);
 			area_l.entities.emplace_back(new Resource(res2_l), 3);
-			for(unsigned long c = 0 ; c < x+y ; ++ c)
+			for(unsigned long c = 0 ; c < x*y ; ++ c)
 			{
 				Unit *unit_l = new Unit({0, 0}, false, lib_p.getUnitModel(genModelName(gen_l)));
-				unit_l->_player = 1;
+				//unit_l->_player = 1;
 				area_l.entities.emplace_back(unit_l, 1);
 			}
 			spawners_l.push_back(area_l);

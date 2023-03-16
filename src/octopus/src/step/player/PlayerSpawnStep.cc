@@ -8,7 +8,7 @@
 namespace octopus
 {
 
-void PlayerSpawnStep::apply(State &state_p) const
+void PlayerSpawnStep::apply(State &state_p, SteppableData *) const
 {
 	Logger::getDebug() << "PlayerSpawnStep :: apply id = " << this->_playerIdx << " team = " <<this->_playerTeam<<std::endl;
 
@@ -22,7 +22,7 @@ void PlayerSpawnStep::apply(State &state_p) const
 	state_p.getPlayers().push_back(player_l);
 }
 
-void PlayerSpawnStep::revert(State &state_p) const
+void PlayerSpawnStep::revert(State &state_p, SteppableData *) const
 {
 	Logger::getDebug() << "PlayerSpawnStep :: revert id = " << this->_playerIdx << " team = " <<this->_playerTeam<<std::endl;
 
@@ -35,7 +35,7 @@ void PlayerSpawnStep::revert(State &state_p) const
 	delete player_l;
 }
 
-void PlayerAddBuildingModel::apply(State &state_p) const
+void PlayerAddBuildingModel::apply(State &state_p, SteppableData *) const
 {
 	Logger::getDebug() << "PlayerAddBuildingModel :: apply id = " << this->_playerIdx << " model = " <<this->_model._id<<std::endl;
 
@@ -43,7 +43,7 @@ void PlayerAddBuildingModel::apply(State &state_p) const
 
 	player_l->_buildingModels.push_back(&this->_model);
 }
-void PlayerAddBuildingModel::revert(State &state_p) const
+void PlayerAddBuildingModel::revert(State &state_p, SteppableData *) const
 {
 	Logger::getDebug() << "PlayerAddBuildingModel :: revert id = " << this->_playerIdx << " model = " <<this->_model._id<<std::endl;
 

@@ -6,7 +6,7 @@
 namespace octopus
 {
 
-void EntityMoveStep::apply(State &state_p) const
+void EntityMoveStep::apply(State &state_p, SteppableData *) const
 {
 	Entity * ent_l = state_p.getEntity(this->_handle);
 	Logger::getDebug() << "EntityMoveStep :: apply "<< this->_handle << " " << ent_l->_pos << " + "<<this->_move<<std::endl;
@@ -24,7 +24,7 @@ void EntityMoveStep::apply(State &state_p) const
 	}
 }
 
-void EntityMoveStep::revert(State &state_p) const
+void EntityMoveStep::revert(State &state_p, SteppableData *) const
 {
 	Entity * ent_l = state_p.getEntity(this->_handle);
 	Logger::getDebug() << "EntityMoveStep :: revert " << this->_handle << " " << ent_l->_pos << " - "<<this->_move<<std::endl;

@@ -13,7 +13,15 @@ namespace octopus
 	class EntityMoveStep;
 	class State;
 	class Steppable;
+	class SteppableData;
 	class SteppableVisitor;
+
+	/// @brief simple class to store a steppable and its associated data
+	struct SteppableBundle
+	{
+		Steppable const *_steppable {nullptr};
+		SteppableData *_data {nullptr};
+	};
 
 	class Step
 	{
@@ -29,8 +37,8 @@ namespace octopus
 			std::list<EntityMoveStep *> &getEntityMoveStep();
 			std::list<EntityMoveStep *> const &getEntityMoveStep() const;
 
-			std::list<Steppable *> &getSteppable();
-			std::list<Steppable *> const &getSteppable() const;
+			std::list<SteppableBundle> &getSteppable();
+			std::list<SteppableBundle> const &getSteppable() const;
 
 			double & getResourceSpent(unsigned long player_p, ResourceType res_p);
 			double getResourceSpent(unsigned long player_p, ResourceType res_p) const;
@@ -53,7 +61,7 @@ namespace octopus
 		private:
 			std::list<EntityMoveStep *> _listEntityMoveStep;
 
-			std::list<Steppable *> _listSteppable;
+			std::list<SteppableBundle> _listSteppable;
 
 			/// @brief the id of the step (previous step + 1)
 			unsigned long long const _id {0};

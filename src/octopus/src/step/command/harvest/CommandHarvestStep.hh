@@ -14,8 +14,8 @@ public:
 	CommandResourceChangeStep(Handle const &handle_p, Handle const &old_p, Handle const &new_p)
 		: _handle(handle_p) , _oldResource(old_p), _newResource(new_p) {}
 
-	virtual void apply(State &state_p) const override;
-	virtual void revert(State &state_p) const override;
+	virtual void apply(State &state_p, SteppableData *) const override;
+	virtual void revert(State &state_p, SteppableData *) const override;
 
 	virtual bool isNoOp() const override;
 	virtual void visit(SteppableVisitor * visitor_p) const override
@@ -34,8 +34,8 @@ public:
 	CommandDepositChangeStep(Handle const &handle_p, Handle const &old_p, Handle const &new_p)
 		: _handle(handle_p) , _oldDeposit(old_p), _newDeposit(new_p) {}
 
-	virtual void apply(State &state_p) const override;
-	virtual void revert(State &state_p) const override;
+	virtual void apply(State &state_p, SteppableData *) const override;
+	virtual void revert(State &state_p, SteppableData *) const override;
 
 	virtual bool isNoOp() const override;
 	virtual void visit(SteppableVisitor * visitor_p) const override
@@ -54,8 +54,8 @@ public:
 	CommandHarvestingChangeStep(Handle const &handle_p, bool old_p, bool new_p)
 		: _handle(handle_p) , _old(old_p), _new(new_p) {}
 
-	virtual void apply(State &state_p) const override;
-	virtual void revert(State &state_p) const override;
+	virtual void apply(State &state_p, SteppableData *) const override;
+	virtual void revert(State &state_p, SteppableData *) const override;
 
 	virtual bool isNoOp() const override;
 	virtual void visit(SteppableVisitor * visitor_p) const override
@@ -75,8 +75,8 @@ public:
 	CommandHarvestTimeSinceHarvestStep(Handle const &handle_p, double old_p, double new_p)
 		: _handle(handle_p), _old(old_p), _new(new_p) {}
 
-	virtual void apply(State &state_p) const override;
-	virtual void revert(State &state_p) const override;
+	virtual void apply(State &state_p, SteppableData *) const override;
+	virtual void revert(State &state_p, SteppableData *) const override;
 
 	virtual bool isNoOp() const override;
 	virtual void visit(SteppableVisitor * visitor_p) const override

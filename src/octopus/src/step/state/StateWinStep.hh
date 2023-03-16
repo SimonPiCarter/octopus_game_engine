@@ -11,8 +11,8 @@ public:
     StateWinStep(bool oldIsOver_p, bool oldHasWinningTeam_p, unsigned long oldWinningTeam_p, unsigned long winningTeam_p)
 		: _oldIsOver(oldIsOver_p), _oldhasWinningTeam(oldHasWinningTeam_p), _oldWinningTeam(oldWinningTeam_p), _winningTeam(winningTeam_p) {}
 
-	virtual void apply(State &state_p) const override;
-	virtual void revert(State &state_p) const override;
+	virtual void apply(State &state_p, SteppableData *) const override;
+	virtual void revert(State &state_p, SteppableData *) const override;
 
 	virtual bool isNoOp() const override
 	{

@@ -29,7 +29,7 @@ void updateFromResource(State &state_p, Resource *res_p)
 	}
 }
 
-void UnitHarvestQuantityStep::apply(State &state_p) const
+void UnitHarvestQuantityStep::apply(State &state_p, SteppableData *) const
 {
 	Logger::getDebug() << "UnitHarvestQuantityStep :: apply " << this->_handle <<std::endl;
 	Unit * unit_l = dynamic_cast<Unit *>(state_p.getEntity(this->_handle));
@@ -40,7 +40,7 @@ void UnitHarvestQuantityStep::apply(State &state_p) const
 
 	updateFromResource(state_p, res_l);
 }
-void UnitHarvestQuantityStep::revert(State &state_p) const
+void UnitHarvestQuantityStep::revert(State &state_p, SteppableData *) const
 {
 	Logger::getDebug() << "UnitHarvestQuantityStep :: revert " << this->_handle <<std::endl;
 	Unit * unit_l = dynamic_cast<Unit *>(state_p.getEntity(this->_handle));
@@ -57,7 +57,7 @@ bool UnitHarvestQuantityStep::isNoOp() const
 	return std::abs(_qty) < 1e-3;
 }
 
-void UnitHarvestTypeStep::apply(State &state_p) const
+void UnitHarvestTypeStep::apply(State &state_p, SteppableData *) const
 {
 	Entity * ent_l = state_p.getEntity(this->_handle);
 	Logger::getDebug() << "UnitHarvestTypeStep :: apply " << this->_handle <<std::endl;
@@ -65,7 +65,7 @@ void UnitHarvestTypeStep::apply(State &state_p) const
 	unit_l->_typeOfResource = _new;
 	unit_l->_quantityOfResource = 0.;
 }
-void UnitHarvestTypeStep::revert(State &state_p) const
+void UnitHarvestTypeStep::revert(State &state_p, SteppableData *) const
 {
 	Entity * ent_l = state_p.getEntity(this->_handle);
 	Logger::getDebug() << "UnitHarvestTypeStep :: revert " << this->_handle <<std::endl;
@@ -79,7 +79,7 @@ bool UnitHarvestTypeStep::isNoOp() const
 	return _old == _new;
 }
 
-void UnitHarvestDropStep::apply(State &state_p) const
+void UnitHarvestDropStep::apply(State &state_p, SteppableData *) const
 {
 	Entity * ent_l = state_p.getEntity(this->_handle);
 	Logger::getDebug() << "UnitHarvestDropStep :: apply " << this->_handle <<std::endl;
@@ -88,7 +88,7 @@ void UnitHarvestDropStep::apply(State &state_p) const
 	state_p.getPlayer(unit_l->_player)->_resources[unit_l->_typeOfResource] += _dropped;
 }
 
-void UnitHarvestDropStep::revert(State &state_p) const
+void UnitHarvestDropStep::revert(State &state_p, SteppableData *) const
 {
 	Entity * ent_l = state_p.getEntity(this->_handle);
 	Logger::getDebug() << "UnitHarvestDropStep :: revert " << this->_handle <<std::endl;

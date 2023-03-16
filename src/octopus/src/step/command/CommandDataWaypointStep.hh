@@ -14,8 +14,8 @@ public:
 	CommandDataWaypointAddStep(Handle const &handle_p, Vector const &waypoint_p)
 		: _handle(handle_p) , _waypoint(waypoint_p){}
 
-	virtual void apply(State &state_p) const override;
-	virtual void revert(State &state_p) const override;
+	virtual void apply(State &state_p, SteppableData *) const override;
+	virtual void revert(State &state_p, SteppableData *) const override;
 
 	virtual bool isNoOp() const override;
 	virtual void visit(SteppableVisitor * visitor_p) const override
@@ -33,8 +33,8 @@ public:
 	CommandDataWaypointRemoveStep(Handle const &handle_p, Vector const &waypoint_p)
 		: _handle(handle_p) , _waypoint(waypoint_p){}
 
-	virtual void apply(State &state_p) const override;
-	virtual void revert(State &state_p) const override;
+	virtual void apply(State &state_p, SteppableData *) const override;
+	virtual void revert(State &state_p, SteppableData *) const override;
 
 	virtual bool isNoOp() const override;
 	virtual void visit(SteppableVisitor * visitor_p) const override
@@ -52,8 +52,8 @@ public:
 	CommandDataWaypointSetStep(Handle const &handle_p, std::list<Vector> const &old_p, std::list<Vector> const &new_p)
 		: _handle(handle_p) , _old(old_p), _new(new_p) {}
 
-	virtual void apply(State &state_p) const override;
-	virtual void revert(State &state_p) const override;
+	virtual void apply(State &state_p, SteppableData *) const override;
+	virtual void revert(State &state_p, SteppableData *) const override;
 
 	virtual bool isNoOp() const override;
 	virtual void visit(SteppableVisitor * visitor_p) const override

@@ -14,12 +14,12 @@ TEST(stateDrawStepTest, simple)
     EXPECT_FALSE(state_l.isOver());
     EXPECT_FALSE(state_l.hasWinningTeam());
 
-    drawStep_l.apply(state_l);
+    drawStep_l.apply(state_l, nullptr);
 
     EXPECT_TRUE(state_l.isOver());
     EXPECT_FALSE(state_l.hasWinningTeam());
 
-    drawStep_l.revert(state_l);
+    drawStep_l.revert(state_l, nullptr);
 
     EXPECT_FALSE(state_l.isOver());
     EXPECT_FALSE(state_l.hasWinningTeam());

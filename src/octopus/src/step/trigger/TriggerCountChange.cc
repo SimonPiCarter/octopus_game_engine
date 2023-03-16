@@ -7,7 +7,7 @@
 namespace octopus
 {
 
-void TriggerCountChange::apply(State &state_p) const
+void TriggerCountChange::apply(State &state_p, SteppableData *) const
 {
 	Logger::getDebug() << "TriggerCountChange :: apply " << _handleTrigger << ", "<< _handleListener << " " << _old << " -> "<< _new <<std::endl;
 	ListenerData * data_l = state_p.getListenerData(_handleTrigger, _handleListener);
@@ -15,7 +15,7 @@ void TriggerCountChange::apply(State &state_p) const
 	data_l->_count = _new;
 }
 
-void TriggerCountChange::revert(State &state_p) const
+void TriggerCountChange::revert(State &state_p, SteppableData *) const
 {
 	Logger::getDebug() << "TriggerCountChange :: revert " << _handleTrigger << ", "<< _handleListener << " "  << _new << " -> "<< _old <<std::endl;
 	ListenerData * data_l = state_p.getListenerData(_handleTrigger, _handleListener);

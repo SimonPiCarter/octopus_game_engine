@@ -15,7 +15,7 @@ class SpawnModelStep : public Steppable
 public:
 	SpawnModelStep(Handle const &handle_p, class_t const &model_p, bool forceAlive_p=false) : _handle(handle_p), _model(model_p), _forceAlive(forceAlive_p) {}
 
-	virtual void apply(State &state_p) const override
+	virtual void apply(State &state_p, SteppableData*) const override
 	{
 		if(!state_p.hasEntity(_handle))
 		{
@@ -42,7 +42,7 @@ public:
 			updateExplorationGrid(state_p, ent_l, true);
 		}
 	}
-	virtual void revert(State &state_p) const override
+	virtual void revert(State &state_p, SteppableData*) const override
 	{
 		// unspawn but do not delete
 		Entity * ent_l = state_p.getEntity(this->_handle);

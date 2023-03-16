@@ -83,11 +83,12 @@ Controller::Controller(
 	octopus::updateStepFromConflictPosition(_initialStep, *_backState->_state);
 	octopus::compact(_initialStep);
 
-	for(Steppable * steppable_l : _initialStep.getSteppable())
+	for(SteppableBundle &bundle_l : _initialStep.getSteppable())
 	{
+		Steppable const * steppable_l = bundle_l._steppable;
 		// store commands for memory handling
-		CommandSpawnStep * cmdSpawn_l = dynamic_cast<CommandSpawnStep *>(steppable_l);
-		CommandStorageStep * cmdstorage_l = dynamic_cast<CommandStorageStep *>(steppable_l);
+		CommandSpawnStep const * cmdSpawn_l = dynamic_cast<CommandSpawnStep const *>(steppable_l);
+		CommandStorageStep const * cmdstorage_l = dynamic_cast<CommandStorageStep const *>(steppable_l);
 		if(cmdSpawn_l)
 		{
 			_commands[0].push_back(cmdSpawn_l->getCmd());
@@ -217,11 +218,13 @@ bool Controller::loop_body()
 			octopus::compact(step_l);
 
 			// register all commands
-			for(Steppable * steppable_l : step_l.getSteppable())
+
+			for(SteppableBundle &bundle_l : _initialStep.getSteppable())
 			{
+				Steppable const * steppable_l = bundle_l._steppable;
 				// store commands for memory handling
-				CommandSpawnStep * cmdSpawn_l = dynamic_cast<CommandSpawnStep *>(steppable_l);
-				CommandStorageStep * cmdstorage_l = dynamic_cast<CommandStorageStep *>(steppable_l);
+				CommandSpawnStep const * cmdSpawn_l = dynamic_cast<CommandSpawnStep const *>(steppable_l);
+				CommandStorageStep const * cmdstorage_l = dynamic_cast<CommandStorageStep const *>(steppable_l);
 				if(cmdSpawn_l)
 				{
 					_commands[_backState->_stepHandled].push_back(cmdSpawn_l->getCmd());
@@ -230,7 +233,7 @@ bool Controller::loop_body()
 				{
 					_commands[_backState->_stepHandled].push_back(cmdstorage_l->getCmd());
 				}
-				TriggerSpawn * triggerSpawn_l = dynamic_cast<TriggerSpawn *>(steppable_l);
+				TriggerSpawn const * triggerSpawn_l = dynamic_cast<TriggerSpawn const *>(steppable_l);
 				if(triggerSpawn_l)
 				{
 					_triggers[_backState->_stepHandled].push_back(triggerSpawn_l->_trigger);
