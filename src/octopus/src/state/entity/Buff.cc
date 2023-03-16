@@ -26,7 +26,8 @@ bool TyppedBuff::isApplying(State const &state_p, Entity const &source_p, Entity
 	if(_type == Type::Speed
 	|| _type == Type::FullReload
 	|| _type == Type::Damage
-	|| _type == Type::Armor)
+	|| _type == Type::Armor
+	|| _type == Type::HpMax)
 	{
 		return ent_p._model._isUnit;
 	}
@@ -60,6 +61,10 @@ void TyppedBuff::apply(Entity &ent_p) const
 		case Type::Armor:
 			ent_p._buffArmor._offset += _offset;
 			ent_p._buffArmor._coef += _coef;
+			break;
+		case Type::HpMax:
+			ent_p._buffHpMax._offset += _offset;
+			ent_p._buffHpMax._coef += _coef;
 			break;
 		case Type::Production:
 			ent_p._buffProduction._offset += _offset;

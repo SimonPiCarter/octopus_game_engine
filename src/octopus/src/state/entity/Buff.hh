@@ -22,12 +22,14 @@ struct TyppedBuff : public Buff
 		FullReload,
 		Damage,
 		Armor,
+		HpMax,
 		Production,
 		Harvest
 	};
 
 	Type _type {Type::Speed};
 
+	/// @brief 0 for infinite buff
 	unsigned long _duration {0};
 
 	/// @brief true if applies to enemies
