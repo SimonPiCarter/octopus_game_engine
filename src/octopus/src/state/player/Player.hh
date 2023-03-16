@@ -9,6 +9,7 @@
 #include "state/DivinityType.hh"
 
 #include "DivinityOption.hh"
+#include "StepOptionsGenerator.hh"
 
 namespace octopus
 {
@@ -18,6 +19,8 @@ namespace octopus
 	class Player
 	{
 		public:
+			~Player();
+
 			std::map<ResourceType, double> _resources;
 
 			unsigned long _popCap {0};
@@ -38,6 +41,10 @@ namespace octopus
 			std::map<DivinityType, double> _divAnchor;
 			/// @brief the options currently available to the player
 			std::list<DivinityOption> _divOptions;
+
+			/// @brief the map of options available to the player
+			/// @note Player is owner of the generator here
+			std::map<std::string, StepOptionsGenerator*> _options;
 
 			///
 			/// Unlock info

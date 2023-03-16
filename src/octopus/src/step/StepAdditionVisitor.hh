@@ -53,8 +53,10 @@ public:
     virtual void visit(MissingResourceStep const *) {}
     virtual void visit(PlayerAddBuildingModel const *) {}
     virtual void visit(PlayerAddOptionDivinityStep const *) {}
+	virtual void visit(PlayerAddOptionStep const *) {}
     virtual void visit(PlayerAnchorDivinityStep const *) {}
     virtual void visit(PlayerLevelUpDivinityStep const *) {}
+	virtual void visit(PlayerPopOptionStep const *) {}
     virtual void visit(PlayerResetOptionDivinityStep const *);
     virtual void visit(PlayerSpawnStep const *) {}
     virtual void visit(PlayerSpendResourceStep const *);

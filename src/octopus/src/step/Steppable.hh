@@ -39,9 +39,9 @@ namespace octopus
 			virtual SteppableData * newData() const { return nullptr; }
 	};
 
+	class BuildingCancelStep;
 	class BuildingSpawnStep;
 	class BuildingStep;
-	class BuildingCancelStep;
 	class CommandAddSubAttackStep;
 	class CommandDataWaypointAddStep;
 	class CommandDataWaypointRemoveStep;
@@ -51,8 +51,8 @@ namespace octopus
 	class CommandHarvestingChangeStep;
 	class CommandHarvestTimeSinceHarvestStep;
 	class CommandIncrementNoProgressStep;
-	class CommandMoveUpdateStep;
 	class CommandMoveStepSinceUpdateIncrementStep;
+	class CommandMoveUpdateStep;
 	class CommandNewTargetStep;
 	class CommandNextStep;
 	class CommandResourceChangeStep;
@@ -67,13 +67,15 @@ namespace octopus
 	class EntityFrozenStep;
 	class EntityHitPointChangeStep;
 	class EntityMoveStep;
-	class EntityUpdateWaitingStep;
 	class EntitySpawnStep;
+	class EntityUpdateWaitingStep;
 	class MissingResourceStep;
 	class PlayerAddBuildingModel;
 	class PlayerAddOptionDivinityStep;
+	class PlayerAddOptionStep;
 	class PlayerAnchorDivinityStep;
 	class PlayerLevelUpDivinityStep;
+	class PlayerPopOptionStep;
 	class PlayerResetOptionDivinityStep;
 	class PlayerSpawnStep;
 	class PlayerSpendResourceStep;
@@ -110,9 +112,9 @@ namespace octopus
 				steppable_p->visit(this);
 			}
 
+			virtual void visit(BuildingCancelStep const *steppable_p) = 0;
 			virtual void visit(BuildingSpawnStep const *steppable_p) = 0;
 			virtual void visit(BuildingStep const *steppable_p) = 0;
-			virtual void visit(BuildingCancelStep const *steppable_p) = 0;
 			virtual void visit(CommandAddSubAttackStep const *steppable_p) = 0;
 			virtual void visit(CommandDataWaypointAddStep const *steppable_p) = 0;
 			virtual void visit(CommandDataWaypointRemoveStep const *steppable_p) = 0;
@@ -122,29 +124,31 @@ namespace octopus
 			virtual void visit(CommandHarvestingChangeStep const *steppable_p) = 0;
 			virtual void visit(CommandHarvestTimeSinceHarvestStep const *steppable_p) = 0;
 			virtual void visit(CommandIncrementNoProgressStep const *steppable_p) = 0;
-			virtual void visit(CommandMoveUpdateStep const *steppable_p) = 0;
 			virtual void visit(CommandMoveStepSinceUpdateIncrementStep const *steppable_p) = 0;
+			virtual void visit(CommandMoveUpdateStep const *steppable_p) = 0;
 			virtual void visit(CommandNewTargetStep const *steppable_p) = 0;
 			virtual void visit(CommandNextStep const *steppable_p) = 0;
 			virtual void visit(CommandResourceChangeStep const *steppable_p) = 0;
 			virtual void visit(CommandSetPositionFromStep const *steppable_p) = 0;
 			virtual void visit(CommandSpawnStep const *steppable_p) = 0;
 			virtual void visit(CommandStorageStep const *steppable_p) = 0;
-			virtual void visit(CommandUpdateLastPosStep const *steppable_p) = 0;
 			virtual void visit(CommandUpdateLastIdStep const *) = 0;
+			virtual void visit(CommandUpdateLastPosStep const *steppable_p) = 0;
 			virtual void visit(CommandWindUpDiffStep const *steppable_p) = 0;
 			virtual void visit(EntityAttackStep const *steppable_p) = 0;
 			virtual void visit(EntityBuffStep const *steppable_p) = 0;
 			virtual void visit(EntityFrozenStep const *steppable_p) = 0;
 			virtual void visit(EntityHitPointChangeStep const *steppable_p) = 0;
 			virtual void visit(EntityMoveStep const *steppable_p) = 0;
-			virtual void visit(EntityUpdateWaitingStep const *steppable_p) = 0;
 			virtual void visit(EntitySpawnStep const *steppable_p) = 0;
+			virtual void visit(EntityUpdateWaitingStep const *steppable_p) = 0;
 			virtual void visit(MissingResourceStep const *steppable_p) = 0;
 			virtual void visit(PlayerAddBuildingModel const *steppable_p) = 0;
 			virtual void visit(PlayerAddOptionDivinityStep const *steppable_p) = 0;
+			virtual void visit(PlayerAddOptionStep const *steppable_p) = 0;
 			virtual void visit(PlayerAnchorDivinityStep const *steppable_p) = 0;
 			virtual void visit(PlayerLevelUpDivinityStep const *steppable_p) = 0;
+			virtual void visit(PlayerPopOptionStep const *steppable_p) = 0;
 			virtual void visit(PlayerResetOptionDivinityStep const *steppable_p) = 0;
 			virtual void visit(PlayerSpawnStep const *steppable_p) = 0;
 			virtual void visit(PlayerSpendResourceStep const *steppable_p) = 0;

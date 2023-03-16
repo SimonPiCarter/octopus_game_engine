@@ -10,7 +10,7 @@
 namespace octopus
 {
 
-struct BuildingModel;;
+struct BuildingModel;
 
 class PlayerSpawnStep : public Steppable
 {

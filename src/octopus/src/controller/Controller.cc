@@ -219,7 +219,7 @@ bool Controller::loop_body()
 
 			// register all commands
 
-			for(SteppableBundle &bundle_l : _initialStep.getSteppable())
+			for(SteppableBundle &bundle_l : step_l.getSteppable())
 			{
 				Steppable const * steppable_l = bundle_l._steppable;
 				// store commands for memory handling

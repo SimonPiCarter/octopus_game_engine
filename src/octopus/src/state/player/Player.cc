@@ -5,6 +5,15 @@
 
 namespace octopus
 {
+
+Player::~Player()
+{
+	for(auto &&pair_l : _options)
+	{
+		delete pair_l.second;
+	}
+}
+
 double getResource(Player const &player_p, ResourceType type_p)
 {
 	auto &&it_l = player_p._resources.find(type_p);
