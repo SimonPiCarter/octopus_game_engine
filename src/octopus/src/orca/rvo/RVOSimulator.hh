@@ -47,6 +47,7 @@
 namespace octopus
 {
 	class EntityMoveStep;
+	class Entity;
 }
 
 namespace RVO {
@@ -529,6 +530,8 @@ namespace RVO {
 		void setAgentPosition(size_t agentNo, const Vector2 &position);
 
 		void setAgentMoveStep(size_t agentNo, octopus::EntityMoveStep *moveStep);
+
+		void setAgentEntity(size_t agentNo, octopus::Entity const *ent);
 
 		void setAgentWeight(size_t agentNo, octopus::Fixed weight);
 

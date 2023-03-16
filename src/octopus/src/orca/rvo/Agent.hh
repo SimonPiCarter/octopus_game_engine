@@ -45,6 +45,7 @@
 
 namespace octopus
 {
+	class Entity;
 	class EntityMoveStep;
 }
 
@@ -93,6 +94,11 @@ namespace RVO {
 		 */
 		void update();
 
+		/// @brief return true if the agent should be active
+		/// this is false usually when then represented entity has died
+		/// @return
+		bool active() const;
+
 		std::vector<std::pair<octopus::Fixed , const Agent *> > agentNeighbors_;
 		size_t maxNeighbors_;
 		octopus::Fixed maxSpeed_;
@@ -113,6 +119,7 @@ namespace RVO {
 		size_t id_;
 
 		octopus::EntityMoveStep * moveStep_;
+		octopus::Entity const * ent_;
 
 		friend class KdTree;
 		friend class RVOSimulator;

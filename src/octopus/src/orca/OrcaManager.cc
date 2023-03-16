@@ -88,10 +88,11 @@ void OrcaManager::resetFromState(State const &state_p)
 
 void OrcaManager::setupStep(State const &state_p, Step &step_p)
 {
+    _gridStatus = state_p.getPathGridStatus();
     // set or reset position, velocity and weight values
     for(octopus::Entity const * ent_l : state_p.getEntities())
     {
-        if(skipCollision(ent_l) || ent_l->_model._isStatic)
+        if(skipCollision(ent_l) || ent_l->_model._isStatic || _mapHandleIdx.find(ent_l->_handle) == _mapHandleIdx.end())
         {
             continue;
         }
@@ -104,6 +105,7 @@ void OrcaManager::setupStep(State const &state_p, Step &step_p)
         {
             _sim->setAgentMaxSpeed(idx_l, ent_l->_model._stepSpeed);
         }
+        _sim->setAgentEntity(idx_l, ent_l);
         // _sim->setAgentWeight(idx_l, 1);
         _sim->setAgentPrefVelocity(idx_l, RVO::Vector2(0, 0));
         _sim->setAgentPosition(idx_l, RVO::Vector2(ent_l->_pos.x, ent_l->_pos.y));
@@ -124,7 +126,7 @@ void OrcaManager::setupStep(State const &state_p, Step &step_p)
     // also update weights to be lower
 	for(Entity const * ent_l : state_p.getEntities())
 	{
-        if(skipCollision(ent_l))
+        if(skipCollision(ent_l) || _mapHandleIdx.find(ent_l->_handle) == _mapHandleIdx.end())
         {
             continue;
         }
@@ -142,7 +144,7 @@ void OrcaManager::setupStep(State const &state_p, Step &step_p)
     // set move step and prefered velocity from move steps
     for(octopus::EntityMoveStep *moveStep_l : step_p.getEntityMoveStep())
     {
-        if(skipCollision(state_p.getEntity(moveStep_l->_handle)))
+        if(skipCollision(state_p.getEntity(moveStep_l->_handle)) || _mapHandleIdx.find(moveStep_l->_handle) == _mapHandleIdx.end())
         {
             continue;
         }
@@ -154,7 +156,7 @@ void OrcaManager::setupStep(State const &state_p, Step &step_p)
     // set known velocity based on last move step
     for(octopus::EntityMoveStep const *moveStep_l : step_p.getPrev()->getEntityMoveStep())
     {
-        if(skipCollision(state_p.getEntity(moveStep_l->_handle)))
+        if(skipCollision(state_p.getEntity(moveStep_l->_handle)) || _mapHandleIdx.find(moveStep_l->_handle) == _mapHandleIdx.end())
         {
             continue;
         }
@@ -172,7 +174,8 @@ void OrcaManager::commitStep(State const &state_p, Step &step_p)
 {
     for(octopus::EntityMoveStep *moveStep_l : step_p.getEntityMoveStep())
     {
-        if(skipCollision(state_p.getEntity(moveStep_l->_handle)))
+        if(skipCollision(state_p.getEntity(moveStep_l->_handle))
+        || _mapHandleIdx.find(moveStep_l->_handle) == _mapHandleIdx.end())
         {
             continue;
         }
@@ -189,6 +192,23 @@ void OrcaManager::commitStep(State const &state_p, Step &step_p)
         }
 
     }
+}
+
+bool OrcaManager::ShouldReset(OrcaManager const *manager_p, State const &state_p, Step const &step_p)
+{
+    if(!manager_p)
+    {
+        return true;
+    }
+    if(step_p.getEntitySpawned() > 0)
+    {
+        return true;
+    }
+    if(manager_p->_gridStatus < state_p.getPathGridStatus())
+    {
+        return true;
+    }
+    return false;
 }
 
 } // namespace octopus

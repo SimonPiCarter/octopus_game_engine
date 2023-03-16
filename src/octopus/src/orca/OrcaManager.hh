@@ -43,12 +43,22 @@ public:
     void doStep();
     void commitStep(State const &state_p, Step &step_p);
 
+    /// @brief check if the manager should be reset, this happens as soon as any entity is spawned
+    /// or died or if manager is null
+    /// @param manager_p
+    /// @param state_p
+    /// @param step_p
+    /// @return
+    static bool ShouldReset(OrcaManager const *manager_p, State const &state_p, Step const &step_p);
+
 private:
-    double _timeStep;
-    double _neighborDist;
-    size_t _maxNeighbors;
-    double _timeHorizon;
-    double _timeHorizonObst;
+    double const _timeStep;
+    double const _neighborDist;
+    size_t const _maxNeighbors;
+    double const _timeHorizon;
+    double const _timeHorizonObst;
+
+    unsigned long _gridStatus {0};
 
     /// @brief the simulation to use
     RVO::RVOSimulator *_sim {nullptr};
