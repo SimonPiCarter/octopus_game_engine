@@ -32,8 +32,6 @@ TEST(entityStepTest, simple)
 
 	step_l.revert(state_l, nullptr);
 
-	// was not deleted
-	ASSERT_EQ(1u, state_l.getEntities().size());
-	EXPECT_EQ(false, state_l.getEntity(0)->_alive);
-
+	// was deleted
+	ASSERT_EQ(0u, state_l.getEntities().size());
 }

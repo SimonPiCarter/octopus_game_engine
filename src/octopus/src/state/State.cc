@@ -100,6 +100,11 @@ Handle State::addEntity(Entity * ent_p)
 	return ent_p->_handle;
 }
 
+std::vector<Entity *> &State::getEntities()
+{
+	return _entities;
+}
+
 std::vector<Entity *> const &State::getEntities() const
 {
 	return _entities;

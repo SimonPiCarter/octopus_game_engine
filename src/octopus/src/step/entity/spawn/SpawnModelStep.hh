@@ -44,14 +44,14 @@ public:
 	}
 	virtual void revert(State &state_p, SteppableData*) const override
 	{
+		if(state_p.getEntities().back()->_handle != this->_handle)
+		{
+			throw std::logic_error("Spawn Step revert is incoherrent (steps seem to be reverted in the wrong order)");
+		}
 		// unspawn but do not delete
 		Entity * ent_l = state_p.getEntity(this->_handle);
-		if(ent_l->_alive)
-		{
-			updateExplorationGrid(state_p, ent_l, false);
-			updateGrid(state_p, ent_l, false);
-		}
-		ent_l->_alive = false;
+		state_p.getEntities().pop_back();
+		delete ent_l;
 	}
 
 	virtual bool isNoOp() const override
