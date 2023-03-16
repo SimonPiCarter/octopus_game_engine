@@ -74,6 +74,7 @@ namespace octopus
 	class PlayerAddOptionDivinityStep;
 	class PlayerAddOptionStep;
 	class PlayerAnchorDivinityStep;
+	class PlayerBuffAllStep;
 	class PlayerLevelUpDivinityStep;
 	class PlayerPopOptionStep;
 	class PlayerResetOptionDivinityStep;
@@ -147,6 +148,7 @@ namespace octopus
 			virtual void visit(PlayerAddOptionDivinityStep const *steppable_p) = 0;
 			virtual void visit(PlayerAddOptionStep const *steppable_p) = 0;
 			virtual void visit(PlayerAnchorDivinityStep const *steppable_p) = 0;
+			virtual void visit(PlayerBuffAllStep const *steppable_p) = 0;
 			virtual void visit(PlayerLevelUpDivinityStep const *steppable_p) = 0;
 			virtual void visit(PlayerPopOptionStep const *steppable_p) = 0;
 			virtual void visit(PlayerResetOptionDivinityStep const *steppable_p) = 0;

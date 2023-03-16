@@ -9,20 +9,8 @@
 namespace octopus
 {
 
-bool TyppedBuff::isApplying(State const &state_p, Entity const &source_p, Entity const &ent_p) const
+bool TyppedBuff::isApplying(State const &state_p, Entity const &ent_p) const
 {
-	unsigned long teamSource_l = state_p.getPlayer(source_p._player)->_team;
-	unsigned long teamEnt_l = state_p.getPlayer(ent_p._player)->_team;
-	// cannot buff enemy
-	if(!_debuff && teamSource_l != teamEnt_l)
-	{
-		return false;
-	}
-	// cannot debuff allies
-	if(_debuff && teamSource_l == teamEnt_l)
-	{
-		return false;
-	}
 	if(_type == Type::Speed
 	|| _type == Type::FullReload
 	|| _type == Type::Damage
@@ -40,6 +28,23 @@ bool TyppedBuff::isApplying(State const &state_p, Entity const &source_p, Entity
 		return ent_p._model._isBuilding && static_cast<Building const &>(ent_p)._buildingModel.isAnyDeposit();
 	}
 	return false;
+}
+
+bool TyppedBuff::isApplying(State const &state_p, Entity const &source_p, Entity const &ent_p) const
+{
+	unsigned long teamSource_l = state_p.getPlayer(source_p._player)->_team;
+	unsigned long teamEnt_l = state_p.getPlayer(ent_p._player)->_team;
+	// cannot buff enemy
+	if(!_debuff && teamSource_l != teamEnt_l)
+	{
+		return false;
+	}
+	// cannot debuff allies
+	if(_debuff && teamSource_l == teamEnt_l)
+	{
+		return false;
+	}
+	return isApplying(state_p, ent_p);
 }
 
 void TyppedBuff::apply(Entity &ent_p) const

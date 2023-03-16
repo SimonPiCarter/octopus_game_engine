@@ -7,6 +7,7 @@
 #include <map>
 #include "state/ResourceType.hh"
 #include "state/DivinityType.hh"
+#include "state/entity/Buff.hh"
 
 #include "DivinityOption.hh"
 #include "StepOptionsGenerator.hh"
@@ -45,6 +46,9 @@ namespace octopus
 			/// @brief the map of options available to the player
 			/// @note Player is owner of the generator here
 			std::map<std::string, StepOptionsGenerator*> _options;
+
+			/// @brief the list of all buffs that should be applied on every entity per model
+			std::map<std::string, std::vector<TyppedBuff> > _mapBuffs;
 
 			///
 			/// Unlock info

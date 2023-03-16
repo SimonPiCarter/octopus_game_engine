@@ -65,6 +65,7 @@ public:
 	virtual void visit(PlayerAddOptionDivinityStep const *) {}
 	virtual void visit(PlayerAddOptionStep const *) {}
 	virtual void visit(PlayerAnchorDivinityStep const *) {}
+	virtual void visit(PlayerBuffAllStep const *) {}
 	virtual void visit(PlayerLevelUpDivinityStep const *) {}
 	virtual void visit(PlayerPopOptionStep const *) {}
 	virtual void visit(PlayerResetOptionDivinityStep const *) {}

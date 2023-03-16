@@ -38,6 +38,11 @@ struct TyppedBuff : public Buff
 	std::string _id;
 
 	/// @brief check if the buff apply to the entity
+	/// @param ent_p the entity to test
+	/// @return true if the buff apply to the entity
+	bool isApplying(State const &state_p, Entity const &ent_p) const;
+
+	/// @brief check if the buff apply to the entity
 	/// @param source_p the entity buffing
 	/// @param ent_p the entity to test
 	/// @return true if the buff apply to the entity
