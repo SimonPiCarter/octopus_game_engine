@@ -184,11 +184,23 @@ bool Controller::loop_body()
 
 			if(_orcaCollision)
 			{
-				OrcaManager orcaManager_l(1, 35., 10, 10., 10.);
-				orcaManager_l.resetFromState(*_backState->_state);
-				orcaManager_l.setupStep(*_backState->_state, step_l);
-				orcaManager_l.doStep();
-				orcaManager_l.commitStep(*_backState->_state, step_l);
+				// test should reset based on last bacause we want to update the manager on the current state
+				// therefore we need to check on the step just applied
+				if(OrcaManager::ShouldReset(_orcaManager, *_backState->_state, *step_l.getPrev()))
+				{
+					delete _orcaManager;
+					_orcaManager = new OrcaManager(1, 35., 10, 10., 10.);
+					_orcaManager->resetFromState(*_backState->_state);
+					_orcaManager->setupStep(*_backState->_state, step_l);
+					_orcaManager->doStep();
+					_orcaManager->commitStep(*_backState->_state, step_l);
+				}
+				else
+				{
+					_orcaManager->setupStep(*_backState->_state, step_l);
+					_orcaManager->doStep();
+					_orcaManager->commitStep(*_backState->_state, step_l);
+				}
 			}
 			else
 			{

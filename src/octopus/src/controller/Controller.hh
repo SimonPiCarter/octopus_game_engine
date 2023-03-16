@@ -15,6 +15,7 @@ namespace octopus
 {
 
 class Command;
+class OrcaManager;
 class Steppable;
 class State;
 
@@ -154,6 +155,8 @@ private:
 	void handleTriggers(State const &state_p, Step &step_p, Step const &prevStep_p);
 
 	Step const &getStepBeforeLastCompiledStep() const;
+
+	OrcaManager *_orcaManager {nullptr};
 };
 
 } // namespace octopus
