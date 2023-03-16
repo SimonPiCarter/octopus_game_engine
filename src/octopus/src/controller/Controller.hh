@@ -110,6 +110,8 @@ public:
 	unsigned long getOngoingStep() const;
 
 	void enableORCA() { _orcaCollision = true; }
+
+	double getTimePerStep() const { return _timePerStep; }
 private:
 	/// @brief set to true to enable orca Collision
 	/// way better performance but less predictible (should not be used in tests)

@@ -473,8 +473,8 @@ void GameLoop::runLoop(Window &window_p)
 		textDivAnchor_l.display(window_p);
 
 		std::stringstream ss_l;
-		ss_l << stateAndSteps_l._steps.size()<<"/"<<_controller.getOngoingStep()
-		<<"     ratio : "<<ratio_l << "%"
+		ss_l << "step : "<<_controller.getOngoingStep()
+		<<"     ratio : "<<int(ratio_l*_controller.getTimePerStep()*100.) << "%"
 		<<"     entity count : "<<_world.getListSprite().size();
 		textSteps_l.setText(ss_l.str());
 		textSteps_l.display(window_p);
