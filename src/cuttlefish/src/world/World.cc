@@ -17,9 +17,9 @@
 namespace cuttlefish
 {
 
-void World::handleStep(Window &window_p, Panel &panel_p, StatsPanel &statsPanel_p, DivinityPanel &divPanel_p, octopus::StateAndSteps const &steps_p, SpriteLibrary const &lib_p)
+void World::handleStep(Window &window_p, Panel &panel_p, StatsPanel &statsPanel_p, OptionPanel &optionPanel_p, octopus::StateAndSteps const &steps_p, SpriteLibrary const &lib_p)
 {
-	WorldUpdaterStepVisitor vis_l(*this, window_p, panel_p, statsPanel_p, divPanel_p, steps_p._state, lib_p);
+	WorldUpdaterStepVisitor vis_l(*this, window_p, panel_p, statsPanel_p, optionPanel_p, steps_p._state, lib_p);
 
 	if(_first)
 	{

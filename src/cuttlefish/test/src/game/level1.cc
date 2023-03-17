@@ -226,7 +226,7 @@ void runLevel1(Window &window_p)
 		statsPanel_l.addSpriteInfo("div_swarm_2", 4, 2);
 		statsPanel_l.addSpriteInfo("div_swarm_3", 4, 3);
 
-	DivinityPanel divPanel_l(&window_p, window_p.getWidth()-window_p.getWidth()/2-200, window_p.getHeight()-window_p.getHeight()/2-200,
+	DivinityPanel divPanel_l(window_p.getWidth()-window_p.getWidth()/2-200, window_p.getHeight()-window_p.getHeight()/2-200,
 		window_p.loadTexture("resources/background.png"), window_p.loadTexture("resources/grid.png"), 0);
 	divPanel_l.addOptionInfo(octopus::DivinityType::Divinity_1, 2, 0);
 	divPanel_l.addOptionInfo(octopus::DivinityType::Divinity_3, 1, 3);
@@ -400,12 +400,10 @@ void runLevel1(Window &window_p)
 
 				if(divPanel_l.isActive())
 				{
-					std::pair<bool, octopus::DivinityType> option_l = divPanel_l.getOption(window_p, e.button.x, e.button.y);
-					if(option_l.first)
+					int option_l = divPanel_l.getOption(window_p, e.button.x, e.button.y);
+					if(option_l >=0)
 					{
-						octopus::PlayerChoseDivinityCommand * command_l = new octopus::PlayerChoseDivinityCommand(0, option_l.second);
-						controller_l.commitCommand(command_l);
-						divPanel_l.popOptionLayer();
+						controller_l.commitCommandAsPlayer(divPanel_l.newCommandFromOption(option_l), world_l.getPlayer());
 					}
 				}
 				else if(!minimapClicked_l)

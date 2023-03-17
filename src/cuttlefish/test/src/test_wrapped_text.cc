@@ -199,7 +199,7 @@ int main( int argc, char* args[] )
 			statsPanel_l.addSpriteInfo("barrack", 0, 1);
 			statsPanel_l.addSpriteInfo("temple", 0, 4);
 
-			DivinityPanel divPanel_l(&window_l, SCREEN_WIDTH-SCREEN_WIDTH/2-200, SCREEN_HEIGHT-SCREEN_HEIGHT/2-200,
+			DivinityPanel divPanel_l(SCREEN_WIDTH-SCREEN_WIDTH/2-200, SCREEN_HEIGHT-SCREEN_HEIGHT/2-200,
 				window_l.loadTexture("resources/background.png"), window_l.loadTexture("resources/grid.png"), 0);
 			divPanel_l.addOptionInfo(octopus::DivinityType::Divinity_1, 1, 3);
 			divPanel_l.addOptionInfo(octopus::DivinityType::Divinity_2, 1, 4);
@@ -260,12 +260,10 @@ int main( int argc, char* args[] )
 					{
 						if(divPanel_l.isActive())
 						{
-							std::pair<bool, octopus::DivinityType> option_l = divPanel_l.getOption(window_l, e.button.x, e.button.y);
-							if(option_l.first)
+							int option_l = divPanel_l.getOption(window_l, e.button.x, e.button.y);
+							if(option_l >=0)
 							{
-								octopus::PlayerChoseDivinityCommand * command_l = new octopus::PlayerChoseDivinityCommand(0, option_l.second);
-								controller_l.commitCommand(command_l);
-								divPanel_l.popOptionLayer();
+								controller_l.commitCommandAsPlayer(divPanel_l.newCommandFromOption(option_l), world_l.getPlayer());
 							}
 						}
 						else

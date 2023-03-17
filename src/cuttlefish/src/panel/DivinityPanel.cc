@@ -1,5 +1,6 @@
 #include "DivinityPanel.hh"
 
+#include "command/player/PlayerChoseDivinityCommand.hh"
 #include "state/State.hh"
 #include "state/player/Player.hh"
 #include "state/entity/Entity.hh"
@@ -10,16 +11,13 @@
 namespace cuttlefish
 {
 
-DivinityPanel::DivinityPanel(Window* window_p, int x, int y, Texture const * background_p, Texture const *icons_p, unsigned long player_p) :
-	_x(x), _y(y), _player(player_p), _icons(icons_p)
+DivinityPanel::DivinityPanel(int x, int y, Texture const * background_p, Texture const *icons_p, unsigned long player_p) :
+	OptionPanel(x, y, background_p), _player(player_p), _icons(icons_p)
 {
-	_background = new Picture(background_p, 400, 400, {1}, {1});
-	_background->setDestination(x, y, 200., 200.);
 }
 
 DivinityPanel::~DivinityPanel()
 {
-	delete _background;
 	cleanOptions();
 }
 
@@ -84,26 +82,18 @@ void DivinityPanel::addOptionInfo(octopus::DivinityType type_p, int state_p, int
 	_mapIcons[type_p].frame = frame_p;
 }
 
-std::pair<bool, octopus::DivinityType> DivinityPanel::getOption(Window &window_p, int x, int y) const
+int DivinityPanel::getOption(Window &window_p, int x, int y) const
 {
+	int option_l = -1;
 	for(auto &&pair_l : _options)
 	{
+		++option_l;
 		if(pair_l.first->isInside(window_p, x, y))
 		{
-			return {true, pair_l.second};
+			return option_l;
 		}
 	}
-	return {false, octopus::DivinityType::Divinity_1};
-}
-
-std::pair<bool, octopus::DivinityType> DivinityPanel::getOptionOnGrid(int x, int y) const
-{
-	auto it_l = _grid.find({x,y});
-	if(it_l == _grid.end())
-	{
-		return {false, octopus::DivinityType::Divinity_1};
-	}
-	return {true, it_l->second};
+	return option_l;
 }
 
 void DivinityPanel::cleanOptions()
@@ -117,7 +107,7 @@ void DivinityPanel::cleanOptions()
 	_grid.clear();
 }
 
-void DivinityPanel::addOptionLayer(unsigned long player_p, std::set<octopus::DivinityType> const &options_p)
+void DivinityPanel::addOptionDivinityLayer(unsigned long player_p, std::set<octopus::DivinityType> const &options_p)
 {
 	if(_player == player_p)
 	{
@@ -125,9 +115,22 @@ void DivinityPanel::addOptionLayer(unsigned long player_p, std::set<octopus::Div
 	}
 }
 
-void DivinityPanel::popOptionLayer()
+octopus::Command * DivinityPanel::newCommandFromOption(int option_p)
 {
-	_optionLayers.pop_front();
+	int cur_l = 0;
+
+	for(auto &&pair_l : _options)
+	{
+		if(cur_l == option_p)
+		{
+			octopus::PlayerChoseDivinityCommand * command_l = new octopus::PlayerChoseDivinityCommand(_player, pair_l.second);
+			_optionLayers.pop_front();
+			return command_l;
+		}
+		++cur_l;
+	}
+
+	return nullptr;
 }
 
 } // namespace cuttlefish

@@ -13,7 +13,7 @@
 #include "clicMode/StandardClicMode.hh"
 #include "minimap/Minimap.hh"
 #include "panel/DescPanel.hh"
-#include "panel/DivinityPanel.hh"
+#include "panel/OptionPanel.hh"
 #include "panel/Panel.hh"
 #include "panel/StatsPanel.hh"
 #include "sprite/Sprite.hh"
@@ -30,7 +30,6 @@
 #include "command/entity/EntityMoveCommand.hh"
 #include "command/entity/EntityWaitCommand.hh"
 #include "command/unit/UnitHarvestCommand.hh"
-#include "command/player/PlayerChoseDivinityCommand.hh"
 #include "controller/Controller.hh"
 #include "library/Library.hh"
 #include "logger/Logger.hh"
@@ -173,7 +172,7 @@ void GameLoop::runLoop(Window &window_p)
 		// query a new state if available
 		octopus::StateAndSteps stateAndSteps_l = _controller.queryStateAndSteps();
 		octopus::State const &state_l = *stateAndSteps_l._state;
-		_world.handleStep(window_p, _panel, _statsPanel, _divinityPanel, stateAndSteps_l, _spriteLibrary);
+		_world.handleStep(window_p, _panel, _statsPanel, _optionPanel, stateAndSteps_l, _spriteLibrary);
 
 		// quit loop if state is over
 		if(state_l.isOver())
@@ -253,7 +252,7 @@ void GameLoop::runLoop(Window &window_p)
 				}
 				else if(!_panel.getBackground()->isInside(window_p, e.button.x, e.button.y)
 				&& !_statsPanel.getBackground()->isInside(window_p, e.button.x, e.button.y)
-				&& (!_divinityPanel.getBackground()->isInside(window_p, e.button.x, e.button.y) || !_divinityPanel.isActive()))
+				&& (!_optionPanel.getBackground()->isInside(window_p, e.button.x, e.button.y) || !_optionPanel.isActive()))
 				{
 					currentClicMode_l->handleMouseDown(e);
 					clicStartedOnScreen_l = true;
@@ -261,14 +260,12 @@ void GameLoop::runLoop(Window &window_p)
 			}
 			if (e.type == SDL_MOUSEBUTTONUP)
 			{
-				if(_divinityPanel.isActive())
+				if(_optionPanel.isActive())
 				{
-					std::pair<bool, octopus::DivinityType> option_l = _divinityPanel.getOption(window_p, e.button.x, e.button.y);
-					if(option_l.first)
+					int option_l = _optionPanel.getOption(window_p, e.button.x, e.button.y);
+					if(option_l >=0)
 					{
-						octopus::PlayerChoseDivinityCommand * command_l = new octopus::PlayerChoseDivinityCommand(0, option_l.second);
-						_controller.commitCommandAsPlayer(command_l, _world.getPlayer());
-						_divinityPanel.popOptionLayer();
+						_controller.commitCommandAsPlayer(_optionPanel.newCommandFromOption(option_l), _world.getPlayer());
 					}
 				}
 				else if(_minimap.isInside(e.button.x, e.button.y) && !clicStartedOnScreen_l)
@@ -433,11 +430,11 @@ void GameLoop::runLoop(Window &window_p)
 			_descPanel.render(window_p);
 		}
 
-		_divinityPanel.refresh();
-		paused_l = _divinityPanel.isActive();
-		if(_divinityPanel.isActive())
+		_optionPanel.refresh();
+		paused_l = _optionPanel.isActive();
+		if(_optionPanel.isActive())
 		{
-			_divinityPanel.render(window_p);
+			_optionPanel.render(window_p);
 		}
 
 		///

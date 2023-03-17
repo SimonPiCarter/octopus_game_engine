@@ -158,12 +158,12 @@ void WorldUpdaterStepVisitor::visit(octopus::BuildingStep const *steppable_p)
 
 void WorldUpdaterStepVisitor::visit(octopus::PlayerAddOptionDivinityStep const *steppable_p)
 {
-	_divPanel.addOptionLayer(steppable_p->_player, steppable_p->_types);
+	_optPanel.addOptionDivinityLayer(steppable_p->_player, steppable_p->_types);
 }
 
 void WorldUpdaterStepVisitor::visit(octopus::PlayerAddOptionStep const *steppable_p)
 {
-	_divPanel.addOptionLayer(steppable_p);
+	_optPanel.addOptionLayer(steppable_p);
 }
 
 void WorldUpdaterStepVisitor::visit(octopus::CommandWindUpDiffStep const *steppable_p)

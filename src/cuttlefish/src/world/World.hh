@@ -16,7 +16,7 @@ namespace octopus
 
 namespace cuttlefish
 {
-class DivinityPanel;
+class OptionPanel;
 class Panel;
 class Picture;
 class SpriteEntity;
@@ -36,7 +36,7 @@ public:
 
 	/// @brief update all sprites from the steps given
 	/// only works if all previous steps have been handled this way
-	void handleStep(Window &window_p, Panel &panel_p, StatsPanel &statsPanel_p, DivinityPanel &divPanel_p, octopus::StateAndSteps const &steps_p, SpriteLibrary const &lib_p);
+	void handleStep(Window &window_p, Panel &panel_p, StatsPanel &statsPanel_p, OptionPanel &optionPanel_p, octopus::StateAndSteps const &steps_p, SpriteLibrary const &lib_p);
 
 	/// @brief update all sprites and
 	void display(Window &window_p, octopus::State const &state_p, double elapsed_p);

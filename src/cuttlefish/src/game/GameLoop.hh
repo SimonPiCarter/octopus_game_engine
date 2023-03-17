@@ -11,7 +11,7 @@ namespace cuttlefish
 {
 class Window;
 class DescPanel;
-class DivinityPanel;
+class OptionPanel;
 class Minimap;
 class Panel;
 class SpriteLibrary;
@@ -24,7 +24,7 @@ class GameLoop
 public:
     GameLoop(
         DescPanel &descPanel_p,
-        DivinityPanel &divinityPanel_p,
+        OptionPanel &divinityPanel_p,
         Minimap &minimap_p,
         octopus::Controller &controller_p,
         Panel &panel_p,
@@ -34,7 +34,7 @@ public:
         World & world_p
     ) : _controller(controller_p),
         _descPanel(descPanel_p),
-        _divinityPanel(divinityPanel_p),
+        _optionPanel(divinityPanel_p),
         _minimap(minimap_p),
         _panel(panel_p),
         _spriteLibrary(spriteLibrary_p),
@@ -47,7 +47,7 @@ public:
 
 private:
     DescPanel & _descPanel;
-    DivinityPanel & _divinityPanel;
+    OptionPanel & _optionPanel;
     Minimap & _minimap;
     octopus::Controller & _controller;
     Panel & _panel;
