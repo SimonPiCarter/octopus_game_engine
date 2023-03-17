@@ -9,6 +9,7 @@
 #include "step/entity/spawn/EntitySpawnStep.hh"
 #include "step/entity/spawn/ResourceSpawnStep.hh"
 #include "step/entity/spawn/UnitSpawnStep.hh"
+#include "step/state/StateTemplePositionAddStep.hh"
 
 namespace octopus
 {
@@ -48,6 +49,13 @@ void spawn(State const &state_p, Step & step_p, Entity const *model_p, Option co
 		building_l._pos = pos_l;
 
 		step_p.addSteppable(new BuildingSpawnStep(getNextHandle(step_p, state_p), building_l, true));
+
+		// special case for abandonned temple
+		if(model_p->_model._isAbandonedTemple)
+		{
+			Logger::getDebug()<<"AreaSpawnerCommand :: spawn abandonned temple at " << pos_l<<std::endl;
+			step_p.addSteppable(new StateTemplePositionAddStep(pos_l));
+		}
 	}
 	else if(model_p->_model._isResource)
 	{
