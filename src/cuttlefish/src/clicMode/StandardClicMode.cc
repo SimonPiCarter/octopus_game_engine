@@ -134,14 +134,75 @@ void StandardClicMode::display(Window & window_p, double , int x, int y)
 		int ly = std::min(y, _downY);
 		int ux = std::max(x, _downX);
 		int uy = std::max(y, _downY);
-		SDL_Rect final_l {
-			lx,
-			ly,
-			ux-lx,
-			uy-ly
-		};
 
-		window_p.loadTexture("resources/background.png")->render(window_p.getRenderer(), final_l.x, final_l.y, final_l.h, final_l.w, nullptr);
+		// top
+		{
+			SDL_Rect final_l {
+				lx,
+				ly,
+				ux-lx,
+				2
+			};
+			SDL_Rect clip_l {
+				2,
+				0,
+				2,
+				2
+			};
+
+			window_p.loadTexture("resources/selection_box.png")->render(window_p.getRenderer(), final_l.x, final_l.y, final_l.h, final_l.w, &clip_l);
+		}
+		// bottom
+		{
+			SDL_Rect final_l {
+				lx,
+				uy-2,
+				ux-lx,
+				2
+			};
+			SDL_Rect clip_l {
+				2,
+				4,
+				2,
+				2
+			};
+
+			window_p.loadTexture("resources/selection_box.png")->render(window_p.getRenderer(), final_l.x, final_l.y, final_l.h, final_l.w, &clip_l);
+		}
+		// left
+		{
+			SDL_Rect final_l {
+				lx,
+				ly,
+				2,
+				uy-ly
+			};
+			SDL_Rect clip_l {
+				0,
+				2,
+				2,
+				2
+			};
+
+			window_p.loadTexture("resources/selection_box.png")->render(window_p.getRenderer(), final_l.x, final_l.y, final_l.h, final_l.w, &clip_l);
+		}
+		// right
+		{
+			SDL_Rect final_l {
+				ux-2,
+				ly,
+				2,
+				uy-ly
+			};
+			SDL_Rect clip_l {
+				4,
+				2,
+				2,
+				2
+			};
+
+			window_p.loadTexture("resources/selection_box.png")->render(window_p.getRenderer(), final_l.x, final_l.y, final_l.h, final_l.w, &clip_l);
+		}
 	}
 }
 
