@@ -152,6 +152,7 @@ void createAnchorSpot(Library &lib_p)
     BuildingModel buildingModel_l { true, 0.9, 1000. };
     buildingModel_l._isBuilding = true;
     buildingModel_l._isStatic = true;
+    buildingModel_l._invulnerable = true;
     buildingModel_l._isAbandonedTemple = true;
     buildingModel_l._armor = 5;
 
