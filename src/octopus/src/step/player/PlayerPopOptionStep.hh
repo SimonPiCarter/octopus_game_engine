@@ -35,6 +35,8 @@ public:
 		visitor_p->visit(this);
 	}
 
+	virtual SteppableData * newData() const { return new PlayerPopOptionStepData(); }
+
 	unsigned long const _player;
 	std::string const _key;
 	unsigned long const _choice;
