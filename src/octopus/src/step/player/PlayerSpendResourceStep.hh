@@ -17,8 +17,8 @@ public:
 	PlayerSpendResourceStep(unsigned long player_p, std::map<ResourceType, double> const & delta_p)
 		: _player(player_p), _delta(delta_p) {}
 
-	virtual void apply(State &state_p) const override;
-	virtual void revert(State &state_p) const override;
+	virtual void apply(State &state_p, SteppableData *) const override;
+	virtual void revert(State &state_p, SteppableData *) const override;
 
 	virtual bool isNoOp() const override;
 	virtual void visit(SteppableVisitor * visitor_p) const override

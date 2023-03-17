@@ -129,7 +129,7 @@ void WorldUpdaterStepVisitor::visit(octopus::EntityHitPointChangeStep const *ste
 	// in case we have deleted it already (can happens when multiple change step in one step)
 	if(_world._sprites[steppable_p->_handle])
 	{
-		_world._sprites[steppable_p->_handle]->setLifePercent(100*hp_l/ent_l->_model._hpMax);
+		_world._sprites[steppable_p->_handle]->setLifePercent(100*hp_l/ent_l->getHpMax());
 	}
 	if(hp_l <= 0.)
 	{

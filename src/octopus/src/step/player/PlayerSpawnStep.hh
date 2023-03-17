@@ -10,15 +10,15 @@
 namespace octopus
 {
 
-struct BuildingModel;;
+struct BuildingModel;
 
 class PlayerSpawnStep : public Steppable
 {
 public:
 	PlayerSpawnStep(unsigned long idx_p, unsigned long team_p) : _playerIdx(idx_p), _playerTeam(team_p) {}
 
-	virtual void apply(State &state_p) const override;
-	virtual void revert(State &state_p) const override;
+	virtual void apply(State &state_p, SteppableData *) const override;
+	virtual void revert(State &state_p, SteppableData *) const override;
 
 	virtual bool isNoOp() const override
 	{
@@ -38,8 +38,8 @@ class PlayerAddBuildingModel : public Steppable
 public:
 	PlayerAddBuildingModel(unsigned long idx_p, BuildingModel const &model_p) : _playerIdx(idx_p), _model(model_p) {}
 
-	virtual void apply(State &state_p) const override;
-	virtual void revert(State &state_p) const override;
+	virtual void apply(State &state_p, SteppableData *) const override;
+	virtual void revert(State &state_p, SteppableData *) const override;
 
 	virtual bool isNoOp() const override
 	{

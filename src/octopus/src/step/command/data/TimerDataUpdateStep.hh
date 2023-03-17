@@ -12,8 +12,8 @@ public:
 	TimerDataUpdateStep(Handle const &handle_p, unsigned long old_p, unsigned long new_p)
 		: _handle(handle_p) , _old(old_p), _new(new_p) {}
 
-	virtual void apply(State &state_p) const override;
-	virtual void revert(State &state_p) const override;
+	virtual void apply(State &state_p, SteppableData *) const override;
+	virtual void revert(State &state_p, SteppableData *) const override;
 
 	virtual bool isNoOp() const override;
 	virtual void visit(SteppableVisitor * visitor_p) const override

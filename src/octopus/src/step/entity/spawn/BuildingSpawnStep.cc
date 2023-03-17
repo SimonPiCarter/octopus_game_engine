@@ -8,9 +8,9 @@ BuildingSpawnStep::BuildingSpawnStep(Handle const &handle_p, Building const &mod
 {}
 
 
-void BuildingSpawnStep::apply(State &state_p) const
+void BuildingSpawnStep::apply(State &state_p, SteppableData *data_p) const
 {
-	SpawnModelStep::apply(state_p);
+	SpawnModelStep::apply(state_p, data_p);
 
 	Building * ent_l = static_cast<Building *>(state_p.getEntity(this->_handle));
 	// if build update building process

@@ -192,16 +192,24 @@ namespace RVO {
 #ifdef _OPENMP
 #pragma omp parallel for
 #endif
-		for (int i = 0; i < static_cast<int>(agents_.size()); ++i) {
-			agents_[i]->computeNeighbors();
-			agents_[i]->computeNewVelocity();
+		for (int i = 0; i < static_cast<int>(agents_.size()); ++i)
+		{
+			if(agents_[i]->active())
+			{
+				agents_[i]->computeNeighbors();
+				agents_[i]->computeNewVelocity();
+			}
 		}
 
 #ifdef _OPENMP
 #pragma omp parallel for
 #endif
-		for (int i = 0; i < static_cast<int>(agents_.size()); ++i) {
-			agents_[i]->update();
+		for (int i = 0; i < static_cast<int>(agents_.size()); ++i)
+		{
+			if(agents_[i]->active())
+			{
+				agents_[i]->update();
+			}
 		}
 
 		globalTime_ += timeStep_;
@@ -370,6 +378,11 @@ namespace RVO {
 	void RVOSimulator::setAgentMoveStep(size_t agentNo, octopus::EntityMoveStep *moveStep)
 	{
 		agents_[agentNo]->moveStep_ = moveStep;
+	}
+
+	void RVOSimulator::setAgentEntity(size_t agentNo, octopus::Entity const *ent)
+	{
+		agents_[agentNo]->ent_ = ent;
 	}
 
 	void RVOSimulator::setAgentWeight(size_t agentNo, octopus::Fixed weight)

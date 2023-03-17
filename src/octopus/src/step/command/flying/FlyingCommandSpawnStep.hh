@@ -15,8 +15,8 @@ public:
 	FlyingCommand * getCmd() { return _cmd; }
 	FlyingCommand const * getCmd() const { return _cmd; }
 
-	virtual void apply(State &state_p) const;
-	virtual void revert(State &state_p) const;
+	virtual void apply(State &state_p, SteppableData *) const override;
+	virtual void revert(State &state_p, SteppableData *) const override;
 
 	virtual bool isNoOp() const { return false; }
 

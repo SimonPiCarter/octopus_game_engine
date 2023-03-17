@@ -17,7 +17,7 @@ CommandSpawnStep::~CommandSpawnStep()
 {
 }
 
-void CommandSpawnStep::apply(State &state_p) const
+void CommandSpawnStep::apply(State &state_p, SteppableData *) const
 {
 	Commandable * ent_l = state_p.getCommandable(_cmd->getHandleCommand());
 	Logger::getDebug() << "CommandSpawnStep :: apply " << _cmd->getHandleCommand() <<std::endl;
@@ -31,7 +31,7 @@ void CommandSpawnStep::apply(State &state_p) const
 	}
 }
 
-void CommandSpawnStep::revert(State &state_p) const
+void CommandSpawnStep::revert(State &state_p, SteppableData *) const
 {
 	Commandable * ent_l = state_p.getCommandable(this->_cmd->getHandleCommand());
 	Logger::getDebug() << "CommandSpawnStep :: revert " << _cmd->getHandleCommand() <<std::endl;
@@ -45,28 +45,28 @@ void CommandSpawnStep::revert(State &state_p) const
 	}
 }
 
-void CommandNextStep::apply(State &state_p) const
+void CommandNextStep::apply(State &state_p, SteppableData *) const
 {
 	Commandable * ent_l = state_p.getCommandable(this->_handle);
 	Logger::getDebug() << "CommandNextStep :: apply " << this->_handle <<std::endl;
 	ent_l->getQueue().nextCommand();
 }
 
-void CommandNextStep::revert(State &state_p) const
+void CommandNextStep::revert(State &state_p, SteppableData *) const
 {
 	Commandable * ent_l = state_p.getCommandable(this->_handle);
 	Logger::getDebug() << "CommandNextStep :: revert " << this->_handle <<std::endl;
 	ent_l->getQueue().prevCommand();
 }
 
-void CommandUpdateLastIdStep::apply(State &state_p) const
+void CommandUpdateLastIdStep::apply(State &state_p, SteppableData *) const
 {
 	Commandable * ent_l = state_p.getCommandable(this->_handle);
 	Logger::getDebug() << "CommandUpdateLastIdStep :: apply " << this->_handle <<std::endl;
 	ent_l->setIdLast(_newIdLast);
 }
 
-void CommandUpdateLastIdStep::revert(State &state_p) const
+void CommandUpdateLastIdStep::revert(State &state_p, SteppableData *) const
 {
 	Commandable * ent_l = state_p.getCommandable(this->_handle);
 	Logger::getDebug() << "CommandUpdateLastIdStep :: revert " << this->_handle <<std::endl;

@@ -1,8 +1,10 @@
 #ifndef __SPAWN_MODEL_STEP__
 #define __SPAWN_MODEL_STEP__
 
+#include "state/entity/Buff.hh"
 #include "state/entity/Entity.hh"
 #include "state/State.hh"
+#include "state/player/Player.hh"
 #include "state/Handle.hh"
 #include "step/Steppable.hh"
 #include "utils/Vector.hh"
@@ -15,7 +17,7 @@ class SpawnModelStep : public Steppable
 public:
 	SpawnModelStep(Handle const &handle_p, class_t const &model_p, bool forceAlive_p=false) : _handle(handle_p), _model(model_p), _forceAlive(forceAlive_p) {}
 
-	virtual void apply(State &state_p) const override
+	virtual void apply(State &state_p, SteppableData*) const override
 	{
 		if(!state_p.hasEntity(_handle))
 		{
@@ -41,17 +43,28 @@ public:
 			updateGrid(state_p, ent_l, true);
 			updateExplorationGrid(state_p, ent_l, true);
 		}
+
+		Player *player_l = state_p.getPlayer(ent_l->_player);
+		// enable player buffs to the spawned entity
+		for(TyppedBuff const &buff_l : player_l->_mapBuffs[ent_l->_model._id])
+		{
+			if(buff_l.isApplying(state_p, *ent_l))
+			{
+				ent_l->_timeSinceBuff[buff_l._id] = 0;
+				ent_l->_registeredBuff[buff_l._id] = buff_l;
+			}
+		}
 	}
-	virtual void revert(State &state_p) const override
+	virtual void revert(State &state_p, SteppableData*) const override
 	{
+		if(state_p.getEntities().back()->_handle != this->_handle)
+		{
+			throw std::logic_error("Spawn Step revert is incoherrent (steps seem to be reverted in the wrong order)");
+		}
 		// unspawn but do not delete
 		Entity * ent_l = state_p.getEntity(this->_handle);
-		if(ent_l->_alive)
-		{
-			updateExplorationGrid(state_p, ent_l, false);
-			updateGrid(state_p, ent_l, false);
-		}
-		ent_l->_alive = false;
+		state_p.getEntities().pop_back();
+		delete ent_l;
 	}
 
 	virtual bool isNoOp() const override

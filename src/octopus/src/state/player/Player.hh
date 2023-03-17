@@ -7,8 +7,10 @@
 #include <map>
 #include "state/ResourceType.hh"
 #include "state/DivinityType.hh"
+#include "state/entity/Buff.hh"
 
 #include "DivinityOption.hh"
+#include "StepOptionsGenerator.hh"
 
 namespace octopus
 {
@@ -18,6 +20,8 @@ namespace octopus
 	class Player
 	{
 		public:
+			~Player();
+
 			std::map<ResourceType, double> _resources;
 
 			unsigned long _popCap {0};
@@ -38,6 +42,13 @@ namespace octopus
 			std::map<DivinityType, double> _divAnchor;
 			/// @brief the options currently available to the player
 			std::list<DivinityOption> _divOptions;
+
+			/// @brief the map of options available to the player
+			/// @note Player is owner of the generator here
+			std::map<std::string, StepOptionsGenerator*> _options;
+
+			/// @brief the list of all buffs that should be applied on every entity per model
+			std::map<std::string, std::vector<TyppedBuff> > _mapBuffs;
 
 			///
 			/// Unlock info

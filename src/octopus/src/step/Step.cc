@@ -1,6 +1,7 @@
 #include "Step.hh"
 
 #include "state/State.hh"
+#include "step/Steppable.hh"
 #include "step/entity/EntityMoveStep.hh"
 #include "utils/Vector.hh"
 
@@ -12,9 +13,9 @@ namespace octopus
 
 Step::~Step()
 {
-	for(Steppable * step_l : _listSteppable)
+	for(SteppableBundle &bundle_l : _listSteppable)
 	{
-		delete step_l;
+		delete bundle_l._steppable;
 	}
 }
 
@@ -28,7 +29,7 @@ void Step::addSteppable(Steppable * step_p)
 {
 	StepAdditionVisitor vis_l(*this);
 	vis_l(step_p);
-	_listSteppable.push_back(step_p);
+	_listSteppable.push_back(SteppableBundle{step_p, step_p->newData()});
 }
 
 std::list<EntityMoveStep *> &Step::getEntityMoveStep()
@@ -41,12 +42,12 @@ std::list<EntityMoveStep *> const &Step::getEntityMoveStep() const
 	return _listEntityMoveStep;
 }
 
-std::list<Steppable *> &Step::getSteppable()
+std::list<SteppableBundle> &Step::getSteppable()
 {
 	return _listSteppable;
 }
 
-std::list<Steppable *> const &Step::getSteppable() const
+std::list<SteppableBundle> const &Step::getSteppable() const
 {
 	return _listSteppable;
 }
@@ -120,9 +121,9 @@ unsigned long Step::getFlyingCommandSpawned() const
 void apply(Step const & step_p, State &state_p)
 {
 	// apply all steppables
-	for(Steppable *steppable_l: step_p.getSteppable())
+	for(SteppableBundle const &bundle_l: step_p.getSteppable())
 	{
-		steppable_l->apply(state_p);
+		bundle_l._steppable->apply(state_p, bundle_l._data);
 	}
 }
 
@@ -131,7 +132,7 @@ void revert(Step const & step_p, State &state_p)
 	// apply all steppables (in reverse order)
 	for(auto it_l = step_p.getSteppable().rbegin(); it_l != step_p.getSteppable().rend() ; ++it_l)
 	{
-		(*it_l)->revert(state_p);
+		it_l->_steppable->revert(state_p, it_l->_data);
 	}
 }
 
@@ -142,9 +143,10 @@ void compact(Step & step_p)
 
 	for(auto it_l = step_p.getSteppable().begin() ; it_l != step_p.getSteppable().end() ; )
 	{
-		if((*it_l)->isNoOp())
+		if(it_l->_steppable->isNoOp())
 		{
-			delete *it_l;
+			delete it_l->_steppable;
+			delete it_l->_data;
 			it_l = step_p.getSteppable().erase(it_l);
 		}
 		else
@@ -156,9 +158,9 @@ void compact(Step & step_p)
 
 void visitAll(Step const &step_p, SteppableVisitor &visitor_p)
 {
-	for(Steppable const * steppable_l : step_p.getSteppable())
+	for(SteppableBundle const & steppable_l : step_p.getSteppable())
 	{
-		visitor_p(steppable_l);
+		visitor_p(steppable_l._steppable);
 	}
 }
 

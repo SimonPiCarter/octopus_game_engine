@@ -8,7 +8,7 @@
 
 namespace octopus
 {
-void CommandSetPositionFromStep::apply(State &state_p) const
+void CommandSetPositionFromStep::apply(State &state_p, SteppableData *) const
 {
 	Commandable * ent_l = state_p.getCommandable(this->_handle);
 	Logger::getDebug() << "CommandSetPositionFromStep :: apply " << this->_handle <<std::endl;
@@ -20,7 +20,7 @@ void CommandSetPositionFromStep::apply(State &state_p) const
 	data_l->_positionFromAttack = _newPos;
 }
 
-void CommandSetPositionFromStep::revert(State &state_p) const
+void CommandSetPositionFromStep::revert(State &state_p, SteppableData *) const
 {
 	Commandable * ent_l = state_p.getCommandable(this->_handle);
 	Logger::getDebug() << "CommandSetPositionFromStep :: revert " << this->_handle <<std::endl;

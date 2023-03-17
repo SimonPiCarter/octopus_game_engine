@@ -53,6 +53,7 @@ public:
 	/// @warning handle will be modified!
 	Handle addEntity(Entity * ent_p);
 
+	std::vector<Entity *> &getEntities();
 	std::vector<Entity *> const &getEntities() const;
 	std::vector<Commandable *> const &getCommandables() const;
 

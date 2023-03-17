@@ -17,8 +17,8 @@ public:
 	TriggerEntityResetStep(Handle const &handleTrigger_p, Handle const &handleListener_p, std::vector<Entity const *> const ent_p)
 		: _handleTrigger(handleTrigger_p) , _handleListener(handleListener_p), _ent(ent_p) {}
 
-	virtual void apply(State &state_p) const override;
-	virtual void revert(State &state_p) const override;
+	virtual void apply(State &state_p, SteppableData *) const override;
+	virtual void revert(State &state_p, SteppableData *) const override;
 
 	virtual bool isNoOp() const override { return _ent.empty(); }
 	virtual void visit(SteppableVisitor * visitor_p) const override

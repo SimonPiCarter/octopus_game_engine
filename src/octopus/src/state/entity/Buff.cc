@@ -9,6 +9,27 @@
 namespace octopus
 {
 
+bool TyppedBuff::isApplying(State const &state_p, Entity const &ent_p) const
+{
+	if(_type == Type::Speed
+	|| _type == Type::FullReload
+	|| _type == Type::Damage
+	|| _type == Type::Armor
+	|| _type == Type::HpMax)
+	{
+		return ent_p._model._isUnit;
+	}
+	if(_type == Type::Production)
+	{
+		return ent_p._model._isBuilding && static_cast<Building const &>(ent_p)._buildingModel.isProduction();
+	}
+	if(_type == Type::Harvest)
+	{
+		return ent_p._model._isBuilding && static_cast<Building const &>(ent_p)._buildingModel.isAnyDeposit();
+	}
+	return false;
+}
+
 bool TyppedBuff::isApplying(State const &state_p, Entity const &source_p, Entity const &ent_p) const
 {
 	unsigned long teamSource_l = state_p.getPlayer(source_p._player)->_team;
@@ -23,22 +44,7 @@ bool TyppedBuff::isApplying(State const &state_p, Entity const &source_p, Entity
 	{
 		return false;
 	}
-	if(_type == Type::Speed
-	|| _type == Type::FullReload
-	|| _type == Type::Damage
-	|| _type == Type::Armor)
-	{
-		return ent_p._model._isUnit;
-	}
-	if(_type == Type::Production)
-	{
-		return ent_p._model._isBuilding && static_cast<Building const &>(ent_p)._buildingModel.isProduction();
-	}
-	if(_type == Type::Harvest)
-	{
-		return ent_p._model._isBuilding && static_cast<Building const &>(ent_p)._buildingModel.isAnyDeposit();
-	}
-	return false;
+	return isApplying(state_p, ent_p);
 }
 
 void TyppedBuff::apply(Entity &ent_p) const
@@ -60,6 +66,10 @@ void TyppedBuff::apply(Entity &ent_p) const
 		case Type::Armor:
 			ent_p._buffArmor._offset += _offset;
 			ent_p._buffArmor._coef += _coef;
+			break;
+		case Type::HpMax:
+			ent_p._buffHpMax._offset += _offset;
+			ent_p._buffHpMax._coef += _coef;
 			break;
 		case Type::Production:
 			ent_p._buffProduction._offset += _offset;
@@ -91,6 +101,10 @@ void TyppedBuff::revert(Entity &ent_p) const
 		case Type::Armor:
 			ent_p._buffArmor._offset -= _offset;
 			ent_p._buffArmor._coef -= _coef;
+			break;
+		case Type::HpMax:
+			ent_p._buffHpMax._offset -= _offset;
+			ent_p._buffHpMax._coef -= _coef;
 			break;
 		case Type::Production:
 			ent_p._buffProduction._offset -= _offset;

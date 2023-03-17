@@ -84,9 +84,12 @@ add_library(octopus
 	${CMAKE_CURRENT_SOURCE_DIR}/src/step/entity/spawn/UnitSpawnStep.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/step/entity/spawn/BuildingSpawnStep.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/step/entity/spawn/ResourceSpawnStep.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/src/step/player/PlayerAddOptionStep.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/step/player/PlayerAddOptionDivinityStep.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/step/player/PlayerAnchorDivinityStep.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/src/step/player/PlayerBuffAllStep.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/step/player/PlayerLevelUpDivinityStep.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/src/step/player/PlayerPopOptionStep.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/step/player/PlayerResetOptionDivinityStep.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/step/player/PlayerSpawnStep.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/step/player/PlayerSpendResourceStep.cc

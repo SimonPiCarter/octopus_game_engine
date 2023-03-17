@@ -16,6 +16,7 @@ namespace octopus
 
 class AbstractCommand;
 class Command;
+class OrcaManager;
 class Steppable;
 class State;
 
@@ -110,6 +111,8 @@ public:
 	unsigned long getOngoingStep() const;
 
 	void enableORCA() { _orcaCollision = true; }
+
+	double getTimePerStep() const { return _timePerStep; }
 private:
 	/// @brief set to true to enable orca Collision
 	/// way better performance but less predictible (should not be used in tests)
@@ -133,7 +136,7 @@ private:
 	/// @brief list of commit commands for every step
 	std::vector<std::list<Command *> *> _commitedCommands;
 	/// @brief memory handling list (per step of adding in case of rewind)
-	std::vector<std::list<AbstractCommand *>> _commands;
+	std::vector<std::list<AbstractCommand const *>> _commands;
 	/// @brief list of all triggers (for memory management)
 	std::vector<std::list<Trigger const *>> _triggers;
 	/// @brief initial step
@@ -155,6 +158,8 @@ private:
 	void handleTriggers(State const &state_p, Step &step_p, Step const &prevStep_p);
 
 	Step const &getStepBeforeLastCompiledStep() const;
+
+	OrcaManager *_orcaManager {nullptr};
 };
 
 } // namespace octopus

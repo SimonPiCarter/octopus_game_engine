@@ -14,8 +14,8 @@ public:
 	UnitHarvestQuantityStep(Handle const &handle_p, Handle const &res_p, double const &qty_p)
 		: _handle(handle_p) , _res(res_p), _qty(qty_p) {}
 
-	virtual void apply(State &state_p) const override;
-	virtual void revert(State &state_p) const override;
+	virtual void apply(State &state_p, SteppableData *) const override;
+	virtual void revert(State &state_p, SteppableData *) const override;
 
 	virtual bool isNoOp() const override;
 	virtual void visit(SteppableVisitor * visitor_p) const override
@@ -34,8 +34,8 @@ public:
 	UnitHarvestTypeStep(Handle const &handle_p, double oldVal_p, ResourceType old_p, ResourceType new_p)
 		: _handle(handle_p) , _oldVal(oldVal_p), _old(old_p) , _new(new_p) {}
 
-	virtual void apply(State &state_p) const override;
-	virtual void revert(State &state_p) const override;
+	virtual void apply(State &state_p, SteppableData *) const override;
+	virtual void revert(State &state_p, SteppableData *) const override;
 
 	virtual bool isNoOp() const override;
 	virtual void visit(SteppableVisitor * visitor_p) const override
@@ -56,8 +56,8 @@ public:
 	UnitHarvestDropStep(Handle const &handle_p, double qty_p, double dropped_p)
 		: _handle(handle_p), _qty(qty_p), _dropped(dropped_p) {}
 
-	virtual void apply(State &state_p) const override;
-	virtual void revert(State &state_p) const override;
+	virtual void apply(State &state_p, SteppableData *) const override;
+	virtual void revert(State &state_p, SteppableData *) const override;
 
 	virtual bool isNoOp() const override;
 	virtual void visit(SteppableVisitor * visitor_p) const override

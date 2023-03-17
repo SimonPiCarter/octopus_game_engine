@@ -7,7 +7,7 @@
 namespace octopus
 {
 
-void TriggerEntityResetStep::apply(State &state_p) const
+void TriggerEntityResetStep::apply(State &state_p, SteppableData *) const
 {
 	Logger::getDebug() << "TriggerEntityResetStep :: apply " << this->_handleTrigger << ", "<< this->_handleListener <<std::endl;
 	ListenerEntityData * data_l = dynamic_cast<ListenerEntityData *>(state_p.getListenerData(_handleTrigger, _handleListener));
@@ -15,7 +15,7 @@ void TriggerEntityResetStep::apply(State &state_p) const
 	data_l->_entities.clear();
 }
 
-void TriggerEntityResetStep::revert(State &state_p) const
+void TriggerEntityResetStep::revert(State &state_p, SteppableData *) const
 {
 	Logger::getDebug() << "TriggerEntityResetStep :: revert " << this->_handleTrigger << ", "<< this->_handleListener <<std::endl;
 	ListenerEntityData * data_l = dynamic_cast<ListenerEntityData *>(state_p.getListenerData(_handleTrigger, _handleListener));

@@ -169,7 +169,7 @@ void StatsPanel::render(Window &window_p)
 		{
 			_textStats.updateText("name", _monoSelection->_model._id);
 			std::stringstream ss_l;
-			ss_l<<_monoSelection->_hp<<"/"<<_monoSelection->_model._hpMax;
+			ss_l<<_monoSelection->_hp<<"/"<<_monoSelection->getHpMax();
 			_textStats.updateText("hp_val", ss_l.str());
 
 			ss_l.str("");

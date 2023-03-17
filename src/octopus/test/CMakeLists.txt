@@ -36,6 +36,7 @@ target_sources (unit_tests
 	src/conflictSolver.test.cc
 	src/controller.test.cc
 	src/divinityCommand.test.cc
+	src/entityHitPointChange.test.cc
 	src/entityMoveStep.test.cc
 	src/entitySpawnStep.test.cc
 	src/fixed.test.cc
@@ -43,11 +44,13 @@ target_sources (unit_tests
 	src/grid.test.cc
 	src/harvestCommand.test
 	src/moveCommand.test.cc
+	src/playerBuffAllStep.test.cc
 	src/queueCommand.test.cc
 	src/resourceSpentSimultaneous.test.cc
 	src/spawningGrid.test.cc
 	src/stateDrawStep.test.cc
 	src/stateWinStep.test.cc
+	src/stepOptionsGenerator.test.cc
 	src/triggerBuilding.test.cc
 	src/triggerTime.test.cc
 	src/triggerUnitSpawn.test.cc

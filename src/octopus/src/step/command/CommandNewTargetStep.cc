@@ -8,7 +8,7 @@
 
 namespace octopus
 {
-void CommandNewTargetStep::apply(State &state_p) const
+void CommandNewTargetStep::apply(State &state_p, SteppableData *) const
 {
 	Commandable * ent_l = state_p.getCommandable(this->_handle);
 	Logger::getDebug() << "CommandNewTargetStep :: apply " << this->_handle <<std::endl;
@@ -20,7 +20,7 @@ void CommandNewTargetStep::apply(State &state_p) const
 	data_l->_target = _newTarget;
 }
 
-void CommandNewTargetStep::revert(State &state_p) const
+void CommandNewTargetStep::revert(State &state_p, SteppableData *) const
 {
 	Commandable * ent_l = state_p.getCommandable(this->_handle);
 	Logger::getDebug() << "CommandNewTargetStep :: revert " << this->_handle <<std::endl;

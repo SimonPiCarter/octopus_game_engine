@@ -35,6 +35,8 @@
 #include "KdTree.hh"
 #include "Obstacle.hh"
 
+#include "state/entity/Entity.hh"
+
 namespace RVO {
 	Agent::Agent(RVOSimulator *sim) : maxNeighbors_(0), maxSpeed_(0.0f), neighborDist_(0.0f), radius_(0.0f), sim_(sim), timeHorizon_(0.0f), timeHorizonObst_(0.0f), id_(0) { }
 
@@ -418,6 +420,11 @@ namespace RVO {
 	{
 		velocity_ = newVelocity_;
 		position_ += velocity_ * sim_->timeStep_;
+	}
+
+	bool Agent::active() const
+	{
+		return ent_ && ent_->isActive() && !ent_->isIgnoringCollision();
 	}
 
 	bool linearProgram1(const std::vector<Line> &lines, size_t lineNo, octopus::Fixed radius, const Vector2 &optVelocity, bool directionOpt, Vector2 &result)

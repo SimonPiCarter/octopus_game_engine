@@ -24,6 +24,8 @@ public:
 
 	virtual CommandData * newData() const override { return nullptr; }
 
+	virtual bool checkPlayer(State const &, unsigned long player_p) const override { return _player == player_p; }
+
 private:
 	Vector const _pos;
 	unsigned long const _player;

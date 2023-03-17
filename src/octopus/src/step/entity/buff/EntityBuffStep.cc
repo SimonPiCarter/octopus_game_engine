@@ -7,7 +7,7 @@
 namespace octopus
 {
 
-void EntityBuffStep::apply(State &state_p) const
+void EntityBuffStep::apply(State &state_p, SteppableData *) const
 {
 	Entity * ent_l = state_p.getEntity(this->_target);
 	Logger::getDebug() << "EntityBuffStep :: apply " << this->_target <<" ("<<_buff._id<<")"<<std::endl;
@@ -39,7 +39,7 @@ void EntityBuffStep::apply(State &state_p) const
 	}
 }
 
-void EntityBuffStep::revert(State &state_p) const
+void EntityBuffStep::revert(State &state_p, SteppableData *) const
 {
 	Entity * ent_l = state_p.getEntity(this->_target);
 	Logger::getDebug() << "EntityBuffStep :: revert " << this->_target<<std::endl;

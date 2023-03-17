@@ -59,7 +59,7 @@ Controller::Controller(
 
 	_commitedCommands.push_back(new std::list<Command *>());
 	_triggers.push_back(std::list<Trigger const *>());
-	_commands.push_back(std::list<AbstractCommand *>());
+	_commands.push_back(std::list<AbstractCommand const *>());
 	// add steppable
 	for(Steppable * steppable_l : initSteppables_p)
 	{
@@ -85,11 +85,12 @@ Controller::Controller(
 	octopus::updateStepFromConflictPosition(_initialStep, *_backState->_state);
 	octopus::compact(_initialStep);
 
-	for(Steppable * steppable_l : _initialStep.getSteppable())
+	for(SteppableBundle &bundle_l : _initialStep.getSteppable())
 	{
+		Steppable const * steppable_l = bundle_l._steppable;
 		// store commands for memory handling
-		CommandSpawnStep * cmdSpawn_l = dynamic_cast<CommandSpawnStep *>(steppable_l);
-		CommandStorageStep * cmdstorage_l = dynamic_cast<CommandStorageStep *>(steppable_l);
+		CommandSpawnStep const * cmdSpawn_l = dynamic_cast<CommandSpawnStep const *>(steppable_l);
+		CommandStorageStep const * cmdstorage_l = dynamic_cast<CommandStorageStep const *>(steppable_l);
 		if(cmdSpawn_l)
 		{
 			_commands[0].push_back(cmdSpawn_l->getCmd());
@@ -116,9 +117,9 @@ Controller::~Controller()
 	{
 		delete cmds_l;
 	}
-	for(std::list<AbstractCommand *> const &cmds_l : _commands)
+	for(std::list<AbstractCommand const *> const &cmds_l : _commands)
 	{
-		for(AbstractCommand * cmd_l : cmds_l)
+		for(AbstractCommand const * cmd_l : cmds_l)
 		{
 			delete cmd_l;
 		}
@@ -196,11 +197,23 @@ bool Controller::loop_body()
 
 			if(_orcaCollision)
 			{
-				OrcaManager orcaManager_l(1, 35., 10, 10., 10.);
-				orcaManager_l.resetFromState(*_backState->_state);
-				orcaManager_l.setupStep(*_backState->_state, step_l);
-				orcaManager_l.doStep();
-				orcaManager_l.commitStep(*_backState->_state, step_l);
+				// test should reset based on last bacause we want to update the manager on the current state
+				// therefore we need to check on the step just applied
+				if(OrcaManager::ShouldReset(_orcaManager, *_backState->_state, *step_l.getPrev()))
+				{
+					delete _orcaManager;
+					_orcaManager = new OrcaManager(1, 35., 10, 10., 10.);
+					_orcaManager->resetFromState(*_backState->_state);
+					_orcaManager->setupStep(*_backState->_state, step_l);
+					_orcaManager->doStep();
+					_orcaManager->commitStep(*_backState->_state, step_l);
+				}
+				else
+				{
+					_orcaManager->setupStep(*_backState->_state, step_l);
+					_orcaManager->doStep();
+					_orcaManager->commitStep(*_backState->_state, step_l);
+				}
 			}
 			else
 			{
@@ -217,12 +230,14 @@ bool Controller::loop_body()
 			octopus::compact(step_l);
 
 			// register all commands
-			for(Steppable * steppable_l : step_l.getSteppable())
+
+			for(SteppableBundle &bundle_l : step_l.getSteppable())
 			{
+				Steppable const * steppable_l = bundle_l._steppable;
 				// store commands for memory handling
-				CommandSpawnStep * cmdSpawn_l = dynamic_cast<CommandSpawnStep *>(steppable_l);
-				CommandStorageStep * cmdstorage_l = dynamic_cast<CommandStorageStep *>(steppable_l);
-				FlyingCommandSpawnStep * flyingCmdSpawn_l = dynamic_cast<FlyingCommandSpawnStep *>(steppable_l);
+				CommandSpawnStep const * cmdSpawn_l = dynamic_cast<CommandSpawnStep const *>(steppable_l);
+				CommandStorageStep const * cmdstorage_l = dynamic_cast<CommandStorageStep const *>(steppable_l);
+				FlyingCommandSpawnStep const * flyingCmdSpawn_l = dynamic_cast<FlyingCommandSpawnStep const *>(steppable_l);
 				if(cmdSpawn_l)
 				{
 					_commands[_backState->_stepHandled].push_back(cmdSpawn_l->getCmd());
@@ -235,7 +250,7 @@ bool Controller::loop_body()
 				{
 					_commands[_backState->_stepHandled].push_back(flyingCmdSpawn_l->getCmd());
 				}
-				TriggerSpawn * triggerSpawn_l = dynamic_cast<TriggerSpawn *>(steppable_l);
+				TriggerSpawn const * triggerSpawn_l = dynamic_cast<TriggerSpawn const *>(steppable_l);
 				if(triggerSpawn_l)
 				{
 					_triggers[_backState->_stepHandled].push_back(triggerSpawn_l->_trigger);
@@ -367,8 +382,7 @@ void Controller::commitCommandAsPlayer(Command * cmd_p, unsigned long player_p)
 {
 	// lock to avoid multi swap
 	std::lock_guard<std::mutex> lock_l(_mutex);
-	if(_frontState->_state->getEntity(cmd_p->getHandleCommand())
-	&& _frontState->_state->getEntity(cmd_p->getHandleCommand())->_player == player_p)
+	if(cmd_p->checkPlayer(*_frontState->_state, player_p))
 	{
 		_commitedCommands[_ongoingStep]->push_back(cmd_p);
 	}
@@ -411,7 +425,7 @@ void Controller::updateCommitedCommand()
 	{
 		_commitedCommands.push_back(new std::list<Command *>());
 		_triggers.push_back(std::list<Trigger const *>());
-		_commands.push_back(std::list<AbstractCommand *>());
+		_commands.push_back(std::list<AbstractCommand const *>());
 	}
 }
 

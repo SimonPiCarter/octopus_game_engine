@@ -10,7 +10,7 @@
 
 namespace octopus
 {
-void TimerDataUpdateStep::apply(State &state_p) const
+void TimerDataUpdateStep::apply(State &state_p, SteppableData *) const
 {
 	auto && it_l = state_p.getFlyingCommands().find(this->_handle);
 	assert(it_l != state_p.getFlyingCommands().end());
@@ -25,7 +25,7 @@ void TimerDataUpdateStep::apply(State &state_p) const
 	data_l->_time = _new;
 }
 
-void TimerDataUpdateStep::revert(State &state_p) const
+void TimerDataUpdateStep::revert(State &state_p, SteppableData *) const
 {
 	auto && it_l = state_p.getFlyingCommands().find(this->_handle);
 	assert(it_l != state_p.getFlyingCommands().end());

@@ -48,6 +48,10 @@ double Entity::getArmor() const
 {
 	return ( _model._armor + _buffArmor._offset )* ( 1. + _buffArmor._coef );
 }
+double Entity::getHpMax() const
+{
+	return ( _model._hpMax + _buffHpMax._offset )* ( 1. + _buffHpMax._coef );
+}
 
 double Entity::getProduction() const
 {

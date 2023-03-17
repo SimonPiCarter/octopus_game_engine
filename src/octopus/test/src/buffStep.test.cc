@@ -142,3 +142,57 @@ TEST(buffStepTest, simple_armor)
 
 	EXPECT_NEAR(1., state_l->getEntity(0)->getArmor(), 1e-5);
 }
+
+TEST(buffStepTest, simple_infinite)
+{
+	octopus::EntityModel unitModel_l { false, 1., 1., 10. };
+
+	EntitySpawnStep * spawn0_l = new EntitySpawnStep(0, Entity { { 3, 3. }, false, unitModel_l});
+
+	TyppedBuff buff_l;
+	buff_l._duration = 0;
+	buff_l._id = "armor";
+	buff_l._coef = 0.;
+	buff_l._offset = 1.;
+	buff_l._type = TyppedBuff::Type::Armor;
+
+	Controller controller_l({new PlayerSpawnStep(0, 0), spawn0_l, new EntityBuffStep(0, buff_l, 0, true)}, 1.);
+
+	// query state
+	State const * state_l = controller_l.queryState();
+
+	EXPECT_NEAR(1., state_l->getEntity(0)->getArmor(), 1e-5);
+
+	// update time to 1second (1)
+	// buf has registered but not been applied yet
+	controller_l.update(1.);
+
+	// updated until synced up
+	while(!controller_l.loop_body()) {}
+
+	state_l = controller_l.queryState();
+
+	EXPECT_NEAR(1., state_l->getEntity(0)->getArmor(), 1e-5);
+
+	// update time to 1 seconds (2)
+	// buff has been applied
+	controller_l.update(1.);
+
+	// updated until synced up
+	while(!controller_l.loop_body()) {}
+
+	state_l = controller_l.queryState();
+
+	EXPECT_NEAR(2., state_l->getEntity(0)->getArmor(), 1e-5);
+
+	// update time to 100 seconds (102)
+	// buff is still active
+	controller_l.update(100.);
+
+	// updated until synced up
+	while(!controller_l.loop_body()) {}
+
+	state_l = controller_l.queryState();
+
+	EXPECT_NEAR(2., state_l->getEntity(0)->getArmor(), 1e-5);
+}

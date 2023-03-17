@@ -45,6 +45,9 @@ public:
 	/// @note in that case the first option (first left, top) will be taken
 	void setNonRandom() { _nonRandom = true; }
 
+	/// @brief cannot be commited by a player
+	virtual bool checkPlayer(State const &, unsigned long ) const override { return false; }
+
 private:
 	/// @brief randomize between min_p and max_p - 1
 	/// @note if _nonRandom is true then always return min_p

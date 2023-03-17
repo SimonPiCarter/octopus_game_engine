@@ -56,6 +56,7 @@ namespace octopus
 			Buff _buffFullReload;
 			Buff _buffDamage;
 			Buff _buffArmor;
+			Buff _buffHpMax;
 			Buff _buffProduction;
 			Buff _buffHarvest;
 
@@ -77,6 +78,8 @@ namespace octopus
 			double getDamageNoBonus() const;
 			/// @brief get armor updated using buffing info
 			double getArmor() const;
+			/// @brief get hp max updated using buffing info
+			double getHpMax() const;
 			/// @brief get production updated using buffing info
 			double getProduction() const;
 			/// @brief get harvest updated using buffing info

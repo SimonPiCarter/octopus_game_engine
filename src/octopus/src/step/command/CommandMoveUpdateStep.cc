@@ -10,7 +10,7 @@
 
 namespace octopus
 {
-void CommandMoveUpdateStep::apply(State &state_p) const
+void CommandMoveUpdateStep::apply(State &state_p, SteppableData *) const
 {
 	Commandable * ent_l = state_p.getCommandable(this->_handle);
 	Logger::getDebug() << "CommandMoveUpdateStep :: apply " << this->_handle <<std::endl;
@@ -19,7 +19,7 @@ void CommandMoveUpdateStep::apply(State &state_p) const
 	data_l->_gridStatus = _newGridStatus;
 }
 
-void CommandMoveUpdateStep::revert(State &state_p) const
+void CommandMoveUpdateStep::revert(State &state_p, SteppableData *) const
 {
 	Commandable * ent_l = state_p.getCommandable(this->_handle);
 	Logger::getDebug() << "CommandMoveUpdateStep :: revert " << this->_handle <<std::endl;
@@ -33,7 +33,7 @@ bool CommandMoveUpdateStep::isNoOp() const
 	return false;
 }
 
-void CommandMoveStepSinceUpdateIncrementStep::apply(State &state_p) const
+void CommandMoveStepSinceUpdateIncrementStep::apply(State &state_p, SteppableData *) const
 {
 	Commandable * ent_l = state_p.getCommandable(this->_handle);
 	Logger::getDebug() << "CommandMoveStepSinceUpdateIncrementStep :: apply " << this->_handle <<std::endl;
@@ -41,7 +41,7 @@ void CommandMoveStepSinceUpdateIncrementStep::apply(State &state_p) const
 	++data_l->_stepSinceUpdate;
 }
 
-void CommandMoveStepSinceUpdateIncrementStep::revert(State &state_p) const
+void CommandMoveStepSinceUpdateIncrementStep::revert(State &state_p, SteppableData *) const
 {
 	Commandable * ent_l = state_p.getCommandable(this->_handle);
 	Logger::getDebug() << "CommandMoveStepSinceUpdateIncrementStep :: revert " << this->_handle <<std::endl;

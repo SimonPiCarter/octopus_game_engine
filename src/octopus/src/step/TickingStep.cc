@@ -11,11 +11,15 @@ namespace octopus
 
 double const TickingStep::_anchorLoss = 0.01;
 
-void TickingStep::apply(State &state_p) const
+void TickingStep::apply(State &state_p, SteppableData *) const
 {
 	Logger::getDebug() << "TickingStep :: apply "<<std::endl;
 	for(Entity *ent_l : state_p.getEntities())
 	{
+		if(!ent_l->_alive)
+		{
+			continue;
+		}
 		++ent_l->_reload;
 
 		// Handle buffs
@@ -48,7 +52,7 @@ void TickingStep::apply(State &state_p) const
 	}
 }
 
-void TickingStep::revert(State &state_p) const
+void TickingStep::revert(State &state_p, SteppableData *) const
 {
 	Logger::getDebug() << "TickingStep :: revert "<<std::endl;
 	for(Entity *ent_l : state_p.getEntities())
@@ -70,7 +74,7 @@ void TickingStep::revert(State &state_p) const
 			{
 				buff_l.revert(*ent_l);
 			}
-			// need to revert buff (only when we go the exact duration to avoid reverting multiple times)
+			// need to apply back buff (only when we go the exact duration to avoid reverting multiple times)
 			if(time_l == buff_l._duration && buff_l._duration != 0)
 			{
 				buff_l.apply(*ent_l);

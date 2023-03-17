@@ -25,12 +25,12 @@ TEST(entityMoveStepTest, simple)
 	EXPECT_NEAR(3., to_double(state_l.getEntity(0)->_pos.x), 1e-5);
 	EXPECT_NEAR(3., to_double(state_l.getEntity(0)->_pos.y), 1e-5);
 
-	step_l.apply(state_l);
+	step_l.apply(state_l, nullptr);
 
 	EXPECT_NEAR(4., to_double(state_l.getEntity(0)->_pos.x), 1e-5);
 	EXPECT_NEAR(5., to_double(state_l.getEntity(0)->_pos.y), 1e-5);
 
-	step_l.revert(state_l);
+	step_l.revert(state_l, nullptr);
 
 	EXPECT_NEAR(3., to_double(state_l.getEntity(0)->_pos.x), 1e-5);
 	EXPECT_NEAR(3., to_double(state_l.getEntity(0)->_pos.y), 1e-5);
@@ -50,14 +50,14 @@ TEST(entityMoveStepTest, simple_two)
 	EXPECT_NEAR(3., to_double(state_l.getEntity(0)->_pos.x), 1e-5);
 	EXPECT_NEAR(3., to_double(state_l.getEntity(0)->_pos.y), 1e-5);
 
-	step_l.apply(state_l);
-	step2_l.apply(state_l);
+	step_l.apply(state_l, nullptr);
+	step2_l.apply(state_l, nullptr);
 
 	EXPECT_NEAR(9., to_double(state_l.getEntity(0)->_pos.x), 1e-5);
 	EXPECT_NEAR(12., to_double(state_l.getEntity(0)->_pos.y), 1e-5);
 
-	step2_l.revert(state_l);
-	step_l.revert(state_l);
+	step2_l.revert(state_l, nullptr);
+	step_l.revert(state_l, nullptr);
 
 	EXPECT_NEAR(3., to_double(state_l.getEntity(0)->_pos.x), 1e-5);
 	EXPECT_NEAR(3., to_double(state_l.getEntity(0)->_pos.y), 1e-5);

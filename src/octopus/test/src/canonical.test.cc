@@ -53,7 +53,7 @@ TEST(canonicalTest, empty_computation)
 	EXPECT_NEAR(2., to_double(val_l[4][4]), 1e-5);
 	EXPECT_NEAR(12., to_double(val_l[9][9]), 1e-5);
 	EXPECT_NEAR(10, to_double(val_l[8][8]), 1e-5);
-	stream(std::cout, val_l);
+	//stream(std::cout, val_l);
 }
 
 TEST(canonicalTest, borders)
@@ -78,11 +78,11 @@ TEST(canonicalTest, borders)
 	EXPECT_NEAR(-1, to_double(val_l[8][8]), 1e-5);
 	EXPECT_NEAR(18, to_double(val_l[9][9]), 1e-5);
 
-	stream(std::cout, val_l);
+	//stream(std::cout, val_l);
 
 	FlowField field_l = flow_field(val_l);
 
-	stream(std::cout, field_l);
+	//stream(std::cout, field_l);
 }
 
 TEST(canonicalTest, big_50)

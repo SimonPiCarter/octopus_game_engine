@@ -8,7 +8,7 @@
 
 namespace octopus
 {
-void CommandWindUpDiffStep::apply(State &state_p) const
+void CommandWindUpDiffStep::apply(State &state_p, SteppableData *) const
 {
 	Commandable * ent_l = state_p.getCommandable(this->_handle);
 	Logger::getDebug() << "CommandWindUpDiffStep :: apply " << this->_handle <<std::endl;
@@ -16,7 +16,7 @@ void CommandWindUpDiffStep::apply(State &state_p) const
 	data_l->_windup += _diff;
 }
 
-void CommandWindUpDiffStep::revert(State &state_p) const
+void CommandWindUpDiffStep::revert(State &state_p, SteppableData *) const
 {
 	Commandable * ent_l = state_p.getCommandable(this->_handle);
 	Logger::getDebug() << "CommandWindUpDiffStep :: revert " << this->_handle <<std::endl;

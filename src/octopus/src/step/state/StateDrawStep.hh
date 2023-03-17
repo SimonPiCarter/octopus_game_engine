@@ -10,8 +10,8 @@ class StateDrawStep : public Steppable
 public:
     StateDrawStep(bool oldIsOver_p, bool oldHasWinningTeam_p) : _oldIsOver(oldIsOver_p), _oldhasWinningTeam(oldHasWinningTeam_p) {}
 
-	virtual void apply(State &state_p) const override;
-	virtual void revert(State &state_p) const override;
+	virtual void apply(State &state_p, SteppableData *) const override;
+	virtual void revert(State &state_p, SteppableData *) const override;
 
 	virtual bool isNoOp() const override
 	{
