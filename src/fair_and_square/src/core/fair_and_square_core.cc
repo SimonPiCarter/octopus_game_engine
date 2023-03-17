@@ -32,6 +32,19 @@ void quit(bool &quit_p)
 	quit_p = true;
 }
 
+void toogleFullScreen(cuttlefish::Window &window_p, bool &fullscreen_p)
+{
+	if(fullscreen_p)
+	{
+		window_p.setWindowed();
+	}
+	else
+	{
+		window_p.setWindowedFullScreeen();
+	}
+	fullscreen_p = !fullscreen_p;
+}
+
 int main( int argc, char* args[] )
 {
 	//octopus::Logger::enable_debug();
@@ -48,6 +61,7 @@ int main( int argc, char* args[] )
 	auto last_l = std::chrono::steady_clock::now();
 	double elapsed_l = 0.;
 	bool quit_l = false;
+	bool fullscreen_l = false;
 
 
 	cuttlefish::Menu menu_l(SCREEN_WIDTH/2, 200, 5);
@@ -81,6 +95,12 @@ int main( int argc, char* args[] )
 	Text * text_l = new Text(&window_l, {0, 0, 0}, 0, 0);
 	text_l->setText("Play Arena Level (500)");
 	menu_l.addButton(button_l, text_l, std::bind(fas::runArena, std::ref(window_l), 500));
+}
+{
+	Picture * button_l = new Picture(window_l.loadTexture("resources/button.png"), 256, 64, {1, 1 ,1}, {1, 1, 1});
+	Text * text_l = new Text(&window_l, {0, 0, 0}, 0, 0);
+	text_l->setText("FullScreen (toggle)");
+	menu_l.addButton(button_l, text_l, std::bind(toogleFullScreen, std::ref(window_l), std::ref(fullscreen_l)));
 }
 {
 	Picture * button_l = new Picture(window_l.loadTexture("resources/button.png"), 256, 64, {1, 1 ,1}, {1, 1, 1});
