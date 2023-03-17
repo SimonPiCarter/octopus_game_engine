@@ -69,6 +69,8 @@ public:
 	virtual void visit(octopus::EntityBuffStep const *) override {}
 	virtual void visit(octopus::EntityFrozenStep const *) {}
 	virtual void visit(octopus::EntityUpdateWaitingStep const *) override {}
+	virtual void visit(octopus::FlyingCommandSpawnStep const *) override {}
+	virtual void visit(octopus::FlyingCommandPopStep const *) override {}
 	virtual void visit(octopus::MissingResourceStep const *) override {}
 	virtual void visit(octopus::PlayerAddBuildingModel const *) override {}
 	virtual void visit(octopus::PlayerAnchorDivinityStep const *steppable_p) override {}
@@ -83,6 +85,7 @@ public:
 	virtual void visit(octopus::StateTemplePositionRemoveStep const *) override {}
 	virtual void visit(octopus::StateWinStep const *) override {}
 	virtual void visit(octopus::TickingStep const *) override {}
+	virtual void visit(octopus::TimerDataUpdateStep const *) override {}
 	virtual void visit(octopus::TriggerCountChange const *) override {}
 	virtual void visit(octopus::TriggerEnableChange const *) override {}
 	virtual void visit(octopus::TriggerEntityAddStep const *) override {}

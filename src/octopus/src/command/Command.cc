@@ -13,4 +13,10 @@ void Command::registerCommand(Step &step_p, State const &)
 
 void Command::cleanUp(Step & , State const &, CommandData const *) const {}
 
+void FlyingCommand::registerCommand(Step & , State const &)
+{
+	// NA for now
+	throw std::logic_error("Should never be called");
+}
+
 }

@@ -10,23 +10,42 @@ class PathManager;
 class Step;
 class State;
 
+/// @brief represent a command that can be registered in a step and
+/// applied to the state
+/// It supports creating data to support the command
+class AbstractCommand
+{
+public:
+	AbstractCommand() {}
+	virtual ~AbstractCommand() {}
+
+	/// @brief register the command into the step
+	/// This method is responsible for
+	/// handling cost of command and spawning command in step
+	/// and checking legality
+	virtual void registerCommand(Step & step_p, State const &state_p) = 0;
+
+	/// @brief compile command or info into the step
+	/// @return true if command is over
+	virtual bool applyCommand(Step & step_p, State const &state_p, CommandData const * data_p, PathManager &pathManager_p) const = 0;
+
+	/// @brief create data supporting the command actions
+	virtual CommandData * newData() const = 0;
+};
+
 /// @brief symbolise a command given (by player; by ai)
 /// those commands must be serializable otherwise replay from file will not be possible
-class Command
+class Command : public AbstractCommand
 {
 public:
 	Command(Handle const &handle_p) : _handleCommand(handle_p) {}
 	virtual ~Command() {}
 
-	/// @brief refister the command into the step
+	/// @brief register the command into the step
 	/// This method is responsible for
 	/// handling cost of command and spawning command in step
 	/// and checking legality
-	virtual void registerCommand(Step & step_p, State const &state_p);
-
-	/// @brief compile command or info into the step
-	/// @return true if command is over
-	virtual bool applyCommand(Step & step_p, State const &state_p, CommandData const * data_p, PathManager &pathManager_p) const = 0;
+	virtual void registerCommand(Step & step_p, State const &state_p) override;
 
 	/// @brief compile clean up for command (may reset some state values for example)
 	/// is useful when command are interupted
@@ -35,9 +54,6 @@ public:
 	/// @param data_p date of the command
 	/// @note this will only be used on started commands when going to next command
 	virtual void cleanUp(Step & step_p, State const &state_p, CommandData const * data_p) const;
-
-	/// @brief create data supporting the command actions
-	virtual CommandData * newData() const = 0;
 
 	void setQueued(bool queued_p) { _queued = queued_p; }
 	bool isQueued() const { return _queued; }
@@ -49,6 +65,28 @@ protected:
 
 	/// @brief if set to true the command will be queued up
 	bool _queued { false };
+};
+
+/// @brief those commands are not tied to an Entity
+/// they can be used to represent events or effect like
+/// - area of effect (damage/heal)
+/// - chaining effects (damage/heal)
+/// - on death effects
+/// - effects over time (damage/heal)
+/// all registered commands execute on every compilation
+/// each state stores a instance of data (should be synced on same step count)
+/// FlyingCommand must have a unique handle to be inserted in the same order in case of reverting
+/// removal
+class FlyingCommand : public AbstractCommand
+{
+public:
+	FlyingCommand(Handle handle_p) : _handle(handle_p) {}
+
+	virtual void registerCommand(Step & step_p, State const &state_p);
+
+	Handle const &getHandle() const { return _handle; }
+private:
+	Handle const _handle;
 };
 
 } // namespace octopus
