@@ -446,7 +446,7 @@ void GameLoop::runLoop(Window &window_p)
 		octopus::Player const * player_l = state_l.getPlayer(_world.getPlayer());
 
 		//Render background texture to screen
-		background_l->render(window_p.getRenderer(), 0, 0, 50, window_p.getWidth() );
+		background_l->render(window_p.getRenderer(), 0, 0, 50, window_p.getWidth()/2 );
 
 		textResource_l.setText(resourceStr(*player_l));
 		textResource_l.display(window_p);

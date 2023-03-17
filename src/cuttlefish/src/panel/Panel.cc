@@ -15,8 +15,8 @@ namespace cuttlefish
 Panel::Panel(Window* window_p, int x, int y, Texture const * background_p, Texture const *icons_p, int iconsPerLine_p) :
 	_x(x), _y(y), _icons(icons_p), _iconsPerLine(iconsPerLine_p)
 {
-	_background = new Picture(background_p, 400, 400, {1}, {1});
-	_background->setDestination(x, y, 261, 261);
+	_background = new Picture(background_p, 276, 276, {1}, {1});
+	_background->setDestination(x, y, 276, 276);
 }
 
 Panel::~Panel()
@@ -100,7 +100,7 @@ void Panel::refresh(SpriteEntity const *sprite_p, octopus::State const &state_p)
 		int x = idx_l % _iconsPerLine;
 		int y = idx_l/_iconsPerLine;
 
-		sprite_l.sprite->setDestination(_x + 1 + x * 65, _y + 1 + y * 65, 64, 64);
+		sprite_l.sprite->setDestination(_x + 4 + x * 68, _y + 4 + y * 68, 64, 64);
 		_grid[{x,y}] = &sprite_l;
 		++idx_l;
 	}

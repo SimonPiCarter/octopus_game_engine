@@ -24,8 +24,8 @@ StatsPanel::StatsPanel(Window* window_p, int x, int y, Texture const * backgroun
 	_textQtyRes(window_p, x+150, y+45),
 	_selection(selection_p)
 {
-	_background = new Picture(background_p, 400, 400, {1}, {1});
-	_background->setDestination(x, y, 261, 261);
+	_background = new Picture(background_p, 276, 276, {1}, {1});
+	_background->setDestination(x, y, 276, 276);
 
 	_textStats.addText("name", "", {0, 0, 0}, true);
 	_textStats.addText("hp", "hp : ", {0, 0, 0}, false);
@@ -145,10 +145,10 @@ void StatsPanel::refresh(Window &window_p, octopus::State const &state_p)
 		int x = idx_l % _iconsPerLine;
 		int y = idx_l/_iconsPerLine;
 
-		selectionPicture_l->_icon->sprite->setDestination(_x + 1 + x * 65, _y + 1 + y * 65, 64, 64);
+		selectionPicture_l->_icon->sprite->setDestination(_x + 4 + x * 68, _y + 4 + y * 68, 64, 64);
 		_grid[{x,y}] = selectionPicture_l->_icon;
 
-		selectionPicture_l->_text->setPosition(_x + x * 65, _y + y * 65);
+		selectionPicture_l->_text->setPosition(_x + 4 + x * 68, _y + 4 + y * 68);
 
 		++idx_l;
 	}
