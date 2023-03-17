@@ -11,7 +11,7 @@ namespace fas
 class ChoicePanel : public cuttlefish::DivinityPanel
 {
 public:
-	ChoicePanel(cuttlefish::Window* window_p, int x, int y, cuttlefish::Texture const * background_p, cuttlefish::Texture const *icons_p, unsigned long player_p);
+	ChoicePanel(int x, int y, cuttlefish::Texture const * background_p, cuttlefish::Texture const *icons_p, unsigned long player_p);
 
 	virtual void addOptionLayer(octopus::PlayerAddOptionStep const *) override;
 };

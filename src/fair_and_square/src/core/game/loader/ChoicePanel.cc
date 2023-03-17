@@ -8,8 +8,8 @@
 namespace fas
 {
 
-ChoicePanel::ChoicePanel(cuttlefish::Window* window_p, int x, int y, cuttlefish::Texture const * background_p, cuttlefish::Texture const *icons_p, unsigned long player_p)
-    : cuttlefish::DivinityPanel(window_p, x, y, background_p, icons_p, player_p)
+ChoicePanel::ChoicePanel(int x, int y, cuttlefish::Texture const * background_p, cuttlefish::Texture const *icons_p, unsigned long player_p)
+    : cuttlefish::DivinityPanel(x, y, background_p, icons_p, player_p)
 {}
 
 void ChoicePanel::addOptionLayer(octopus::PlayerAddOptionStep const *options_p)
