@@ -52,7 +52,9 @@ BuffOption generateRandomOption(std::mt19937 &gen_p, std::string const &id_p)
     std::uniform_int_distribution<> distBonusType_l(0, 1);
     int bonusType_l = distBonusType_l(gen_p);
 
-    if(bonusType_l == 0)
+    if(bonusType_l == 0
+    && option_l._buff._type != TyppedBuff::Type::Production
+    && option_l._buff._type != TyppedBuff::Type::Harvest)
     {
         std::uniform_int_distribution<> dist_l(3, 6);
         option_l._buff._offset = dist_l(gen_p);
