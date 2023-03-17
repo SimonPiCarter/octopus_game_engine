@@ -63,7 +63,11 @@ public:
 	int getWidth() const { return _width; }
 	int getHeight() const { return _height; }
 
+	void setWindowedFullScreeen();
+	void setWindowed();
+
 private:
+	void updateFromRenderer();
 	std::map<std::string, Texture *> _mapTexture;
 
 	//The window we'll be rendering to
@@ -79,6 +83,8 @@ private:
 
 	int _width {0};
 	int _height {0};
+	int _baseWidth {0};
+	int _baseHeight {0};
 	unsigned long _worldSize {0};
 
 	// display fps

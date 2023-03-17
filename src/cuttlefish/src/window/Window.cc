@@ -37,6 +37,8 @@ bool Window::init(int width_p, int height_p, unsigned long worldSize_p)
 		{
 			_width = width_p;
 			_height = height_p;
+			_baseWidth = width_p;
+			_baseHeight = height_p;
 			_worldSize = worldSize_p;
 			//Create renderer for window
 			_renderer = SDL_CreateRenderer( _window, -1, SDL_RENDERER_ACCELERATED );
@@ -185,6 +187,26 @@ octopus::Vector Window::getPixelVector(double x, double y) const
 octopus::Vector Window::getWindowSize() const
 {
 	return {_width/32., _height/32.};
+}
+
+void Window::setWindowedFullScreeen()
+{
+	SDL_SetWindowFullscreen(getWindow(), SDL_WINDOW_FULLSCREEN_DESKTOP);
+	updateFromRenderer();
+}
+
+void Window::setWindowed()
+{
+	SDL_SetWindowFullscreen(getWindow(), 0);
+	updateFromRenderer();
+}
+
+void Window::updateFromRenderer()
+{
+	// udpate window
+	SDL_GetRendererOutputSize(getRenderer(), &_width, &_height);
+	SDL_Rect clip_l {0, 0, _width, _height};
+	SDL_RenderSetClipRect(_renderer, &clip_l);
 }
 
 
