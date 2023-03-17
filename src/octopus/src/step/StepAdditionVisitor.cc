@@ -24,14 +24,19 @@ void StepAdditionVisitor::visit(PlayerResetOptionDivinityStep const *step_p)
     ++_step.getDivOptionSpent(step_p->_player);
 }
 
-void StepAdditionVisitor::visit(BuildingSpawnStep const *step_p)
+void StepAdditionVisitor::visit(BuildingSpawnStep const *)
 {
     _step.addEntitySpawned();
 }
 
-void StepAdditionVisitor::visit(EntitySpawnStep const *step_p)
+void StepAdditionVisitor::visit(EntitySpawnStep const *)
 {
     _step.addEntitySpawned();
+}
+
+void StepAdditionVisitor::visit(FlyingCommandSpawnStep const *)
+{
+    _step.addFlyingCommnandSpawned();
 }
 
 void StepAdditionVisitor::visit(ResourceSpawnStep const *step_p)

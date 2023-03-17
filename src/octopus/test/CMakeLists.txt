@@ -40,10 +40,11 @@ target_sources (unit_tests
 	src/entityMoveStep.test.cc
 	src/entitySpawnStep.test.cc
 	src/fixed.test.cc
+	src/flyingCommant.test.cc
 	src/grid.test.cc
 	src/harvestCommand.test
 	src/moveCommand.test.cc
-	src/PlayerBuffAllStep.test.cc
+	src/playerBuffAllStep.test.cc
 	src/queueCommand.test.cc
 	src/resourceSpentSimultaneous.test.cc
 	src/spawningGrid.test.cc

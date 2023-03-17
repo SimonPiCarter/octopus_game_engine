@@ -22,6 +22,7 @@ add_library(octopus
 	${CMAKE_CURRENT_SOURCE_DIR}/src/command/entity/EntityBuildingCommand.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/command/entity/EntityMoveCommand.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/command/entity/EntityWaitCommand.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/src/command/flying/CommandEffectOverTime.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/command/player/PlayerChoseDivinityCommand.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/command/spawner/AreaSpawnerCommand.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/command/spawner/SpawningGrid.cc
@@ -67,6 +68,9 @@ add_library(octopus
 	${CMAKE_CURRENT_SOURCE_DIR}/src/step/command/CommandWindUpDiffStep.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/step/command/ProductionPaidStep.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/step/command/ProductionProgressionStep.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/src/step/command/data/TimerDataUpdateStep.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/src/step/command/flying/FlyingCommandPopStep.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/src/step/command/flying/FlyingCommandSpawnStep.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/step/command/harvest/CommandHarvestStep.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/step/building/BuildingCancelStep.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/step/building/BuildingStep.cc

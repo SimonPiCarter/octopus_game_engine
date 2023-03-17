@@ -9,9 +9,18 @@
 #include "entity/Building.hh"
 #include "utils/Box.hh"
 #include "state/model/entity/BuildingModel.hh"
+#include "command/Command.hh"
 
 namespace octopus
 {
+
+
+FlyingCommandBundle::FlyingCommandBundle(CommandData * data_p, FlyingCommand * cmd_p)
+	: _data(data_p)
+	, _cmd(cmd_p)
+{}
+
+Handle const FlyingCommandBundle::getHandle() const { return _cmd->getHandle(); }
 
 State::State() : _id(0), _gridSize(50), _gridPointSize(1), _pathGrid(_gridSize*_gridPointSize, _gridSize*_gridPointSize, 1., 1.), _visionHandler(_gridSize*_gridPointSize)
 {
@@ -113,6 +122,16 @@ std::vector<Entity *> const &State::getEntities() const
 std::vector<Commandable *> const &State::getCommandables() const
 {
 	return _commandables;
+}
+
+FlyingCommandSet & State::getFlyingCommands()
+{
+	return _flyingCommands;
+}
+
+const FlyingCommandSet & State::getFlyingCommands() const
+{
+	return _flyingCommands;
 }
 
 std::vector<Player *> &State::getPlayers()

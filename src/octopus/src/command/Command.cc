@@ -21,4 +21,10 @@ bool Command::checkPlayer(State const &state_p, unsigned long player_p) const
 		&& state_p.getEntity(this->getHandleCommand())->_player == player_p;
 }
 
+void FlyingCommand::registerCommand(Step & , State const &)
+{
+	// NA for now
+	throw std::logic_error("Should never be called");
+}
+
 }

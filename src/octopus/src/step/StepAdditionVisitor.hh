@@ -50,6 +50,8 @@ public:
     virtual void visit(EntityMoveStep const *) {}
     virtual void visit(EntityUpdateWaitingStep const *) {}
     virtual void visit(EntitySpawnStep const *);
+	virtual void visit(FlyingCommandSpawnStep const *);
+	virtual void visit(FlyingCommandPopStep const *) {}
     virtual void visit(MissingResourceStep const *) {}
     virtual void visit(PlayerAddBuildingModel const *) {}
     virtual void visit(PlayerAddOptionDivinityStep const *) {}
@@ -69,6 +71,7 @@ public:
     virtual void visit(StateTemplePositionRemoveStep const *) {}
     virtual void visit(StateWinStep const *) {}
     virtual void visit(TickingStep const *) {}
+	virtual void visit(TimerDataUpdateStep const *) {}
     virtual void visit(TriggerCountChange const *) {}
     virtual void visit(TriggerEnableChange const *) {}
     virtual void visit(TriggerEntityAddStep const *) {}

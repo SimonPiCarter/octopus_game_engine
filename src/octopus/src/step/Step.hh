@@ -11,6 +11,7 @@
 namespace octopus
 {
 	class EntityMoveStep;
+	class FlyingCommand;
 	class State;
 	class Steppable;
 	class SteppableData;
@@ -53,6 +54,11 @@ namespace octopus
 			/// @brief get the number of entity spawned in this step
 			unsigned long getEntitySpawned() const;
 
+			/// @brief add an flying command spawned
+			void addFlyingCommnandSpawned();
+			/// @brief get the number of flying command spawned in this step
+			unsigned long getFlyingCommandSpawned() const;
+
 			/// @brief get previous step
 			/// @return previous step
 			Step const * getPrev() const { return _prev; }
@@ -72,8 +78,11 @@ namespace octopus
 			/// @brief a map of number of div option spent in this step (player) -> number of div option spent this step
 			std::map<unsigned long, unsigned long> _divOptionsSpent;
 
-			/// @brief a map of entity spawned in this step
+			/// @brief the number of entity spawned in this step
 			unsigned long _entitySpawned {0};
+
+			/// @brief the number of flying command spawned in this step
+			unsigned long _flyingCommandSpawned {0};
 
 			Step const * const _prev {nullptr};
 

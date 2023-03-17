@@ -69,6 +69,8 @@ namespace octopus
 	class EntityMoveStep;
 	class EntitySpawnStep;
 	class EntityUpdateWaitingStep;
+	class FlyingCommandPopStep;
+	class FlyingCommandSpawnStep;
 	class MissingResourceStep;
 	class PlayerAddBuildingModel;
 	class PlayerAddOptionDivinityStep;
@@ -88,6 +90,7 @@ namespace octopus
 	class StateTemplePositionRemoveStep;
 	class StateWinStep;
 	class TickingStep;
+	class TimerDataUpdateStep;
 	class TriggerCountChange;
 	class TriggerEnableChange;
 	class TriggerEntityAddStep;
@@ -142,6 +145,8 @@ namespace octopus
 			virtual void visit(EntityHitPointChangeStep const *steppable_p) = 0;
 			virtual void visit(EntityMoveStep const *steppable_p) = 0;
 			virtual void visit(EntitySpawnStep const *steppable_p) = 0;
+			virtual void visit(FlyingCommandSpawnStep const *steppable_p) = 0;
+			virtual void visit(FlyingCommandPopStep const *steppable_p) = 0;
 			virtual void visit(EntityUpdateWaitingStep const *steppable_p) = 0;
 			virtual void visit(MissingResourceStep const *steppable_p) = 0;
 			virtual void visit(PlayerAddBuildingModel const *steppable_p) = 0;
@@ -162,6 +167,7 @@ namespace octopus
 			virtual void visit(StateTemplePositionRemoveStep const *steppable_p) = 0;
 			virtual void visit(StateWinStep const *steppable_p) = 0;
 			virtual void visit(TickingStep const *steppable_p) = 0;
+			virtual void visit(TimerDataUpdateStep const *steppable_p) = 0;
 			virtual void visit(TriggerCountChange const *steppable_p) = 0;
 			virtual void visit(TriggerEnableChange const *steppable_p) = 0;
 			virtual void visit(TriggerEntityAddStep const *steppable_p) = 0;

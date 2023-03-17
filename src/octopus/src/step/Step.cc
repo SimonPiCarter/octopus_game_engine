@@ -108,6 +108,16 @@ unsigned long Step::getEntitySpawned() const
 	return _entitySpawned;
 }
 
+void Step::addFlyingCommnandSpawned()
+{
+	++_flyingCommandSpawned;
+}
+
+unsigned long Step::getFlyingCommandSpawned() const
+{
+	return _flyingCommandSpawned;
+}
+
 void apply(Step const & step_p, State &state_p)
 {
 	// apply all steppables

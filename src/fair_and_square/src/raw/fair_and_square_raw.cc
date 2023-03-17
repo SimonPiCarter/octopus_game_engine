@@ -12,9 +12,9 @@ int main()
 {
 	octopus::Library lib_l;
 	std::list<octopus::Steppable *> spawners_l = WaveLevelSteps(lib_l, 15, 0.1*60*100, 0);
-	std::list<octopus::Command *> commands_l = WaveLevelCommands(lib_l, 500);
+	std::list<octopus::Command *> commands_l = WaveLevelCommands(lib_l, 250);
 
-	octopus::Controller controller_l(spawners_l, 0.01, commands_l, 5, 100);
+	octopus::Controller controller_l(spawners_l, 0.01, commands_l, 5, 50);
 	controller_l.enableORCA();
 
 	using namespace std::chrono_literals;
