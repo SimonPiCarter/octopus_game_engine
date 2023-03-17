@@ -12,6 +12,7 @@
 namespace octopus
 {
 	class Player;
+	class PlayerAddOptionStep;
 	class State;
 } // namespace octopus
 
@@ -33,7 +34,7 @@ class DivinityPanel
 {
 public:
 	DivinityPanel(Window* window_p, int x, int y, Texture const * background_p, Texture const *icons_p, unsigned long player_p);
-	~DivinityPanel();
+	virtual ~DivinityPanel();
 
 	/// @brief refresh Panel if necessary
 	void refresh();
@@ -58,6 +59,7 @@ public:
 
 
 	void addOptionLayer(unsigned long player_p, std::set<octopus::DivinityType> const &options_p);
+	virtual void addOptionLayer(octopus::PlayerAddOptionStep const *) {}
 	void popOptionLayer();
 protected:
 	/// @brief sprites and options used

@@ -24,6 +24,7 @@
 #include "step/entity/spawn/ResourceSpawnStep.hh"
 #include "step/entity/spawn/UnitSpawnStep.hh"
 #include "step/player/PlayerAddOptionDivinityStep.hh"
+#include "step/player/PlayerAddOptionStep.hh"
 #include "step/unit/UnitHarvestStep.hh"
 
 
@@ -158,6 +159,11 @@ void WorldUpdaterStepVisitor::visit(octopus::BuildingStep const *steppable_p)
 void WorldUpdaterStepVisitor::visit(octopus::PlayerAddOptionDivinityStep const *steppable_p)
 {
 	_divPanel.addOptionLayer(steppable_p->_player, steppable_p->_types);
+}
+
+void WorldUpdaterStepVisitor::visit(octopus::PlayerAddOptionStep const *steppable_p)
+{
+	_divPanel.addOptionLayer(steppable_p);
 }
 
 void WorldUpdaterStepVisitor::visit(octopus::CommandWindUpDiffStep const *steppable_p)
