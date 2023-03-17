@@ -52,22 +52,7 @@ std::string resourceStr(octopus::Player const &player_p)
 	std::stringstream ss_l;
 	ss_l << "Food   : "<<stringify(std::abs(std::floor(1e-5+octopus::getResource(player_p, octopus::ResourceType::Food))))<<" | ";
 	ss_l << "Steel  : "<<stringify(std::abs(std::floor(1e-5+octopus::getResource(player_p, octopus::ResourceType::Steel))))<<" | ";
-	return ss_l.str();
-}
-
-std::string divAnchorStr(octopus::Player const &player_p)
-{
-	std::stringstream ss_l;
-	ss_l << "anc | ";
-	ss_l << "div1 : "<<stringify(int(octopus::getDivAnchor(player_p, octopus::DivinityType::Divinity_1)))<<" | ";
-	return ss_l.str();
-}
-
-std::string divLvlStr(octopus::Player const &player_p)
-{
-	std::stringstream ss_l;
-	ss_l << "lvl | ";
-	ss_l << "div1 : "<<stringify(octopus::getDivLvl(player_p, octopus::DivinityType::Divinity_1))<<" | ";
+	ss_l << "Anchor  : "<<stringify(std::abs(std::floor(1e-5+octopus::getResource(player_p, octopus::ResourceType::Anchor))))<<" | ";
 	return ss_l.str();
 }
 
@@ -165,8 +150,6 @@ void GameLoop::runLoop(Window &window_p)
 
 	// Text for resource
 	Text textResource_l(&window_p, {0,0,0}, 250, 0);
-	Text textDivLvl_l(&window_p, {0,0,0}, 500, 0);
-	Text textDivAnchor_l(&window_p, {0,0,0}, 650, 0);
 	Text textSteps_l(&window_p, {0,0,0}, 0, 20);
 
 	StandardClicMode standardClicMode_l;
@@ -467,10 +450,6 @@ void GameLoop::runLoop(Window &window_p)
 
 		textResource_l.setText(resourceStr(*player_l));
 		textResource_l.display(window_p);
-		textDivLvl_l.setText(divLvlStr(*player_l));
-		textDivLvl_l.display(window_p);
-		textDivAnchor_l.setText(divAnchorStr(*player_l));
-		textDivAnchor_l.display(window_p);
 
 		std::stringstream ss_l;
 		ss_l << "step : "<<_controller.getOngoingStep()
