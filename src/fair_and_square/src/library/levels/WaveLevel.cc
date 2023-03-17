@@ -5,6 +5,7 @@
 #include <random>
 
 #include "library/model/ModelLoader.hh"
+#include "library/model/TimerDamage.hh"
 
 #include "controller/trigger/Listener.hh"
 #include "command/entity/EntityAttackMoveCommand.hh"
@@ -17,6 +18,7 @@
 #include "state/State.hh"
 #include "step/Step.hh"
 #include "step/command/CommandQueueStep.hh"
+#include "step/command/flying/FlyingCommandSpawnStep.hh"
 #include "step/entity/spawn/UnitSpawnStep.hh"
 #include "step/entity/spawn/ResourceSpawnStep.hh"
 #include "step/entity/spawn/BuildingSpawnStep.hh"
@@ -68,9 +70,12 @@ std::list<Steppable *> WaveLevelSteps(Library &lib_p, unsigned long waveCount_p,
 	std::map<ResourceType, double> mapRes_l;
 	mapRes_l[octopus::ResourceType::Food] = -200;
 	mapRes_l[octopus::ResourceType::Steel] = -200;
+	mapRes_l[octopus::ResourceType::Anchor] = -5;
 
 	Trigger * triggerWave_l = new WaveSpawn(new ListenerStepCount(stepCount_p), lib_p, 1, stepCount_p, waveCount_p, player_p);
 	Trigger * triggerLose_l = new LoseTrigger(new ListenerEntityModelDied(&lib_p.getBuildingModel("command_center"), 0));
+
+
 
 	std::list<Steppable *> spawners_l =
 	{
@@ -92,6 +97,7 @@ std::list<Steppable *> WaveLevelSteps(Library &lib_p, unsigned long waveCount_p,
 		new UnitSpawnStep(8, unit_l),
 		new TriggerSpawn(triggerWave_l),
 		new TriggerSpawn(triggerLose_l),
+		new FlyingCommandSpawnStep(new TimerDamage(0, 100, 0, 0, octopus::ResourceType::Anchor, 0)),
 	};
 
 	return spawners_l;
