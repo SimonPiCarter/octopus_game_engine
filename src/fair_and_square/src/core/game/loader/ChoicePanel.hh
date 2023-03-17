@@ -1,8 +1,9 @@
 #ifndef __ChoicePanel__
 #define __ChoicePanel__
 
-#include "panel/OptionPanel.hh"
 #include "library/model/bonus/BuffGenerators.hh"
+#include "panel/OptionPanel.hh"
+#include "text/SegmentedText.hh"
 
 namespace fas
 {
@@ -12,7 +13,7 @@ namespace fas
 class ChoicePanel : public cuttlefish::OptionPanel
 {
 public:
-	ChoicePanel(int x, int y, cuttlefish::Texture const * background_p, cuttlefish::Texture const *icons_p, unsigned long player_p);
+	ChoicePanel(cuttlefish::Window &window_p, int x, int y, cuttlefish::Texture const * background_p, cuttlefish::Texture const *icons_p, unsigned long player_p);
 	~ChoicePanel();
 
 	/// @brief refresh Panel if necessary
@@ -36,11 +37,24 @@ public:
     virtual octopus::Command * newCommandFromOption(int option_p) override;
 
 protected:
+	cuttlefish::Window &_window;
 	unsigned long const _player;
-	std::vector<BuffOption> _options;
 
+	/// @brief background for the options
 	std::vector<cuttlefish::Picture *> _optionsBackground;
 
+	/// @brief temporary texts for option
+	std::vector<cuttlefish::SegmentedText *> _optionsTexts;
+
+	/// @brief list of all options queued
+	std::list<std::vector<BuffOption>> _queuedOptions;
+	std::list<std::string> _queuedKeys;
+
+	/// @brief update current option with the first option queued
+	void updateCurrent();
+
+	/// @brief option list of the current choice
+	std::vector<BuffOption> _options;
 	/// @brief key of the current choice
 	std::string _key;
 

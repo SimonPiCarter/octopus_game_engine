@@ -38,7 +38,7 @@ void runGame(Window &window_p, std::list<octopus::Steppable *> &spawners_p, std:
 
 	GameLoop loop_l(
 		loader_l._descPanel,
-		loader_l._divPanel,
+		loader_l._choicePanel,
 		loader_l._minimap,
 		controller_l,
 		loader_l._panel,

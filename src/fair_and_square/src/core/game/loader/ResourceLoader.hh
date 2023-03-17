@@ -22,7 +22,7 @@ public:
 
 	cuttlefish::Panel _panel;
 	cuttlefish::StatsPanel _statsPanel;
-	fas::ChoicePanel _divPanel;
+	fas::ChoicePanel _choicePanel;
 	cuttlefish::DescPanel _descPanel;
 	cuttlefish::SpriteLibrary _spriteLib;
 	cuttlefish::Tilemap _tilemap;
