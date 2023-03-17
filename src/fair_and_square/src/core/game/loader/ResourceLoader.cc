@@ -45,10 +45,10 @@ RessourceLoader::RessourceLoader(cuttlefish::Window &window_p, unsigned long ful
 	_statsPanel.addSpriteInfo("triangle", 2, 3);
 	_statsPanel.addSpriteInfo("circle", 1, 3);
 
-	_divPanel.addOptionInfo(octopus::DivinityType::Divinity_1, 2, 0);
-	_divPanel.addOptionInfo(octopus::DivinityType::Divinity_3, 1, 3);
-	_divPanel.addOptionInfo(octopus::DivinityType::Divinity_4, 1, 4);
-	_divPanel.addOptionInfo(octopus::DivinityType::Divinity_5, 2, 3);
+	// _divPanel.addOptionInfo(octopus::DivinityType::Divinity_1, 2, 0);
+	// _divPanel.addOptionInfo(octopus::DivinityType::Divinity_3, 1, 3);
+	// _divPanel.addOptionInfo(octopus::DivinityType::Divinity_4, 1, 4);
+	// _divPanel.addOptionInfo(octopus::DivinityType::Divinity_5, 2, 3);
 
 	_descPanel.setText("ceci est un texte de test avec un parametre param $param");
 
