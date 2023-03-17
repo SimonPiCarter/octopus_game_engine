@@ -84,16 +84,16 @@ void DivinityPanel::addOptionInfo(octopus::DivinityType type_p, int state_p, int
 
 int DivinityPanel::getOption(Window &window_p, int x, int y) const
 {
-	int option_l = -1;
+	int option_l = 0;
 	for(auto &&pair_l : _options)
 	{
-		++option_l;
 		if(pair_l.first->isInside(window_p, x, y))
 		{
 			return option_l;
 		}
+		++option_l;
 	}
-	return option_l;
+	return -1;
 }
 
 void DivinityPanel::cleanOptions()
