@@ -68,11 +68,11 @@ BuffOption generateRandomOption(std::mt19937 &gen_p, std::string const &id_p)
 
     option_l._buff._id = id_p;
 
-    if(option_l._buff._type != TyppedBuff::Type::Production)
+    if(option_l._buff._type == TyppedBuff::Type::Production)
     {
         option_l._model = "barrack";
     }
-    else if(option_l._buff._type != TyppedBuff::Type::Harvest)
+    else if(option_l._buff._type == TyppedBuff::Type::Harvest)
     {
         option_l._model = "deposit";
     }
