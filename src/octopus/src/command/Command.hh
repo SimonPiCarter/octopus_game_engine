@@ -81,7 +81,8 @@ protected:
 /// - effects over time (damage/heal)
 /// all registered commands execute on every compilation
 /// each state stores a instance of data (should be synced on same step count)
-/// FlyingCommand must have a unique handle to be inserted in the same order in case of reverting
+///
+/// @warning FlyingCommand must have a unique handle to be inserted in the same order in case of reverting
 /// removal
 class FlyingCommand : public AbstractCommand
 {
