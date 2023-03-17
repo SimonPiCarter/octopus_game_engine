@@ -64,6 +64,8 @@ struct Buffer
 	TyppedBuff _buff;
 };
 
+std::string to_string(TyppedBuff::Type type_p);
+
 }
 
 #endif
