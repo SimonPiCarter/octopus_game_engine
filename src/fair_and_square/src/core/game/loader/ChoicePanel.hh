@@ -36,9 +36,13 @@ public:
     virtual octopus::Command * newCommandFromOption(int option_p) override;
 
 protected:
+	unsigned long const _player;
 	std::vector<BuffOption> _options;
 
 	std::vector<cuttlefish::Picture *> _optionsBackground;
+
+	/// @brief key of the current choice
+	std::string _key;
 
 };
 } // namespace octopus

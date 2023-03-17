@@ -1,6 +1,7 @@
 #include "ChoicePanel.hh"
 
 #include "step/player/PlayerAddOptionStep.hh"
+#include "command/player/PlayerChoseOptionCommand.hh"
 
 #include <iostream>
 
@@ -8,7 +9,7 @@ namespace fas
 {
 
 ChoicePanel::ChoicePanel(int x, int y, cuttlefish::Texture const * background_p, cuttlefish::Texture const *icons_p, unsigned long player_p)
-    : cuttlefish::OptionPanel(x, y, background_p)
+    : cuttlefish::OptionPanel(x, y, background_p), _player(player_p)
 {
 	_background->setDestination(x, y, 600., 300.);
 
@@ -30,10 +31,18 @@ ChoicePanel::~ChoicePanel()
 
 void ChoicePanel::addOptionLayer(octopus::PlayerAddOptionStep const *options_p)
 {
+	// skip if other player
+	if(options_p->_player != _player)
+	{
+		return;
+	}
+
 	BuffGenerator const *gen_l = dynamic_cast<BuffGenerator const *>(options_p->_generator);
 
 	std::cout<<"options found"<<std::endl;
 	_options = gen_l->_options;
+
+	_key = options_p->_key;
 
 	for(BuffOption const &opt_l : _options)
 	{
@@ -41,6 +50,7 @@ void ChoicePanel::addOptionLayer(octopus::PlayerAddOptionStep const *options_p)
 		std::cout<<"\ttype : "<<octopus::to_string(opt_l._buff._type)<<std::endl;
 		std::cout<<"\toffset : "<<opt_l._buff._offset<<std::endl;
 		std::cout<<"\tcoef : "<<opt_l._buff._coef<<std::endl;
+		std::cout<<"\tmodel : "<<opt_l._model<<std::endl;
 	}
 }
 
@@ -84,7 +94,8 @@ bool ChoicePanel::isActive() const
 /// @param option_p is supposed to be valid (>= 0)
 octopus::Command * ChoicePanel::newCommandFromOption(int option_p)
 {
-	return nullptr;
+	_options.clear();
+	return new octopus::PlayerChoseOptionCommand(_player, _key, option_p);
 }
 
 } // namespace fas
