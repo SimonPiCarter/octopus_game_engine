@@ -55,7 +55,7 @@ BuffOption generateRandomOption(std::mt19937 &gen_p, std::string const &id_p)
     if(bonusType_l == 0)
     {
         std::uniform_int_distribution<> dist_l(3, 6);
-        option_l._buff._offset = dist_l(gen_p).;
+        option_l._buff._offset = dist_l(gen_p);
     }
     else if(bonusType_l == 1)
     {
