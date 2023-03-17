@@ -4,6 +4,7 @@
 #include <fstream>
 #include <random>
 
+#include "library/model/AnchorTrigger.hh"
 #include "library/model/ModelLoader.hh"
 #include "library/model/TimerDamage.hh"
 
@@ -85,6 +86,7 @@ std::list<Steppable *> WaveLevelSteps(Library &lib_p, unsigned long waveCount_p,
 		new PlayerAddBuildingModel(0, lib_p.getBuildingModel("command_center")),
 		new PlayerAddBuildingModel(0, lib_p.getBuildingModel("barrack")),
 		new PlayerAddBuildingModel(0, lib_p.getBuildingModel("deposit")),
+		new PlayerAddBuildingModel(0, lib_p.getBuildingModel("anchor")),
 		new PlayerSpendResourceStep(0, mapRes_l),
 		new BuildingSpawnStep(0, building_l, true),
 		new ResourceSpawnStep(1, res1_l),
@@ -97,6 +99,7 @@ std::list<Steppable *> WaveLevelSteps(Library &lib_p, unsigned long waveCount_p,
 		new UnitSpawnStep(8, unit_l),
 		new TriggerSpawn(triggerWave_l),
 		new TriggerSpawn(triggerLose_l),
+		new TriggerSpawn(new AnchorTrigger(lib_p)),
 		new FlyingCommandSpawnStep(new TimerDamage(0, 100, 0, 0, octopus::ResourceType::Anchor, 0)),
 	};
 
@@ -117,6 +120,9 @@ std::list<Command *> WaveLevelCommands(Library &lib_p, unsigned long worldSize_p
 	res3_l._resource = 500.;
 	res3_l._player = 2;
 
+	Building anchorSpot_l({0,0}, true, lib_p.getBuildingModel("anchor_spot"));
+	anchorSpot_l._player = 2;
+
     std::mt19937 gen_l(42);
 
 	for(unsigned long x = 0 ; x < worldSize_p/20 ; ++ x)
@@ -134,6 +140,7 @@ std::list<Command *> WaveLevelCommands(Library &lib_p, unsigned long worldSize_p
 			area_l.y = 5 + area_l.size*y;
 			area_l.entities.emplace_back(new Resource(res3_l), 1);
 			area_l.entities.emplace_back(new Resource(res2_l), 3);
+			area_l.entities.emplace_back(new Building(anchorSpot_l), 1);
 			for(unsigned long c = 0 ; c < x*y ; ++ c)
 			{
 				Unit *unit_l = new Unit({0, 0}, false, lib_p.getUnitModel(genModelName(gen_l)));

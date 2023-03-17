@@ -9,6 +9,7 @@ cmake_minimum_required (VERSION 3.14.0)
 # ============================================================================
 
 add_library(fair_and_square_lib
+	${CMAKE_CURRENT_SOURCE_DIR}/src/library/model/AnchorTrigger.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/library/model/ModelLoader.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/library/model/TimerDamage.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/library/levels/ArenaLevel.cc

@@ -3,6 +3,7 @@
 #include "library/Library.hh"
 #include "state/model/entity/UnitModel.hh"
 #include "state/model/entity/BuildingModel.hh"
+#include "state/model/entity/TempleModel.hh"
 
 using namespace octopus;
 
@@ -131,6 +132,32 @@ void createDeposit(Library &lib_p)
 	lib_p.registerBuildingModel("deposit", buildingModel_l);
 }
 
+void createAnchor(Library &lib_p)
+{
+    // temple
+    TempleModel buildingModel_l { true, 0.9, 1000. };
+    buildingModel_l._isBuilding = true;
+    buildingModel_l._isStatic = true;
+    buildingModel_l._buildingTime = 500;
+    buildingModel_l._cost[ResourceType::Steel] = 150;
+    buildingModel_l._cost[ResourceType::Food] = 50;
+    buildingModel_l._armor = 5;
+
+    lib_p.registerTempleModel("anchor", buildingModel_l);
+}
+
+void createAnchorSpot(Library &lib_p)
+{
+    // temple
+    BuildingModel buildingModel_l { true, 0.9, 1000. };
+    buildingModel_l._isBuilding = true;
+    buildingModel_l._isStatic = true;
+    buildingModel_l._isAbandonedTemple = true;
+    buildingModel_l._armor = 5;
+
+    lib_p.registerBuildingModel("anchor_spot", buildingModel_l);
+}
+
 void createResourceFood(Library &lib_p)
 {
 	EntityModel resModel_l { true, 0.9, 1., 10. };
@@ -156,6 +183,8 @@ void loadModels(octopus::Library &lib_p)
 	createCommandCenter(lib_p);
 	createBarrack(lib_p);
     createDeposit(lib_p);
+    createAnchor(lib_p);
+    createAnchorSpot(lib_p);
 
 	createResourceFood(lib_p);
 	createResourceSteel(lib_p);
