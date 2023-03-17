@@ -36,6 +36,12 @@ public:
 	/// @note this will only be used on started commands when going to next command
 	virtual void cleanUp(Step & step_p, State const &state_p, CommandData const * data_p) const;
 
+	/// @brief Check if command is valid for given player
+	/// @param state_p the state in case we need to get some info
+	/// @param player_p the player supposed to commit the command
+	/// @return true if the command can be commited for said player
+	virtual bool checkPlayer(State const &state_p, unsigned long player_p) const;
+
 	/// @brief create data supporting the command actions
 	virtual CommandData * newData() const = 0;
 

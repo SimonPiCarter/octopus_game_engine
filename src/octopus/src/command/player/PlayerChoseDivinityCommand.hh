@@ -23,6 +23,8 @@ public:
 
 	virtual CommandData * newData() const override { return nullptr; }
 
+	virtual bool checkPlayer(State const &, unsigned long player_p) const override { return _player == player_p; }
+
 private:
 	unsigned long const _player;
 	DivinityType const _type;
