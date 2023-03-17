@@ -170,7 +170,7 @@ Handle const &EntityAttackCommand::getTarget() const
 bool EntityAttackCommand::checkTarget(State const &state_p, Handle const & target_p) const
 {
 	Entity const * entTarget_l = state_p.getEntity(target_p);
-	return !entTarget_l->_alive;
+	return !entTarget_l->_alive || entTarget_l->_model._invulnerable;
 }
 
 bool EntityAttackCommand::inRange(State const &state_p, Handle const & target_p) const

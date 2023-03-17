@@ -302,6 +302,7 @@ TargetPanel lookUpNewTargets(State const &state_p, Handle const &sourceHandle_p,
 		Entity const * ent_l = state_p.getEntity(handle_p);
 		if(ent_l == source_l
 		|| !ent_l->_alive
+		|| !ent_l->_model._invulnerable
 		|| team_l == state_p.getPlayer(ent_l->_player)->_team)
 		{
 			// NA

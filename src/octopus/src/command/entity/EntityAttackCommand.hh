@@ -36,6 +36,7 @@ private:
 	/// @brief if true we wont change target except when it dies
 	bool const _frozenTarget;
 
+	/// @brief return true if the target is not valid anymore
 	bool checkTarget(State const &state_p, Handle const & target_p) const;
 	bool inRange(State const &state_p, Handle const & target_p) const;
 };
