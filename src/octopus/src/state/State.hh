@@ -12,12 +12,24 @@
 namespace octopus
 {
 class Commandable;
+class CommandData;
 class Entity;
 struct ListenerData;
 class Player;
 class Trigger;
 struct TriggerData;
 struct TyppedBuff;
+class FlyingCommand;
+
+struct FlyingCommandBundle
+{
+	FlyingCommandBundle(CommandData * data_p, FlyingCommand * cmd_p);
+	CommandData * _data {nullptr};
+	FlyingCommand * _cmd {nullptr};
+	Handle const getHandle() const;
+};
+
+typedef std::map<Handle, FlyingCommandBundle> FlyingCommandSet;
 
 /// @brief represent the whole world
 /// @warning a State must only be modified through step apply and revert!
@@ -44,6 +56,9 @@ public:
 	std::vector<Entity *> const &getEntities() const;
 	std::vector<Commandable *> const &getCommandables() const;
 
+	FlyingCommandSet & getFlyingCommands();
+	const FlyingCommandSet & getFlyingCommands() const;
+
 	std::vector<Player *> &getPlayers();
 	std::vector<Player *> const &getPlayers() const;
 
@@ -63,9 +78,9 @@ public:
 	const TriggerData * getTriggerData(Handle const &handleTrigger_p) const;
 
 	std::vector<Trigger const *> &getTriggers() { return _triggers; }
-	std::vector<Trigger const *> const &getTriggers() const { return _triggers; }
+	const std::vector<Trigger const *> &getTriggers() const { return _triggers; }
 	std::vector<TriggerData *> &getTriggersData() { return _triggersData; }
-	std::vector<TriggerData *> const &getTriggersData() const { return _triggersData; }
+	const std::vector<TriggerData *> &getTriggersData() const { return _triggersData; }
 
 	unsigned long getGridSize() const;
 	unsigned long getWorldSize() const;
@@ -112,6 +127,9 @@ private:
 
 	/// @brief vector of all commandables
 	std::vector<Commandable *> _commandables;
+
+	/// @brief vector of all flying command to be run
+	FlyingCommandSet _flyingCommands;
 
 	/// @brief vector of players
 	std::vector<Player *> _players;

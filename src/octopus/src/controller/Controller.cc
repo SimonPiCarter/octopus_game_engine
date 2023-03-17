@@ -16,6 +16,8 @@
 #include "step/trigger/TriggerEnableChange.hh"
 #include "step/trigger/TriggerSpawn.hh"
 #include "step/command/CommandQueueStep.hh"
+#include "step/command/flying/FlyingCommandPopStep.hh"
+#include "step/command/flying/FlyingCommandSpawnStep.hh"
 #include "orca/OrcaManager.hh"
 
 namespace octopus
@@ -57,7 +59,7 @@ Controller::Controller(
 
 	_commitedCommands.push_back(new std::list<Command *>());
 	_triggers.push_back(std::list<Trigger const *>());
-	_commands.push_back(std::list<Command *>());
+	_commands.push_back(std::list<AbstractCommand *>());
 	// add steppable
 	for(Steppable * steppable_l : initSteppables_p)
 	{
@@ -114,9 +116,9 @@ Controller::~Controller()
 	{
 		delete cmds_l;
 	}
-	for(std::list<Command *> const &cmds_l : _commands)
+	for(std::list<AbstractCommand *> const &cmds_l : _commands)
 	{
-		for(Command * cmd_l : cmds_l)
+		for(AbstractCommand * cmd_l : cmds_l)
 		{
 			delete cmd_l;
 		}
@@ -168,6 +170,16 @@ bool Controller::loop_body()
 				}
 			}
 
+			for(auto &&pair_l : _backState->_state->getFlyingCommands())
+			{
+				FlyingCommandBundle const & cmd_l = pair_l.second;
+				// if over remove it
+				if(cmd_l._cmd->applyCommand(step_l, *_backState->_state, cmd_l._data, _pathManager))
+				{
+					step_l.addSteppable(new FlyingCommandPopStep(cmd_l._cmd));
+				}
+			}
+
 			// push new commands
 			std::list<Command *> * commands_l = nullptr;
 			{
@@ -210,6 +222,7 @@ bool Controller::loop_body()
 				// store commands for memory handling
 				CommandSpawnStep * cmdSpawn_l = dynamic_cast<CommandSpawnStep *>(steppable_l);
 				CommandStorageStep * cmdstorage_l = dynamic_cast<CommandStorageStep *>(steppable_l);
+				FlyingCommandSpawnStep * flyingCmdSpawn_l = dynamic_cast<FlyingCommandSpawnStep *>(steppable_l);
 				if(cmdSpawn_l)
 				{
 					_commands[_backState->_stepHandled].push_back(cmdSpawn_l->getCmd());
@@ -217,6 +230,10 @@ bool Controller::loop_body()
 				if(cmdstorage_l)
 				{
 					_commands[_backState->_stepHandled].push_back(cmdstorage_l->getCmd());
+				}
+				if(flyingCmdSpawn_l)
+				{
+					_commands[_backState->_stepHandled].push_back(flyingCmdSpawn_l->getCmd());
 				}
 				TriggerSpawn * triggerSpawn_l = dynamic_cast<TriggerSpawn *>(steppable_l);
 				if(triggerSpawn_l)
@@ -394,7 +411,7 @@ void Controller::updateCommitedCommand()
 	{
 		_commitedCommands.push_back(new std::list<Command *>());
 		_triggers.push_back(std::list<Trigger const *>());
-		_commands.push_back(std::list<Command *>());
+		_commands.push_back(std::list<AbstractCommand *>());
 	}
 }
 
