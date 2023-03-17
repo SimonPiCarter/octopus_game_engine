@@ -9,6 +9,8 @@
 #include "sprite/SpriteLibrary.hh"
 #include "tilemap/Tilemap.hh"
 
+#include "ChoicePanel.hh"
+
 namespace fas
 {
 
@@ -20,7 +22,7 @@ public:
 
 	cuttlefish::Panel _panel;
 	cuttlefish::StatsPanel _statsPanel;
-	cuttlefish::DivinityPanel _divPanel;
+	fas::ChoicePanel _divPanel;
 	cuttlefish::DescPanel _descPanel;
 	cuttlefish::SpriteLibrary _spriteLib;
 	cuttlefish::Tilemap _tilemap;

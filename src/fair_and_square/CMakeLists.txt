@@ -32,6 +32,7 @@ target_link_libraries(fair_and_square_raw PUBLIC fair_and_square_lib)
 
 if(GRAPHICS)
 	add_executable(fair_and_square
+		${CMAKE_CURRENT_SOURCE_DIR}/src/core/game/loader/ChoicePanel.cc
 		${CMAKE_CURRENT_SOURCE_DIR}/src/core/game/loader/ResourceLoader.cc
 		${CMAKE_CURRENT_SOURCE_DIR}/src/core/game/RunGame.cc
 		${CMAKE_CURRENT_SOURCE_DIR}/src/core/fair_and_square_core.cc
