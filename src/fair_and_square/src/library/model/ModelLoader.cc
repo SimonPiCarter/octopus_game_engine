@@ -26,6 +26,7 @@ void createWorker(Library &lib_p)
     unitModel_l._damage = 5;
     unitModel_l._armor = 0;
     unitModel_l._range = 3.;
+    unitModel_l._lineOfSight = 5;
     unitModel_l._fullReload = 500.;
     unitModel_l._windup = 10.;
 
@@ -43,6 +44,7 @@ void createSquare(Library &lib_p)
     unitModel_l._damage = 10;
     unitModel_l._armor = 0;
     unitModel_l._range = 0.5;
+    unitModel_l._lineOfSight = 10;
     unitModel_l._fullReload = 100.;
     unitModel_l._windup = 50;
 
@@ -62,6 +64,7 @@ void createTriangle(Library &lib_p)
     unitModel_l._damage = 5;
     unitModel_l._armor = 0;
     unitModel_l._range = 5;
+    unitModel_l._lineOfSight = 10;
     unitModel_l._fullReload = 100.;
     unitModel_l._windup = 50;
 
@@ -81,6 +84,7 @@ void createCircle(Library &lib_p)
     unitModel_l._damage = 10;
     unitModel_l._armor = 3;
     unitModel_l._range = 0.1;
+    unitModel_l._lineOfSight = 10;
     unitModel_l._fullReload = 100.;
     unitModel_l._windup = 50;
 
@@ -94,6 +98,7 @@ void createCommandCenter(Library &lib_p)
 	BuildingModel buildingModel_l { true, 1.9, 5000. };
 	buildingModel_l._isBuilding = true;
 	buildingModel_l._isStatic = true;
+    buildingModel_l._productionOutput = {2, 0};
 	buildingModel_l._deposit[ResourceType::Food] = true;
 	buildingModel_l._deposit[ResourceType::Steel] = true;
 	buildingModel_l._deposit[ResourceType::Ether] = true;
