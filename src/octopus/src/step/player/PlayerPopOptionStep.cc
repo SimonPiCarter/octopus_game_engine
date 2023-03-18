@@ -71,12 +71,16 @@ void PlayerPopOptionStep::revert(State &state_p, SteppableData *data_p) const
     {
         throw std::logic_error("Error while poping option : an option is present with the key "+_key);
     }
+    if(data_l->_mapGeneratorPerState[state_p._id] == nullptr)
+    {
+        throw std::logic_error("Error while poping option : no option generator present for state.");
+    }
 
     // restore generator in state
     player_l->_options[_key] = data_l->_mapGeneratorPerState[state_p._id];
 
     // pop option from data
-    data_l->_mapGeneratorPerState[state_p._id] = nullptr;
+    data_l->_mapGeneratorPerState.erase(state_p._id);
 
     StepOptionsGenerator * generator_l = player_l->_options[_key];
 
@@ -90,6 +94,15 @@ void PlayerPopOptionStep::revert(State &state_p, SteppableData *data_p) const
         step_l->revert(state_p, stepData_l);
     }
 
+    // if no more generator we remove data
+    if(data_l->_mapGeneratorPerState.empty())
+    {
+        for(SteppableData * stepData_l : data_l->_data)
+        {
+            delete stepData_l;
+        }
+        data_l->_data.clear();
+    }
 
 }
 
