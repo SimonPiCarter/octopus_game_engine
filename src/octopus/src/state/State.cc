@@ -70,6 +70,10 @@ State::~State()
 	{
 		delete triggerData_l;
 	}
+	for(auto &&pair_l : _flyingCommands)
+	{
+		delete pair_l.second._data;
+	}
 }
 bool State::hasEntity(Handle const &handle_p) const
 {

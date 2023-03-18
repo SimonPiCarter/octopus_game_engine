@@ -119,6 +119,7 @@ Controller::~Controller()
 	delete _backState;
 	delete _bufferState;
 	delete _frontState;
+	delete _orcaManager;
 	for(std::list<Command *> const *cmds_l : _commitedCommands)
 	{
 		delete cmds_l;
