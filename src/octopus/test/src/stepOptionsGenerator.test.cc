@@ -64,7 +64,8 @@ TEST(stepOptionsGenerator, simple)
 	state_l.getPlayers().push_back(new Player());
 	state_l.getPlayers().back()->_id = 0;
 
-	PlayerAddOptionStep stepAdd_l(0, "test", new TestGenerator());
+	TestGenerator generator_l;
+	PlayerAddOptionStep stepAdd_l(0, "test", &generator_l);
 	PlayerPopOptionStep stepPop_l(0, "test", 2);
 	PlayerPopOptionStepData data_l;
 
@@ -85,7 +86,8 @@ TEST(stepOptionsGenerator, simple_revert_add)
 	state_l.getPlayers().push_back(new Player());
 	state_l.getPlayers().back()->_id = 0;
 
-	PlayerAddOptionStep stepAdd_l(0, "test", new TestGenerator());
+	TestGenerator generator_l;
+	PlayerAddOptionStep stepAdd_l(0, "test", &generator_l);
 	PlayerPopOptionStep stepPop_l(0, "test", 2);
 	PlayerPopOptionStepData data_l;
 
@@ -109,7 +111,8 @@ TEST(stepOptionsGenerator, simple_revert_pop)
 	state_l.getPlayers().push_back(new Player());
 	state_l.getPlayers().back()->_id = 0;
 
-	PlayerAddOptionStep stepAdd_l(0, "test", new TestGenerator());
+	TestGenerator generator_l;
+	PlayerAddOptionStep stepAdd_l(0, "test", &generator_l);
 	PlayerPopOptionStep stepPop_l(0, "test", 2);
 	PlayerPopOptionStepData data_l;
 
@@ -138,7 +141,8 @@ TEST(stepOptionsGenerator, simple_revert_add_then_stop)
 	state_l.getPlayers().push_back(new Player());
 	state_l.getPlayers().back()->_id = 0;
 
-	PlayerAddOptionStep stepAdd_l(0, "test", new TestGenerator());
+	TestGenerator generator_l;
+	PlayerAddOptionStep stepAdd_l(0, "test", &generator_l);
 	PlayerPopOptionStep stepPop_l(0, "test", 2);
 	PlayerPopOptionStepData data_l;
 
@@ -159,7 +163,8 @@ TEST(stepOptionsGenerator, simple_revert_pop_then_stop)
 	state_l.getPlayers().push_back(new Player());
 	state_l.getPlayers().back()->_id = 0;
 
-	PlayerAddOptionStep stepAdd_l(0, "test", new TestGenerator());
+	TestGenerator generator_l;
+	PlayerAddOptionStep stepAdd_l(0, "test", &generator_l);
 	PlayerPopOptionStep stepPop_l(0, "test", 2);
 	PlayerPopOptionStepData data_l;
 
