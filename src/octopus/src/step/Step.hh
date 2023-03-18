@@ -4,6 +4,7 @@
 #include <list>
 #include <iostream>
 #include <map>
+#include <set>
 
 #include "state/ResourceType.hh"
 #include "state/Handle.hh"
@@ -59,6 +60,11 @@ namespace octopus
 			/// @brief get the number of flying command spawned in this step
 			unsigned long getFlyingCommandSpawned() const;
 
+			/// @brief add a canceled building
+			void addCanceledBuilding(Handle const &handle_p);
+			/// @brief check if the building has been canceled already
+			bool isCanceled(Handle const &handle_p) const;
+
 			/// @brief get previous step
 			/// @return previous step
 			Step const * getPrev() const { return _prev; }
@@ -83,6 +89,9 @@ namespace octopus
 
 			/// @brief the number of flying command spawned in this step
 			unsigned long _flyingCommandSpawned {0};
+
+			/// @brief set of cancelled buildings to avoid refunding them multiple times
+			std::set<Handle> _canceledBuildings;
 
 			Step const * const _prev {nullptr};
 

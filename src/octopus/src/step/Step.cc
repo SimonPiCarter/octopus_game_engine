@@ -119,6 +119,16 @@ unsigned long Step::getFlyingCommandSpawned() const
 	return _flyingCommandSpawned;
 }
 
+void Step::addCanceledBuilding(Handle const &handle_p)
+{
+	_canceledBuildings.insert(handle_p);
+}
+
+bool Step::isCanceled(Handle const &handle_p) const
+{
+	return _canceledBuildings.find(handle_p) != _canceledBuildings.end();
+}
+
 void apply(Step const & step_p, State &state_p)
 {
 	// apply all steppables

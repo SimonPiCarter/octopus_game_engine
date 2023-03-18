@@ -2,6 +2,7 @@
 
 #include "Step.hh"
 
+#include "step/building/BuildingCancelStep.hh"
 #include "step/player/PlayerSpendResourceStep.hh"
 #include "step/player/PlayerResetOptionDivinityStep.hh"
 
@@ -19,6 +20,7 @@ void StepAdditionVisitor::visit(PlayerSpendResourceStep const *step_p)
     }
 }
 
+
 void StepAdditionVisitor::visit(PlayerResetOptionDivinityStep const *step_p)
 {
     ++_step.getDivOptionSpent(step_p->_player);
@@ -27,6 +29,14 @@ void StepAdditionVisitor::visit(PlayerResetOptionDivinityStep const *step_p)
 void StepAdditionVisitor::visit(BuildingSpawnStep const *)
 {
     _step.addEntitySpawned();
+}
+
+void StepAdditionVisitor::visit(BuildingCancelStep const *step_p)
+{
+    if(step_p->_new)
+    {
+        _step.addCanceledBuilding(step_p->_handle);
+    }
 }
 
 void StepAdditionVisitor::visit(EntitySpawnStep const *)
