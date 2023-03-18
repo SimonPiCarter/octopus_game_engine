@@ -17,13 +17,7 @@ class BuffGenerator : public octopus::StepOptionsGenerator
 {
 public:
     BuffGenerator(std::vector<BuffOption> const &options_p) : _options(options_p) {}
-	~BuffGenerator()
-	{
-		for(auto step_l : _steps)
-		{
-			delete step_l;
-		}
-	}
+	~BuffGenerator();
 
     virtual StepOptionsGenerator* newCopy() const override { return new BuffGenerator(_options); }
 

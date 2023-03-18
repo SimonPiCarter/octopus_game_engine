@@ -4,6 +4,14 @@
 
 using namespace octopus;
 
+BuffGenerator::~BuffGenerator()
+{
+    for(auto step_l : _steps)
+    {
+        delete step_l;
+    }
+}
+
 std::vector<Steppable *> const &BuffGenerator::getSteppables(unsigned long options_p, unsigned long player_p)
 {
     if(_steps.empty())
