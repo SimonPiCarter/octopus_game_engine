@@ -125,9 +125,9 @@ std::list<Command *> WaveLevelCommands(Library &lib_p, unsigned long worldSize_p
 
     std::mt19937 gen_l(42);
 
-	for(unsigned long x = 0 ; x < worldSize_p/20 ; ++ x)
+	for(unsigned long x = 0 ; x < worldSize_p/40 ; ++ x)
 	{
-		for(unsigned long y = 0 ; y < worldSize_p/20 ; ++ y)
+		for(unsigned long y = 0 ; y < worldSize_p/40 ; ++ y)
 		{
 			// skip spawn
 			if(x==0 && y==0)
@@ -135,16 +135,16 @@ std::list<Command *> WaveLevelCommands(Library &lib_p, unsigned long worldSize_p
 				continue;
 			}
 			AreaSpawn area_l;
-			area_l.size = 20;
+			area_l.size = 40;
 			area_l.x = 5 + area_l.size*x;
 			area_l.y = 5 + area_l.size*y;
-			area_l.entities.emplace_back(new Resource(res3_l), 1);
+			area_l.entities.emplace_back(new Resource(res3_l), 2);
 			area_l.entities.emplace_back(new Resource(res2_l), 3);
 			area_l.entities.emplace_back(new Building(anchorSpot_l), 1);
-			for(unsigned long c = 0 ; c < x*y ; ++ c)
+			for(unsigned long c = 0 ; c < 2+x*y ; ++ c)
 			{
 				Unit *unit_l = new Unit({0, 0}, false, lib_p.getUnitModel(genModelName(gen_l)));
-				//unit_l->_player = 1;
+				unit_l->_player = 1;
 				area_l.entities.emplace_back(unit_l, 1);
 			}
 			spawners_l.push_back(area_l);
@@ -187,7 +187,7 @@ void WaveSpawn::trigger(State const &state_p, Step &step_p, unsigned long) const
 	// nbUnits_l = nbUnits_l - nbUnitsLast_l;
 	for(unsigned long i = 0 ; i < _wave * 10 ; ++ i)
 	{
-		Unit unit_l({ 35., 35. }, false, _lib.getUnitModel(model_l));
+		Unit unit_l({ 200., 200. }, false, _lib.getUnitModel(model_l));
 		unit_l._player = _player;
 		Handle handle_l = getNextHandle(step_p, state_p);
 		step_p.addSteppable(new UnitSpawnStep(handle_l, unit_l));
