@@ -60,7 +60,7 @@ RessourceLoader::RessourceLoader(cuttlefish::Window &window_p, unsigned long ful
 	_spriteLib.registerSpriteTemplate("details", window_p.loadTexture("resources/fair_and_square/details.png"), 0.5, 0, 0, 64, 64, {1}, {2}, 1);
 
 	// resources
-	_spriteLib.registerSpriteTemplate("resource_steel", window_p.loadTexture("resources/steel_prop1.png"), 2., 128, 128, 256, 256, {10, 10}, {0.2,0.2}, 1);
+	_spriteLib.registerSpriteTemplate("resource_steel", window_p.loadTexture("resources/fair_and_square/resources_2.png"), 1., 32, 32, 64, 64, {20}, {0.1}, 1);
 	_spriteLib.registerSpriteTemplate("resource_food", window_p.loadTexture("resources/fair_and_square/food_prop2.png"), 1., 32, 32, 64, 64, {14, 1}, {0.1, 1.}, 1);
 
 	// neutral

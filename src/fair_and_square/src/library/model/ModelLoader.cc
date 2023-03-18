@@ -169,7 +169,7 @@ void createResourceFood(Library &lib_p)
 
 void createResourceSteel(Library &lib_p)
 {
-	EntityModel resModel_l { true, 1.8, 1., 10. };
+	EntityModel resModel_l { true, 0.9, 1., 10. };
 	resModel_l._isResource = true;
 	resModel_l._isStatic = true;
 	lib_p.registerEntityModel("resource_steel", resModel_l);
