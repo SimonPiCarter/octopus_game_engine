@@ -106,6 +106,7 @@ void ChoicePanel::updateCurrent()
 	{
 		delete text_l;
 	}
+	_optionsTexts.clear();
 
 	/// @todo update visuals
 	if(_queuedOptions.size() > 0)
