@@ -91,6 +91,8 @@ Controller::Controller(
 		// store commands for memory handling
 		CommandSpawnStep const * cmdSpawn_l = dynamic_cast<CommandSpawnStep const *>(steppable_l);
 		CommandStorageStep const * cmdstorage_l = dynamic_cast<CommandStorageStep const *>(steppable_l);
+		FlyingCommandSpawnStep const * flyingCmdSpawn_l = dynamic_cast<FlyingCommandSpawnStep const *>(steppable_l);
+
 		if(cmdSpawn_l)
 		{
 			_commands[0].push_back(cmdSpawn_l->getCmd());
@@ -98,6 +100,10 @@ Controller::Controller(
 		if(cmdstorage_l)
 		{
 			_commands[0].push_back(cmdstorage_l->getCmd());
+		}
+		if(flyingCmdSpawn_l)
+		{
+			_commands[0].push_back(flyingCmdSpawn_l->getCmd());
 		}
 	}
 
