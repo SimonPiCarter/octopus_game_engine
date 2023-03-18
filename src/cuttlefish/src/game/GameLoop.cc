@@ -344,6 +344,13 @@ void GameLoop::runLoop(Window &window_p)
 							currentClicMode_l, standardClicMode_l, _world);
 						break;
 					}
+					case SDLK_r:
+					{
+						SpriteModel const * spriteModel_l = _panel.getSpriteModelOnGrid(3, 0);
+						commandFromSpriteModel(spriteModel_l, state_l, _spriteLibrary, selection_l, _controller,
+							currentClicMode_l, standardClicMode_l, _world);
+						break;
+					}
 					case SDLK_q:
 					{
 						SpriteModel const * spriteModel_l = _panel.getSpriteModelOnGrid(0, 1);
