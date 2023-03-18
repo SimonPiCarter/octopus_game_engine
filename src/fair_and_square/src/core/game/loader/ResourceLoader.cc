@@ -13,7 +13,7 @@ RessourceLoader::RessourceLoader(cuttlefish::Window &window_p, unsigned long ful
 		window_p.loadTexture("resources/fair_and_square/prod_bar_back.png"), window_p.loadTexture("resources/fair_and_square/prod_bar_fill.png"), 4, world_p.getSelection())
 	, _choicePanel(window_p, window_p.getWidth()-window_p.getWidth()/2-200, window_p.getHeight()-window_p.getHeight()/2-200,
 		window_p.loadTexture("resources/fair_and_square/panel.png"), window_p.loadTexture("resources/fair_and_square/grid.png"), 0)
-	, _descPanel(&window_p, window_p.getWidth()-260, window_p.getHeight()-520,
+	, _descPanel(&window_p, window_p.getWidth()-260, window_p.getHeight()-276*2-5,
 		window_p.loadTexture("resources/fair_and_square/panel.png"))
 	, _spriteLib()
 	, _tilemap(fullWorldSize_p, _spriteLib, "tiles", "details")
@@ -67,8 +67,8 @@ RessourceLoader::RessourceLoader(cuttlefish::Window &window_p, unsigned long ful
 	_spriteLib.registerSpriteTemplate("command_center", window_p.loadTexture("resources/fair_and_square/command_center.png"), 2., 64, 64, 128, 128, {8, 2, 2, 2}, {0.25, 0.5, 0.5, 0.5}, 1);
 	_spriteLib.registerSpriteTemplate("barrack", window_p.loadTexture("resources/fair_and_square/barrack.png"), 1., 32, 32, 64, 64, {16, 1, 1, 1}, {0.25, 0.5, 0.5, 0.5}, 1);
 	_spriteLib.registerSpriteTemplate("deposit", window_p.loadTexture("resources/fair_and_square/deposit.png"), 1., 32, 32, 64, 64, {14, 1, 1, 1}, {0.1, 0.5, 0.5, 0.5}, 1);
-	_spriteLib.registerSpriteTemplate("anchor", window_p.loadTexture("resources/fair_and_square/deposit.png"), 1., 32, 32, 64, 64, {14, 1, 1, 1}, {0.1, 0.5, 0.5, 0.5}, 1);
-	_spriteLib.registerSpriteTemplate("anchor_spot", window_p.loadTexture("resources/fair_and_square/anchor_spot.png"), 1., 32, 32, 64, 64, {1}, {0.1}, 1);
+	_spriteLib.registerSpriteTemplate("anchor", window_p.loadTexture("resources/fair_and_square/anchor.png"), 1., 32, 32, 64, 64, {24, 1, 1, 1}, {0.1, 0.5, 0.5, 0.5}, 1);
+	_spriteLib.registerSpriteTemplate("anchor_spot", window_p.loadTexture("resources/fair_and_square/anchor_spot.png"), 1., 32, 32, 64, 64, {24}, {0.1}, 1);
 	_spriteLib.registerSpriteTemplate("worker", window_p.loadTexture("resources/fair_and_square/worker_v2.png"), 0.5, 32, 32, 64, 64, {2, 2}, {0.5, 0.1}, 1);
 	_spriteLib.registerAltTextureForTemplate("worker", 0, window_p.loadTexture("resources/fair_and_square/worker_v2_green.png"));
 	_spriteLib.registerAltTextureForTemplate("worker", 1, window_p.loadTexture("resources/fair_and_square/worker_v2_red.png"));
