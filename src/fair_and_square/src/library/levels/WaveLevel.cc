@@ -46,7 +46,7 @@ std::string genModelName(std::mt19937 &gen_p)
 	return model_l;
 }
 
-std::list<Steppable *> WaveLevelSteps(Library &lib_p, unsigned long waveCount_p, unsigned long stepCount_p, unsigned long player_p)
+std::list<Steppable *> WaveLevelSteps(Library &lib_p, unsigned long waveCount_p, unsigned long stepCount_p, unsigned long player_p, unsigned long worldSize_p)
 {
 	loadModels(lib_p);
 
@@ -73,7 +73,7 @@ std::list<Steppable *> WaveLevelSteps(Library &lib_p, unsigned long waveCount_p,
 	mapRes_l[octopus::ResourceType::Steel] = -200;
 	mapRes_l[octopus::ResourceType::Anchor] = -5;
 
-	Trigger * triggerWave_l = new WaveSpawn(new ListenerStepCount(stepCount_p), lib_p, 1, stepCount_p, waveCount_p, player_p);
+	Trigger * triggerWave_l = new WaveSpawn(new ListenerStepCount(stepCount_p), lib_p, 1, stepCount_p, waveCount_p, player_p, worldSize_p);
 	Trigger * triggerLose_l = new LoseTrigger(new ListenerEntityModelDied(&lib_p.getBuildingModel("command_center"), 0));
 
 
@@ -125,9 +125,11 @@ std::list<Command *> WaveLevelCommands(Library &lib_p, unsigned long worldSize_p
 
     std::mt19937 gen_l(42);
 
-	for(unsigned long x = 0 ; x < worldSize_p/40 ; ++ x)
+	int areSize_l = 20;
+
+	for(unsigned long x = 0 ; x < worldSize_p/areSize_l ; ++ x)
 	{
-		for(unsigned long y = 0 ; y < worldSize_p/40 ; ++ y)
+		for(unsigned long y = 0 ; y < worldSize_p/areSize_l ; ++ y)
 		{
 			// skip spawn
 			if(x==0 && y==0)
@@ -135,7 +137,7 @@ std::list<Command *> WaveLevelCommands(Library &lib_p, unsigned long worldSize_p
 				continue;
 			}
 			AreaSpawn area_l;
-			area_l.size = 40;
+			area_l.size = areSize_l;
 			area_l.x = 5 + area_l.size*x;
 			area_l.y = 5 + area_l.size*y;
 			area_l.entities.emplace_back(new Resource(res3_l), 2);
@@ -166,13 +168,14 @@ std::list<Command *> WaveLevelCommands(Library &lib_p, unsigned long worldSize_p
 /////////////////////////////////////////////
 /////////////////////////////////////////////
 
-WaveSpawn::WaveSpawn(Listener * listener_p, Library const &lib_p, unsigned long wave_p, unsigned long stepWait_p, unsigned long finalWave_p, unsigned long player_p) :
+WaveSpawn::WaveSpawn(Listener * listener_p, Library const &lib_p, unsigned long wave_p, unsigned long stepWait_p, unsigned long finalWave_p, unsigned long player_p, unsigned long worldSize_p) :
 		OneShotTrigger({listener_p}),
 		_lib(lib_p),
 		_player(player_p),
 		_wave(wave_p),
 		_stepWait(stepWait_p),
-		_finalWave(finalWave_p)
+		_finalWave(finalWave_p),
+		_worldSize(worldSize_p)
 {}
 
 void WaveSpawn::trigger(State const &state_p, Step &step_p, unsigned long) const
@@ -187,14 +190,14 @@ void WaveSpawn::trigger(State const &state_p, Step &step_p, unsigned long) const
 	// nbUnits_l = nbUnits_l - nbUnitsLast_l;
 	for(unsigned long i = 0 ; i < _wave * 10 ; ++ i)
 	{
-		Unit unit_l({ 200., 200. }, false, _lib.getUnitModel(model_l));
+		Unit unit_l({ _worldSize-10, _worldSize-10 }, false, _lib.getUnitModel(model_l));
 		unit_l._player = _player;
 		Handle handle_l = getNextHandle(step_p, state_p);
 		step_p.addSteppable(new UnitSpawnStep(handle_l, unit_l));
 		step_p.addSteppable(new CommandSpawnStep(new EntityAttackMoveCommand(handle_l, handle_l, {7., 20.}, 0, {{7., 20.}}, true )));
 	}
 
-	step_p.addSteppable(new TriggerSpawn(new WaveSpawn(new ListenerStepCount(_stepWait), _lib, _wave+1, _stepWait, _finalWave, _player)));
+	step_p.addSteppable(new TriggerSpawn(new WaveSpawn(new ListenerStepCount(_stepWait), _lib, _wave+1, _stepWait, _finalWave, _player, _worldSize)));
 
 	// win after 10 waves
 	if(_wave == _finalWave)

@@ -19,13 +19,12 @@ using namespace cuttlefish;
 namespace fas
 {
 
-void runGame(Window &window_p, std::list<octopus::Steppable *> &spawners_p, std::list<octopus::Command *> &commands_p)
+void runGame(Window &window_p, std::list<octopus::Steppable *> &spawners_p, std::list<octopus::Command *> &commands_p, unsigned long worldSize_p)
 {
-	unsigned long gridSize_l = 50;
 	unsigned long gridPointSize_l = 5;
-	unsigned long fullWorldSize_l = gridPointSize_l * gridSize_l;
+	unsigned long gridSize_l = worldSize_p/gridPointSize_l;
 
-	window_p.setWorldSize(fullWorldSize_l);
+	window_p.setWorldSize(worldSize_p);
 
     Texture const * background_l = window_p.loadTexture("resources/background.png");
 
@@ -34,7 +33,7 @@ void runGame(Window &window_p, std::list<octopus::Steppable *> &spawners_p, std:
 	octopus::Controller controller_l(spawners_p, 0.01, commands_p, gridPointSize_l, gridSize_l);
 	controller_l.enableORCA();
 
-	fas::RessourceLoader loader_l(window_p, fullWorldSize_l, world_l);
+	fas::RessourceLoader loader_l(window_p, worldSize_p, world_l);
 
 	GameLoop loop_l(
 		loader_l._descPanel,
@@ -50,13 +49,13 @@ void runGame(Window &window_p, std::list<octopus::Steppable *> &spawners_p, std:
 	loop_l.runLoop(window_p);
 }
 
-void runWave(Window &window_p, unsigned long stepCount_p, unsigned long player_p)
+void runWave(Window &window_p, unsigned long stepCount_p, unsigned long player_p, unsigned long worldSize_p)
 {
 	octopus::Library lib_l;
-	std::list<octopus::Steppable *> spawners_l = WaveLevelSteps(lib_l, 10, stepCount_p, player_p);
-	std::list<octopus::Command *> commands_l = WaveLevelCommands(lib_l, 250);
+	std::list<octopus::Steppable *> spawners_l = WaveLevelSteps(lib_l, 10, stepCount_p, player_p, worldSize_p);
+	std::list<octopus::Command *> commands_l = WaveLevelCommands(lib_l, worldSize_p);
 
-	runGame(window_p, spawners_l, commands_l);
+	runGame(window_p, spawners_l, commands_l, worldSize_p);
 }
 
 void runArena(cuttlefish::Window &window_p, size_t number_p)
@@ -65,7 +64,7 @@ void runArena(cuttlefish::Window &window_p, size_t number_p)
 	std::list<octopus::Steppable *> spawners_l = ArenaLevelSteps(lib_l, number_p);
 	std::list<octopus::Command *> commands_l = ArenaLevelCommands(lib_l);
 
-	runGame(window_p, spawners_l, commands_l);
+	runGame(window_p, spawners_l, commands_l, 250);
 }
 
 
