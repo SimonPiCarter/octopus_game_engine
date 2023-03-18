@@ -59,10 +59,10 @@ void OrcaManager::resetFromState(State const &state_p)
         {
             // load obstacle
 	        _sim->addObstacle({
-                RVO::Vector2(ent_l->_pos.x-ent_l->_model._ray, ent_l->_pos.y-ent_l->_model._ray),
-                RVO::Vector2(ent_l->_pos.x+ent_l->_model._ray, ent_l->_pos.y-ent_l->_model._ray),
-                RVO::Vector2(ent_l->_pos.x+ent_l->_model._ray, ent_l->_pos.y+ent_l->_model._ray),
-                RVO::Vector2(ent_l->_pos.x-ent_l->_model._ray, ent_l->_pos.y+ent_l->_model._ray),
+                RVO::Vector2(ent_l->_pos.x-ent_l->_model._ray, ent_l->_pos.y-ent_l->_model._ray*0.8),
+                RVO::Vector2(ent_l->_pos.x+ent_l->_model._ray, ent_l->_pos.y-ent_l->_model._ray*0.8),
+                RVO::Vector2(ent_l->_pos.x+ent_l->_model._ray, ent_l->_pos.y+ent_l->_model._ray*0.8),
+                RVO::Vector2(ent_l->_pos.x-ent_l->_model._ray, ent_l->_pos.y+ent_l->_model._ray*0.8),
             });
         }
         else
