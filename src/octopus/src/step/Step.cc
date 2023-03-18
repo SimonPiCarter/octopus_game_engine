@@ -16,6 +16,7 @@ Step::~Step()
 	for(SteppableBundle &bundle_l : _listSteppable)
 	{
 		delete bundle_l._steppable;
+		delete bundle_l._data;
 	}
 }
 
