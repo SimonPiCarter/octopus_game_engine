@@ -13,6 +13,8 @@ class Steppable;
 class StepOptionsGenerator
 {
 public:
+    virtual ~StepOptionsGenerator() {}
+
     /// @brief Create a new copy of this generator
     /// this is required to ease up memory handling between steps and states for options handling
     /// @return a newly created copy of this genertor
