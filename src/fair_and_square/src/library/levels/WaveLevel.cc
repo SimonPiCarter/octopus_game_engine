@@ -143,11 +143,15 @@ std::list<Command *> WaveLevelCommands(Library &lib_p, unsigned long worldSize_p
 			area_l.entities.emplace_back(new Resource(res3_l), 2);
 			area_l.entities.emplace_back(new Resource(res2_l), 3);
 			area_l.entities.emplace_back(new Building(anchorSpot_l), 1);
-			for(unsigned long c = 0 ; c < 2+x*y ; ++ c)
+			// only add unit if not on the neighbour of start point
+			if(x + y > 1 )
 			{
-				Unit *unit_l = new Unit({0, 0}, false, lib_p.getUnitModel(genModelName(gen_l)));
-				unit_l->_player = 1;
-				area_l.entities.emplace_back(unit_l, 1);
+				for(unsigned long c = 0 ; c < 2+x*y ; ++ c)
+				{
+					Unit *unit_l = new Unit({0, 0}, false, lib_p.getUnitModel(genModelName(gen_l)));
+					unit_l->_player = 1;
+					area_l.entities.emplace_back(unit_l, 1);
+				}
 			}
 			spawners_l.push_back(area_l);
 		}
