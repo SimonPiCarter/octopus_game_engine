@@ -69,6 +69,11 @@ void runAndSaveGame(Window &window_p, std::list<octopus::Steppable *> &spawners_
 	octopus::Controller controller_l(spawners_p, 0.01, commands_p, gridPointSize_l, gridSize_l);
 	controller_l.enableORCA();
 
+	// neeed nb of steps in header of the file
+	size_t header_l = 0;
+	file_p.write((char*)&header_l, sizeof(header_l));
+	controller_l.setOnlineSaveFile(&file_p);
+
 	fas::RessourceLoader loader_l(window_p, worldSize_p, world_l);
 
 	GameLoop loop_l(
@@ -84,7 +89,6 @@ void runAndSaveGame(Window &window_p, std::list<octopus::Steppable *> &spawners_
 
 	loop_l.runLoop(window_p);
 
-	writeCommands(file_p, controller_l);
 }
 
 /// @brief Replay the game to watch it and stop at end of save
