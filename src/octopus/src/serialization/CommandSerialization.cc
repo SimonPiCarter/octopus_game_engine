@@ -16,6 +16,8 @@
 #include "library/Library.hh"
 #include "state/model/entity/BuildingModel.hh"
 
+#include "logger/Logger.hh"
+
 #include <iostream>
 
 namespace octopus
@@ -60,37 +62,61 @@ void writeCommands(std::ofstream &file_p, Controller const &controller_p)
 
     // write the number of step
     write(file_p, commandsPerLevel_l.size());
+    Logger::getDebug() << ">>nbSteps_l " << commandsPerLevel_l.size() << std::endl;
 
-    bool first_l = true;
+    size_t step_l = 0;
     for(std::list<Command *> const * list_l : commandsPerLevel_l)
     {
         // We skip first commands because they must be loaded from context
-        if(first_l)
+        // we also skip empty steps to save space
+        if(step_l == 0 || list_l->empty())
         {
-            first_l = false;
+            ++step_l;
             continue;
         }
+        // write the step id
+        write(file_p, step_l);
+        Logger::getDebug() << ">>step_l " << step_l << std::endl;
         // write the number of commands for this step
         write(file_p, list_l->size());
+        Logger::getDebug() << ">>nbCommands_l " << list_l->size() << std::endl;
 
         for(Command const * cmd_l : *list_l)
         {
             writeCommand(file_p, cmd_l);
         }
+
+        ++step_l;
     }
 }
 
 void readCommands(std::ifstream &file_p, Controller &controller_p, Library const &lib_p)
 {
+
     // read the number of step
     size_t nbSteps_l;
     file_p.read((char*) &nbSteps_l, sizeof(nbSteps_l));
 
-    for(size_t step_l = 1 ; step_l < nbSteps_l ; ++ step_l)
+    Logger::getDebug() << "<<nbSteps_l " << nbSteps_l << std::endl;
+
+    int cur_l = file_p.tellg();
+    file_p.seekg (0, file_p.end);
+    int length_l = file_p.tellg();
+    file_p.seekg (cur_l, file_p.beg);
+
+    while(file_p.tellg() < length_l)
     {
+        // read the id of this step
+        size_t step_l;
+        read(file_p, &step_l);
+
+        Logger::getDebug() << "<<step_l "<< step_l << std::endl;
+
         // read the number of commands for this step
         size_t nbCommands_l;
         read(file_p, &nbCommands_l);
+
+        Logger::getDebug() << "<<nbCommands_l "<< nbCommands_l << std::endl;
 
         // update controller
         controller_p.setOngoingStep(step_l);
@@ -100,6 +126,9 @@ void readCommands(std::ifstream &file_p, Controller &controller_p, Library const
             controller_p.commitCommand(readCommand(file_p, lib_p));
         }
     }
+
+    // update controller
+    controller_p.setOngoingStep(nbSteps_l-1);
 }
 
 void writeCommand(std::ofstream &file_p, Command const *cmd_p)
@@ -239,6 +268,8 @@ Command * readCommand(std::ifstream &file_p, Library const &lib_p)
     // read common info
     read(file_p, &queued_l);
     read(file_p, &cmdId_p);
+
+    Logger::getDebug() << "command id "<<cmdId_p<<std::endl;
 
     if(cmdId_p == 1)
     {
