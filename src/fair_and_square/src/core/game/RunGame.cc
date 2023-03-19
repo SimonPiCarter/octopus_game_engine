@@ -75,10 +75,6 @@ void replayGame(std::string const &file_p, Window &window_p, std::list<octopus::
 	std::ifstream file_l(file_p, std::ios::in | std::ios::binary);
 	readCommands(file_l, controller_l, lib_p);
 
-	// std::cout<<"loading..."<<std::endl;
-	// while(!controller_l.loop_body()) {}
-	// std::cout<<"done."<<std::endl;
-
 	controller_l.setOngoingStep(1);
 	controller_l.setReplayMode(true);
 
@@ -115,9 +111,21 @@ void loadGame(std::string const &file_p, Window &window_p, std::list<octopus::St
 	std::ifstream file_l(file_p, std::ios::in | std::ios::binary);
 	readCommands(file_l, controller_l, lib_p);
 
+	auto last_l = std::chrono::steady_clock::now();
+
 	std::cout<<"loading..."<<std::endl;
-	while(!controller_l.loop_body()) {}
-	std::cout<<"done."<<std::endl;
+	while(!controller_l.loop_body())
+	{
+		octopus::StateAndSteps stateAndSteps_l = controller_l.queryStateAndSteps();
+		octopus::State const &state_l = *stateAndSteps_l._state;
+		world_l.handleStep(window_p, loader_l._panel, loader_l._statsPanel, loader_l._choicePanel, stateAndSteps_l, loader_l._spriteLib);
+	}
+
+	auto cur_l = std::chrono::steady_clock::now();
+	std::chrono::duration<double> elapsed_seconds_l = cur_l-last_l;
+	double elapsed_l = elapsed_seconds_l.count();
+
+	std::cout<<"done in "<<(int)(elapsed_l*1000)<<"ms"<<std::endl;
 
 	GameLoop loop_l(
 		loader_l._descPanel,
@@ -157,7 +165,7 @@ void loadWave(Window &window_p, unsigned long stepCount_p, unsigned long player_
 	std::list<octopus::Steppable *> spawners_l = WaveLevelSteps(lib_l, 10, stepCount_p, player_p, worldSize_p);
 	std::list<octopus::Command *> commands_l = WaveLevelCommands(lib_l, worldSize_p);
 
-	replayGame("wave.fas", window_p, spawners_l, commands_l, worldSize_p, lib_l);
+	loadGame("wave.fas", window_p, spawners_l, commands_l, worldSize_p, lib_l);
 }
 
 void runArena(cuttlefish::Window &window_p, size_t number_p)
