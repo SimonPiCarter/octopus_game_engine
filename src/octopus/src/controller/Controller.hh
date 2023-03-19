@@ -125,6 +125,10 @@ public:
 	/// @brief set replay mode : no command can be commited in this mode
 	void setReplayMode(bool replayMode_p);
 
+	/// @brief allow online save when necessary
+	/// @note nullptr to disable
+	void setOnlineSaveFile(std::ofstream* of_p);
+
 private:
 	/// @brief set to true to enable orca Collision
 	/// way better performance but less predictible (should not be used in tests)
@@ -175,6 +179,9 @@ private:
 
 	/// @brief in replay mode all commuited command wont affect the controller
 	bool _replayMode {false};
+
+	/// @brief output file for online save (nullptr to disable)
+	std::ofstream* _of {nullptr};
 };
 
 } // namespace octopus

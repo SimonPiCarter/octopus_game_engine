@@ -10,15 +10,16 @@
 #include "controller/event/EventCollection.hh"
 #include "controller/trigger/Listener.hh"
 #include "logger/Logger.hh"
+#include "orca/OrcaManager.hh"
+#include "serialization/CommandSerialization.hh"
 #include "state/State.hh"
+#include "step/command/CommandQueueStep.hh"
+#include "step/command/flying/FlyingCommandPopStep.hh"
+#include "step/command/flying/FlyingCommandSpawnStep.hh"
 #include "step/ConflictPositionSolver.hh"
 #include "step/TickingStep.hh"
 #include "step/trigger/TriggerEnableChange.hh"
 #include "step/trigger/TriggerSpawn.hh"
-#include "step/command/CommandQueueStep.hh"
-#include "step/command/flying/FlyingCommandPopStep.hh"
-#include "step/command/flying/FlyingCommandSpawnStep.hh"
-#include "orca/OrcaManager.hh"
 
 namespace octopus
 {
@@ -451,10 +452,20 @@ void Controller::setReplayMode(bool replayMode_p)
 	_replayMode = replayMode_p;
 }
 
+void Controller::setOnlineSaveFile(std::ofstream* of_p)
+{
+	_of = of_p;
+}
+
 void Controller::updateCommitedCommand()
 {
 	while(_commitedCommands.size() <= _ongoingStep)
 	{
+		// online save if necessary
+		if(_of && !_commitedCommands.back()->empty())
+		{
+			writeListOfCommand(*_of, _commitedCommands.back(), _commitedCommands.size()-1);
+		}
 		_commitedCommands.push_back(new std::list<Command *>());
 		_triggers.push_back(std::list<Trigger const *>());
 		_commands.push_back(std::list<AbstractCommand const *>());

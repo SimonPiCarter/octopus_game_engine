@@ -2,11 +2,13 @@
 #define __CommandWriter__
 
 #include <fstream>
+#include <list>
 
 namespace octopus
 {
 class Controller;
 class Library;
+class Command;
 
 /// @brief This class writes a all commands commited by step
 /// in this controller
@@ -23,6 +25,15 @@ class Library;
 ///
 void writeCommands(std::ofstream &file_p, Controller const &controller_p);
 
+/// @brief write a lifst of command to the file
+/// @param file_p
+/// @param list_p
+void writeListOfCommand(std::ofstream &file_p, std::list<Command *> const * list_p, size_t step_l);
+
+/// @brief Read commands from a file
+/// @param file_p
+/// @param controller_p
+/// @param lib_p
 void readCommands(std::ifstream &file_p, Controller &controller_p, Library const &lib_p);
 
 } // namespace octopus

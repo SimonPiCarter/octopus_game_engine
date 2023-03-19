@@ -62,7 +62,7 @@ void writeCommands(std::ofstream &file_p, Controller const &controller_p)
 
     // write the number of step
     write(file_p, commandsPerLevel_l.size());
-    Logger::getDebug() << ">>nbSteps_l " << commandsPerLevel_l.size() << std::endl;
+    Logger::getDebug() << ">>nbSteps " << commandsPerLevel_l.size() << std::endl;
 
     size_t step_l = 0;
     for(std::list<Command *> const * list_l : commandsPerLevel_l)
@@ -74,19 +74,24 @@ void writeCommands(std::ofstream &file_p, Controller const &controller_p)
             ++step_l;
             continue;
         }
-        // write the step id
-        write(file_p, step_l);
-        Logger::getDebug() << ">>step_l " << step_l << std::endl;
-        // write the number of commands for this step
-        write(file_p, list_l->size());
-        Logger::getDebug() << ">>nbCommands_l " << list_l->size() << std::endl;
-
-        for(Command const * cmd_l : *list_l)
-        {
-            writeCommand(file_p, cmd_l);
-        }
+        writeListOfCommand(file_p, list_l, step_l);
 
         ++step_l;
+    }
+}
+
+void writeListOfCommand(std::ofstream &file_p, std::list<Command *> const * list_p, size_t step_p)
+{
+    // write the step id
+    write(file_p, step_p);
+    Logger::getDebug() << ">>step " << step_p << std::endl;
+    // write the number of commands for this step
+    write(file_p, list_p->size());
+    Logger::getDebug() << ">>nbCommands " << list_p->size() << std::endl;
+
+    for(Command const * cmd_l : *list_p)
+    {
+        writeCommand(file_p, cmd_l);
     }
 }
 
@@ -104,10 +109,10 @@ void readCommands(std::ifstream &file_p, Controller &controller_p, Library const
     int length_l = file_p.tellg();
     file_p.seekg (cur_l, file_p.beg);
 
+    size_t step_l = 0;
     while(file_p.tellg() < length_l)
     {
         // read the id of this step
-        size_t step_l;
         read(file_p, &step_l);
 
         Logger::getDebug() << "<<step_l "<< step_l << std::endl;
@@ -128,7 +133,10 @@ void readCommands(std::ifstream &file_p, Controller &controller_p, Library const
     }
 
     // update controller
-    controller_p.setOngoingStep(nbSteps_l-1);
+    if(nbSteps_l!=0)
+    {
+        controller_p.setOngoingStep(std::max(step_l, nbSteps_l-1));
+    }
 }
 
 void writeCommand(std::ofstream &file_p, Command const *cmd_p)
