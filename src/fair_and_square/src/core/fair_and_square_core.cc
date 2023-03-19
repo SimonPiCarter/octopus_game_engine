@@ -81,14 +81,14 @@ int main( int argc, char* args[] )
 {
 	Picture * button_l = new Picture(window_l.loadTexture("resources/button.png"), 256, 64, {1, 1 ,1}, {1, 1, 1});
 	Text * text_l = new Text(&window_l, {0, 0, 0}, 0, 0);
-	text_l->setText("Replay Wave Level (fast)");
-	menu_l.addButton(button_l, text_l, std::bind(fas::replayWave, std::ref(window_l), 0.1*60*100, 0, 150));
+	text_l->setText("Replay Wave Level");
+	menu_l.addButton(button_l, text_l, std::bind(fas::replayWave, std::ref(window_l)));
 }
 {
 	Picture * button_l = new Picture(window_l.loadTexture("resources/button.png"), 256, 64, {1, 1 ,1}, {1, 1, 1});
 	Text * text_l = new Text(&window_l, {0, 0, 0}, 0, 0);
-	text_l->setText("Load Wave Level (fast)");
-	menu_l.addButton(button_l, text_l, std::bind(fas::loadWave, std::ref(window_l), 0.1*60*100, 0, 150));
+	text_l->setText("Load Wave Level");
+	menu_l.addButton(button_l, text_l, std::bind(fas::loadWave, std::ref(window_l)));
 }
 {
 	Picture * button_l = new Picture(window_l.loadTexture("resources/button.png"), 256, 64, {1, 1 ,1}, {1, 1, 1});

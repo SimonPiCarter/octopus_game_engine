@@ -23,6 +23,7 @@ using namespace cuttlefish;
 namespace fas
 {
 
+/// @brief Run the game
 void runGame(Window &window_p, std::list<octopus::Steppable *> &spawners_p, std::list<octopus::Command *> &commands_p, unsigned long worldSize_p)
 {
 	unsigned long gridPointSize_l = 5;
@@ -51,12 +52,10 @@ void runGame(Window &window_p, std::list<octopus::Steppable *> &spawners_p, std:
 		world_l);
 
 	loop_l.runLoop(window_p);
-
-	std::ofstream file_l("wave.fas", std::ios::out | std::ios::binary);
-	writeCommands(file_l, controller_l);
 }
 
-void replayGame(std::string const &file_p, Window &window_p, std::list<octopus::Steppable *> &spawners_p, std::list<octopus::Command *> &commands_p, unsigned long worldSize_p, octopus::Library const &lib_p)
+/// @brief Run a game and save it a the end
+void runAndSaveGame(Window &window_p, std::list<octopus::Steppable *> &spawners_p, std::list<octopus::Command *> &commands_p, unsigned long worldSize_p, std::ofstream &file_p)
 {
 	unsigned long gridPointSize_l = 5;
 	unsigned long gridSize_l = worldSize_p/gridPointSize_l;
@@ -72,8 +71,40 @@ void replayGame(std::string const &file_p, Window &window_p, std::list<octopus::
 
 	fas::RessourceLoader loader_l(window_p, worldSize_p, world_l);
 
-	std::ifstream file_l(file_p, std::ios::in | std::ios::binary);
-	readCommands(file_l, controller_l, lib_p);
+	GameLoop loop_l(
+		loader_l._descPanel,
+		loader_l._choicePanel,
+		loader_l._minimap,
+		controller_l,
+		loader_l._panel,
+		loader_l._spriteLib,
+		loader_l._statsPanel,
+		loader_l._tilemap,
+		world_l);
+
+	loop_l.runLoop(window_p);
+
+	writeCommands(file_p, controller_l);
+}
+
+/// @brief Replay the game to watch it and stop at end of save
+void replayGame(std::ifstream &file_p, Window &window_p, std::list<octopus::Steppable *> &spawners_p, std::list<octopus::Command *> &commands_p, unsigned long worldSize_p, octopus::Library const &lib_p)
+{
+	unsigned long gridPointSize_l = 5;
+	unsigned long gridSize_l = worldSize_p/gridPointSize_l;
+
+	window_p.setWorldSize(worldSize_p);
+
+    Texture const * background_l = window_p.loadTexture("resources/background.png");
+
+	World world_l(0);
+
+	octopus::Controller controller_l(spawners_p, 0.01, commands_p, gridPointSize_l, gridSize_l);
+	controller_l.enableORCA();
+
+	fas::RessourceLoader loader_l(window_p, worldSize_p, world_l);
+
+	readCommands(file_p, controller_l, lib_p);
 
 	controller_l.setOngoingStep(1);
 	controller_l.setReplayMode(true);
@@ -92,7 +123,8 @@ void replayGame(std::string const &file_p, Window &window_p, std::list<octopus::
 	loop_l.runLoop(window_p);
 }
 
-void loadGame(std::string const &file_p, Window &window_p, std::list<octopus::Steppable *> &spawners_p, std::list<octopus::Command *> &commands_p, unsigned long worldSize_p, octopus::Library const &lib_p)
+/// @brief Load game and start from last step saved
+void loadGame(std::ifstream &file_p, Window &window_p, std::list<octopus::Steppable *> &spawners_p, std::list<octopus::Command *> &commands_p, unsigned long worldSize_p, octopus::Library const &lib_p)
 {
 	unsigned long gridPointSize_l = 5;
 	unsigned long gridSize_l = worldSize_p/gridPointSize_l;
@@ -108,8 +140,7 @@ void loadGame(std::string const &file_p, Window &window_p, std::list<octopus::St
 
 	fas::RessourceLoader loader_l(window_p, worldSize_p, world_l);
 
-	std::ifstream file_l(file_p, std::ios::in | std::ios::binary);
-	readCommands(file_l, controller_l, lib_p);
+	readCommands(file_p, controller_l, lib_p);
 
 	auto last_l = std::chrono::steady_clock::now();
 
@@ -147,25 +178,50 @@ void runWave(Window &window_p, unsigned long stepCount_p, unsigned long player_p
 	std::list<octopus::Steppable *> spawners_l = WaveLevelSteps(lib_l, 10, stepCount_p, player_p, worldSize_p);
 	std::list<octopus::Command *> commands_l = WaveLevelCommands(lib_l, worldSize_p);
 
-	runGame(window_p, spawners_l, commands_l, worldSize_p);
+
+	std::ofstream file_l("wave.fas", std::ios::out | std::ios::binary);
+
+    file_l.write((char*)&stepCount_p, sizeof(stepCount_p));
+    file_l.write((char*)&player_p, sizeof(player_p));
+    file_l.write((char*)&worldSize_p, sizeof(worldSize_p));
+
+	runAndSaveGame(window_p, spawners_l, commands_l, worldSize_p, file_l);
 }
 
-void replayWave(Window &window_p, unsigned long stepCount_p, unsigned long player_p, unsigned long worldSize_p)
+void replayWave(Window &window_p)
 {
+	std::ifstream file_l("wave.fas", std::ios::in | std::ios::binary);
+	unsigned long stepCount_p;
+	unsigned long player_p;
+	unsigned long worldSize_p;
+
+    file_l.read((char*)&stepCount_p, sizeof(stepCount_p));
+    file_l.read((char*)&player_p, sizeof(player_p));
+    file_l.read((char*)&worldSize_p, sizeof(worldSize_p));
+
 	octopus::Library lib_l;
 	std::list<octopus::Steppable *> spawners_l = WaveLevelSteps(lib_l, 10, stepCount_p, player_p, worldSize_p);
 	std::list<octopus::Command *> commands_l = WaveLevelCommands(lib_l, worldSize_p);
 
-	replayGame("wave.fas", window_p, spawners_l, commands_l, worldSize_p, lib_l);
+	replayGame(file_l, window_p, spawners_l, commands_l, worldSize_p, lib_l);
 }
 
-void loadWave(Window &window_p, unsigned long stepCount_p, unsigned long player_p, unsigned long worldSize_p)
+void loadWave(Window &window_p)
 {
+	std::ifstream file_l("wave.fas", std::ios::in | std::ios::binary);
+	unsigned long stepCount_p;
+	unsigned long player_p;
+	unsigned long worldSize_p;
+
+    file_l.read((char*)&stepCount_p, sizeof(stepCount_p));
+    file_l.read((char*)&player_p, sizeof(player_p));
+    file_l.read((char*)&worldSize_p, sizeof(worldSize_p));
+
 	octopus::Library lib_l;
 	std::list<octopus::Steppable *> spawners_l = WaveLevelSteps(lib_l, 10, stepCount_p, player_p, worldSize_p);
 	std::list<octopus::Command *> commands_l = WaveLevelCommands(lib_l, worldSize_p);
 
-	loadGame("wave.fas", window_p, spawners_l, commands_l, worldSize_p, lib_l);
+	loadGame(file_l, window_p, spawners_l, commands_l, worldSize_p, lib_l);
 }
 
 void runArena(cuttlefish::Window &window_p, size_t number_p)
