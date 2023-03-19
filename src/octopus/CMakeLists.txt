@@ -35,6 +35,7 @@ add_library(octopus
 	${CMAKE_CURRENT_SOURCE_DIR}/src/orca/rvo/KdTree.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/orca/rvo/Obstacle.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/orca/rvo/RVOSimulator.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/src/serialization/CommandSerialization.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/controller/Controller.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/controller/Metrics.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/controller/event/EventCollection.cc

@@ -8,7 +8,7 @@
 
 namespace octopus
 {
-struct BuildingModel;;
+struct BuildingModel;
 
 /// @brief This command will spawn a blueprint after a resource check
 class BuildingBlueprintCommand : public Command
@@ -25,6 +25,10 @@ public:
 	virtual CommandData * newData() const override { return nullptr; }
 
 	virtual bool checkPlayer(State const &, unsigned long player_p) const override { return _player == player_p; }
+
+	Vector const &getPos() const { return _pos; }
+	unsigned long getPlayer() const { return _player; }
+	BuildingModel const & getModel() const { return _model; }
 
 private:
 	Vector const _pos;

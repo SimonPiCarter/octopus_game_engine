@@ -29,6 +29,7 @@ public:
 
 	Handle const &getSource() const;
 	Handle const &getTarget() const;
+	bool isFrozenTarget() const;
 private:
 	Handle const _source;
 	/// @brief initial target

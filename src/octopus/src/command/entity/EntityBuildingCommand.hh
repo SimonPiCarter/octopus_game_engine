@@ -30,6 +30,9 @@ public:
 		_subMoveCommand.cleanUp(step_p, state_p, data_p);
 	}
 
+	Handle getTarget() const { return _target; }
+	EntityMoveCommand const &getSubMoveCommand() const { return _subMoveCommand; }
+
 private:
 	Handle const _source;
 	Handle const _target;

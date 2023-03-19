@@ -166,6 +166,10 @@ Handle const &EntityAttackCommand::getTarget() const
 {
 	return _target;
 }
+bool EntityAttackCommand::isFrozenTarget() const
+{
+	return _frozenTarget;
+}
 
 bool EntityAttackCommand::checkTarget(State const &state_p, Handle const & target_p) const
 {
