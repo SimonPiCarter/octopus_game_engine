@@ -64,7 +64,7 @@ int main( int argc, char* args[] )
 	bool fullscreen_l = false;
 
 
-	cuttlefish::Menu menu_l(SCREEN_WIDTH/2, 200, 5);
+	cuttlefish::Menu menu_l(SCREEN_WIDTH/2, 100, 5);
 
 {
 	Picture * button_l = new Picture(window_l.loadTexture("resources/button.png"), 256, 64, {1, 1 ,1}, {1, 1, 1});
