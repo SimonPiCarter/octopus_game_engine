@@ -194,7 +194,7 @@ void runLevel1(Window &window_p)
 		panel_l.addSpriteInfo("div_swarm_3", 4, 3);
 
 	StatsPanel statsPanel_l(&window_p, window_p.getWidth()-520, window_p.getHeight()-260,
-		window_p.loadTexture("resources/background.png"), window_p.loadTexture("resources/grid.png"), nullptr, nullptr, 4, world_l.getSelection());
+		window_p.loadTexture("resources/background.png"), window_p.loadTexture("resources/grid.png"), 4, world_l.getSelection());
 
 	// resources
 	statsPanel_l.addSpriteInfo("resource_steel", 2, 4);

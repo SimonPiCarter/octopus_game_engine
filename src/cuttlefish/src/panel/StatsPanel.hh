@@ -32,7 +32,7 @@ class Window;
 class StatsPanel
 {
 public:
-	StatsPanel(Window* window_p, int x, int y, Texture const * background_p, Texture const *icons_p, Texture const *barBack_p, Texture const *barFill_p, int iconsPerLine_p, Selection & selection_p);
+	StatsPanel(Window* window_p, int x, int y, Texture const * background_p, Texture const *icons_p, int iconsPerLine_p, Selection & selection_p);
 	~StatsPanel();
 
 	/// @brief refresh StatsPanel if necessary
@@ -62,7 +62,6 @@ protected:
 	SelectionKey _lastKey;
 
 	/// @brief sprites
-	std::vector<ProductionPicture *> _productionPictures;
 	std::vector<SelectionPicture *> _selectionPictures;
 	/// @brief sprite models used for grid coordinate access
 	std::map<std::pair<int, int>, SpriteModel *> _grid;

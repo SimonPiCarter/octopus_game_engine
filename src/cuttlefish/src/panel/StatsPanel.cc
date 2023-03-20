@@ -14,7 +14,7 @@
 namespace cuttlefish
 {
 
-StatsPanel::StatsPanel(Window* window_p, int x, int y, Texture const * background_p, Texture const *icons_p, Texture const *barBack_p, Texture const *barFill_p, int iconsPerLine_p, Selection &selection_p) :
+StatsPanel::StatsPanel(Window* window_p, int x, int y, Texture const * background_p, Texture const *icons_p, int iconsPerLine_p, Selection &selection_p) :
 	_x(x),
 	_y(y),
 	_icons(icons_p),
@@ -43,33 +43,10 @@ StatsPanel::StatsPanel(Window* window_p, int x, int y, Texture const * backgroun
 	_textResources.addText("qty", "quantity : ", {0, 0, 0}, false);
 	_textResources.addText("qty_val", "", {0, 0, 0}, true);
 
-	if(barBack_p && barFill_p)
-	{
-		for(size_t idx_l = 0 ; idx_l < 2*_iconsPerLine ; ++ idx_l)
-		{
-			int x = idx_l % _iconsPerLine;
-			int y = idx_l/_iconsPerLine;
-
-			_productionPictures.push_back(new ProductionPicture());
-			_productionPictures.back()->_icon = new Picture(_icons, 64, 64, {1}, {1});
-			_productionPictures.back()->_bar = new ProgressBar(new Picture(barBack_p, 62, 6, {1}, {1}), new Picture(barFill_p, 62, 6, {1}, {1}), 62, 6, 1);
-
-			int posX_l = _x + 1 + x * 65;
-			// add offset to be at bottom of the panel
-			int posY_l = _y + 120 + y * 65;
-			_productionPictures.back()->_icon->setDestination(posX_l, posY_l, 64, 64);
-			// Pos + offset to have progress bar on the bottom
-			_productionPictures.back()->_bar->setPosition(posX_l, posY_l + 56);
-		}
-	}
 }
 
 StatsPanel::~StatsPanel()
 {
-	for(ProductionPicture *ptr_l : _productionPictures)
-	{
-		delete ptr_l;
-	}
 	delete _background;
 }
 
@@ -193,28 +170,6 @@ void StatsPanel::render(Window &window_p)
 					_textQtyRes.updateText("qty_val", ss_l.str());
 					_textQtyRes.updateText("res_type", to_string(unit_l->_typeOfResource));
 					_textQtyRes.display(window_p);
-				}
-			}
-
-			if(_monoSelection->getQueue().hasCommand())
-			{
-				auto it_l = _monoSelection->getQueue().getCurrentCommand();
-				size_t i = 0;
-				while(it_l != _monoSelection->getQueue().getEnd() && i < _productionPictures.size())
-				{
-					octopus::BuildingUnitProductionCommand const *cmd_l = dynamic_cast<octopus::BuildingUnitProductionCommand const *>(it_l->_cmd);
-					octopus::UnitProductionData const *data_l = dynamic_cast<octopus::UnitProductionData const *>(it_l->_data);
-					if(cmd_l && data_l)
-					{
-						SpriteInfo const &info_l = _mapIcons.at(cmd_l->getModel()._id);
-						_productionPictures[i]->_icon->setState(info_l.state);
-						_productionPictures[i]->_icon->setFrame(info_l.frame);
-						_productionPictures[i]->_icon->display(window_p);
-						_productionPictures[i]->_bar->setProgress(100.*data_l->_progression/data_l->_completeTime);
-						_productionPictures[i]->_bar->display(window_p);
-					}
-					++it_l;
-					++i;
 				}
 			}
 		}

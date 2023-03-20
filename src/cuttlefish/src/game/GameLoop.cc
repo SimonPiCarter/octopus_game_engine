@@ -15,6 +15,7 @@
 #include "panel/DescPanel.hh"
 #include "panel/OptionPanel.hh"
 #include "panel/Panel.hh"
+#include "panel/ProductionPanel.hh"
 #include "panel/StatsPanel.hh"
 #include "sprite/Sprite.hh"
 #include "sprite/SpriteLibrary.hh"
@@ -432,6 +433,8 @@ void GameLoop::runLoop(Window &window_p)
 		_panel.render(window_p);
 		_statsPanel.refresh(window_p, state_l);
 		_statsPanel.render(window_p);
+		_prodPanel.refresh(window_p, state_l);
+		_prodPanel.render(window_p);
 		if(descActive_l)
 		{
 			_descPanel.render(window_p);
