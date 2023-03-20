@@ -33,6 +33,7 @@ target_sources (unit_tests
 	src/buildingCommand.test.cc
 	src/canonical.test.cc
 	src/commandQueue.test.cc
+	src/commandSerialization.test.cc
 	src/conflictSolver.test.cc
 	src/controller.test.cc
 	src/divinityCommand.test.cc

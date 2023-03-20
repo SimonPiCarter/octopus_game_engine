@@ -28,6 +28,11 @@ public:
 	}
 
 	virtual void cleanUp(Step & step_p, State const &state_p, CommandData const *data_p) const override;
+
+
+	Handle const &getResource() const { return _resource; }
+	EntityMoveCommand const &getSubMoveCommand() const { return _subMoveCommand; }
+
 private:
 	Handle const _source;
 	Handle const _resource;

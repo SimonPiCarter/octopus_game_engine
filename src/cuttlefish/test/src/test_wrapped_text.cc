@@ -190,7 +190,7 @@ int main( int argc, char* args[] )
 
 
 			StatsPanel statsPanel_l(&window_l, window_l.getWidth()-520, window_l.getHeight()-260,
-				window_l.loadTexture("resources/background.png"), window_l.loadTexture("resources/grid.png"), nullptr, nullptr, 4, world_l.getSelection());
+				window_l.loadTexture("resources/background.png"), window_l.loadTexture("resources/grid.png"), 4, world_l.getSelection());
 
 			// resources
 			statsPanel_l.addSpriteInfo("unit", 2, 1);

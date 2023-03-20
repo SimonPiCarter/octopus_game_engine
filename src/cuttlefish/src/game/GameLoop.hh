@@ -14,6 +14,7 @@ class DescPanel;
 class OptionPanel;
 class Minimap;
 class Panel;
+class ProductionPanel;
 class SpriteLibrary;
 class StatsPanel;
 class Tilemap;
@@ -28,6 +29,7 @@ public:
         Minimap &minimap_p,
         octopus::Controller &controller_p,
         Panel &panel_p,
+        ProductionPanel &prodPanel_p,
         SpriteLibrary &spriteLibrary_p,
         StatsPanel &statsPanel_p,
         Tilemap &tilemap_p,
@@ -37,6 +39,7 @@ public:
         _optionPanel(divinityPanel_p),
         _minimap(minimap_p),
         _panel(panel_p),
+        _prodPanel(prodPanel_p),
         _spriteLibrary(spriteLibrary_p),
         _statsPanel(statsPanel_p),
         _tilemap(tilemap_p),
@@ -51,6 +54,7 @@ private:
     Minimap & _minimap;
     octopus::Controller & _controller;
     Panel & _panel;
+    ProductionPanel & _prodPanel;
     SpriteLibrary & _spriteLibrary;
     StatsPanel & _statsPanel;
     Tilemap & _tilemap;

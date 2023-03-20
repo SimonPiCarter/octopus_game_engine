@@ -30,6 +30,9 @@ public:
 	{
 		_subMoveCommand.cleanUp(step_p, state_p, data_p);
 	}
+
+	Handle const &getDeposit() const { return _deposit; }
+	EntityMoveCommand const &getSubMoveCommand() const { return _subMoveCommand; }
 private:
 	Handle const _source;
 	Handle const _deposit;

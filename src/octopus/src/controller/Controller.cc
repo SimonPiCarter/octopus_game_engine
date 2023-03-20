@@ -10,15 +10,16 @@
 #include "controller/event/EventCollection.hh"
 #include "controller/trigger/Listener.hh"
 #include "logger/Logger.hh"
+#include "orca/OrcaManager.hh"
+#include "serialization/CommandSerialization.hh"
 #include "state/State.hh"
+#include "step/command/CommandQueueStep.hh"
+#include "step/command/flying/FlyingCommandPopStep.hh"
+#include "step/command/flying/FlyingCommandSpawnStep.hh"
 #include "step/ConflictPositionSolver.hh"
 #include "step/TickingStep.hh"
 #include "step/trigger/TriggerEnableChange.hh"
 #include "step/trigger/TriggerSpawn.hh"
-#include "step/command/CommandQueueStep.hh"
-#include "step/command/flying/FlyingCommandPopStep.hh"
-#include "step/command/flying/FlyingCommandSpawnStep.hh"
-#include "orca/OrcaManager.hh"
 
 namespace octopus
 {
@@ -57,9 +58,6 @@ Controller::Controller(
 	_bufferState = new BufferedState { 0, _compiledSteps.begin(), new State(1, gridSize_p, gridPointSize_p) };
 	_frontState = new BufferedState { 0, _compiledSteps.begin(), new State(2, gridSize_p, gridPointSize_p) };
 
-	_commitedCommands.push_back(new std::list<Command *>());
-	_triggers.push_back(std::list<Trigger const *>());
-	_commands.push_back(std::list<AbstractCommand const *>());
 	// add steppable
 	for(Steppable * steppable_l : initSteppables_p)
 	{
@@ -337,6 +335,14 @@ bool Controller::loop_body()
 unsigned long Controller::update(double elapsedTime_p)
 {
 	unsigned long steps_l = 0;
+
+	// In replay mode et cant go farther than steps loaded
+	if(_replayMode
+	&& _commitedCommands.size() == _ongoingStep+1)
+	{
+		return steps_l;
+	}
+
 	// lock to avoid overlap
 	std::lock_guard<std::mutex> lock_l(_mutex);
 
@@ -380,6 +386,10 @@ StateAndSteps Controller::queryStateAndSteps()
 
 void Controller::commitCommand(Command * cmd_p)
 {
+	if(_replayMode)
+	{
+		return;
+	}
 	// lock to avoid multi swap
 	std::lock_guard<std::mutex> lock_l(_mutex);
 	_commitedCommands[_ongoingStep]->push_back(cmd_p);
@@ -387,6 +397,10 @@ void Controller::commitCommand(Command * cmd_p)
 
 void Controller::commitCommandAsPlayer(Command * cmd_p, unsigned long player_p)
 {
+	if(_replayMode)
+	{
+		return;
+	}
 	// lock to avoid multi swap
 	std::lock_guard<std::mutex> lock_l(_mutex);
 	if(cmd_p->checkPlayer(*_frontState->_state, player_p))
@@ -426,10 +440,32 @@ unsigned long Controller::getOngoingStep() const
 	return _ongoingStep-1;
 }
 
+void Controller::setOngoingStep(unsigned long step_p)
+{
+	_ongoingStep = step_p;
+	// update containers
+	updateCommitedCommand();
+}
+
+void Controller::setReplayMode(bool replayMode_p)
+{
+	_replayMode = replayMode_p;
+}
+
+void Controller::setOnlineSaveFile(std::ofstream* of_p)
+{
+	_of = of_p;
+}
+
 void Controller::updateCommitedCommand()
 {
 	while(_commitedCommands.size() <= _ongoingStep)
 	{
+		// online save if necessary
+		if(_of && !_commitedCommands.back()->empty())
+		{
+			writeListOfCommand(*_of, _commitedCommands.back(), _commitedCommands.size()-1);
+		}
 		_commitedCommands.push_back(new std::list<Command *>());
 		_triggers.push_back(std::list<Trigger const *>());
 		_commands.push_back(std::list<AbstractCommand const *>());

@@ -113,6 +113,22 @@ public:
 	void enableORCA() { _orcaCollision = true; }
 
 	double getTimePerStep() const { return _timePerStep; }
+
+	std::vector<std::list<Command *> *> const & getCommitedCommands() const { return _commitedCommands; }
+
+	///
+	/// Serialization part
+	///
+	/// @brief set up all internal containers to get data from a given number of steps
+	void setOngoingStep(unsigned long step_p);
+
+	/// @brief set replay mode : no command can be commited in this mode
+	void setReplayMode(bool replayMode_p);
+
+	/// @brief allow online save when necessary
+	/// @note nullptr to disable
+	void setOnlineSaveFile(std::ofstream* of_p);
+
 private:
 	/// @brief set to true to enable orca Collision
 	/// way better performance but less predictible (should not be used in tests)
@@ -160,6 +176,12 @@ private:
 	Step const &getStepBeforeLastCompiledStep() const;
 
 	OrcaManager *_orcaManager {nullptr};
+
+	/// @brief in replay mode all commuited command wont affect the controller
+	bool _replayMode {false};
+
+	/// @brief output file for online save (nullptr to disable)
+	std::ofstream* _of {nullptr};
 };
 
 } // namespace octopus

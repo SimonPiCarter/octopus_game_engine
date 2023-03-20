@@ -11,10 +11,12 @@
 #include "clicMode/AttackMoveClicMode.hh"
 #include "clicMode/BuildClicMode.hh"
 #include "clicMode/StandardClicMode.hh"
+#include "menu/Menu.hh"
 #include "minimap/Minimap.hh"
 #include "panel/DescPanel.hh"
 #include "panel/OptionPanel.hh"
 #include "panel/Panel.hh"
+#include "panel/ProductionPanel.hh"
 #include "panel/StatsPanel.hh"
 #include "sprite/Sprite.hh"
 #include "sprite/SpriteLibrary.hh"
@@ -121,6 +123,16 @@ void controllerLoop(octopus::Controller &controller_p, bool const &over_p, bool 
 	}
 }
 
+void quit(bool &quit_p)
+{
+	quit_p = true;
+}
+
+void unpause(bool &menu_p)
+{
+	menu_p = false;
+}
+
 void GameLoop::runLoop(Window &window_p)
 {
     Texture const * background_l = window_p.loadTexture("resources/background.png");
@@ -128,10 +140,26 @@ void GameLoop::runLoop(Window &window_p)
 	//SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "1");
 	bool quit_l = false;
 	bool paused_l = false;
+	bool menuActive_l = false;
 	// ratio in % of time used (higher the better, gives % of speed on runtime)
 	long ratio_l = 100;
 
 	std::thread controllerThread_l(controllerLoop, std::ref(_controller), std::ref(quit_l), std::ref(paused_l), std::ref(ratio_l));
+
+
+	cuttlefish::Menu menu_l(window_p.getWidth()/2, 100, 5);
+	{
+		Picture * button_l = new Picture(window_p.loadTexture("resources/button.png"), 256, 64, {1, 1 ,1}, {1, 1, 1});
+		Text * text_l = new Text(&window_p, {0, 0, 0}, 0, 0);
+		text_l->setText("Reprendre");
+		menu_l.addButton(button_l, text_l, std::bind(unpause, std::ref(menuActive_l)));
+	}
+	{
+		Picture * button_l = new Picture(window_p.loadTexture("resources/button.png"), 256, 64, {1, 1 ,1}, {1, 1, 1});
+		Text * text_l = new Text(&window_p, {0, 0, 0}, 0, 0);
+		text_l->setText("Quitter");
+		menu_l.addButton(button_l, text_l, std::bind(quit, std::ref(quit_l)));
+	}
 
 	double x = 0.;
 	double y = 0.;
@@ -186,6 +214,15 @@ void GameLoop::runLoop(Window &window_p)
 		//Handle events on queue
 		while( SDL_PollEvent( &e ) != 0 )
 		{
+			//User requests quit_l
+			if( e.type == SDL_QUIT )
+			{
+				quit_l = true;
+			}
+			if(menuActive_l)
+			{
+				menu_l.handleEvent(window_p, e);
+			}
 			if( e.type == SDL_MOUSEMOTION )
 			{
 				dX = 0;
@@ -233,11 +270,6 @@ void GameLoop::runLoop(Window &window_p)
 					y = to_double(pos_l.y);
 				}
 			}
-			//User requests quit_l
-			if( e.type == SDL_QUIT )
-			{
-				quit_l = true;
-			}
 			if (e.type == SDL_MOUSEBUTTONDOWN)
 			{
 				if(_minimap.isInside(e.button.x, e.button.y))
@@ -260,7 +292,11 @@ void GameLoop::runLoop(Window &window_p)
 			}
 			if (e.type == SDL_MOUSEBUTTONUP)
 			{
-				if(_optionPanel.isActive())
+				if(menuActive_l)
+				{
+					// NA (just avoid doing anything else)
+				}
+				else if(_optionPanel.isActive())
 				{
 					int option_l = _optionPanel.getOption(window_p, e.button.x, e.button.y);
 					if(option_l >=0)
@@ -376,6 +412,11 @@ void GameLoop::runLoop(Window &window_p)
 						}
 						break;
 					}
+					case SDLK_ESCAPE:
+					{
+						menuActive_l = !menuActive_l;
+						break;
+					}
 					case SDLK_0:
 					case SDLK_1:
 					case SDLK_2:
@@ -432,16 +473,22 @@ void GameLoop::runLoop(Window &window_p)
 		_panel.render(window_p);
 		_statsPanel.refresh(window_p, state_l);
 		_statsPanel.render(window_p);
+		_prodPanel.refresh(window_p, state_l);
+		_prodPanel.render(window_p);
 		if(descActive_l)
 		{
 			_descPanel.render(window_p);
 		}
 
 		_optionPanel.refresh();
-		paused_l = _optionPanel.isActive();
+		paused_l = _optionPanel.isActive() || menuActive_l;
 		if(_optionPanel.isActive())
 		{
 			_optionPanel.render(window_p);
+		}
+		if(menuActive_l)
+		{
+			menu_l.display(elapsed_l, window_p);
 		}
 
 		///

@@ -25,6 +25,9 @@ public:
 
 	virtual bool checkPlayer(State const &, unsigned long player_p) const override { return _player == player_p; }
 
+	unsigned long getPlayer() const { return _player; }
+	DivinityType getType() const { return _type; }
+
 private:
 	unsigned long const _player;
 	DivinityType const _type;

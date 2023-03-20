@@ -24,6 +24,7 @@ add_library(cuttlefish
 	${CMAKE_CURRENT_SOURCE_DIR}/src/panel/DivinityPanel.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/panel/OptionPanel.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/panel/Panel.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/src/panel/ProductionPanel.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/panel/StatsPanel.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/panel/stats/ProductionPicture.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/panel/stats/SelectionPicture.cc

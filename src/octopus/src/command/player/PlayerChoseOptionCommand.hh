@@ -9,7 +9,7 @@
 
 namespace octopus
 {
-struct BuildingModel;;
+struct BuildingModel;
 
 /// @brief This command will update the divinity chosen and eventually lvling it up
 class PlayerChoseOptionCommand : public Command
@@ -25,6 +25,10 @@ public:
 	virtual CommandData * newData() const override { return nullptr; }
 
 	virtual bool checkPlayer(State const &, unsigned long player_p) const override { return _player == player_p; }
+
+	unsigned long getPlayer() const { return _player; }
+	std::string const &getKey() const { return _key; }
+	unsigned long getOption() const { return _option; }
 
 private:
 	unsigned long const _player;

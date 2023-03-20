@@ -5,6 +5,7 @@
 #include "panel/DescPanel.hh"
 #include "panel/DivinityPanel.hh"
 #include "panel/Panel.hh"
+#include "panel/ProductionPanel.hh"
 #include "panel/StatsPanel.hh"
 #include "sprite/SpriteLibrary.hh"
 #include "tilemap/Tilemap.hh"
@@ -21,6 +22,7 @@ public:
 	RessourceLoader(cuttlefish::Window &window_p, unsigned long fullWorldSize_p, cuttlefish::World &world_p);
 
 	cuttlefish::Panel _panel;
+	cuttlefish::ProductionPanel _prodPanel;
 	cuttlefish::StatsPanel _statsPanel;
 	fas::ChoicePanel _choicePanel;
 	cuttlefish::DescPanel _descPanel;
