@@ -15,8 +15,8 @@ namespace octopus
 {
 	class Entity;
 	class State;
-	struct UnitModel;;
-	struct BuildingModel;;
+	struct UnitModel;
+	struct BuildingModel;
 } // namespace octopus
 
 
@@ -32,7 +32,7 @@ class Window;
 class StatsPanel
 {
 public:
-	StatsPanel(Window* window_p, int x, int y, Texture const * background_p, Texture const *icons_p, int iconsPerLine_p, Selection & selection_p);
+	StatsPanel(Window* window_p, int x, int y, Texture const * background_p, Texture const *icons_p, Texture const *statsIcons_p, int iconsPerLine_p, Selection & selection_p);
 	~StatsPanel();
 
 	/// @brief refresh StatsPanel if necessary
@@ -78,7 +78,23 @@ protected:
 	int _y;
 	int const _iconsPerLine;
 
-	SegmentedText _textStats;
+	///
+	/// Mono selection stats
+	///
+	Picture _monoIcon;
+	Picture _damageIcon;
+	Picture _armorIcon;
+	Picture _attackSpeedIcon;
+	Picture _speedIcon;
+
+	SegmentedText _textHp;
+	SegmentedText _textDamage;
+	SegmentedText _textArmor;
+	SegmentedText _textAttackSpeed;
+	SegmentedText _textSpeed;
+
+	ProgressBar _hpBar;
+
 	SegmentedText _textQtyRes;
 	SegmentedText _textResources;
 };

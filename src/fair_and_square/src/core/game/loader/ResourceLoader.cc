@@ -12,7 +12,8 @@ RessourceLoader::RessourceLoader(cuttlefish::Window &window_p, unsigned long ful
 		window_p.loadTexture("resources/fair_and_square/grid.png"), window_p.loadTexture("resources/fair_and_square/prod_bar_back.png"),
 		window_p.loadTexture("resources/fair_and_square/prod_bar_fill.png"), 10, world_p.getSelection())
 	, _statsPanel(&window_p, window_p.getWidth()-276*2-2, window_p.getHeight()-276,
-		window_p.loadTexture("resources/fair_and_square/panel.png"), window_p.loadTexture("resources/fair_and_square/grid.png"), 4, world_p.getSelection())
+		window_p.loadTexture("resources/fair_and_square/panel.png"), window_p.loadTexture("resources/fair_and_square/grid.png"),
+		window_p.loadTexture("resources/fair_and_square/icons.png"), 4, world_p.getSelection())
 	, _choicePanel(window_p, window_p.getWidth()-window_p.getWidth()/2-200, window_p.getHeight()-window_p.getHeight()/2-200,
 		window_p.loadTexture("resources/fair_and_square/panel.png"), window_p.loadTexture("resources/fair_and_square/grid.png"), 0)
 	, _descPanel(&window_p, window_p.getWidth()-260, window_p.getHeight()-276*2-5,

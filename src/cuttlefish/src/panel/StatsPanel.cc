@@ -1,5 +1,7 @@
 #include "StatsPanel.hh"
 
+#include "window/Window.hh"
+
 #include "command/building/BuildingUnitProductionCommand.hh"
 #include "command/CommandQueue.hh"
 #include "state/State.hh"
@@ -14,26 +16,50 @@
 namespace cuttlefish
 {
 
-StatsPanel::StatsPanel(Window* window_p, int x, int y, Texture const * background_p, Texture const *icons_p, int iconsPerLine_p, Selection &selection_p) :
+StatsPanel::StatsPanel(Window* window_p, int x, int y, Texture const * background_p, Texture const *icons_p, Texture const *statsIcons_p, int iconsPerLine_p, Selection &selection_p) :
 	_x(x),
 	_y(y),
+	_background(new Picture(background_p, 276, 276, {1}, {1})),
 	_icons(icons_p),
 	_iconsPerLine(iconsPerLine_p),
-	_textStats(window_p, x, y+5),
 	_textResources(window_p, x, y+45),
 	_textQtyRes(window_p, x+150, y+45),
-	_selection(selection_p)
+	_selection(selection_p),
+	_monoIcon(icons_p, 64, 64, {1}, {1}),
+	_damageIcon(statsIcons_p, 32, 32, {1}, {1}),
+	_armorIcon(statsIcons_p, 32, 32, {1}, {1}),
+	_attackSpeedIcon(statsIcons_p, 32, 32, {1}, {1}),
+	_speedIcon(statsIcons_p, 32, 32, {1}, {1}),
+	_textHp(window_p, x+75, y+45),
+	_textDamage(window_p, x+50, y+95),
+	_textArmor(window_p, x+50, y+122),
+	_textAttackSpeed(window_p, x+50, y+152),
+	_textSpeed(window_p, x+50, y+182),
+	_hpBar(new Picture(window_p->loadTexture("resources/fair_and_square/hp_bar_back.png"), 32, 6, {1}, {1}),
+			new Picture(window_p->loadTexture("resources/fair_and_square/hp_bar_fill.png"), 32, 4, {1}, {1}), 266, 6, 1)
 {
-	_background = new Picture(background_p, 276, 276, {1}, {1});
 	_background->setDestination(x, y, 276, 276);
+	_hpBar.setPosition(x+5, y+70);
 
-	_textStats.addText("name", "", {0, 0, 0}, true);
-	_textStats.addText("hp", "hp : ", {0, 0, 0}, false);
-	_textStats.addText("hp_val", "", {0, 155, 0}, true);
-	_textStats.addText("dmg", "dmg : ", {0, 0, 0}, false);
-	_textStats.addText("dmg_val", "", {155, 0, 0}, true);
-	_textStats.addText("armor", "armor : ", {0, 0, 0}, false);
-	_textStats.addText("armor_val", "", {0, 0, 155}, true);
+	_monoIcon.setDestination(x+5, y+5, 64, 64);
+	_damageIcon.setDestination(x+5, y+90, 32, 32);
+	_damageIcon.setState(1);
+	_damageIcon.setFrame(0);
+	_armorIcon.setDestination(x+5, y+120, 32, 32);
+	_armorIcon.setState(2);
+	_armorIcon.setFrame(0);
+	_attackSpeedIcon.setDestination(x+5, y+150, 32, 32);
+	_attackSpeedIcon.setState(3);
+	_attackSpeedIcon.setFrame(0);
+	_speedIcon.setDestination(x+5, y+180, 32, 32);
+	_speedIcon.setState(2);
+	_speedIcon.setFrame(1);
+
+	_textHp.addText("hp_val", "", {0, 0, 0}, false);
+	_textDamage.addText("dmg_val", "", {0, 0, 0}, false);
+	_textArmor.addText("armor_val", "", {0, 0, 0}, false);
+	_textAttackSpeed.addText("attackSpeed_val", "", {0, 0, 0}, false);
+	_textSpeed.addText("speed_val", "", {0, 0, 0}, false);
 
 	_textQtyRes.addText("res_type", "",{0, 0, 0}, false);
 	_textQtyRes.addText("spacer", " : ",{0, 0, 0}, false);
@@ -42,7 +68,6 @@ StatsPanel::StatsPanel(Window* window_p, int x, int y, Texture const * backgroun
 	_textResources.addText("res_type", "", {0, 0, 0}, true);
 	_textResources.addText("qty", "quantity : ", {0, 0, 0}, false);
 	_textResources.addText("qty_val", "", {0, 0, 0}, true);
-
 }
 
 StatsPanel::~StatsPanel()
@@ -144,21 +169,45 @@ void StatsPanel::render(Window &window_p)
 	{
 		if (_monoSelection->_model._isUnit || _monoSelection->_model._isBuilding)
 		{
-			_textStats.updateText("name", _monoSelection->_model._id);
+			SpriteInfo const &info_l = _mapIcons.at(_monoSelection->_model._id);
+			_monoIcon.setState(info_l.state);
+			_monoIcon.setFrame(info_l.frame);
+
 			std::stringstream ss_l;
 			ss_l<<_monoSelection->_hp<<"/"<<_monoSelection->getHpMax();
-			_textStats.updateText("hp_val", ss_l.str());
+			_textHp.updateText("hp_val", ss_l.str());
 
 			ss_l.str("");
 			ss_l<<_monoSelection->getDamageNoBonus();
-			_textStats.updateText("dmg_val", ss_l.str());
+			_textDamage.updateText("dmg_val", ss_l.str());
 
 			ss_l.str("");
 			ss_l<<_monoSelection->getArmor();
-			_textStats.updateText("armor_val", ss_l.str());
+			_textArmor.updateText("armor_val", ss_l.str());
+
+			ss_l.str("");
+			ss_l<<_monoSelection->getStepSpeed()*100;
+			_textSpeed.updateText("speed_val", ss_l.str());
+
+			ss_l.str("");
+			ss_l<<_monoSelection->getFullReload()/100.;
+			_textAttackSpeed.updateText("attackSpeed_val", ss_l.str());
 
 			// display stats on selection
-			_textStats.display(window_p);
+			_textHp.display(window_p);
+			_textDamage.display(window_p);
+			_textArmor.display(window_p);
+			_textAttackSpeed.display(window_p);
+			_textSpeed.display(window_p);
+
+			_monoIcon.display(window_p);
+			_damageIcon.display(window_p);
+			_armorIcon.display(window_p);
+			_attackSpeedIcon.display(window_p);
+			_speedIcon.display(window_p);
+
+			_hpBar.setProgress(100*_monoSelection->_hp/_monoSelection->getHpMax());
+			_hpBar.display(window_p);
 
 			if(_monoSelection->_model._isUnit)
 			{
