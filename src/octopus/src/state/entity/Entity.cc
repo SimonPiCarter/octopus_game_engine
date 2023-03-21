@@ -26,40 +26,46 @@ bool Entity::isIgnoringCollision() const
 	return false;
 }
 
+double applyBuff(double val_p, Buff const &buff_p)
+{
+	return std::max(0., val_p + buff_p._offset ) * std::max( 0.1, 1. + buff_p._coef );
+}
+
 double Entity::getStepSpeed() const
 {
-	return ( _model._stepSpeed + _buffSpeed._offset )* ( 1. + _buffSpeed._coef );
+	return applyBuff( _model._stepSpeed, _buffSpeed);
 }
 
 double Entity::getFullReload() const
 {
-	return ( _model._fullReload + _buffFullReload._offset )* ( 1. + _buffFullReload._coef );
+	return applyBuff( _model._fullReload, _buffFullReload);
 }
 
 double Entity::getDamage(EntityModel const &target_p) const
 {
-	return ( _model._damage + _buffDamage._offset )* ( 1. + _buffDamage._coef ) + getBonus(target_p._id, _model);
+	return applyBuff( _model._damage, _buffDamage) + getBonus(target_p._id, _model);
 }
 double Entity::getDamageNoBonus() const
 {
-	return ( _model._damage + _buffDamage._offset )* ( 1. + _buffDamage._coef );
+	return applyBuff( _model._damage, _buffDamage);
 }
 double Entity::getArmor() const
 {
-	return ( _model._armor + _buffArmor._offset )* ( 1. + _buffArmor._coef );
+	return applyBuff( _model._armor, _buffArmor);
 }
 double Entity::getHpMax() const
 {
-	return ( _model._hpMax + _buffHpMax._offset )* ( 1. + _buffHpMax._coef );
+	return applyBuff( _model._hpMax, _buffHpMax);
 }
 
 double Entity::getProduction() const
 {
-	return ( 1. + _buffProduction._offset )* ( 1. + _buffProduction._coef );
+	return applyBuff( 1., _buffProduction);
 }
+
 double Entity::getHarvest() const
 {
-	return ( 1. + _buffHarvest._offset )* ( 1. + _buffHarvest._coef );
+	return applyBuff( 1., _buffHarvest);
 }
 
 bool Entity::isFrozen() const
