@@ -5,12 +5,14 @@
 
 namespace fas
 {
-RessourceLoader::RessourceLoader(cuttlefish::Window &window_p, unsigned long fullWorldSize_p, cuttlefish::World &world_p)
+ResourceLoader::ResourceLoader(cuttlefish::Window &window_p, unsigned long fullWorldSize_p, cuttlefish::World &world_p)
 	: _panel(&window_p, window_p.getWidth()-276, window_p.getHeight()-276,
 		window_p.loadTexture("resources/fair_and_square/panel.png"), window_p.loadTexture("resources/fair_and_square/grid.png"), 4)
 	, _prodPanel(&window_p, 255, window_p.getHeight()-65,
 		window_p.loadTexture("resources/fair_and_square/grid.png"), window_p.loadTexture("resources/fair_and_square/prod_bar_back.png"),
 		window_p.loadTexture("resources/fair_and_square/prod_bar_fill.png"), 10, world_p.getSelection())
+	, _resourcesPanel(&window_p, window_p.getWidth()-100, 0,
+		window_p.loadTexture("resources/fair_and_square/panel.png"), window_p.loadTexture("resources/fair_and_square/resources_icons.png"))
 	, _statsPanel(&window_p, window_p.getWidth()-276*2-2, window_p.getHeight()-276,
 		window_p.loadTexture("resources/fair_and_square/panel.png"), window_p.loadTexture("resources/fair_and_square/grid.png"),
 		window_p.loadTexture("resources/fair_and_square/icons.png"), 4, world_p.getSelection())
@@ -37,6 +39,10 @@ RessourceLoader::RessourceLoader(cuttlefish::Window &window_p, unsigned long ful
 	_prodPanel.addSpriteInfo("square", 1, 4);
 	_prodPanel.addSpriteInfo("triangle", 2, 3);
 	_prodPanel.addSpriteInfo("circle", 1, 3);
+
+	_resourcesPanel.setRes1Icon(0, 1);
+	_resourcesPanel.setRes2Icon(0, 0);
+	_resourcesPanel.setTimeIcon(0, 2);
 
 	// resources
 	_statsPanel.addSpriteInfo("resource_steel", 2, 4);

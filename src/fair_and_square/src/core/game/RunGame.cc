@@ -38,7 +38,7 @@ void runGame(Window &window_p, std::list<octopus::Steppable *> &spawners_p, std:
 	octopus::Controller controller_l(spawners_p, 0.01, commands_p, gridPointSize_l, gridSize_l);
 	controller_l.enableORCA();
 
-	fas::RessourceLoader loader_l(window_p, worldSize_p, world_l);
+	fas::ResourceLoader loader_l(window_p, worldSize_p, world_l);
 
 	GameLoop loop_l(
 		loader_l._descPanel,
@@ -47,6 +47,7 @@ void runGame(Window &window_p, std::list<octopus::Steppable *> &spawners_p, std:
 		controller_l,
 		loader_l._panel,
 		loader_l._prodPanel,
+		loader_l._resourcesPanel,
 		loader_l._spriteLib,
 		loader_l._statsPanel,
 		loader_l._tilemap,
@@ -75,7 +76,7 @@ void runAndSaveGame(Window &window_p, std::list<octopus::Steppable *> &spawners_
 	file_p.write((char*)&header_l, sizeof(header_l));
 	controller_l.setOnlineSaveFile(&file_p);
 
-	fas::RessourceLoader loader_l(window_p, worldSize_p, world_l);
+	fas::ResourceLoader loader_l(window_p, worldSize_p, world_l);
 
 	GameLoop loop_l(
 		loader_l._descPanel,
@@ -84,6 +85,7 @@ void runAndSaveGame(Window &window_p, std::list<octopus::Steppable *> &spawners_
 		controller_l,
 		loader_l._panel,
 		loader_l._prodPanel,
+		loader_l._resourcesPanel,
 		loader_l._spriteLib,
 		loader_l._statsPanel,
 		loader_l._tilemap,
@@ -108,7 +110,7 @@ void replayGame(std::ifstream &file_p, Window &window_p, std::list<octopus::Step
 	octopus::Controller controller_l(spawners_p, 0.01, commands_p, gridPointSize_l, gridSize_l);
 	controller_l.enableORCA();
 
-	fas::RessourceLoader loader_l(window_p, worldSize_p, world_l);
+	fas::ResourceLoader loader_l(window_p, worldSize_p, world_l);
 
 	readCommands(file_p, controller_l, lib_p);
 
@@ -122,6 +124,7 @@ void replayGame(std::ifstream &file_p, Window &window_p, std::list<octopus::Step
 		controller_l,
 		loader_l._panel,
 		loader_l._prodPanel,
+		loader_l._resourcesPanel,
 		loader_l._spriteLib,
 		loader_l._statsPanel,
 		loader_l._tilemap,
@@ -145,7 +148,7 @@ void loadGame(std::ifstream &file_p, Window &window_p, std::list<octopus::Steppa
 	octopus::Controller controller_l(spawners_p, 0.01, commands_p, gridPointSize_l, gridSize_l);
 	controller_l.enableORCA();
 
-	fas::RessourceLoader loader_l(window_p, worldSize_p, world_l);
+	fas::ResourceLoader loader_l(window_p, worldSize_p, world_l);
 
 	readCommands(file_p, controller_l, lib_p);
 
@@ -172,6 +175,7 @@ void loadGame(std::ifstream &file_p, Window &window_p, std::list<octopus::Steppa
 		controller_l,
 		loader_l._panel,
 		loader_l._prodPanel,
+		loader_l._resourcesPanel,
 		loader_l._spriteLib,
 		loader_l._statsPanel,
 		loader_l._tilemap,

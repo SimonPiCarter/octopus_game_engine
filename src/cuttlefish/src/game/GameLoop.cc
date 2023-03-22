@@ -17,6 +17,7 @@
 #include "panel/OptionPanel.hh"
 #include "panel/Panel.hh"
 #include "panel/ProductionPanel.hh"
+#include "panel/ResourcesPanel.hh"
 #include "panel/StatsPanel.hh"
 #include "sprite/Sprite.hh"
 #include "sprite/SpriteLibrary.hh"
@@ -490,6 +491,9 @@ void GameLoop::runLoop(Window &window_p)
 		{
 			menu_l.display(elapsed_l, window_p);
 		}
+
+		_resPanel.refresh(window_p, state_l, _world.getPlayer());
+		_resPanel.render(window_p);
 
 		///
 		/// Debug texts
