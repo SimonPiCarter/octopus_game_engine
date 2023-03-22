@@ -1,5 +1,7 @@
 #include "ResourcesPanel.hh"
 
+#include <sstream>
+
 #include "state/State.hh"
 #include "state/player/Player.hh"
 
@@ -42,7 +44,20 @@ void ResourcesPanel::refresh(Window &window_p, octopus::State const &state_p, un
 	octopus::Player const &player_l = *state_p.getPlayer(player_p);
 	_textRes1.updateText("val", getVal(player_l, octopus::ResourceType::Food));
 	_textRes2.updateText("val", getVal(player_l, octopus::ResourceType::Steel));
-	_textIcon.updateText("val", getVal(player_l, octopus::ResourceType::Anchor));
+
+	int time_l = std::abs(std::floor(1e-5+octopus::getResource(player_l, octopus::ResourceType::Anchor)));
+	std::stringstream ss_l;
+	if(time_l/60 < 10)
+	{
+		ss_l<<"0";
+	}
+	ss_l << time_l/60 << ":";
+	if(time_l%60 < 10)
+	{
+		ss_l<<"0";
+	}
+	ss_l << (time_l%60);
+	_textIcon.updateText("val", ss_l.str());
 }
 
 void ResourcesPanel::render(Window &window_p)
