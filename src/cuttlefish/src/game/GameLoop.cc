@@ -296,8 +296,8 @@ void GameLoop::runLoop(Window &window_p)
 						y = to_double(pos_l.y);
 					}
 				}
-				else if(!_panel.getBackground()->isInside(window_p, e.button.x, e.button.y)
-				&& !_statsPanel.getBackground()->isInside(window_p, e.button.x, e.button.y)
+				else if(((!_panel.getBackground()->isInside(window_p, e.button.x, e.button.y)
+				&& !_statsPanel.getBackground()->isInside(window_p, e.button.x, e.button.y)) || !_panel.isActive())
 				&& (!_optionPanel.getBackground()->isInside(window_p, e.button.x, e.button.y) || !_optionPanel.isActive()))
 				{
 					currentClicMode_l->handleMouseDown(e);
@@ -352,7 +352,8 @@ void GameLoop::runLoop(Window &window_p)
 					//
 					else if((_panel.getBackground()->isInside(window_p, e.button.x, e.button.y)
 						 || _statsPanel.getBackground()->isInside(window_p, e.button.x, e.button.y))
-						 && !clicStartedOnScreen_l)
+						 && !clicStartedOnScreen_l
+						 && _panel.isActive())
 					{
 						// NA (skip selection and move command)
 					}
@@ -484,9 +485,14 @@ void GameLoop::runLoop(Window &window_p)
 		SDL_GetMouseState(&mouseX, &mouseY);
 		currentClicMode_l->display(window_p, elapsed_l, mouseX, mouseY);
 
-		_panel.render(window_p);
-		_statsPanel.refresh(window_p, state_l);
-		_statsPanel.render(window_p);
+		if(_panel.isActive())
+		{
+			_panel.render(window_p);
+			_statsPanel.refresh(window_p, state_l);
+			_statsPanel.render(window_p);
+		}
+
+
 		_prodPanel.refresh(window_p, state_l);
 		_prodPanel.render(window_p);
 		if(descActive_l)

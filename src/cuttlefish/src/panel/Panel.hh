@@ -61,6 +61,8 @@ public:
 	SpriteModel const * getSpriteModelOnGrid(int x, int y) const;
 
 	Picture const * getBackground() const { return _background; }
+
+	bool isActive() const { return _lastSelection != nullptr; }
 protected:
 	/// @brief last selection
 	octopus::Entity const * _lastSelection {nullptr};

@@ -97,6 +97,7 @@ void StatsPanel::refresh(Window &window_p, octopus::State const &state_p)
 	// if nothing selected just return
 	if(_selection._sprites.empty())
 	{
+		_monoSelection = nullptr;
 		return;
 	}
 

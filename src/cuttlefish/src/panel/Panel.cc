@@ -53,6 +53,7 @@ void Panel::refresh(SpriteEntity const *sprite_p, octopus::State const &state_p)
 
 	if(selected_l == nullptr)
 	{
+		_grid.clear();
 		return;
 	}
 
