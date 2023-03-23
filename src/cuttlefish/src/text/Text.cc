@@ -75,7 +75,7 @@ void Text::clean()
 
 void Text::generate()
 {
-	_surface = TTF_RenderText_Solid( _window->getFont(), _text.c_str(), _color );
+	_surface = TTF_RenderText_Blended( _window->getFont(), _text.c_str(), _color );
 	if ( !_surface ) {
 		octopus::Logger::getNormal() << "Failed to render text: " << TTF_GetError() << std::endl;
 	}

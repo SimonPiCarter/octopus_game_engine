@@ -62,12 +62,12 @@ bool Window::init(int width_p, int height_p, unsigned long worldSize_p)
 					success = false;
 				}
 				if ( TTF_Init() < 0 ) {
-					std::cout << "Error initializing SDL_ttf: " << TTF_GetError() << std::endl;
+					std::cout<< "Error initializing SDL_ttf: " << TTF_GetError() << std::endl;
 				}
 
-				_font = TTF_OpenFont("resources/fonts/BebasNeue-Regular.ttf", 20);
+				_font = TTF_OpenFont("resources/fonts/FreeSansBold.ttf", 16);
 				if ( !_font ) {
-					std::cout << "Failed to load font: " << TTF_GetError() << std::endl;
+					std::cout<< "Failed to load font: " << TTF_GetError() << std::endl;
 				}
 			}
 		}
