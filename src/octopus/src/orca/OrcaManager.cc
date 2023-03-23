@@ -106,7 +106,7 @@ void OrcaManager::setupStep(State const &state_p, Step &step_p)
             _sim->setAgentMaxSpeed(idx_l, ent_l->_model._stepSpeed);
         }
         _sim->setAgentEntity(idx_l, ent_l);
-        // _sim->setAgentWeight(idx_l, 1);
+        _sim->setAgentWeight(idx_l, 1);
         _sim->setAgentPrefVelocity(idx_l, RVO::Vector2(0, 0));
         _sim->setAgentPosition(idx_l, RVO::Vector2(ent_l->_pos.x, ent_l->_pos.y));
     }
@@ -133,7 +133,7 @@ void OrcaManager::setupStep(State const &state_p, Step &step_p)
 		if(mapMoveStep_l[ent_l->_handle] == nullptr && ent_l->isActive() && !ent_l->isFrozen())
 		{
             size_t idx_l = _mapHandleIdx[ent_l->_handle];
-            // _sim->setAgentWeight(idx_l, 0.01);
+            _sim->setAgentWeight(idx_l, 0.01);
 
 			EntityMoveStep *step_l = new EntityMoveStep(ent_l->_handle, {0, 0});
 			step_p.addEntityMoveStep(step_l);
