@@ -65,7 +65,7 @@ bool Window::init(int width_p, int height_p, unsigned long worldSize_p)
 					std::cout << "Error initializing SDL_ttf: " << TTF_GetError() << std::endl;
 				}
 
-				_font = TTF_OpenFont("resources/font.ttf", 24);
+				_font = TTF_OpenFont("resources/fonts/BebasNeue-Regular.ttf", 20);
 				if ( !_font ) {
 					std::cout << "Failed to load font: " << TTF_GetError() << std::endl;
 				}
