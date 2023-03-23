@@ -11,6 +11,8 @@
 #include "clicMode/AttackMoveClicMode.hh"
 #include "clicMode/BuildClicMode.hh"
 #include "clicMode/StandardClicMode.hh"
+#include "cutscene/Dialog.hh"
+#include "cutscene/DialogManager.hh"
 #include "menu/Menu.hh"
 #include "minimap/Minimap.hh"
 #include "panel/DescPanel.hh"
@@ -48,15 +50,6 @@ using octopus::to_double;
 
 namespace cuttlefish
 {
-
-std::string resourceStr(octopus::Player const &player_p)
-{
-	std::stringstream ss_l;
-	ss_l << "Food   : "<<stringify(std::abs(std::floor(1e-5+octopus::getResource(player_p, octopus::ResourceType::Food))))<<" | ";
-	ss_l << "Steel  : "<<stringify(std::abs(std::floor(1e-5+octopus::getResource(player_p, octopus::ResourceType::Steel))))<<" | ";
-	ss_l << "Anchor  : "<<stringify(std::abs(std::floor(1e-5+octopus::getResource(player_p, octopus::ResourceType::Anchor))))<<" | ";
-	return ss_l.str();
-}
 
 /// @brief delete clicMode_p execpt if equal to stdClicMode_p
 void cleanClicMode(ClicMode const * clicMode_p, ClicMode const * stdClicMode_p)
@@ -147,6 +140,7 @@ void GameLoop::runLoop(Window &window_p)
 
 	std::thread controllerThread_l(controllerLoop, std::ref(_controller), std::ref(quit_l), std::ref(paused_l), std::ref(ratio_l));
 
+	cuttlefish::Dialog * dialog_l = nullptr;
 
 	cuttlefish::Menu menu_l(window_p.getWidth()/2, 100, 5);
 	{
@@ -177,8 +171,7 @@ void GameLoop::runLoop(Window &window_p)
 	bool clicStartedOnScreen_l = false;
 
 	// Text for resource
-	Text textResource_l(&window_p, {0,0,0}, 250, 0);
-	Text textSteps_l(&window_p, {0,0,0}, 0, 20);
+	Text textSteps_l(&window_p, {0,0,0}, 150, 0);
 
 	StandardClicMode standardClicMode_l;
 	ClicMode * currentClicMode_l = &standardClicMode_l;
@@ -203,6 +196,7 @@ void GameLoop::runLoop(Window &window_p)
 		octopus::State const &state_l = *stateAndSteps_l._state;
 		_world.handleStep(window_p, _panel, _statsPanel, _optionPanel, stateAndSteps_l, _spriteLibrary);
 
+
 		// quit loop if state is over
 		if(state_l.isOver())
 		{
@@ -210,6 +204,12 @@ void GameLoop::runLoop(Window &window_p)
 			draw_l = !state_l.hasWinningTeam();
 			winningTeam_l = state_l.getWinningTeam();
 			quit_l = true;
+		}
+
+		// get dialog if any
+		if(!dialog_l)
+		{
+			dialog_l = _world.getDialogManager().nextDialog(window_p);
 		}
 
 		//Handle events on queue
@@ -224,6 +224,19 @@ void GameLoop::runLoop(Window &window_p)
 			{
 				menu_l.handleEvent(window_p, e);
 			}
+
+			if(dialog_l)
+			{
+				// end dialog
+				if ((e.type == SDL_MOUSEBUTTONDOWN
+					&& dialog_l->getBackground().isInside(window_p, e.button.x, e.button.y))
+				|| e.type == SDL_KEYDOWN)
+				{
+					delete dialog_l;
+					dialog_l = nullptr;
+				}
+			}
+
 			if( e.type == SDL_MOUSEMOTION )
 			{
 				dX = 0;
@@ -481,8 +494,13 @@ void GameLoop::runLoop(Window &window_p)
 			_descPanel.render(window_p);
 		}
 
+		if(dialog_l)
+		{
+			dialog_l->display(window_p);
+		}
+
 		_optionPanel.refresh();
-		paused_l = _optionPanel.isActive() || menuActive_l;
+		paused_l = _optionPanel.isActive() || menuActive_l || dialog_l != nullptr;
 		if(_optionPanel.isActive())
 		{
 			_optionPanel.render(window_p);
@@ -501,10 +519,7 @@ void GameLoop::runLoop(Window &window_p)
 		octopus::Player const * player_l = state_l.getPlayer(_world.getPlayer());
 
 		//Render background texture to screen
-		background_l->render(window_p.getRenderer(), 0, 0, 50, window_p.getWidth()/2 );
-
-		textResource_l.setText(resourceStr(*player_l));
-		textResource_l.display(window_p);
+		background_l->render(window_p.getRenderer(), 0, 0, 25, window_p.getWidth()/3 );
 
 		std::stringstream ss_l;
 		ss_l << "step : "<<_controller.getOngoingStep()

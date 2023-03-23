@@ -8,6 +8,7 @@
 #include "panel/Panel.hh"
 #include "panel/StatsPanel.hh"
 #include "panel/DivinityPanel.hh"
+#include "cutscene/step/DialogStep.hh"
 
 // octopus
 #include "command/data/AttackMoveData.hh"
@@ -182,6 +183,15 @@ void WorldUpdaterStepVisitor::visit(octopus::CommandWindUpDiffStep const *steppa
 			_world._sprites[steppable_p->_handle]->setState(1);
 			_world._sprites[steppable_p->_handle]->queueState(0);
 		}
+	}
+}
+
+void WorldUpdaterStepVisitor::visit(octopus::CustomStep const *steppable_p)
+{
+	cuttlefish::DialogStep const * dialogSteppable_l = dynamic_cast<cuttlefish::DialogStep const *>(steppable_p);
+	if(dialogSteppable_l)
+	{
+		_world._dialogManager.addDialogStep(dialogSteppable_l);
 	}
 }
 

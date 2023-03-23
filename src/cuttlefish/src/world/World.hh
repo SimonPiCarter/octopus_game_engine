@@ -6,6 +6,7 @@
 #include <unordered_map>
 
 #include "Selection.hh"
+#include "cutscene/DialogManager.hh"
 
 namespace octopus
 {
@@ -79,6 +80,9 @@ public:
 	std::list<SpriteEntity *> const &getDyingSprites() const { return _dyingSprites; }
 	std::list<SpriteEntity *> &getDyingSprites() { return _dyingSprites; }
 
+	DialogManager &getDialogManager() { return _dialogManager; }
+	DialogManager const &getDialogManager() const { return _dialogManager; }
+
 private:
 	/// @brief the player for this world
 	unsigned long const _player;
@@ -104,6 +108,8 @@ private:
 	/// @brief handlers for last step used
 	bool _first {true};
 	std::list<octopus::Step *>::const_iterator _lastIt;
+
+	DialogManager _dialogManager;
 
 	friend class WorldUpdaterStepVisitor;
 };
