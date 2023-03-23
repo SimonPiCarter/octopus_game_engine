@@ -64,7 +64,10 @@ int main( int argc, char* args[] )
 	bool fullscreen_l = false;
 
 
-	cuttlefish::Menu menu_l(SCREEN_WIDTH/2, 100, 5);
+	cuttlefish::Menu menu_l(window_l.getWidth()/2, 100, 5);
+
+	Picture octopus_l(window_l.loadTexture("resources/octopus.png"), 64, 64, {2}, {1});
+	octopus_l.setDestination(window_l.getWidth()-150, window_l.getHeight()-150, 128, 128);
 
 {
 	Picture * button_l = new Picture(window_l.loadTexture("resources/button.png"), 256, 64, {1, 1 ,1}, {1, 1, 1});
@@ -135,6 +138,9 @@ int main( int argc, char* args[] )
 		window_l.clear();
 
 		menu_l.display(elapsed_l, window_l);
+
+		octopus_l.update(elapsed_l);
+		octopus_l.display(window_l);
 
 		window_l.draw();
 

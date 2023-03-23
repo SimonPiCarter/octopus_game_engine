@@ -20,6 +20,7 @@
 #include "step/Step.hh"
 #include "step/command/CommandQueueStep.hh"
 #include "step/command/flying/FlyingCommandSpawnStep.hh"
+#include "step/custom/CustomStep.hh"
 #include "step/entity/spawn/UnitSpawnStep.hh"
 #include "step/entity/spawn/ResourceSpawnStep.hh"
 #include "step/entity/spawn/BuildingSpawnStep.hh"
@@ -29,6 +30,8 @@
 #include "step/trigger/TriggerSpawn.hh"
 
 using namespace octopus;
+
+std::vector<octopus::Steppable*> defaultGenerator() { return {}; }
 
 std::string genModelName(std::mt19937 &gen_p)
 {
@@ -46,7 +49,8 @@ std::string genModelName(std::mt19937 &gen_p)
 	return model_l;
 }
 
-std::list<Steppable *> WaveLevelSteps(Library &lib_p, unsigned long waveCount_p, unsigned long stepCount_p, unsigned long player_p, unsigned long worldSize_p)
+std::list<Steppable *> WaveLevelSteps(Library &lib_p, unsigned long waveCount_p, unsigned long stepCount_p, unsigned long player_p, unsigned long worldSize_p,
+	std::function<std::vector<octopus::Steppable *>(void)> waveStepGenerator_p)
 {
 	loadModels(lib_p);
 
@@ -73,7 +77,7 @@ std::list<Steppable *> WaveLevelSteps(Library &lib_p, unsigned long waveCount_p,
 	mapRes_l[octopus::ResourceType::Steel] = -200;
 	mapRes_l[octopus::ResourceType::Anchor] = -5;
 
-	Trigger * triggerWave_l = new WaveSpawn(new ListenerStepCount(stepCount_p), lib_p, 1, stepCount_p, waveCount_p, player_p, worldSize_p);
+	Trigger * triggerWave_l = new WaveSpawn(new ListenerStepCount(stepCount_p), lib_p, 1, stepCount_p, waveCount_p, player_p, worldSize_p, waveStepGenerator_p);
 	Trigger * triggerLose_l = new LoseTrigger(new ListenerEntityModelDied(&lib_p.getBuildingModel("command_center"), 0));
 
 
@@ -172,14 +176,16 @@ std::list<Command *> WaveLevelCommands(Library &lib_p, unsigned long worldSize_p
 /////////////////////////////////////////////
 /////////////////////////////////////////////
 
-WaveSpawn::WaveSpawn(Listener * listener_p, Library const &lib_p, unsigned long wave_p, unsigned long stepWait_p, unsigned long finalWave_p, unsigned long player_p, unsigned long worldSize_p) :
+WaveSpawn::WaveSpawn(Listener * listener_p, Library const &lib_p, unsigned long wave_p, unsigned long stepWait_p, unsigned long finalWave_p, unsigned long player_p, unsigned long worldSize_p,
+	std::function<std::vector<octopus::Steppable *>(void)> waveStepGenerator_p) :
 		OneShotTrigger({listener_p}),
 		_lib(lib_p),
 		_player(player_p),
 		_wave(wave_p),
 		_stepWait(stepWait_p),
 		_finalWave(finalWave_p),
-		_worldSize(worldSize_p)
+		_worldSize(worldSize_p),
+		_waveStepGenerator(waveStepGenerator_p)
 {}
 
 void WaveSpawn::trigger(State const &state_p, Step &step_p, unsigned long) const
@@ -201,7 +207,12 @@ void WaveSpawn::trigger(State const &state_p, Step &step_p, unsigned long) const
 		step_p.addSteppable(new CommandSpawnStep(new EntityAttackMoveCommand(handle_l, handle_l, {7., 20.}, 0, {{7., 20.}}, true )));
 	}
 
-	step_p.addSteppable(new TriggerSpawn(new WaveSpawn(new ListenerStepCount(_stepWait), _lib, _wave+1, _stepWait, _finalWave, _player, _worldSize)));
+	std::vector<octopus::Steppable *> stepsGenerated_l = _waveStepGenerator();
+	for(octopus::Steppable *step_l : stepsGenerated_l)
+	{
+		step_p.addSteppable(step_l);
+	}
+	step_p.addSteppable(new TriggerSpawn(new WaveSpawn(new ListenerStepCount(_stepWait), _lib, _wave+1, _stepWait, _finalWave, _player, _worldSize, _waveStepGenerator)));
 
 	// win after 10 waves
 	if(_wave == _finalWave)

@@ -184,10 +184,21 @@ void loadGame(std::ifstream &file_p, Window &window_p, std::list<octopus::Steppa
 	loop_l.runLoop(window_p);
 }
 
+
+std::vector<octopus::Steppable*> genDialogStep(Window &window_p)
+{
+	return {
+		new cuttlefish::DialogStep("place_name", "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+			cuttlefish::Picture(window_p.loadTexture("resources/octopus.png"), 64, 64, {2}, {1})),
+		new cuttlefish::DialogStep("place_name", "Ok 2",
+			cuttlefish::Picture(window_p.loadTexture("resources/octopus.png"), 64, 64, {2}, {1}))
+	};
+}
+
 void runWave(Window &window_p, unsigned long stepCount_p, unsigned long player_p, unsigned long worldSize_p)
 {
 	octopus::Library lib_l;
-	std::list<octopus::Steppable *> spawners_l = WaveLevelSteps(lib_l, 10, stepCount_p, player_p, worldSize_p);
+	std::list<octopus::Steppable *> spawners_l = WaveLevelSteps(lib_l, 10, stepCount_p, player_p, worldSize_p, std::bind(genDialogStep, window_p));
 	std::list<octopus::Command *> commands_l = WaveLevelCommands(lib_l, worldSize_p);
 
 
@@ -212,7 +223,7 @@ void replayWave(Window &window_p)
     file_l.read((char*)&worldSize_p, sizeof(worldSize_p));
 
 	octopus::Library lib_l;
-	std::list<octopus::Steppable *> spawners_l = WaveLevelSteps(lib_l, 10, stepCount_p, player_p, worldSize_p);
+	std::list<octopus::Steppable *> spawners_l = WaveLevelSteps(lib_l, 10, stepCount_p, player_p, worldSize_p, std::bind(genDialogStep, window_p));
 	std::list<octopus::Command *> commands_l = WaveLevelCommands(lib_l, worldSize_p);
 
 	replayGame(file_l, window_p, spawners_l, commands_l, worldSize_p, lib_l);
@@ -230,7 +241,7 @@ void loadWave(Window &window_p)
     file_l.read((char*)&worldSize_p, sizeof(worldSize_p));
 
 	octopus::Library lib_l;
-	std::list<octopus::Steppable *> spawners_l = WaveLevelSteps(lib_l, 10, stepCount_p, player_p, worldSize_p);
+	std::list<octopus::Steppable *> spawners_l = WaveLevelSteps(lib_l, 10, stepCount_p, player_p, worldSize_p, std::bind(genDialogStep, window_p));
 	std::list<octopus::Command *> commands_l = WaveLevelCommands(lib_l, worldSize_p);
 
 	loadGame(file_l, window_p, spawners_l, commands_l, worldSize_p, lib_l);
