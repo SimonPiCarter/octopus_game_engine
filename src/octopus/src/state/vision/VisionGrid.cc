@@ -54,7 +54,7 @@ void VisionGrid::updateVision(const Entity &ent_p, bool set_p)
 	{
 		Logger::getDebug() << "VisionGrid :: decresing vision count on " << ent_p._pos<<" for entity "<<ent_p._handle<<std::endl;
 	}
-	for(std::pair<unsigned long, unsigned long> const &pair_l : pattern_l)
+	for(std::pair<long, long> const &pair_l : pattern_l)
 	{
 		unsigned long x = std::max(0l, std::min<long>(to_int(pair_l.first+ent_p._pos.x), _grid.size()-1));
 		unsigned long y = std::max(0l, std::min<long>(to_int(pair_l.second+ent_p._pos.y), _grid[x].size()-1));
