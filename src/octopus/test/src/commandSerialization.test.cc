@@ -13,6 +13,11 @@
 
 using namespace octopus;
 
+// required to use EXPECT_EQ with on stack vector creation
+std::ostream &operator<<(std::ostream &os_p, octopus::Vector const vec_p)
+{
+	return os_p<<"Vector[x="<<vec_p.x<<", y="<<vec_p.y<<"]";
+}
 
 TEST(commandSerializationTest, simple_no_step_attackCommand)
 {
