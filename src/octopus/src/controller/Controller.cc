@@ -20,6 +20,7 @@
 #include "step/TickingStep.hh"
 #include "step/trigger/TriggerEnableChange.hh"
 #include "step/trigger/TriggerSpawn.hh"
+#include "step/vision/VisionChangeStep.hh"
 
 namespace octopus
 {
@@ -190,7 +191,7 @@ bool Controller::loop_body()
 			std::list<Command *> * commands_l = nullptr;
 			{
 				// lock to avoid overlap
-				std::lock_guard<std::mutex> lock_l(_mutex);
+				//std::lock_guard<std::mutex> lock_l(_mutex);
 				commands_l = _commitedCommands.at(_backState->_stepHandled);
 			}
 			for(Command * cmd_l : *commands_l)
@@ -207,7 +208,7 @@ bool Controller::loop_body()
 				if(OrcaManager::ShouldReset(_orcaManager, *_backState->_state, *step_l.getPrev()))
 				{
 					delete _orcaManager;
-					_orcaManager = new OrcaManager(1, 35., 10, 10., 10.);
+					_orcaManager = new OrcaManager(1, 5., 10, 10., 10.);
 					_orcaManager->resetFromState(*_backState->_state);
 					_orcaManager->setupStep(*_backState->_state, step_l);
 					_orcaManager->doStep();
@@ -231,6 +232,9 @@ bool Controller::loop_body()
 				step_l.addSteppable(new TriggerSpawn(trigger_l));
 			}
 			handleTriggers(*_backState->_state, step_l, getStepBeforeLastCompiledStep());
+
+			std::list<VisionChangeStep *> list_l = newVisionChangeStep(*_backState->_state, step_l, _backState->_state->getVisionHandler());
+			std::for_each(list_l.begin(), list_l.end(), std::bind(&Step::addSteppable, &step_l, std::placeholders::_1));
 
 			octopus::compact(step_l);
 

@@ -46,12 +46,15 @@ public:
 	/// @param ent_p the entity used to update
 	void updateExplorationFromMovement(const State &state_p, const Entity &ent_p, long dx, long dy);
 
+	/// @brief gate the grid of the team for the given player
+	VisionGrid * getGridFromPlayer(const State &state_p, unsigned long player_p);
+
+	/// @brief gate the grid of the given team
+	VisionGrid * getGridFromTeam(const State &state_p, unsigned long team_p);
 protected:
 	unsigned long const _size;
 	/// @brief vision grid for every team
 	std::vector<VisionGrid *> _grid;
-
-	VisionGrid * safeGetGrid(const State &state_p, unsigned long player_p);
 };
 
 } // octopus

@@ -91,6 +91,7 @@ public:
 	virtual void visit(UnitHarvestDropStep const *) {}
 	virtual void visit(UnitHarvestQuantityStep const *) {}
 	virtual void visit(UnitHarvestTypeStep const *) {}
+	virtual void visit(VisionChangeStep const *) {}
 
 private:
 	State const &_state;

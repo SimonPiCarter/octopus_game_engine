@@ -13,17 +13,9 @@ void EntityMoveStep::apply(State &state_p, SteppableData *) const
 
 	if(ent_l->_alive)
 	{
-		long dx = to_int(ent_l->_pos.x);
-		long dy = to_int(ent_l->_pos.y);
 		updateGrid(state_p, ent_l, false);
 		ent_l->_pos += this->_move;
 		updateGrid(state_p, ent_l, true);
-
-		dx = to_int(ent_l->_pos.x) - dx;
-		dy = to_int(ent_l->_pos.y) - dy;
-
-		updateVisionGridFromMovement(state_p, ent_l, dx, dy);
-		updateExplorationGridFromMovement(state_p, ent_l, dx, dy);
 	}
 	else
 	{
@@ -38,18 +30,9 @@ void EntityMoveStep::revert(State &state_p, SteppableData *) const
 
 	if(ent_l->_alive)
 	{
-		long dx = to_int(ent_l->_pos.x);
-		long dy = to_int(ent_l->_pos.y);
-
 		updateGrid(state_p, ent_l, false);
 		ent_l->_pos -= this->_move;
 		updateGrid(state_p, ent_l, true);
-
-		dx = to_int(ent_l->_pos.x) - dx;
-		dy = to_int(ent_l->_pos.y) - dy;
-
-		updateVisionGridFromMovement(state_p, ent_l, dx, dy);
-		updateExplorationGridFromMovement(state_p, ent_l, dx, dy);
 	}
 	else
 	{

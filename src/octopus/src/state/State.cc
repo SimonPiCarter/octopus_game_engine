@@ -607,6 +607,11 @@ void updateExplorationGridFromMovement(State &state_p, Entity const *ent_p, long
 	state_p.getVisionHandler().updateExplorationFromMovement(state_p, *ent_p, dx, dy);
 }
 
+VisionGrid * getVisionGrid(State &state_p, unsigned long team_p)
+{
+	return state_p.getVisionHandler().getGridFromTeam(state_p, team_p);
+}
+
 bool checkGrid(State const &state_p, Entity const *ent_p, bool ignoreAbandonedTemples_p)
 {
 	long long size_l = state_p.getGridSize();

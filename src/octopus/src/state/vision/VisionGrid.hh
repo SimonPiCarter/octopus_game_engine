@@ -55,7 +55,20 @@ public:
 	/// @warning do not check team of entity
 	void updateExplorationFromMovement(const Entity &ent_p, long dx, long dy);
 
+	/// @brief increment given grid element
+	void incrementVisionGrid(size_t x, size_t y, long long delta_p, bool exploration_p);
+
+	VisionPattern const &getPattern(long lineOfSight_p);
+
+	/// @brief get patterns for the given movement
+	/// it only returns the patterns to increment (to get the pattern to decrement one need to call)
+	/// this function with -dx and -dy where dx and dy is the movement of the entity
+	VisionPattern const &getMovementPattern(long lineOfSight_p, long dx, long dy);
+
+	unsigned long const &getSize() const { return _size; }
 protected:
+	/// @brief size of the grid
+	unsigned long const _size;
 	/// @brief this is the vision grid
 	/// it tracks the number of unit seeing one node of the grid
 	std::vector<std::vector<long long> > _grid;
@@ -66,16 +79,10 @@ protected:
 	/// @brief cache vision pattern based on line of sight
 	std::unordered_map<long, VisionPattern> _patterns;
 
-	VisionPattern const &getPattern(long lineOfSight_p);
-
 	/// @brief cache vision pattern for movement
 	/// indexing si done by : los, dx, dy
 	std::unordered_map<long, std::unordered_map<long, std::unordered_map<long, VisionPattern> > > _movingPatterns;
 
-	/// @brief get patterns for the given movement
-	/// it only returns the patterns to increment (to get the pattern to decrement one need to call)
-	/// this function with -dx and -dy where dx and dy is the movement of the entity
-	VisionPattern const &getMovementPattern(long lineOfSight_p, long dx, long dy);
 };
 
 } // octopus

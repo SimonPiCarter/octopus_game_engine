@@ -211,6 +211,9 @@ void updateVisionGridFromMovement(State &state_p, Entity const *ent_p, long dx, 
 /// it is like the current vision but not reset when moving or dying
 void updateExplorationGridFromMovement(State &state_p, Entity const *ent_p, long dx, long dy);
 
+/// @brief get the vision grid of the given team
+VisionGrid * getVisionGrid(State &state_p, unsigned long team_p);
+
 /// @brief check if the grid elements corresponding to the entity
 /// are free
 bool checkGrid(State const &state_p, Entity const *ent_p, bool ignoreAbandonedTemples_p);

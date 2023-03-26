@@ -129,6 +129,16 @@ bool Step::isCanceled(Handle const &handle_p) const
 	return _canceledBuildings.find(handle_p) != _canceledBuildings.end();
 }
 
+void Step::addHpChange(Handle const &handle_p, double delta_p)
+{
+	_hpChange[handle_p] += delta_p;
+}
+
+std::unordered_map<Handle, double> const& Step::getHpChange() const
+{
+	return _hpChange;
+}
+
 void apply(Step const & step_p, State &state_p)
 {
 	// apply all steppables

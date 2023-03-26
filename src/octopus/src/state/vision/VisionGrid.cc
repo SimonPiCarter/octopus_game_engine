@@ -10,7 +10,8 @@
 namespace octopus
 {
 
-VisionGrid::VisionGrid(unsigned long size_p) : _grid(size_p, std::vector<long long>(size_p, 0)), _exploration(size_p, std::vector<long long>(size_p, 0))
+VisionGrid::VisionGrid(unsigned long size_p)
+	: _size(size_p), _grid(size_p, std::vector<long long>(size_p, 0)), _exploration(size_p, std::vector<long long>(size_p, 0))
 {}
 
 /// @brief check if the given entity is visible
@@ -84,6 +85,18 @@ void VisionGrid::updateExplorationFromMovement(const Entity &ent_p, long dx, lon
 {
 	VisionPattern const &pattern_l = getPattern(ent_p._model._lineOfSight);
 	updateGrid(ent_p, true, _exploration, pattern_l);
+}
+
+void VisionGrid::incrementVisionGrid(size_t x, size_t y, long long delta_p, bool exploration_p)
+{
+	if(!exploration_p)
+	{
+		_grid[x][y] += delta_p;
+	}
+	else
+	{
+		_exploration[x][y] += delta_p;
+	}
 }
 
 VisionPattern const &VisionGrid::getPattern(long lineOfSight_p)

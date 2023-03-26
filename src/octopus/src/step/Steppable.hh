@@ -102,6 +102,7 @@ namespace octopus
 	class UnitHarvestQuantityStep;
 	class UnitHarvestTypeStep;
 	class UnitSpawnStep;
+	class VisionChangeStep;
 
 	/// @brief This is used to enable specific step comportement in
 	/// libs using Octopus
@@ -180,6 +181,7 @@ namespace octopus
 			virtual void visit(UnitHarvestQuantityStep const *steppable_p) = 0;
 			virtual void visit(UnitHarvestTypeStep const *steppable_p) = 0;
 			virtual void visit(UnitSpawnStep const *steppable_p) = 0;
+			virtual void visit(VisionChangeStep const *steppable_p) = 0;
 	};
 }
 

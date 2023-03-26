@@ -97,6 +97,7 @@ public:
 	virtual void visit(octopus::UnitHarvestQuantityStep const *step_p) override;
 	virtual void visit(octopus::UnitHarvestTypeStep const *) override {}
 	virtual void visit(octopus::UnitSpawnStep const *step_p) override;
+	virtual void visit(octopus::VisionChangeStep const *) override {}
 
 private:
 	World &_world;

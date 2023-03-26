@@ -10,6 +10,7 @@
 #include "step/entity/EntityHitPointChangeStep.hh"
 #include "step/entity/spawn/EntitySpawnStep.hh"
 #include "step/player/PlayerSpawnStep.hh"
+#include "step/vision/VisionChangeStep.hh"
 
 using namespace octopus;
 
@@ -36,8 +37,11 @@ TEST(VisionGridOnStep, move_then_test)
 
 	Step second_l(&initial_l);
 
-	second_l.addSteppable(new EntityMoveStep(0, Vector {2., 2.}));
+	second_l.addEntityMoveStep(new EntityMoveStep(0, Vector {2., 2.}));
 	second_l.addSteppable(new EntityHitPointChangeStep(0, -10.));
+
+	std::list<VisionChangeStep *> list_l = newVisionChangeStep(state_l, second_l, state_l.getVisionHandler());
+	std::for_each(list_l.begin(), list_l.end(), std::bind(&Step::addSteppable, &second_l, std::placeholders::_1));
 
 	apply(second_l, state_l);
 
@@ -72,7 +76,10 @@ TEST(VisionGridOnStep, death_then_move)
 	Step second_l(&initial_l);
 
 	second_l.addSteppable(new EntityHitPointChangeStep(0, -10.));
-	second_l.addSteppable(new EntityMoveStep(0, Vector {2., 2.}));
+	second_l.addEntityMoveStep(new EntityMoveStep(0, Vector {2., 2.}));
+
+	std::list<VisionChangeStep *> list_l = newVisionChangeStep(state_l, second_l, state_l.getVisionHandler());
+	std::for_each(list_l.begin(), list_l.end(), std::bind(&Step::addSteppable, &second_l, std::placeholders::_1));
 
 	apply(second_l, state_l);
 

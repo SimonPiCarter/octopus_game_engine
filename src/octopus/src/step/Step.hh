@@ -4,6 +4,7 @@
 #include <list>
 #include <iostream>
 #include <map>
+#include <unordered_map>
 #include <set>
 
 #include "state/ResourceType.hh"
@@ -65,6 +66,11 @@ namespace octopus
 			/// @brief check if the building has been canceled already
 			bool isCanceled(Handle const &handle_p) const;
 
+			/// @brief add an hp change
+			void addHpChange(Handle const &handle_p, double delta_p);
+			/// @brief get all cumulative hp change
+			std::unordered_map<Handle, double> const& getHpChange() const;
+
 			/// @brief get previous step
 			/// @return previous step
 			Step const * getPrev() const { return _prev; }
@@ -92,6 +98,9 @@ namespace octopus
 
 			/// @brief set of cancelled buildings to avoid refunding them multiple times
 			std::set<Handle> _canceledBuildings;
+
+			/// @brief vector of hp change for entities
+			std::unordered_map<Handle, double> _hpChange;
 
 			Step const * const _prev {nullptr};
 

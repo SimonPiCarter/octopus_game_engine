@@ -46,7 +46,7 @@ public:
     virtual void visit(EntityAttackStep const *) {}
     virtual void visit(EntityBuffStep const *) {}
     virtual void visit(EntityFrozenStep const *) {}
-    virtual void visit(EntityHitPointChangeStep const *) {}
+    virtual void visit(EntityHitPointChangeStep const *);
     virtual void visit(EntityMoveStep const *) {}
     virtual void visit(EntityUpdateWaitingStep const *) {}
     virtual void visit(EntitySpawnStep const *);
@@ -82,6 +82,8 @@ public:
     virtual void visit(UnitHarvestQuantityStep const *) {}
     virtual void visit(UnitHarvestTypeStep const *) {}
     virtual void visit(UnitSpawnStep const *);
+    virtual void visit(VisionChangeStep const *) {}
+
 private:
     Step &_step;
 };
