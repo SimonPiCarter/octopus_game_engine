@@ -7,6 +7,10 @@ namespace numeric
 
 double square_root(double v)
 {
+	if(is_zero(v))
+	{
+		return 0.;
+	}
 	double res_l(1.);
 	double epsilon_l(0.000001);
 

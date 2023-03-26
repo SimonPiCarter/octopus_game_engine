@@ -114,6 +114,7 @@ add_library(octopus
 	${CMAKE_CURRENT_SOURCE_DIR}/src/library/Library.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/utils/DynamicBitset.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/utils/Fixed.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/src/utils/FixedPoint.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/utils/Vector.cc
 )
 

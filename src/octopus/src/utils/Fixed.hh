@@ -701,7 +701,7 @@ double abs(double d);
 
 namespace octopus
 {
-	typedef FixedPoint<1000000> Fixed;
+	typedef double Fixed;
 
 	template <size_t I, size_t F>
 	long long to_int(numeric::fixed<I, F> const &f) {

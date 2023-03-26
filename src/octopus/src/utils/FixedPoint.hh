@@ -268,10 +268,14 @@ octopus::FixedPoint<e> sqr(octopus::FixedPoint<e> const &f) {
 	return f*f;
 }
 
+double sqr(double const &f);
+
 template <long long e>
 bool is_zero(octopus::FixedPoint<e> const &f) {
 	return std::abs(f.data()) < 1;
 }
+
+bool is_zero(double const &f);
 
 namespace numeric
 {

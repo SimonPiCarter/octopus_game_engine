@@ -272,7 +272,7 @@ namespace RVO {
 	 */
 	inline std::ostream &operator<<(std::ostream &os, const Vector2 &vector)
 	{
-		os << "(" << to_double(vector.x()) << "," << to_double(vector.y()) << ")";
+		os << "(" << octopus::to_double(vector.x()) << "," << octopus::to_double(vector.y()) << ")";
 
 		return os;
 	}
