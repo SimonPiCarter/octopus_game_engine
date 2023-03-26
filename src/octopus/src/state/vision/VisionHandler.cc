@@ -52,24 +52,32 @@ bool VisionHandler::isExplored(unsigned long team_p, unsigned long x, unsigned l
 
 void VisionHandler::updateVision(const State &state_p, const Entity &ent_p, bool set_p)
 {
-	Player const *player_l = state_p.getPlayer(ent_p._player);
-	while(player_l->_team >= _grid.size())
-	{
-		_grid.push_back(new VisionGrid(_size));
-	}
-
-	_grid.at(player_l->_team)->updateVision(ent_p, set_p);
+	safeGetGrid(state_p, ent_p._player)->updateVision(ent_p, set_p);
 }
 
 void VisionHandler::updateExploration(const State &state_p, const Entity &ent_p, bool set_p)
 {
-	Player const *player_l = state_p.getPlayer(ent_p._player);
-	while(player_l->_team >= _grid.size())
+	safeGetGrid(state_p, ent_p._player)->updateExploration(ent_p, set_p);
+}
+
+void VisionHandler::updateVisionFromMovement(const State &state_p, const Entity &ent_p, long dx, long dy)
+{
+	safeGetGrid(state_p, ent_p._player)->updateVisionFromMovement(ent_p, dx, dy);
+}
+
+void VisionHandler::updateExplorationFromMovement(const State &state_p, const Entity &ent_p, long dx, long dy)
+{
+	safeGetGrid(state_p, ent_p._player)->updateExplorationFromMovement(ent_p, dx, dy);
+}
+
+VisionGrid * VisionHandler::safeGetGrid(const State &state_p, unsigned long player_p)
+{
+	Player const *player_l = state_p.getPlayer(player_p);
+	while(player_p >= _grid.size())
 	{
 		_grid.push_back(new VisionGrid(_size));
 	}
-
-	_grid.at(player_l->_team)->updateExploration(ent_p, set_p);
+	return _grid.at(player_l->_team);
 }
 
 } // octopus

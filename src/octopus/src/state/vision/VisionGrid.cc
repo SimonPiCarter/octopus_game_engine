@@ -1,5 +1,7 @@
 #include "VisionGrid.hh"
 
+#include <algorithm>
+
 #include "state/entity/Entity.hh"
 #include "state/model/entity/EntityModel.hh"
 #include "utils/Box.hh"
@@ -8,7 +10,7 @@
 namespace octopus
 {
 
-VisionGrid::VisionGrid(unsigned long size_p) : _grid(size_p, std::vector<long>(size_p, 0)), _exploration(size_p, std::vector<long>(size_p, 0))
+VisionGrid::VisionGrid(unsigned long size_p) : _grid(size_p, std::vector<long long>(size_p, 0)), _exploration(size_p, std::vector<long long>(size_p, 0))
 {}
 
 /// @brief check if the given entity is visible
@@ -42,52 +44,46 @@ bool VisionGrid::isExplored(unsigned long x, unsigned long y) const
 	return _exploration.at(x).at(y) > 0;
 }
 
-void VisionGrid::updateVision(const Entity &ent_p, bool set_p)
+void updateGrid(const Entity &ent_p, bool set_p, std::vector<std::vector<long long> > &grid_p, VisionPattern const &pattern_p)
 {
-	VisionPattern const &pattern_l = getPattern(ent_p._model._lineOfSight);
-
-	if(set_p)
+	for(std::pair<long, long> const &pair_l : pattern_p)
 	{
-		Logger::getDebug() << "VisionGrid :: increasing vision count on " << ent_p._pos<<" for entity "<<ent_p._handle<<std::endl;
-	}
-	else
-	{
-		Logger::getDebug() << "VisionGrid :: decresing vision count on " << ent_p._pos<<" for entity "<<ent_p._handle<<std::endl;
-	}
-	for(std::pair<long, long> const &pair_l : pattern_l)
-	{
-		unsigned long x = std::max(0l, std::min<long>(to_int(pair_l.first+ent_p._pos.x), _grid.size()-1));
-		unsigned long y = std::max(0l, std::min<long>(to_int(pair_l.second+ent_p._pos.y), _grid[x].size()-1));
+		unsigned long x = std::max(0l, std::min<long>(to_int(pair_l.first+ent_p._pos.x), grid_p.size()-1));
+		unsigned long y = std::max(0l, std::min<long>(to_int(pair_l.second+ent_p._pos.y), grid_p[x].size()-1));
 
 		if(set_p)
 		{
-			++_grid[x][y];
+			++grid_p[x][y];
 		}
 		else
 		{
-			--_grid[x][y];
+			--grid_p[x][y];
 		}
 	}
+}
+
+void VisionGrid::updateVision(const Entity &ent_p, bool set_p)
+{
+	VisionPattern const &pattern_l = getPattern(ent_p._model._lineOfSight);
+	updateGrid(ent_p, set_p, _grid, pattern_l);
 }
 
 void VisionGrid::updateExploration(const Entity &ent_p, bool set_p)
 {
 	VisionPattern const &pattern_l = getPattern(ent_p._model._lineOfSight);
+	updateGrid(ent_p, set_p, _exploration, pattern_l);
+}
 
-	for(std::pair<long, long> const &pair_l : pattern_l)
-	{
-		unsigned long x = std::max(0l, std::min<long>(to_int(pair_l.first+ent_p._pos.x), _grid.size()-1));
-		unsigned long y = std::max(0l, std::min<long>(to_int(pair_l.second+ent_p._pos.y), _grid[x].size()-1));
+void VisionGrid::updateVisionFromMovement(const Entity &ent_p, long dx, long dy)
+{
+	VisionPattern const &pattern_l = getMovementPattern(ent_p._model._lineOfSight, dx, dy);
+	updateGrid(ent_p, true, _grid, pattern_l);
+}
 
-		if(set_p)
-		{
-			++_exploration[x][y];
-		}
-		else
-		{
-			--_exploration[x][y];
-		}
-	}
+void VisionGrid::updateExplorationFromMovement(const Entity &ent_p, long dx, long dy)
+{
+	VisionPattern const &pattern_l = getPattern(ent_p._model._lineOfSight);
+	updateGrid(ent_p, true, _exploration, pattern_l);
 }
 
 VisionPattern const &VisionGrid::getPattern(long lineOfSight_p)
@@ -122,6 +118,35 @@ VisionPattern const &VisionGrid::getPattern(long lineOfSight_p)
 	}
 
 	return pattern_l;
+}
+
+VisionPattern const &VisionGrid::getMovementPattern(long lineOfSight_p, long dx, long dy)
+{
+	// check cache
+	if((dx == 0 && dy == 0)
+	|| !_movingPatterns[lineOfSight_p][dx][dy].empty() )
+	{
+		return _movingPatterns[lineOfSight_p][dx][dy];
+	}
+
+	// get pattern for given los
+	VisionPattern const & pattern_l = getPattern(lineOfSight_p);
+
+	VisionPattern &movingPattern_l = _movingPatterns[lineOfSight_p][dx][dy];
+
+	// list pattern for faster deletion
+	std::list<std::pair<long, long> > listPattern_l(pattern_l.begin(), pattern_l.end());
+
+	for(std::pair<long, long> const &pair_l : pattern_l)
+	{
+		long x = pair_l.first - dx;
+		long y = pair_l.second - dy;
+
+		listPattern_l.remove(std::make_pair(x, y));
+	}
+	movingPattern_l.insert(movingPattern_l.end(), listPattern_l.begin(), listPattern_l.end());
+
+	return movingPattern_l;
 }
 
 } // octopus

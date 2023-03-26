@@ -15,6 +15,7 @@ void updateFromProgress(Building *ent_p, State &state_p)
 		if(ent_p->_alive)
 		{
 			updateGrid(state_p, ent_p, false);
+			updateVisionGrid(state_p, ent_p, false);
 			updateExplorationGrid(state_p, ent_p, false);
 		}
 		ent_p->_alive = false;
@@ -25,6 +26,7 @@ void updateFromProgress(Building *ent_p, State &state_p)
 		if(!ent_p->_alive)
 		{
 			updateGrid(state_p, ent_p, true);
+			updateVisionGrid(state_p, ent_p, true);
 			updateExplorationGrid(state_p, ent_p, true);
 		}
 		ent_p->_alive = true;

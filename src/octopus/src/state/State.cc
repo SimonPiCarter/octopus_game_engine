@@ -586,13 +586,25 @@ void updateGrid(State &state_p, Entity const *ent_p, bool set_p)
 			}
 		}
 	}
+}
 
+void updateVisionGrid(State &state_p, Entity const *ent_p, bool set_p)
+{
 	state_p.getVisionHandler().updateVision(state_p, *ent_p, set_p);
 }
 
 void updateExplorationGrid(State &state_p, Entity const *ent_p, bool set_p)
 {
 	state_p.getVisionHandler().updateExploration(state_p, *ent_p, set_p);
+}
+
+void updateVisionGridFromMovement(State &state_p, Entity const *ent_p, long dx, long dy)
+{
+	state_p.getVisionHandler().updateVisionFromMovement(state_p, *ent_p, dx, dy);
+}
+void updateExplorationGridFromMovement(State &state_p, Entity const *ent_p, long dx, long dy)
+{
+	state_p.getVisionHandler().updateExplorationFromMovement(state_p, *ent_p, dx, dy);
 }
 
 bool checkGrid(State const &state_p, Entity const *ent_p, bool ignoreAbandonedTemples_p)

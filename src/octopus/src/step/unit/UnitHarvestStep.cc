@@ -16,6 +16,7 @@ void updateFromResource(State &state_p, Resource *res_p)
 		if(res_p->_alive)
 		{
 			updateGrid(state_p, res_p, false);
+			updateVisionGrid(state_p, res_p, false);
 		}
 		res_p->_alive = false;
 	}
@@ -24,6 +25,7 @@ void updateFromResource(State &state_p, Resource *res_p)
 		if(!res_p->_alive)
 		{
 			updateGrid(state_p, res_p, true);
+			updateVisionGrid(state_p, res_p, true);
 		}
 		res_p->_alive = true;
 	}

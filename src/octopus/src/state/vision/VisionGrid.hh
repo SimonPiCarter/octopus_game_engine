@@ -38,25 +38,44 @@ public:
 	/// @warning do not check team of entity
 	void updateVision(const Entity &ent_p, bool set_p);
 
-	/// @brief update the grid vision count
+	/// @brief update the grid exploration count
 	/// @param ent_p the entity used to update
 	/// @param set_p true if the entity should be added to the vision grid
 	/// false if it should be removed
 	/// @warning do not check team of entity
 	void updateExploration(const Entity &ent_p, bool set_p);
 
+	/// @brief update the grid vision count from a movement in the grid
+	/// @param ent_p the entity used to update
+	/// @warning do not check team of entity
+	void updateVisionFromMovement(const Entity &ent_p, long dx, long dy);
+
+	/// @brief update the grid exploration count from a movement in the grid
+	/// @param ent_p the entity used to update
+	/// @warning do not check team of entity
+	void updateExplorationFromMovement(const Entity &ent_p, long dx, long dy);
+
 protected:
 	/// @brief this is the vision grid
 	/// it tracks the number of unit seeing one node of the grid
-	std::vector<std::vector<long> > _grid;
+	std::vector<std::vector<long long> > _grid;
 
 	/// @brief track if a node has been explored already
-	std::vector<std::vector<long> > _exploration;
+	std::vector<std::vector<long long> > _exploration;
 
 	/// @brief cache vision pattern based on line of sight
 	std::unordered_map<long, VisionPattern> _patterns;
 
 	VisionPattern const &getPattern(long lineOfSight_p);
+
+	/// @brief cache vision pattern for movement
+	/// indexing si done by : los, dx, dy
+	std::unordered_map<long, std::unordered_map<long, std::unordered_map<long, VisionPattern> > > _movingPatterns;
+
+	/// @brief get patterns for the given movement
+	/// it only returns the patterns to increment (to get the pattern to decrement one need to call)
+	/// this function with -dx and -dy where dx and dy is the movement of the entity
+	VisionPattern const &getMovementPattern(long lineOfSight_p, long dx, long dy);
 };
 
 } // octopus

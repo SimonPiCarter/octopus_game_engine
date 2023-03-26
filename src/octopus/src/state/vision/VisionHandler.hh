@@ -38,10 +38,20 @@ public:
 	/// false if it should be removed
 	void updateExploration(const State &state_p, const Entity &ent_p, bool set_p);
 
+	/// @brief update the grid vision from movement
+	/// @param ent_p the entity used to update
+	void updateVisionFromMovement(const State &state_p, const Entity &ent_p, long dx, long dy);
+
+	/// @brief update the global grid vision from movement
+	/// @param ent_p the entity used to update
+	void updateExplorationFromMovement(const State &state_p, const Entity &ent_p, long dx, long dy);
+
 protected:
 	unsigned long const _size;
 	/// @brief vision grid for every team
 	std::vector<VisionGrid *> _grid;
+
+	VisionGrid * safeGetGrid(const State &state_p, unsigned long player_p);
 };
 
 } // octopus

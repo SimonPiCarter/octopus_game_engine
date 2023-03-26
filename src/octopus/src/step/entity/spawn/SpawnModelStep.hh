@@ -41,6 +41,7 @@ public:
 		if(ent_l->_alive)
 		{
 			updateGrid(state_p, ent_l, true);
+			updateVisionGrid(state_p, ent_l, true);
 			updateExplorationGrid(state_p, ent_l, true);
 		}
 
