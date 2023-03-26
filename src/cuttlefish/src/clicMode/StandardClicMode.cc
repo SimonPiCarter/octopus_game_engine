@@ -212,8 +212,8 @@ void StandardClicMode::handleRightClic(octopus::Vector const &clicWorldPosition_
 	// mouse tick
 	Picture * tick_l = new Picture(window_p.loadTexture("resources/clic_marker.png"), 16, 16, {5}, {0.1});
 	tick_l->setEndAfterLastFrame(true);
-	octopus::Vector pixelPos_l = window_p.getPixelVector(to_double(clicWorldPosition_p.x), to_double(clicWorldPosition_p.y));
-	tick_l->setDestination(pixelPos_l.x.to_int()-16-window_p.getCamera().x, pixelPos_l.y.to_int()-16-window_p.getCamera().y, 32, 32);
+	octopus::Vector pixelPos_l = window_p.getPixelVector(octopus::to_double(clicWorldPosition_p.x), octopus::to_double(clicWorldPosition_p.y));
+	tick_l->setDestination(octopus::to_int(pixelPos_l.x)-16-window_p.getCamera().x, octopus::to_int(pixelPos_l.y)-16-window_p.getCamera().y, 32, 32);
 	world_p.getDyingPictures().push_back(tick_l);
 
 	for(SpriteEntity * selected_l : selection_p._sprites)

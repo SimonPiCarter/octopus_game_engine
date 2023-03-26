@@ -27,7 +27,9 @@ TEST(conflictSolverTest, simple)
 	state_l.addEntity(building_l);
 
 	updateGrid(state_l, ent_l, true);
+	updateVisionGrid(state_l, ent_l, true);
 	updateGrid(state_l, building_l, true);
+	updateVisionGrid(state_l, building_l, true);
 
 	EntityMoveStep * moveStep_l = new EntityMoveStep(0, Vector { -1, -1} );
 	step_l.addEntityMoveStep(moveStep_l);
