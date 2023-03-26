@@ -1,4 +1,6 @@
 
+#include "library/levels/MazeLevel.hh"
+#include "library/levels/ArenaLevel.hh"
 #include "library/levels/WaveLevel.hh"
 
 // octopus
@@ -11,8 +13,10 @@
 int main()
 {
 	octopus::Library lib_l;
-	std::list<octopus::Steppable *> spawners_l = WaveLevelSteps(lib_l, 15, 0.1*60*100, 0, 250);
-	std::list<octopus::Command *> commands_l = WaveLevelCommands(lib_l, 250);
+	//std::list<octopus::Steppable *> spawners_l = WaveLevelSteps(lib_l, 15, 0.1*60*100, 0, 250);
+	//std::list<octopus::Command *> commands_l = WaveLevelCommands(lib_l, 250);
+	std::list<octopus::Steppable *> spawners_l = ArenaLevelSteps(lib_l, 500);
+	std::list<octopus::Command *> commands_l = ArenaLevelCommands(lib_l);
 
 	octopus::Controller controller_l(spawners_l, 0.01, commands_l, 5, 50);
 	controller_l.enableORCA();
@@ -25,7 +29,7 @@ int main()
 
 	octopus::Logger::getNormal()<<"Playing"<<std::endl;
 
-	while(!over_l)
+	while(!over_l && controller_l.getMetrics()._nbStepsCompiled < 1000)
 	{
         // update controller
         controller_l.update(elapsed_l);
