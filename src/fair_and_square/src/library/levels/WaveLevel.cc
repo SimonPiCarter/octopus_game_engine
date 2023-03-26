@@ -200,7 +200,7 @@ void WaveSpawn::trigger(State const &state_p, Step &step_p, unsigned long) const
 	// nbUnits_l = nbUnits_l - nbUnitsLast_l;
 	for(unsigned long i = 0 ; i < _wave * 10 ; ++ i)
 	{
-		Unit unit_l({ _worldSize-10, _worldSize-10 }, false, _lib.getUnitModel(model_l));
+		Unit unit_l({ _worldSize-10., _worldSize-10. }, false, _lib.getUnitModel(model_l));
 		unit_l._player = _player;
 		Handle handle_l = getNextHandle(step_p, state_p);
 		step_p.addSteppable(new UnitSpawnStep(handle_l, unit_l));

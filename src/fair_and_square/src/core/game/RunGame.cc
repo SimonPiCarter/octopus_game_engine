@@ -12,6 +12,7 @@
 
 #include "library/levels/WaveLevel.hh"
 #include "library/levels/ArenaLevel.hh"
+#include "library/levels/MazeLevel.hh"
 #include "core/game/loader/ResourceLoader.hh"
 
 #include "serialization/CommandSerialization.hh"
@@ -252,6 +253,15 @@ void runArena(cuttlefish::Window &window_p, size_t number_p)
 	octopus::Library lib_l;
 	std::list<octopus::Steppable *> spawners_l = ArenaLevelSteps(lib_l, number_p);
 	std::list<octopus::Command *> commands_l = ArenaLevelCommands(lib_l);
+
+	runGame(window_p, spawners_l, commands_l, 250);
+}
+
+void runMaze(cuttlefish::Window &window_p, size_t number_p)
+{
+	octopus::Library lib_l;
+	std::list<octopus::Steppable *> spawners_l = MazeLevelSteps(lib_l, number_p);
+	std::list<octopus::Command *> commands_l = MazeLevelCommands(lib_l);
 
 	runGame(window_p, spawners_l, commands_l, 250);
 }

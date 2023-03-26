@@ -20,6 +20,8 @@ namespace fas
     void loadWave(cuttlefish::Window &window_p);
 
     void runArena(cuttlefish::Window &window_p, size_t number_p);
+
+    void runMaze(cuttlefish::Window &window_p, size_t number_p);
 } // namespace fas
 
 

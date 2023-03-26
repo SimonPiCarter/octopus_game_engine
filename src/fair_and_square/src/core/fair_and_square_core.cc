@@ -108,6 +108,18 @@ int main( int argc, char* args[] )
 {
 	Picture * button_l = new Picture(window_l.loadTexture("resources/button.png"), 256, 64, {1, 1 ,1}, {1, 1, 1});
 	Text * text_l = new Text(&window_l, {0, 0, 0}, 0, 0);
+	text_l->setText("Play Maze Level (50)");
+	menu_l.addButton(button_l, text_l, std::bind(fas::runMaze, std::ref(window_l), 50));
+}
+{
+	Picture * button_l = new Picture(window_l.loadTexture("resources/button.png"), 256, 64, {1, 1 ,1}, {1, 1, 1});
+	Text * text_l = new Text(&window_l, {0, 0, 0}, 0, 0);
+	text_l->setText("Play Maze Level (500)");
+	menu_l.addButton(button_l, text_l, std::bind(fas::runMaze, std::ref(window_l), 500));
+}
+{
+	Picture * button_l = new Picture(window_l.loadTexture("resources/button.png"), 256, 64, {1, 1 ,1}, {1, 1, 1});
+	Text * text_l = new Text(&window_l, {0, 0, 0}, 0, 0);
 	text_l->setText("FullScreen (toggle)");
 	menu_l.addButton(button_l, text_l, std::bind(toogleFullScreen, std::ref(window_l), std::ref(fullscreen_l)));
 }
