@@ -13,6 +13,7 @@
 
 namespace octopus
 {
+	class AttackModifier;
 
 	class Entity : public Commandable
 	{
@@ -48,6 +49,8 @@ namespace octopus
 			EntityModel const &_model;
 
 			unsigned long _player {0};
+
+			AttackModifier const * _attackMod {nullptr};
 
 			///
 			/// Buffing properties
