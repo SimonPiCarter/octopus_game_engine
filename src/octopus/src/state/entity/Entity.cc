@@ -55,7 +55,7 @@ double Entity::getArmor() const
 }
 double Entity::getHpMax() const
 {
-	return applyBuff( _model._hpMax, _buffHpMax);
+	return std::max(1., applyBuff( _model._hpMax, _buffHpMax));
 }
 
 double Entity::getProduction() const
