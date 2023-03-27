@@ -36,6 +36,7 @@
 #include "Obstacle.hh"
 
 #include "state/entity/Entity.hh"
+#include "logger/Logger.hh"
 
 namespace RVO {
 	Agent::Agent(RVOSimulator *sim) : maxNeighbors_(0), maxSpeed_(0.0f), neighborDist_(0.0f), radius_(0.0f), sim_(sim), timeHorizon_(0.0f), timeHorizonObst_(0.0f), id_(0) { }
@@ -77,7 +78,11 @@ namespace RVO {
 			bool alreadyCovered = false;
 
 			for (size_t j = 0; j < orcaLines_.size(); ++j) {
-				if (det(invTimeHorizonObst * relativePosition1 - orcaLines_[j].point, orcaLines_[j].direction) - invTimeHorizonObst * radius_ >= -RVO_EPSILON && det(invTimeHorizonObst * relativePosition2 - orcaLines_[j].point, orcaLines_[j].direction) - invTimeHorizonObst * radius_ >=  -RVO_EPSILON) {
+				const octopus::Fixed det1_l = det(invTimeHorizonObst * relativePosition1 - orcaLines_[j].point, orcaLines_[j].direction) - invTimeHorizonObst * radius_;
+				const octopus::Fixed det2_l = det(invTimeHorizonObst * relativePosition2 - orcaLines_[j].point, orcaLines_[j].direction) - invTimeHorizonObst * radius_;
+
+				if (det1_l >= -RVO_EPSILON
+				&& det2_l >=  -RVO_EPSILON) {
 					alreadyCovered = true;
 					break;
 				}
@@ -248,9 +253,10 @@ namespace RVO {
 			 * Project on left leg, right leg, or cut-off line, whichever is closest
 			 * to velocity.
 			 */
-			const octopus::Fixed distSqCutoff = ((t < 0.0f || t > 1.0f || obstacle1 == obstacle2) ? std::numeric_limits<octopus::Fixed >::infinity() : absSq(velocity_ - (leftCutoff + t * cutoffVec)));
-			const octopus::Fixed distSqLeft = ((tLeft < 0.0f) ? std::numeric_limits<octopus::Fixed>::infinity() : absSq(velocity_ - (leftCutoff + tLeft * leftLegDirection)));
-			const octopus::Fixed distSqRight = ((tRight < 0.0f) ? std::numeric_limits<octopus::Fixed>::infinity() : absSq(velocity_ - (rightCutoff + tRight * rightLegDirection)));
+			const octopus::Fixed distSqCutoff = ((t < 0.0f || t > 1.0f || obstacle1 == obstacle2) ? numeric::infinity<octopus::Fixed>() : absSq(velocity_ - (leftCutoff + t * cutoffVec)));
+			const octopus::Fixed distSqLeft = ((tLeft < 0.0f) ? numeric::infinity<octopus::Fixed>() : absSq(velocity_ - (leftCutoff + tLeft * leftLegDirection)));
+			const octopus::Fixed distSqRight = ((tRight < 0.0f) ? numeric::infinity<octopus::Fixed>() : absSq(velocity_ - (rightCutoff + tRight * rightLegDirection)));
+
 
 			if (distSqCutoff <= distSqLeft && distSqCutoff <= distSqRight) {
 				/* Project on cut-off line. */

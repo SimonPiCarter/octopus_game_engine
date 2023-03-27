@@ -2,6 +2,7 @@
 #define __FixedPoint__
 
 #include <iostream>
+#include <limits>
 
 namespace octopus
 {
@@ -308,6 +309,19 @@ template <long long e>
 octopus::FixedPoint<e> abs(octopus::FixedPoint<e> const &f)
 {
 	return octopus::FixedPoint<e>(std::abs(f.data()), true);
+}
+
+
+template<class Number, class = typename std::enable_if<std::is_arithmetic<Number>::value>::type>
+Number infinity()
+{
+	return std::numeric_limits<Number>::infinity();
+}
+
+template<class Fixed>
+Fixed infinity()
+{
+	return Fixed(std::numeric_limits<long long>::max(), true);
 }
 
 } // namespace numeric
