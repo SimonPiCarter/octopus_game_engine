@@ -261,6 +261,13 @@ void writeCommand(std::ofstream &file_p, Command const *cmd_p)
         write(file_p, typped_l->getPlayer());
         write(file_p, typped_l->getType());
     }
+    else if(dynamic_cast<BuildingUnitCancelCommand const *>(cmd_p))
+    {
+        write(file_p, 12ul);
+        BuildingUnitCancelCommand const *typped_l = dynamic_cast<BuildingUnitCancelCommand const *>(cmd_p);
+        write(file_p, typped_l->getHandleCommand());
+        write(file_p, typped_l->_idx);
+    }
     else
     {
         throw std::logic_error("unserializable command thrown in file");
@@ -463,6 +470,16 @@ Command * readCommand(std::ifstream &file_p, Library const &lib_p)
         read(file_p, &type_l);
 
         cmd_l = new PlayerChoseDivinityCommand(player_l, type_l);
+    }
+    else if(cmdId_p == 12)
+    {
+        Handle building_l;
+        unsigned long idx_l;
+
+        read(file_p, &building_l);
+        read(file_p, &idx_l);
+
+        cmd_l = new BuildingUnitCancelCommand(building_l, idx_l);
     }
     if(!cmd_l)
     {

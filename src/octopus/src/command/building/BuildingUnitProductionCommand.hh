@@ -40,7 +40,7 @@ private:
 class BuildingUnitCancelCommand : public Command
 {
 public:
-	BuildingUnitCancelCommand(Handle const &commandHandle_p, size_t idx_p) : Command(commandHandle_p), _idx(idx_p) {}
+	BuildingUnitCancelCommand(Handle const &commandHandle_p, unsigned long idx_p) : Command(commandHandle_p), _idx(idx_p) {}
 
 	/// @brief register the command into the step
 	/// This method is responsible to
@@ -52,8 +52,7 @@ public:
 
 	virtual CommandData * newData() const override { return nullptr; }
 
-private:
-	size_t const _idx;
+	unsigned long const _idx;
 };
 
 } // namespace octopus

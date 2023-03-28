@@ -13,7 +13,7 @@ struct CommandBundle
 {
 	Command * _cmd {nullptr};
 	CommandData * _data {nullptr};
-	size_t _id;
+	size_t _id {0};
 };
 
 /// @brief This class represent a command queue
