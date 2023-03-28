@@ -49,9 +49,9 @@ namespace RVO {
 		agents_.clear();
 		for (size_t i = agents_.size(); i < sim_->agents_.size(); ++i)
 		{
-			if(sim_->agents_[i]->active())
+			if(sim_->agents_[i].active())
 			{
-				agents_.push_back(sim_->agents_[i]);
+				agents_.push_back(&sim_->agents_[i]);
 			}
 		}
 

@@ -54,12 +54,13 @@ namespace RVO {
 	 * \brief      Defines an agent in the simulation.
 	 */
 	class Agent {
-	private:
+	public:
 		/**
 		 * \brief      Constructs an agent instance.
 		 * \param      sim             The simulator instance.
 		 */
 		explicit Agent(RVOSimulator *sim);
+	private:
 
 		/**
 		 * \brief      Computes the neighbors of this agent.
