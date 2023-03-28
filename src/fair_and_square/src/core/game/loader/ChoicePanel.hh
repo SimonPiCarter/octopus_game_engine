@@ -4,6 +4,7 @@
 #include "library/model/bonus/BuffGenerators.hh"
 #include "panel/OptionPanel.hh"
 #include "text/SegmentedText.hh"
+#include "choice/ChoiceSubPanel.hh"
 
 namespace fas
 {
@@ -42,6 +43,7 @@ protected:
 
 	/// @brief background for the options
 	std::vector<cuttlefish::Picture *> _optionsBackground;
+	std::vector<ChoiceSubPanel *> _optionsSubPanel;
 
 	/// @brief temporary texts for option
 	std::vector<cuttlefish::SegmentedText *> _optionsTexts;

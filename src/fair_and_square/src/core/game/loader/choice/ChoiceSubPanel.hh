@@ -1,0 +1,59 @@
+#ifndef __ChoiceSubPanel__
+#define __ChoiceSubPanel__
+
+#include <list>
+
+#include "sprite/Picture.hh"
+
+#include "library/model/bonus/BuffGenerators.hh"
+
+namespace cuttlefish
+{
+    class Window;
+    class WrappedText;
+    class Text;
+    class Texture;
+} // namespace cuttlefish
+
+
+namespace fas
+{
+
+/// @brief This class holds a sub panel for one
+/// option with all the visuals
+/// - icons (one or several) to know on what the buff is going to apply
+/// - Title text
+/// - Description text
+/// - icon of the stat boosted (or new attack modifier)
+/// - bonus text (if applicable)
+class ChoiceSubPanel
+{
+public:
+    ChoiceSubPanel(cuttlefish::Window &window_p, int x, int y, int w, cuttlefish::Picture const & background_p, cuttlefish::Texture const *icons_p);
+    ~ChoiceSubPanel();
+    /// @brief update the sub panel from the option
+    void update(BuffOption const &option_p);
+
+    void display(cuttlefish::Window &window_p);
+
+    cuttlefish::Picture const &getBackground() const;
+private:
+	cuttlefish::Window &_window;
+    int const _x;
+    int const _y;
+    int const _w;
+    cuttlefish::Picture _background;
+
+    cuttlefish::WrappedText *_titleText {nullptr};
+    cuttlefish::WrappedText *_descriptionText {nullptr};
+    std::list<cuttlefish::Picture *> _mainIcons;
+
+    cuttlefish::Picture * _statIcons {nullptr};
+    cuttlefish::Text *_statText {nullptr};
+
+    cuttlefish::Texture const * const _icons;
+};
+
+} // fas
+
+#endif
