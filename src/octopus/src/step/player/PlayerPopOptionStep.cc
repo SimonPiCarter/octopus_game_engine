@@ -28,8 +28,7 @@ void PlayerPopOptionStep::apply(State &state_p, SteppableData *data_p) const
 
     StepOptionsGenerator * generator_l = player_l->_options[_key];
 
-    // do not throw here to avoid
-    if(player_l->_options[_key] == nullptr)
+    if(generator_l == nullptr)
     {
         throw std::logic_error("Error while poping option : no option with the given key "+_key);
     }

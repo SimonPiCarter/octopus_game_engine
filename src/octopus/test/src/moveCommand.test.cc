@@ -46,6 +46,7 @@ TEST(moveCommandTest, simple)
 	/// Step 1
 	///
 	Step step_l(nullptr);
+	StepData stepData_l;
 
 	bool terminated_l = command_l.applyCommand(step_l, state_l, data_l, pathManager_l);
 	EXPECT_FALSE(terminated_l);
@@ -57,7 +58,7 @@ TEST(moveCommandTest, simple)
 	Vector expected_l {1., 0};
 	EXPECT_TRUE(expected_l == entStep_l->_move) << "expected : "<<expected_l<<" real : "<<entStep_l->_move;
 
-	apply(step_l, state_l);
+	apply(step_l, state_l, stepData_l);
 
 	// Now on 4,3
 
@@ -68,13 +69,14 @@ TEST(moveCommandTest, simple)
 	/// Step 2
 	///
 	Step step2_l(nullptr);
+	StepData stepData2_l;
 
 	terminated_l = command_l.applyCommand(step2_l, state_l, data_l, pathManager_l);
 	EXPECT_TRUE(terminated_l);
 
 	ASSERT_EQ(0u, step2_l.getEntityMoveStep().size());
 
-	apply(step2_l, state_l);
+	apply(step2_l, state_l, stepData2_l);
 
 	// Still on 4,3
 

@@ -16,12 +16,15 @@ public:
 	ProductionData(unsigned long completeTime_p) :
 		_progression(0.),
 		_completeTime(completeTime_p),
-		_paid(false) {}
+		_paid(false),
+		_canceled(false) {}
 
 	double _progression;
 	unsigned long const _completeTime;
 
 	bool _paid;
+
+	bool _canceled;
 };
 
 /// @brief This class is used to track unit production

@@ -31,6 +31,8 @@
 #include "world/World.hh"
 
 // octopus
+#include "command/building/BuildingCancelCommand.hh"
+#include "command/building/BuildingUnitCancelCommand.hh"
 #include "command/building/BuildingUnitProductionCommand.hh"
 #include "command/entity/EntityMoveCommand.hh"
 #include "command/entity/EntityWaitCommand.hh"
@@ -286,7 +288,11 @@ void GameLoop::runLoop(Window &window_p)
 			}
 			if (e.type == SDL_MOUSEBUTTONDOWN)
 			{
-				if(_minimap.isInside(e.button.x, e.button.y))
+				if(_prodPanel.getIndex(window_p, e.button.x, e.button.y)._inside)
+				{
+					// NA just eat clic
+				}
+				else if(_minimap.isInside(e.button.x, e.button.y))
 				{
 					if(e.button.button == SDL_BUTTON_LEFT && !dynamic_cast<AttackMoveClicMode *>(currentClicMode_l))
 					{
@@ -306,7 +312,12 @@ void GameLoop::runLoop(Window &window_p)
 			}
 			if (e.type == SDL_MOUSEBUTTONUP)
 			{
-				if(menuActive_l)
+				IndexProductionClic indexProd_l = _prodPanel.getIndex(window_p, e.button.x, e.button.y);
+				if(indexProd_l._inside)
+				{
+					_controller.commitCommandAsPlayer(new octopus::BuildingUnitCancelCommand(indexProd_l._handle, indexProd_l._idx), _world.getPlayer());
+				}
+				else if(menuActive_l)
 				{
 					// NA (just avoid doing anything else)
 				}
@@ -419,11 +430,21 @@ void GameLoop::runLoop(Window &window_p)
 					{
 						for(SpriteEntity * spriteEnt_l : selection_l._sprites)
 						{
-							octopus::EntityWaitCommand * command_l = new octopus::EntityWaitCommand(
-									spriteEnt_l->getHandle(),
-									spriteEnt_l->getHandle()
-								);
-							_controller.commitCommandAsPlayer(command_l, _world.getPlayer());
+							if(state_l.getEntity(spriteEnt_l->getHandle())->_model._isBuilding)
+							{
+								octopus::BuildingCancelCommand * command_l = new octopus::BuildingCancelCommand(
+										spriteEnt_l->getHandle()
+									);
+								_controller.commitCommandAsPlayer(command_l, _world.getPlayer());
+							}
+							else
+							{
+								octopus::EntityWaitCommand * command_l = new octopus::EntityWaitCommand(
+										spriteEnt_l->getHandle(),
+										spriteEnt_l->getHandle()
+									);
+								_controller.commitCommandAsPlayer(command_l, _world.getPlayer());
+							}
 						}
 						break;
 					}

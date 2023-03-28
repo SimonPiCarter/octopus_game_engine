@@ -20,17 +20,25 @@ class OrcaManager;
 class Steppable;
 class State;
 
+/// @brief This struct bundles a pointer to the step
+/// and a pointer to the associated StepData (contains date per state)
+struct StepBundle
+{
+	Step *_step {nullptr};
+	StepData *_stepData {nullptr};
+};
+
 /// @brief simple structure aggregating usefull info for triple buffering
 struct BufferedState
 {
-	BufferedState(unsigned long stepHandled_p, std::list<Step *>::iterator it_p, State *state_p);
+	BufferedState(unsigned long stepHandled_p, std::list<StepBundle>::iterator it_p, State *state_p);
 	~BufferedState();
 
 	unsigned long long getNextStepToApplyId() const;
 
 	unsigned long _stepHandled {0};
 	/// @brief iterator after the last handled step
-	std::list<Step *>::iterator _stepIt;
+	std::list<StepBundle>::iterator _stepIt;
 	State * _state {nullptr};
 };
 
@@ -41,8 +49,8 @@ struct BufferedState
 struct StateAndSteps
 {
 	/// @brief iterator after the last handled step
-	std::list<Step *>::iterator _stepIt;
-	std::list<Step *> const &_steps;
+	std::list<StepBundle>::iterator _stepIt;
+	std::list<StepBundle> const &_steps;
 	State const *_state;
 	Step const &_initialStep;
 };
@@ -157,8 +165,10 @@ private:
 	std::vector<std::list<Trigger const *>> _triggers;
 	/// @brief initial step
 	Step _initialStep;
-	/// @brief list of compiled steps
-	std::list<Step *> _compiledSteps;
+	/// @brief initial step data
+	StepData _initialStepData;
+	/// @brief list of step bundles
+	std::list<StepBundle> _stepBundles;
 
 	/// @brief the metrics of this controller
 	Metrics _metrics;

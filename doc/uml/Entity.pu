@@ -1,0 +1,87 @@
+@startuml entity
+
+class CommandBundle
+note right: Command is not owned by the bundle
+CommandBundle : Command * _cmd
+CommandBundle : CommandData * _data
+CommandBundle : size_t _id
+
+CommandQueue --* CommandBundle : std::list<CommandBundle>
+CommandQueue : std::list<QueueIterator>
+
+Commandable --* CommandQueue : _queue
+Commandable : bool _hasLastCommand
+Commandable : size_t _lastCommand
+
+Entity --|> Commandable
+Entity : Vector _pos
+Entity : bool _frozen
+Entity : Handle _handle
+Entity : bool _alive
+Entity : double _hp
+Entity : unsigned long _reload
+Entity : unsigned long _waiting
+Entity : unsigned long _player
+Entity : AttackModifier const * _attackMod
+Entity --* EntityModel : _model
+Entity --* Buff : _buff{Speed,FullReload,Damage,Armor,HpMax,Production,Harvest}
+
+Buff : double _offset
+Buff : double _coef
+
+class EntityModel
+note left: All models are owned out of state
+EntityModel : bool _isStatic
+EntityModel : double _ray
+EntityModel : double _stepSpeed
+EntityModel : double _hpMax
+EntityModel : double _damage
+EntityModel : double _armor
+EntityModel : double _range
+EntityModel : unsigned long _fullReload
+EntityModel : std::unordered_map<std::string,double> _bonusDamage
+EntityModel : unsigned long _windup
+EntityModel : bool _isBuilding
+EntityModel : bool _isUnit
+EntityModel : bool _isResource
+EntityModel : bool _isBuilder
+EntityModel : bool _invulnerable
+EntityModel : bool _isAbandonedTemple
+EntityModel : std::map<ResourceType,double> _cost
+EntityModel --* Requirements : _requirements
+EntityModel : double _lineOfSight
+EntityModel : std::string _id
+
+Requirements : std::set<std::string> _noBuildings
+Requirements : std::set<std::string> _buildings
+Requirements : std::set<std::string> _technologies
+Requirements : std::map<DivinityType,unsigned long> _divLvl
+
+Building --|> Entity
+Building : double _buildingProgress
+Building : bool _canceled
+Building --* BuildingModel : _buildingModel
+
+BuildingModel --|> EntityModel
+BuildingModel : std::map<ResourceType, bool> _deposit
+BuildingModel : unsigned long _buildingTime
+BuildingModel : Vector _productionOutput
+BuildingModel : std::list<UnitModel const *> _unitModels
+
+Unit --|> Entity
+Unit : ResourceType _typeOfResource
+Unit : double _quantityOfResource
+Unit --* UnitModel : _unitModel
+
+UnitModel --|> EntityModel
+UnitModel : std::map<ResourceType, double> _maxQuantity
+UnitModel : unsigned long _productionTime
+UnitModel : unsigned long _timeToHarvest
+UnitModel : Buffer _buffer
+
+Resource --|> Entity
+Resource : ResourceType _type
+Resource : double _resource
+
+@enduml
+

@@ -54,6 +54,8 @@ bool EntityAttackMoveCommand::applyCommand(Step & step_p, State const &state_p, 
 		attackMoveData_l._subAttackCommand->cleanUp(step_p, state_p, data_p);
 		// get non const pointer here (required by the step)
 		step_p.addSteppable(new CommandDelSubAttackStep(_handleCommand, attackMoveData_l._subAttackCommand->getSource(), attackMoveData_l._subAttackCommand->getTarget()));
+		// return false is necessary here to avoid double move step
+		return false;
 	}
 	else
 	{

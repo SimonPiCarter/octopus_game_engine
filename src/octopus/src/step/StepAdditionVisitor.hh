@@ -23,6 +23,7 @@ public:
     virtual void visit(BuildingSpawnStep const *);
     virtual void visit(BuildingStep const *) {}
     virtual void visit(BuildingCancelStep const *);
+    virtual void visit(CancelUnitProductionStep const *);
     virtual void visit(CommandAddSubAttackStep const *) {}
     virtual void visit(CommandDataWaypointAddStep const *) {}
     virtual void visit(CommandDataWaypointRemoveStep const *) {}

@@ -15,6 +15,7 @@
 #include "step/entity/EntityAttackStep.hh"
 #include "step/entity/EntityMoveStep.hh"
 #include "step/entity/EntityFrozenStep.hh"
+#include "step/entity/EntityUpdateWaitingStep.hh"
 
 
 namespace octopus
@@ -80,12 +81,12 @@ bool EntityAttackCommand::applyCommand(Step & step_p, State const &state_p, Comm
 
 		Vector closest_l = entSource_l->_pos + dir_l * (1. - ratio_l);
 
-		/// @todo check for closer target to reallocate aggro
-
 		// if entity is frozen and not in range it means target has run out of range
 		// scan for target closer only if target is not frozen
-		if(!_frozenTarget)
+		if(!_frozenTarget && entSource_l->_waiting > 50)
 		{
+			// reset waiting
+			step_p.addSteppable(new EntityUpdateWaitingStep(entSource_l->_handle, entSource_l->_waiting, 0));
 			// If target is dead we look for another target in range
 			Entity const * newTarget_l = lookUpNewTarget(state_p, _source);
 

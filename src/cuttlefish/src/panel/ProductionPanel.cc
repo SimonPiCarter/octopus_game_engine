@@ -55,6 +55,9 @@ struct CommandSorter
 void ProductionPanel::refresh(Window &window_p, octopus::State const &state_p)
 {
 	std::vector<std::pair<octopus::BuildingUnitProductionCommand const *, octopus::UnitProductionData const *> > vecCommands_l;
+	std::vector<size_t> vecIdx_l;
+
+
 	for(SpriteEntity * spirteEnt_l : _selection._sprites)
 	{
 		octopus::Entity const * ent_l = state_p.getEntity(spirteEnt_l->getHandle());
@@ -70,6 +73,7 @@ void ProductionPanel::refresh(Window &window_p, octopus::State const &state_p)
 			if(cmd_l && data_l)
 			{
 				vecCommands_l.push_back(std::make_pair(cmd_l, data_l));
+				vecIdx_l.push_back(it_l->_id);
 			}
 			++it_l;
 		}
@@ -77,6 +81,8 @@ void ProductionPanel::refresh(Window &window_p, octopus::State const &state_p)
 
 	std::sort(vecCommands_l.begin(), vecCommands_l.end(), CommandSorter());
 
+	_productionIndex.clear();
+	_productionHandle.clear();
 	_productionToDisplay = std::min(vecCommands_l.size(), _productionPictures.size());
 
 	for(size_t i = 0 ; i < _productionToDisplay ; ++i)
@@ -86,6 +92,9 @@ void ProductionPanel::refresh(Window &window_p, octopus::State const &state_p)
 		_productionPictures[i]->_icon->setFrame(info_l.frame);
 
 		_productionPictures[i]->_bar->setProgress(100.*vecCommands_l[i].second->_progression/vecCommands_l[i].second->_completeTime);
+
+		_productionIndex.push_back(vecIdx_l[i]);
+		_productionHandle.push_back(vecCommands_l[i].first->getHandleCommand());
 	}
 }
 
@@ -102,6 +111,18 @@ void ProductionPanel::addSpriteInfo(std::string const &model_p, int state_p, int
 {
 	_mapIcons[model_p].state = state_p;
 	_mapIcons[model_p].frame = frame_p;
+}
+
+IndexProductionClic ProductionPanel::getIndex(Window &window_p, int x, int y)
+{
+	for(size_t i = 0 ; i < _productionToDisplay ; ++i)
+	{
+		if(_productionPictures[i]->_icon->isInside(window_p, x, y))
+		{
+			return {_productionHandle.at(i), _productionIndex.at(i), true};
+		}
+	}
+	return {0, 0, false};
 }
 
 } // namespace cuttlefish
