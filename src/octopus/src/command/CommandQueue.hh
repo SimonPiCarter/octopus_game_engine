@@ -64,6 +64,9 @@ public:
 	/// @brief Get the bundle associated to the id
 	CommandBundle const &getBundle(size_t id_p) const;
 
+	/// @brief Get the bundle associated to the id
+	CommandBundle &getBundle(size_t id_p);
+
 protected:
 	/// @brief list of all actions in the command queue
 	std::list<CommandBundle> _commandQueue;

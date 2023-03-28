@@ -129,6 +129,16 @@ bool Step::isCanceled(Handle const &handle_p) const
 	return _canceledBuildings.find(handle_p) != _canceledBuildings.end();
 }
 
+void Step::addCmdCanceled(CommandData const *data_p)
+{
+	_canceledCmd.insert(data_p);
+}
+
+bool Step::isCmdCanceled(CommandData const *data_p) const
+{
+	return _canceledCmd.find(data_p) != _canceledCmd.end();
+}
+
 void Step::addHpChange(Handle const &handle_p, double delta_p)
 {
 	_hpChange[handle_p] += delta_p;

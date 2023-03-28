@@ -12,6 +12,7 @@
 
 namespace octopus
 {
+	class CommandData;
 	class EntityMoveStep;
 	class FlyingCommand;
 	class State;
@@ -66,6 +67,9 @@ namespace octopus
 			/// @brief check if the building has been canceled already
 			bool isCanceled(Handle const &handle_p) const;
 
+			void addCmdCanceled(CommandData const *data_p);
+			bool isCmdCanceled(CommandData const *data_p) const;
+
 			/// @brief add an hp change
 			void addHpChange(Handle const &handle_p, double delta_p);
 			/// @brief get all cumulative hp change
@@ -98,6 +102,9 @@ namespace octopus
 
 			/// @brief set of cancelled buildings to avoid refunding them multiple times
 			std::set<Handle> _canceledBuildings;
+
+			/// @brief of commands data canceled in this step (to avoid refunding twice)
+			std::set<CommandData const *> _canceledCmd;
 
 			/// @brief vector of hp change for entities
 			std::unordered_map<Handle, double> _hpChange;

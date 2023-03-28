@@ -2,7 +2,9 @@
 
 #include "Step.hh"
 
+#include "command/data/ProductionData.hh"
 #include "step/building/BuildingCancelStep.hh"
+#include "step/command/data/CancelUnitProductionStep.hh"
 #include "step/entity/EntityHitPointChangeStep.hh"
 #include "step/player/PlayerSpendResourceStep.hh"
 #include "step/player/PlayerResetOptionDivinityStep.hh"
@@ -43,6 +45,11 @@ void StepAdditionVisitor::visit(BuildingCancelStep const *step_p)
     {
         _step.addCanceledBuilding(step_p->_handle);
     }
+}
+
+void StepAdditionVisitor::visit(CancelUnitProductionStep const *step_p)
+{
+    _step.addCmdCanceled(step_p->_data);
 }
 
 void StepAdditionVisitor::visit(EntitySpawnStep const *)

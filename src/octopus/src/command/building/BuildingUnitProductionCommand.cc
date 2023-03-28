@@ -6,12 +6,14 @@
 #include "logger/Logger.hh"
 #include "state/State.hh"
 #include "state/entity/Building.hh"
+#include "state/model/entity/EntityModel.hh"
 #include "step/Step.hh"
 #include "step/entity/spawn/UnitSpawnStep.hh"
 #include "step/command/CommandQueueStep.hh"
 #include "step/command/MissingResourceStep.hh"
 #include "step/command/ProductionPaidStep.hh"
 #include "step/command/ProductionProgressionStep.hh"
+#include "step/command/data/CancelUnitProductionStep.hh"
 #include "step/player/PlayerSpendResourceStep.hh"
 
 namespace octopus
@@ -57,6 +59,12 @@ bool BuildingUnitProductionCommand::applyCommand(Step & step_p, State const &sta
 	Logger::getDebug() << "BuildingUnitProductionCommand:: apply Command "<<_source <<std::endl;
 	Building const * building_l = dynamic_cast<Building const *>(state_p.getEntity(_source));
 
+	if(data_l._canceled)
+	{
+		Logger::getDebug() << "BuildingUnitProductionCommand:: canceled Command "<<_source <<std::endl;
+		return true;
+	}
+
 	if(data_l._progression < data_l._model._productionTime)
 	{
 		Logger::getDebug() << "BuildingUnitProductionCommand :: adding production progression step " <<std::endl;
@@ -74,6 +82,21 @@ bool BuildingUnitProductionCommand::applyCommand(Step & step_p, State const &sta
 	}
 
 	return false;
+}
+
+void BuildingUnitCancelCommand::registerCommand(Step & step_p, State const &state_p)
+{
+	Logger::getDebug() << "BuildingUnitCancelCommand:: register Command "<<_handleCommand <<std::endl;
+	Entity const * ent_l = state_p.getEntity(_handleCommand);
+
+	UnitProductionData const * const data_l = dynamic_cast<UnitProductionData const *>(ent_l->getQueue().getBundle(_idx)._data);
+
+	if(data_l && !data_l->_canceled && !step_p.isCmdCanceled(data_l))
+	{
+		step_p.addSteppable(new PlayerSpendResourceStep(ent_l->_player, getReverseCostMap(data_l->_model._cost)));
+		step_p.addSteppable(new CancelUnitProductionStep(_handleCommand, data_l));
+	}
+	step_p.addSteppable(new CommandStorageStep(this));
 }
 
 } // namespace octopus
