@@ -55,7 +55,7 @@ struct CommandSorter
 void ProductionPanel::refresh(Window &window_p, octopus::State const &state_p)
 {
 	std::vector<std::pair<octopus::BuildingUnitProductionCommand const *, octopus::UnitProductionData const *> > vecCommands_l;
-	std::vector<size_t> vecIdx_l;
+	std::vector<unsigned long> vecIdx_l;
 
 
 	for(SpriteEntity * spirteEnt_l : _selection._sprites)

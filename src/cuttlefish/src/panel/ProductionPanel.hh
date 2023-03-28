@@ -63,7 +63,7 @@ protected:
 	std::vector<ProductionPicture *> _productionPictures;
 
 	/// @brief this is used to store production index in case of cancel
-	std::vector<size_t> _productionIndex;
+	std::vector<unsigned long> _productionIndex;
 	std::vector<octopus::Handle> _productionHandle;
 
 	/// @brief map of sprite info (state/frame)
