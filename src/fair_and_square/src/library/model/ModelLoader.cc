@@ -36,7 +36,7 @@ void createWorker(Library &lib_p)
 void createSquare(Library &lib_p)
 {
     // square
-    UnitModel unitModel_l { false, 0.5, 0.075, 120. };
+    UnitModel unitModel_l { false, 0.5, 0.05, 120. };
     unitModel_l._isUnit = true;
     unitModel_l._productionTime = 2500;
     unitModel_l._cost[ResourceType::Food] = 25;
@@ -45,8 +45,8 @@ void createSquare(Library &lib_p)
     unitModel_l._armor = 0;
     unitModel_l._range = 0.5;
     unitModel_l._lineOfSight = 10;
-    unitModel_l._fullReload = 100.;
-    unitModel_l._windup = 50;
+    unitModel_l._fullReload = 30.;
+    unitModel_l._windup = 20;
 
     unitModel_l._bonusDamage["triangle"] = 5.;
 
@@ -65,8 +65,8 @@ void createTriangle(Library &lib_p)
     unitModel_l._armor = 0;
     unitModel_l._range = 5;
     unitModel_l._lineOfSight = 10;
-    unitModel_l._fullReload = 100.;
-    unitModel_l._windup = 50;
+    unitModel_l._fullReload = 30.;
+    unitModel_l._windup = 20;
 
     unitModel_l._bonusDamage["circle"] = 5.;
 
@@ -85,8 +85,8 @@ void createCircle(Library &lib_p)
     unitModel_l._armor = 3;
     unitModel_l._range = 0.1;
     unitModel_l._lineOfSight = 10;
-    unitModel_l._fullReload = 100.;
-    unitModel_l._windup = 50;
+    unitModel_l._fullReload = 30.;
+    unitModel_l._windup = 20;
 
     unitModel_l._bonusDamage["square"] = 10.;
 

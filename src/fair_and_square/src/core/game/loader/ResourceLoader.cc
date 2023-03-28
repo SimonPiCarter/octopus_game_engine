@@ -82,15 +82,15 @@ ResourceLoader::ResourceLoader(cuttlefish::Window &window_p, unsigned long fullW
 	_spriteLib.registerAltTextureForTemplate("worker", 0, window_p.loadTexture("resources/fair_and_square/worker_v2_green.png"));
 	_spriteLib.registerAltTextureForTemplate("worker", 1, window_p.loadTexture("resources/fair_and_square/worker_v2_red.png"));
 
-	_spriteLib.registerSpriteTemplate("square", window_p.loadTexture("resources/fair_and_square/square.png"), 0.5, 16, 16, 32, 32, {8, 8, 8}, {0.25, 0.5/7., 0.05}, 1);
+	_spriteLib.registerSpriteTemplate("square", window_p.loadTexture("resources/fair_and_square/square.png"), 0.5, 16, 16, 32, 32, {8, 8, 8}, {0.25, 0.2/7., 0.05}, 1);
 	_spriteLib.registerAltTextureForTemplate("square", 0, window_p.loadTexture("resources/fair_and_square/square_v2_green.png"));
 	_spriteLib.registerAltTextureForTemplate("square", 1, window_p.loadTexture("resources/fair_and_square/square_v2_red.png"));
 	_spriteLib.addDyingState("square", 2);
-	_spriteLib.registerSpriteTemplate("triangle", window_p.loadTexture("resources/fair_and_square/triangle.png"), 0.5, 16, 16, 32, 32, {8, 8, 8}, {0.25, 0.5/7., 0.05}, 1);
+	_spriteLib.registerSpriteTemplate("triangle", window_p.loadTexture("resources/fair_and_square/triangle.png"), 0.5, 16, 16, 32, 32, {8, 8, 8}, {0.25, 0.2/7., 0.05}, 1);
 	_spriteLib.registerAltTextureForTemplate("triangle", 0, window_p.loadTexture("resources/fair_and_square/triangle_v2_green.png"));
 	_spriteLib.registerAltTextureForTemplate("triangle", 1, window_p.loadTexture("resources/fair_and_square/triangle_v2_red.png"));
 	_spriteLib.addDyingState("triangle", 2);
-	_spriteLib.registerSpriteTemplate("circle", window_p.loadTexture("resources/fair_and_square/circle.png"), 0.5, 16, 16, 32, 32, {8, 8, 8}, {0.25, 0.5/7., 0.05}, 1);
+	_spriteLib.registerSpriteTemplate("circle", window_p.loadTexture("resources/fair_and_square/circle.png"), 0.5, 16, 16, 32, 32, {8, 8, 8}, {0.25, 0.2/7., 0.05}, 1);
 	_spriteLib.registerAltTextureForTemplate("circle", 0, window_p.loadTexture("resources/fair_and_square/circle_v2_green.png"));
 	_spriteLib.registerAltTextureForTemplate("circle", 1, window_p.loadTexture("resources/fair_and_square/circle_v2_red.png"));
 	_spriteLib.addDyingState("circle", 2);
