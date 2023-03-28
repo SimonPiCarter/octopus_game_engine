@@ -25,7 +25,7 @@
 namespace octopus
 {
 
-BufferedState::BufferedState(unsigned long stepHandled_p, std::list<Step *>::iterator it_p, State *state_p)
+BufferedState::BufferedState(unsigned long stepHandled_p, std::list<StepBundle>::iterator it_p, State *state_p)
 	: _stepHandled(stepHandled_p), _stepIt(it_p), _state(state_p)
 {}
 
@@ -36,7 +36,7 @@ BufferedState::~BufferedState()
 
 unsigned long long BufferedState::getNextStepToApplyId() const
 {
-	return (*_stepIt)->getId();
+	return _stepIt->_step->getId();
 }
 
 Controller::Controller(
@@ -53,11 +53,11 @@ Controller::Controller(
 	_ongoingStep = 1;
 	updateCommitedCommand();
 	_lastHandledStep = 0;
-	_compiledSteps.push_back(new Step(&_initialStep));
+	_stepBundles.push_back({new Step(&_initialStep), new StepData()});
 
-	_backState = new BufferedState { 0, _compiledSteps.begin(), new State(0, gridSize_p, gridPointSize_p) };
-	_bufferState = new BufferedState { 0, _compiledSteps.begin(), new State(1, gridSize_p, gridPointSize_p) };
-	_frontState = new BufferedState { 0, _compiledSteps.begin(), new State(2, gridSize_p, gridPointSize_p) };
+	_backState = new BufferedState { 0, _stepBundles.begin(), new State(0, gridSize_p, gridPointSize_p) };
+	_bufferState = new BufferedState { 0, _stepBundles.begin(), new State(1, gridSize_p, gridPointSize_p) };
+	_frontState = new BufferedState { 0, _stepBundles.begin(), new State(2, gridSize_p, gridPointSize_p) };
 
 	// add steppable
 	for(Steppable * steppable_l : initSteppables_p)
@@ -84,9 +84,8 @@ Controller::Controller(
 	octopus::updateStepFromConflictPosition(_initialStep, *_backState->_state);
 	octopus::compact(_initialStep);
 
-	for(SteppableBundle &bundle_l : _initialStep.getSteppable())
+	for(Steppable const *steppable_l : _initialStep.getSteppable())
 	{
-		Steppable const * steppable_l = bundle_l._steppable;
 		// store commands for memory handling
 		CommandSpawnStep const * cmdSpawn_l = dynamic_cast<CommandSpawnStep const *>(steppable_l);
 		CommandStorageStep const * cmdstorage_l = dynamic_cast<CommandStorageStep const *>(steppable_l);
@@ -107,9 +106,9 @@ Controller::Controller(
 	}
 
 	// apply step
-	apply(_initialStep, *_backState->_state);
-	apply(_initialStep, *_bufferState->_state);
-	apply(_initialStep, *_frontState->_state);
+	apply(_initialStep, *_backState->_state, _initialStepData);
+	apply(_initialStep, *_bufferState->_state, _initialStepData);
+	apply(_initialStep, *_frontState->_state, _initialStepData);
 }
 
 Controller::~Controller()
@@ -137,9 +136,10 @@ Controller::~Controller()
 			delete trigger_l;
 		}
 	}
-	for(Step * step_l : _compiledSteps)
+	for(StepBundle &step_l : _stepBundles)
 	{
-		delete step_l;
+		delete step_l._stepData;
+		delete step_l._step;
 	}
 }
 
@@ -156,10 +156,10 @@ bool Controller::loop_body()
 		++_backState->_stepHandled;
 
 		// next step has not been compiled : we need to compile commands into the step
-		if(std::next(_backState->_stepIt) == _compiledSteps.end())
+		if(std::next(_backState->_stepIt) == _stepBundles.end())
 		{
 			// Compile current step
-			Step &step_l = *_compiledSteps.back();
+			Step &step_l = *_stepBundles.back()._step;
 
 			// if step was not handled already
 			Logger::getDebug() << "compiling step " << _backState->_stepHandled << " on state "<<_backState->_state->_id<< std::endl;
@@ -240,9 +240,8 @@ bool Controller::loop_body()
 
 			// register all commands
 
-			for(SteppableBundle &bundle_l : step_l.getSteppable())
+			for(Steppable const * steppable_l : step_l.getSteppable())
 			{
-				Steppable const * steppable_l = bundle_l._steppable;
 				// store commands for memory handling
 				CommandSpawnStep const * cmdSpawn_l = dynamic_cast<CommandSpawnStep const *>(steppable_l);
 				CommandStorageStep const * cmdstorage_l = dynamic_cast<CommandStorageStep const *>(steppable_l);
@@ -271,8 +270,8 @@ bool Controller::loop_body()
 			_pathManager.startCompute(5000);
 
 			// Prepare next step
-			_compiledSteps.push_back(new Step(_compiledSteps.back()));
-			_compiledSteps.back()->addSteppable(new TickingStep());
+			_stepBundles.push_back({new Step(_stepBundles.back()._step), new StepData()});
+			_stepBundles.back()._step->addSteppable(new TickingStep());
 			_lastHandledStep = _backState->_stepHandled;
 
 			auto &&time_l = std::chrono::nanoseconds( std::chrono::steady_clock::now() - start_l ).count();
@@ -293,7 +292,7 @@ bool Controller::loop_body()
 		const std::chrono::time_point<std::chrono::steady_clock> start_l = std::chrono::steady_clock::now();
 
 		// apply step
-		apply(**_backState->_stepIt, *_backState->_state);
+		apply(*(_backState->_stepIt->_step), *_backState->_state, *(_backState->_stepIt->_stepData));
 		// increment iterator
 		++_backState->_stepIt;
 
@@ -325,10 +324,11 @@ bool Controller::loop_body()
 		minId_l = std::min(minId_l, _bufferState->getNextStepToApplyId());
 	}
 	// free steps if necessary
-	while(_compiledSteps.size() > 100 && _compiledSteps.front()->getId() < minId_l)
+	while(_stepBundles.size() > 100 && _stepBundles.front()._step->getId() < minId_l)
 	{
-		delete _compiledSteps.front();
-		_compiledSteps.pop_front();
+		delete _stepBundles.front()._stepData;
+		delete _stepBundles.front()._step;
+		_stepBundles.pop_front();
 	}
 	return upToDate_l;
 }
@@ -385,7 +385,7 @@ StateAndSteps Controller::queryStateAndSteps()
 		std::lock_guard<std::mutex> lock_l(_mutex);
 		std::swap(_bufferState, _frontState);
 	}
-	return { _frontState->_stepIt, _compiledSteps , _frontState->_state, _initialStep };
+	return { _frontState->_stepIt, _stepBundles , _frontState->_state, _initialStep };
 }
 
 void Controller::commitCommand(Command * cmd_p)
@@ -526,14 +526,14 @@ void Controller::handleTriggers(State const &state_p, Step &step_p, Step const &
 
 Step const & Controller::getStepBeforeLastCompiledStep() const
 {
-	if(_compiledSteps.empty()
-	|| _compiledSteps.back() == _compiledSteps.front())
+	if(_stepBundles.empty()
+	|| _stepBundles.back()._step == _stepBundles.front()._step)
 	{
 		return _initialStep;
 	}
-	auto &&rit_l = _compiledSteps.rbegin();
+	auto &&rit_l = _stepBundles.rbegin();
 	++rit_l;
-	return **rit_l;
+	return *rit_l->_step;
 }
 
 } // namespace octopus

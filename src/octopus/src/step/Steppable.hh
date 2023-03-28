@@ -24,9 +24,9 @@ namespace octopus
 		public:
 			virtual ~Steppable() {}
 			/// @brief apply this Steppable to the given state
-			virtual void apply(State &state_p, SteppableData *data_p) const = 0;
+			virtual void apply(State &state_p, SteppableData *) const = 0;
 			/// @brief revert this Steppable to the given state
-			virtual void revert(State &state_p, SteppableData *data_p) const = 0;
+			virtual void revert(State &state_p, SteppableData *) const = 0;
 
 			/// @brief return true if this Steppable does no operation on the State it would be applied
 			virtual bool isNoOp() const = 0;

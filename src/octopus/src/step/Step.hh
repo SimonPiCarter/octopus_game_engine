@@ -6,6 +6,7 @@
 #include <map>
 #include <unordered_map>
 #include <set>
+#include <vector>
 
 #include "state/ResourceType.hh"
 #include "state/Handle.hh"
@@ -20,13 +21,6 @@ namespace octopus
 	class SteppableData;
 	class SteppableVisitor;
 
-	/// @brief simple class to store a steppable and its associated data
-	struct SteppableBundle
-	{
-		Steppable const *_steppable {nullptr};
-		SteppableData *_data {nullptr};
-	};
-
 	class Step
 	{
 		public:
@@ -38,11 +32,11 @@ namespace octopus
 			/// @brief add step and keep ownership
 			void addSteppable(Steppable * step_p);
 
-			std::list<EntityMoveStep *> &getEntityMoveStep();
-			std::list<EntityMoveStep *> const &getEntityMoveStep() const;
+			std::vector<EntityMoveStep *> &getEntityMoveStep();
+			std::vector<EntityMoveStep *> const &getEntityMoveStep() const;
 
-			std::list<SteppableBundle> &getSteppable();
-			std::list<SteppableBundle> const &getSteppable() const;
+			std::vector<Steppable const *> &getSteppable();
+			std::vector<Steppable const *> const &getSteppable() const;
 
 			double & getResourceSpent(unsigned long player_p, ResourceType res_p);
 			double getResourceSpent(unsigned long player_p, ResourceType res_p) const;
@@ -81,9 +75,9 @@ namespace octopus
 
 			unsigned long long getId() const { return _id; }
 		private:
-			std::list<EntityMoveStep *> _listEntityMoveStep;
+			std::vector<EntityMoveStep *> _listEntityMoveStep;
 
-			std::list<SteppableBundle> _listSteppable;
+			std::vector<Steppable const *> _listSteppable;
 
 			/// @brief the id of the step (previous step + 1)
 			unsigned long long const _id {0};
@@ -113,11 +107,20 @@ namespace octopus
 
 	};
 
-	/// @brief apply the step
-	void apply(Step const &step_p, State &state_p);
+	/// @brief This class handles data for steppables based on a Step
+	/// each state will have its own set of data
+	class StepData
+	{
+		public:
+			~StepData();
+			std::map<unsigned long, std::vector<SteppableData *> > _listSteppableData;
+	};
 
 	/// @brief apply the step
-	void revert(Step const &step_p, State &state_p);
+	void apply(Step const &step_p, State &state_p, StepData &stepData_p);
+
+	/// @brief apply the step
+	void revert(Step const &step_p, State &state_p, StepData &stepData_p);
 
 	/// @brief compact the step to avoid useles steps
 	/// for example : remove all EntityMoveStep with no noticeable difference

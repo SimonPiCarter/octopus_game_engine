@@ -27,15 +27,17 @@ TEST(VisionGridOnStep, move_then_test)
 	EXPECT_FALSE(handler_l.isVisible(0, 3, 3));
 
 	Step initial_l(nullptr);
+	StepData initialData_l;
 
 	initial_l.addSteppable(new PlayerSpawnStep(0, 0));
 	initial_l.addSteppable(new EntitySpawnStep(0, Entity { { 3.5, 3.5 }, false, unitModel_l}));
 
-	apply(initial_l, state_l);
+	apply(initial_l, state_l, initialData_l);
 
 	EXPECT_TRUE(handler_l.isVisible(0, 3, 3));
 
 	Step second_l(&initial_l);
+	StepData secondData_l;
 
 	second_l.addEntityMoveStep(new EntityMoveStep(0, Vector {2., 2.}));
 	second_l.addSteppable(new EntityHitPointChangeStep(0, -10.));
@@ -43,7 +45,7 @@ TEST(VisionGridOnStep, move_then_test)
 	std::list<VisionChangeStep *> list_l = newVisionChangeStep(state_l, second_l, state_l.getVisionHandler());
 	std::for_each(list_l.begin(), list_l.end(), std::bind(&Step::addSteppable, &second_l, std::placeholders::_1));
 
-	apply(second_l, state_l);
+	apply(second_l, state_l, secondData_l);
 
 	for(unsigned long i = 0 ; i < 10; ++i)
 	{
@@ -65,15 +67,17 @@ TEST(VisionGridOnStep, death_then_move)
 	EXPECT_FALSE(handler_l.isVisible(0, 3, 3));
 
 	Step initial_l(nullptr);
+	StepData initialData_l;
 
 	initial_l.addSteppable(new PlayerSpawnStep(0, 0));
 	initial_l.addSteppable(new EntitySpawnStep(0, Entity { { 3.5, 3.5 }, false, unitModel_l}));
 
-	apply(initial_l, state_l);
+	apply(initial_l, state_l, initialData_l);
 
 	EXPECT_TRUE(handler_l.isVisible(0, 3, 3));
 
 	Step second_l(&initial_l);
+	StepData secondData_l;
 
 	second_l.addSteppable(new EntityHitPointChangeStep(0, -10.));
 	second_l.addEntityMoveStep(new EntityMoveStep(0, Vector {2., 2.}));
@@ -81,7 +85,7 @@ TEST(VisionGridOnStep, death_then_move)
 	std::list<VisionChangeStep *> list_l = newVisionChangeStep(state_l, second_l, state_l.getVisionHandler());
 	std::for_each(list_l.begin(), list_l.end(), std::bind(&Step::addSteppable, &second_l, std::placeholders::_1));
 
-	apply(second_l, state_l);
+	apply(second_l, state_l, secondData_l);
 
 	for(unsigned long i = 0 ; i < 10; ++i)
 	{

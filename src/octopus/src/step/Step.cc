@@ -13,10 +13,9 @@ namespace octopus
 
 Step::~Step()
 {
-	for(SteppableBundle &bundle_l : _listSteppable)
+	for(Steppable const *steppable_l : _listSteppable)
 	{
-		delete bundle_l._steppable;
-		delete bundle_l._data;
+		delete steppable_l;
 	}
 }
 
@@ -30,25 +29,25 @@ void Step::addSteppable(Steppable * step_p)
 {
 	StepAdditionVisitor vis_l(*this);
 	vis_l(step_p);
-	_listSteppable.push_back(SteppableBundle{step_p, step_p->newData()});
+	_listSteppable.push_back(step_p);
 }
 
-std::list<EntityMoveStep *> &Step::getEntityMoveStep()
+std::vector<EntityMoveStep *> &Step::getEntityMoveStep()
 {
 	return _listEntityMoveStep;
 }
 
-std::list<EntityMoveStep *> const &Step::getEntityMoveStep() const
+std::vector<EntityMoveStep *> const &Step::getEntityMoveStep() const
 {
 	return _listEntityMoveStep;
 }
 
-std::list<SteppableBundle> &Step::getSteppable()
+std::vector<Steppable const *> &Step::getSteppable()
 {
 	return _listSteppable;
 }
 
-std::list<SteppableBundle> const &Step::getSteppable() const
+std::vector<Steppable const *> const &Step::getSteppable() const
 {
 	return _listSteppable;
 }
@@ -149,22 +148,53 @@ std::unordered_map<Handle, double> const& Step::getHpChange() const
 	return _hpChange;
 }
 
-void apply(Step const & step_p, State &state_p)
+StepData::~StepData()
 {
-	// apply all steppables
-	for(SteppableBundle const &bundle_l: step_p.getSteppable())
+	for(std::pair<unsigned long, std::vector<SteppableData *>> pair_l : _listSteppableData)
 	{
-		bundle_l._steppable->apply(state_p, bundle_l._data);
+		for(SteppableData * data_l : pair_l.second)
+		{
+			delete data_l;
+		}
 	}
 }
 
-void revert(Step const & step_p, State &state_p)
+void apply(Step const & step_p, State &state_p, StepData &stepData_p)
 {
-	// apply all steppables (in reverse order)
-	for(auto it_l = step_p.getSteppable().rbegin(); it_l != step_p.getSteppable().rend() ; ++it_l)
+	std::vector<SteppableData *> &vecData_l = stepData_p._listSteppableData[state_p._id];
+	if(!vecData_l.empty())
 	{
-		it_l->_steppable->revert(state_p, it_l->_data);
+		throw std::logic_error("tried to apply the same step twice to a state");
 	}
+	vecData_l.resize(step_p.getSteppable().size(), nullptr);
+	// apply all steppables
+	for(size_t i = 0 ; i < step_p.getSteppable().size() ; ++i)
+	{
+		// create data
+		vecData_l[i] = step_p.getSteppable()[i]->newData();
+		// apply steppable with state data
+		step_p.getSteppable()[i]->apply(state_p, vecData_l[i]);
+	}
+}
+
+void revert(Step const & step_p, State &state_p, StepData &stepData_p)
+{
+	std::vector<SteppableData *> &vecData_l = stepData_p._listSteppableData[state_p._id];
+	if(vecData_l.empty())
+	{
+		throw std::logic_error("tried to revert the same step twice to a state or reverted a step without applying it first");
+	}
+	// apply all steppables (in reverse order)
+	for(size_t i = step_p.getSteppable().size() ; i > 0 ; --i)
+	{
+		// apply steppable with state data
+		step_p.getSteppable()[i-1]->revert(state_p, vecData_l[i-1]);
+
+		// delete data
+		delete vecData_l[i-1];
+	}
+
+	vecData_l.clear();
 }
 
 void compact(Step & step_p)
@@ -174,10 +204,9 @@ void compact(Step & step_p)
 
 	for(auto it_l = step_p.getSteppable().begin() ; it_l != step_p.getSteppable().end() ; )
 	{
-		if(it_l->_steppable->isNoOp())
+		if((*it_l)->isNoOp())
 		{
-			delete it_l->_steppable;
-			delete it_l->_data;
+			delete *it_l;
 			it_l = step_p.getSteppable().erase(it_l);
 		}
 		else
@@ -189,9 +218,9 @@ void compact(Step & step_p)
 
 void visitAll(Step const &step_p, SteppableVisitor &visitor_p)
 {
-	for(SteppableBundle const & steppable_l : step_p.getSteppable())
+	for(Steppable const *steppable_l : step_p.getSteppable())
 	{
-		visitor_p(steppable_l._steppable);
+		visitor_p(steppable_l);
 	}
 }
 
