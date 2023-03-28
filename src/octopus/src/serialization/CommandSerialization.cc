@@ -3,6 +3,8 @@
 #include "controller/Controller.hh"
 #include "command/Command.hh"
 #include "command/building/BuildingBlueprintCommand.hh"
+#include "command/building/BuildingCancelCommand.hh"
+#include "command/building/BuildingUnitCancelCommand.hh"
 #include "command/building/BuildingUnitProductionCommand.hh"
 #include "command/entity/EntityAttackCommand.hh"
 #include "command/entity/EntityAttackMoveCommand.hh"
@@ -268,6 +270,12 @@ void writeCommand(std::ofstream &file_p, Command const *cmd_p)
         write(file_p, typped_l->getHandleCommand());
         write(file_p, typped_l->_idx);
     }
+    else if(dynamic_cast<BuildingCancelCommand const *>(cmd_p))
+    {
+        write(file_p, 13ul);
+        BuildingCancelCommand const *typped_l = dynamic_cast<BuildingCancelCommand const *>(cmd_p);
+        write(file_p, typped_l->getHandleCommand());
+    }
     else
     {
         throw std::logic_error("unserializable command thrown in file");
@@ -480,6 +488,14 @@ Command * readCommand(std::ifstream &file_p, Library const &lib_p)
         read(file_p, &idx_l);
 
         cmd_l = new BuildingUnitCancelCommand(building_l, idx_l);
+    }
+    else if(cmdId_p == 13)
+    {
+        Handle building_l;
+
+        read(file_p, &building_l);
+
+        cmd_l = new BuildingCancelCommand(building_l);
     }
     if(!cmd_l)
     {

@@ -2,6 +2,7 @@
 
 #include <logger/Logger.hh>
 
+#include "command/building/BuildingUnitCancelCommand.hh"
 #include "command/building/BuildingUnitProductionCommand.hh"
 #include "controller/Controller.hh"
 #include "state/entity/Building.hh"
