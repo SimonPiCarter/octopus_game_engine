@@ -84,7 +84,7 @@ bool EntityAttackCommand::applyCommand(Step & step_p, State const &state_p, Comm
 
 		// if entity is frozen and not in range it means target has run out of range
 		// scan for target closer only if target is not frozen
-		if(entSource_l->_frozen && !_frozenTarget)
+		if(!_frozenTarget)
 		{
 			// If target is dead we look for another target in range
 			Entity const * newTarget_l = lookUpNewTarget(state_p, _source);
