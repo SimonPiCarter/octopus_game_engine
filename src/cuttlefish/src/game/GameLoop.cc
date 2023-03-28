@@ -31,6 +31,8 @@
 #include "world/World.hh"
 
 // octopus
+#include "command/building/BuildingCancelCommand.hh"
+#include "command/building/BuildingUnitCancelCommand.hh"
 #include "command/building/BuildingUnitProductionCommand.hh"
 #include "command/entity/EntityMoveCommand.hh"
 #include "command/entity/EntityWaitCommand.hh"
@@ -428,11 +430,21 @@ void GameLoop::runLoop(Window &window_p)
 					{
 						for(SpriteEntity * spriteEnt_l : selection_l._sprites)
 						{
-							octopus::EntityWaitCommand * command_l = new octopus::EntityWaitCommand(
-									spriteEnt_l->getHandle(),
-									spriteEnt_l->getHandle()
-								);
-							_controller.commitCommandAsPlayer(command_l, _world.getPlayer());
+							if(state_l.getEntity(spriteEnt_l->getHandle())->_model._isBuilding)
+							{
+								octopus::BuildingCancelCommand * command_l = new octopus::BuildingCancelCommand(
+										spriteEnt_l->getHandle()
+									);
+								_controller.commitCommandAsPlayer(command_l, _world.getPlayer());
+							}
+							else
+							{
+								octopus::EntityWaitCommand * command_l = new octopus::EntityWaitCommand(
+										spriteEnt_l->getHandle(),
+										spriteEnt_l->getHandle()
+									);
+								_controller.commitCommandAsPlayer(command_l, _world.getPlayer());
+							}
 						}
 						break;
 					}
