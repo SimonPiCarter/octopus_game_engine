@@ -286,7 +286,11 @@ void GameLoop::runLoop(Window &window_p)
 			}
 			if (e.type == SDL_MOUSEBUTTONDOWN)
 			{
-				if(_minimap.isInside(e.button.x, e.button.y))
+				if(_prodPanel.getIndex(window_p, e.button.x, e.button.y)._inside)
+				{
+					// NA just eat clic
+				}
+				else if(_minimap.isInside(e.button.x, e.button.y))
 				{
 					if(e.button.button == SDL_BUTTON_LEFT && !dynamic_cast<AttackMoveClicMode *>(currentClicMode_l))
 					{
@@ -306,7 +310,12 @@ void GameLoop::runLoop(Window &window_p)
 			}
 			if (e.type == SDL_MOUSEBUTTONUP)
 			{
-				if(menuActive_l)
+				IndexProductionClic indexProd_l = _prodPanel.getIndex(window_p, e.button.x, e.button.y);
+				if(indexProd_l._inside)
+				{
+					_controller.commitCommandAsPlayer(new octopus::BuildingUnitCancelCommand(indexProd_l._handle, indexProd_l._idx), _world.getPlayer());
+				}
+				else if(menuActive_l)
 				{
 					// NA (just avoid doing anything else)
 				}
