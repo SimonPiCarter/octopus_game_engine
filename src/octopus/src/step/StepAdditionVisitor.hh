@@ -58,6 +58,7 @@ public:
     virtual void visit(PlayerAddBuildingModel const *) {}
     virtual void visit(PlayerAddOptionDivinityStep const *) {}
 	virtual void visit(PlayerAddOptionStep const *) {}
+    virtual void visit(PlayerAttackModAllStep const *) {}
     virtual void visit(PlayerAnchorDivinityStep const *) {}
 	virtual void visit(PlayerBuffAllStep const *) {}
     virtual void visit(PlayerLevelUpDivinityStep const *) {}

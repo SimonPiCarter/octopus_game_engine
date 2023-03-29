@@ -99,6 +99,7 @@ add_library(octopus
 	${CMAKE_CURRENT_SOURCE_DIR}/src/step/player/PlayerAddOptionStep.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/step/player/PlayerAddOptionDivinityStep.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/step/player/PlayerAnchorDivinityStep.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/src/step/player/PlayerAttackModAllStep.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/step/player/PlayerBuffAllStep.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/step/player/PlayerLevelUpDivinityStep.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/step/player/PlayerPopOptionStep.cc
