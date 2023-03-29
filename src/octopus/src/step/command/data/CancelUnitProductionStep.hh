@@ -14,8 +14,8 @@ public:
 	CancelUnitProductionStep(Handle const &handle_p, UnitProductionData const * data_p)
 		: _handle(handle_p) , _data(data_p) {}
 
-	virtual void apply(State &state_p, SteppableData *) const override;
-	virtual void revert(State &state_p, SteppableData *) const override;
+	virtual void apply(State &state_p) const override;
+	virtual void revert(State &state_p, SteppableData const *) const override;
 
 	virtual bool isNoOp() const override { return false; }
 	virtual void visit(SteppableVisitor * visitor_p) const override

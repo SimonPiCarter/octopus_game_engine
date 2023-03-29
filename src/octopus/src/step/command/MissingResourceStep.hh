@@ -12,8 +12,8 @@ class MissingResourceStep : public Steppable
 	public:
 		MissingResourceStep(unsigned long player_p) : _player(player_p) {}
 
-		virtual void apply(State &, SteppableData*) const override {}
-		virtual void revert(State &, SteppableData*) const override {}
+		virtual void apply(State &) const override {}
+		virtual void revert(State &, SteppableData const *) const override {}
 
 		virtual bool isNoOp() const override
 		{

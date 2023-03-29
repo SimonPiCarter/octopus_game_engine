@@ -48,7 +48,7 @@ EntityHitPointChangeStep::EntityHitPointChangeStep(Handle const &handle_p, doubl
 	: _handle(handle_p), _delta(getDelta(anticipatedHp_p, delta_p, hpMax_p))
 {}
 
-void EntityHitPointChangeStep::apply(State &state_p, SteppableData *) const
+void EntityHitPointChangeStep::apply(State &state_p) const
 {
 	Entity * ent_l = state_p.getEntity(this->_handle);
 	Logger::getDebug() << "EntityHitPointChangeStep :: " << ent_l->_hp << " + "<<this->_delta<<std::endl;
@@ -57,7 +57,7 @@ void EntityHitPointChangeStep::apply(State &state_p, SteppableData *) const
 	updateFromHp(state_p, ent_l);
 }
 
-void EntityHitPointChangeStep::revert(State &state_p, SteppableData *) const
+void EntityHitPointChangeStep::revert(State &state_p, SteppableData const *) const
 {
 	Entity * ent_l = state_p.getEntity(this->_handle);
 	Logger::getDebug() << "EntityHitPointChangeStep :: " << ent_l->_hp << " - "<<this->_delta<<std::endl;

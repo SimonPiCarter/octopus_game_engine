@@ -160,36 +160,35 @@ double Step::getHpChange(Handle const &handle_p) const
 
 StepData::~StepData()
 {
-	for(std::pair<unsigned long, std::vector<SteppableData *>> pair_l : _listSteppableData)
+	for(SteppableData * data_l : _listSteppableData)
 	{
-		for(SteppableData * data_l : pair_l.second)
-		{
-			delete data_l;
-		}
+		delete data_l;
 	}
 }
 
 void apply(Step const & step_p, State &state_p, StepData &stepData_p)
 {
-	std::vector<SteppableData *> &vecData_l = stepData_p._listSteppableData[state_p._id];
-	if(!vecData_l.empty())
+	bool buildData_l = stepData_p._listSteppableData.empty();
+	if(buildData_l)
 	{
-		throw std::logic_error("tried to apply the same step twice to a state");
+		stepData_p._listSteppableData.reserve(step_p.getSteppable().size());
 	}
-	vecData_l.resize(step_p.getSteppable().size(), nullptr);
+
 	// apply all steppables
-	for(size_t i = 0 ; i < step_p.getSteppable().size() ; ++i)
+	for(Steppable const *steppable_l : step_p.getSteppable())
 	{
-		// create data
-		vecData_l[i] = step_p.getSteppable()[i]->newData();
+		if(buildData_l)
+		{
+			stepData_p._listSteppableData.push_back(steppable_l->newData(state_p));
+		}
 		// apply steppable with state data
-		step_p.getSteppable()[i]->apply(state_p, vecData_l[i]);
+		steppable_l->apply(state_p);
 	}
 }
 
 void revert(Step const & step_p, State &state_p, StepData &stepData_p)
 {
-	std::vector<SteppableData *> &vecData_l = stepData_p._listSteppableData[state_p._id];
+	std::vector<SteppableData *> &vecData_l = stepData_p._listSteppableData;
 	if(vecData_l.empty())
 	{
 		throw std::logic_error("tried to revert the same step twice to a state or reverted a step without applying it first");

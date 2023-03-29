@@ -9,11 +9,11 @@
 namespace octopus
 {
 
-void CancelUnitProductionStep::apply(State &state_p, SteppableData *) const
+void CancelUnitProductionStep::apply(State &state_p) const
 {
 	Logger::getDebug() << "CancelUnitProductionStep :: apply " << this->_handle <<std::endl;
     Entity *ent_l = state_p.getEntity(this->_handle);
-    
+
     auto it_l = ent_l->getQueue().getCurrentCommand();
     while(it_l != ent_l->getQueue().getEnd())
     {
@@ -27,11 +27,11 @@ void CancelUnitProductionStep::apply(State &state_p, SteppableData *) const
     }
 }
 
-void CancelUnitProductionStep::revert(State &state_p, SteppableData *) const
+void CancelUnitProductionStep::revert(State &state_p, SteppableData const *) const
 {
 	Logger::getDebug() << "CancelUnitProductionStep :: revert " << this->_handle <<std::endl;
     Entity *ent_l = state_p.getEntity(this->_handle);
-    
+
     auto it_l = ent_l->getQueue().getCurrentCommand();
     while(it_l != ent_l->getQueue().getEnd())
     {

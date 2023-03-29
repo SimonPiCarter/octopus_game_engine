@@ -20,8 +20,8 @@ namespace octopus
 			/// @param hpMax_p max hop of the target to clamp delta if necessary
 			EntityHitPointChangeStep(Handle const &handle_p, double delta_p, double anticipatedHp_p, double hpMax_p);
 
-			virtual void apply(State &state_p, SteppableData *) const override;
-			virtual void revert(State &state_p, SteppableData *) const override;
+			virtual void apply(State &state_p) const override;
+			virtual void revert(State &state_p, SteppableData const *) const override;
 
 			virtual bool isNoOp() const override;
 			virtual void visit(SteppableVisitor * visitor_p) const override

@@ -16,8 +16,8 @@ public:
 	CommandAddSubAttackStep(Handle const &handle_p, Handle const &source_p, Handle const &target_p)
 		: _handle(handle_p) , _source(source_p) , _target(target_p){}
 
-	virtual void apply(State &state_p, SteppableData *) const override;
-	virtual void revert(State &state_p, SteppableData *) const override;
+	virtual void apply(State &state_p) const override;
+	virtual void revert(State &state_p, SteppableData const *) const override;
 
 	virtual bool isNoOp() const override;
 	virtual void visit(SteppableVisitor * visitor_p) const override
@@ -36,8 +36,8 @@ public:
 	CommandDelSubAttackStep(Handle const &handle_p, Handle const &source_p, Handle const &target_p)
 		: _handle(handle_p) , _source(source_p), _target(target_p) {}
 
-	virtual void apply(State &state_p, SteppableData *) const override;
-	virtual void revert(State &state_p, SteppableData *) const override;
+	virtual void apply(State &state_p) const override;
+	virtual void revert(State &state_p, SteppableData const *) const override;
 
 	virtual bool isNoOp() const override;
 	virtual void visit(SteppableVisitor * visitor_p) const override

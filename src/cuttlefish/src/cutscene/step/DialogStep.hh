@@ -14,8 +14,8 @@ public:
     DialogStep(std::string const &name_p, std::string const &text_p, Picture const &picture_p)
         : _name(name_p), _text(text_p), _picture(picture_p)
     {}
-    virtual void apply(octopus::State &, octopus::SteppableData *) const {}
-    virtual void revert(octopus::State &, octopus::SteppableData *) const {}
+    virtual void apply(octopus::State &) const {}
+    virtual void revert(octopus::State &, octopus::SteppableData const *) const {}
     virtual bool isNoOp() const { return false; }
 
     std::string const _name;

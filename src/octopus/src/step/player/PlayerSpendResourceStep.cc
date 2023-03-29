@@ -7,7 +7,7 @@
 namespace octopus
 {
 
-void PlayerSpendResourceStep::apply(State &state_p, SteppableData *) const
+void PlayerSpendResourceStep::apply(State &state_p) const
 {
 	Logger::getDebug() << "PlayerSpendResourceStep :: apply " << _player <<std::endl;
 	for(auto &&pair_l : _delta)
@@ -16,7 +16,7 @@ void PlayerSpendResourceStep::apply(State &state_p, SteppableData *) const
 	}
 }
 
-void PlayerSpendResourceStep::revert(State &state_p, SteppableData *) const
+void PlayerSpendResourceStep::revert(State &state_p, SteppableData const *) const
 {
 	Logger::getDebug() << "PlayerSpendResourceStep :: revert " << _player <<std::endl;
 	for(auto &&pair_l : _delta)

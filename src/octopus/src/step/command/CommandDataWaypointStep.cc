@@ -10,7 +10,7 @@
 
 namespace octopus
 {
-void CommandDataWaypointAddStep::apply(State &state_p, SteppableData *) const
+void CommandDataWaypointAddStep::apply(State &state_p) const
 {
 	Commandable * ent_l = state_p.getCommandable(this->_handle);
 	Logger::getDebug() << "CommandDataWaypointAddStep :: apply " << this->_handle <<std::endl;
@@ -18,7 +18,7 @@ void CommandDataWaypointAddStep::apply(State &state_p, SteppableData *) const
 	data_l->_waypoints.push_front(_waypoint);
 }
 
-void CommandDataWaypointAddStep::revert(State &state_p, SteppableData *) const
+void CommandDataWaypointAddStep::revert(State &state_p, SteppableData const *) const
 {
 	Commandable * ent_l = state_p.getCommandable(this->_handle);
 	Logger::getDebug() << "CommandDataWaypointAddStep :: revert " << this->_handle <<std::endl;
@@ -31,7 +31,7 @@ bool CommandDataWaypointAddStep::isNoOp() const
 	return false;
 }
 
-void CommandDataWaypointRemoveStep::apply(State &state_p, SteppableData *) const
+void CommandDataWaypointRemoveStep::apply(State &state_p) const
 {
 	Commandable * ent_l = state_p.getCommandable(this->_handle);
 	Logger::getDebug() << "CommandDataWaypointRemoveStep :: apply " << this->_handle <<std::endl;
@@ -39,7 +39,7 @@ void CommandDataWaypointRemoveStep::apply(State &state_p, SteppableData *) const
 	data_l->_waypoints.pop_front();
 }
 
-void CommandDataWaypointRemoveStep::revert(State &state_p, SteppableData *) const
+void CommandDataWaypointRemoveStep::revert(State &state_p, SteppableData const *) const
 {
 	Commandable * ent_l = state_p.getCommandable(this->_handle);
 	Logger::getDebug() << "CommandDataWaypointRemoveStep :: revert " << this->_handle <<std::endl;
@@ -52,7 +52,7 @@ bool CommandDataWaypointRemoveStep::isNoOp() const
 	return false;
 }
 
-void CommandDataWaypointSetStep::apply(State &state_p, SteppableData *) const
+void CommandDataWaypointSetStep::apply(State &state_p) const
 {
 	Commandable * ent_l = state_p.getCommandable(this->_handle);
 	Logger::getDebug() << "CommandDataWaypointSetStep :: apply " << this->_handle <<std::endl;
@@ -61,7 +61,7 @@ void CommandDataWaypointSetStep::apply(State &state_p, SteppableData *) const
 	data_l->_finalPoint = _new.back();
 }
 
-void CommandDataWaypointSetStep::revert(State &state_p, SteppableData *) const
+void CommandDataWaypointSetStep::revert(State &state_p, SteppableData const *) const
 {
 	Commandable * ent_l = state_p.getCommandable(this->_handle);
 	Logger::getDebug() << "CommandDataWaypointSetStep :: revert " << this->_handle <<std::endl;

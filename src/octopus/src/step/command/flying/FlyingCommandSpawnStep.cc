@@ -8,7 +8,7 @@
 namespace octopus
 {
 
-void FlyingCommandSpawnStep::apply(State &state_p, SteppableData *) const
+void FlyingCommandSpawnStep::apply(State &state_p) const
 {
 	Logger::getDebug() << "FlyingCommandSpawnStep :: apply " <<std::endl;
 
@@ -21,7 +21,7 @@ void FlyingCommandSpawnStep::apply(State &state_p, SteppableData *) const
 		throw std::logic_error("Incorrect handle for flying command");
 	}
 }
-void FlyingCommandSpawnStep::revert(State &state_p, SteppableData *) const
+void FlyingCommandSpawnStep::revert(State &state_p, SteppableData const *) const
 {
 	Logger::getDebug() << "FlyingCommandSpawnStep :: revert " <<std::endl;
 

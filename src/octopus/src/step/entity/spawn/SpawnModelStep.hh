@@ -17,7 +17,7 @@ class SpawnModelStep : public Steppable
 public:
 	SpawnModelStep(Handle const &handle_p, class_t const &model_p, bool forceAlive_p=false) : _handle(handle_p), _model(model_p), _forceAlive(forceAlive_p) {}
 
-	virtual void apply(State &state_p, SteppableData*) const override
+	virtual void apply(State &state_p) const override
 	{
 		if(!state_p.hasEntity(_handle))
 		{
@@ -56,7 +56,7 @@ public:
 			}
 		}
 	}
-	virtual void revert(State &state_p, SteppableData*) const override
+	virtual void revert(State &state_p, SteppableData const *) const override
 	{
 		if(state_p.getEntities().back()->_handle != this->_handle)
 		{

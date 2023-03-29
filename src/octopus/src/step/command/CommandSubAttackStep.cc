@@ -9,7 +9,7 @@
 
 namespace octopus
 {
-void CommandAddSubAttackStep::apply(State &state_p, SteppableData *) const
+void CommandAddSubAttackStep::apply(State &state_p) const
 {
 	Commandable * ent_l = state_p.getCommandable(this->_handle);
 	Logger::getDebug() << "CommandAddSubAttackStep :: apply " << this->_handle <<std::endl;
@@ -22,7 +22,7 @@ void CommandAddSubAttackStep::apply(State &state_p, SteppableData *) const
 	data_l->_subAttackCommand = new EntityAttackCommand(_handle, _source, _target, false);
 }
 
-void CommandAddSubAttackStep::revert(State &state_p, SteppableData *) const
+void CommandAddSubAttackStep::revert(State &state_p, SteppableData const *) const
 {
 	Commandable * ent_l = state_p.getCommandable(this->_handle);
 	Logger::getDebug() << "CommandAddSubAttackStep :: revert " << this->_handle <<std::endl;
@@ -40,7 +40,7 @@ bool CommandAddSubAttackStep::isNoOp() const
 	return false;
 }
 
-void CommandDelSubAttackStep::apply(State &state_p, SteppableData *) const
+void CommandDelSubAttackStep::apply(State &state_p) const
 {
 	Commandable * ent_l = state_p.getCommandable(this->_handle);
 	Logger::getDebug() << "CommandDelSubAttackStep :: apply " << this->_handle <<std::endl;
@@ -49,7 +49,7 @@ void CommandDelSubAttackStep::apply(State &state_p, SteppableData *) const
 	data_l->_subAttackCommand = nullptr;
 }
 
-void CommandDelSubAttackStep::revert(State &state_p, SteppableData *) const
+void CommandDelSubAttackStep::revert(State &state_p, SteppableData const *) const
 {
 	Commandable * ent_l = state_p.getCommandable(this->_handle);
 	Logger::getDebug() << "CommandDelSubAttackStep :: revert " << this->_handle <<std::endl;

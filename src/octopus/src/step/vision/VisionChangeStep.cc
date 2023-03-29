@@ -39,7 +39,7 @@ VisionChangeStep::VisionChangeStep(unsigned long team_p, std::unordered_map<size
 	}
 }
 
-void VisionChangeStep::apply(State &state_p, SteppableData *) const
+void VisionChangeStep::apply(State &state_p) const
 {
 	Logger::getDebug() << "VisionChangeStep :: apply " << this->_team <<std::endl;
 
@@ -54,7 +54,7 @@ void VisionChangeStep::apply(State &state_p, SteppableData *) const
 	}
 }
 
-void VisionChangeStep::revert(State &state_p, SteppableData *) const
+void VisionChangeStep::revert(State &state_p, SteppableData const *) const
 {
 	Logger::getDebug() << "VisionChangeStep :: apply " << this->_team <<std::endl;
 

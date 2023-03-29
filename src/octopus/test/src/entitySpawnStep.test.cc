@@ -23,7 +23,7 @@ TEST(entityStepTest, simple)
 
 	EXPECT_EQ(0u, state_l.getEntities().size());
 
-	step_l.apply(state_l, nullptr);
+	step_l.apply(state_l);
 
 	ASSERT_EQ(1u, state_l.getEntities().size());
 	EXPECT_EQ(true, state_l.getEntity(0)->_alive);

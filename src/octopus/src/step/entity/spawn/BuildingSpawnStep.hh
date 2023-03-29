@@ -16,7 +16,7 @@ public:
 	}
 
 
-	virtual void apply(State &state_p, SteppableData *) const override;
+	virtual void apply(State &state_p) const override;
 };
 }
 

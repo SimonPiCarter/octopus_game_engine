@@ -27,7 +27,7 @@ TEST(buffCommandTest, simple_speed)
 	buff_l._id = "speed";
 	buff_l._coef = 1.;
 
-	Controller controller_l({new PlayerSpawnStep(0, 0), spawn0_l, new EntityBuffStep(0, buff_l, 0, true)}, 1.);
+	Controller controller_l({new PlayerSpawnStep(0, 0), spawn0_l, new EntityBuffStep(0, buff_l)}, 1.);
 
 	// query state
 	State const * state_l = controller_l.queryState();

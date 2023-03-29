@@ -115,7 +115,7 @@ namespace octopus
 	{
 		public:
 			~StepData();
-			std::map<unsigned long, std::vector<SteppableData *> > _listSteppableData;
+			std::vector<SteppableData *> _listSteppableData;
 	};
 
 	/// @brief apply the step

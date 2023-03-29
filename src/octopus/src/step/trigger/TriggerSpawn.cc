@@ -8,7 +8,7 @@
 namespace octopus
 {
 
-void TriggerSpawn::apply(State &state_p, SteppableData *) const
+void TriggerSpawn::apply(State &state_p) const
 {
 	Logger::getDebug() << "TriggerSpawn :: apply " << std::endl;
 
@@ -20,7 +20,7 @@ void TriggerSpawn::apply(State &state_p, SteppableData *) const
 	triggersData_l.push_back(_trigger->newTriggerData(triggers_l.size()-1));
 }
 
-void TriggerSpawn::revert(State &state_p, SteppableData *) const
+void TriggerSpawn::revert(State &state_p, SteppableData const *) const
 {
 	Logger::getDebug() << "TriggerSpawn :: revert " << std::endl;
 

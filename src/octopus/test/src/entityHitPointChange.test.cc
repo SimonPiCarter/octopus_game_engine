@@ -25,7 +25,7 @@ TEST(entityHitPointChangeTest, simple_overheal)
 
 	EXPECT_NEAR(10., state_l.getEntity(0)->_hp, 1e-5);
 
-	step_l.apply(state_l, nullptr);
+	step_l.apply(state_l);
 
 	EXPECT_NEAR(10., state_l.getEntity(0)->_hp, 1e-5);
 
@@ -46,7 +46,7 @@ TEST(entityHitPointChangeTest, simple_overkill)
 
 	EXPECT_NEAR(10., state_l.getEntity(0)->_hp, 1e-5);
 
-	step_l.apply(state_l, nullptr);
+	step_l.apply(state_l);
 
 	EXPECT_NEAR(0., state_l.getEntity(0)->_hp, 1e-5);
 
@@ -68,7 +68,7 @@ TEST(entityHitPointChangeTest, simple_buff_heal)
 
 	EXPECT_NEAR(10., state_l.getEntity(0)->_hp, 1e-5);
 
-	step_l.apply(state_l, nullptr);
+	step_l.apply(state_l);
 
 	EXPECT_NEAR(10., state_l.getEntity(0)->_hp, 1e-5);
 

@@ -14,8 +14,8 @@ namespace octopus
 		public:
 			EntityFrozenStep(Handle const &handle_p, bool old_p, bool new_p) : _handle(handle_p), _old(old_p), _new(new_p) {}
 
-			virtual void apply(State &state_p, SteppableData *) const override;
-			virtual void revert(State &state_p, SteppableData *) const override;
+			virtual void apply(State &state_p) const override;
+			virtual void revert(State &state_p, SteppableData const *) const override;
 
 			virtual bool isNoOp() const override;
 			virtual void visit(SteppableVisitor * visitor_p) const override

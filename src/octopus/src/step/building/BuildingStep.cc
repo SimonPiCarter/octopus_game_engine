@@ -33,7 +33,7 @@ void updateFromProgress(Building *ent_p, State &state_p)
 	}
 }
 
-void BuildingStep::apply(State &state_p, SteppableData *) const
+void BuildingStep::apply(State &state_p) const
 {
 	Building * ent_l = static_cast<Building *>(state_p.getEntity(this->_handle));
 	Logger::getDebug() << "BuildingStep :: apply " << _handle <<std::endl;
@@ -41,7 +41,7 @@ void BuildingStep::apply(State &state_p, SteppableData *) const
 	updateFromProgress(ent_l, state_p);
 }
 
-void BuildingStep::revert(State &state_p, SteppableData *) const
+void BuildingStep::revert(State &state_p, SteppableData const *) const
 {
 	Building * ent_l = static_cast<Building *>(state_p.getEntity(this->_handle));
 	Logger::getDebug() << "BuildingStep :: revert " << _handle <<std::endl;

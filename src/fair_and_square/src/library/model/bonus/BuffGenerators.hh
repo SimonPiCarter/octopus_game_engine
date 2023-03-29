@@ -21,7 +21,7 @@ public:
 
     virtual StepOptionsGenerator* newCopy() const override { return new BuffGenerator(_options); }
 
-    virtual std::vector<octopus::Steppable *> const &getSteppables(unsigned long options_p, unsigned long player_p) override;
+    virtual std::vector<octopus::Steppable *> getSteppables(unsigned long options_p, unsigned long player_p) const override;
 
     virtual unsigned long getNumOptions() const override { return _options.size(); }
 

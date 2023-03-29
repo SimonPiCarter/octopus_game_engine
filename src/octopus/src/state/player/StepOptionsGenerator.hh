@@ -22,8 +22,8 @@ public:
 
     /// @brief get internal steppable for the given option
     /// @param options_p the option index
-    /// @return a vector of steppables (owner is this generator)
-    virtual std::vector<Steppable *> const &getSteppables(unsigned long options_p, unsigned long player_p) = 0;
+    /// @return a vector of steppables (owner is given away)
+    virtual std::vector<Steppable *> getSteppables(unsigned long options_p, unsigned long player_p) const = 0;
     /// @brief Return the number of available options for this generator
     virtual unsigned long getNumOptions() const = 0;
 };

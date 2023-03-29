@@ -24,9 +24,9 @@ namespace octopus
 		public:
 			virtual ~Steppable() {}
 			/// @brief apply this Steppable to the given state
-			virtual void apply(State &state_p, SteppableData *) const = 0;
+			virtual void apply(State &state_p) const = 0;
 			/// @brief revert this Steppable to the given state
-			virtual void revert(State &state_p, SteppableData *) const = 0;
+			virtual void revert(State &state_p, SteppableData const *) const = 0;
 
 			/// @brief return true if this Steppable does no operation on the State it would be applied
 			virtual bool isNoOp() const = 0;
@@ -36,7 +36,7 @@ namespace octopus
 
 			/// @brief create an optional new SteppableData
 			/// @return nullptr if not required
-			virtual SteppableData * newData() const { return nullptr; }
+			virtual SteppableData * newData(State const &) const { return nullptr; }
 	};
 
 	class BuildingCancelStep;

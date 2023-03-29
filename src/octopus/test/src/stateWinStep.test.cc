@@ -15,7 +15,7 @@ TEST(StateWinStepTest, simple)
     EXPECT_FALSE(state_l.hasWinningTeam());
     EXPECT_EQ(0, state_l.getWinningTeam());
 
-    winStep_l.apply(state_l, nullptr);
+    winStep_l.apply(state_l);
 
     EXPECT_TRUE(state_l.isOver());
     EXPECT_TRUE(state_l.hasWinningTeam());
