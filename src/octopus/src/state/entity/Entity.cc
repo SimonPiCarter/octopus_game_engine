@@ -14,9 +14,7 @@ Entity::Entity(Vector const &pos_p, bool frozen_p, EntityModel const &model_p)
 	, _hp(model_p._hpMax)
 	, _reload(model_p._fullReload)
 	, _model(model_p)
-{
-	_attackMod = LifeStealModifier(0.75);
-}
+{}
 
 bool Entity::isIgnoringCollision() const
 {
