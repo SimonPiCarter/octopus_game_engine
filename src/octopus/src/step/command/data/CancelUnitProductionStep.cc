@@ -18,7 +18,7 @@ void CancelUnitProductionStep::apply(State &state_p) const
     while(it_l != ent_l->getQueue().getEnd())
     {
         octopus::UnitProductionData *data_l = dynamic_cast<octopus::UnitProductionData*>(it_l->_data);
-        if(data_l == _data)
+        if(it_l->_id == _idx)
         {
             data_l->_canceled = true;
             break;
@@ -36,7 +36,7 @@ void CancelUnitProductionStep::revert(State &state_p, SteppableData const *) con
     while(it_l != ent_l->getQueue().getEnd())
     {
         octopus::UnitProductionData *data_l = dynamic_cast<octopus::UnitProductionData*>(it_l->_data);
-        if(data_l == _data)
+        if(it_l->_id == _idx)
         {
             data_l->_canceled = false;
             break;

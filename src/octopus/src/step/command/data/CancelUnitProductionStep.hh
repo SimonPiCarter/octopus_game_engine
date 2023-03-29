@@ -11,8 +11,8 @@ class UnitProductionData;
 class CancelUnitProductionStep : public Steppable
 {
 public:
-	CancelUnitProductionStep(Handle const &handle_p, UnitProductionData const * data_p)
-		: _handle(handle_p) , _data(data_p) {}
+	CancelUnitProductionStep(Handle const &handle_p, unsigned long const idx_p)
+		: _handle(handle_p) , _idx(idx_p) {}
 
 	virtual void apply(State &state_p) const override;
 	virtual void revert(State &state_p, SteppableData const *) const override;
@@ -24,7 +24,7 @@ public:
 	}
 
 	Handle const _handle {0};
-	UnitProductionData const * const _data;
+	unsigned long const _idx;
 };
 
 }

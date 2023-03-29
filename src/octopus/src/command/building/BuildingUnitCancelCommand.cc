@@ -19,10 +19,10 @@ void BuildingUnitCancelCommand::registerCommand(Step & step_p, State const &stat
 
 	UnitProductionData const * const data_l = dynamic_cast<UnitProductionData const *>(ent_l->getQueue().getBundle(_idx)._data);
 
-	if(data_l && !data_l->_canceled && !step_p.isCmdCanceled(data_l))
+	if(data_l && !data_l->_canceled && !step_p.isCmdCanceled(CommandIdx(_handleCommand, _idx)))
 	{
 		step_p.addSteppable(new PlayerSpendResourceStep(ent_l->_player, getReverseCostMap(data_l->_model._cost)));
-		step_p.addSteppable(new CancelUnitProductionStep(_handleCommand, data_l));
+		step_p.addSteppable(new CancelUnitProductionStep(_handleCommand, _idx));
 	}
 	step_p.addSteppable(new CommandStorageStep(this));
 }

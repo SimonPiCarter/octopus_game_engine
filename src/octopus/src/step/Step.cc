@@ -128,14 +128,14 @@ bool Step::isCanceled(Handle const &handle_p) const
 	return _canceledBuildings.find(handle_p) != _canceledBuildings.end();
 }
 
-void Step::addCmdCanceled(CommandData const *data_p)
+void Step::addCmdCanceled(CommandIdx cmdidx_p)
 {
-	_canceledCmd.insert(data_p);
+	_canceledCmd.insert(cmdidx_p);
 }
 
-bool Step::isCmdCanceled(CommandData const *data_p) const
+bool Step::isCmdCanceled(CommandIdx cmdidx_p) const
 {
-	return _canceledCmd.find(data_p) != _canceledCmd.end();
+	return _canceledCmd.find(cmdidx_p) != _canceledCmd.end();
 }
 
 void Step::addHpChange(Handle const &handle_p, double delta_p)

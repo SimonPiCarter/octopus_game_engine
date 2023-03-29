@@ -49,7 +49,7 @@ void StepAdditionVisitor::visit(BuildingCancelStep const *step_p)
 
 void StepAdditionVisitor::visit(CancelUnitProductionStep const *step_p)
 {
-    _step.addCmdCanceled(step_p->_data);
+    _step.addCmdCanceled(CommandIdx(step_p->_handle, step_p->_idx));
 }
 
 void StepAdditionVisitor::visit(EntitySpawnStep const *)

@@ -21,6 +21,22 @@ namespace octopus
 	class SteppableData;
 	class SteppableVisitor;
 
+	struct CommandIdx
+	{
+		CommandIdx(Handle const &cmdable_p, unsigned long idx) : cmdable(cmdable_p), cmdidx(idx) {}
+		Handle const &cmdable;
+		unsigned long const &cmdidx;
+
+		bool operator<(CommandIdx const &other_p) const
+		{
+			if(cmdable == other_p.cmdable)
+			{
+				return cmdidx < other_p.cmdidx;
+			}
+			return cmdable < other_p.cmdable;
+		}
+	};
+
 	class Step
 	{
 		public:
@@ -61,8 +77,8 @@ namespace octopus
 			/// @brief check if the building has been canceled already
 			bool isCanceled(Handle const &handle_p) const;
 
-			void addCmdCanceled(CommandData const *data_p);
-			bool isCmdCanceled(CommandData const *data_p) const;
+			void addCmdCanceled(CommandIdx cmdidx_p);
+			bool isCmdCanceled(CommandIdx cmdidx_p) const;
 
 			/// @brief add an hp change
 			void addHpChange(Handle const &handle_p, double delta_p);
@@ -100,7 +116,7 @@ namespace octopus
 			std::set<Handle> _canceledBuildings;
 
 			/// @brief of commands data canceled in this step (to avoid refunding twice)
-			std::set<CommandData const *> _canceledCmd;
+			std::set<CommandIdx> _canceledCmd;
 
 			/// @brief vector of hp change for entities
 			std::unordered_map<Handle, double> _hpChange;
