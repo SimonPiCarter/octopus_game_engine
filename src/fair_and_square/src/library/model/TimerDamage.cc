@@ -19,6 +19,8 @@ void TimerDamage::applyEffect(octopus::Step & step_p, octopus::State const &stat
     }
     else
     {
-        step_p.addSteppable(new octopus::EntityHitPointChangeStep(_ent, -10.));
+        double maxHp_l = state_p.getEntity(_ent)->getHpMax();
+        double curHp_l = state_p.getEntity(_ent)->_hp + step_p.getHpChange(_ent);
+        step_p.addSteppable(new octopus::EntityHitPointChangeStep(_ent, -10., curHp_l, maxHp_l));
     }
 }

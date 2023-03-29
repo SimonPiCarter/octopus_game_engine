@@ -68,6 +68,8 @@ namespace octopus
 			void addHpChange(Handle const &handle_p, double delta_p);
 			/// @brief get all cumulative hp change
 			std::unordered_map<Handle, double> const& getHpChange() const;
+			/// @brief get hp change for given handle
+			double getHpChange(Handle const &handle_p) const;
 
 			/// @brief get previous step
 			/// @return previous step

@@ -148,6 +148,16 @@ std::unordered_map<Handle, double> const& Step::getHpChange() const
 	return _hpChange;
 }
 
+double Step::getHpChange(Handle const &handle_p) const
+{
+	auto it_l = _hpChange.find(handle_p);
+	if(it_l != _hpChange.end())
+	{
+		return it_l->second;
+	}
+	return 0;
+}
+
 StepData::~StepData()
 {
 	for(std::pair<unsigned long, std::vector<SteppableData *>> pair_l : _listSteppableData)

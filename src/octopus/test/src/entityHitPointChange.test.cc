@@ -21,16 +21,15 @@ TEST(entityHitPointChangeTest, simple_overheal)
 	octopus::EntityModel unitModel_l { false, 1., 1., 10. };
 	state_l.addEntity(new Entity { { 3, 3. }, false, unitModel_l});
 
-	EntityHitPointChangeStep step_l(0, 10.);
-	EntityHitPointChangeStepData data_l;
+	EntityHitPointChangeStep step_l(0, 10., 10., 10.);
 
 	EXPECT_NEAR(10., state_l.getEntity(0)->_hp, 1e-5);
 
-	step_l.apply(state_l, &data_l);
+	step_l.apply(state_l, nullptr);
 
 	EXPECT_NEAR(10., state_l.getEntity(0)->_hp, 1e-5);
 
-	step_l.revert(state_l, &data_l);
+	step_l.revert(state_l, nullptr);
 
 	EXPECT_NEAR(10., state_l.getEntity(0)->_hp, 1e-5);
 }
@@ -43,16 +42,15 @@ TEST(entityHitPointChangeTest, simple_overkill)
 	octopus::EntityModel unitModel_l { false, 1., 1., 10. };
 	state_l.addEntity(new Entity { { 3, 3. }, false, unitModel_l});
 
-	EntityHitPointChangeStep step_l(0, -100.);
-	EntityHitPointChangeStepData data_l;
+	EntityHitPointChangeStep step_l(0, -100., 10., 10.);
 
 	EXPECT_NEAR(10., state_l.getEntity(0)->_hp, 1e-5);
 
-	step_l.apply(state_l, &data_l);
+	step_l.apply(state_l, nullptr);
 
 	EXPECT_NEAR(0., state_l.getEntity(0)->_hp, 1e-5);
 
-	step_l.revert(state_l, &data_l);
+	step_l.revert(state_l, nullptr);
 
 	EXPECT_NEAR(10., state_l.getEntity(0)->_hp, 1e-5);
 }
@@ -66,27 +64,15 @@ TEST(entityHitPointChangeTest, simple_buff_heal)
 	state_l.addEntity(new Entity { { 3, 3. }, false, unitModel_l});
 
 
-	EntityHitPointChangeStep step_l(0, 5);
-	EntityHitPointChangeStepData data_l;
+	EntityHitPointChangeStep step_l(0, 5, 10., 10.);
 
 	EXPECT_NEAR(10., state_l.getEntity(0)->_hp, 1e-5);
 
-	step_l.apply(state_l, &data_l);
+	step_l.apply(state_l, nullptr);
 
 	EXPECT_NEAR(10., state_l.getEntity(0)->_hp, 1e-5);
 
-	step_l.revert(state_l, &data_l);
+	step_l.revert(state_l, nullptr);
 
 	EXPECT_NEAR(10., state_l.getEntity(0)->_hp, 1e-5);
-
-	state_l.getEntity(0)->_buffHpMax._offset = 10;
-
-	step_l.apply(state_l, &data_l);
-
-	EXPECT_NEAR(15., state_l.getEntity(0)->_hp, 1e-5);
-
-	step_l.revert(state_l, &data_l);
-
-	EXPECT_NEAR(10., state_l.getEntity(0)->_hp, 1e-5);
-
 }
