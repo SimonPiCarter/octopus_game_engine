@@ -195,7 +195,7 @@ namespace RVO {
 		ObstacleTreeNode *obstacleTree_;
 		RVOSimulator *sim_;
 
-		static const size_t MAX_LEAF_SIZE = 10;
+		static const size_t MAX_LEAF_SIZE = 5;
 
 		friend class Agent;
 		friend class RVOSimulator;
