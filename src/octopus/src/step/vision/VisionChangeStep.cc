@@ -79,11 +79,15 @@ std::list<VisionChangeStep *> newVisionChangeStep(State const &state_p, Step con
 
 	std::vector<double> hitpoints_l;
 	std::vector<double> dead_l;
+	std::vector<double> alreadyDead_l;
 	hitpoints_l.reserve(state_p.getEntities().size());
+	dead_l.reserve(state_p.getEntities().size());
+	alreadyDead_l.reserve(state_p.getEntities().size());
 	for(Entity const * ent_l : state_p.getEntities())
 	{
 		hitpoints_l.push_back(ent_l->_hp);
 		dead_l.push_back(false);
+		alreadyDead_l.push_back(!ent_l->_alive);
 	}
 	// need to tag all dead entities to avoid updating them
 	// only do so by checking hit point changes
@@ -99,7 +103,7 @@ std::list<VisionChangeStep *> newVisionChangeStep(State const &state_p, Step con
 	for(Entity const * ent_l : state_p.getEntities())
 	{
 		unsigned long team_l = state_p.getPlayer(ent_l->_player)->_team;
-		if(!dead_l[ent_l->_handle])
+		if(!dead_l[ent_l->_handle] || alreadyDead_l[ent_l->_handle])
 		{
 			continue;
 		}
@@ -118,7 +122,7 @@ std::list<VisionChangeStep *> newVisionChangeStep(State const &state_p, Step con
 	{
 		Entity const * ent_l = state_p.getEntity(moveStep_l->_handle);
 		// skip treatmen for dead entities
-		if(dead_l[ent_l->_handle])
+		if(dead_l[ent_l->_handle] || alreadyDead_l[ent_l->_handle])
 		{
 			continue;
 		}
