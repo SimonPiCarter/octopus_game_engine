@@ -70,7 +70,7 @@ void ProductionPanel::refresh(Window &window_p, octopus::State const &state_p)
 		{
 			octopus::BuildingUnitProductionCommand const *cmd_l = dynamic_cast<octopus::BuildingUnitProductionCommand const *>(it_l->_cmd);
 			octopus::UnitProductionData const *data_l = dynamic_cast<octopus::UnitProductionData const *>(it_l->_data);
-			if(cmd_l && data_l)
+			if(cmd_l && data_l && !data_l->_canceled)
 			{
 				vecCommands_l.push_back(std::make_pair(cmd_l, data_l));
 				vecIdx_l.push_back(it_l->_id);
