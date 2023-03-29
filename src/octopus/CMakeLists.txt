@@ -24,6 +24,7 @@ add_library(octopus
 	${CMAKE_CURRENT_SOURCE_DIR}/src/command/entity/EntityBuildingCommand.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/command/entity/EntityMoveCommand.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/command/entity/EntityWaitCommand.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/src/command/flying/eot/DamageOverTime.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/command/flying/CommandEffectOverTime.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/command/player/PlayerChoseDivinityCommand.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/command/player/PlayerChoseOptionCommand.cc
@@ -49,6 +50,10 @@ add_library(octopus
 	${CMAKE_CURRENT_SOURCE_DIR}/src/state/entity/Resource.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/state/entity/Unit.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/state/entity/attackModifier/AttackModifier.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/src/state/entity/attackModifier/modifiers/AoEModifier.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/src/state/entity/attackModifier/modifiers/ChainingModifier.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/src/state/entity/attackModifier/modifiers/DotModifier.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/src/state/entity/attackModifier/modifiers/LifeStealModifier.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/state/model/requirements/Requirements.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/state/model/entity/BuildingModel.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/state/model/entity/EntityModel.cc
@@ -86,6 +91,7 @@ add_library(octopus
 	${CMAKE_CURRENT_SOURCE_DIR}/src/step/entity/EntityMoveStep.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/step/entity/EntityUpdateWaitingStep.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/step/entity/buff/EntityBuffStep.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/src/step/entity/modifier/AttackModifierStep.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/step/entity/spawn/EntitySpawnStep.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/step/entity/spawn/UnitSpawnStep.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/step/entity/spawn/BuildingSpawnStep.cc

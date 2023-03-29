@@ -60,6 +60,10 @@ public:
 	FlyingCommandSet & getFlyingCommands();
 	const FlyingCommandSet & getFlyingCommands() const;
 
+	/// @brief return the next available handle
+	/// @param spawning_p the number of available handles that will be used (need to iterate further the first available handle if > 0)
+	Handle getFlyingCommandHandle(unsigned long spawning_p) const;
+
 	std::vector<Player *> &getPlayers();
 	std::vector<Player *> const &getPlayers() const;
 
@@ -175,7 +179,7 @@ struct TargetPanel
 
 /// @brief look for new targets in a matching range
 /// @return all targets within range
-TargetPanel lookUpNewTargets(State const &state_p, Handle const &sourceHandle_p, Fixed matchDistance_p);
+TargetPanel lookUpNewTargets(State const &state_p, Handle const &sourceHandle_p, Fixed matchDistance_p, bool filterTeam_p=true);
 
 Entity const * lookUpNewBuffTarget(State const &state_p, Handle const &sourceHandle_p, double range_p, TyppedBuff const &buff_p);
 Entity const * lookUpNewTarget(State const &state_p, Handle const &sourceHandle_p);

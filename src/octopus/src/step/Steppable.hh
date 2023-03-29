@@ -39,6 +39,7 @@ namespace octopus
 			virtual SteppableData * newData(State const &) const { return nullptr; }
 	};
 
+	class AttackModifierStep;
 	class BuildingCancelStep;
 	class BuildingSpawnStep;
 	class BuildingStep;
@@ -119,6 +120,7 @@ namespace octopus
 				steppable_p->visit(this);
 			}
 
+			virtual void visit(AttackModifierStep const *steppable_p) = 0;
 			virtual void visit(BuildingCancelStep const *steppable_p) = 0;
 			virtual void visit(BuildingSpawnStep const *steppable_p) = 0;
 			virtual void visit(BuildingStep const *steppable_p) = 0;

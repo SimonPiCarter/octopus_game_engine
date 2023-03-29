@@ -118,7 +118,10 @@ bool EntityAttackCommand::applyCommand(Step & step_p, State const &state_p, Comm
 			step_p.addSteppable(new CommandWindUpDiffStep(_handleCommand, - windup_l - 1));
 
 			// add damage (with current hp from state and step until now)
-			step_p.addSteppable(newAttackSteppable(*entSource_l, *entTarget_l, state_p, step_p));
+			for(Steppable * steppable_l : newAttackSteppable(*entSource_l, *entTarget_l, state_p, step_p))
+			{
+				step_p.addSteppable(steppable_l);
+			}
 			// reset reload time
 			step_p.addSteppable(new EntityAttackStep(_source, entSource_l->_reload));
 

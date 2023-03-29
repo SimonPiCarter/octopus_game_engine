@@ -33,6 +33,7 @@ public:
 	virtual void visit(UnitSpawnStep const *);
 
 	/// NA
+	virtual void visit(AttackModifierStep const *) {}
 	virtual void visit(BuildingSpawnStep const *) {}
 	virtual void visit(BuildingCancelStep const *) {}
     virtual void visit(CancelUnitProductionStep const *) {}

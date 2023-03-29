@@ -8,6 +8,7 @@
 #include "state/ResourceType.hh"
 #include "state/DivinityType.hh"
 #include "state/entity/Buff.hh"
+#include "state/entity/attackModifier/AttackModifier.hh"
 
 #include "DivinityOption.hh"
 #include "StepOptionsGenerator.hh"
@@ -49,6 +50,9 @@ namespace octopus
 
 			/// @brief the list of all buffs that should be applied on every entity per model
 			std::map<std::string, std::vector<TyppedBuff> > _mapBuffs;
+
+			/// @brief the list of modifiers that should be applied on every entity per model
+			std::map<std::string, AttackModifier > _mapModifiers;
 
 			///
 			/// Unlock info

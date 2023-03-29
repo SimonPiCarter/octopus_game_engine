@@ -34,6 +34,7 @@ public:
 	void clear(octopus::Handle const &handle_p);
 	void spawn(octopus::Handle const &handle_p);
 
+	virtual void visit(octopus::AttackModifierStep const *) override {}
 	virtual void visit(octopus::BuildingCancelStep const *) override;
 	virtual void visit(octopus::BuildingSpawnStep const *step_p) override;
 	virtual void visit(octopus::BuildingStep const *steppable_p) override;

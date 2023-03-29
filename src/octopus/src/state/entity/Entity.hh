@@ -9,12 +9,11 @@
 #include "command/Commandable.hh"
 #include "utils/Vector.hh"
 #include "state/Handle.hh"
+#include "state/entity/attackModifier/AttackModifier.hh"
 #include "state/model/entity/EntityModel.hh"
 
 namespace octopus
 {
-	class AttackModifier;
-
 	class Entity : public Commandable
 	{
 		public:
@@ -50,7 +49,7 @@ namespace octopus
 
 			unsigned long _player {0};
 
-			AttackModifier const * _attackMod {nullptr};
+			AttackModifier  _attackMod {NoModifier()};
 
 			///
 			/// Buffing properties
