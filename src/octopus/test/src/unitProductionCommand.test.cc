@@ -176,12 +176,11 @@ TEST(unitProductionCommandTest, cancel_two)
 
 	controller_l.commitCommand(new BuildingUnitCancelCommand(0, 0));
 
-	// update time to 7seconds (10)
-	// 1step to add cancel step
+	// update time to 6seconds (9)
 	// 1step for cancel to occur
 	// 5steps of production
 	// next entity should be rdy to build but not spawned yet
-	controller_l.update(7.);
+	controller_l.update(6.);
 
 	// updated until synced up
 	while(!controller_l.loop_body()) {}
@@ -190,7 +189,7 @@ TEST(unitProductionCommandTest, cancel_two)
 
 	EXPECT_EQ(1u, state_l->getEntities().size());
 
-	// update time to 1second (11)
+	// update time to 1second (10)
 	controller_l.update(1.);
 
 	// updated until synced up
