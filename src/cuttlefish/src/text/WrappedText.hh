@@ -20,6 +20,7 @@ namespace cuttlefish
 		/// @brief set the text of this wrapped text
 		/// @note every $ in the text trigger an accessible text portion which can be updated
 		/// every updatable text should be updated with mono word content if possible (it will always be on the same line)
+		/// @note $$ will indicate new lines
 		void setText(std::string const & text_p, SDL_Color const &color_p);
 
 		/// @brief update text and refresh segmented text positions
@@ -33,6 +34,9 @@ namespace cuttlefish
 		void display(Window & window_p) const;
 
 		void clean();
+
+		/// @brief get the current cursor Y (to know the height of the bloc)
+		int getCursorY() const { return _cursorY; }
 	protected:
 
 		Window * const _window;

@@ -2,10 +2,12 @@
 #define __BuffGenerators__
 
 #include <random>
+#include <variant>
 #include <vector>
 
 #include "state/player/StepOptionsGenerator.hh"
 #include "state/entity/Buff.hh"
+#include "state/entity/attackModifier/AttackModifier.hh"
 
 struct BuffOption
 {
@@ -13,11 +15,18 @@ struct BuffOption
     std::string _model;
 };
 
+struct ModifierOption
+{
+    octopus::AttackModifier _mod;
+    std::string _model;
+};
+
+using Option = std::variant<BuffOption, ModifierOption>;
+
 class BuffGenerator : public octopus::StepOptionsGenerator
 {
 public:
-    BuffGenerator(std::vector<BuffOption> const &options_p) : _options(options_p) {}
-	~BuffGenerator();
+    BuffGenerator(std::vector<Option> const &options_p) : _options(options_p) {}
 
     virtual StepOptionsGenerator* newCopy() const override { return new BuffGenerator(_options); }
 
@@ -25,11 +34,11 @@ public:
 
     virtual unsigned long getNumOptions() const override { return _options.size(); }
 
-    std::vector<BuffOption> const _options;
-private:
-	std::vector<octopus::Steppable *> _steps;
+    std::vector<Option> const _options;
 };
 
-BuffOption generateRandomOption(std::mt19937 &_gen, std::string const &id_p);
+BuffOption generateRandomBuffOption(std::mt19937 &_gen, std::string const &id_p);
+
+ModifierOption generateRandomModifierOption(std::mt19937 &_gen);
 
 #endif

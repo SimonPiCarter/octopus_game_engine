@@ -4,6 +4,7 @@
 #include "library/model/bonus/BuffGenerators.hh"
 #include "panel/OptionPanel.hh"
 #include "text/SegmentedText.hh"
+#include "choice/ChoiceSubPanel.hh"
 
 namespace fas
 {
@@ -42,19 +43,20 @@ protected:
 
 	/// @brief background for the options
 	std::vector<cuttlefish::Picture *> _optionsBackground;
+	std::vector<ChoiceSubPanel *> _optionsSubPanel;
 
 	/// @brief temporary texts for option
 	std::vector<cuttlefish::SegmentedText *> _optionsTexts;
 
 	/// @brief list of all options queued
-	std::list<std::vector<BuffOption>> _queuedOptions;
+	std::list<std::vector<Option>> _queuedOptions;
 	std::list<std::string> _queuedKeys;
 
 	/// @brief update current option with the first option queued
 	void updateCurrent();
 
 	/// @brief option list of the current choice
-	std::vector<BuffOption> _options;
+	std::vector<Option> _options;
 	/// @brief key of the current choice
 	std::string _key;
 

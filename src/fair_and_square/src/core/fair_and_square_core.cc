@@ -18,8 +18,8 @@
 #include "text/Text.hh"
 #include "texture/Texture.hh"
 
-#define SCREEN_WIDTH 1600
-#define SCREEN_HEIGHT 800
+#define SCREEN_WIDTH 1920
+#define SCREEN_HEIGHT 1024
 
 using namespace cuttlefish;
 
@@ -64,7 +64,7 @@ int main( int argc, char* args[] )
 	bool fullscreen_l = false;
 
 
-	cuttlefish::Menu menu_l(window_l.getWidth()/2, 20, 5);
+	cuttlefish::Menu menu_l(window_l.getWidth()/2, 40, 5);
 
 	Picture octopus_l(window_l.loadTexture("resources/octopus.png"), 64, 64, {2}, {1});
 	octopus_l.setDestination(window_l.getWidth()-150, window_l.getHeight()-150, 128, 128);

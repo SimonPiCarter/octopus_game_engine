@@ -22,10 +22,19 @@ void AnchorTrigger::trigger(octopus::State const &state_p, octopus::Step &step_p
     step_p.addSteppable(new octopus::PlayerSpendResourceStep(_player, map_l));
 
     std::string id_l = std::to_string(state_p.getPathGridStatus());
-    std::vector<BuffOption> options_l;
+    std::vector<Option> options_l;
     for(size_t i = 0 ; i < 3 ; ++ i )
     {
-        options_l.push_back(generateRandomOption(_gen, id_l));
+        std::uniform_int_distribution<> distType_l(0, 1);
+        int type_l = distType_l(_gen);
+        if(type_l == 0)
+        {
+            options_l.push_back(generateRandomBuffOption(_gen, id_l));
+        }
+        else
+        {
+            options_l.push_back(generateRandomModifierOption(_gen));
+        }
     }
 
     step_p.addSteppable(new octopus::PlayerAddOptionStep(_player, id_l, new BuffGenerator(options_l)));

@@ -13,12 +13,16 @@ ChoicePanel::ChoicePanel(cuttlefish::Window &window_p, int x, int y, cuttlefish:
 {
 	_background->setDestination(x, y, 600., 300.);
 
-	_optionsBackground.push_back(new cuttlefish::Picture(background_p, 400, 400, {1}, {1}));
-	_optionsBackground.back()->setDestination(x+5, y+5, 190., 290.);
-	_optionsBackground.push_back(new cuttlefish::Picture(background_p, 400, 400, {1}, {1}));
-	_optionsBackground.back()->setDestination(x+205, y+5, 190., 290.);
-	_optionsBackground.push_back(new cuttlefish::Picture(background_p, 400, 400, {1}, {1}));
-	_optionsBackground.back()->setDestination(x+405, y+5, 190., 290.);
+	cuttlefish::Picture background_l(background_p, 400, 400, {1}, {1});
+
+	background_l.setDestination(x+5, y+5, 190., 290.);
+	_optionsSubPanel.push_back(new ChoiceSubPanel(window_p, x+5, y+5, 190, background_l, icons_p));
+
+	background_l.setDestination(x+205, y+5, 190., 290.);
+	_optionsSubPanel.push_back(new ChoiceSubPanel(window_p, x+205, y+5, 190, background_l, icons_p));
+
+	background_l.setDestination(x+405, y+5, 190., 290.);
+	_optionsSubPanel.push_back(new ChoiceSubPanel(window_p, x+405, y+5, 190, background_l, icons_p));
 }
 
 ChoicePanel::~ChoicePanel()
@@ -55,13 +59,9 @@ void ChoicePanel::refresh()
 void ChoicePanel::render(cuttlefish::Window &window_p)
 {
 	_background->display(window_p);
-	for(cuttlefish::Picture * pic_l : _optionsBackground)
+	for(ChoiceSubPanel * subPanel_l : _optionsSubPanel)
 	{
-		pic_l->display(window_p);
-	}
-	for(cuttlefish::SegmentedText * text_l : _optionsTexts)
-	{
-		text_l->display(window_p);
+		subPanel_l->display(window_p);
 	}
 }
 
@@ -70,9 +70,9 @@ void ChoicePanel::render(cuttlefish::Window &window_p)
 int ChoicePanel::getOption(cuttlefish::Window &window_p, int x, int y) const
 {
 	int count_l = 0;
-	for(cuttlefish::Picture * pic_l : _optionsBackground)
+	for(ChoiceSubPanel const * subPanel_l : _optionsSubPanel)
 	{
-		if(pic_l->isInside(window_p, x, y))
+		if(subPanel_l->getBackground().isInside(window_p, x, y))
 		{
 			return count_l;
 		}
@@ -115,20 +115,10 @@ void ChoicePanel::updateCurrent()
 		_key = _queuedKeys.front();
 		size_t i = 0;
 		/// temporary texts
-		for(BuffOption const &opt_l : _options)
+		for(Option const &opt_l : _options)
 		{
-			cuttlefish::SegmentedText * text_l = new cuttlefish::SegmentedText(&_window, _x+10+205*(i++), _y+10);
-			text_l->addText("header", "option : ", {0,0,0}, true);
-			text_l->addText("type", "    type : ", {0,0,0}, false);
-			text_l->addText("type_val", octopus::to_string(opt_l._buff._type), {0,0,0}, true);
-			text_l->addText("offset", "    offset : ", {0,0,0}, false);
-			text_l->addText("offset_val", std::to_string(int(opt_l._buff._offset)), {0,0,0}, true);
-			text_l->addText("coef", "    coef : ", {0,0,0}, false);
-			text_l->addText("coef_val", std::to_string(int(opt_l._buff._coef*100.))+"%", {0,0,0}, true);
-			text_l->addText("model", "    model : ", {0,0,0}, false);
-			text_l->addText("model_val", opt_l._model, {0,0,0}, true);
-
-			_optionsTexts.push_back(text_l);
+			std::visit([&](auto && arg) { _optionsSubPanel[i]->update(arg); }, opt_l);
+			++i;
 		}
 	}
 	else
