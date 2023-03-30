@@ -39,6 +39,7 @@
 #ifdef _OPENMP
 #include <omp.h>
 #endif
+#include <thread>
 
 namespace RVO {
 	RVOSimulator::RVOSimulator() : defaultAgent_(NULL), globalTime_(0.0f), kdTree_(NULL), timeStep_(0.0f)
@@ -159,21 +160,31 @@ namespace RVO {
 	{
 		kdTree_->buildAgentTree();
 
-#ifdef _OPENMP
-#pragma omp parallel for
-#endif
-		for (int i = 0; i < static_cast<int>(agents_.size()); ++i)
-		{
-			if(agents_[i].active())
+		std::thread first_l([&](){
+			for (int i = 0; i < static_cast<int>(agents_.size()/2); ++i)
 			{
-				agents_[i].computeNeighbors();
-				agents_[i].computeNewVelocity();
+				if(agents_[i].active())
+				{
+					agents_[i].computeNeighbors();
+					agents_[i].computeNewVelocity();
+				}
 			}
-		}
+		});
 
-#ifdef _OPENMP
-#pragma omp parallel for
-#endif
+		std::thread second_l([&](){
+			for (int i = static_cast<int>(agents_.size()/2)+1; i < static_cast<int>(agents_.size()); ++i)
+			{
+				if(agents_[i].active())
+				{
+					agents_[i].computeNeighbors();
+					agents_[i].computeNewVelocity();
+				}
+			}
+		});
+
+		first_l.join();
+		second_l.join();
+
 		for (int i = 0; i < static_cast<int>(agents_.size()); ++i)
 		{
 			if(agents_[i].active())
