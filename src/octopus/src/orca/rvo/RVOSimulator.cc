@@ -172,7 +172,7 @@ namespace RVO {
 		});
 
 		std::thread second_l([&](){
-			for (int i = static_cast<int>(agents_.size()/2)+1; i < static_cast<int>(agents_.size()); ++i)
+			for (int i = static_cast<int>(agents_.size()/2); i < static_cast<int>(agents_.size()); ++i)
 			{
 				if(agents_[i].active())
 				{
