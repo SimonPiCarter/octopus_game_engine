@@ -31,8 +31,18 @@ class ChoiceSubPanel
 public:
     ChoiceSubPanel(cuttlefish::Window &window_p, int x, int y, int w, cuttlefish::Picture const & background_p, cuttlefish::Texture const *icons_p);
     ~ChoiceSubPanel();
-    /// @brief update the sub panel from the option
+    /// @brief update the sub panel from the buff option
     void update(BuffOption const &option_p);
+    /// @brief update the sub panel from the modifier option
+    void update(ModifierOption const &option_p);
+
+    void updateFromModifier(octopus::NoModifier const &mod_p);
+    void updateFromModifier(octopus::AoEModifier const &mod_p);
+    void updateFromModifier(octopus::ChainingModifier const &mod_p);
+    void updateFromModifier(octopus::DotModifier const &mod_p);
+    void updateFromModifier(octopus::LifeStealModifier const &mod_p);
+
+    void updateIconsPosition();
 
     void display(cuttlefish::Window &window_p);
 

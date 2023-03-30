@@ -1,25 +1,48 @@
 #include "BuffGenerators.hh"
 
+#include "state/entity/attackModifier/AttackModifier.hh"
 #include "step/player/PlayerBuffAllStep.hh"
+#include "step/player/PlayerAttackModAllStep.hh"
 
 using namespace octopus;
 
-BuffGenerator::~BuffGenerator()
+Steppable * genStep(unsigned long player_p, BuffOption const &option_p)
 {
-    for(auto step_l : _steps)
-    {
-        delete step_l;
-    }
+    return new PlayerBuffAllStep(player_p, option_p._buff, option_p._model);
+}
+
+Steppable * genStep(unsigned long player_p, ModifierOption const &option_p)
+{
+    return new PlayerAttackModAllStep(player_p, option_p._mod, option_p._model);
 }
 
 std::vector<Steppable *> BuffGenerator::getSteppables(unsigned long options_p, unsigned long player_p) const
 {
     std::vector<Steppable *> steps_l;
-    steps_l.push_back(new PlayerBuffAllStep(player_p, _options.at(options_p)._buff, _options.at(options_p)._model));
+    std::visit([&steps_l, &player_p](auto &&arg) { steps_l.push_back(genStep(player_p, arg)); }, _options.at(options_p));
     return steps_l;
 }
 
-BuffOption generateRandomOption(std::mt19937 &gen_p, std::string const &id_p)
+std::string generateRandomModel(std::mt19937 &gen_p)
+{
+    std::uniform_int_distribution<> distModel_l(0, 2);
+    int model_l = distModel_l(gen_p);
+
+    if(model_l == 0)
+    {
+        return "square";
+    }
+    else if(model_l == 1)
+    {
+        return "circle";
+    }
+    else
+    {
+        return "triangle";
+    }
+}
+
+BuffOption generateRandomBuffOption(std::mt19937 &gen_p, std::string const &id_p)
 {
     std::uniform_int_distribution<> distType_l(0, 6);
     int type_l = distType_l(gen_p);
@@ -90,21 +113,44 @@ BuffOption generateRandomOption(std::mt19937 &gen_p, std::string const &id_p)
     }
     else
     {
-        std::uniform_int_distribution<> distModel_l(0, 2);
-        int model_l = distModel_l(gen_p);
+        option_l._model = generateRandomModel(gen_p);
+    }
 
-        if(model_l == 0)
-        {
-            option_l._model = "square";
-        }
-        else if(model_l == 1)
-        {
-            option_l._model = "circle";
-        }
-        else if(model_l == 2)
-        {
-            option_l._model = "triangle";
-        }
+    return option_l;
+}
+
+ModifierOption generateRandomModifierOption(std::mt19937 &gen_p)
+{
+    ModifierOption option_l;
+
+    option_l._model = generateRandomModel(gen_p);
+
+    std::uniform_int_distribution<> distMod_l(0, 3);
+    int mod_l = distMod_l(gen_p);
+
+    if(mod_l == 0)
+    {
+        std::uniform_int_distribution<> distRange_l(2, 4);
+        std::uniform_int_distribution<> distRatio_l(2, 5);
+        option_l._mod = AoEModifier(distRatio_l(gen_p)/10., distRange_l(gen_p));
+    }
+    else if(mod_l == 1)
+    {
+        std::uniform_int_distribution<> distTicks_l(2, 5);
+        std::uniform_int_distribution<> distRatio_l(2, 5);
+        std::uniform_int_distribution<> distRange_l(2, 5);
+        option_l._mod = ChainingModifier(20, distTicks_l(gen_p), distRatio_l(gen_p)/10., distRange_l(gen_p));
+    }
+    else if(mod_l == 2)
+    {
+        std::uniform_int_distribution<> distTicks_l(2, 5);
+        std::uniform_int_distribution<> distDmg_l(5, 10);
+        option_l._mod = DotModifier(100, distTicks_l(gen_p), distDmg_l(gen_p));
+    }
+    else
+    {
+        std::uniform_int_distribution<> distRatio_l(2, 4);
+        option_l._mod = LifeStealModifier(distRatio_l(gen_p)/10.);
     }
 
     return option_l;

@@ -115,9 +115,9 @@ void ChoicePanel::updateCurrent()
 		_key = _queuedKeys.front();
 		size_t i = 0;
 		/// temporary texts
-		for(BuffOption const &opt_l : _options)
+		for(Option const &opt_l : _options)
 		{
-			_optionsSubPanel[i]->update(opt_l);
+			std::visit([&](auto && arg) { _optionsSubPanel[i]->update(arg); }, opt_l);
 			++i;
 		}
 	}
