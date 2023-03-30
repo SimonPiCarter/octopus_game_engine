@@ -13,8 +13,8 @@ namespace octopus
 		public:
 			EntityMoveStep(Handle const &handle_p, Vector const &move_p) : _handle(handle_p), _move(move_p) {}
 
-			virtual void apply(State &state_p, SteppableData *) const override;
-			virtual void revert(State &state_p, SteppableData *) const override;
+			virtual void apply(State &state_p) const override;
+			virtual void revert(State &state_p, SteppableData const *) const override;
 
 			virtual bool isNoOp() const override;
 			virtual void visit(SteppableVisitor * visitor_p) const override

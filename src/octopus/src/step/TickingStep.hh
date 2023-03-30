@@ -15,8 +15,8 @@ namespace octopus
 		public:
 			TickingStep() {}
 
-			virtual void apply(State &state_p, SteppableData *) const override;
-			virtual void revert(State &state_p, SteppableData *) const override;
+			virtual void apply(State &state_p) const override;
+			virtual void revert(State &state_p, SteppableData const *) const override;
 
 			virtual bool isNoOp() const override;
 

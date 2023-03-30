@@ -197,8 +197,6 @@ namespace RVO {
 						octopus::Fixed timeHorizonObst, octopus::Fixed radius, octopus::Fixed maxSpeed,
 						const Vector2 &velocity = Vector2());
 
-		void removeAgent(size_t agent);
-
 		/**
 		 * \brief      Adds a new obstacle to the simulation.
 		 * \param      vertices        List of the vertices of the polygonal
@@ -210,8 +208,6 @@ namespace RVO {
 		 *             order.
 		 */
 		size_t addObstacle(const std::vector<Vector2> &vertices);
-
-		void removeObstacle(size_t obstacle);
 
 		/**
 		 * \brief      Lets the simulator perform a simulation step and updates the
@@ -594,7 +590,7 @@ namespace RVO {
 		void setTimeStep(octopus::Fixed timeStep);
 
 	private:
-		std::vector<Agent *> agents_;
+		std::vector<Agent> agents_;
 		Agent *defaultAgent_;
 		octopus::Fixed globalTime_;
 		KdTree *kdTree_;

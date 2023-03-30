@@ -28,7 +28,7 @@ public:
 	/// @note add steppables here
 	virtual void applyEffect(Step & step_p, State const &state_p, CommandData const * data_p, PathManager &pathManager_p) const = 0;
 
-private:
+protected:
 	/// @brief number of step required for effect to occur
 	unsigned long const _tickRate;
 

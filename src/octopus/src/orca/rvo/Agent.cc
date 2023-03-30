@@ -389,7 +389,7 @@ namespace RVO {
 				size_t i = agentNeighbors_.size() - 1;
 
 				while (i != 0 && distSq < agentNeighbors_[i - 1].first) {
-					agentNeighbors_[i] = agentNeighbors_[i - 1];
+					std::swap(agentNeighbors_[i], agentNeighbors_[i - 1]);
 					--i;
 				}
 

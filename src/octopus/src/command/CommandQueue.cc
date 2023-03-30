@@ -118,4 +118,16 @@ CommandBundle const &CommandQueue::getBundle(size_t id_p) const
 	throw std::logic_error("CommandQueue could not get bundle with id "+std::to_string(id_p));
 }
 
+CommandBundle &CommandQueue::getBundle(size_t id_p)
+{
+	for(CommandBundle & bundle_l: _commandQueue)
+	{
+		if(bundle_l._id == id_p)
+		{
+			return bundle_l;
+		}
+	}
+	throw std::logic_error("CommandQueue could not get bundle with id "+std::to_string(id_p));
+}
+
 } /// octopus

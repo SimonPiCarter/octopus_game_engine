@@ -14,8 +14,8 @@ public:
 	PlayerLevelUpDivinityStep(unsigned long player_p, DivinityType type_p)
 		: _player(player_p), _type(type_p) {}
 
-	virtual void apply(State &state_p, SteppableData *) const override;
-	virtual void revert(State &state_p, SteppableData *) const override;
+	virtual void apply(State &state_p) const override;
+	virtual void revert(State &state_p, SteppableData const *) const override;
 
 	virtual bool isNoOp() const override { return false; }
 	virtual void visit(SteppableVisitor * visitor_p) const override

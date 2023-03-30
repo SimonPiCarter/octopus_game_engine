@@ -13,7 +13,7 @@ struct CommandBundle
 {
 	Command * _cmd {nullptr};
 	CommandData * _data {nullptr};
-	size_t _id;
+	size_t _id {0};
 };
 
 /// @brief This class represent a command queue
@@ -63,6 +63,9 @@ public:
 
 	/// @brief Get the bundle associated to the id
 	CommandBundle const &getBundle(size_t id_p) const;
+
+	/// @brief Get the bundle associated to the id
+	CommandBundle &getBundle(size_t id_p);
 
 protected:
 	/// @brief list of all actions in the command queue

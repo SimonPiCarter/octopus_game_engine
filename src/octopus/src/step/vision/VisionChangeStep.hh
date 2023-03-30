@@ -16,8 +16,8 @@ public:
 	/// @brief construct step using a movable map (to avoid any copy)
 	VisionChangeStep(unsigned long team_p, std::unordered_map<size_t , std::unordered_map<size_t, long long> > &&delta_p, bool exploration_p=false);
 
-	virtual void apply(State &state_p, SteppableData *) const override;
-	virtual void revert(State &state_p, SteppableData *) const override;
+	virtual void apply(State &state_p) const override;
+	virtual void revert(State &state_p, SteppableData const *) const override;
 
 	virtual bool isNoOp() const override
 	{

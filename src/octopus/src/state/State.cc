@@ -138,6 +138,23 @@ const FlyingCommandSet & State::getFlyingCommands() const
 	return _flyingCommands;
 }
 
+Handle State::getFlyingCommandHandle(unsigned long spawning_p) const
+{
+	// number of available handle found
+	unsigned long offset_l = 0;
+	Handle handle_l = 0;
+	while(offset_l<=spawning_p)
+	{
+		auto &&it_l = _flyingCommands.find(handle_l);
+		if(it_l == _flyingCommands.end())
+		{
+			++offset_l;
+		}
+		++handle_l;
+	}
+	return handle_l-1;
+}
+
 std::vector<Player *> &State::getPlayers()
 {
 	return _players;
@@ -272,7 +289,7 @@ Entity const * lookUpNewBuffTarget(State const &state_p, Handle const &sourceHan
 	return best_l;
 }
 
-TargetPanel lookUpNewTargets(State const &state_p, Handle const &sourceHandle_p, Fixed matchDistance_p)
+TargetPanel lookUpNewTargets(State const &state_p, Handle const &sourceHandle_p, Fixed matchDistance_p, bool filterTeam_p)
 {
 	TargetPanel panel_l;
 	panel_l.matchDistance = matchDistance_p;
@@ -307,7 +324,7 @@ TargetPanel lookUpNewTargets(State const &state_p, Handle const &sourceHandle_p,
 		if(ent_l == source_l
 		|| !ent_l->_alive
 		|| ent_l->_model._invulnerable
-		|| team_l == state_p.getPlayer(ent_l->_player)->_team)
+		|| (team_l == state_p.getPlayer(ent_l->_player)->_team && filterTeam_p))
 		{
 			// NA
 		}

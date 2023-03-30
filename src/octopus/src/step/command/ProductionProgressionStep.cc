@@ -8,7 +8,7 @@
 namespace octopus
 {
 
-void ProductionProgressionStep::apply(State &state_p, SteppableData *) const
+void ProductionProgressionStep::apply(State &state_p) const
 {
 	Commandable * cmdable_l = state_p.getCommandable(this->_handle);
 	Logger::getDebug() << "ProductionProgressionStep :: apply " << this->_handle <<std::endl;
@@ -16,7 +16,7 @@ void ProductionProgressionStep::apply(State &state_p, SteppableData *) const
 	data_l->_progression += _delta;
 }
 
-void ProductionProgressionStep::revert(State &state_p, SteppableData *) const
+void ProductionProgressionStep::revert(State &state_p, SteppableData const *) const
 {
 	Commandable * cmdable_l = state_p.getCommandable(this->_handle);
 	Logger::getDebug() << "ProductionProgressionStep :: revert " << this->_handle <<std::endl;

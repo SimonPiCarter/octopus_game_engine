@@ -8,21 +8,20 @@ namespace octopus
 
 /// @brief clamp the hp of the entity between 0 and max life
 /// @param ent_p
-/// @return the correction made (old value + correction = new value)
-double clampHp(Entity * ent_p)
+/// @return the new delta to be applied
+double getDelta(double hp_p, double delta_p, double hpMax_p)
 {
-	double correction_l = 0.;
-	if(ent_p->_hp < 0)
+	double curHp_l = hp_p+delta_p;
+	double newDelta_l = delta_p;
+	if(curHp_l < 0)
 	{
-		correction_l = - ent_p->_hp;
-		ent_p->_hp = 0;
+		newDelta_l = -hp_p;
 	}
-	if(ent_p->_hp > ent_p->getHpMax())
+	if(curHp_l > hpMax_p)
 	{
-		correction_l = ent_p->getHpMax() - ent_p->_hp;
-		ent_p->_hp = ent_p->getHpMax();
+		newDelta_l = hpMax_p - hp_p;
 	}
-	return correction_l;
+	return newDelta_l;
 }
 
 void updateFromHp(State &state_p, Entity *ent_p)
@@ -45,25 +44,25 @@ void updateFromHp(State &state_p, Entity *ent_p)
 	}
 }
 
-void EntityHitPointChangeStep::apply(State &state_p, SteppableData *data_p) const
+EntityHitPointChangeStep::EntityHitPointChangeStep(Handle const &handle_p, double delta_p, double anticipatedHp_p, double hpMax_p)
+	: _handle(handle_p), _delta(getDelta(anticipatedHp_p, delta_p, hpMax_p))
+{}
+
+void EntityHitPointChangeStep::apply(State &state_p) const
 {
 	Entity * ent_l = state_p.getEntity(this->_handle);
 	Logger::getDebug() << "EntityHitPointChangeStep :: " << ent_l->_hp << " + "<<this->_delta<<std::endl;
 	ent_l->_hp += this->_delta;
-	EntityHitPointChangeStepData * data_l = dynamic_cast<EntityHitPointChangeStepData *>(data_p);
-
-	data_l->_correction = clampHp(ent_l);
 
 	updateFromHp(state_p, ent_l);
 }
 
-void EntityHitPointChangeStep::revert(State &state_p, SteppableData *data_p) const
+void EntityHitPointChangeStep::revert(State &state_p, SteppableData const *) const
 {
 	Entity * ent_l = state_p.getEntity(this->_handle);
 	Logger::getDebug() << "EntityHitPointChangeStep :: " << ent_l->_hp << " - "<<this->_delta<<std::endl;
-	EntityHitPointChangeStepData * data_l = dynamic_cast<EntityHitPointChangeStepData *>(data_p);
 
-	ent_l->_hp -= this->_delta + data_l->_correction;
+	ent_l->_hp -= this->_delta;
 
 	updateFromHp(state_p, ent_l);
 }

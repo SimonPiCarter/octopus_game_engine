@@ -34,9 +34,11 @@ public:
 	void clear(octopus::Handle const &handle_p);
 	void spawn(octopus::Handle const &handle_p);
 
+	virtual void visit(octopus::AttackModifierStep const *) override {}
 	virtual void visit(octopus::BuildingCancelStep const *) override;
 	virtual void visit(octopus::BuildingSpawnStep const *step_p) override;
 	virtual void visit(octopus::BuildingStep const *steppable_p) override;
+	virtual void visit(octopus::CancelUnitProductionStep const *) override {}
 	virtual void visit(octopus::CommandAddSubAttackStep const *) override {}
 	virtual void visit(octopus::CommandDataWaypointAddStep const *) override {}
 	virtual void visit(octopus::CommandDataWaypointRemoveStep const *) override {}
@@ -71,6 +73,7 @@ public:
 	virtual void visit(octopus::PlayerAddBuildingModel const *) override {}
 	virtual void visit(octopus::PlayerAddOptionDivinityStep const *) override;
 	virtual void visit(octopus::PlayerAddOptionStep const *) override;
+    virtual void visit(octopus::PlayerAttackModAllStep const *) override {}
 	virtual void visit(octopus::PlayerAnchorDivinityStep const *) override {}
 	virtual void visit(octopus::PlayerBuffAllStep const *) {}
 	virtual void visit(octopus::PlayerLevelUpDivinityStep const *) override {}

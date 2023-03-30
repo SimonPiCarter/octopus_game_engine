@@ -24,9 +24,9 @@ namespace octopus
 		public:
 			virtual ~Steppable() {}
 			/// @brief apply this Steppable to the given state
-			virtual void apply(State &state_p, SteppableData *data_p) const = 0;
+			virtual void apply(State &state_p) const = 0;
 			/// @brief revert this Steppable to the given state
-			virtual void revert(State &state_p, SteppableData *data_p) const = 0;
+			virtual void revert(State &state_p, SteppableData const *) const = 0;
 
 			/// @brief return true if this Steppable does no operation on the State it would be applied
 			virtual bool isNoOp() const = 0;
@@ -36,12 +36,14 @@ namespace octopus
 
 			/// @brief create an optional new SteppableData
 			/// @return nullptr if not required
-			virtual SteppableData * newData() const { return nullptr; }
+			virtual SteppableData * newData(State const &) const { return nullptr; }
 	};
 
+	class AttackModifierStep;
 	class BuildingCancelStep;
 	class BuildingSpawnStep;
 	class BuildingStep;
+	class CancelUnitProductionStep;
 	class CommandAddSubAttackStep;
 	class CommandDataWaypointAddStep;
 	class CommandDataWaypointRemoveStep;
@@ -76,6 +78,7 @@ namespace octopus
 	class PlayerAddBuildingModel;
 	class PlayerAddOptionDivinityStep;
 	class PlayerAddOptionStep;
+	class PlayerAttackModAllStep;
 	class PlayerAnchorDivinityStep;
 	class PlayerBuffAllStep;
 	class PlayerLevelUpDivinityStep;
@@ -118,9 +121,11 @@ namespace octopus
 				steppable_p->visit(this);
 			}
 
+			virtual void visit(AttackModifierStep const *steppable_p) = 0;
 			virtual void visit(BuildingCancelStep const *steppable_p) = 0;
 			virtual void visit(BuildingSpawnStep const *steppable_p) = 0;
 			virtual void visit(BuildingStep const *steppable_p) = 0;
+    		virtual void visit(CancelUnitProductionStep const *) = 0;
 			virtual void visit(CommandAddSubAttackStep const *steppable_p) = 0;
 			virtual void visit(CommandDataWaypointAddStep const *steppable_p) = 0;
 			virtual void visit(CommandDataWaypointRemoveStep const *steppable_p) = 0;
@@ -155,6 +160,7 @@ namespace octopus
 			virtual void visit(PlayerAddBuildingModel const *steppable_p) = 0;
 			virtual void visit(PlayerAddOptionDivinityStep const *steppable_p) = 0;
 			virtual void visit(PlayerAddOptionStep const *steppable_p) = 0;
+			virtual void visit(PlayerAttackModAllStep const *steppable_p) = 0;
 			virtual void visit(PlayerAnchorDivinityStep const *steppable_p) = 0;
 			virtual void visit(PlayerBuffAllStep const *steppable_p) = 0;
 			virtual void visit(PlayerLevelUpDivinityStep const *steppable_p) = 0;

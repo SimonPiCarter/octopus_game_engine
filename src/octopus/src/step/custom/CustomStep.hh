@@ -23,9 +23,9 @@ class CustomKeyStep : public CustomStep
 public:
     CustomKeyStep(std::string const &key_p) : _key(key_p) {}
     /// @brief apply this Steppable to the given state
-    virtual void apply(State &state_p, SteppableData *data_p) const {}
+    virtual void apply(State &state_p, SteppableData *) const {}
     /// @brief revert this Steppable to the given state
-    virtual void revert(State &state_p, SteppableData *data_p) const {}
+    virtual void revert(State &state_p, SteppableData *) const {}
 
     /// @brief return true if this Steppable does no operation on the State it would be applied
     virtual bool isNoOp() const { return false; }

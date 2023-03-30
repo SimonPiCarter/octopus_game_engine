@@ -10,6 +10,7 @@
 
 #include "stats/ProductionPicture.hh"
 #include "stats/SelectionPicture.hh"
+#include "state/Handle.hh"
 
 namespace octopus
 {
@@ -24,6 +25,13 @@ namespace cuttlefish
 {
 class Texture;
 class Window;
+
+struct IndexProductionClic
+{
+	octopus::Handle _handle;
+	unsigned long _idx;
+	bool _inside;
+};
 
 /// @brief this class represent a ProductionPanel
 /// It can display either
@@ -43,6 +51,8 @@ public:
 
 	/// @brief add a sprite info for a given model
 	void addSpriteInfo(std::string const &model_p, int state_p, int frame_p);
+
+	IndexProductionClic getIndex(Window &window_p, int x, int y);
 protected:
 	/// @brief selection
 	Selection & _selection;
@@ -51,6 +61,10 @@ protected:
 
 	/// @brief sprites
 	std::vector<ProductionPicture *> _productionPictures;
+
+	/// @brief this is used to store production index in case of cancel
+	std::vector<unsigned long> _productionIndex;
+	std::vector<octopus::Handle> _productionHandle;
 
 	/// @brief map of sprite info (state/frame)
 	/// for models

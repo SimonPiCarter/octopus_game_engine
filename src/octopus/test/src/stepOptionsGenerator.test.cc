@@ -20,14 +20,6 @@ using namespace octopus;
 class TestGenerator : public StepOptionsGenerator
 {
 public:
-	~TestGenerator()
-	{
-		for(auto step_l : _steps)
-		{
-			delete step_l;
-		}
-	}
-
     virtual StepOptionsGenerator* newCopy() const override
 	{
 		return new TestGenerator();
@@ -36,17 +28,16 @@ public:
     /// @brief get internal steppable for the given option
     /// @param options_p the option index
     /// @return a vector of steppables (owner is this generator)
-    virtual std::vector<Steppable *> const & getSteppables(unsigned long options_p, unsigned long player_p) override
+    virtual std::vector<Steppable *> getSteppables(unsigned long options_p, unsigned long player_p) const override
 	{
-		// lazy construction
-		if(_steps.empty())
-		{
-			std::map<ResourceType, double> map_l;
-			map_l[ResourceType::Food] = -10.*options_p;
+		std::vector<Steppable *> steps_l;
 
-			_steps.push_back(new PlayerSpendResourceStep(player_p, map_l));
-		}
-		return _steps;
+		std::map<ResourceType, double> map_l;
+		map_l[ResourceType::Food] = -10.*options_p;
+
+		steps_l.push_back(new PlayerSpendResourceStep(player_p, map_l));
+
+		return steps_l;
 	}
 
     /// @brief Return the number of available options for this generator
@@ -54,8 +45,6 @@ public:
 	{
 		return 1000;
 	}
-
-	std::vector<Steppable *> _steps;
 };
 
 TEST(stepOptionsGenerator, simple)
@@ -67,15 +56,14 @@ TEST(stepOptionsGenerator, simple)
 	TestGenerator generator_l;
 	PlayerAddOptionStep stepAdd_l(0, "test", &generator_l);
 	PlayerPopOptionStep stepPop_l(0, "test", 2);
-	PlayerPopOptionStepData data_l;
 
 	EXPECT_NEAR(0., getResource(*state_l.getPlayer(0), ResourceType::Food), 1e-3);
 
-	stepAdd_l.apply(state_l, nullptr);
+	stepAdd_l.apply(state_l);
 
 	EXPECT_NEAR(0., getResource(*state_l.getPlayer(0), ResourceType::Food), 1e-3);
 
-	stepPop_l.apply(state_l, &data_l);
+	stepPop_l.apply(state_l);
 
 	EXPECT_NEAR(20., getResource(*state_l.getPlayer(0), ResourceType::Food), 1e-3);
 }
@@ -89,18 +77,17 @@ TEST(stepOptionsGenerator, simple_revert_add)
 	TestGenerator generator_l;
 	PlayerAddOptionStep stepAdd_l(0, "test", &generator_l);
 	PlayerPopOptionStep stepPop_l(0, "test", 2);
-	PlayerPopOptionStepData data_l;
 
 	EXPECT_NEAR(0., getResource(*state_l.getPlayer(0), ResourceType::Food), 1e-3);
 
-	stepAdd_l.apply(state_l, nullptr);
+	stepAdd_l.apply(state_l);
 
 	EXPECT_NEAR(0., getResource(*state_l.getPlayer(0), ResourceType::Food), 1e-3);
 
 	stepAdd_l.revert(state_l, nullptr);
-	stepAdd_l.apply(state_l, nullptr);
+	stepAdd_l.apply(state_l);
 
-	stepPop_l.apply(state_l, &data_l);
+	stepPop_l.apply(state_l);
 
 	EXPECT_NEAR(20., getResource(*state_l.getPlayer(0), ResourceType::Food), 1e-3);
 }
@@ -114,25 +101,27 @@ TEST(stepOptionsGenerator, simple_revert_pop)
 	TestGenerator generator_l;
 	PlayerAddOptionStep stepAdd_l(0, "test", &generator_l);
 	PlayerPopOptionStep stepPop_l(0, "test", 2);
-	PlayerPopOptionStepData data_l;
 
 	EXPECT_NEAR(0., getResource(*state_l.getPlayer(0), ResourceType::Food), 1e-3);
 
-	stepAdd_l.apply(state_l, nullptr);
+	stepAdd_l.apply(state_l);
 
 	EXPECT_NEAR(0., getResource(*state_l.getPlayer(0), ResourceType::Food), 1e-3);
 
-	stepPop_l.apply(state_l, &data_l);
+	SteppableData const * data_l = stepPop_l.newData(state_l);
+	stepPop_l.apply(state_l);
 
 	EXPECT_NEAR(20., getResource(*state_l.getPlayer(0), ResourceType::Food), 1e-3);
 
-	stepPop_l.revert(state_l, &data_l);
+	stepPop_l.revert(state_l, data_l);
+	delete data_l;
 
 	EXPECT_NEAR(0., getResource(*state_l.getPlayer(0), ResourceType::Food), 1e-3);
 
-	stepPop_l.apply(state_l, &data_l);
+	stepPop_l.apply(state_l);
 
 	EXPECT_NEAR(20., getResource(*state_l.getPlayer(0), ResourceType::Food), 1e-3);
+
 }
 
 TEST(stepOptionsGenerator, simple_revert_add_then_stop)
@@ -144,11 +133,10 @@ TEST(stepOptionsGenerator, simple_revert_add_then_stop)
 	TestGenerator generator_l;
 	PlayerAddOptionStep stepAdd_l(0, "test", &generator_l);
 	PlayerPopOptionStep stepPop_l(0, "test", 2);
-	PlayerPopOptionStepData data_l;
 
 	EXPECT_NEAR(0., getResource(*state_l.getPlayer(0), ResourceType::Food), 1e-3);
 
-	stepAdd_l.apply(state_l, nullptr);
+	stepAdd_l.apply(state_l);
 
 	EXPECT_NEAR(0., getResource(*state_l.getPlayer(0), ResourceType::Food), 1e-3);
 
@@ -166,19 +154,20 @@ TEST(stepOptionsGenerator, simple_revert_pop_then_stop)
 	TestGenerator generator_l;
 	PlayerAddOptionStep stepAdd_l(0, "test", &generator_l);
 	PlayerPopOptionStep stepPop_l(0, "test", 2);
-	PlayerPopOptionStepData data_l;
 
 	EXPECT_NEAR(0., getResource(*state_l.getPlayer(0), ResourceType::Food), 1e-3);
 
-	stepAdd_l.apply(state_l, nullptr);
+	stepAdd_l.apply(state_l);
 
 	EXPECT_NEAR(0., getResource(*state_l.getPlayer(0), ResourceType::Food), 1e-3);
 
-	stepPop_l.apply(state_l, &data_l);
+	SteppableData const * data_l = stepPop_l.newData(state_l);
+	stepPop_l.apply(state_l);
 
 	EXPECT_NEAR(20., getResource(*state_l.getPlayer(0), ResourceType::Food), 1e-3);
 
-	stepPop_l.revert(state_l, &data_l);
+	stepPop_l.revert(state_l, data_l);
+	delete data_l;
 
 	EXPECT_NEAR(0., getResource(*state_l.getPlayer(0), ResourceType::Food), 1e-3);
 }

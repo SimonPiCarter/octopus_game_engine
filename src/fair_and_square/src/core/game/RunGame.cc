@@ -7,6 +7,7 @@
 
 // octopus
 #include "controller/Controller.hh"
+#include "state/State.hh"
 #include "library/Library.hh"
 #include "logger/Logger.hh"
 
@@ -31,8 +32,6 @@ void runGame(Window &window_p, std::list<octopus::Steppable *> &spawners_p, std:
 	unsigned long gridSize_l = worldSize_p/gridPointSize_l;
 
 	window_p.setWorldSize(worldSize_p);
-
-    Texture const * background_l = window_p.loadTexture("resources/background.png");
 
 	World world_l(0);
 
@@ -64,8 +63,6 @@ void runAndSaveGame(Window &window_p, std::list<octopus::Steppable *> &spawners_
 	unsigned long gridSize_l = worldSize_p/gridPointSize_l;
 
 	window_p.setWorldSize(worldSize_p);
-
-    Texture const * background_l = window_p.loadTexture("resources/background.png");
 
 	World world_l(0);
 
@@ -104,8 +101,6 @@ void replayGame(std::ifstream &file_p, Window &window_p, std::list<octopus::Step
 
 	window_p.setWorldSize(worldSize_p);
 
-    Texture const * background_l = window_p.loadTexture("resources/background.png");
-
 	World world_l(0);
 
 	octopus::Controller controller_l(spawners_p, 0.01, commands_p, gridPointSize_l, gridSize_l);
@@ -141,8 +136,6 @@ void loadGame(std::ifstream &file_p, Window &window_p, std::list<octopus::Steppa
 	unsigned long gridSize_l = worldSize_p/gridPointSize_l;
 
 	window_p.setWorldSize(worldSize_p);
-
-    Texture const * background_l = window_p.loadTexture("resources/background.png");
 
 	World world_l(0);
 
@@ -248,16 +241,48 @@ void loadWave(Window &window_p)
 	loadGame(file_l, window_p, spawners_l, commands_l, worldSize_p, lib_l);
 }
 
-void runArena(cuttlefish::Window &window_p, size_t number_p)
+void runArena(cuttlefish::Window &window_p, unsigned long number_p)
 {
 	octopus::Library lib_l;
 	std::list<octopus::Steppable *> spawners_l = ArenaLevelSteps(lib_l, number_p);
 	std::list<octopus::Command *> commands_l = ArenaLevelCommands(lib_l);
 
-	runGame(window_p, spawners_l, commands_l, 250);
+	std::ofstream file_l("arena.fas", std::ios::out | std::ios::binary);
+
+    file_l.write((char*)&number_p, sizeof(number_p));
+
+	runAndSaveGame(window_p, spawners_l, commands_l, 250, file_l);
 }
 
-void runMaze(cuttlefish::Window &window_p, size_t number_p)
+void replayArena(Window &window_p)
+{
+	std::ifstream file_l("arena.fas", std::ios::in | std::ios::binary);
+	unsigned long number_p;
+
+    file_l.read((char*)&number_p, sizeof(number_p));
+
+	octopus::Library lib_l;
+	std::list<octopus::Steppable *> spawners_l = ArenaLevelSteps(lib_l, number_p);
+	std::list<octopus::Command *> commands_l = ArenaLevelCommands(lib_l);
+
+	replayGame(file_l, window_p, spawners_l, commands_l, 250, lib_l);
+}
+
+void loadArena(Window &window_p)
+{
+	std::ifstream file_l("arena.fas", std::ios::in | std::ios::binary);
+	unsigned long number_p;
+
+    file_l.read((char*)&number_p, sizeof(number_p));
+
+	octopus::Library lib_l;
+	std::list<octopus::Steppable *> spawners_l = ArenaLevelSteps(lib_l, number_p);
+	std::list<octopus::Command *> commands_l = ArenaLevelCommands(lib_l);
+
+	loadGame(file_l, window_p, spawners_l, commands_l, 250, lib_l);
+}
+
+void runMaze(cuttlefish::Window &window_p, unsigned long number_p)
 {
 	octopus::Library lib_l;
 	std::list<octopus::Steppable *> spawners_l = MazeLevelSteps(lib_l, number_p);

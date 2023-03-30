@@ -7,7 +7,7 @@
 namespace octopus
 {
 
-void PlayerAddOptionStep::apply(State &state_p, SteppableData *) const
+void PlayerAddOptionStep::apply(State &state_p) const
 {
 	Logger::getDebug() << "PlayerAddOptionStep :: apply " << this->_player<<std::endl;
 	Player *player_l = state_p.getPlayer(_player);
@@ -18,7 +18,7 @@ void PlayerAddOptionStep::apply(State &state_p, SteppableData *) const
     player_l->_options[_key] = _generator->newCopy();
 }
 
-void PlayerAddOptionStep::revert(State &state_p, SteppableData *) const
+void PlayerAddOptionStep::revert(State &state_p, SteppableData const *) const
 {
 	Logger::getDebug() << "PlayerAddOptionStep :: revert " << this->_player<<std::endl;
 	Player *player_l = state_p.getPlayer(_player);

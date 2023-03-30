@@ -8,12 +8,7 @@
 #include "Selection.hh"
 #include "cutscene/DialogManager.hh"
 
-namespace octopus
-{
-	struct StateAndSteps;
-	class State;
-	class Step;
-}
+#include "controller/Controller.hh"
 
 namespace cuttlefish
 {
@@ -107,7 +102,7 @@ private:
 
 	/// @brief handlers for last step used
 	bool _first {true};
-	std::list<octopus::Step *>::const_iterator _lastIt;
+	std::list<octopus::StepBundle>::const_iterator _lastIt;
 
 	DialogManager _dialogManager;
 

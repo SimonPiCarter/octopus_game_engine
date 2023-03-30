@@ -6,12 +6,14 @@
 #include <map>
 #include <unordered_map>
 #include <set>
+#include <vector>
 
 #include "state/ResourceType.hh"
 #include "state/Handle.hh"
 
 namespace octopus
 {
+	class CommandData;
 	class EntityMoveStep;
 	class FlyingCommand;
 	class State;
@@ -19,11 +21,20 @@ namespace octopus
 	class SteppableData;
 	class SteppableVisitor;
 
-	/// @brief simple class to store a steppable and its associated data
-	struct SteppableBundle
+	struct CommandIdx
 	{
-		Steppable const *_steppable {nullptr};
-		SteppableData *_data {nullptr};
+		CommandIdx(Handle const &cmdable_p, unsigned long idx) : cmdable(cmdable_p), cmdidx(idx) {}
+		Handle const &cmdable;
+		unsigned long const &cmdidx;
+
+		bool operator<(CommandIdx const &other_p) const
+		{
+			if(cmdable == other_p.cmdable)
+			{
+				return cmdidx < other_p.cmdidx;
+			}
+			return cmdable < other_p.cmdable;
+		}
 	};
 
 	class Step
@@ -37,11 +48,11 @@ namespace octopus
 			/// @brief add step and keep ownership
 			void addSteppable(Steppable * step_p);
 
-			std::list<EntityMoveStep *> &getEntityMoveStep();
-			std::list<EntityMoveStep *> const &getEntityMoveStep() const;
+			std::vector<EntityMoveStep *> &getEntityMoveStep();
+			std::vector<EntityMoveStep *> const &getEntityMoveStep() const;
 
-			std::list<SteppableBundle> &getSteppable();
-			std::list<SteppableBundle> const &getSteppable() const;
+			std::vector<Steppable const *> &getSteppable();
+			std::vector<Steppable const *> const &getSteppable() const;
 
 			double & getResourceSpent(unsigned long player_p, ResourceType res_p);
 			double getResourceSpent(unsigned long player_p, ResourceType res_p) const;
@@ -66,10 +77,15 @@ namespace octopus
 			/// @brief check if the building has been canceled already
 			bool isCanceled(Handle const &handle_p) const;
 
+			void addCmdCanceled(CommandIdx cmdidx_p);
+			bool isCmdCanceled(CommandIdx cmdidx_p) const;
+
 			/// @brief add an hp change
 			void addHpChange(Handle const &handle_p, double delta_p);
 			/// @brief get all cumulative hp change
 			std::unordered_map<Handle, double> const& getHpChange() const;
+			/// @brief get hp change for given handle
+			double getHpChange(Handle const &handle_p) const;
 
 			/// @brief get previous step
 			/// @return previous step
@@ -77,9 +93,9 @@ namespace octopus
 
 			unsigned long long getId() const { return _id; }
 		private:
-			std::list<EntityMoveStep *> _listEntityMoveStep;
+			std::vector<EntityMoveStep *> _listEntityMoveStep;
 
-			std::list<SteppableBundle> _listSteppable;
+			std::vector<Steppable const *> _listSteppable;
 
 			/// @brief the id of the step (previous step + 1)
 			unsigned long long const _id {0};
@@ -99,6 +115,9 @@ namespace octopus
 			/// @brief set of cancelled buildings to avoid refunding them multiple times
 			std::set<Handle> _canceledBuildings;
 
+			/// @brief of commands data canceled in this step (to avoid refunding twice)
+			std::set<CommandIdx> _canceledCmd;
+
 			/// @brief vector of hp change for entities
 			std::unordered_map<Handle, double> _hpChange;
 
@@ -106,11 +125,20 @@ namespace octopus
 
 	};
 
-	/// @brief apply the step
-	void apply(Step const &step_p, State &state_p);
+	/// @brief This class handles data for steppables based on a Step
+	/// each state will have its own set of data
+	class StepData
+	{
+		public:
+			~StepData();
+			std::vector<SteppableData *> _listSteppableData;
+	};
 
 	/// @brief apply the step
-	void revert(Step const &step_p, State &state_p);
+	void apply(Step const &step_p, State &state_p, StepData &stepData_p);
+
+	/// @brief apply the step
+	void revert(Step const &step_p, State &state_p, StepData &stepData_p);
 
 	/// @brief compact the step to avoid useles steps
 	/// for example : remove all EntityMoveStep with no noticeable difference

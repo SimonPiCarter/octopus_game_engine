@@ -27,9 +27,9 @@ void World::handleStep(Window &window_p, Panel &panel_p, StatsPanel &statsPanel_
 		_first = false;
 
 		// visit intial steps
-		for(octopus::SteppableBundle const & bundle_l : steps_p._initialStep.getSteppable())
+		for(octopus::Steppable const * steppable_l : steps_p._initialStep.getSteppable())
 		{
-			vis_l(bundle_l._steppable);
+			vis_l(steppable_l);
 		}
 	}
 
@@ -52,9 +52,9 @@ void World::handleStep(Window &window_p, Panel &panel_p, StatsPanel &statsPanel_
 			}
 		}
 		// Visit every stepapble in the step
-		for(octopus::SteppableBundle const & bundle_l : (*it_l)->getSteppable())
+		for(octopus::Steppable const * steppable_l : it_l->_step->getSteppable())
 		{
-			vis_l(bundle_l._steppable);
+			vis_l(steppable_l);
 		}
 	}
 	_lastIt = steps_p._stepIt;

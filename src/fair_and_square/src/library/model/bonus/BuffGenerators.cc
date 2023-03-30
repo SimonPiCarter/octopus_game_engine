@@ -12,13 +12,11 @@ BuffGenerator::~BuffGenerator()
     }
 }
 
-std::vector<Steppable *> const &BuffGenerator::getSteppables(unsigned long options_p, unsigned long player_p)
+std::vector<Steppable *> BuffGenerator::getSteppables(unsigned long options_p, unsigned long player_p) const
 {
-    if(_steps.empty())
-    {
-        _steps.push_back(new PlayerBuffAllStep(player_p, _options.at(options_p)._buff, _options.at(options_p)._model));
-    }
-    return _steps;
+    std::vector<Steppable *> steps_l;
+    steps_l.push_back(new PlayerBuffAllStep(player_p, _options.at(options_p)._buff, _options.at(options_p)._model));
+    return steps_l;
 }
 
 BuffOption generateRandomOption(std::mt19937 &gen_p, std::string const &id_p)

@@ -6,14 +6,14 @@
 
 namespace octopus
 {
-void EntityAttackStep::apply(State &state_p, SteppableData *) const
+void EntityAttackStep::apply(State &state_p) const
 {
 	Entity * ent_l = state_p.getEntity(this->_handle);
 	Logger::getDebug() << "EntityAttackStep :: apply " << this->_handle <<std::endl;
 	ent_l->_reload = 0;
 }
 
-void EntityAttackStep::revert(State &state_p, SteppableData *) const
+void EntityAttackStep::revert(State &state_p, SteppableData const *) const
 {
 	Entity * ent_l = state_p.getEntity(this->_handle);
 	Logger::getDebug() << "EntityAttackStep :: revert " << this->_handle<<std::endl;

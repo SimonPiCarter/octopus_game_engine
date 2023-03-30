@@ -8,7 +8,7 @@
 namespace octopus
 {
 
-void TriggerEnableChange::apply(State &state_p, SteppableData *) const
+void TriggerEnableChange::apply(State &state_p) const
 {
 	Logger::getDebug() << "TriggerEnableChange :: apply " << this->_handleTrigger  <<std::endl;
 	TriggerData * trigger_l = state_p.getTriggerData(_handleTrigger);
@@ -16,7 +16,7 @@ void TriggerEnableChange::apply(State &state_p, SteppableData *) const
 	trigger_l->_isEnabled = _new;
 }
 
-void TriggerEnableChange::revert(State &state_p, SteppableData *) const
+void TriggerEnableChange::revert(State &state_p, SteppableData const *) const
 {
 	Logger::getDebug() << "TriggerEnableChange :: revert " << this->_handleTrigger  <<std::endl;
 	TriggerData * trigger_l = state_p.getTriggerData(_handleTrigger);

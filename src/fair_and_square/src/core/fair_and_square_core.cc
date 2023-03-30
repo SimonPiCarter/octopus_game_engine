@@ -64,7 +64,7 @@ int main( int argc, char* args[] )
 	bool fullscreen_l = false;
 
 
-	cuttlefish::Menu menu_l(window_l.getWidth()/2, 100, 5);
+	cuttlefish::Menu menu_l(window_l.getWidth()/2, 20, 5);
 
 	Picture octopus_l(window_l.loadTexture("resources/octopus.png"), 64, 64, {2}, {1});
 	octopus_l.setDestination(window_l.getWidth()-150, window_l.getHeight()-150, 128, 128);
@@ -104,6 +104,18 @@ int main( int argc, char* args[] )
 	Text * text_l = new Text(&window_l, {0, 0, 0}, 0, 0);
 	text_l->setText("Play Arena Level (500)");
 	menu_l.addButton(button_l, text_l, std::bind(fas::runArena, std::ref(window_l), 500));
+}
+{
+	Picture * button_l = new Picture(window_l.loadTexture("resources/button.png"), 256, 64, {1, 1 ,1}, {1, 1, 1});
+	Text * text_l = new Text(&window_l, {0, 0, 0}, 0, 0);
+	text_l->setText("Replay Arena Level");
+	menu_l.addButton(button_l, text_l, std::bind(fas::replayArena, std::ref(window_l)));
+}
+{
+	Picture * button_l = new Picture(window_l.loadTexture("resources/button.png"), 256, 64, {1, 1 ,1}, {1, 1, 1});
+	Text * text_l = new Text(&window_l, {0, 0, 0}, 0, 0);
+	text_l->setText("Load Arena Level");
+	menu_l.addButton(button_l, text_l, std::bind(fas::loadArena, std::ref(window_l)));
 }
 {
 	Picture * button_l = new Picture(window_l.loadTexture("resources/button.png"), 256, 64, {1, 1 ,1}, {1, 1, 1});

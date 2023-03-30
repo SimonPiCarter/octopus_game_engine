@@ -8,7 +8,7 @@
 namespace octopus
 {
 
-void ProductionPaidStep::apply(State &state_p, SteppableData *) const
+void ProductionPaidStep::apply(State &state_p) const
 {
 	Commandable * cmdable_l = state_p.getCommandable(this->_handle);
 	Logger::getDebug() << "ProductionPaidStep :: apply " << this->_handle <<std::endl;
@@ -16,7 +16,7 @@ void ProductionPaidStep::apply(State &state_p, SteppableData *) const
 	data_l->_paid = true;
 }
 
-void ProductionPaidStep::revert(State &state_p, SteppableData *) const
+void ProductionPaidStep::revert(State &state_p, SteppableData const *) const
 {
 	Commandable * cmdable_l = state_p.getCommandable(this->_handle);
 	Logger::getDebug() << "ProductionPaidStep :: revert " << this->_handle <<std::endl;

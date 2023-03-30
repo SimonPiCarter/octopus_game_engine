@@ -11,6 +11,8 @@ cmake_minimum_required (VERSION 3.14.0)
 
 add_library(octopus
 	${CMAKE_CURRENT_SOURCE_DIR}/src/command/building/BuildingBlueprintCommand.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/src/command/building/BuildingCancelCommand.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/src/command/building/BuildingUnitCancelCommand.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/command/building/BuildingUnitProductionCommand.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/command/Command.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/command/Commandable.cc
@@ -22,6 +24,7 @@ add_library(octopus
 	${CMAKE_CURRENT_SOURCE_DIR}/src/command/entity/EntityBuildingCommand.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/command/entity/EntityMoveCommand.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/command/entity/EntityWaitCommand.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/src/command/flying/eot/DamageOverTime.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/command/flying/CommandEffectOverTime.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/command/player/PlayerChoseDivinityCommand.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/command/player/PlayerChoseOptionCommand.cc
@@ -47,6 +50,10 @@ add_library(octopus
 	${CMAKE_CURRENT_SOURCE_DIR}/src/state/entity/Resource.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/state/entity/Unit.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/state/entity/attackModifier/AttackModifier.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/src/state/entity/attackModifier/modifiers/AoEModifier.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/src/state/entity/attackModifier/modifiers/ChainingModifier.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/src/state/entity/attackModifier/modifiers/DotModifier.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/src/state/entity/attackModifier/modifiers/LifeStealModifier.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/state/model/requirements/Requirements.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/state/model/entity/BuildingModel.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/state/model/entity/EntityModel.cc
@@ -71,6 +78,7 @@ add_library(octopus
 	${CMAKE_CURRENT_SOURCE_DIR}/src/step/command/CommandWindUpDiffStep.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/step/command/ProductionPaidStep.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/step/command/ProductionProgressionStep.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/src/step/command/data/CancelUnitProductionStep.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/step/command/data/TimerDataUpdateStep.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/step/command/flying/FlyingCommandPopStep.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/step/command/flying/FlyingCommandSpawnStep.cc
@@ -83,6 +91,7 @@ add_library(octopus
 	${CMAKE_CURRENT_SOURCE_DIR}/src/step/entity/EntityMoveStep.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/step/entity/EntityUpdateWaitingStep.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/step/entity/buff/EntityBuffStep.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/src/step/entity/modifier/AttackModifierStep.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/step/entity/spawn/EntitySpawnStep.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/step/entity/spawn/UnitSpawnStep.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/step/entity/spawn/BuildingSpawnStep.cc
@@ -90,6 +99,7 @@ add_library(octopus
 	${CMAKE_CURRENT_SOURCE_DIR}/src/step/player/PlayerAddOptionStep.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/step/player/PlayerAddOptionDivinityStep.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/step/player/PlayerAnchorDivinityStep.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/src/step/player/PlayerAttackModAllStep.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/step/player/PlayerBuffAllStep.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/step/player/PlayerLevelUpDivinityStep.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/step/player/PlayerPopOptionStep.cc

@@ -9,78 +9,57 @@ namespace octopus
 
 PlayerPopOptionStepData::~PlayerPopOptionStepData()
 {
-    for(auto &&pair_l : _mapGeneratorPerState)
-    {
-        delete pair_l.second;
-    }
+    delete _generator;
     for(SteppableData * data_l : _data)
     {
         delete data_l;
     }
 }
 
-void PlayerPopOptionStep::apply(State &state_p, SteppableData *data_p) const
+void PlayerPopOptionStep::apply(State &state_p) const
 {
 	Logger::getDebug() << "PlayerPopOptionStep :: apply " << this->_player<<std::endl;
 	Player *player_l = state_p.getPlayer(_player);
 
-    PlayerPopOptionStepData * data_l = dynamic_cast<PlayerPopOptionStepData *>(data_p);
-
     StepOptionsGenerator * generator_l = player_l->_options[_key];
 
-    // do not throw here to avoid
-    if(player_l->_options[_key] == nullptr)
+    if(generator_l == nullptr)
     {
         throw std::logic_error("Error while poping option : no option with the given key "+_key);
     }
 
     std::vector<Steppable *> subSteps_l = generator_l->getSteppables(_choice, _player);
 
-    // if sup steps data have not been created create them
-    if(data_l->_data.empty())
-    {
-        for(Steppable * step_l : subSteps_l)
-        {
-            data_l->_data.push_back(step_l->newData());
-        }
-    }
-
     // apply chosen sub steps
-    for(size_t i = 0 ; i < subSteps_l.size() ; ++i)
+    for(Steppable * step_l : subSteps_l)
     {
-        Steppable const * step_l = subSteps_l[i];
-        SteppableData * stepData_l = data_l->_data[i];
-        step_l->apply(state_p, stepData_l);
+        step_l->apply(state_p);
+        delete step_l;
     }
-
-    // save generator
-    data_l->_mapGeneratorPerState[state_p._id] = generator_l;
 
     // pop option from state
+    delete player_l->_options[_key];
     player_l->_options[_key] = nullptr;
 }
 
-void PlayerPopOptionStep::revert(State &state_p, SteppableData *data_p) const
+void PlayerPopOptionStep::revert(State &state_p, SteppableData const *data_p) const
 {
 	Logger::getDebug() << "PlayerPopOptionStep :: revert " << this->_player<<std::endl;
 	Player *player_l = state_p.getPlayer(_player);
 
-    PlayerPopOptionStepData * data_l = dynamic_cast<PlayerPopOptionStepData *>(data_p);
+    PlayerPopOptionStepData const * data_l = dynamic_cast<PlayerPopOptionStepData const *>(data_p);
 
     if(player_l->_options[_key] != nullptr)
     {
         throw std::logic_error("Error while poping option : an option is present with the key "+_key);
     }
-    if(data_l->_mapGeneratorPerState[state_p._id] == nullptr)
+    if(data_l->_generator == nullptr)
     {
         throw std::logic_error("Error while poping option : no option generator present for state.");
     }
 
     // restore generator in state
-    player_l->_options[_key] = data_l->_mapGeneratorPerState[state_p._id];
-
-    // pop option from data
-    data_l->_mapGeneratorPerState.erase(state_p._id);
+    player_l->_options[_key] = data_l->_generator->newCopy();
 
     StepOptionsGenerator * generator_l = player_l->_options[_key];
 
@@ -90,20 +69,29 @@ void PlayerPopOptionStep::revert(State &state_p, SteppableData *data_p) const
     for(size_t i = subSteps_l.size() ; i > 0 ; --i)
     {
         Steppable const * step_l = subSteps_l[i-1];
-        SteppableData * stepData_l = data_l->_data[i-1];
+        SteppableData const * stepData_l = data_l->_data[i-1];
         step_l->revert(state_p, stepData_l);
+        delete subSteps_l[i-1];
     }
+}
 
-    // if no more generator we remove data
-    if(data_l->_mapGeneratorPerState.empty())
+SteppableData * PlayerPopOptionStep::newData(State const &state_p) const
+{
+    PlayerPopOptionStepData * data_l = new PlayerPopOptionStepData();
+    Player const *player_l = state_p.getPlayer(_player);
+
+    data_l->_generator = player_l->_options.at(_key)->newCopy();
+
+    std::vector<Steppable *> subSteps_l = data_l->_generator->getSteppables(_choice, _player);
+
+    data_l->_data.reserve(subSteps_l.size());
+    for(Steppable * step_l : subSteps_l)
     {
-        for(SteppableData * stepData_l : data_l->_data)
-        {
-            delete stepData_l;
-        }
-        data_l->_data.clear();
+        data_l->_data.push_back(step_l->newData(state_p));
+        delete step_l;
     }
 
+    return data_l;
 }
 
 } // namespace octopus

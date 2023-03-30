@@ -15,7 +15,7 @@ class PlayerPopOptionStepData : public SteppableData
 public:
 	~PlayerPopOptionStepData();
 
-	std::map<unsigned long, StepOptionsGenerator *> _mapGeneratorPerState;
+	StepOptionsGenerator * _generator;
 	std::vector<SteppableData *> _data;
 };
 
@@ -26,8 +26,8 @@ public:
 	PlayerPopOptionStep(unsigned long player_p, std::string const &key_p, unsigned long choice_p)
 		: _player(player_p), _key(key_p), _choice(choice_p) {}
 
-	virtual void apply(State &state_p, SteppableData *data_p) const override;
-	virtual void revert(State &state_p, SteppableData *data_p) const override;
+	virtual void apply(State &state_p) const override;
+	virtual void revert(State &state_p, SteppableData const *data_p) const override;
 
 	virtual bool isNoOp() const override { return false; }
 	virtual void visit(SteppableVisitor * visitor_p) const override
@@ -35,7 +35,7 @@ public:
 		visitor_p->visit(this);
 	}
 
-	virtual SteppableData * newData() const { return new PlayerPopOptionStepData(); }
+	virtual SteppableData * newData(State const &state_p) const;
 
 	unsigned long const _player;
 	std::string const _key;

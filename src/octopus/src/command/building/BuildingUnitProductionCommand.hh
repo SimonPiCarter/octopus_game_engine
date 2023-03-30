@@ -16,7 +16,7 @@ class BuildingUnitProductionCommand : public Command
 public:
 	BuildingUnitProductionCommand(Handle const &commandHandle_p, Handle const &source_p, UnitModel const &model_p);
 
-	/// @brief refister the command into the step
+	/// @brief register the command into the step
 	/// This method is responsible to
 	/// handle cost of command and spawning command in step
 	virtual void registerCommand(Step & step_p, State const &state_p) override;

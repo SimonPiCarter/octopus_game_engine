@@ -16,7 +16,7 @@ FlyingCommandPopStep::~FlyingCommandPopStep()
 	}
 }
 
-void FlyingCommandPopStep::apply(State &state_p, SteppableData *) const
+void FlyingCommandPopStep::apply(State &state_p) const
 {
 	Logger::getDebug() << "FlyingCommandPopStep :: apply " <<std::endl;
 
@@ -31,7 +31,7 @@ void FlyingCommandPopStep::apply(State &state_p, SteppableData *) const
 	state_p.getFlyingCommands().erase(it_l);
 }
 
-void FlyingCommandPopStep::revert(State &state_p, SteppableData *) const
+void FlyingCommandPopStep::revert(State &state_p, SteppableData const *) const
 {
 	Logger::getDebug() << "FlyingCommandPopStep :: revert " <<std::endl;
 

@@ -20,8 +20,8 @@ public:
 		: _cmd(cmd_p) {}
 	~CommandStorageStep();
 
-	virtual void apply(State &, SteppableData*) const override {}
-	virtual void revert(State &, SteppableData*) const override {}
+	virtual void apply(State &) const override {}
+	virtual void revert(State &, SteppableData const *) const override {}
 
 	virtual bool isNoOp() const override { return _cmd == nullptr; }
 	virtual void visit(SteppableVisitor * visitor_p) const override
@@ -42,8 +42,8 @@ public:
 		: _cmd(cmd_p) {}
 	~CommandSpawnStep();
 
-	virtual void apply(State &state_p, SteppableData *) const override;
-	virtual void revert(State &state_p, SteppableData *) const override;
+	virtual void apply(State &state_p) const override;
+	virtual void revert(State &state_p, SteppableData const *) const override;
 
 	virtual bool isNoOp() const override { return _cmd == nullptr; }
 	virtual void visit(SteppableVisitor * visitor_p) const override
@@ -63,8 +63,8 @@ public:
 	CommandNextStep(Handle const &handle_p)
 		: _handle(handle_p) {}
 
-	virtual void apply(State &state_p, SteppableData *) const override;
-	virtual void revert(State &state_p, SteppableData *) const override;
+	virtual void apply(State &state_p) const override;
+	virtual void revert(State &state_p, SteppableData const *) const override;
 
 	virtual bool isNoOp() const override { return false; }
 	virtual void visit(SteppableVisitor * visitor_p) const override
@@ -82,8 +82,8 @@ public:
 	CommandUpdateLastIdStep(Handle const &handle_p, size_t oldIdLast_p, size_t newIdLast_p)
 		: _handle(handle_p), _oldIdLast(oldIdLast_p), _newIdLast(newIdLast_p) {}
 
-	virtual void apply(State &state_p, SteppableData *) const override;
-	virtual void revert(State &state_p, SteppableData *) const override;
+	virtual void apply(State &state_p) const override;
+	virtual void revert(State &state_p, SteppableData const *) const override;
 
 	virtual bool isNoOp() const override { return _oldIdLast == _newIdLast; }
 	virtual void visit(SteppableVisitor * visitor_p) const override

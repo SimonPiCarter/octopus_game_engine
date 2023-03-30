@@ -20,9 +20,11 @@ public:
         steppable_p->visit(this);
     }
 
+	virtual void visit(AttackModifierStep const *) {}
     virtual void visit(BuildingSpawnStep const *);
     virtual void visit(BuildingStep const *) {}
     virtual void visit(BuildingCancelStep const *);
+    virtual void visit(CancelUnitProductionStep const *);
     virtual void visit(CommandAddSubAttackStep const *) {}
     virtual void visit(CommandDataWaypointAddStep const *) {}
     virtual void visit(CommandDataWaypointRemoveStep const *) {}
@@ -56,6 +58,7 @@ public:
     virtual void visit(PlayerAddBuildingModel const *) {}
     virtual void visit(PlayerAddOptionDivinityStep const *) {}
 	virtual void visit(PlayerAddOptionStep const *) {}
+    virtual void visit(PlayerAttackModAllStep const *) {}
     virtual void visit(PlayerAnchorDivinityStep const *) {}
 	virtual void visit(PlayerBuffAllStep const *) {}
     virtual void visit(PlayerLevelUpDivinityStep const *) {}

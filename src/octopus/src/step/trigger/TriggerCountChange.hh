@@ -13,8 +13,8 @@ public:
 	TriggerCountChange(Handle const &handleTrigger_p, Handle const &handleListener_p, unsigned long old_p, unsigned long new_p)
 		: _handleTrigger(handleTrigger_p) , _handleListener(handleListener_p), _old(old_p), _new(new_p) {}
 
-	virtual void apply(State &state_p, SteppableData *) const override;
-	virtual void revert(State &state_p, SteppableData *) const override;
+	virtual void apply(State &state_p) const override;
+	virtual void revert(State &state_p, SteppableData const *) const override;
 
 	virtual bool isNoOp() const override;
 	virtual void visit(SteppableVisitor * visitor_p) const override

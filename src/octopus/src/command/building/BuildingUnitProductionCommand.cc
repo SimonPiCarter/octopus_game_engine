@@ -6,12 +6,14 @@
 #include "logger/Logger.hh"
 #include "state/State.hh"
 #include "state/entity/Building.hh"
+#include "state/model/entity/EntityModel.hh"
 #include "step/Step.hh"
 #include "step/entity/spawn/UnitSpawnStep.hh"
 #include "step/command/CommandQueueStep.hh"
 #include "step/command/MissingResourceStep.hh"
 #include "step/command/ProductionPaidStep.hh"
 #include "step/command/ProductionProgressionStep.hh"
+#include "step/command/data/CancelUnitProductionStep.hh"
 #include "step/player/PlayerSpendResourceStep.hh"
 
 namespace octopus
@@ -56,6 +58,12 @@ bool BuildingUnitProductionCommand::applyCommand(Step & step_p, State const &sta
 
 	Logger::getDebug() << "BuildingUnitProductionCommand:: apply Command "<<_source <<std::endl;
 	Building const * building_l = dynamic_cast<Building const *>(state_p.getEntity(_source));
+
+	if(data_l._canceled)
+	{
+		Logger::getDebug() << "BuildingUnitProductionCommand:: canceled Command "<<_source <<std::endl;
+		return true;
+	}
 
 	if(data_l._progression < data_l._model._productionTime)
 	{
