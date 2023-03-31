@@ -70,13 +70,16 @@ void commandFromSpriteModel(SpriteModel const *spriteModel_p, octopus::State con
 		if(spriteModel_p->unitModel)
 		{
 			SpriteEntity const * ent_l = getBestProductionBuilding(selection_p, state_p, spriteModel_p->unitModel);
-			octopus::BuildingUnitProductionCommand * command_l = new octopus::BuildingUnitProductionCommand(
-					ent_l->getHandle(),
-					ent_l->getHandle(),
-					*spriteModel_p->unitModel
-				);
-			command_l->setQueued(true);
-			controller_p.commitCommandAsPlayer(command_l, world_p.getPlayer());
+			if(ent_l)
+			{
+				octopus::BuildingUnitProductionCommand * command_l = new octopus::BuildingUnitProductionCommand(
+						ent_l->getHandle(),
+						ent_l->getHandle(),
+						*spriteModel_p->unitModel
+					);
+				command_l->setQueued(true);
+				controller_p.commitCommandAsPlayer(command_l, world_p.getPlayer());
+			}
 		}
 		if(spriteModel_p->buildingModel)
 		{
