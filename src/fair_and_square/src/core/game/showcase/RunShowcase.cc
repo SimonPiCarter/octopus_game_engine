@@ -11,11 +11,12 @@
 #include "library/Library.hh"
 #include "logger/Logger.hh"
 
+#include "core/game/loader/ResourceLoader.hh"
+#include "core/lang/LangEntries.hh"
 #include "library/levels/showcase/AoeShowcase.hh"
 #include "library/levels/showcase/ChainingShowcase.hh"
 #include "library/levels/showcase/DotShowcase.hh"
 #include "library/levels/showcase/LifestealShowcase.hh"
-#include "core/game/loader/ResourceLoader.hh"
 
 #include <fstream>
 
@@ -62,7 +63,7 @@ void runAoeShowcase(cuttlefish::Window &window_p)
 	std::list<octopus::Command *> commands_l = aoeShowcaseCommands(lib_l);
 
     spawners_l.push_back(
-		new cuttlefish::DialogStep("Welcome to the AoE Modifier Showcase", "Triangles can't harm you here. $$ Your square has been empowered with an AoE modifier doing 50% damage in a 5tiles radius area. $$ Press any key to start...",
+		new cuttlefish::DialogStep(LangEntries::GetInstance()->getEntry("AoE Modifier Showcase"), LangEntries::GetInstance()->getEntry("AoE Modifier Showcase main"),
 			cuttlefish::Picture(window_p.loadTexture("resources/octopus.png"), 64, 64, {2}, {1}))
     );
 
@@ -76,7 +77,7 @@ void runChainingShowcase(cuttlefish::Window &window_p)
 	std::list<octopus::Command *> commands_l = chainingShowcaseCommands(lib_l);
 
     spawners_l.push_back(
-		new cuttlefish::DialogStep("Welcome to the Chaining Modifier Showcase", " Triangles can't harm you here. $$ Your square has been empowered with a chaining modifier bouncing to 5 targets with 80% damage decay. $$ Press any key to start...",
+		new cuttlefish::DialogStep(LangEntries::GetInstance()->getEntry("Chaining Modifier Showcase"), LangEntries::GetInstance()->getEntry("Chaining Modifier Showcase main"),
 			cuttlefish::Picture(window_p.loadTexture("resources/octopus.png"), 64, 64, {2}, {1}))
     );
 
@@ -90,7 +91,7 @@ void runDotShowcase(cuttlefish::Window &window_p)
 	std::list<octopus::Command *> commands_l = dotShowcaseCommands(lib_l);
 
     spawners_l.push_back(
-		new cuttlefish::DialogStep("Welcome to the Dot Modifier Showcase", "Triangles can't harm you here. $$ Your square has been empowered with a dot modifier dealing 10 damage every half second for a total of 50 damage. $$ Press any key to start...",
+		new cuttlefish::DialogStep(LangEntries::GetInstance()->getEntry("Dot Modifier Showcase"), LangEntries::GetInstance()->getEntry("Dot Modifier Showcase main"),
 			cuttlefish::Picture(window_p.loadTexture("resources/octopus.png"), 64, 64, {2}, {1}))
     );
 
@@ -104,7 +105,7 @@ void runLifestealShowcase(cuttlefish::Window &window_p)
 	std::list<octopus::Command *> commands_l = lifestealShowcaseCommands(lib_l);
 
     spawners_l.push_back(
-		new cuttlefish::DialogStep("Welcome to the Lifesteal Modifier Showcase", "Your square has been empowered with a lifesteal modifier healing him for 80% of the damage dealt. $$ Triangles WILL harm you here. $$ Press any key to start...",
+		new cuttlefish::DialogStep(LangEntries::GetInstance()->getEntry("Lifesteal Modifier Showcase"), LangEntries::GetInstance()->getEntry("Lifesteal Modifier Showcase main"),
 			cuttlefish::Picture(window_p.loadTexture("resources/octopus.png"), 64, 64, {2}, {1}))
     );
 

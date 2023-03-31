@@ -15,8 +15,8 @@
 // fas
 #include "menu/MainMenu.hh"
 
-#define SCREEN_WIDTH 1920
-#define SCREEN_HEIGHT 1024
+#define SCREEN_WIDTH 1800
+#define SCREEN_HEIGHT 800
 
 using namespace cuttlefish;
 

@@ -4,6 +4,8 @@
 #include "text/Text.hh"
 #include "window/Window.hh"
 
+#include "core/lang/LangEntries.hh"
+
 namespace fas
 {
 
@@ -79,7 +81,7 @@ void ChoiceSubPanel::update(BuffOption const &option_p)
     }
 
     _descriptionText = new cuttlefish::WrappedText(&_window, _x+10, _y+offset_l+10, _w-20);
-    _descriptionText->setText("Option $$ type : $type_val $$ offset : $offset_val $$ coef : $coef_val $$ model : $model_val", {0,0,0});
+    _descriptionText->setText(LangEntries::GetInstance()->getEntry("choiceSubPanel"), {0,0,0});
     _descriptionText->updateText("type_val", octopus::to_string(option_p._buff._type));
     _descriptionText->updateText("offset_val", std::to_string(int(option_p._buff._offset)));
     _descriptionText->updateText("coef_val", std::to_string(int(option_p._buff._coef*100.))+"%");
@@ -113,7 +115,7 @@ void ChoiceSubPanel::updateFromModifier(octopus::NoModifier const &mod_p)
     _mainIcons.back()->setFrame(0);
 
     _descriptionText = new cuttlefish::WrappedText(&_window, _x+10, _y+74, _w-20);
-    _descriptionText->setText("NoModifier", {0,0,0});
+    _descriptionText->setText(LangEntries::GetInstance()->getEntry("NoModifierChoice"), {0,0,0});
 }
 
 void ChoiceSubPanel::updateFromModifier(octopus::AoEModifier const &mod_p)
@@ -123,7 +125,7 @@ void ChoiceSubPanel::updateFromModifier(octopus::AoEModifier const &mod_p)
     _mainIcons.back()->setFrame(1);
 
     _descriptionText = new cuttlefish::WrappedText(&_window, _x+10, _y+74, _w-20);
-    _descriptionText->setText("AoEModifier $$ ratio : $ratio $$ range : $range", {0,0,0});
+    _descriptionText->setText(LangEntries::GetInstance()->getEntry("AoEModifierChoice"), {0,0,0});
     _descriptionText->updateText("ratio", std::to_string(mod_p._ratio));
     _descriptionText->updateText("range", std::to_string(octopus::to_double(mod_p._range)));
 }
@@ -134,7 +136,7 @@ void ChoiceSubPanel::updateFromModifier(octopus::ChainingModifier const &mod_p)
     _mainIcons.back()->setState(3);
     _mainIcons.back()->setFrame(2);
     _descriptionText = new cuttlefish::WrappedText(&_window, _x+10, _y+74, _w-20);
-    _descriptionText->setText("ChainingModifier $$ nb of chains : $nbOfTicks $$ ratio : $ratio $$ range : $range", {0,0,0});
+    _descriptionText->setText(LangEntries::GetInstance()->getEntry("ChainingModifierChoice"), {0,0,0});
     _descriptionText->updateText("nbOfTicks", std::to_string(mod_p._nbOfTicks));
     _descriptionText->updateText("ratio", std::to_string(mod_p._ratio));
     _descriptionText->updateText("range", std::to_string(mod_p._range));
@@ -147,7 +149,7 @@ void ChoiceSubPanel::updateFromModifier(octopus::DotModifier const &mod_p)
     _mainIcons.back()->setFrame(3);
 
     _descriptionText = new cuttlefish::WrappedText(&_window, _x+10, _y+74, _w-20);
-    _descriptionText->setText("DotModifier $$ nb of ticks : $nbOfTicks $$ seconds between ticks : $tickrate $$ damage : $damage", {0,0,0});
+    _descriptionText->setText(LangEntries::GetInstance()->getEntry("DotModifierChoice"), {0,0,0});
     _descriptionText->updateText("nbOfTicks", std::to_string(mod_p._nbOfTicks));
     _descriptionText->updateText("tickrate", std::to_string(mod_p._tickRate/100.));
     _descriptionText->updateText("damage", std::to_string(mod_p._dmg));
@@ -160,7 +162,7 @@ void ChoiceSubPanel::updateFromModifier(octopus::LifeStealModifier const &mod_p)
     _mainIcons.back()->setFrame(4);
 
     _descriptionText = new cuttlefish::WrappedText(&_window, _x+10, _y+74, _w-20);
-    _descriptionText->setText("LifeStealModifier $$ ratio : $ratio %", {0,0,0});
+    _descriptionText->setText(LangEntries::GetInstance()->getEntry("LifeStealModifierChoice"), {0,0,0});
     _descriptionText->updateText("ratio", std::to_string(mod_p._ratio*100.));
 }
 

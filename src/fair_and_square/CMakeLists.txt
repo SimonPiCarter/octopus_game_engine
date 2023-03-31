@@ -42,6 +42,7 @@ if(GRAPHICS)
 		${CMAKE_CURRENT_SOURCE_DIR}/src/core/game/loader/choice/ChoiceSubPanel.cc
 		${CMAKE_CURRENT_SOURCE_DIR}/src/core/game/RunGame.cc
 		${CMAKE_CURRENT_SOURCE_DIR}/src/core/game/showcase/RunShowcase.cc
+		${CMAKE_CURRENT_SOURCE_DIR}/src/core/lang/LangEntries.cc
 
 		${CMAKE_CURRENT_SOURCE_DIR}/src/core/menu/MainMenu.cc
 		${CMAKE_CURRENT_SOURCE_DIR}/src/core/menu/levels/ArenaMenu.cc

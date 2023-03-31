@@ -15,6 +15,7 @@
 #include "library/levels/ArenaLevel.hh"
 #include "library/levels/MazeLevel.hh"
 #include "core/game/loader/ResourceLoader.hh"
+#include "core/lang/LangEntries.hh"
 
 #include "serialization/CommandSerialization.hh"
 
@@ -182,9 +183,9 @@ void loadGame(std::ifstream &file_p, Window &window_p, std::list<octopus::Steppa
 std::vector<octopus::Steppable*> genDialogStep(Window &window_p)
 {
 	return {
-		new cuttlefish::DialogStep("place_name", "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+		new cuttlefish::DialogStep(LangEntries::GetInstance()->getEntry("wave_incoming_name"), LangEntries::GetInstance()->getEntry("wave_incoming_first"),
 			cuttlefish::Picture(window_p.loadTexture("resources/octopus.png"), 64, 64, {2}, {1})),
-		new cuttlefish::DialogStep("place_name", "Ok 2",
+		new cuttlefish::DialogStep(LangEntries::GetInstance()->getEntry("wave_incoming_name"), LangEntries::GetInstance()->getEntry("wave_incoming_second"),
 			cuttlefish::Picture(window_p.loadTexture("resources/octopus.png"), 64, 64, {2}, {1}))
 	};
 }

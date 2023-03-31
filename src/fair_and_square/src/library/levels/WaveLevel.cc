@@ -73,8 +73,8 @@ std::list<Steppable *> WaveLevelSteps(Library &lib_p, unsigned long waveCount_p,
 	res3_l._player = 2;
 
 	std::map<ResourceType, double> mapRes_l;
-	mapRes_l[octopus::ResourceType::Food] = -200;
-	mapRes_l[octopus::ResourceType::Steel] = -200;
+	mapRes_l[octopus::ResourceType::Food] = -2000;
+	mapRes_l[octopus::ResourceType::Steel] = -2000;
 	mapRes_l[octopus::ResourceType::Anchor] = -5;
 
 	Trigger * triggerWave_l = new WaveSpawn(new ListenerStepCount(stepCount_p), lib_p, 1, stepCount_p, waveCount_p, player_p, worldSize_p, waveStepGenerator_p);
