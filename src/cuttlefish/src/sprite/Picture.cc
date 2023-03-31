@@ -9,12 +9,13 @@
 namespace cuttlefish
 {
 
-Picture::Picture(Texture const * texture_p, int width_p, int height_p, std::vector<int> const &nbFramesPerState_p, std::vector<double> const &timePerFramePerState_p)
+Picture::Picture(Texture const * texture_p, int width_p, int height_p, std::vector<int> const &nbFramesPerState_p, std::vector<double> const &timePerFramePerState_p, bool absCoord_p)
 	:  _texture(texture_p)
 	, _width(width_p)
 	, _height(height_p)
 	, _nbFramesPerState(nbFramesPerState_p)
 	, _timePerFramePerState(timePerFramePerState_p)
+	, _absCoord(absCoord_p)
 {
 	_dest.w = _width;
 	_dest.h = _height;
@@ -76,8 +77,15 @@ void Picture::display(Window &window_p)
 {
 	if(!_ended)
 	{
+		SDL_Point const &cam_l = window_p.getCamera();
 		SDL_Rect clip_l(this->getClip());
-		_texture->render(window_p.getRenderer(), _dest.x, _dest.y, _dest.h, _dest.w, &clip_l);
+		_texture->render(
+			window_p.getRenderer(),
+			_absCoord ? _dest.x : _dest.x - cam_l.x,
+			_absCoord ? _dest.y : _dest.y - cam_l.y,
+			_dest.h,
+			_dest.w,
+			&clip_l);
 	}
 }
 

@@ -25,7 +25,14 @@ class Window;
 class Picture
 {
 	public:
-		Picture(Texture const * texture_p, int width_p, int height_p, std::vector<int> const &nbFramesPerState_p, std::vector<double> const &timePerFramePerState_p);
+		/// @brief
+		/// @param texture_p
+		/// @param width_p
+		/// @param height_p
+		/// @param nbFramesPerState_p
+		/// @param timePerFramePerState_p
+		/// @param absCoord_p if false the destination should be given in absolute pixel coordinate and will be updated based on camera
+		Picture(Texture const * texture_p, int width_p, int height_p, std::vector<int> const &nbFramesPerState_p, std::vector<double> const &timePerFramePerState_p, bool absCoord_p=true);
         virtual ~Picture() {}
 
 		/// @brief update state and reset current frame and time into frame
@@ -124,6 +131,8 @@ class Picture
 		/// @brief boolean to track if the picture ended (result of a frame reset with _endAfterLastFrame true)
 		/// @note picture will not render if this is set to true
 		bool _ended {false};
+		/// @brief if true destination will be in absolute coordinate (no camera adaptation)
+		bool _absCoord {false};
 };
 
 } // namespace cuttlefish

@@ -188,7 +188,7 @@ WaveSpawn::WaveSpawn(Listener * listener_p, Library const &lib_p, unsigned long 
 		_waveStepGenerator(waveStepGenerator_p)
 {}
 
-void WaveSpawn::trigger(State const &state_p, Step &step_p, unsigned long) const
+void WaveSpawn::trigger(State const &state_p, Step &step_p, unsigned long, octopus::TriggerData const &) const
 {
     std::mt19937 gen_l(42*_wave);
 	std::string model_l = genModelName(gen_l);
@@ -223,7 +223,7 @@ void WaveSpawn::trigger(State const &state_p, Step &step_p, unsigned long) const
 
 LoseTrigger::LoseTrigger(Listener * listener_p) : OneShotTrigger({listener_p}) {}
 
-void LoseTrigger::trigger(State const &state_p, Step &step_p, unsigned long) const
+void LoseTrigger::trigger(State const &state_p, Step &step_p, unsigned long, octopus::TriggerData const &) const
 {
 	step_p.addSteppable(new StateWinStep(state_p.isOver(), state_p.hasWinningTeam(), state_p.getWinningTeam(), 1));
 }

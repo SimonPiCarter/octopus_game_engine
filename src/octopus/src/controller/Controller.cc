@@ -525,7 +525,7 @@ void Controller::handleTriggers(State const &state_p, Step &step_p, Step const &
 			for(size_t count_l = 0 ; count_l < trigger_l->getCount(data_l) ; ++count_l)
 			{
 				Logger::getDebug() << "handleTriggers :: trigger on trigger "<<curHandle_l<<std::endl;
-				trigger_l->trigger(state_p, step_p, count_l);
+				trigger_l->trigger(state_p, step_p, count_l, data_l);
 			}
 
 			// handle reset or disabling

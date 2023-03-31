@@ -7,17 +7,21 @@
 
 // octopus
 #include "controller/Controller.hh"
-#include "state/State.hh"
 #include "library/Library.hh"
 #include "logger/Logger.hh"
+#include "state/State.hh"
+#include "step/trigger/TriggerSpawn.hh"
 
 #include "library/levels/WaveLevel.hh"
 #include "library/levels/ArenaLevel.hh"
 #include "library/levels/MazeLevel.hh"
 #include "core/game/loader/ResourceLoader.hh"
+#include "core/game/loader/trigger/AnchorEffectTrigger.hh"
+#include "core/game/loader/visitor/FASStepVisitor.hh"
 #include "core/lang/LangEntries.hh"
 
 #include "serialization/CommandSerialization.hh"
+
 
 #include <fstream>
 
@@ -27,7 +31,7 @@ namespace fas
 {
 
 /// @brief Run the game
-void runGame(Window &window_p, std::list<octopus::Steppable *> &spawners_p, std::list<octopus::Command *> &commands_p, unsigned long worldSize_p)
+void runGame(Window &window_p, std::list<octopus::Steppable *> &spawners_p, std::list<octopus::Command *> &commands_p, unsigned long worldSize_p, octopus::Library &lib_p)
 {
 	unsigned long gridPointSize_l = 5;
 	unsigned long gridSize_l = worldSize_p/gridPointSize_l;
@@ -35,6 +39,10 @@ void runGame(Window &window_p, std::list<octopus::Steppable *> &spawners_p, std:
 	window_p.setWorldSize(worldSize_p);
 
 	World world_l(0);
+
+	FASStepVisitor visitor_l(window_p, world_l);
+	spawners_p.push_back(new octopus::TriggerSpawn(new AnchorEffectTrigger(lib_p, visitor_l)));
+	world_l.setCustomVisitor(&visitor_l);
 
 	octopus::Controller controller_l(spawners_p, 0.01, commands_p, gridPointSize_l, gridSize_l);
 	controller_l.enableORCA();
@@ -58,7 +66,7 @@ void runGame(Window &window_p, std::list<octopus::Steppable *> &spawners_p, std:
 }
 
 /// @brief Run a game and save it a the end
-void runAndSaveGame(Window &window_p, std::list<octopus::Steppable *> &spawners_p, std::list<octopus::Command *> &commands_p, unsigned long worldSize_p, std::ofstream &file_p)
+void runAndSaveGame(Window &window_p, std::list<octopus::Steppable *> &spawners_p, std::list<octopus::Command *> &commands_p, unsigned long worldSize_p, std::ofstream &file_p, octopus::Library &lib_p)
 {
 	unsigned long gridPointSize_l = 5;
 	unsigned long gridSize_l = worldSize_p/gridPointSize_l;
@@ -66,6 +74,10 @@ void runAndSaveGame(Window &window_p, std::list<octopus::Steppable *> &spawners_
 	window_p.setWorldSize(worldSize_p);
 
 	World world_l(0);
+
+	FASStepVisitor visitor_l(window_p, world_l);
+	spawners_p.push_back(new octopus::TriggerSpawn(new AnchorEffectTrigger(lib_p, visitor_l)));
+	world_l.setCustomVisitor(&visitor_l);
 
 	octopus::Controller controller_l(spawners_p, 0.01, commands_p, gridPointSize_l, gridSize_l);
 	controller_l.enableORCA();
@@ -104,6 +116,10 @@ void replayGame(std::ifstream &file_p, Window &window_p, std::list<octopus::Step
 
 	World world_l(0);
 
+	FASStepVisitor visitor_l(window_p, world_l);
+	spawners_p.push_back(new octopus::TriggerSpawn(new AnchorEffectTrigger(lib_p, visitor_l)));
+	world_l.setCustomVisitor(&visitor_l);
+
 	octopus::Controller controller_l(spawners_p, 0.01, commands_p, gridPointSize_l, gridSize_l);
 	controller_l.enableORCA();
 
@@ -139,6 +155,10 @@ void loadGame(std::ifstream &file_p, Window &window_p, std::list<octopus::Steppa
 	window_p.setWorldSize(worldSize_p);
 
 	World world_l(0);
+
+	FASStepVisitor visitor_l(window_p, world_l);
+	spawners_p.push_back(new octopus::TriggerSpawn(new AnchorEffectTrigger(lib_p, visitor_l)));
+	world_l.setCustomVisitor(&visitor_l);
 
 	octopus::Controller controller_l(spawners_p, 0.01, commands_p, gridPointSize_l, gridSize_l);
 	controller_l.enableORCA();
@@ -203,7 +223,7 @@ void runWave(Window &window_p, unsigned long stepCount_p, unsigned long player_p
     file_l.write((char*)&player_p, sizeof(player_p));
     file_l.write((char*)&worldSize_p, sizeof(worldSize_p));
 
-	runAndSaveGame(window_p, spawners_l, commands_l, worldSize_p, file_l);
+	runAndSaveGame(window_p, spawners_l, commands_l, worldSize_p, file_l, lib_l);
 }
 
 void replayWave(Window &window_p)
@@ -252,7 +272,7 @@ void runArena(cuttlefish::Window &window_p, unsigned long number_p)
 
     file_l.write((char*)&number_p, sizeof(number_p));
 
-	runAndSaveGame(window_p, spawners_l, commands_l, 250, file_l);
+	runAndSaveGame(window_p, spawners_l, commands_l, 250, file_l, lib_l);
 }
 
 void replayArena(Window &window_p)
@@ -289,7 +309,7 @@ void runMaze(cuttlefish::Window &window_p, unsigned long number_p)
 	std::list<octopus::Steppable *> spawners_l = MazeLevelSteps(lib_l, number_p);
 	std::list<octopus::Command *> commands_l = MazeLevelCommands(lib_l);
 
-	runGame(window_p, spawners_l, commands_l, 250);
+	runGame(window_p, spawners_l, commands_l, 250, lib_l);
 }
 
 

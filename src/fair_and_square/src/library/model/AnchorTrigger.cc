@@ -15,7 +15,7 @@ AnchorTrigger::AnchorTrigger(octopus::Library const &lib_p) :
     _gen(42)
 {}
 
-void AnchorTrigger::trigger(octopus::State const &state_p, octopus::Step &step_p, unsigned long) const
+void AnchorTrigger::trigger(octopus::State const &state_p, octopus::Step &step_p, unsigned long, octopus::TriggerData const &) const
 {
     std::map<octopus::ResourceType, double> map_l;
     map_l[octopus::ResourceType::Anchor] = -240;

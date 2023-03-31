@@ -40,6 +40,8 @@ if(GRAPHICS)
 		${CMAKE_CURRENT_SOURCE_DIR}/src/core/game/loader/ChoicePanel.cc
 		${CMAKE_CURRENT_SOURCE_DIR}/src/core/game/loader/ResourceLoader.cc
 		${CMAKE_CURRENT_SOURCE_DIR}/src/core/game/loader/choice/ChoiceSubPanel.cc
+		${CMAKE_CURRENT_SOURCE_DIR}/src/core/game/loader/trigger/AnchorEffectTrigger.cc
+		${CMAKE_CURRENT_SOURCE_DIR}/src/core/game/loader/visitor/FASStepVisitor.cc
 		${CMAKE_CURRENT_SOURCE_DIR}/src/core/game/RunGame.cc
 		${CMAKE_CURRENT_SOURCE_DIR}/src/core/game/showcase/RunShowcase.cc
 		${CMAKE_CURRENT_SOURCE_DIR}/src/core/lang/LangEntries.cc

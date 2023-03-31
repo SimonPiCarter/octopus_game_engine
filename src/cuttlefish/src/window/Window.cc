@@ -191,7 +191,8 @@ octopus::Vector Window::getWindowSize() const
 
 void Window::setWindowedFullScreeen()
 {
-	SDL_SetWindowFullscreen(getWindow(), SDL_WINDOW_FULLSCREEN_DESKTOP);
+	//SDL_SetWindowFullscreen(getWindow(), SDL_WINDOW_FULLSCREEN_DESKTOP);
+	SDL_SetWindowFullscreen(getWindow(), SDL_WINDOW_FULLSCREEN);
 	updateFromRenderer();
 }
 

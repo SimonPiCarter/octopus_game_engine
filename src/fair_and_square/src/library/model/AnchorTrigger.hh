@@ -16,7 +16,7 @@ class AnchorTrigger : public octopus::OnEachTrigger
 {
 public:
 	AnchorTrigger(octopus::Library const &lib_p);
-	virtual void trigger(octopus::State const &, octopus::Step &step_p, unsigned long) const override;
+	virtual void trigger(octopus::State const &, octopus::Step &step_p, unsigned long, octopus::TriggerData const &) const override;
 
 private:
 	unsigned long const _player;

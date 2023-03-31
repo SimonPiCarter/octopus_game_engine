@@ -9,6 +9,7 @@
 #include "cutscene/DialogManager.hh"
 
 #include "controller/Controller.hh"
+#include "step/Steppable.hh"
 
 namespace cuttlefish
 {
@@ -19,6 +20,15 @@ class SpriteEntity;
 class SpriteLibrary;
 class StatsPanel;
 class Window;
+
+class WorldStepVisitor : public octopus::SteppableVisitor
+{
+public:
+	void setState(octopus::State const *state_p) { _state = state_p; }
+
+protected:
+	octopus::State const *_state {nullptr};
+};
 
 /// @brief This class is used to maintain a representation of the world
 /// based on state the engine sends
@@ -78,6 +88,9 @@ public:
 	DialogManager &getDialogManager() { return _dialogManager; }
 	DialogManager const &getDialogManager() const { return _dialogManager; }
 
+	/// @brief add a custom steppable visitor
+	void setCustomVisitor(WorldStepVisitor *vis_p) { _customVisitor = vis_p; }
+
 private:
 	/// @brief the player for this world
 	unsigned long const _player;
@@ -105,6 +118,8 @@ private:
 	std::list<octopus::StepBundle>::const_iterator _lastIt;
 
 	DialogManager _dialogManager;
+
+	WorldStepVisitor * _customVisitor {nullptr};
 
 	friend class WorldUpdaterStepVisitor;
 };

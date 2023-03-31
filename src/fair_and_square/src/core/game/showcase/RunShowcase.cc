@@ -8,6 +8,7 @@
 // octopus
 #include "controller/Controller.hh"
 #include "state/State.hh"
+#include "step/trigger/TriggerSpawn.hh"
 #include "library/Library.hh"
 #include "logger/Logger.hh"
 
@@ -18,6 +19,10 @@
 #include "library/levels/showcase/DotShowcase.hh"
 #include "library/levels/showcase/LifestealShowcase.hh"
 
+
+#include "core/game/loader/trigger/AnchorEffectTrigger.hh"
+#include "core/game/loader/visitor/FASStepVisitor.hh"
+
 #include <fstream>
 
 using namespace cuttlefish;
@@ -26,7 +31,7 @@ namespace fas
 {
 
 /// @brief Run the showcase
-void runShowcase(Window &window_p, std::list<octopus::Steppable *> &spawners_p, std::list<octopus::Command *> &commands_p, unsigned long worldSize_p)
+void runShowcase(Window &window_p, std::list<octopus::Steppable *> &spawners_p, std::list<octopus::Command *> &commands_p, unsigned long worldSize_p, octopus::Library &lib_p)
 {
 	unsigned long gridPointSize_l = 5;
 	unsigned long gridSize_l = worldSize_p/gridPointSize_l;
@@ -34,6 +39,9 @@ void runShowcase(Window &window_p, std::list<octopus::Steppable *> &spawners_p, 
 	window_p.setWorldSize(worldSize_p);
 
 	World world_l(0);
+
+	FASStepVisitor visitor_l(window_p, world_l);
+	world_l.setCustomVisitor(&visitor_l);
 
 	octopus::Controller controller_l(spawners_p, 0.01, commands_p, gridPointSize_l, gridSize_l);
 	controller_l.enableORCA();
@@ -67,7 +75,7 @@ void runAoeShowcase(cuttlefish::Window &window_p)
 			cuttlefish::Picture(window_p.loadTexture("resources/octopus.png"), 64, 64, {2}, {1}))
     );
 
-	runShowcase(window_p, spawners_l, commands_l, 250);
+	runShowcase(window_p, spawners_l, commands_l, 250, lib_l);
 }
 
 void runChainingShowcase(cuttlefish::Window &window_p)
@@ -81,7 +89,7 @@ void runChainingShowcase(cuttlefish::Window &window_p)
 			cuttlefish::Picture(window_p.loadTexture("resources/octopus.png"), 64, 64, {2}, {1}))
     );
 
-	runShowcase(window_p, spawners_l, commands_l, 250);
+	runShowcase(window_p, spawners_l, commands_l, 250, lib_l);
 }
 
 void runDotShowcase(cuttlefish::Window &window_p)
@@ -95,7 +103,7 @@ void runDotShowcase(cuttlefish::Window &window_p)
 			cuttlefish::Picture(window_p.loadTexture("resources/octopus.png"), 64, 64, {2}, {1}))
     );
 
-	runShowcase(window_p, spawners_l, commands_l, 250);
+	runShowcase(window_p, spawners_l, commands_l, 250, lib_l);
 }
 
 void runLifestealShowcase(cuttlefish::Window &window_p)
@@ -109,7 +117,7 @@ void runLifestealShowcase(cuttlefish::Window &window_p)
 			cuttlefish::Picture(window_p.loadTexture("resources/octopus.png"), 64, 64, {2}, {1}))
     );
 
-	runShowcase(window_p, spawners_l, commands_l, 250);
+	runShowcase(window_p, spawners_l, commands_l, 250, lib_l);
 }
 
 } // namespace cuttlefish

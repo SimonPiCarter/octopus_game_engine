@@ -20,6 +20,10 @@ namespace cuttlefish
 void World::handleStep(Window &window_p, Panel &panel_p, StatsPanel &statsPanel_p, OptionPanel &optionPanel_p, octopus::StateAndSteps const &steps_p, SpriteLibrary const &lib_p)
 {
 	WorldUpdaterStepVisitor vis_l(*this, window_p, panel_p, statsPanel_p, optionPanel_p, steps_p._state, lib_p);
+	if(_customVisitor)
+	{
+		_customVisitor->setState(steps_p._state);
+	}
 
 	if(_first)
 	{
@@ -30,6 +34,10 @@ void World::handleStep(Window &window_p, Panel &panel_p, StatsPanel &statsPanel_
 		for(octopus::Steppable const * steppable_l : steps_p._initialStep.getSteppable())
 		{
 			vis_l(steppable_l);
+			if(_customVisitor)
+			{
+				(*_customVisitor)(steppable_l);
+			}
 		}
 	}
 
@@ -55,6 +63,10 @@ void World::handleStep(Window &window_p, Panel &panel_p, StatsPanel &statsPanel_
 		for(octopus::Steppable const * steppable_l : it_l->_step->getSteppable())
 		{
 			vis_l(steppable_l);
+			if(_customVisitor)
+			{
+				(*_customVisitor)(steppable_l);
+			}
 		}
 	}
 	_lastIt = steps_p._stepIt;
