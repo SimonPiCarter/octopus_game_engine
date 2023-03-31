@@ -25,7 +25,7 @@ namespace fas
 {
 
 
-void mazeMenu(cuttlefish::Window &window_p)
+void mazeMenu(cuttlefish::Window &window_p, bool &exit_p)
 {
 	auto last_l = std::chrono::steady_clock::now();
 	double elapsed_l = 0.;
@@ -59,7 +59,7 @@ void mazeMenu(cuttlefish::Window &window_p)
 	//Event handler
 	SDL_Event e;
 
-	while( !quit_l )
+	while( !quit_l && !exit_p )
 	{
 		//Handle events on queue
 		while( SDL_PollEvent( &e ) != 0 )
@@ -67,7 +67,7 @@ void mazeMenu(cuttlefish::Window &window_p)
 			//User requests quit_l
 			if( e.type == SDL_QUIT )
 			{
-				quit_l = true;
+				exit_p = true;
 			}
 
 			menu_l.handleEvent(window_p, e);

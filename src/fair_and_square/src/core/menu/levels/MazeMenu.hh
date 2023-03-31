@@ -10,7 +10,7 @@ namespace cuttlefish
 namespace fas
 {
 
-void mazeMenu(cuttlefish::Window &window_l);
+void mazeMenu(cuttlefish::Window &window_l, bool &exit_p);
 
 } // namespace fas
 

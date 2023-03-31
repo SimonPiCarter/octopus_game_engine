@@ -60,7 +60,7 @@ void mainMenu(cuttlefish::Window &window_p)
 	Picture * button_l = new Picture(window_p.loadTexture("resources/button.png"), 256, 64, {1, 1 ,1}, {1, 1, 1});
 	Text * text_l = new Text(&window_p, {0, 0, 0}, 0, 0);
 	text_l->setText("Wave Level");
-	menu_l.addButton(button_l, text_l, std::bind(fas::waveMenu, std::ref(window_p)));
+	menu_l.addButton(button_l, text_l, std::bind(fas::waveMenu, std::ref(window_p), std::ref(quit_l)));
 }
 ///
 /// Arena
@@ -69,7 +69,7 @@ void mainMenu(cuttlefish::Window &window_p)
 	Picture * button_l = new Picture(window_p.loadTexture("resources/button.png"), 256, 64, {1, 1 ,1}, {1, 1, 1});
 	Text * text_l = new Text(&window_p, {0, 0, 0}, 0, 0);
 	text_l->setText("Arena Level");
-	menu_l.addButton(button_l, text_l, std::bind(fas::arenaMenu, std::ref(window_p)));
+	menu_l.addButton(button_l, text_l, std::bind(fas::arenaMenu, std::ref(window_p), std::ref(quit_l)));
 }
 ///
 /// Maze
@@ -78,7 +78,7 @@ void mainMenu(cuttlefish::Window &window_p)
 	Picture * button_l = new Picture(window_p.loadTexture("resources/button.png"), 256, 64, {1, 1 ,1}, {1, 1, 1});
 	Text * text_l = new Text(&window_p, {0, 0, 0}, 0, 0);
 	text_l->setText("Maze Level");
-	menu_l.addButton(button_l, text_l, std::bind(fas::mazeMenu, std::ref(window_p)));
+	menu_l.addButton(button_l, text_l, std::bind(fas::mazeMenu, std::ref(window_p), std::ref(quit_l)));
 }
 
 
