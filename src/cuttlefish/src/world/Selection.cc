@@ -170,7 +170,8 @@ SpriteEntity const * getBestProductionBuilding(Selection const &selection_p, oct
 		octopus::Building const *building_l = dynamic_cast<octopus::Building const *>(ent_l);
 
 		// skip if cannot produce building
-		if(!building_l->_buildingModel.canProduce(model_p))
+		if(!building_l->_buildingModel.canProduce(model_p)
+		|| !building_l->isBuilt())
 		{
 			continue;
 		}

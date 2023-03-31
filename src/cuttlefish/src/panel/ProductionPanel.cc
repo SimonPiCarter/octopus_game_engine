@@ -43,19 +43,40 @@ ProductionPanel::~ProductionPanel()
 	}
 }
 
+struct CommandInfo
+{
+	octopus::BuildingUnitProductionCommand const * cmd;
+	octopus::UnitProductionData const * data;
+	size_t idx;
+	/// @brief used for sorting purpose
+	size_t posInQueue;
+};
+
+
 struct CommandSorter
 {
-	bool operator()(std::pair<octopus::BuildingUnitProductionCommand const *, octopus::UnitProductionData const *> const &a,
-					std::pair<octopus::BuildingUnitProductionCommand const *, octopus::UnitProductionData const *> const &b) const
+	bool operator()(CommandInfo const &a,
+					CommandInfo const &b) const
 	{
-		return a.second->_progression > b.second->_progression;
+		if(a.data->_progression != b.data->_progression)
+		{
+			return a.data->_progression > b.data->_progression;
+		}
+		if(a.posInQueue != b.posInQueue)
+		{
+			return a.posInQueue < b.posInQueue;
+		}
+		if(a.cmd->getHandleCommand() != b.cmd->getHandleCommand())
+		{
+			return a.cmd->getHandleCommand() < b.cmd->getHandleCommand();
+		}
+		return a.idx < b.idx;
 	}
 };
 
 void ProductionPanel::refresh(Window &window_p, octopus::State const &state_p)
 {
-	std::vector<std::pair<octopus::BuildingUnitProductionCommand const *, octopus::UnitProductionData const *> > vecCommands_l;
-	std::vector<unsigned long> vecIdx_l;
+	std::vector<CommandInfo> vecCommands_l;
 
 
 	for(SpriteEntity * spirteEnt_l : _selection._sprites)
@@ -65,6 +86,7 @@ void ProductionPanel::refresh(Window &window_p, octopus::State const &state_p)
 		{
 			continue;
 		}
+		size_t posInQueue_l = 0;
 		auto it_l = ent_l->getQueue().getCurrentCommand();
 		while(it_l != ent_l->getQueue().getEnd())
 		{
@@ -72,10 +94,10 @@ void ProductionPanel::refresh(Window &window_p, octopus::State const &state_p)
 			octopus::UnitProductionData const *data_l = dynamic_cast<octopus::UnitProductionData const *>(it_l->_data);
 			if(cmd_l && data_l && !data_l->_canceled)
 			{
-				vecCommands_l.push_back(std::make_pair(cmd_l, data_l));
-				vecIdx_l.push_back(it_l->_id);
+				vecCommands_l.push_back({cmd_l, data_l, it_l->_id, posInQueue_l});
 			}
 			++it_l;
+			++posInQueue_l;
 		}
 	}
 
@@ -87,14 +109,14 @@ void ProductionPanel::refresh(Window &window_p, octopus::State const &state_p)
 
 	for(size_t i = 0 ; i < _productionToDisplay ; ++i)
 	{
-		SpriteInfo const &info_l = _mapIcons.at(vecCommands_l[i].first->getModel()._id);
+		SpriteInfo const &info_l = _mapIcons.at(vecCommands_l[i].cmd->getModel()._id);
 		_productionPictures[i]->_icon->setState(info_l.state);
 		_productionPictures[i]->_icon->setFrame(info_l.frame);
 
-		_productionPictures[i]->_bar->setProgress(100.*vecCommands_l[i].second->_progression/vecCommands_l[i].second->_completeTime);
+		_productionPictures[i]->_bar->setProgress(100.*vecCommands_l[i].data->_progression/vecCommands_l[i].data->_completeTime);
 
-		_productionIndex.push_back(vecIdx_l[i]);
-		_productionHandle.push_back(vecCommands_l[i].first->getHandleCommand());
+		_productionIndex.push_back(vecCommands_l[i].idx);
+		_productionHandle.push_back(vecCommands_l[i].cmd->getHandleCommand());
 	}
 }
 
