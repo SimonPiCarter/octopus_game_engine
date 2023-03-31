@@ -19,7 +19,7 @@ std::list<Steppable *> lifestealShowcaseSteps(Library &lib_p, size_t number_p)
 {
     // square
 {
-    UnitModel unitModel_l { false, 0.5, 0.05, 1000. };
+    UnitModel unitModel_l { false, 0.5, 0.05, 100. };
     unitModel_l._isUnit = true;
     unitModel_l._damage = 10;
     unitModel_l._armor = 0;
@@ -32,7 +32,7 @@ std::list<Steppable *> lifestealShowcaseSteps(Library &lib_p, size_t number_p)
 }
     // triangle
 {
-    UnitModel unitModel_l { false, 0.5, 0.045, 1000. };
+    UnitModel unitModel_l { false, 0.5, 0.045, 100. };
     unitModel_l._isUnit = true;
     unitModel_l._damage = 10;
     unitModel_l._armor = 0;

@@ -15,7 +15,7 @@
 
 using namespace octopus;
 
-std::list<Steppable *> chainingShowcaseSteps(Library &lib_p, size_t number_p)
+std::list<Steppable *> chainingShowcaseSteps(Library &lib_p)
 {
     // square
 {
@@ -24,7 +24,7 @@ std::list<Steppable *> chainingShowcaseSteps(Library &lib_p, size_t number_p)
     unitModel_l._damage = 10;
     unitModel_l._armor = 0;
     unitModel_l._range = 0.5;
-    unitModel_l._lineOfSight = 20;
+    unitModel_l._lineOfSight = 30;
     unitModel_l._fullReload = 100;
     unitModel_l._windup = 20;
 
@@ -59,10 +59,20 @@ std::list<Steppable *> chainingShowcaseSteps(Library &lib_p, size_t number_p)
 
 	unsigned long id_l = 0;
     spawners_l.push_back(new UnitSpawnStep(id_l++, square1_l));
-	for(size_t i = 0; i < number_p ; ++ i)
-	{
-		spawners_l.push_back(new UnitSpawnStep(id_l++, triangle2_l));
-	}
+
+	spawners_l.push_back(new UnitSpawnStep(id_l++, triangle2_l));
+    triangle2_l._pos.x = 37;
+	spawners_l.push_back(new UnitSpawnStep(id_l++, triangle2_l));
+    triangle2_l._pos.y = 18;
+	spawners_l.push_back(new UnitSpawnStep(id_l++, triangle2_l));
+    triangle2_l._pos.x = 39;
+	spawners_l.push_back(new UnitSpawnStep(id_l++, triangle2_l));
+    triangle2_l._pos.y = 16;
+	spawners_l.push_back(new UnitSpawnStep(id_l++, triangle2_l));
+    triangle2_l._pos.x = 41;
+	spawners_l.push_back(new UnitSpawnStep(id_l++, triangle2_l));
+    triangle2_l._pos.y = 14;
+	spawners_l.push_back(new UnitSpawnStep(id_l++, triangle2_l));
 
 	return spawners_l;
 }

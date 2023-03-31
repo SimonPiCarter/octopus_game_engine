@@ -72,7 +72,7 @@ void runAoeShowcase(cuttlefish::Window &window_p)
 void runChainingShowcase(cuttlefish::Window &window_p)
 {
 	octopus::Library lib_l;
-	std::list<octopus::Steppable *> spawners_l = chainingShowcaseSteps(lib_l, 50);
+	std::list<octopus::Steppable *> spawners_l = chainingShowcaseSteps(lib_l);
 	std::list<octopus::Command *> commands_l = chainingShowcaseCommands(lib_l);
 
     spawners_l.push_back(

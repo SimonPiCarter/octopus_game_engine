@@ -13,7 +13,7 @@ namespace octopus
 } // namespace octopus
 
 
-std::list<octopus::Steppable *> chainingShowcaseSteps(octopus::Library &lib_p, size_t number_p);
+std::list<octopus::Steppable *> chainingShowcaseSteps(octopus::Library &lib_p);
 std::list<octopus::Command *> chainingShowcaseCommands(octopus::Library &lib_p);
 
 #endif
