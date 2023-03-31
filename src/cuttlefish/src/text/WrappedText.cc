@@ -126,7 +126,7 @@ void WrappedText::refresh()
 		{
 			// update cursor to start of new line
 			_cursorY += lastHeight;
-			_cursorX = _x;
+			_cursorX = _x-10;
 			first_l = true;
 		}
 	}
