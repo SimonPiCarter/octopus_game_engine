@@ -24,14 +24,14 @@ ProductionPanel::ProductionPanel(Window* window_p, int x, int y, Texture const *
 	{
 		_productionPictures.push_back(new ProductionPicture());
 		_productionPictures.back()->_icon = new Picture(_icons, 64, 64, {1}, {1});
-		_productionPictures.back()->_bar = new ProgressBar(new Picture(barBack_p, 62, 6, {1}, {1}), new Picture(barFill_p, 62, 6, {1}, {1}), 62, 6, 1);
+		_productionPictures.back()->_bar = new ProgressBar(new Picture(barBack_p, 62, 6, {1}, {1}), new Picture(barFill_p, 62, 6, {1}, {1}), 60, 6, 1);
 
 		int posX_l = _x + idx_l * 65;
 		// add offset to be at bottom of the panel
 		int posY_l = _y;
 		_productionPictures.back()->_icon->setDestination(posX_l, posY_l, 64, 64);
 		// Pos + offset to have progress bar on the bottom
-		_productionPictures.back()->_bar->setPosition(posX_l, posY_l + 56);
+		_productionPictures.back()->_bar->setPosition(posX_l+2, posY_l + 56);
 	}
 }
 
