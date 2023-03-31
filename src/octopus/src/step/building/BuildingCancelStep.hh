@@ -15,7 +15,7 @@ class BuildingCancelStep : public Steppable
 		virtual void apply(State &state_p) const override;
 		virtual void revert(State &state_p, SteppableData const *) const override;
 
-		virtual bool isNoOp() const override { return false; }
+		virtual bool isNoOp() const override { return _old == _new; }
 		virtual void visit(SteppableVisitor * visitor_p) const override
 		{
 			visitor_p->visit(this);
