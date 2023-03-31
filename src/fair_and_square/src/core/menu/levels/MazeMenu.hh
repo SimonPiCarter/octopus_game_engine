@@ -1,0 +1,18 @@
+#ifndef __MazeMenu__
+#define __MazeMenu__
+
+namespace cuttlefish
+{
+    class Window;
+} // namespace cuttlefish
+
+
+namespace fas
+{
+
+void mazeMenu(cuttlefish::Window &window_l);
+
+} // namespace fas
+
+
+#endif

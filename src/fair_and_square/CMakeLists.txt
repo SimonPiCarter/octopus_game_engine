@@ -36,8 +36,13 @@ if(GRAPHICS)
 		${CMAKE_CURRENT_SOURCE_DIR}/src/core/game/loader/ChoicePanel.cc
 		${CMAKE_CURRENT_SOURCE_DIR}/src/core/game/loader/ResourceLoader.cc
 		${CMAKE_CURRENT_SOURCE_DIR}/src/core/game/loader/choice/ChoiceSubPanel.cc
-
 		${CMAKE_CURRENT_SOURCE_DIR}/src/core/game/RunGame.cc
+
+		${CMAKE_CURRENT_SOURCE_DIR}/src/core/menu/MainMenu.cc
+		${CMAKE_CURRENT_SOURCE_DIR}/src/core/menu/levels/ArenaMenu.cc
+		${CMAKE_CURRENT_SOURCE_DIR}/src/core/menu/levels/MazeMenu.cc
+		${CMAKE_CURRENT_SOURCE_DIR}/src/core/menu/levels/WaveMenu.cc
+
 		${CMAKE_CURRENT_SOURCE_DIR}/src/core/fair_and_square_core.cc
 	)
 	target_link_libraries(fair_and_square PUBLIC fair_and_square_lib cuttlefish)
