@@ -90,7 +90,7 @@ std::vector<Steppable *> ChainingModifier::newAttackSteppable(const Entity &ent_
 
     Handle idx_l = state_p.getFlyingCommandHandle(step_p.getFlyingCommandSpawned());
     vec_l.push_back(new FlyingCommandSpawnStep(
-        new ChainingOverTime(idx_l, _delay, ent_p.getDamageNoBonus()*_ratio, target_p._handle, _nbOfTicks, _ratio, _range, team_l)));
+        new ChainingOverTime(idx_l, _delay, ent_p.getDamageNoBonus()*_ratio, target_p._handle, _nbOfTicks, _ratio, _range, team_l, {target_p._handle})));
 
 	double dmg_l = std::min(-1., target_p.getArmor() - ent_p.getDamage(target_p._model));
     double curHp_l = target_p._hp + step_p.getHpChange(target_p._handle);
