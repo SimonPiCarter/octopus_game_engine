@@ -7,7 +7,9 @@
 
 #include "command/Command.hh"
 #include "command/Commandable.hh"
+#include "command/building/BuildingUnitProductionCommand.hh"
 #include "controller/event/EventCollection.hh"
+#include "controller/event/EventEntityModelDied.hh"
 #include "controller/trigger/Listener.hh"
 #include "logger/Logger.hh"
 #include "orca/OrcaManager.hh"
@@ -18,9 +20,11 @@
 #include "step/command/flying/FlyingCommandSpawnStep.hh"
 #include "step/ConflictPositionSolver.hh"
 #include "step/TickingStep.hh"
+#include "step/player/PlayerSpendResourceStep.hh"
 #include "step/trigger/TriggerEnableChange.hh"
 #include "step/trigger/TriggerSpawn.hh"
 #include "step/vision/VisionChangeStep.hh"
+
 
 namespace octopus
 {
@@ -482,6 +486,28 @@ void Controller::handleTriggers(State const &state_p, Step &step_p, Step const &
 	// compute event and triggers (visit last step)
 	EventCollection visitor_l(state_p);
 	visitAll(prevStep_p, visitor_l);
+
+	// check every unit destroyed to cancel BuildingUnitProductionCommand and refund
+	for(EventEntityModelDied const * died_l : visitor_l._listEventEntityModelDied)
+	{
+		Entity const & ent_l = died_l->_entity;
+		if(died_l->_model._isBuilding && ent_l.getQueue().hasCommand())
+		{
+			// inspect running commands
+			auto it_l = ent_l.getQueue().getCurrentCommand();
+			while(it_l != ent_l.getQueue().getEnd())
+			{
+				BuildingUnitProductionCommand const *cmd_l = dynamic_cast<BuildingUnitProductionCommand const *>(it_l->_cmd);
+				UnitProductionData const *data_l = dynamic_cast<UnitProductionData const *>(it_l->_data);
+				// refund cost of unit production
+				if(cmd_l && data_l)
+				{
+					step_p.addSteppable(new PlayerSpendResourceStep(ent_l._player, getReverseCostMap(cmd_l->getModel()._cost)));
+				}
+				++it_l;
+			}
+		}
+	}
 
 	Handle curHandle_l = 0;
 	for(Trigger const * trigger_l : state_p.getTriggers())
