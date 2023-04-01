@@ -34,7 +34,7 @@ void FASStepVisitor::visit(octopus::EntityHitPointChangeStep const *step_p)
 	{
 		octopus::Vector pos_l = _window.getPixelVector(octopus::to_double(ent_l->_pos.x), octopus::to_double(ent_l->_pos.y));
 
-		cuttlefish::Picture *pic_l = new cuttlefish::Picture(_window.loadTexture("resources/fair_and_square/healing.png"), 96, 96, {9}, {0.1}, false);
+		cuttlefish::Picture *pic_l = new cuttlefish::Picture(_window.loadTexture("resources/fair_and_square/healing.png"), 96, 96, {9}, {0.2}, false);
 		pic_l->setDestination(octopus::to_int(pos_l.x)-48, octopus::to_int(pos_l.y)-48, 96, 96);
 
 		pic_l->setEndAfterLastFrame(true);
