@@ -5,6 +5,7 @@
 #include <random>
 
 #include "command/Command.hh"
+#include "utils/RandomGenerator.hh"
 
 #include "SpawningGrid.hh"
 
@@ -31,7 +32,7 @@ struct AreaSpawn
 class AreaSpawnerCommand : public Command
 {
 public:
-	AreaSpawnerCommand(std::list<AreaSpawn> const &spawns_p);
+	AreaSpawnerCommand(RandomGenerator &rand_p, std::list<AreaSpawn> const &spawns_p);
 	~AreaSpawnerCommand();
 
 	virtual void registerCommand(Step & step_p, State const &state_p) override;
@@ -57,7 +58,7 @@ private:
 	std::list<AreaSpawn> const _spawns;
 
 	/// @brief random generator
-	std::mt19937 _gen;
+	RandomGenerator &_rand;
 
 	bool _nonRandom {false};
 };

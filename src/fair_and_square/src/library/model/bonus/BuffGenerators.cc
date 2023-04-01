@@ -23,10 +23,9 @@ std::vector<Steppable *> BuffGenerator::getSteppables(unsigned long options_p, u
     return steps_l;
 }
 
-std::string generateRandomModel(std::mt19937 &gen_p)
+std::string generateRandomModel(RandomGenerator &gen_p)
 {
-    std::uniform_int_distribution<> distModel_l(0, 2);
-    int model_l = distModel_l(gen_p);
+    int model_l = gen_p.roll(0, 2);
 
     if(model_l == 0)
     {
@@ -42,10 +41,9 @@ std::string generateRandomModel(std::mt19937 &gen_p)
     }
 }
 
-BuffOption generateRandomBuffOption(std::mt19937 &gen_p, std::string const &id_p)
+BuffOption generateRandomBuffOption(RandomGenerator &gen_p, std::string const &id_p)
 {
-    std::uniform_int_distribution<> distType_l(0, 6);
-    int type_l = distType_l(gen_p);
+    int type_l = gen_p.roll(0, 6);
 
     BuffOption option_l;
 
@@ -78,8 +76,7 @@ BuffOption generateRandomBuffOption(std::mt19937 &gen_p, std::string const &id_p
         option_l._buff._type = TyppedBuff::Type::Harvest;
     }
 
-    std::uniform_int_distribution<> distBonusType_l(0, 1);
-    int bonusType_l = distBonusType_l(gen_p);
+    int bonusType_l = gen_p.roll(0, 1);
 
     if(bonusType_l == 0
     && option_l._buff._type != TyppedBuff::Type::Production
@@ -87,13 +84,11 @@ BuffOption generateRandomBuffOption(std::mt19937 &gen_p, std::string const &id_p
     && option_l._buff._type != TyppedBuff::Type::Speed
     && option_l._buff._type != TyppedBuff::Type::FullReload)
     {
-        std::uniform_int_distribution<> dist_l(3, 6);
-        option_l._buff._offset = dist_l(gen_p);
+        option_l._buff._offset = gen_p.roll(3, 6);
     }
     else
     {
-        std::uniform_int_distribution<> dist_l(5, 15);
-        option_l._buff._coef = dist_l(gen_p)/100.;
+        option_l._buff._coef = gen_p.roll(5, 15)/100.;
     }
 
     if(option_l._buff._type == TyppedBuff::Type::FullReload)
@@ -119,38 +114,29 @@ BuffOption generateRandomBuffOption(std::mt19937 &gen_p, std::string const &id_p
     return option_l;
 }
 
-ModifierOption generateRandomModifierOption(std::mt19937 &gen_p)
+ModifierOption generateRandomModifierOption(RandomGenerator &gen_p)
 {
     ModifierOption option_l;
 
     option_l._model = generateRandomModel(gen_p);
 
-    std::uniform_int_distribution<> distMod_l(0, 3);
-    int mod_l = distMod_l(gen_p);
+    int mod_l = gen_p.roll(0, 3);
 
     if(mod_l == 0)
     {
-        std::uniform_int_distribution<> distRange_l(2, 4);
-        std::uniform_int_distribution<> distRatio_l(2, 5);
-        option_l._mod = AoEModifier(distRatio_l(gen_p)/10., distRange_l(gen_p));
+        option_l._mod = AoEModifier(gen_p.roll(2, 4)/10., gen_p.roll(2, 5));
     }
     else if(mod_l == 1)
     {
-        std::uniform_int_distribution<> distTicks_l(2, 5);
-        std::uniform_int_distribution<> distRatio_l(2, 5);
-        std::uniform_int_distribution<> distRange_l(2, 5);
-        option_l._mod = ChainingModifier(20, distTicks_l(gen_p), distRatio_l(gen_p)/10., distRange_l(gen_p));
+        option_l._mod = ChainingModifier(20, gen_p.roll(2, 5), gen_p.roll(2, 5)/10., gen_p.roll(2, 5));
     }
     else if(mod_l == 2)
     {
-        std::uniform_int_distribution<> distTicks_l(2, 5);
-        std::uniform_int_distribution<> distDmg_l(5, 10);
-        option_l._mod = DotModifier(100, distTicks_l(gen_p), distDmg_l(gen_p));
+        option_l._mod = DotModifier(100, gen_p.roll(2, 5), gen_p.roll(5, 10));
     }
     else
     {
-        std::uniform_int_distribution<> distRatio_l(2, 4);
-        option_l._mod = LifeStealModifier(distRatio_l(gen_p)/10.);
+        option_l._mod = LifeStealModifier(gen_p.roll(2, 4)/10.);
     }
 
     return option_l;

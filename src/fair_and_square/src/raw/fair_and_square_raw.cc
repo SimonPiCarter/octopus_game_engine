@@ -12,8 +12,9 @@
 
 int main()
 {
+	octopus::RandomGenerator rand_l(42);
 	octopus::Library lib_l;
-	//std::list<octopus::Steppable *> spawners_l = WaveLevelSteps(lib_l, 15, 0.1*60*100, 0, 250);
+	//std::list<octopus::Steppable *> spawners_l = WaveLevelSteps(lib_l, rand_l, 15, 0.1*60*100, 0, 250);
 	//std::list<octopus::Command *> commands_l = WaveLevelCommands(lib_l, 250);
 	std::list<octopus::Steppable *> spawners_l = ArenaLevelSteps(lib_l, 500);
 	std::list<octopus::Command *> commands_l = ArenaLevelCommands(lib_l);

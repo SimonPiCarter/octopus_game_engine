@@ -33,11 +33,10 @@ using namespace octopus;
 
 std::vector<octopus::Steppable*> defaultGenerator() { return {}; }
 
-std::string genModelName(std::mt19937 &gen_p)
+std::string genModelName(RandomGenerator &gen_p)
 {
-    std::uniform_int_distribution<> dist_l(0, 2);
 	std::string model_l = "square";
-	int random_l = dist_l(gen_p);
+	int random_l = gen_p.roll(0, 2);
 	if(random_l==1)
 	{
 		model_l = "triangle";
@@ -49,7 +48,7 @@ std::string genModelName(std::mt19937 &gen_p)
 	return model_l;
 }
 
-std::list<Steppable *> WaveLevelSteps(Library &lib_p, unsigned long waveCount_p, unsigned long stepCount_p, unsigned long player_p, unsigned long worldSize_p,
+std::list<Steppable *> WaveLevelSteps(Library &lib_p, RandomGenerator &rand_p, unsigned long waveCount_p, unsigned long stepCount_p, unsigned long player_p, unsigned long worldSize_p,
 	std::function<std::vector<octopus::Steppable *>(void)> waveStepGenerator_p)
 {
 	loadModels(lib_p);
@@ -77,7 +76,7 @@ std::list<Steppable *> WaveLevelSteps(Library &lib_p, unsigned long waveCount_p,
 	mapRes_l[octopus::ResourceType::Steel] = -2000;
 	mapRes_l[octopus::ResourceType::Anchor] = -5;
 
-	Trigger * triggerWave_l = new WaveSpawn(new ListenerStepCount(stepCount_p), lib_p, 1, stepCount_p, waveCount_p, player_p, worldSize_p, waveStepGenerator_p);
+	Trigger * triggerWave_l = new WaveSpawn(new ListenerStepCount(stepCount_p), lib_p, rand_p, 1, stepCount_p, waveCount_p, player_p, worldSize_p, waveStepGenerator_p);
 	Trigger * triggerLose_l = new LoseTrigger(new ListenerEntityModelDied(&lib_p.getBuildingModel("command_center"), 0));
 
 
@@ -103,14 +102,14 @@ std::list<Steppable *> WaveLevelSteps(Library &lib_p, unsigned long waveCount_p,
 		new UnitSpawnStep(8, unit_l),
 		new TriggerSpawn(triggerWave_l),
 		new TriggerSpawn(triggerLose_l),
-		new TriggerSpawn(new AnchorTrigger(lib_p)),
+		new TriggerSpawn(new AnchorTrigger(lib_p, rand_p)),
 		new FlyingCommandSpawnStep(new TimerDamage(0, 100, 0, 0, octopus::ResourceType::Anchor, 0)),
 	};
 
 	return spawners_l;
 }
 
-std::list<Command *> WaveLevelCommands(Library &lib_p, unsigned long worldSize_p)
+std::list<Command *> WaveLevelCommands(Library &lib_p, RandomGenerator &rand_p, unsigned long worldSize_p)
 {
 	std::list<AreaSpawn> spawners_l;
 
@@ -126,8 +125,6 @@ std::list<Command *> WaveLevelCommands(Library &lib_p, unsigned long worldSize_p
 
 	Building anchorSpot_l({0,0}, true, lib_p.getBuildingModel("anchor_spot"));
 	anchorSpot_l._player = 2;
-
-    std::mt19937 gen_l(42);
 
 	int areSize_l = 20;
 
@@ -152,7 +149,7 @@ std::list<Command *> WaveLevelCommands(Library &lib_p, unsigned long worldSize_p
 			{
 				for(unsigned long c = 0 ; c < 2+x*y ; ++ c)
 				{
-					Unit *unit_l = new Unit({0, 0}, false, lib_p.getUnitModel(genModelName(gen_l)));
+					Unit *unit_l = new Unit({0, 0}, false, lib_p.getUnitModel(genModelName(rand_p)));
 					unit_l->_player = 1;
 					area_l.entities.emplace_back(unit_l, 1);
 				}
@@ -161,10 +158,8 @@ std::list<Command *> WaveLevelCommands(Library &lib_p, unsigned long worldSize_p
 		}
 	}
 
-	AreaSpawnerCommand * spawnCommand_l = new AreaSpawnerCommand(spawners_l);
-
 	std::list<Command *> commands_l {
-		new AreaSpawnerCommand(spawners_l),
+		new AreaSpawnerCommand(rand_p, spawners_l),
 	};
 
 	return commands_l;
@@ -176,10 +171,11 @@ std::list<Command *> WaveLevelCommands(Library &lib_p, unsigned long worldSize_p
 /////////////////////////////////////////////
 /////////////////////////////////////////////
 
-WaveSpawn::WaveSpawn(Listener * listener_p, Library const &lib_p, unsigned long wave_p, unsigned long stepWait_p, unsigned long finalWave_p, unsigned long player_p, unsigned long worldSize_p,
+WaveSpawn::WaveSpawn(Listener * listener_p, Library const &lib_p, RandomGenerator &rand_p, unsigned long wave_p, unsigned long stepWait_p, unsigned long finalWave_p, unsigned long player_p, unsigned long worldSize_p,
 	std::function<std::vector<octopus::Steppable *>(void)> waveStepGenerator_p) :
 		OneShotTrigger({listener_p}),
 		_lib(lib_p),
+		_rand(rand_p),
 		_player(player_p),
 		_wave(wave_p),
 		_stepWait(stepWait_p),
@@ -190,8 +186,7 @@ WaveSpawn::WaveSpawn(Listener * listener_p, Library const &lib_p, unsigned long 
 
 void WaveSpawn::trigger(State const &state_p, Step &step_p, unsigned long, octopus::TriggerData const &) const
 {
-    std::mt19937 gen_l(42*_wave);
-	std::string model_l = genModelName(gen_l);
+	std::string model_l = genModelName(_rand);
 
 	// unsigned long n = _stepWait/100/20*_wave;
 	// unsigned long nbUnits_l = (10*n*n + 10 * n + 50)/50;
@@ -212,7 +207,7 @@ void WaveSpawn::trigger(State const &state_p, Step &step_p, unsigned long, octop
 	{
 		step_p.addSteppable(step_l);
 	}
-	step_p.addSteppable(new TriggerSpawn(new WaveSpawn(new ListenerStepCount(_stepWait), _lib, _wave+1, _stepWait, _finalWave, _player, _worldSize, _waveStepGenerator)));
+	step_p.addSteppable(new TriggerSpawn(new WaveSpawn(new ListenerStepCount(_stepWait), _lib, _rand, _wave+1, _stepWait, _finalWave, _player, _worldSize, _waveStepGenerator)));
 
 	// win after 10 waves
 	if(_wave == _finalWave)

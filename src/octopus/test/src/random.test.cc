@@ -16,6 +16,7 @@ TEST(random, std)
         std::cout<<distModel_l(gen_l)<<std::endl;
     }
 }
+
 TEST(random, boost)
 {
     boost::random::mt19937 gen_l(42);

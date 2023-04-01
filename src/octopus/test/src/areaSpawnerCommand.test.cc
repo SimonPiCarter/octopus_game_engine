@@ -42,7 +42,8 @@ TEST(areaSpawnerCommandTest, simple)
 	area_l.entities.emplace_back(new Building(building_l), 1);
 	spawners_l.push_back(area_l);
 
-	AreaSpawnerCommand * spawnCommand_l = new AreaSpawnerCommand(spawners_l);
+	RandomGenerator gen_p(42);
+	AreaSpawnerCommand * spawnCommand_l = new AreaSpawnerCommand(gen_p, spawners_l);
 	// for testing purpose
 	spawnCommand_l->setNonRandom();
 
