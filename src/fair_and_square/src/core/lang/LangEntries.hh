@@ -2,6 +2,7 @@
 #define __LangEntries__
 
 #include <unordered_map>
+#include <string>
 
 namespace fas
 {
