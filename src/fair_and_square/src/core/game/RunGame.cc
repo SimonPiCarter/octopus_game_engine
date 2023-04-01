@@ -210,9 +210,9 @@ std::vector<octopus::Steppable*> genDialogStep(Window &window_p)
 	};
 }
 
-void runWave(Window &window_p, unsigned long stepCount_p, unsigned long player_p, unsigned long worldSize_p)
+void runWave(Window &window_p, unsigned long stepCount_p, unsigned long player_p, unsigned long worldSize_p, unsigned long seed_p)
 {
-	octopus::RandomGenerator rand_l(42);
+	octopus::RandomGenerator rand_l(seed_p);
 	octopus::Library lib_l;
 	std::list<octopus::Steppable *> spawners_l = WaveLevelSteps(lib_l, rand_l, 10, stepCount_p, player_p, worldSize_p, std::bind(genDialogStep, window_p));
 	std::list<octopus::Command *> commands_l = WaveLevelCommands(lib_l, rand_l, worldSize_p);
@@ -220,6 +220,7 @@ void runWave(Window &window_p, unsigned long stepCount_p, unsigned long player_p
 
 	std::ofstream file_l("wave.fas", std::ios::out | std::ios::binary);
 
+    file_l.write((char*)&seed_p, sizeof(seed_p));
     file_l.write((char*)&stepCount_p, sizeof(stepCount_p));
     file_l.write((char*)&player_p, sizeof(player_p));
     file_l.write((char*)&worldSize_p, sizeof(worldSize_p));
@@ -230,15 +231,17 @@ void runWave(Window &window_p, unsigned long stepCount_p, unsigned long player_p
 void replayWave(Window &window_p)
 {
 	std::ifstream file_l("wave.fas", std::ios::in | std::ios::binary);
+	unsigned long seed_p;
 	unsigned long stepCount_p;
 	unsigned long player_p;
 	unsigned long worldSize_p;
 
+    file_l.read((char*)&seed_p, sizeof(seed_p));
     file_l.read((char*)&stepCount_p, sizeof(stepCount_p));
     file_l.read((char*)&player_p, sizeof(player_p));
     file_l.read((char*)&worldSize_p, sizeof(worldSize_p));
 
-	octopus::RandomGenerator rand_l(42);
+	octopus::RandomGenerator rand_l(seed_p);
 	octopus::Library lib_l;
 	std::list<octopus::Steppable *> spawners_l = WaveLevelSteps(lib_l, rand_l, 10, stepCount_p, player_p, worldSize_p, std::bind(genDialogStep, window_p));
 	std::list<octopus::Command *> commands_l = WaveLevelCommands(lib_l, rand_l, worldSize_p);
@@ -249,15 +252,17 @@ void replayWave(Window &window_p)
 void loadWave(Window &window_p)
 {
 	std::ifstream file_l("wave.fas", std::ios::in | std::ios::binary);
+	unsigned long seed_p;
 	unsigned long stepCount_p;
 	unsigned long player_p;
 	unsigned long worldSize_p;
 
+    file_l.read((char*)&seed_p, sizeof(seed_p));
     file_l.read((char*)&stepCount_p, sizeof(stepCount_p));
     file_l.read((char*)&player_p, sizeof(player_p));
     file_l.read((char*)&worldSize_p, sizeof(worldSize_p));
 
-	octopus::RandomGenerator rand_l(42);
+	octopus::RandomGenerator rand_l(seed_p);
 	octopus::Library lib_l;
 	std::list<octopus::Steppable *> spawners_l = WaveLevelSteps(lib_l, rand_l, 10, stepCount_p, player_p, worldSize_p, std::bind(genDialogStep, window_p));
 	std::list<octopus::Command *> commands_l = WaveLevelCommands(lib_l, rand_l, worldSize_p);

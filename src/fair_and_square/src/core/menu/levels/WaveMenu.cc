@@ -41,13 +41,13 @@ void waveMenu(cuttlefish::Window &window_p, bool &exit_p)
 	Picture * button_l = new Picture(window_p.loadTexture("resources/button.png"), 256, 64, {1, 1 ,1}, {1, 1, 1});
 	Text * text_l = new Text(&window_p, {0, 0, 0}, 0, 0);
 	text_l->setText("Play Wave Level (fast)");
-	menu_l.addButton(button_l, text_l, std::bind(fas::runWave, std::ref(window_p), 0.1*60*100, 0, 150));
+	menu_l.addButton(button_l, text_l, std::bind(fas::runWave, std::ref(window_p), 0.1*60*100, 0, 150, 42));
 }
 {
 	Picture * button_l = new Picture(window_p.loadTexture("resources/button.png"), 256, 64, {1, 1 ,1}, {1, 1, 1});
 	Text * text_l = new Text(&window_p, {0, 0, 0}, 0, 0);
 	text_l->setText("Play Wave Level (real)");
-	menu_l.addButton(button_l, text_l, std::bind(fas::runWave, std::ref(window_p), 3*60*100, 1, 150));
+	menu_l.addButton(button_l, text_l, std::bind(fas::runWave, std::ref(window_p), 3*60*100, 1, 150, 42));
 }
 {
 	Picture * button_l = new Picture(window_p.loadTexture("resources/button.png"), 256, 64, {1, 1 ,1}, {1, 1, 1});
