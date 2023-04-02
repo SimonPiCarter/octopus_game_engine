@@ -8,6 +8,8 @@
 // octopus
 #include "controller/Controller.hh"
 #include "state/State.hh"
+#include "state/vision/PatternHandler.hh"
+#include "step/team/TeamVisionStep.hh"
 #include "step/trigger/TriggerSpawn.hh"
 #include "library/Library.hh"
 #include "logger/Logger.hh"
@@ -39,6 +41,10 @@ void runShowcase(Window &window_p, std::list<octopus::Steppable *> &spawners_p, 
 	window_p.setWorldSize(worldSize_p);
 
 	World world_l(0);
+
+    octopus::PatternHandler handler_l;
+    spawners_p.push_back(new octopus::TeamVisionStep(0, handler_l.getPattern(2*worldSize_p), true, true));
+    spawners_p.push_back(new octopus::TeamVisionStep(0, handler_l.getPattern(2*worldSize_p), true, false));
 
 	FASStepVisitor visitor_l(window_p, world_l);
 	world_l.setCustomVisitor(&visitor_l);
@@ -75,7 +81,7 @@ void runAoeShowcase(cuttlefish::Window &window_p)
 			cuttlefish::Picture(window_p.loadTexture("resources/octopus.png"), 64, 64, {2}, {1}))
     );
 
-	runShowcase(window_p, spawners_l, commands_l, 250, lib_l);
+	runShowcase(window_p, spawners_l, commands_l, 100, lib_l);
 }
 
 void runChainingShowcase(cuttlefish::Window &window_p)
@@ -89,7 +95,7 @@ void runChainingShowcase(cuttlefish::Window &window_p)
 			cuttlefish::Picture(window_p.loadTexture("resources/octopus.png"), 64, 64, {2}, {1}))
     );
 
-	runShowcase(window_p, spawners_l, commands_l, 250, lib_l);
+	runShowcase(window_p, spawners_l, commands_l, 100, lib_l);
 }
 
 void runDotShowcase(cuttlefish::Window &window_p)
@@ -103,7 +109,7 @@ void runDotShowcase(cuttlefish::Window &window_p)
 			cuttlefish::Picture(window_p.loadTexture("resources/octopus.png"), 64, 64, {2}, {1}))
     );
 
-	runShowcase(window_p, spawners_l, commands_l, 250, lib_l);
+	runShowcase(window_p, spawners_l, commands_l, 100, lib_l);
 }
 
 void runLifestealShowcase(cuttlefish::Window &window_p)
@@ -117,7 +123,7 @@ void runLifestealShowcase(cuttlefish::Window &window_p)
 			cuttlefish::Picture(window_p.loadTexture("resources/octopus.png"), 64, 64, {2}, {1}))
     );
 
-	runShowcase(window_p, spawners_l, commands_l, 250, lib_l);
+	runShowcase(window_p, spawners_l, commands_l, 100, lib_l);
 }
 
 } // namespace cuttlefish
