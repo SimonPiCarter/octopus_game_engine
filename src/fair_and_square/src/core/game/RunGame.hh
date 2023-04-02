@@ -13,7 +13,7 @@ namespace cuttlefish
 
 namespace fas
 {
-    void runWave(cuttlefish::Window &window_p, unsigned long stepCount_p, unsigned long player_p, unsigned long worldSize_p);
+    void runWave(cuttlefish::Window &window_p, unsigned long stepCount_p, unsigned long player_p, unsigned long worldSize_p, unsigned long seed_p);
 
     void replayWave(cuttlefish::Window &window_p);
 
