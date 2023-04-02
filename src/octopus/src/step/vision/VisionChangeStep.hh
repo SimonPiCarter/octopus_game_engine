@@ -8,7 +8,7 @@
 namespace octopus
 {
 class Step;
-class VisionHandler;
+class PatternHandler;
 
 class VisionChangeStep : public Steppable
 {
@@ -37,7 +37,7 @@ private:
 };
 
 /// @brief create VisionChangeStep from given step
-std::list<VisionChangeStep *> newVisionChangeStep(State const &state_p, Step const &step_p, VisionHandler &handler_p);
+std::list<VisionChangeStep *> newVisionChangeStep(State const &state_p, Step const &step_p, long worldSize_p, PatternHandler &handler_p);
 
 }
 

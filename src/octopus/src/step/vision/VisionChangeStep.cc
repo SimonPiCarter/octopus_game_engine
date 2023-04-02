@@ -4,6 +4,7 @@
 #include "state/entity/Entity.hh"
 #include "state/model/entity/EntityModel.hh"
 #include "state/player/Player.hh"
+#include "state/vision/PatternHandler.hh"
 #include "state/vision/VisionGrid.hh"
 #include "step/entity/EntityMoveStep.hh"
 #include "step/Step.hh"
@@ -69,13 +70,10 @@ void VisionChangeStep::revert(State &state_p, SteppableData const *) const
 	}
 }
 
-std::list<VisionChangeStep *> newVisionChangeStep(State const &state_p, Step const &step_p, VisionHandler &handler_p)
+std::list<VisionChangeStep *> newVisionChangeStep(State const &state_p, Step const &step_p, long worldSize_p, PatternHandler &handler_p)
 {
 	std::unordered_map<unsigned long , std::unordered_map<size_t , std::unordered_map<size_t, long long> > > deltaPerTeam_l;
 	std::unordered_map<unsigned long , std::unordered_map<size_t , std::unordered_map<size_t, long long> > > deltaPerTeamExploration_l;
-
-	/// @todo remonter les patterns dans le vision handler
-	VisionGrid &grid_l = *handler_p.getGridFromTeam(state_p, 0);
 
 	std::vector<double> hitpoints_l;
 	std::vector<double> dead_l;
@@ -107,11 +105,11 @@ std::list<VisionChangeStep *> newVisionChangeStep(State const &state_p, Step con
 		{
 			continue;
 		}
-		VisionPattern const &pattern_l = grid_l.getPattern(ent_l->_model._lineOfSight);
+		VisionPattern const &pattern_l = handler_p.getPattern(ent_l->_model._lineOfSight);
 		for(std::pair<long, long> const &pair_l : pattern_l)
 		{
-			unsigned long x = std::max(0l, std::min<long>(to_int(pair_l.first+ent_l->_pos.x), grid_l.getSize()-1));
-			unsigned long y = std::max(0l, std::min<long>(to_int(pair_l.second+ent_l->_pos.y), grid_l.getSize()-1));
+			unsigned long x = std::max(0l, std::min<long>(to_int(pair_l.first+ent_l->_pos.x), worldSize_p-1));
+			unsigned long y = std::max(0l, std::min<long>(to_int(pair_l.second+ent_l->_pos.y), worldSize_p-1));
 
 			deltaPerTeam_l[team_l][x][y] -= 1;
 		}
@@ -133,23 +131,23 @@ std::list<VisionChangeStep *> newVisionChangeStep(State const &state_p, Step con
 		long dx = newx_l - to_int(ent_l->_pos.x);
 		long dy = newy_l - to_int(ent_l->_pos.y);
 
-		VisionPattern const &pattern_l = grid_l.getMovementPattern(ent_l->_model._lineOfSight, dx, dy);
+		VisionPattern const &pattern_l = handler_p.getMovementPattern(ent_l->_model._lineOfSight, dx, dy);
 
 		for(std::pair<long, long> const &pair_l : pattern_l)
 		{
-			unsigned long x = std::max(0l, std::min<long>(to_int(pair_l.first+newx_l), grid_l.getSize()-1));
-			unsigned long y = std::max(0l, std::min<long>(to_int(pair_l.second+newy_l), grid_l.getSize()-1));
+			unsigned long x = std::max(0l, std::min<long>(to_int(pair_l.first+newx_l), worldSize_p-1));
+			unsigned long y = std::max(0l, std::min<long>(to_int(pair_l.second+newy_l), worldSize_p-1));
 
 			deltaPerTeam_l[team_l][x][y] += 1;
 			deltaPerTeamExploration_l[team_l][x][y] += 1;
 		}
 
-		VisionPattern const &patternOpposite_l = grid_l.getMovementPattern(ent_l->_model._lineOfSight, -dx, -dy);
+		VisionPattern const &patternOpposite_l = handler_p.getMovementPattern(ent_l->_model._lineOfSight, -dx, -dy);
 
 		for(std::pair<long, long> const &pair_l : patternOpposite_l)
 		{
-			unsigned long x = std::max(0l, std::min<long>(to_int(pair_l.first+ent_l->_pos.x), grid_l.getSize()-1));
-			unsigned long y = std::max(0l, std::min<long>(to_int(pair_l.second+ent_l->_pos.y), grid_l.getSize()-1));
+			unsigned long x = std::max(0l, std::min<long>(to_int(pair_l.first+ent_l->_pos.x), worldSize_p-1));
+			unsigned long y = std::max(0l, std::min<long>(to_int(pair_l.second+ent_l->_pos.y), worldSize_p-1));
 
 			deltaPerTeam_l[team_l][x][y] -= 1;
 		}

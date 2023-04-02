@@ -1,6 +1,7 @@
 #ifndef __VisionHandler__
 #define __VisionHandler__
 
+#include "PatternHandler.hh"
 #include <vector>
 
 namespace octopus
@@ -51,10 +52,15 @@ public:
 
 	/// @brief gate the grid of the given team
 	VisionGrid * getGridFromTeam(const State &state_p, unsigned long team_p);
+
+	/// @brief return pattern handler
+	PatternHandler &getPatternHandler();
 protected:
 	unsigned long const _size;
 	/// @brief vision grid for every team
 	std::vector<VisionGrid *> _grid;
+
+	PatternHandler _patternHandler;
 };
 
 } // octopus

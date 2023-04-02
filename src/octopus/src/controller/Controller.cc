@@ -155,7 +155,8 @@ bool Controller::loop_body()
 	if(_backState->_stepHandled < _ongoingStep - 1)
 	{
 		upToDate_l = false;
-		Logger::getDebug() << "step back state on step "<< _backState->_stepHandled << " " <<_backState->_state->_id<< std::endl;
+		State *state_l = _backState->_state;
+		Logger::getDebug() << "step back state on step "<< _backState->_stepHandled << " " <<state_l->_id<< std::endl;
 		// increment number of step hadled
 		++_backState->_stepHandled;
 
@@ -166,26 +167,26 @@ bool Controller::loop_body()
 			Step &step_l = *_stepBundles.back()._step;
 
 			// if step was not handled already
-			Logger::getDebug() << "compiling step " << _backState->_stepHandled << " on state "<<_backState->_state->_id<< std::endl;
+			Logger::getDebug() << "compiling step " << _backState->_stepHandled << " on state "<<state_l->_id<< std::endl;
 
 			const std::chrono::time_point<std::chrono::steady_clock> start_l = std::chrono::steady_clock::now();
 
 			_pathManager.joinCompute();
 
 			// apply all commands
-			for(Commandable * cmdable_l : _backState->_state->getEntities())
+			for(Commandable * cmdable_l : state_l->getEntities())
 			{
 				if(cmdable_l->isActive())
 				{
-					cmdable_l->runCommands(step_l, *_backState->_state, _pathManager);
+					cmdable_l->runCommands(step_l, *state_l, _pathManager);
 				}
 			}
 
-			for(auto &&pair_l : _backState->_state->getFlyingCommands())
+			for(auto &&pair_l : state_l->getFlyingCommands())
 			{
 				FlyingCommandBundle const & cmd_l = pair_l.second;
 				// if over remove it
-				if(cmd_l._cmd->applyCommand(step_l, *_backState->_state, cmd_l._data, _pathManager))
+				if(cmd_l._cmd->applyCommand(step_l, *state_l, cmd_l._data, _pathManager))
 				{
 					step_l.addSteppable(new FlyingCommandPopStep(cmd_l._cmd));
 				}
@@ -200,34 +201,34 @@ bool Controller::loop_body()
 			}
 			for(Command * cmd_l : *commands_l)
 			{
-				cmd_l->registerCommand(step_l, *_backState->_state);
+				cmd_l->registerCommand(step_l, *state_l);
 			}
 
-			Logger::getDebug() << "processing step " << _backState->_stepHandled << " on state "<<_backState->_state->_id<< std::endl;
+			Logger::getDebug() << "processing step " << _backState->_stepHandled << " on state "<<state_l->_id<< std::endl;
 
 			if(_orcaCollision)
 			{
 				// test should reset based on last bacause we want to update the manager on the current state
 				// therefore we need to check on the step just applied
-				if(OrcaManager::ShouldReset(_orcaManager, *_backState->_state, *step_l.getPrev()))
+				if(OrcaManager::ShouldReset(_orcaManager, *state_l, *step_l.getPrev()))
 				{
 					delete _orcaManager;
 					_orcaManager = new OrcaManager(1, 5., 10, 10., 10.);
-					_orcaManager->resetFromState(*_backState->_state);
-					_orcaManager->setupStep(*_backState->_state, step_l);
+					_orcaManager->resetFromState(*state_l);
+					_orcaManager->setupStep(*state_l, step_l);
 					_orcaManager->doStep();
-					_orcaManager->commitStep(*_backState->_state, step_l);
+					_orcaManager->commitStep(*state_l, step_l);
 				}
 				else
 				{
-					_orcaManager->setupStep(*_backState->_state, step_l);
+					_orcaManager->setupStep(*state_l, step_l);
 					_orcaManager->doStep();
-					_orcaManager->commitStep(*_backState->_state, step_l);
+					_orcaManager->commitStep(*state_l, step_l);
 				}
 			}
 			else
 			{
-				for(size_t i = 0; i < 1 && octopus::updateStepFromConflictPosition(step_l, *_backState->_state) ; ++ i) {}
+				for(size_t i = 0; i < 1 && octopus::updateStepFromConflictPosition(step_l, *state_l) ; ++ i) {}
 			}
 
 			// push new triggers
@@ -235,9 +236,9 @@ bool Controller::loop_body()
 			{
 				step_l.addSteppable(new TriggerSpawn(trigger_l));
 			}
-			handleTriggers(*_backState->_state, step_l, getStepBeforeLastCompiledStep());
+			handleTriggers(*state_l, step_l, getStepBeforeLastCompiledStep());
 
-			std::list<VisionChangeStep *> list_l = newVisionChangeStep(*_backState->_state, step_l, _backState->_state->getVisionHandler());
+			std::list<VisionChangeStep *> list_l = newVisionChangeStep(*state_l, step_l, state_l->getWorldSize(), state_l->getVisionHandler().getPatternHandler());
 			std::for_each(list_l.begin(), list_l.end(), std::bind(&Step::addSteppable, &step_l, std::placeholders::_1));
 
 			octopus::compact(step_l);
@@ -270,7 +271,7 @@ bool Controller::loop_body()
 			}
 
 			// compute paths (update grid)
-			_pathManager.initFromGrid(_backState->_state->getPathGrid().getInternalGrid(), _backState->_state->getPathGridStatus());
+			_pathManager.initFromGrid(state_l->getPathGrid().getInternalGrid(), state_l->getPathGridStatus());
 			_pathManager.startCompute(5000);
 
 			// Prepare next step
@@ -291,22 +292,22 @@ bool Controller::loop_body()
 			}
 		}
 
-		Logger::getDebug() << "apply step" << " "<<_backState->_state->_id<< std::endl;
+		Logger::getDebug() << "apply step" << " "<<state_l->_id<< std::endl;
 
 		const std::chrono::time_point<std::chrono::steady_clock> start_l = std::chrono::steady_clock::now();
 
 		// apply step
-		apply(*(_backState->_stepIt->_step), *_backState->_state, *(_backState->_stepIt->_stepData));
+		apply(*(_backState->_stepIt->_step), *state_l, *(_backState->_stepIt->_stepData));
 		// increment iterator
 		++_backState->_stepIt;
 
 		// update metrics
-		updateStateMetrics(_metrics, *_backState->_state);
+		updateStateMetrics(_metrics, *state_l);
 		_metrics._nbStepsApplied += 1;
 		_metrics._timeApplyingSteps += std::chrono::nanoseconds( std::chrono::steady_clock::now() - start_l ).count();
 
 		// update last handled step
-		Logger::getDebug() << "last handled step = " << _backState->_stepHandled << " for state "<<_backState->_state->_id<< std::endl;
+		Logger::getDebug() << "last handled step = " << _backState->_stepHandled << " for state "<<state_l->_id<< std::endl;
 	}
 
 	{
