@@ -83,6 +83,7 @@ public:
 	virtual void visit(StateTemplePositionAddStep const *) override {}
 	virtual void visit(StateTemplePositionRemoveStep const *) {}
 	virtual void visit(StateWinStep const *) {}
+	virtual void visit(TeamVisionStep const *) {}
 	virtual void visit(TickingStep const *) {}
 	virtual void visit(TimerDataUpdateStep const *) {}
 	virtual void visit(TriggerCountChange const *) {}

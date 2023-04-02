@@ -93,6 +93,7 @@ namespace octopus
 	class StateTemplePositionAddStep;
 	class StateTemplePositionRemoveStep;
 	class StateWinStep;
+	class TeamVisionStep;
 	class TickingStep;
 	class TimerDataUpdateStep;
 	class TriggerCountChange;
@@ -175,6 +176,7 @@ namespace octopus
 			virtual void visit(StateTemplePositionAddStep const *steppable_p) = 0;
 			virtual void visit(StateTemplePositionRemoveStep const *steppable_p) = 0;
 			virtual void visit(StateWinStep const *steppable_p) = 0;
+			virtual void visit(TeamVisionStep const *steppable_p) = 0;
 			virtual void visit(TickingStep const *steppable_p) = 0;
 			virtual void visit(TimerDataUpdateStep const *steppable_p) = 0;
 			virtual void visit(TriggerCountChange const *steppable_p) = 0;

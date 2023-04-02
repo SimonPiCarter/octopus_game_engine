@@ -111,6 +111,7 @@ add_library(octopus
 	${CMAKE_CURRENT_SOURCE_DIR}/src/step/state/StateTemplePositionAddStep.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/step/state/StateTemplePositionRemoveStep.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/step/state/StateWinStep.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/src/step/team/TeamVisionStep.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/step/trigger/TriggerCountChange.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/step/trigger/TriggerEnableChange.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/step/trigger/TriggerEntityAddStep.cc
