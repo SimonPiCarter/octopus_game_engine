@@ -15,7 +15,7 @@
 #include "utils/Vector.hh"
 #include "utils/DynamicBitset.hh"
 #include "utils/Box.hh"
-#include "utils/RandomGen.hh"
+#include "utils/RandomGenerator.hh"
 
 namespace octopus
 {

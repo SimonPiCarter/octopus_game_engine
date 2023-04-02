@@ -9,10 +9,10 @@
 
 #include "library/model/bonus/BuffGenerators.hh"
 
-AnchorTrigger::AnchorTrigger(octopus::Library const &lib_p) :
+AnchorTrigger::AnchorTrigger(octopus::Library const &lib_p, octopus::RandomGenerator &rand_p) :
     octopus::OnEachTrigger(new octopus::ListenerEntityModelFinished(&lib_p.getBuildingModel("anchor"), 0)),
     _player(0),
-    _gen(42)
+    _rand(rand_p)
 {}
 
 void AnchorTrigger::trigger(octopus::State const &state_p, octopus::Step &step_p, unsigned long, octopus::TriggerData const &) const
@@ -25,15 +25,14 @@ void AnchorTrigger::trigger(octopus::State const &state_p, octopus::Step &step_p
     std::vector<Option> options_l;
     for(size_t i = 0 ; i < 3 ; ++ i )
     {
-        std::uniform_int_distribution<> distType_l(0, 1);
-        int type_l = distType_l(_gen);
+        int type_l = _rand.roll(0, 1);
         if(type_l == 0)
         {
-            options_l.push_back(generateRandomBuffOption(_gen, id_l));
+            options_l.push_back(generateRandomBuffOption(_rand, id_l));
         }
         else
         {
-            options_l.push_back(generateRandomModifierOption(_gen));
+            options_l.push_back(generateRandomModifierOption(_rand));
         }
     }
 

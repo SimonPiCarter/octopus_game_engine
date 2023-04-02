@@ -1,13 +1,13 @@
 #ifndef __BuffGenerators__
 #define __BuffGenerators__
 
-#include <random>
 #include <variant>
 #include <vector>
 
 #include "state/player/StepOptionsGenerator.hh"
 #include "state/entity/Buff.hh"
 #include "state/entity/attackModifier/AttackModifier.hh"
+#include "utils/RandomGenerator.hh"
 
 struct BuffOption
 {
@@ -37,8 +37,8 @@ public:
     std::vector<Option> const _options;
 };
 
-BuffOption generateRandomBuffOption(std::mt19937 &_gen, std::string const &id_p);
+BuffOption generateRandomBuffOption(octopus::RandomGenerator &gen_p, std::string const &id_p);
 
-ModifierOption generateRandomModifierOption(std::mt19937 &_gen);
+ModifierOption generateRandomModifierOption(octopus::RandomGenerator &gen_p);
 
 #endif

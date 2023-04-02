@@ -48,6 +48,8 @@ target_sources (unit_tests
 	src/moveCommand.test.cc
 	src/playerBuffAllStep.test.cc
 	src/queueCommand.test.cc
+	src/random.test.cc
+	src/random.test.cc
 	src/resourceSpentSimultaneous.test.cc
 	src/spawningGrid.test.cc
 	src/stateDrawStep.test.cc

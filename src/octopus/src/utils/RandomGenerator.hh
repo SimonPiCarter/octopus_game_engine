@@ -1,8 +1,29 @@
 #ifndef __RandomGen__
 #define __RandomGen__
 
+#include <boost/random/mersenne_twister.hpp>
+#include <boost/random/uniform_int_distribution.hpp>
+
 namespace octopus
 {
+
+/// @brief this class is unique per game and allow consistent random generation using boost since std is not platform independant
+class RandomGenerator
+{
+public:
+	RandomGenerator(unsigned long seed_p) : _gen(seed_p) {}
+
+	int roll(int min_p, int max_p)
+	{
+		boost::random::uniform_int_distribution<> distModel_l(min_p, max_p);
+		return distModel_l(_gen);
+	}
+
+private:
+	boost::random::mt19937 _gen;
+};
+
+
 /// @brief implement Xoshiro128+ from https://thompsonsed.co.uk/random-number-generators-for-c-performance-tested
 class RandomGen
 {
