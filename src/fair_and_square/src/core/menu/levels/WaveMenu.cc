@@ -8,6 +8,7 @@
 #include "window/Window.hh"
 
 #include "core/game/RunGame.hh"
+#include "core/game/RunLevel1.hh"
 
 using namespace cuttlefish;
 
@@ -37,6 +38,12 @@ void waveMenu(cuttlefish::Window &window_p, bool &exit_p)
 	Picture octopus_l(window_p.loadTexture("resources/octopus.png"), 64, 64, {2}, {1});
 	octopus_l.setDestination(window_p.getWidth()-150, window_p.getHeight()-150, 128, 128);
 
+{
+	Picture * button_l = new Picture(window_p.loadTexture("resources/button.png"), 256, 64, {1, 1 ,1}, {1, 1, 1});
+	Text * text_l = new Text(&window_p, {0, 0, 0}, 0, 0);
+	text_l->setText("Play Level 1");
+	menu_l.addButton(button_l, text_l, std::bind(fas::runLevel1, std::ref(window_p), 5*60*100, 150, 42));
+}
 {
 	Picture * button_l = new Picture(window_p.loadTexture("resources/button.png"), 256, 64, {1, 1 ,1}, {1, 1, 1});
 	Text * text_l = new Text(&window_p, {0, 0, 0}, 0, 0);

@@ -9,16 +9,17 @@
 
 #include "library/model/bonus/BuffGenerators.hh"
 
-AnchorTrigger::AnchorTrigger(octopus::Library const &lib_p, octopus::RandomGenerator &rand_p) :
+AnchorTrigger::AnchorTrigger(octopus::Library const &lib_p, octopus::RandomGenerator &rand_p, double bonus_p) :
     octopus::OnEachTrigger(new octopus::ListenerEntityModelFinished(&lib_p.getBuildingModel("anchor"), 0)),
     _player(0),
-    _rand(rand_p)
+    _rand(rand_p),
+    _bonus(bonus_p)
 {}
 
 void AnchorTrigger::trigger(octopus::State const &state_p, octopus::Step &step_p, unsigned long, octopus::TriggerData const &) const
 {
     std::map<octopus::ResourceType, double> map_l;
-    map_l[octopus::ResourceType::Anchor] = -240;
+    map_l[octopus::ResourceType::Anchor] = -_bonus;
     step_p.addSteppable(new octopus::PlayerSpendResourceStep(_player, map_l));
 
     std::string id_l = std::to_string(state_p.getPathGridStatus());
