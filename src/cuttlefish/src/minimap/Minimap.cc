@@ -120,8 +120,8 @@ void Minimap::render(octopus::State const &state_p, World const &world_p, Window
 	SDL_Rect cam_l;
 	cam_l.x = _x + to_double(window_p.getWorldVector(0, 0).x)*_w/state_p.getWorldSize();
 	cam_l.y = _y + to_double(window_p.getWorldVector(0, 0).y)*_h/state_p.getWorldSize();
-	cam_l.w = to_double(window_p.getWindowSize().x)*_w/state_p.getWorldSize();
-	cam_l.h = to_double(window_p.getWindowSize().y)*_h/state_p.getWorldSize();
+	cam_l.w = std::min<double>(_w, to_double(window_p.getWindowSize().x)*_w/state_p.getWorldSize());
+	cam_l.h = std::min<double>(_h, to_double(window_p.getWindowSize().y)*_h/state_p.getWorldSize());
 	SDL_SetRenderDrawColor(window_p.getRenderer(), 255, 255, 255, 255);
 	SDL_RenderDrawRect(window_p.getRenderer(), &cam_l);
 }
