@@ -108,7 +108,6 @@ void ChoicePanel::updateCurrent()
 	}
 	_optionsTexts.clear();
 
-	/// @todo update visuals
 	if(_queuedOptions.size() > 0)
 	{
 		_options = _queuedOptions.front();
