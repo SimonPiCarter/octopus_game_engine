@@ -19,7 +19,8 @@ Dialog * DialogManager::nextDialog(Window &window_p)
         Picture(window_p.loadTexture("resources/fair_and_square/panel.png"), 276, 276, {1}, {1}),
         step_l->_name,
         step_l->_text,
-        step_l->_picture);
+        step_l->_picture,
+        step_l->_return);
     _steps.pop_front();
     return dialog_l;
 }

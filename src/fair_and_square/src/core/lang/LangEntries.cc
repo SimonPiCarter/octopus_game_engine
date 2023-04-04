@@ -47,6 +47,7 @@ LangEntries::LangEntries()
 
     _mapEntries["Show Anchor"] = "Anchor is low!";
     _mapEntries["Show Anchor main"] = "In one minute you won't have any anchor to maintain the gate to \"there\". $$ You need to build an achor on the anchor spot showing on the map. $$ Be careful! It is guarded!";
+    _mapEntries["press return"] = "Press Return to continue...";
 }
 
 } // namespace fas

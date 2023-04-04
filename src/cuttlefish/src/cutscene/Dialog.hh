@@ -18,7 +18,7 @@ class Dialog
 {
 public:
 	Dialog(Window* window_p, int x, int y, Picture const & background_p,
-        std::string const &name_p, std::string const &text_p, Picture const & icon_p);
+        std::string const &name_p, std::string const &text_p, Picture const & icon_p, std::string const &return_p);
 	~Dialog();
 
 	/// @brief display Dialog
@@ -31,6 +31,7 @@ private:
     Text _textName;
     WrappedText _textDescription;
     Picture _icon;
+    Text _textReturn;
 };
 } // namespace cuttlefish
 

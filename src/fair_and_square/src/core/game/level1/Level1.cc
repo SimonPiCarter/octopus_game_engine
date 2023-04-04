@@ -76,7 +76,7 @@ public:
 
 		step_p.addSteppable(
 			new cuttlefish::DialogStep(LangEntries::GetInstance()->getEntry("Show Anchor"), LangEntries::GetInstance()->getEntry("Show Anchor main"),
-				cuttlefish::Picture(_window.loadTexture("resources/octopus.png"), 64, 64, {2}, {1}))
+				cuttlefish::Picture(_window.loadTexture("resources/octopus.png"), 64, 64, {2}, {1}), LangEntries::GetInstance()->getEntry("press return"))
 		);
 	}
 private:

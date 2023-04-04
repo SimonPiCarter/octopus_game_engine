@@ -233,9 +233,7 @@ void GameLoop::runLoop(Window &window_p)
 			if(dialog_l)
 			{
 				// end dialog
-				if ((e.type == SDL_MOUSEBUTTONDOWN
-					&& dialog_l->getBackground().isInside(window_p, e.button.x, e.button.y))
-				|| e.type == SDL_KEYDOWN)
+				if(e.type == SDL_KEYDOWN && (e.key.keysym.sym == SDLK_RETURN || e.key.keysym.sym == SDLK_KP_ENTER))
 				{
 					delete dialog_l;
 					dialog_l = nullptr;
