@@ -46,7 +46,7 @@ LangEntries::LangEntries()
     _mapEntries["wave_incoming_second"] = "The next wave is going to come in 3 minutes.";
 
     _mapEntries["Show Anchor"] = "Anchor is low!";
-    _mapEntries["Show Anchor main"] = "In one minute you won't have any anchor to maintain the gate to \"there\". $$ You need to build an achor on the anchor spot showing on the map. $$ Be careful! It is guarded!";
+    _mapEntries["Show Anchor main"] = "In one minute you won't have any anchor to maintain the gate to \"there\". $$ You need to build an anchor on the anchor spot showing on the map. $$ Be careful! It is guarded!";
     _mapEntries["press return"] = "Press Return to continue...";
 }
 
