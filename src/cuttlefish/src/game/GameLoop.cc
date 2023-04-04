@@ -239,7 +239,7 @@ void GameLoop::runLoop(Window &window_p)
 				}
 			}
 
-			if( e.type == SDL_MOUSEMOTION )
+			if( e.type == SDL_MOUSEMOTION && !dialog_l )
 			{
 				dX = 0;
 				dY = 0;
@@ -286,7 +286,7 @@ void GameLoop::runLoop(Window &window_p)
 					y = to_double(pos_l.y);
 				}
 			}
-			if (e.type == SDL_MOUSEBUTTONDOWN)
+			if (e.type == SDL_MOUSEBUTTONDOWN && !dialog_l)
 			{
 				if(_prodPanel.getIndex(window_p, e.button.x, e.button.y)._inside)
 				{
@@ -310,7 +310,7 @@ void GameLoop::runLoop(Window &window_p)
 					clicStartedOnScreen_l = true;
 				}
 			}
-			if (e.type == SDL_MOUSEBUTTONUP)
+			if (e.type == SDL_MOUSEBUTTONUP && !dialog_l)
 			{
 				IndexProductionClic indexProd_l = _prodPanel.getIndex(window_p, e.button.x, e.button.y);
 				if(indexProd_l._inside)
