@@ -4,10 +4,17 @@
 #include <fstream>
 #include <random>
 
+// fas
+#include "core/lang/LangEntries.hh"
 #include "library/model/AnchorTrigger.hh"
 #include "library/model/ModelLoader.hh"
 #include "library/model/TimerDamage.hh"
 
+// cuttlefish
+#include "window/Window.hh"
+#include "world/World.hh"
+
+// octopus
 #include "controller/trigger/Listener.hh"
 #include "command/entity/EntityAttackMoveCommand.hh"
 #include "command/spawner/AreaSpawnerCommand.hh"
@@ -56,7 +63,28 @@ std::string genModelName(RandomGenerator &gen_p)
 	return model_l;
 }
 
-std::list<Steppable *> WaveLevelSteps(Library &lib_p, RandomGenerator &rand_p, unsigned long waveCount_p, unsigned long stepCount_p, unsigned long worldSize_p,
+
+class VisionTrigger : public octopus::OneShotTrigger
+{
+public:
+	VisionTrigger(cuttlefish::Window &window_p, octopus::VisionPattern const &pattern_p) : OneShotTrigger({new octopus::ListenerStepCount(120)}), _window(window_p), _pattern(pattern_p) {}
+
+	virtual void trigger(State const &state_p, Step &step_p, unsigned long, TriggerData const &) const override
+	{
+		step_p.addSteppable(new octopus::TeamVisionStep(0, _pattern, true, true));
+		step_p.addSteppable(new octopus::TeamVisionStep(0, _pattern, true, false));
+
+		step_p.addSteppable(
+			new cuttlefish::DialogStep(LangEntries::GetInstance()->getEntry("Show Anchor"), LangEntries::GetInstance()->getEntry("Show Anchor main"),
+				cuttlefish::Picture(_window.loadTexture("resources/octopus.png"), 64, 64, {2}, {1}))
+		);
+	}
+private:
+	cuttlefish::Window &_window;
+	octopus::VisionPattern const _pattern;
+};
+
+std::list<Steppable *> WaveLevelSteps(cuttlefish::Window &window_p, Library &lib_p, RandomGenerator &rand_p, unsigned long waveCount_p, unsigned long stepCount_p, unsigned long worldSize_p,
 	std::function<std::vector<octopus::Steppable *>(void)> waveStepGenerator_p)
 {
 	loadModels(lib_p);
@@ -120,9 +148,8 @@ std::list<Steppable *> WaveLevelSteps(Library &lib_p, RandomGenerator &rand_p, u
 		new TriggerSpawn(triggerWave_l),
 		new TriggerSpawn(triggerLose_l),
 		new TriggerSpawn(new AnchorTrigger(lib_p, rand_p, 60)),
+		new TriggerSpawn(new VisionTrigger(window_p, pattern_l)),
 		new FlyingCommandSpawnStep(new TimerDamage(0, 100, 0, 0, octopus::ResourceType::Anchor, 0)),
-		new octopus::TeamVisionStep(0, pattern_l, true, true),
-		new octopus::TeamVisionStep(0, pattern_l, true, false),
 	};
 
 	return spawners_l;
@@ -174,8 +201,8 @@ std::list<Command *> WaveLevelCommands(Library &lib_p, RandomGenerator &rand_p, 
 			}
 			AreaSpawn area_l;
 			area_l.size = areSize_l;
-			area_l.x = 5 + area_l.size*x;
-			area_l.y = 5 + area_l.size*y;
+			area_l.x = 15 + area_l.size*x;
+			area_l.y = 15 + area_l.size*y;
 			area_l.entities.emplace_back(new Resource(res3_l), 1);
 			area_l.entities.emplace_back(new Resource(res2_l), 1);
 			area_l.entities.emplace_back(new Building(anchorSpot_l), 1);

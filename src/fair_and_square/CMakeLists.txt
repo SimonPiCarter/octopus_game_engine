@@ -14,7 +14,6 @@ add_library(fair_and_square_lib
 	${CMAKE_CURRENT_SOURCE_DIR}/src/library/model/TimerDamage.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/library/model/bonus/BuffGenerators.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/library/levels/ArenaLevel.cc
-	${CMAKE_CURRENT_SOURCE_DIR}/src/library/levels/Level1.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/library/levels/MazeLevel.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/library/levels/WaveLevel.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/library/levels/showcase/AoeShowcase.cc
@@ -47,6 +46,7 @@ if(GRAPHICS)
 		${CMAKE_CURRENT_SOURCE_DIR}/src/core/game/RunLevel1.cc
 		${CMAKE_CURRENT_SOURCE_DIR}/src/core/game/RunnerHelpers.cc
 		${CMAKE_CURRENT_SOURCE_DIR}/src/core/game/showcase/RunShowcase.cc
+		${CMAKE_CURRENT_SOURCE_DIR}/src/core/game/level1/Level1.cc
 		${CMAKE_CURRENT_SOURCE_DIR}/src/core/lang/LangEntries.cc
 
 		${CMAKE_CURRENT_SOURCE_DIR}/src/core/menu/MainMenu.cc

@@ -16,6 +16,11 @@ namespace octopus
 	class Steppable;
 } // namespace octopus
 
+namespace cuttlefish
+{
+	class Window;
+} // namespace cuttlefish
+
 namespace fas
 {
 namespace level1
@@ -23,7 +28,7 @@ namespace level1
 
 std::vector<octopus::Steppable*> defaultGenerator();
 
-std::list<octopus::Steppable *> WaveLevelSteps(octopus::Library &lib_p, octopus::RandomGenerator &rand_p, unsigned long waveCount_p, unsigned long stepCount_p, unsigned long worldSize_p,
+std::list<octopus::Steppable *> WaveLevelSteps(cuttlefish::Window &window_p, octopus::Library &lib_p, octopus::RandomGenerator &rand_p, unsigned long waveCount_p, unsigned long stepCount_p, unsigned long worldSize_p,
 	std::function<std::vector<octopus::Steppable *>(void)> waveStepGenerator_p=defaultGenerator);
 std::list<octopus::Command *> WaveLevelCommands(octopus::Library &lib_p, octopus::RandomGenerator &rand_p, unsigned long worldSize_p);
 
