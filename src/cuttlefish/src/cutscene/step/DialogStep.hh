@@ -7,7 +7,7 @@
 
 namespace cuttlefish
 {
-/// @brief this is a place holder step to allow step overrinding
+/// @brief this step pops a dialog
 class DialogStep : public octopus::CustomStep
 {
 public:

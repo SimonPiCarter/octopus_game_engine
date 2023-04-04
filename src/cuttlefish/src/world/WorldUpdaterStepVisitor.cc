@@ -9,6 +9,7 @@
 #include "panel/StatsPanel.hh"
 #include "panel/DivinityPanel.hh"
 #include "cutscene/step/DialogStep.hh"
+#include "cutscene/step/CameraStep.hh"
 
 // octopus
 #include "command/data/AttackMoveData.hh"
@@ -192,6 +193,14 @@ void WorldUpdaterStepVisitor::visit(octopus::CustomStep const *steppable_p)
 	if(dialogSteppable_l)
 	{
 		_world._dialogManager.addDialogStep(dialogSteppable_l);
+	}
+	cuttlefish::CameraStep const * cameraSteppable_l = dynamic_cast<cuttlefish::CameraStep const *>(steppable_p);
+	if(cameraSteppable_l)
+	{
+		octopus::Vector size_l = _window.getWindowSize();
+		octopus::Vector vec_l = _window.getPixelVector(cameraSteppable_l->_x - octopus::to_int(size_l.x/2.), cameraSteppable_l->_y - octopus::to_int(size_l.y/2.));
+		_x = octopus::to_double(vec_l.x);
+		_y = octopus::to_double(vec_l.y);
 	}
 }
 

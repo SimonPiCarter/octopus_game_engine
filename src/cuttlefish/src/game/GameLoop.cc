@@ -199,8 +199,7 @@ void GameLoop::runLoop(Window &window_p)
 		// query a new state if available
 		octopus::StateAndSteps stateAndSteps_l = _controller.queryStateAndSteps();
 		octopus::State const &state_l = *stateAndSteps_l._state;
-		_world.handleStep(window_p, _panel, _statsPanel, _optionPanel, stateAndSteps_l, _spriteLibrary);
-
+		_world.handleStep(window_p, _panel, _statsPanel, _optionPanel, stateAndSteps_l, _spriteLibrary, x, y);
 
 		// quit loop if state is over
 		if(state_l.isOver())

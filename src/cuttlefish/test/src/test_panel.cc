@@ -294,7 +294,7 @@ int main( int argc, char* args[] )
 		// query a new state if available
 		octopus::StateAndSteps stateAndSteps_l = controller_l.queryStateAndSteps();
 		octopus::State const &state_l = *stateAndSteps_l._state;
-		world_l.handleStep(window_l, panel_l, statsPanel_l, divPanel_l, stateAndSteps_l, spriteLib_l);
+		world_l.handleStep(window_l, panel_l, statsPanel_l, divPanel_l, stateAndSteps_l, spriteLib_l, x, y);
 
 		//Handle events on queue
 		while( SDL_PollEvent( &e ) != 0 )

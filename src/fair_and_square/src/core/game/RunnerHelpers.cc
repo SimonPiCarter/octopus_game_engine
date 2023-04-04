@@ -173,7 +173,10 @@ void loadGame(std::ifstream &file_p, Window &window_p, std::list<octopus::Steppa
 	{
 		octopus::StateAndSteps stateAndSteps_l = controller_l.queryStateAndSteps();
 		octopus::State const &state_l = *stateAndSteps_l._state;
-		world_l.handleStep(window_p, loader_l._panel, loader_l._statsPanel, loader_l._choicePanel, stateAndSteps_l, loader_l._spriteLib);
+		double x = 0;
+		double y = 0;
+		world_l.handleStep(window_p, loader_l._panel, loader_l._statsPanel, loader_l._choicePanel, stateAndSteps_l, loader_l._spriteLib, x, y);
+		window_p.setCamera(x, y);
 	}
 
 	auto cur_l = std::chrono::steady_clock::now();

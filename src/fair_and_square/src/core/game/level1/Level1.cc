@@ -13,6 +13,8 @@
 // cuttlefish
 #include "window/Window.hh"
 #include "world/World.hh"
+#include "cutscene/step/CameraStep.hh"
+#include "cutscene/step/DialogStep.hh"
 
 // octopus
 #include "controller/trigger/Listener.hh"
@@ -67,6 +69,7 @@ std::string genModelName(RandomGenerator &gen_p)
 class VisionTrigger : public octopus::OneShotTrigger
 {
 public:
+	/// @todo set 1200
 	VisionTrigger(cuttlefish::Window &window_p, octopus::VisionPattern const &pattern_p) : OneShotTrigger({new octopus::ListenerStepCount(120)}), _window(window_p), _pattern(pattern_p) {}
 
 	virtual void trigger(State const &state_p, Step &step_p, unsigned long, TriggerData const &) const override
@@ -74,6 +77,8 @@ public:
 		step_p.addSteppable(new octopus::TeamVisionStep(0, _pattern, true, true));
 		step_p.addSteppable(new octopus::TeamVisionStep(0, _pattern, true, false));
 
+
+		step_p.addSteppable(new cuttlefish::CameraStep(45, 45));
 		step_p.addSteppable(
 			new cuttlefish::DialogStep(LangEntries::GetInstance()->getEntry("Show Anchor"), LangEntries::GetInstance()->getEntry("Show Anchor main"),
 				cuttlefish::Picture(_window.loadTexture("resources/octopus.png"), 64, 64, {2}, {1}), LangEntries::GetInstance()->getEntry("press return"))
