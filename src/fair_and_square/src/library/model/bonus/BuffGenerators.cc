@@ -6,20 +6,20 @@
 
 using namespace octopus;
 
-Steppable * genStep(unsigned long player_p, BuffOption const &option_p)
+Steppable * genStep(BuffOption const &option_p)
 {
-    return new PlayerBuffAllStep(player_p, option_p._buff, option_p._model);
+    return new PlayerBuffAllStep(option_p._player, option_p._buff, option_p._model);
 }
 
-Steppable * genStep(unsigned long player_p, ModifierOption const &option_p)
+Steppable * genStep(ModifierOption const &option_p)
 {
-    return new PlayerAttackModAllStep(player_p, option_p._mod, option_p._model);
+    return new PlayerAttackModAllStep(option_p._player, option_p._mod, option_p._model);
 }
 
-std::vector<Steppable *> BuffGenerator::getSteppables(unsigned long options_p, unsigned long player_p) const
+std::vector<Steppable *> BuffGenerator::getSteppables(unsigned long options_p) const
 {
     std::vector<Steppable *> steps_l;
-    std::visit([&steps_l, &player_p](auto &&arg) { steps_l.push_back(genStep(player_p, arg)); }, _options.at(options_p));
+    std::visit([&steps_l](auto &&arg) { steps_l.push_back(genStep(arg)); }, _options.at(options_p));
     return steps_l;
 }
 
@@ -41,11 +41,12 @@ std::string generateRandomModel(RandomGenerator &gen_p)
     }
 }
 
-BuffOption generateRandomBuffOption(RandomGenerator &gen_p, std::string const &id_p)
+BuffOption generateRandomBuffOption(unsigned long player_p, RandomGenerator &gen_p, std::string const &id_p)
 {
     int type_l = gen_p.roll(0, 6);
 
     BuffOption option_l;
+    option_l._player = player_p;
 
     if(type_l == 0)
     {
@@ -114,9 +115,10 @@ BuffOption generateRandomBuffOption(RandomGenerator &gen_p, std::string const &i
     return option_l;
 }
 
-ModifierOption generateRandomModifierOption(RandomGenerator &gen_p)
+ModifierOption generateRandomModifierOption(unsigned long player_p, RandomGenerator &gen_p)
 {
     ModifierOption option_l;
+    option_l._player = player_p;
 
     option_l._model = generateRandomModel(gen_p);
 

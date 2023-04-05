@@ -11,12 +11,14 @@
 
 struct BuffOption
 {
+    unsigned long _player;
     octopus::TyppedBuff _buff;
     std::string _model;
 };
 
 struct ModifierOption
 {
+    unsigned long _player;
     octopus::AttackModifier _mod;
     std::string _model;
 };
@@ -30,15 +32,15 @@ public:
 
     virtual StepOptionsGenerator* newCopy() const override { return new BuffGenerator(_options); }
 
-    virtual std::vector<octopus::Steppable *> getSteppables(unsigned long options_p, unsigned long player_p) const override;
+    virtual std::vector<octopus::Steppable *> getSteppables(unsigned long options_p) const override;
 
     virtual unsigned long getNumOptions() const override { return _options.size(); }
 
     std::vector<Option> const _options;
 };
 
-BuffOption generateRandomBuffOption(octopus::RandomGenerator &gen_p, std::string const &id_p);
+BuffOption generateRandomBuffOption(unsigned long player_p, octopus::RandomGenerator &gen_p, std::string const &id_p);
 
-ModifierOption generateRandomModifierOption(octopus::RandomGenerator &gen_p);
+ModifierOption generateRandomModifierOption(unsigned long player_p, octopus::RandomGenerator &gen_p);
 
 #endif

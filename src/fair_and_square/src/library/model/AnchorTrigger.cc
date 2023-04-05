@@ -29,11 +29,11 @@ void AnchorTrigger::trigger(octopus::State const &state_p, octopus::Step &step_p
         int type_l = _rand.roll(0, 1);
         if(type_l == 0)
         {
-            options_l.push_back(generateRandomBuffOption(_rand, id_l));
+            options_l.push_back(generateRandomBuffOption(_player, _rand, id_l));
         }
         else
         {
-            options_l.push_back(generateRandomModifierOption(_rand));
+            options_l.push_back(generateRandomModifierOption(_player, _rand));
         }
     }
 

@@ -28,14 +28,14 @@ public:
     /// @brief get internal steppable for the given option
     /// @param options_p the option index
     /// @return a vector of steppables (owner is this generator)
-    virtual std::vector<Steppable *> getSteppables(unsigned long options_p, unsigned long player_p) const override
+    virtual std::vector<Steppable *> getSteppables(unsigned long options_p) const override
 	{
 		std::vector<Steppable *> steps_l;
 
 		std::map<ResourceType, double> map_l;
 		map_l[ResourceType::Food] = -10.*options_p;
 
-		steps_l.push_back(new PlayerSpendResourceStep(player_p, map_l));
+		steps_l.push_back(new PlayerSpendResourceStep(0, map_l));
 
 		return steps_l;
 	}

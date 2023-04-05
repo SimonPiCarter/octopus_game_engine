@@ -28,7 +28,7 @@ void PlayerPopOptionStep::apply(State &state_p) const
         throw std::logic_error("Error while poping option : no option with the given key "+_key);
     }
 
-    std::vector<Steppable *> subSteps_l = generator_l->getSteppables(_choice, _player);
+    std::vector<Steppable *> subSteps_l = generator_l->getSteppables(_choice);
 
     // apply chosen sub steps
     for(Steppable * step_l : subSteps_l)
@@ -63,7 +63,7 @@ void PlayerPopOptionStep::revert(State &state_p, SteppableData const *data_p) co
 
     StepOptionsGenerator * generator_l = player_l->_options[_key];
 
-    std::vector<Steppable *> subSteps_l = generator_l->getSteppables(_choice, _player);
+    std::vector<Steppable *> subSteps_l = generator_l->getSteppables(_choice);
 
     // revert chosen sub steps (use > 0 to avoid unsigned -1 and infinite loop)
     for(size_t i = subSteps_l.size() ; i > 0 ; --i)
@@ -82,7 +82,7 @@ SteppableData * PlayerPopOptionStep::newData(State const &state_p) const
 
     data_l->_generator = player_l->_options.at(_key)->newCopy();
 
-    std::vector<Steppable *> subSteps_l = data_l->_generator->getSteppables(_choice, _player);
+    std::vector<Steppable *> subSteps_l = data_l->_generator->getSteppables(_choice);
 
     data_l->_data.reserve(subSteps_l.size());
     for(Steppable * step_l : subSteps_l)
