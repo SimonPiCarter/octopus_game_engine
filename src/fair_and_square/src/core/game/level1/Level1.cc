@@ -69,7 +69,7 @@ std::string genModelName(RandomGenerator &gen_p)
 class VisionTrigger : public octopus::OneShotTrigger
 {
 public:
-	VisionTrigger(cuttlefish::Window &window_p, octopus::VisionPattern const &pattern_p) : OneShotTrigger({new octopus::ListenerStepCount(1200)}), _window(window_p), _pattern(pattern_p) {}
+	VisionTrigger(cuttlefish::Window &window_p, octopus::VisionPattern const &pattern_p) : OneShotTrigger({new octopus::ListenerStepCount(12000)}), _window(window_p), _pattern(pattern_p) {}
 
 	virtual void trigger(State const &state_p, Step &step_p, unsigned long, TriggerData const &) const override
 	{
