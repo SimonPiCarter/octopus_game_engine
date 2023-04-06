@@ -227,7 +227,7 @@ void State::incrementPathGridStatus()
 long State::getGridIndex(Fixed idx_p) const
 {
 	long size_l = getGridSize();
-	return std::min(std::max(0l, long(to_int(idx_p/_gridPointSize))), size_l-1);
+	return std::min(std::max(0l, long(to_int(idx_p/long(_gridPointSize)))), size_l-1);
 }
 
 Entity const * lookUpNewBuffTarget(State const &state_p, Handle const &sourceHandle_p, double range_p, TyppedBuff const &buff_p)
