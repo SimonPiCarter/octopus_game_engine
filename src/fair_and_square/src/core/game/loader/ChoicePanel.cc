@@ -8,21 +8,21 @@
 namespace fas
 {
 
-ChoicePanel::ChoicePanel(cuttlefish::Window &window_p, int x, int y, cuttlefish::Texture const * background_p, cuttlefish::Texture const *icons_p, unsigned long player_p)
+ChoicePanel::ChoicePanel(cuttlefish::Window &window_p, int x, int y, cuttlefish::Texture const * background_p, cuttlefish::Texture const * subBackground_p, cuttlefish::Texture const *icons_p, cuttlefish::Texture const *statsIcons_p, unsigned long player_p)
     : cuttlefish::OptionPanel(x, y, background_p), _window(window_p), _player(player_p)
 {
-	_background->setDestination(x, y, 600., 300.);
+	_background->setDestination(x, y, 600., 360.);
 
-	cuttlefish::Picture background_l(background_p, 400, 400, {1}, {1});
+	cuttlefish::Picture background_l(subBackground_p, 190, 350, {2}, {1});
 
-	background_l.setDestination(x+5, y+5, 190., 290.);
-	_optionsSubPanel.push_back(new ChoiceSubPanel(window_p, x+5, y+5, 190, background_l, icons_p));
+	background_l.setDestination(x+5, y+5, 190., 350.);
+	_optionsSubPanel.push_back(new ChoiceSubPanel(window_p, x+5, y+5, 190, background_l, icons_p, statsIcons_p));
 
-	background_l.setDestination(x+205, y+5, 190., 290.);
-	_optionsSubPanel.push_back(new ChoiceSubPanel(window_p, x+205, y+5, 190, background_l, icons_p));
+	background_l.setDestination(x+205, y+5, 190., 350.);
+	_optionsSubPanel.push_back(new ChoiceSubPanel(window_p, x+205, y+5, 190, background_l, icons_p, statsIcons_p));
 
-	background_l.setDestination(x+405, y+5, 190., 290.);
-	_optionsSubPanel.push_back(new ChoiceSubPanel(window_p, x+405, y+5, 190, background_l, icons_p));
+	background_l.setDestination(x+405, y+5, 190., 350.);
+	_optionsSubPanel.push_back(new ChoiceSubPanel(window_p, x+405, y+5, 190, background_l, icons_p, statsIcons_p));
 }
 
 ChoicePanel::~ChoicePanel()
@@ -58,7 +58,7 @@ void ChoicePanel::refresh()
 /// @brief display panel
 void ChoicePanel::render(cuttlefish::Window &window_p)
 {
-	_background->display(window_p);
+	//_background->display(window_p);
 	for(ChoiceSubPanel * subPanel_l : _optionsSubPanel)
 	{
 		subPanel_l->display(window_p);
@@ -79,6 +79,21 @@ int ChoicePanel::getOption(cuttlefish::Window &window_p, int x, int y) const
 		++count_l;
 	}
 	return -1;
+}
+
+void ChoicePanel::refreshFromMouse(cuttlefish::Window &window_p, int x, int y)
+{
+	for(ChoiceSubPanel * subPanel_l : _optionsSubPanel)
+	{
+		if(subPanel_l->getBackground().isInside(window_p, x, y))
+		{
+			subPanel_l->getBackground().setFrame(1);
+		}
+		else
+		{
+			subPanel_l->getBackground().setFrame(0);
+		}
+	}
 }
 
 /// @brief return true if the panel as active options to be chosen

@@ -14,7 +14,7 @@ namespace fas
 class ChoicePanel : public cuttlefish::OptionPanel
 {
 public:
-	ChoicePanel(cuttlefish::Window &window_p, int x, int y, cuttlefish::Texture const * background_p, cuttlefish::Texture const *icons_p, unsigned long player_p);
+	ChoicePanel(cuttlefish::Window &window_p, int x, int y, cuttlefish::Texture const * background_p, cuttlefish::Texture const * subBackground_p, cuttlefish::Texture const *icons_p, cuttlefish::Texture const *statsIcons_p, unsigned long player_p);
 	~ChoicePanel();
 
 	/// @brief refresh Panel if necessary
@@ -36,6 +36,9 @@ public:
     /// @brief returna a new command to be commited to the controller based on the option
     /// @param option_p is supposed to be valid (>= 0)
     virtual octopus::Command * newCommandFromOption(int option_p) override;
+
+	/// @brief refresh from mose (to highlight hovered sub panel)
+	virtual void refreshFromMouse(cuttlefish::Window &window_p, int x, int y) override;
 
 protected:
 	cuttlefish::Window &_window;

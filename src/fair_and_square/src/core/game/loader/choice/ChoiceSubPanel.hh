@@ -29,7 +29,7 @@ namespace fas
 class ChoiceSubPanel
 {
 public:
-    ChoiceSubPanel(cuttlefish::Window &window_p, int x, int y, int w, cuttlefish::Picture const & background_p, cuttlefish::Texture const *icons_p);
+    ChoiceSubPanel(cuttlefish::Window &window_p, int x, int y, int w, cuttlefish::Picture const & background_p, cuttlefish::Texture const *icons_p, cuttlefish::Texture const *statsIcons_p);
     ~ChoiceSubPanel();
     /// @brief update the sub panel from the buff option
     void update(BuffOption const &option_p);
@@ -47,6 +47,7 @@ public:
     void display(cuttlefish::Window &window_p);
 
     cuttlefish::Picture const &getBackground() const;
+    cuttlefish::Picture &getBackground();
 private:
 	cuttlefish::Window &_window;
     int const _x;
@@ -58,10 +59,11 @@ private:
     cuttlefish::WrappedText *_descriptionText {nullptr};
     std::list<cuttlefish::Picture *> _mainIcons;
 
-    cuttlefish::Picture * _statIcons {nullptr};
+    cuttlefish::Picture * _statIcon {nullptr};
     cuttlefish::Text *_statText {nullptr};
 
     cuttlefish::Texture const * const _icons;
+    cuttlefish::Texture const * const _statsIcons;
 };
 
 } // fas

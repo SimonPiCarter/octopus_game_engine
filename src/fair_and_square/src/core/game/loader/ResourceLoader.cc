@@ -17,7 +17,8 @@ ResourceLoader::ResourceLoader(cuttlefish::Window &window_p, unsigned long fullW
 		window_p.loadTexture("resources/fair_and_square/panel.png"), window_p.loadTexture("resources/fair_and_square/grid.png"),
 		window_p.loadTexture("resources/fair_and_square/icons.png"), 4, world_p.getSelection())
 	, _choicePanel(window_p, window_p.getWidth()-window_p.getWidth()/2-200, window_p.getHeight()-window_p.getHeight()/2-200,
-		window_p.loadTexture("resources/fair_and_square/panel.png"), window_p.loadTexture("resources/fair_and_square/grid.png"), 0)
+		window_p.loadTexture("resources/fair_and_square/panel.png"), window_p.loadTexture("resources/fair_and_square/panel_choice.png"),
+		window_p.loadTexture("resources/fair_and_square/grid.png"), window_p.loadTexture("resources/fair_and_square/icons.png"), 0)
 	, _descPanel(&window_p, window_p.getWidth()-260, window_p.getHeight()-276*2-5,
 		window_p.loadTexture("resources/fair_and_square/panel.png"))
 	, _spriteLib()
