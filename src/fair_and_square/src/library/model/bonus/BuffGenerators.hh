@@ -23,7 +23,13 @@ struct ModifierOption
     std::string _model;
 };
 
-using Option = std::variant<BuffOption, ModifierOption>;
+using SingleOption = std::variant<BuffOption, ModifierOption>;
+
+struct Option
+{
+    SingleOption _playerOption;
+    SingleOption _enemyOption;
+};
 
 class BuffGenerator : public octopus::StepOptionsGenerator
 {
@@ -39,8 +45,7 @@ public:
     std::vector<Option> const _options;
 };
 
-BuffOption generateRandomBuffOption(unsigned long player_p, octopus::RandomGenerator &gen_p, std::string const &id_p);
-
-ModifierOption generateRandomModifierOption(unsigned long player_p, octopus::RandomGenerator &gen_p);
+SingleOption generatePlayerOption(unsigned long player_p, octopus::RandomGenerator &gen_p, std::string const &id_p);
+SingleOption generateEnemyOption(unsigned long player_p, octopus::RandomGenerator &gen_p, std::string const &id_p);
 
 #endif

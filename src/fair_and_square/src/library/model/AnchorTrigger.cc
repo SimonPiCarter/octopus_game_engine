@@ -16,25 +16,22 @@ AnchorTrigger::AnchorTrigger(octopus::Library const &lib_p, octopus::RandomGener
     _bonus(bonus_p)
 {}
 
-void AnchorTrigger::trigger(octopus::State const &state_p, octopus::Step &step_p, unsigned long, octopus::TriggerData const &) const
+void AnchorTrigger::trigger(octopus::State const &, octopus::Step &step_p, unsigned long, octopus::TriggerData const &) const
 {
     std::map<octopus::ResourceType, double> map_l;
     map_l[octopus::ResourceType::Anchor] = -_bonus;
     step_p.addSteppable(new octopus::PlayerSpendResourceStep(_player, map_l));
 
-    std::string id_l = std::to_string(state_p.getPathGridStatus());
+    std::string id_l = std::to_string(_count++);
     std::vector<Option> options_l;
     for(size_t i = 0 ; i < 3 ; ++ i )
     {
-        int type_l = _rand.roll(0, 1);
-        if(type_l == 0)
-        {
-            options_l.push_back(generateRandomBuffOption(_player, _rand, id_l));
-        }
-        else
-        {
-            options_l.push_back(generateRandomModifierOption(_player, _rand));
-        }
+        Option option_l;
+
+        option_l._playerOption = generatePlayerOption(_player, _rand, id_l);
+        option_l._enemyOption = generateEnemyOption(_player, _rand, id_l);
+
+        options_l.push_back(option_l);
     }
 
     step_p.addSteppable(new octopus::PlayerAddOptionStep(_player, id_l, new BuffGenerator(options_l)));

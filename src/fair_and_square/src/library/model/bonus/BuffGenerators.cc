@@ -19,7 +19,8 @@ Steppable * genStep(ModifierOption const &option_p)
 std::vector<Steppable *> BuffGenerator::getSteppables(unsigned long options_p) const
 {
     std::vector<Steppable *> steps_l;
-    std::visit([&steps_l](auto &&arg) { steps_l.push_back(genStep(arg)); }, _options.at(options_p));
+    std::visit([&steps_l](auto &&arg) { steps_l.push_back(genStep(arg)); }, _options.at(options_p)._playerOption);
+    std::visit([&steps_l](auto &&arg) { steps_l.push_back(genStep(arg)); }, _options.at(options_p)._enemyOption);
     return steps_l;
 }
 
@@ -48,6 +49,10 @@ BuffOption generateRandomBuffOption(unsigned long player_p, RandomGenerator &gen
     BuffOption option_l;
     option_l._player = player_p;
 
+    bool offset_l = false;
+    int min_l = 5;
+    int max_l = 15;
+
     if(type_l == 0)
     {
         option_l._buff._type = TyppedBuff::Type::Speed;
@@ -59,10 +64,16 @@ BuffOption generateRandomBuffOption(unsigned long player_p, RandomGenerator &gen
     else if(type_l == 2)
     {
         option_l._buff._type = TyppedBuff::Type::Damage;
+        offset_l = true;
+        min_l = 3;
+        max_l = 6;
     }
     else if(type_l == 3)
     {
         option_l._buff._type = TyppedBuff::Type::Armor;
+        offset_l = true;
+        min_l = 1;
+        max_l = 3;
     }
     else if(type_l == 4)
     {
@@ -79,17 +90,85 @@ BuffOption generateRandomBuffOption(unsigned long player_p, RandomGenerator &gen
 
     int bonusType_l = gen_p.roll(0, 1);
 
-    if(bonusType_l == 0
-    && option_l._buff._type != TyppedBuff::Type::Production
-    && option_l._buff._type != TyppedBuff::Type::Harvest
-    && option_l._buff._type != TyppedBuff::Type::Speed
-    && option_l._buff._type != TyppedBuff::Type::FullReload)
+    if(offset_l)
     {
-        option_l._buff._offset = gen_p.roll(3, 6);
+        option_l._buff._offset = gen_p.roll(min_l, max_l);
     }
     else
     {
-        option_l._buff._coef = gen_p.roll(5, 15)/100.;
+        option_l._buff._coef = gen_p.roll(min_l, max_l)/100.;
+    }
+
+    if(option_l._buff._type == TyppedBuff::Type::FullReload)
+    {
+        option_l._buff._coef = -option_l._buff._coef;
+    }
+
+    option_l._buff._id = id_p;
+
+    if(option_l._buff._type == TyppedBuff::Type::Production)
+    {
+        option_l._model = "barrack";
+    }
+    else if(option_l._buff._type == TyppedBuff::Type::Harvest)
+    {
+        option_l._model = "deposit";
+    }
+    else
+    {
+        option_l._model = generateRandomModel(gen_p);
+    }
+
+    return option_l;
+}
+
+BuffOption generateRandomBuffOptionForEnemy(unsigned long player_p, RandomGenerator &gen_p, std::string const &id_p)
+{
+    int type_l = gen_p.roll(0, 4);
+
+    BuffOption option_l;
+    option_l._player = player_p;
+
+    bool offset_l = false;
+    int min_l = 5;
+    int max_l = 15;
+
+    if(type_l == 0)
+    {
+        option_l._buff._type = TyppedBuff::Type::Speed;
+    }
+    else if(type_l == 1)
+    {
+        option_l._buff._type = TyppedBuff::Type::FullReload;
+    }
+    else if(type_l == 2)
+    {
+        option_l._buff._type = TyppedBuff::Type::Damage;
+        offset_l = true;
+        min_l = 3;
+        max_l = 6;
+    }
+    else if(type_l == 3)
+    {
+        option_l._buff._type = TyppedBuff::Type::Armor;
+        offset_l = true;
+        min_l = 1;
+        max_l = 3;
+    }
+    else if(type_l == 4)
+    {
+        option_l._buff._type = TyppedBuff::Type::HpMax;
+    }
+
+    int bonusType_l = gen_p.roll(0, 1);
+
+    if(offset_l)
+    {
+        option_l._buff._offset = gen_p.roll(min_l, max_l);
+    }
+    else
+    {
+        option_l._buff._coef = gen_p.roll(min_l, max_l)/100.;
     }
 
     if(option_l._buff._type == TyppedBuff::Type::FullReload)
@@ -142,4 +221,24 @@ ModifierOption generateRandomModifierOption(unsigned long player_p, RandomGenera
     }
 
     return option_l;
+}
+
+SingleOption generatePlayerOption(unsigned long player_p, octopus::RandomGenerator &gen_p, std::string const &id_p)
+{
+    int type_l = gen_p.roll(0, 1);
+    if(type_l == 0)
+    {
+        return generateRandomBuffOption(player_p, gen_p, id_p);
+    }
+    return generateRandomModifierOption(player_p, gen_p);
+}
+
+SingleOption generateEnemyOption(unsigned long player_p, octopus::RandomGenerator &gen_p, std::string const &id_p)
+{
+    int type_l = gen_p.roll(0, 1);
+    if(type_l == 0)
+    {
+        return generateRandomBuffOptionForEnemy(player_p, gen_p, id_p);
+    }
+    return generateRandomModifierOption(player_p, gen_p);
 }

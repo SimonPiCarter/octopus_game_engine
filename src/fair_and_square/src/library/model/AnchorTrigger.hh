@@ -23,6 +23,10 @@ private:
 	octopus::RandomGenerator & _rand;
 
 	double const _bonus;
+
+	/// @brief count of trigger during the game to generate buff id
+	/// need to be mutable to be incremented when triggering
+	mutable size_t _count {0};
 };
 
 #endif

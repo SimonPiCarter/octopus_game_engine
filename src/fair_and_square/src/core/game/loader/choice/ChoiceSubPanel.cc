@@ -260,17 +260,20 @@ ChoiceSubPanel::ChoiceSubPanel(cuttlefish::Window &window_p, int x, int y, int w
     : _window(window_p), _x(x), _y(y), _w(w)
     , _background(background_p)
     , _optionPanelPlayer(window_p, x, y, w, icons_p, statsIcons_p)
+    , _optionPanelEnemy(window_p, x, y+172, w, icons_p, statsIcons_p)
 {}
 
 void ChoiceSubPanel::update(Option const &opt_p)
 {
-    std::visit([&](auto && arg) { _optionPanelPlayer.update(arg); }, opt_p);
+    std::visit([&](auto && arg) { _optionPanelPlayer.update(arg); }, opt_p._playerOption);
+    std::visit([&](auto && arg) { _optionPanelEnemy.update(arg); }, opt_p._enemyOption);
 }
 
 void ChoiceSubPanel::display(cuttlefish::Window &window_p)
 {
     _background.display(window_p);
     _optionPanelPlayer.display(window_p);
+    _optionPanelEnemy.display(window_p);
 }
 
 cuttlefish::Picture const &ChoiceSubPanel::getBackground() const

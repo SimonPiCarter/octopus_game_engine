@@ -82,6 +82,7 @@ private:
     int const _w;
     cuttlefish::Picture _background;
     OneOptionPanel _optionPanelPlayer;
+    OneOptionPanel _optionPanelEnemy;
 };
 
 } // fas
