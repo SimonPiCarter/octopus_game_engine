@@ -9,22 +9,40 @@
 namespace fas
 {
 
-ChoiceSubPanel::ChoiceSubPanel(cuttlefish::Window &window_p, int x, int y, int w, cuttlefish::Picture const &background_p, cuttlefish::Texture const *icons_p, cuttlefish::Texture const *statsIcons_p)
+OneOptionPanel::OneOptionPanel(cuttlefish::Window &window_p, int x, int y, int w, cuttlefish::Texture const *icons_p, cuttlefish::Texture const *statsIcons_p)
     : _window(window_p), _x(x), _y(y), _w(w)
-    , _background(background_p)
     , _icons(icons_p)
     , _statsIcons(statsIcons_p)
 {}
 
-ChoiceSubPanel::~ChoiceSubPanel()
+OneOptionPanel::~OneOptionPanel()
 {
-    delete _titleText;
     delete _descriptionText;
     delete _statIcon;
     delete _statText;
     for(cuttlefish::Picture * pic_l : _mainIcons)
     {
         delete pic_l;
+    }
+}
+
+void OneOptionPanel::display(cuttlefish::Window &window_p)
+{
+    for(cuttlefish::Picture * pic_l : _mainIcons)
+    {
+        pic_l->display(window_p);
+    }
+    if(_descriptionText)
+    {
+        _descriptionText->display(window_p);
+    }
+    if(_statIcon)
+    {
+        _statIcon->display(window_p);
+    }
+    if(_statText)
+    {
+        _statText->display(window_p);
     }
 }
 
@@ -87,9 +105,8 @@ void setUpStatIcon(cuttlefish::Picture * statIcon_p, octopus::TyppedBuff::Type t
     }
 }
 
-void ChoiceSubPanel::update(BuffOption const &option_p)
+void OneOptionPanel::update(BuffOption const &option_p)
 {
-    delete _titleText; _titleText = nullptr;
     delete _descriptionText; _descriptionText = nullptr;
     delete _statIcon; _statIcon = nullptr;
     delete _statText; _statText = nullptr;
@@ -144,9 +161,8 @@ void ChoiceSubPanel::update(BuffOption const &option_p)
     }
 }
 
-void ChoiceSubPanel::update(ModifierOption const &option_p)
+void OneOptionPanel::update(ModifierOption const &option_p)
 {
-    delete _titleText; _titleText = nullptr;
     delete _descriptionText; _descriptionText = nullptr;
     delete _statIcon; _statIcon = nullptr;
     delete _statText; _statText = nullptr;
@@ -164,7 +180,7 @@ void ChoiceSubPanel::update(ModifierOption const &option_p)
     updateIconsPosition();
 }
 
-void ChoiceSubPanel::updateFromModifier(octopus::NoModifier const &mod_p)
+void OneOptionPanel::updateFromModifier(octopus::NoModifier const &mod_p)
 {
     _mainIcons.push_back(new cuttlefish::Picture(_icons, 64, 64, {1}, {1}));
     _mainIcons.back()->setState(3);
@@ -174,7 +190,7 @@ void ChoiceSubPanel::updateFromModifier(octopus::NoModifier const &mod_p)
     _descriptionText->setText(LangEntries::GetInstance()->getEntry("NoModifierChoice"), {0,0,0});
 }
 
-void ChoiceSubPanel::updateFromModifier(octopus::AoEModifier const &mod_p)
+void OneOptionPanel::updateFromModifier(octopus::AoEModifier const &mod_p)
 {
     _mainIcons.push_back(new cuttlefish::Picture(_icons, 64, 64, {1}, {1}));
     _mainIcons.back()->setState(3);
@@ -186,7 +202,7 @@ void ChoiceSubPanel::updateFromModifier(octopus::AoEModifier const &mod_p)
     _descriptionText->updateText("range", std::to_string(octopus::to_double(mod_p._range)));
 }
 
-void ChoiceSubPanel::updateFromModifier(octopus::ChainingModifier const &mod_p)
+void OneOptionPanel::updateFromModifier(octopus::ChainingModifier const &mod_p)
 {
     _mainIcons.push_back(new cuttlefish::Picture(_icons, 64, 64, {1}, {1}));
     _mainIcons.back()->setState(3);
@@ -198,7 +214,7 @@ void ChoiceSubPanel::updateFromModifier(octopus::ChainingModifier const &mod_p)
     _descriptionText->updateText("range", std::to_string(mod_p._range));
 }
 
-void ChoiceSubPanel::updateFromModifier(octopus::DotModifier const &mod_p)
+void OneOptionPanel::updateFromModifier(octopus::DotModifier const &mod_p)
 {
     _mainIcons.push_back(new cuttlefish::Picture(_icons, 64, 64, {1}, {1}));
     _mainIcons.back()->setState(3);
@@ -211,7 +227,7 @@ void ChoiceSubPanel::updateFromModifier(octopus::DotModifier const &mod_p)
     _descriptionText->updateText("damage", std::to_string(mod_p._dmg));
 }
 
-void ChoiceSubPanel::updateFromModifier(octopus::LifeStealModifier const &mod_p)
+void OneOptionPanel::updateFromModifier(octopus::LifeStealModifier const &mod_p)
 {
     _mainIcons.push_back(new cuttlefish::Picture(_icons, 64, 64, {1}, {1}));
     _mainIcons.back()->setState(3);
@@ -222,7 +238,7 @@ void ChoiceSubPanel::updateFromModifier(octopus::LifeStealModifier const &mod_p)
     _descriptionText->updateText("ratio", std::to_string(mod_p._ratio*100.));
 }
 
-void ChoiceSubPanel::updateIconsPosition()
+void OneOptionPanel::updateIconsPosition()
 {
     if(_mainIcons.size() == 2)
     {
@@ -240,27 +256,21 @@ void ChoiceSubPanel::updateIconsPosition()
     }
 }
 
+ChoiceSubPanel::ChoiceSubPanel(cuttlefish::Window &window_p, int x, int y, int w, cuttlefish::Picture const &background_p, cuttlefish::Texture const *icons_p, cuttlefish::Texture const *statsIcons_p)
+    : _window(window_p), _x(x), _y(y), _w(w)
+    , _background(background_p)
+    , _optionPanelPlayer(window_p, x, y, w, icons_p, statsIcons_p)
+{}
+
+void ChoiceSubPanel::update(Option const &opt_p)
+{
+    std::visit([&](auto && arg) { _optionPanelPlayer.update(arg); }, opt_p);
+}
 
 void ChoiceSubPanel::display(cuttlefish::Window &window_p)
 {
     _background.display(window_p);
-    for(cuttlefish::Picture * pic_l : _mainIcons)
-    {
-        pic_l->display(window_p);
-    }
-    // _titleText->display(window_p);
-    if(_descriptionText)
-    {
-        _descriptionText->display(window_p);
-    }
-    if(_statIcon)
-    {
-        _statIcon->display(window_p);
-    }
-    if(_statText)
-    {
-        _statText->display(window_p);
-    }
+    _optionPanelPlayer.display(window_p);
 }
 
 cuttlefish::Picture const &ChoiceSubPanel::getBackground() const
@@ -273,5 +283,9 @@ cuttlefish::Picture &ChoiceSubPanel::getBackground()
     return _background;
 }
 
+OneOptionPanel &ChoiceSubPanel::getOptionPanelPlayer()
+{
+    return _optionPanelPlayer;
+}
 
 } // namespace fas

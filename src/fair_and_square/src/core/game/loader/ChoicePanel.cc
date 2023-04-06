@@ -131,7 +131,7 @@ void ChoicePanel::updateCurrent()
 		/// temporary texts
 		for(Option const &opt_l : _options)
 		{
-			std::visit([&](auto && arg) { _optionsSubPanel[i]->update(arg); }, opt_l);
+			_optionsSubPanel[i]->update(opt_l);
 			++i;
 		}
 	}
