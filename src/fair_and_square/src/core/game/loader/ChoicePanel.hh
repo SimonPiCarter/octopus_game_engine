@@ -37,7 +37,7 @@ public:
     /// @param option_p is supposed to be valid (>= 0)
     virtual octopus::Command * newCommandFromOption(int option_p) override;
 
-	/// @brief refresh from mose (to highlight hovered sub panel)
+	/// @brief refresh from mouse (to highlight hovered sub panel)
 	virtual void refreshFromMouse(cuttlefish::Window &window_p, int x, int y) override;
 
 protected:
