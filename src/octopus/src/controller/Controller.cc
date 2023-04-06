@@ -156,7 +156,7 @@ bool Controller::loop_body()
 	{
 		upToDate_l = false;
 		State *state_l = _backState->_state;
-		Logger::getDebug() << "step back state on step "<< _backState->_stepHandled << " " <<state_l->_id<< std::endl;
+		Logger::getNormal() << "step back state on step "<< _backState->_stepHandled << " " <<state_l->_id<< std::endl;
 		// increment number of step hadled
 		++_backState->_stepHandled;
 
@@ -167,7 +167,7 @@ bool Controller::loop_body()
 			Step &step_l = *_stepBundles.back()._step;
 
 			// if step was not handled already
-			Logger::getDebug() << "compiling step " << _backState->_stepHandled << " on state "<<state_l->_id<< std::endl;
+			Logger::getNormal() << "compiling step " << _backState->_stepHandled << " on state "<<state_l->_id<< std::endl;
 
 			const std::chrono::time_point<std::chrono::steady_clock> start_l = std::chrono::steady_clock::now();
 
@@ -204,7 +204,7 @@ bool Controller::loop_body()
 				cmd_l->registerCommand(step_l, *state_l);
 			}
 
-			Logger::getDebug() << "processing step " << _backState->_stepHandled << " on state "<<state_l->_id<< std::endl;
+			Logger::getNormal() << "processing step " << _backState->_stepHandled << " on state "<<state_l->_id<< std::endl;
 
 			if(_orcaCollision)
 			{

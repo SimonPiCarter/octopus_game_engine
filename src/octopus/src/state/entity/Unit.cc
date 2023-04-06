@@ -52,7 +52,7 @@ void Unit::runCommands(Step & step_p, State const &state_p, PathManager &pathMan
 			Entity const * target_l = lookUpNewTarget(state_p, _handle, 8);
 			if(target_l)
 			{
-				Logger::getDebug() << " Entity::runCommands :: add attack command" << _handle << " -> " << target_l->_handle << std::endl;
+				Logger::getNormal() << " Entity::runCommands :: add attack command" << _handle << " -> " << target_l->_handle << std::endl;
 				step_p.addSteppable(new CommandSpawnStep(new EntityAttackCommand(_commandableHandle, _handle, target_l->_handle, false)));
 			}
 		}
