@@ -241,6 +241,11 @@ void GameLoop::runLoop(Window &window_p)
 
 			if( e.type == SDL_MOUSEMOTION && !dialog_l )
 			{
+				if(_optionPanel.isActive())
+				{
+					_optionPanel.refreshFromMouse(window_p, e.button.x, e.button.y);
+				}
+
 				dX = 0;
 				dY = 0;
 				int margin_l = 5;

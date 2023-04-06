@@ -54,6 +54,9 @@ public:
     /// @param option_p is supposed to be valid (>= 0)
     virtual octopus::Command * newCommandFromOption(int option_p) = 0;
 
+    /// @brief refresh from mouse (to highlight hovered sub panel)
+	virtual void refreshFromMouse(cuttlefish::Window &window_p, int x, int y) {}
+
 protected:
 	Picture * _background;
 
