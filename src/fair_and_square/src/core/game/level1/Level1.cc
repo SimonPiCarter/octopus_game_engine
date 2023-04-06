@@ -253,7 +253,8 @@ void WaveSpawn::trigger(State const &state_p, Step &step_p, unsigned long, octop
 {
 	for(unsigned long i = 0 ; i < _wave * 10 ; ++ i)
 	{
-		Unit unit_l({ _worldSize-10., _worldSize-10. }, false, _lib.getUnitModel(genModelName(_rand)));
+		std::string modelName_l = genModelName(_rand);
+		Unit unit_l({ _worldSize-_rand.roll(10,20), _worldSize-_rand.roll(10,20) }, false, _lib.getUnitModel(modelName_l));
 		unit_l._player = 1;
 		Handle handle_l = getNextHandle(step_p, state_p);
 		step_p.addSteppable(new UnitSpawnStep(handle_l, unit_l));
@@ -267,7 +268,7 @@ void WaveSpawn::trigger(State const &state_p, Step &step_p, unsigned long, octop
 	}
 	step_p.addSteppable(new TriggerSpawn(new WaveSpawn(new ListenerStepCount(_stepWait), _lib, _rand, _wave+1, _stepWait, _finalWave, _worldSize, _waveStepGenerator)));
 
-	// win after 10 waves
+	// win after X waves
 	if(_wave == _finalWave)
 	{
 		step_p.addSteppable(new StateWinStep(state_p.isOver(), state_p.hasWinningTeam(), state_p.getWinningTeam(), 0));
