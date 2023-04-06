@@ -29,7 +29,7 @@ void AnchorTrigger::trigger(octopus::State const &, octopus::Step &step_p, unsig
         Option option_l;
 
         option_l._playerOption = generatePlayerOption(_player, _rand, id_l);
-        option_l._enemyOption = generateEnemyOption(_player, _rand, id_l);
+        option_l._enemyOption = generateEnemyOption((_player+1)%2, _rand, id_l);
 
         options_l.push_back(option_l);
     }
