@@ -233,7 +233,7 @@ long State::getGridIndex(Fixed idx_p) const
 Entity const * lookUpNewBuffTarget(State const &state_p, Handle const &sourceHandle_p, double range_p, TyppedBuff const &buff_p)
 {
 	Entity const * source_l = state_p.getEntity(sourceHandle_p);
-	Fixed matchDistance_l = range_p + source_l->_model._ray;
+	Fixed matchDistance_p = range_p + source_l->_model._ray;
 	Fixed sqDis_l = 0.;
 	unsigned long timeSinceBuff_l = 0;
 	Entity const * best_l = nullptr;
@@ -241,10 +241,10 @@ Entity const * lookUpNewBuffTarget(State const &state_p, Handle const &sourceHan
 
 	Logger::getDebug() << " lookUpNewBuffTarget :: start"<< std::endl;
 
-	Box<long> box_l {state_p.getGridIndex(source_l->_pos.x - matchDistance_l),
-					 state_p.getGridIndex(source_l->_pos.x + matchDistance_l),
-					 state_p.getGridIndex(source_l->_pos.y - matchDistance_l),
-					 state_p.getGridIndex(source_l->_pos.y + matchDistance_l)};
+	Box<long> box_l {state_p.getGridIndex(source_l->_pos.x - matchDistance_p),
+					 state_p.getGridIndex(source_l->_pos.x + matchDistance_p),
+					 state_p.getGridIndex(source_l->_pos.y - matchDistance_p),
+					 state_p.getGridIndex(source_l->_pos.y + matchDistance_p)};
 	std::vector<bool> bitset_l(state_p.getEntities().size(), false);
 
 	// grid for fast access
@@ -353,10 +353,8 @@ TargetPanel lookUpNewTargets(State const &state_p, Handle const &sourceHandle_p,
 	return panel_l;
 }
 
-Entity const * lookUpNewTarget(State const &state_p, Handle const &sourceHandle_p)
+Entity const * lookUpNewTarget(State const &state_p, Handle const &sourceHandle_p, Fixed matchDistance_p)
 {
-	double matchDistance_l = 5;
-
 	Fixed sqDis_l = 0.;
 	Entity const * closest_l = nullptr;
 
@@ -368,10 +366,10 @@ Entity const * lookUpNewTarget(State const &state_p, Handle const &sourceHandle_
 
 	Logger::getDebug() << " lookUpNewTarget :: start"<< std::endl;
 
-	Box<long> box_l {state_p.getGridIndex(source_l->_pos.x - matchDistance_l),
-					 state_p.getGridIndex(source_l->_pos.x + matchDistance_l),
-					 state_p.getGridIndex(source_l->_pos.y - matchDistance_l),
-					 state_p.getGridIndex(source_l->_pos.y + matchDistance_l)};
+	Box<long> box_l {state_p.getGridIndex(source_l->_pos.x - matchDistance_p),
+					 state_p.getGridIndex(source_l->_pos.x + matchDistance_p),
+					 state_p.getGridIndex(source_l->_pos.y - matchDistance_p),
+					 state_p.getGridIndex(source_l->_pos.y + matchDistance_p)};
 	std::vector<bool> bitset_l(state_p.getEntities().size(), false);
 
 	// grid for fast access
@@ -422,13 +420,13 @@ Entity const * lookUpNewTarget(State const &state_p, Handle const &sourceHandle_
 	}
 	}
 	// reset target if too far
-	if(sqDis_l > matchDistance_l*matchDistance_l + 1e-5)
+	if(sqDis_l > matchDistance_p*matchDistance_p + 1e-5)
 	{
 		Logger::getDebug() << " lookUpNewTarget :: reset because too far (unit) "<< std::endl;
 		closest_l = nullptr;
 	}
 	// reset target if too far
-	if(sqDisBuilding_l > matchDistance_l*matchDistance_l + 1e-5)
+	if(sqDisBuilding_l > matchDistance_p*matchDistance_p + 1e-5)
 	{
 		Logger::getDebug() << " lookUpNewTarget :: reset because too far (building) "<< std::endl;
 		closestBuilding_l = nullptr;
