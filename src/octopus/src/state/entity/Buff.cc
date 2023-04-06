@@ -68,9 +68,14 @@ void TyppedBuff::apply(Entity &ent_p) const
 			ent_p._buffArmor._coef += _coef;
 			break;
 		case Type::HpMax:
+		{
+			double hpMax_l = ent_p.getHpMax();
 			ent_p._buffHpMax._offset += _offset;
 			ent_p._buffHpMax._coef += _coef;
+			double newHpMax_l = ent_p.getHpMax();
+			ent_p._hp += newHpMax_l - hpMax_l;
 			break;
+		}
 		case Type::Production:
 			ent_p._buffProduction._offset += _offset;
 			ent_p._buffProduction._coef += _coef;
@@ -103,9 +108,14 @@ void TyppedBuff::revert(Entity &ent_p) const
 			ent_p._buffArmor._coef -= _coef;
 			break;
 		case Type::HpMax:
+		{
+			double hpMax_l = ent_p.getHpMax();
 			ent_p._buffHpMax._offset -= _offset;
 			ent_p._buffHpMax._coef -= _coef;
+			double newHpMax_l = ent_p.getHpMax();
+			ent_p._hp += newHpMax_l - hpMax_l;
 			break;
+		}
 		case Type::Production:
 			ent_p._buffProduction._offset -= _offset;
 			ent_p._buffProduction._coef -= _coef;
