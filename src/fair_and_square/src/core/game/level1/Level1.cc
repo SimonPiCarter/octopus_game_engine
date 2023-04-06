@@ -251,11 +251,9 @@ WaveSpawn::WaveSpawn(Listener * listener_p, Library const &lib_p, RandomGenerato
 
 void WaveSpawn::trigger(State const &state_p, Step &step_p, unsigned long, octopus::TriggerData const &) const
 {
-	std::string model_l = genModelName(_rand);
-
 	for(unsigned long i = 0 ; i < _wave * 10 ; ++ i)
 	{
-		Unit unit_l({ _worldSize-10., _worldSize-10. }, false, _lib.getUnitModel(model_l));
+		Unit unit_l({ _worldSize-10., _worldSize-10. }, false, _lib.getUnitModel(genModelName(_rand)));
 		unit_l._player = 1;
 		Handle handle_l = getNextHandle(step_p, state_p);
 		step_p.addSteppable(new UnitSpawnStep(handle_l, unit_l));

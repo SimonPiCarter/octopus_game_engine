@@ -33,7 +33,7 @@ void runLevel1(Window &window_p, unsigned long stepCount_p, unsigned long worldS
 {
 	octopus::RandomGenerator rand_l(seed_p);
 	octopus::Library lib_l;
-	std::list<octopus::Steppable *> spawners_l = fas::level1::WaveLevelSteps(window_p, lib_l, rand_l, 10, stepCount_p, worldSize_p, std::bind(genDialogStep, window_p));
+	std::list<octopus::Steppable *> spawners_l = fas::level1::WaveLevelSteps(window_p, lib_l, rand_l, 5, stepCount_p, worldSize_p, std::bind(genDialogStep, window_p));
 	std::list<octopus::Command *> commands_l = fas::level1::WaveLevelCommands(lib_l, rand_l, worldSize_p);
 
 
@@ -59,7 +59,7 @@ void replayLevel1(Window &window_p)
 
 	octopus::RandomGenerator rand_l(seed_p);
 	octopus::Library lib_l;
-	std::list<octopus::Steppable *> spawners_l = fas::level1::WaveLevelSteps(window_p, lib_l, rand_l, 10, stepCount_p, worldSize_p, std::bind(genDialogStep, window_p));
+	std::list<octopus::Steppable *> spawners_l = fas::level1::WaveLevelSteps(window_p, lib_l, rand_l, 5, stepCount_p, worldSize_p, std::bind(genDialogStep, window_p));
 	std::list<octopus::Command *> commands_l = fas::level1::WaveLevelCommands(lib_l, rand_l, worldSize_p);
 
 	replayGame(file_l, window_p, spawners_l, commands_l, worldSize_p, lib_l);
@@ -78,7 +78,7 @@ void loadLevel1(Window &window_p)
 
 	octopus::RandomGenerator rand_l(seed_p);
 	octopus::Library lib_l;
-	std::list<octopus::Steppable *> spawners_l = fas::level1::WaveLevelSteps(window_p, lib_l, rand_l, 10, stepCount_p, worldSize_p, std::bind(genDialogStep, window_p));
+	std::list<octopus::Steppable *> spawners_l = fas::level1::WaveLevelSteps(window_p, lib_l, rand_l, 5, stepCount_p, worldSize_p, std::bind(genDialogStep, window_p));
 	std::list<octopus::Command *> commands_l = fas::level1::WaveLevelCommands(lib_l, rand_l, worldSize_p);
 
 	loadGame(file_l, window_p, spawners_l, commands_l, worldSize_p, lib_l);
