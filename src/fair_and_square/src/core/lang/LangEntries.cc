@@ -27,9 +27,9 @@ LangEntries::LangEntries()
 {
     // hard coded entry for now
     _mapEntries["choiceSubPanel"] = "Option $$ type : $type_val $$ offset : $offset_val $$ coef : $coef_val $$ model : $model_val";
-    _mapEntries["AoEModifierChoice"] = "AoEModifier $$ ratio : $ratio $$ range : $range";
-    _mapEntries["ChainingModifierChoice"] = "ChainingModifier $$ nb of chains : $nbOfTicks $$ ratio : $ratio $$ range : $range";
-    _mapEntries["DotModifierChoice"] = "DotModifier $$ nb of ticks : $nbOfTicks $$ seconds between ticks : $tickrate $$ damage : $damage";
+    _mapEntries["AoEModifierChoice"] = "AoEModifier $$ dmg % : $ratio $$ range : $range";
+    _mapEntries["ChainingModifierChoice"] = "ChainingModifier $$ Chains : $nbOfTicks $$ Dmg % : $ratio $$ Range : $range";
+    _mapEntries["DotModifierChoice"] = "DotModifier $$ Ticks : $nbOfTicks $$ Ticks/s : $tickrate $$ Dmg : $damage";
     _mapEntries["LifeStealModifierChoice"] = "LifeStealModifier $$ ratio : $ratio %";
 
     _mapEntries["AoE Modifier Showcase"] = "Welcome to the AoE Modifier Showcase";
