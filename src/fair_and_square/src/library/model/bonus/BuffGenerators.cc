@@ -239,20 +239,10 @@ ModifierOption generateRandomModifierOption(unsigned long player_p, RandomGenera
 
 SingleOption generatePlayerOption(unsigned long player_p, octopus::RandomGenerator &gen_p, std::string const &id_p)
 {
-    int type_l = gen_p.roll(0, 1);
-    if(type_l == 0)
-    {
-        return generateRandomBuffOption(player_p, gen_p, id_p);
-    }
     return generateRandomModifierOption(player_p, gen_p);
 }
 
 SingleOption generateEnemyOption(unsigned long player_p, octopus::RandomGenerator &gen_p, std::string const &id_p)
 {
-    int type_l = gen_p.roll(0, 1);
-    if(type_l == 0)
-    {
-        return generateRandomBuffOptionForEnemy(player_p, gen_p, id_p);
-    }
-    return generateRandomModifierOption(player_p, gen_p);
+    return generateRandomBuffOptionForEnemy(player_p, gen_p, id_p);
 }
