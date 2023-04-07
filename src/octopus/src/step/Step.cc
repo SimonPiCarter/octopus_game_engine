@@ -32,22 +32,22 @@ void Step::addSteppable(Steppable * step_p)
 	_listSteppable.push_back(step_p);
 }
 
-std::vector<EntityMoveStep *> &Step::getEntityMoveStep()
+std::list<EntityMoveStep *> &Step::getEntityMoveStep()
 {
 	return _listEntityMoveStep;
 }
 
-std::vector<EntityMoveStep *> const &Step::getEntityMoveStep() const
+std::list<EntityMoveStep *> const &Step::getEntityMoveStep() const
 {
 	return _listEntityMoveStep;
 }
 
-std::vector<Steppable const *> &Step::getSteppable()
+std::list<Steppable const *> &Step::getSteppable()
 {
 	return _listSteppable;
 }
 
-std::vector<Steppable const *> const &Step::getSteppable() const
+std::list<Steppable const *> const &Step::getSteppable() const
 {
 	return _listSteppable;
 }
@@ -193,14 +193,16 @@ void revert(Step const & step_p, State &state_p, StepData &stepData_p)
 	{
 		throw std::logic_error("tried to revert the same step twice to a state or reverted a step without applying it first");
 	}
+	size_t i = vecData_l.size();
 	// apply all steppables (in reverse order)
-	for(size_t i = step_p.getSteppable().size() ; i > 0 ; --i)
+	for(auto it_l = step_p.getSteppable().rbegin() ; it_l != step_p.getSteppable().rend() ; ++it_l)
 	{
 		// apply steppable with state data
-		step_p.getSteppable()[i-1]->revert(state_p, vecData_l[i-1]);
+		(*it_l)->revert(state_p, vecData_l[i-1]);
 
 		// delete data
-		delete vecData_l[i-1];
+		delete *it_l;
+		--i;
 	}
 
 	vecData_l.clear();

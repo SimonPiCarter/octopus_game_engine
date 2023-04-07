@@ -48,11 +48,11 @@ namespace octopus
 			/// @brief add step and keep ownership
 			void addSteppable(Steppable * step_p);
 
-			std::vector<EntityMoveStep *> &getEntityMoveStep();
-			std::vector<EntityMoveStep *> const &getEntityMoveStep() const;
+			std::list<EntityMoveStep *> &getEntityMoveStep();
+			std::list<EntityMoveStep *> const &getEntityMoveStep() const;
 
-			std::vector<Steppable const *> &getSteppable();
-			std::vector<Steppable const *> const &getSteppable() const;
+			std::list<Steppable const *> &getSteppable();
+			std::list<Steppable const *> const &getSteppable() const;
 
 			double & getResourceSpent(unsigned long player_p, ResourceType res_p);
 			double getResourceSpent(unsigned long player_p, ResourceType res_p) const;
@@ -93,9 +93,9 @@ namespace octopus
 
 			unsigned long long getId() const { return _id; }
 		private:
-			std::vector<EntityMoveStep *> _listEntityMoveStep;
+			std::list<EntityMoveStep *> _listEntityMoveStep;
 
-			std::vector<Steppable const *> _listSteppable;
+			std::list<Steppable const *> _listSteppable;
 
 			/// @brief the id of the step (previous step + 1)
 			unsigned long long const _id {0};
