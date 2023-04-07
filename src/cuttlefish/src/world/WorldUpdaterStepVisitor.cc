@@ -134,7 +134,7 @@ void WorldUpdaterStepVisitor::visit(octopus::EntityHitPointChangeStep const *ste
 	{
 		_world._sprites[steppable_p->_handle]->setLifePercent(100*hp_l/ent_l->getHpMax());
 	}
-	if(hp_l <= 0.)
+	if(!ent_l->_alive)
 	{
 		clear(steppable_p->_handle);
 	}
