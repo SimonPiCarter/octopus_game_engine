@@ -5,6 +5,7 @@
 #include <map>
 #include "sprite/SpriteEntity.hh"
 #include "text/SegmentedText.hh"
+#include "commands/CommandPicture.hh"
 
 namespace octopus
 {
@@ -56,20 +57,28 @@ public:
 	/// @note return nullptr if no clic
 	SpriteModel const * getSpriteModel(Window &window_p, int x, int y) const;
 
+	/// @brief return sprite model from key
+	SpriteModel const * getSpriteModel(Sint32 const &key_p) const;
+	bool isStop(Sint32 const &key_p) const;
+	bool isAttackMove(Sint32 const &key_p) const;
+
 	/// @brief return a sprite model combination for grid position
 	/// @note return nullptr if no match
+	/// @note should be deprecated asap
 	SpriteModel const * getSpriteModelOnGrid(int x, int y) const;
 
 	Picture const * getBackground() const { return _background; }
 
 	bool isActive() const { return _lastSelection != nullptr; }
 protected:
+	/// @brief window is required to create text on the fly
+	Window* const _window;
 	/// @brief last selection
 	octopus::Entity const * _lastSelection {nullptr};
 	/// @brief sprites
-	std::list<SpriteModel> _sprites;
+	std::list<CommandPicture> _sprites;
 	/// @brief sprite models used for grid coordinate access
-	std::map<std::pair<int, int>, SpriteModel *> _grid;
+	std::map<std::pair<int, int>, CommandPicture *> _grid;
 
 	Picture * _background;
 

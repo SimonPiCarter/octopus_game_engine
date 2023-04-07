@@ -3,6 +3,9 @@
 #include "window/Window.hh"
 #include "world/World.hh"
 
+#include "panel/commands/CommandHotkeys.hh"
+
+
 namespace fas
 {
 ResourceLoader::ResourceLoader(cuttlefish::Window &window_p, unsigned long fullWorldSize_p, cuttlefish::World &world_p)
@@ -98,6 +101,20 @@ ResourceLoader::ResourceLoader(cuttlefish::Window &window_p, unsigned long fullW
 
 	_tilemap.generate();
 	_minimap.generate(window_p, _tilemap, fullWorldSize_p);
+
+	cuttlefish::CommandHotkeys & hkeys_l = *cuttlefish::CommandHotkeys::GetInstance();
+
+	hkeys_l.addBuildingModelKeycode("command_center", SDLK_c);
+	hkeys_l.addBuildingModelKeycode("barrack", SDLK_b);
+	hkeys_l.addBuildingModelKeycode("deposit", SDLK_d);
+	hkeys_l.addBuildingModelKeycode("anchor", SDLK_n);
+	hkeys_l.addUnitModelKeycode("square", SDLK_q);
+	hkeys_l.addUnitModelKeycode("triangle", SDLK_t);
+	hkeys_l.addUnitModelKeycode("circle", SDLK_c);
+	hkeys_l.addUnitModelKeycode("worker", SDLK_w);
+	hkeys_l.addCommandTypeKeycode(cuttlefish::CommandPicture::Type::Stop, SDLK_s);
+	hkeys_l.addCommandTypeKeycode(cuttlefish::CommandPicture::Type::AttackMove, SDLK_a);
+
 }
 
 } // namespace fas

@@ -387,51 +387,16 @@ void GameLoop::runLoop(Window &window_p)
 			}
 			if( e.type == SDL_KEYDOWN)
 			{
-				/* Check the SDLKey values and move change the coords */
-				switch( e.key.keysym.sym ){
-					/// handle panel
-					case SDLK_a:
+				/// handle panel
+				if(e.key.keysym.sym >= SDLK_a && e.key.keysym.sym <= SDLK_z)
+				{
+					SpriteModel const * spriteModel_l = _panel.getSpriteModel(e.key.keysym.sym);
+					if(spriteModel_l->unitModel || spriteModel_l->buildingModel)
 					{
-						SpriteModel const * spriteModel_l = _panel.getSpriteModelOnGrid(0, 0);
 						commandFromSpriteModel(spriteModel_l, state_l, _spriteLibrary, selection_l, _controller,
 							currentClicMode_l, standardClicMode_l, _world);
-						break;
 					}
-					case SDLK_z:
-					{
-						SpriteModel const * spriteModel_l = _panel.getSpriteModelOnGrid(1, 0);
-						commandFromSpriteModel(spriteModel_l, state_l, _spriteLibrary, selection_l, _controller,
-							currentClicMode_l, standardClicMode_l, _world);
-						break;
-					}
-					case SDLK_e:
-					{
-						SpriteModel const * spriteModel_l = _panel.getSpriteModelOnGrid(2, 0);
-						commandFromSpriteModel(spriteModel_l, state_l, _spriteLibrary, selection_l, _controller,
-							currentClicMode_l, standardClicMode_l, _world);
-						break;
-					}
-					case SDLK_r:
-					{
-						SpriteModel const * spriteModel_l = _panel.getSpriteModelOnGrid(3, 0);
-						commandFromSpriteModel(spriteModel_l, state_l, _spriteLibrary, selection_l, _controller,
-							currentClicMode_l, standardClicMode_l, _world);
-						break;
-					}
-					case SDLK_q:
-					{
-						SpriteModel const * spriteModel_l = _panel.getSpriteModelOnGrid(0, 1);
-						commandFromSpriteModel(spriteModel_l, state_l, _spriteLibrary, selection_l, _controller,
-							currentClicMode_l, standardClicMode_l, _world);
-						break;
-					}
-					case SDLK_SPACE:
-					{
-						cleanClicMode(currentClicMode_l, &standardClicMode_l);
-						currentClicMode_l = new AttackMoveClicMode();
-						break;
-					}
-					case SDLK_s:
+					else if(_panel.isStop(e.key.keysym.sym))
 					{
 						for(SpriteEntity * spriteEnt_l : selection_l._sprites)
 						{
@@ -451,8 +416,16 @@ void GameLoop::runLoop(Window &window_p)
 								_controller.commitCommandAsPlayer(command_l, _world.getPlayer());
 							}
 						}
-						break;
 					}
+					else if(_panel.isAttackMove(e.key.keysym.sym))
+					{
+						// switch to attack move
+						cleanClicMode(currentClicMode_l, &standardClicMode_l);
+						currentClicMode_l = new AttackMoveClicMode();
+					}
+				}
+				/* Check the SDLKey values and move change the coords */
+				switch( e.key.keysym.sym ){
 					case SDLK_ESCAPE:
 					{
 						menuActive_l = !menuActive_l;

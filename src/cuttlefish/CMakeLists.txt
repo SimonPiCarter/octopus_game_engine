@@ -29,6 +29,8 @@ add_library(cuttlefish
 	${CMAKE_CURRENT_SOURCE_DIR}/src/panel/ProductionPanel.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/panel/ResourcesPanel.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/panel/StatsPanel.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/src/panel/commands/CommandHotkeys.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/src/panel/commands/CommandPicture.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/panel/stats/ProductionPicture.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/panel/stats/SelectionPicture.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/sprite/Picture.cc
