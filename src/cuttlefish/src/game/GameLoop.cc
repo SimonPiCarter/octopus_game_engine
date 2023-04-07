@@ -345,7 +345,11 @@ void GameLoop::runLoop(Window &window_p)
 					int option_l = _optionPanel.getOption(window_p, e.button.x, e.button.y);
 					if(option_l >=0)
 					{
-						_controller.commitCommandAsPlayer(_optionPanel.newCommandFromOption(option_l), _world.getPlayer());
+						octopus::Command * cmd_l = _optionPanel.newCommandFromOption(option_l);
+						if(cmd_l)
+						{
+							_controller.commitCommandAsPlayer(cmd_l, _world.getPlayer());
+						}
 					}
 				}
 				else if(_minimap.isInside(e.button.x, e.button.y) && !clicStartedOnScreen_l)
@@ -430,6 +434,17 @@ void GameLoop::runLoop(Window &window_p)
 				minimapClicked_l = false;
 				clicStartedOnScreen_l = false;
 			}
+			if( e.type == SDL_KEYUP)
+			{
+				/* Check the SDLKey values and move change the coords */
+				switch( e.key.keysym.sym ){
+					case SDLK_TAB:
+					{
+						_optionPanel.unloadChosenOption();
+						break;
+					}
+				}
+			}
 			if( e.type == SDL_KEYDOWN)
 			{
 				/// handle panel
@@ -472,6 +487,11 @@ void GameLoop::runLoop(Window &window_p)
 				}
 				/* Check the SDLKey values and move change the coords */
 				switch( e.key.keysym.sym ){
+					case SDLK_TAB:
+					{
+						_optionPanel.loadChosenOption();
+						break;
+					}
 					case SDLK_ESCAPE:
 					{
 						menuActive_l = !menuActive_l;

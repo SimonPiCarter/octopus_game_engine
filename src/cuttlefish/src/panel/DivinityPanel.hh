@@ -37,6 +37,11 @@ public:
 
     virtual octopus::Command * newCommandFromOption(int option_p) override;
 
+	/// @brief load chosen option for display
+	virtual void loadChosenOption() {}
+	/// @brief unload chosen option for display
+	virtual void unloadChosenOption() {}
+
 	virtual int getOption(Window &window_p, int x, int y) const;
 
 	/// @brief add a sprite info for a given divinity type

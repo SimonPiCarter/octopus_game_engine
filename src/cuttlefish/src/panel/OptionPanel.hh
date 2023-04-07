@@ -50,9 +50,15 @@ public:
 	/// @brief method to add option from a PlayerAddOptionStep
 	virtual void addOptionLayer(octopus::PlayerAddOptionStep const *) {}
 
-    /// @brief returna a new command to be commited to the controller based on the option
+    /// @brief return a a new command to be commited to the controller based on the option
     /// @param option_p is supposed to be valid (>= 0)
+	/// @return can return nullptr if no valide command from given option or panel state
     virtual octopus::Command * newCommandFromOption(int option_p) = 0;
+
+	/// @brief load chosen option for display
+	virtual void loadChosenOption() = 0;
+	/// @brief unload chosen option for display
+	virtual void unloadChosenOption() = 0;
 
     /// @brief refresh from mouse (to highlight hovered sub panel)
 	virtual void refreshFromMouse(cuttlefish::Window &window_p, int x, int y) {}
