@@ -203,21 +203,35 @@ ModifierOption generateRandomModifierOption(unsigned long player_p, RandomGenera
 
     int mod_l = gen_p.roll(0, 3);
 
+    // roll power
+    Fixed power_l = gen_p.roll(100, 400)/Fixed(100);
+    // AoE
     if(mod_l == 0)
     {
-        option_l._mod = AoEModifier(gen_p.roll(2, 4)/10., gen_p.roll(2, 5));
+        int range_l = gen_p.roll(2,5);
+        Fixed ratio_l(1);
+        if(range_l == 2) { ratio_l = power_l/2.; }
+        if(range_l == 3) { ratio_l = power_l/5.; }
+        if(range_l == 4) { ratio_l = power_l/10.; }
+        if(range_l == 5) { ratio_l = power_l/20.; }
+        option_l._mod = AoEModifier(octopus::to_double(ratio_l), range_l);
     }
+    // Chaining
     else if(mod_l == 1)
     {
-        option_l._mod = ChainingModifier(20, gen_p.roll(2, 5), gen_p.roll(2, 5)/10., gen_p.roll(2, 5));
+        int links_l = gen_p.roll(2,5);
+        option_l._mod = ChainingModifier(20, links_l, octopus::to_double(power_l/links_l), 5);
     }
+    // Dot
     else if(mod_l == 2)
     {
-        option_l._mod = DotModifier(100, gen_p.roll(2, 5), gen_p.roll(5, 10));
+        int ticks_l = gen_p.roll(4,8);
+        option_l._mod = DotModifier(100, ticks_l, octopus::to_double(10*power_l/ticks_l));
     }
+    // Lifesteal
     else
     {
-        option_l._mod = LifeStealModifier(gen_p.roll(2, 4)/10.);
+        option_l._mod = LifeStealModifier(octopus::to_double(power_l/10.));
     }
 
     return option_l;
