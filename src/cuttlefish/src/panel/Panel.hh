@@ -55,7 +55,7 @@ public:
 
 	/// @brief return a sprite model combination if clicked
 	/// @note return nullptr if no clic
-	SpriteModel const * getSpriteModel(Window &window_p, int x, int y) const;
+	CommandPicture const *getCommand(Window &window_p, int x, int y) const;
 
 	/// @brief return sprite model from key
 	SpriteModel const * getSpriteModel(Sint32 const &key_p) const;

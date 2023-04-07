@@ -265,19 +265,33 @@ void GameLoop::runLoop(Window &window_p)
 				{
 					dY = camSpeed_l;
 				}
-				SpriteModel const * spriteModel_l = _panel.getSpriteModel(window_p, e.button.x, e.button.y);
 
-				if(spriteModel_l)
+				// description panel
+				CommandPicture const * command_l = _panel.getCommand(window_p, e.button.x, e.button.y);
+				if(command_l)
 				{
-					if(spriteModel_l->unitModel)
-					{
-						_descPanel.setText(getDesc(*spriteModel_l->unitModel));
-					}
-					if(spriteModel_l->buildingModel)
-					{
-						_descPanel.setText(getDesc(*spriteModel_l->buildingModel));
-					}
+					SpriteModel const * spriteModel_l = command_l->_model;
 					descActive_l = true;
+					if(command_l->_type == CommandPicture::Type::Production && spriteModel_l)
+					{
+						if(spriteModel_l->unitModel)
+						{
+							_descPanel.setText(getDesc(*spriteModel_l->unitModel));
+						}
+						if(spriteModel_l->buildingModel)
+						{
+							_descPanel.setText(getDesc(*spriteModel_l->buildingModel));
+						}
+					}
+					// classic commands
+					else if(command_l->_type == CommandPicture::Type::Stop)
+					{
+						_descPanel.setText("Stop the unit.");
+					}
+					else if(command_l->_type == CommandPicture::Type::AttackMove)
+					{
+						_descPanel.setText("Make the unit move attacking things in range.");
+					}
 				}
 				else
 				{
@@ -356,13 +370,44 @@ void GameLoop::runLoop(Window &window_p)
 				}
 				else
 				{
-					SpriteModel const * spriteModel_l = _panel.getSpriteModel(window_p, e.button.x, e.button.y);
-
-					if(spriteModel_l)
+					// action
+					CommandPicture const * command_l = _panel.getCommand(window_p, e.button.x, e.button.y);
+					if(command_l)
 					{
-						if(e.button.button == SDL_BUTTON_LEFT)
+						if(command_l->_type == CommandPicture::Type::Production)
 						{
-							commandFromSpriteModel(spriteModel_l, state_l, _spriteLibrary, selection_l, _controller, currentClicMode_l, standardClicMode_l, _world);
+							if(e.button.button == SDL_BUTTON_LEFT)
+							{
+								commandFromSpriteModel(command_l->_model, state_l, _spriteLibrary, selection_l, _controller, currentClicMode_l, standardClicMode_l, _world);
+							}
+						}
+						// classic commands
+						else if(command_l->_type == CommandPicture::Type::Stop)
+						{
+							for(SpriteEntity * spriteEnt_l : selection_l._sprites)
+							{
+								if(state_l.getEntity(spriteEnt_l->getHandle())->_model._isBuilding)
+								{
+									octopus::BuildingCancelCommand * command_l = new octopus::BuildingCancelCommand(
+											spriteEnt_l->getHandle()
+										);
+									_controller.commitCommandAsPlayer(command_l, _world.getPlayer());
+								}
+								else
+								{
+									octopus::EntityWaitCommand * command_l = new octopus::EntityWaitCommand(
+											spriteEnt_l->getHandle(),
+											spriteEnt_l->getHandle()
+										);
+									_controller.commitCommandAsPlayer(command_l, _world.getPlayer());
+								}
+							}
+						}
+						else if(command_l->_type == CommandPicture::Type::AttackMove)
+						{
+							// switch to attack move
+							cleanClicMode(currentClicMode_l, &standardClicMode_l);
+							currentClicMode_l = new AttackMoveClicMode();
 						}
 					}
 					//

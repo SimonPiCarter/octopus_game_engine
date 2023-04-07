@@ -163,13 +163,13 @@ void Panel::addSpriteInfo(std::string const &model_p, int state_p, int frame_p)
 	_mapIcons[model_p].frame = frame_p;
 }
 
-SpriteModel const * Panel::getSpriteModel(Window &window_p, int x, int y) const
+CommandPicture const *Panel::getCommand(Window &window_p, int x, int y) const
 {
 	for(CommandPicture const & commandPicture_l : _sprites)
 	{
 		if(commandPicture_l._model->sprite->isInside(window_p, x, y))
 		{
-			return commandPicture_l._model;
+			return &commandPicture_l;
 		}
 	}
 	return nullptr;

@@ -346,7 +346,13 @@ int main( int argc, char* args[] )
 				}
 				else
 				{
-					SpriteModel const * spriteModel_l = panel_l.getSpriteModel(window_l, e.button.x, e.button.y);
+					// action
+					CommandPicture const * command_l = panel_l.getCommand(window_l, e.button.x, e.button.y);
+					SpriteModel const * spriteModel_l = nullptr;
+					if(command_l)
+					{
+						spriteModel_l = command_l->_model;
+					}
 
 					if(spriteModel_l)
 					{
