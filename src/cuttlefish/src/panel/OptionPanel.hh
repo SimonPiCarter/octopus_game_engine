@@ -12,6 +12,7 @@ namespace octopus
 {
 	class Player;
 	class PlayerAddOptionStep;
+	class PlayerPopOptionStep;
 	class State;
     class Command;
 } // namespace octopus
@@ -49,6 +50,9 @@ public:
 
 	/// @brief method to add option from a PlayerAddOptionStep
 	virtual void addOptionLayer(octopus::PlayerAddOptionStep const *) {}
+
+	/// @brief method to pop option from a PlayerPopOptionStep
+	virtual void popOptionLayer(octopus::PlayerPopOptionStep const *) {}
 
     /// @brief return a a new command to be commited to the controller based on the option
     /// @param option_p is supposed to be valid (>= 0)

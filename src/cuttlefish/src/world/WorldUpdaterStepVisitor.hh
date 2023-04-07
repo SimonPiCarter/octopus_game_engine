@@ -77,7 +77,7 @@ public:
 	virtual void visit(octopus::PlayerAnchorDivinityStep const *) override {}
 	virtual void visit(octopus::PlayerBuffAllStep const *) {}
 	virtual void visit(octopus::PlayerLevelUpDivinityStep const *) override {}
-	virtual void visit(octopus::PlayerPopOptionStep const *) {}
+	virtual void visit(octopus::PlayerPopOptionStep const *);
 	virtual void visit(octopus::PlayerResetOptionDivinityStep const *) override {}
 	virtual void visit(octopus::PlayerSpawnStep const *) override {}
 	virtual void visit(octopus::PlayerSpendResourceStep const *) override {}

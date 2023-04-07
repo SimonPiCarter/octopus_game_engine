@@ -171,6 +171,11 @@ void WorldUpdaterStepVisitor::visit(octopus::PlayerAddOptionStep const *steppabl
 	_optPanel.addOptionLayer(steppable_p);
 }
 
+void WorldUpdaterStepVisitor::visit(octopus::PlayerPopOptionStep const *steppable_p)
+{
+	_optPanel.popOptionLayer(steppable_p);
+}
+
 void WorldUpdaterStepVisitor::visit(octopus::CommandWindUpDiffStep const *steppable_p)
 {
 	octopus::Entity const * ent_l = _state->getEntity(steppable_p->_handle);

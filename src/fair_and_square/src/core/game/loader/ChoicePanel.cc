@@ -1,6 +1,7 @@
 #include "ChoicePanel.hh"
 
 #include "step/player/PlayerAddOptionStep.hh"
+#include "step/player/PlayerPopOptionStep.hh"
 #include "command/player/PlayerChoseOptionCommand.hh"
 
 #include <iostream>
@@ -44,6 +45,22 @@ void ChoicePanel::addOptionLayer(octopus::PlayerAddOptionStep const *options_p)
 	{
 		updateCurrent();
 	}
+}
+
+void ChoicePanel::popOptionLayer(octopus::PlayerPopOptionStep const *options_p)
+{
+	if(_chosenMode)
+	{
+		return;
+	}
+	// store chosen option to display them later
+	_chosenOptions.push_back(_queuedOptions.front().at(options_p->_choice));
+
+	// pop first queue
+	_queuedOptions.pop_front();
+	_queuedKeys.pop_front();
+
+	updateCurrent();
 }
 
 /// @brief refresh Panel if necessary

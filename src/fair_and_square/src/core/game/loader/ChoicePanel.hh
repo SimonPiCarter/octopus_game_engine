@@ -33,6 +33,9 @@ public:
 	/// @brief method to add option from a PlayerAddOptionStep
 	virtual void addOptionLayer(octopus::PlayerAddOptionStep const *) override;
 
+	/// @brief method to pop option from a PlayerPopOptionStep
+	virtual void popOptionLayer(octopus::PlayerPopOptionStep const *) override;
+
     /// @brief returna a new command to be commited to the controller based on the option
     /// @param option_p is supposed to be valid (>= 0)
     virtual octopus::Command * newCommandFromOption(int option_p) override;
