@@ -40,6 +40,11 @@ public:
 	/// @brief refresh from mouse (to highlight hovered sub panel)
 	virtual void refreshFromMouse(cuttlefish::Window &window_p, int x, int y) override;
 
+	/// @brief load chosen option for display
+	virtual void loadChosenOption() override;
+	/// @brief unload chosen option for display
+	virtual void unloadChosenOption() override;
+
 protected:
 	cuttlefish::Window &_window;
 	unsigned long const _player;
@@ -55,7 +60,7 @@ protected:
 	std::list<std::vector<Option>> _queuedOptions;
 	std::list<std::string> _queuedKeys;
 	/// @brief list of all chosen options
-	std::list<Option> _chosenOptions;
+	std::vector<Option> _chosenOptions;
 
 	/// @brief background for sub panels
 	cuttlefish::Picture _subBackground;
@@ -71,6 +76,8 @@ protected:
 	std::vector<Option> _options;
 	/// @brief key of the current choice
 	std::string _key;
+	/// @brief true if the panel is in chosen mode
+	bool _chosenMode { false };
 
 };
 } // namespace octopus

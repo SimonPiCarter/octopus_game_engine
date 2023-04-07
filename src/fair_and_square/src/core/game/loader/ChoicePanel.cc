@@ -13,7 +13,7 @@ ChoicePanel::ChoicePanel(cuttlefish::Window &window_p, int x, int y, cuttlefish:
     : cuttlefish::OptionPanel(x, y, background_p), _window(window_p), _player(player_p),
 		_subBackground(subBackground_p, 190, 350, {2}, {1}), _icons(icons_p), _statsIcons(statsIcons_p)
 {
-	_background->setDestination(x, y, 600., 360.);
+	_background->setDestination(x-300, y, 600., 360.);
 }
 
 ChoicePanel::~ChoicePanel()
@@ -101,6 +101,10 @@ bool ChoicePanel::isActive() const
 /// @param option_p is supposed to be valid (>= 0)
 octopus::Command * ChoicePanel::newCommandFromOption(int option_p)
 {
+	if(_chosenMode)
+	{
+		return nullptr;
+	}
 	// store chosen option to display them later
 	_chosenOptions.push_back(_queuedOptions.front().at(option_p));
 
@@ -111,6 +115,53 @@ octopus::Command * ChoicePanel::newCommandFromOption(int option_p)
 	updateCurrent();
 
 	return new octopus::PlayerChoseOptionCommand(_player, _key, option_p);
+}
+
+/// @brief load chosen option for display
+void ChoicePanel::loadChosenOption()
+{
+	if(_chosenMode)
+	{
+		return;
+	}
+	_chosenMode = true;
+	for(cuttlefish::SegmentedText * text_l : _optionsTexts)
+	{
+		delete text_l;
+	}
+	_optionsTexts.clear();
+	for(ChoiceSubPanel *ptr_l : _optionsSubPanel)
+	{
+		delete ptr_l;
+	}
+	_optionsSubPanel.clear();
+
+	if(_chosenOptions.size() > 0)
+	{
+		_options = _chosenOptions;
+		_key = "";
+		size_t i = 0;
+		/// temporary texts
+		for(Option const &opt_l : _options)
+		{
+			_subBackground.setDestination(_x+5+200*i, _y+5, 190., 350.);
+			_optionsSubPanel.push_back(new ChoiceSubPanel(_window, _x+5+200*i, _y+5, 190, _subBackground, _icons, _statsIcons));
+
+			_optionsSubPanel.back()->update(opt_l);
+			++i;
+		}
+	}
+	else
+	{
+		_options.clear();
+	}
+}
+
+/// @brief unload chosen option for display
+void ChoicePanel::unloadChosenOption()
+{
+	_chosenMode = false;
+	updateCurrent();
 }
 
 void ChoicePanel::updateCurrent()
