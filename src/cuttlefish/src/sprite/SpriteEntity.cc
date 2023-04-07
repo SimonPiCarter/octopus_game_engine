@@ -9,11 +9,17 @@ SpriteEntity::SpriteEntity(octopus::Handle const &ent_p, Texture const * texture
 	: Sprite(texture_p, scale_p, logX_p, logY_p, width_p, height_p, nbFramesPerState_p, timePerFramePerState_p)
 	, _handle(ent_p)
 	, _lifeBar(nullptr)
+	, _buildingBar(nullptr)
 {
 	if(background_p && bar_p)
 	{
 		_lifeBar = new ProgressBar(background_p, bar_p, 64*scale_p-2, 6, 1);
 		_lifeBar->setProgress(100);
+	}
+	if(background_p && bar_p)
+	{
+		_buildingBar = new ProgressBar(background_p, bar_p, 64*scale_p-2, 6, 1);
+		_buildingBar->setProgress(100);
 	}
 }
 
@@ -40,11 +46,31 @@ void SpriteEntity::renderLifeBar(Window &window_p, double elapsed_p)
 	}
 }
 
+void SpriteEntity::renderBuildingBar(Window &window_p, double elapsed_p)
+{
+	if(_buildingBar
+	&& _buildingBar->getProgress() != 100)
+	{
+		// center life bar
+		_buildingBar->setPosition(_dest.x +_dest.w/2 - _lifeBar->getWidth()/2  , _dest.y);
+		_buildingBar->update(elapsed_p);
+		_buildingBar->display(window_p);
+	}
+}
+
 void SpriteEntity::setLifePercent(int percent_p)
 {
 	if(_lifeBar)
 	{
 		_lifeBar->setProgress(percent_p);
+	}
+}
+
+void SpriteEntity::setBuildingPercent(int percent_p)
+{
+	if(_buildingBar)
+	{
+		_buildingBar->setProgress(percent_p);
 	}
 }
 

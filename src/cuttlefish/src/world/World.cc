@@ -146,6 +146,7 @@ void World::display(Window &window_p, octopus::State const &state_p, double elap
 		for(SpriteEntity * sprite_l : list_l)
 		{
 			sprite_l->renderLifeBar(window_p, elapsed_p);
+			sprite_l->renderBuildingBar(window_p, elapsed_p);
 		}
 	}
 }

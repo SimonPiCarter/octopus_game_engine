@@ -20,8 +20,10 @@ class SpriteEntity : public Sprite
 		octopus::Handle const & getHandle() const;
 
 		void renderLifeBar(Window &window_p, double elapsed_p);
+		void renderBuildingBar(Window &window_p, double elapsed_p);
 
 		void setLifePercent(int percent_p);
+		void setBuildingPercent(int percent_p);
 
 		bool hasDyingState() const;
 		void setDyingState(unsigned long state_p);
@@ -33,6 +35,7 @@ class SpriteEntity : public Sprite
 		octopus::Handle const _handle;
 
 		ProgressBar * _lifeBar;
+		ProgressBar * _buildingBar;
 
 		unsigned long _dyingState {0};
 		bool _hasDyingState {false};

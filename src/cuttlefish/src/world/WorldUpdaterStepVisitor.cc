@@ -151,10 +151,13 @@ void WorldUpdaterStepVisitor::visit(octopus::EntityMoveStep const *steppable_p)
 
 void WorldUpdaterStepVisitor::visit(octopus::BuildingStep const *steppable_p)
 {
+	octopus::Entity const * ent_l = _state->getEntity(steppable_p->_handle);
+	octopus::Building const * building_l = static_cast<octopus::Building const *>(ent_l);
 	if(_world._sprites[steppable_p->_handle])
 	{
 		// Update state of sprite harvesting
 		_world._sprites[steppable_p->_handle]->setStateNoReset(2);
+		_world._sprites[steppable_p->_handle]->setBuildingPercent(100*building_l->_buildingProgress/building_l->_buildingModel._buildingTime);
 	}
 }
 
