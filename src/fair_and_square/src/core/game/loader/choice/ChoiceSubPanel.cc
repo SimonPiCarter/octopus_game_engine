@@ -198,7 +198,7 @@ void OneOptionPanel::updateFromModifier(octopus::AoEModifier const &mod_p)
 
     _descriptionText = new cuttlefish::WrappedText(&_window, _x+10, _y+74, _w-20);
     _descriptionText->setText(LangEntries::GetInstance()->getEntry("AoEModifierChoice"), {0,0,0});
-    _descriptionText->updateText("ratio", std::to_string(mod_p._ratio));
+    _descriptionText->updateText("ratio", std::to_string(mod_p._ratio*100.));
     _descriptionText->updateText("range", std::to_string(octopus::to_double(mod_p._range)));
 }
 

@@ -210,10 +210,10 @@ ModifierOption generateRandomModifierOption(unsigned long player_p, RandomGenera
     {
         int range_l = gen_p.roll(2,5);
         Fixed ratio_l(1);
-        if(range_l == 2) { ratio_l = power_l/2.; }
-        if(range_l == 3) { ratio_l = power_l/5.; }
-        if(range_l == 4) { ratio_l = power_l/10.; }
-        if(range_l == 5) { ratio_l = power_l/20.; }
+        if(range_l == 2) { ratio_l = power_l/4.; }
+        if(range_l == 3) { ratio_l = power_l/6.; }
+        if(range_l == 4) { ratio_l = power_l/12.; }
+        if(range_l == 5) { ratio_l = power_l/24.; }
         option_l._mod = AoEModifier(octopus::to_double(ratio_l), range_l);
     }
     // Chaining
