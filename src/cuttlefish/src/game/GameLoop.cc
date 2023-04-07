@@ -391,7 +391,8 @@ void GameLoop::runLoop(Window &window_p)
 				if(e.key.keysym.sym >= SDLK_a && e.key.keysym.sym <= SDLK_z)
 				{
 					SpriteModel const * spriteModel_l = _panel.getSpriteModel(e.key.keysym.sym);
-					if(spriteModel_l->unitModel || spriteModel_l->buildingModel)
+					if(spriteModel_l
+					&& (spriteModel_l->unitModel || spriteModel_l->buildingModel))
 					{
 						commandFromSpriteModel(spriteModel_l, state_l, _spriteLibrary, selection_l, _controller,
 							currentClicMode_l, standardClicMode_l, _world);
