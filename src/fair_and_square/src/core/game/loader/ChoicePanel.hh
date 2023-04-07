@@ -54,6 +54,15 @@ protected:
 	/// @brief list of all options queued
 	std::list<std::vector<Option>> _queuedOptions;
 	std::list<std::string> _queuedKeys;
+	/// @brief list of all chosen options
+	std::list<Option> _chosenOptions;
+
+	/// @brief background for sub panels
+	cuttlefish::Picture _subBackground;
+	/// @brief icons for sub panels
+	cuttlefish::Texture const * const _icons;
+	/// @brief stat icons for sub panels
+	cuttlefish::Texture const * const _statsIcons;
 
 	/// @brief update current option with the first option queued
 	void updateCurrent();

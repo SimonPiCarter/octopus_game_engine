@@ -8,21 +8,12 @@
 namespace fas
 {
 
-ChoicePanel::ChoicePanel(cuttlefish::Window &window_p, int x, int y, cuttlefish::Texture const * background_p, cuttlefish::Texture const * subBackground_p, cuttlefish::Texture const *icons_p, cuttlefish::Texture const *statsIcons_p, unsigned long player_p)
-    : cuttlefish::OptionPanel(x, y, background_p), _window(window_p), _player(player_p)
+ChoicePanel::ChoicePanel(cuttlefish::Window &window_p, int x, int y, cuttlefish::Texture const * background_p, cuttlefish::Texture const * subBackground_p,
+	cuttlefish::Texture const *icons_p, cuttlefish::Texture const *statsIcons_p, unsigned long player_p)
+    : cuttlefish::OptionPanel(x, y, background_p), _window(window_p), _player(player_p),
+		_subBackground(subBackground_p, 190, 350, {2}, {1}), _icons(icons_p), _statsIcons(statsIcons_p)
 {
 	_background->setDestination(x, y, 600., 360.);
-
-	cuttlefish::Picture background_l(subBackground_p, 190, 350, {2}, {1});
-
-	background_l.setDestination(x+5, y+5, 190., 350.);
-	_optionsSubPanel.push_back(new ChoiceSubPanel(window_p, x+5, y+5, 190, background_l, icons_p, statsIcons_p));
-
-	background_l.setDestination(x+205, y+5, 190., 350.);
-	_optionsSubPanel.push_back(new ChoiceSubPanel(window_p, x+205, y+5, 190, background_l, icons_p, statsIcons_p));
-
-	background_l.setDestination(x+405, y+5, 190., 350.);
-	_optionsSubPanel.push_back(new ChoiceSubPanel(window_p, x+405, y+5, 190, background_l, icons_p, statsIcons_p));
 }
 
 ChoicePanel::~ChoicePanel()
@@ -30,6 +21,10 @@ ChoicePanel::~ChoicePanel()
 	for(cuttlefish::Picture * pic_l : _optionsBackground)
 	{
 		delete pic_l;
+	}
+	for(ChoiceSubPanel *ptr_l : _optionsSubPanel)
+	{
+		delete ptr_l;
 	}
 }
 
@@ -106,6 +101,9 @@ bool ChoicePanel::isActive() const
 /// @param option_p is supposed to be valid (>= 0)
 octopus::Command * ChoicePanel::newCommandFromOption(int option_p)
 {
+	// store chosen option to display them later
+	_chosenOptions.push_back(_queuedOptions.front().at(option_p));
+
 	// pop first queue
 	_queuedOptions.pop_front();
 	_queuedKeys.pop_front();
@@ -122,6 +120,11 @@ void ChoicePanel::updateCurrent()
 		delete text_l;
 	}
 	_optionsTexts.clear();
+	for(ChoiceSubPanel *ptr_l : _optionsSubPanel)
+	{
+		delete ptr_l;
+	}
+	_optionsSubPanel.clear();
 
 	if(_queuedOptions.size() > 0)
 	{
@@ -131,7 +134,10 @@ void ChoicePanel::updateCurrent()
 		/// temporary texts
 		for(Option const &opt_l : _options)
 		{
-			_optionsSubPanel[i]->update(opt_l);
+			_subBackground.setDestination(_x+5+200*i, _y+5, 190., 350.);
+			_optionsSubPanel.push_back(new ChoiceSubPanel(_window, _x+5+200*i, _y+5, 190, _subBackground, _icons, _statsIcons));
+
+			_optionsSubPanel.back()->update(opt_l);
 			++i;
 		}
 	}
