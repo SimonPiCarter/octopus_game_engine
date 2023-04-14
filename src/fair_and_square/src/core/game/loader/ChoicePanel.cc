@@ -129,6 +129,32 @@ octopus::Command * ChoicePanel::newCommandFromOption(int option_p)
 	return new octopus::PlayerChoseOptionCommand(_player, _key, option_p);
 }
 
+int getXOffset(size_t idx_p, size_t size_p, int w)
+{
+	int spacing_l = 10;
+	int off1_l = spacing_l / 2;
+	int off2_l = w + spacing_l;
+	int off3_l = spacing_l;
+	if(size_p % 2 == 0)
+	{
+		if(idx_p < size_p / 2 )
+		{
+			return - off1_l - (size_p/2 - idx_p) * off2_l - w/2;
+		}
+		return off1_l + (idx_p - size_p/2) * off2_l - w/2;
+	}
+	size_t middle_l = size_p / 2;
+	if(idx_p < middle_l)
+	{
+		return -off3_l - (middle_l - idx_p) * off2_l - w/2;
+	}
+	if(idx_p > middle_l)
+	{
+		return off3_l + (idx_p - middle_l) * off2_l - w/2;
+	}
+	return - w/2;
+}
+
 /// @brief load chosen option for display
 void ChoicePanel::loadChosenOption()
 {
@@ -153,11 +179,14 @@ void ChoicePanel::loadChosenOption()
 		_options = _chosenOptions;
 		_key = "";
 		size_t i = 0;
+		size_t middle_l = _options.size()/2;
 		/// temporary texts
 		for(Option const &opt_l : _options)
 		{
-			_subBackground.setDestination(_x+5+200*i, _y+5, 190., 350.);
-			_optionsSubPanel.push_back(new ChoiceSubPanel(_window, _x+5+200*i, _y+5, 190, _subBackground, _icons, _statsIcons));
+			int x = _x + getXOffset(i, _options.size(), 190);
+			int y = _y+5;
+			_subBackground.setDestination(x, y, 190., 350.);
+			_optionsSubPanel.push_back(new ChoiceSubPanel(_window, x, y, 190, _subBackground, _icons, _statsIcons));
 
 			_optionsSubPanel.back()->update(opt_l);
 			++i;
@@ -198,8 +227,10 @@ void ChoicePanel::updateCurrent()
 		/// temporary texts
 		for(Option const &opt_l : _options)
 		{
-			_subBackground.setDestination(_x+5+200*i, _y+5, 190., 350.);
-			_optionsSubPanel.push_back(new ChoiceSubPanel(_window, _x+5+200*i, _y+5, 190, _subBackground, _icons, _statsIcons));
+			int x = _x + getXOffset(i, _options.size(), 190);
+			int y = _y+5;
+			_subBackground.setDestination(x, y, 190., 350.);
+			_optionsSubPanel.push_back(new ChoiceSubPanel(_window, x, y, 190, _subBackground, _icons, _statsIcons));
 
 			_optionsSubPanel.back()->update(opt_l);
 			++i;
