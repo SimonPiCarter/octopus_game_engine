@@ -75,6 +75,9 @@ protected:
 	/// @brief update current option with the first option queued
 	void updateCurrent();
 
+	/// @brief true when an option must be picked
+	bool _active { false };
+
 	/// @brief option list of the current choice
 	std::vector<Option> _options;
 	/// @brief key of the current choice

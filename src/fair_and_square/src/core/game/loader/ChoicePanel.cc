@@ -41,6 +41,8 @@ void ChoicePanel::addOptionLayer(octopus::PlayerAddOptionStep const *options_p)
 	_queuedOptions.push_back(gen_l->_options);
 	_queuedKeys.push_back(options_p->_key);
 
+	_active = true;
+
 	if(_queuedOptions.size() == 1)
 	{
 		updateCurrent();
@@ -111,7 +113,7 @@ void ChoicePanel::refreshFromMouse(cuttlefish::Window &window_p, int x, int y)
 /// @brief return true if the panel as active options to be chosen
 bool ChoicePanel::isActive() const
 {
-	return !_options.empty();
+	return _active;
 }
 
 /// @brief returna a new command to be commited to the controller based on the option
@@ -122,14 +124,7 @@ octopus::Command * ChoicePanel::newCommandFromOption(int option_p)
 	{
 		return nullptr;
 	}
-	// store chosen option to display them later
-	_chosenOptions.push_back(_queuedOptions.front().at(option_p));
-
-	// pop first queue
-	_queuedOptions.pop_front();
-	_queuedKeys.pop_front();
-
-	updateCurrent();
+	_active = false;
 
 	return new octopus::PlayerChoseOptionCommand(_player, _key, option_p);
 }
@@ -172,6 +167,7 @@ void ChoicePanel::loadChosenOption()
 	{
 		_options.clear();
 	}
+	_active = !_options.empty();
 }
 
 /// @brief unload chosen option for display
@@ -213,6 +209,7 @@ void ChoicePanel::updateCurrent()
 	{
 		_options.clear();
 	}
+	_active = !_options.empty();
 }
 
 } // namespace fas
