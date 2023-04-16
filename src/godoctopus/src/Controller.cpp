@@ -174,6 +174,31 @@ void Controller::set_pause(bool paused_p)
     _paused = paused_p;
 }
 
+TypedArray<String> Controller::get_models(int handle_p, int player_p) const
+{
+    TypedArray<String> models_l;
+    octopus::Entity const *ent_l = _state->getEntity(handle_p);
+	// update
+	if(ent_l->_model._isBuilder)
+	{
+		std::list<octopus::BuildingModel const *> buildingGrid_l = octopus::getAvailableBuildingModels(*_state->getPlayer(player_p));
+		for(octopus::BuildingModel const * model_l : buildingGrid_l)
+		{
+            models_l.push_back(model_l->_id.c_str());
+		}
+
+	} else if(ent_l->_model._isBuilding)
+	{
+		std::list<octopus::UnitModel const *> unitGrid_l = octopus::getAvailableUnitModels(
+			static_cast<octopus::BuildingModel const &>(ent_l->_model), *_state->getPlayer(player_p));
+		for(octopus::UnitModel const * model_l : unitGrid_l)
+		{
+            models_l.push_back(model_l->_id.c_str());
+		}
+	}
+    return models_l;
+}
+
 void Controller::add_move_commands(TypedArray<int> const &handles_p, Vector2 const &target_p, int player_p)
 {
     for(size_t i = 0 ; i < handles_p.size() ; ++ i)
@@ -292,6 +317,8 @@ void Controller::_bind_methods()
     ClassDB::bind_method(D_METHOD("init", "size"), &Controller::init);
     ClassDB::bind_method(D_METHOD("has_state"), &Controller::has_state);
     ClassDB::bind_method(D_METHOD("set_pause", "pause"), &Controller::set_pause);
+    ClassDB::bind_method(D_METHOD("get_models", "handle", "player"), &Controller::get_models);
+
     ClassDB::bind_method(D_METHOD("add_move_commands", "handles", "target", "player"), &Controller::add_move_commands);
     ClassDB::bind_method(D_METHOD("add_move_target_commands", "handles", "target", "handle_target", "player"), &Controller::add_move_target_commands);
     ClassDB::bind_method(D_METHOD("add_attack_move_commands", "handles", "target", "player"), &Controller::add_attack_move_commands);

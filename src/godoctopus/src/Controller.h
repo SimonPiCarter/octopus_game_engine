@@ -39,13 +39,17 @@ public:
 
     octopus::Entity const * getEntity(int handle_p) const;
 
+    // signals
 	void spawn(int handle_p);
 	void kill(int handle_p);
 	void move(int handle_p);
 	void windup(int handle_p);
 	void hp_change(int handle_p, float ratio_p);
 
+    // setters
     void set_pause(bool paused_p);
+    // getters
+    TypedArray<String> get_models(int handle_p, int player_p) const;
 
     // commands
     void add_move_commands(TypedArray<int> const &handles_p, Vector2 const &target_p, int player_p);
