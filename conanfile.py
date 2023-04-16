@@ -26,12 +26,14 @@ class cfllpspConan(ConanFile):
     options = {
         "shared": [True, False],
         "fPIC": [True, False],
-        "with_graphic": [True, False]
+        "with_graphic": [True, False],
+        "with_godot": [True, False]
         }
     default_options = {
         "shared": False,
         "fPIC": True,
-        "with_graphic": False
+        "with_graphic": False,
+        "with_godot": False
         }
     generators = "cmake"
     #build_policy = # can be never, missing, always
@@ -45,6 +47,7 @@ class cfllpspConan(ConanFile):
         if self.settings.os == "Windows":
             del self.options.fPIC
             self.options.with_graphic = True
+            self.options.with_godot = True
 
     # CMake configuration wrapper
     def configure_cmake(self):
@@ -82,6 +85,7 @@ class cfllpspConan(ConanFile):
     def configure_cmake(self):
         cmake = CMake(self)
         cmake.definitions["GRAPHICS"] = "ON" if self.options.with_graphic else "OFF"
+        cmake.definitions["GODOT"] = "ON" if self.options.with_godot else "OFF"
         cmake.configure()
         return cmake
 

@@ -13,6 +13,8 @@ project (game
 	LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
 # ===========================================================
 # External requirements
@@ -54,6 +56,9 @@ endif()
 add_subdirectory(src/levels)
 add_subdirectory(src/game)
 add_subdirectory(src/fair_and_square)
+if(GODOT)
+	add_subdirectory(src/godoctopus)
+endif()
 
 # ============================================================================
 # Installation
