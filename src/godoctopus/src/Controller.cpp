@@ -9,6 +9,8 @@
 
 
 // octopus
+#include "command/building/BuildingUnitProductionCommand.hh"
+#include "command/CommandQueue.hh"
 #include "command/entity/EntityAttackCommand.hh"
 #include "command/entity/EntityAttackMoveCommand.hh"
 #include "command/entity/EntityBuildingCommand.hh"
@@ -26,6 +28,7 @@
 
 // godot
 #include "controller/ControllerStepVisitor.h"
+#include "production/ProductionCommand.h"
 
 namespace godot {
 
@@ -199,11 +202,56 @@ TypedArray<String> Controller::get_models(int handle_p, int player_p) const
     return models_l;
 }
 
+void Controller::get_productions(TypedArray<int> const &handles_p, int max_p)
+{
+    std::vector<CommandInfo> vecCommands_l;
+
+    for(size_t i = 0 ; i < handles_p.size() ; ++ i)
+    {
+        int idx_l = handles_p[i];
+		octopus::Entity const * ent_l = _state->getEntity(idx_l);
+		if(!ent_l->getQueue().hasCommand())
+		{
+			continue;
+		}
+		size_t posInQueue_l = 0;
+		auto it_l = ent_l->getQueue().getCurrentCommand();
+		while(it_l != ent_l->getQueue().getEnd())
+		{
+			octopus::BuildingUnitProductionCommand const *cmd_l = dynamic_cast<octopus::BuildingUnitProductionCommand const *>(it_l->_cmd);
+			octopus::UnitProductionData const *data_l = dynamic_cast<octopus::UnitProductionData const *>(it_l->_data);
+			if(cmd_l && data_l && !data_l->_canceled)
+			{
+				vecCommands_l.push_back({cmd_l, data_l, it_l->_id, posInQueue_l});
+			}
+			++it_l;
+			++posInQueue_l;
+		}
+	}
+
+	std::sort(vecCommands_l.begin(), vecCommands_l.end(), CommandSorter());
+
+	for(size_t i = 0 ; i < std::min<size_t>(vecCommands_l.size(), max_p) ; ++i)
+	{
+        CommandInfo const &info_l = vecCommands_l[i];
+        String model_l(info_l.cmd->getModel()._id.c_str());
+        float progress_l = 100.f*vecCommands_l[i].data->_progression/vecCommands_l[i].data->_completeTime;
+        emit_signal("production_command", int(info_l.cmd->getHandleCommand()), int(info_l.idx), model_l, progress_l);
+	}
+}
+
 void Controller::add_move_commands(TypedArray<int> const &handles_p, Vector2 const &target_p, int player_p)
 {
     for(size_t i = 0 ; i < handles_p.size() ; ++ i)
     {
         int idx_l = handles_p[i];
+        const octopus::Entity * cur_l = _state->getEntity(idx_l);
+		bool isStatic_l = cur_l->_model._isStatic;
+
+		if(isStatic_l)
+        {
+            continue;
+        }
         _controller->commitCommandAsPlayer(new octopus::EntityMoveCommand(idx_l, idx_l, octopus::Vector(target_p.x, target_p.y), 0, {octopus::Vector(target_p.x, target_p.y)}, true), player_p);
     }
 }
@@ -306,7 +354,88 @@ void Controller::add_attack_move_commands(TypedArray<int> const &handles_p, Vect
     for(size_t i = 0 ; i < handles_p.size() ; ++ i)
     {
         int idx_l = handles_p[i];
+        const octopus::Entity * cur_l = _state->getEntity(idx_l);
+		bool isStatic_l = cur_l->_model._isStatic;
+
+		if(isStatic_l)
+        {
+            continue;
+        }
         _controller->commitCommandAsPlayer(new octopus::EntityAttackMoveCommand(idx_l, idx_l, octopus::Vector(target_p.x, target_p.y), 0, {octopus::Vector(target_p.x, target_p.y)}, true), player_p);
+    }
+}
+
+unsigned long remainingQueueTime(octopus::Building const &building_p)
+{
+	// remaining queue time
+	unsigned long time_l = 0;
+
+	if(building_p.getQueue().hasCommand())
+	{
+		auto it_l = building_p.getQueue().getCurrentCommand();
+		while(it_l != building_p.getQueue().getEnd())
+		{
+			octopus::BuildingUnitProductionCommand const *cmd_l = dynamic_cast<octopus::BuildingUnitProductionCommand const *>(it_l->_cmd);
+			octopus::UnitProductionData const *data_l = dynamic_cast<octopus::UnitProductionData const *>(it_l->_data);
+			if(cmd_l && data_l
+			&& data_l->_completeTime > data_l->_progression)
+			{
+				time_l += data_l->_completeTime - data_l->_progression;
+			}
+			++it_l;
+		}
+	}
+
+	return time_l;
+}
+
+int getBestProductionBuilding(TypedArray<int> const &handles_p, octopus::State const &state_p, octopus::UnitModel const &model_p)
+{
+    int best_l = -1;
+    unsigned long lowestQueue_l = 0;
+    for(size_t i = 0 ; i < handles_p.size() ; ++ i)
+    {
+        int idx_l = handles_p[i];
+        // check ent
+        octopus::Entity const *ent_l = state_p.getEntity(idx_l);
+        // skip non building
+        if(!ent_l->_model._isBuilding)
+        {
+            continue;
+        }
+        octopus::Building const *building_l = dynamic_cast<octopus::Building const *>(ent_l);
+
+        // skip if cannot produce building
+        if(!building_l->_buildingModel.canProduce(&model_p)
+        || !building_l->isBuilt())
+        {
+            continue;
+        }
+
+        // get production time queued up
+        unsigned long queueTime_l = remainingQueueTime(*building_l);
+
+        if(best_l < 0 || queueTime_l < lowestQueue_l)
+        {
+            best_l = idx_l;
+            lowestQueue_l = queueTime_l;
+        }
+    }
+
+    return best_l;
+}
+
+void Controller::add_unit_build_command(TypedArray<int> const &handles_p, String model_p, int player_p)
+{
+    std::string s(model_p.utf8().get_data());
+    octopus::UnitModel const &unit_l = lib_l.getUnitModel(s);
+    int best_l = getBestProductionBuilding(handles_p, *_state, unit_l);
+
+    if(best_l >= 0)
+    {
+        octopus::BuildingUnitProductionCommand *cmd_l = new octopus::BuildingUnitProductionCommand(best_l, best_l, unit_l);
+        cmd_l->setQueued(true);
+        _controller->commitCommandAsPlayer(cmd_l, player_p);
     }
 }
 
@@ -318,10 +447,12 @@ void Controller::_bind_methods()
     ClassDB::bind_method(D_METHOD("has_state"), &Controller::has_state);
     ClassDB::bind_method(D_METHOD("set_pause", "pause"), &Controller::set_pause);
     ClassDB::bind_method(D_METHOD("get_models", "handle", "player"), &Controller::get_models);
+    ClassDB::bind_method(D_METHOD("get_productions", "handles", "max"), &Controller::get_productions);
 
     ClassDB::bind_method(D_METHOD("add_move_commands", "handles", "target", "player"), &Controller::add_move_commands);
     ClassDB::bind_method(D_METHOD("add_move_target_commands", "handles", "target", "handle_target", "player"), &Controller::add_move_target_commands);
     ClassDB::bind_method(D_METHOD("add_attack_move_commands", "handles", "target", "player"), &Controller::add_attack_move_commands);
+    ClassDB::bind_method(D_METHOD("add_unit_build_command", "handle", "model", "player"), &Controller::add_unit_build_command);
 
     ADD_GROUP("Controller", "Controller_");
 
@@ -331,6 +462,8 @@ void Controller::_bind_methods()
     ADD_SIGNAL(MethodInfo("kill_unit", PropertyInfo(Variant::INT, "handle")));
     ADD_SIGNAL(MethodInfo("hp_change", PropertyInfo(Variant::INT, "handle"), PropertyInfo(Variant::FLOAT, "ratio")));
     ADD_SIGNAL(MethodInfo("harvest_unit", PropertyInfo(Variant::INT, "handle")));
+
+    ADD_SIGNAL(MethodInfo("production_command", PropertyInfo(Variant::INT, "handle"), PropertyInfo(Variant::INT, "index"), PropertyInfo(Variant::STRING, "model"), PropertyInfo(Variant::FLOAT, "progress")));
 }
 
 }

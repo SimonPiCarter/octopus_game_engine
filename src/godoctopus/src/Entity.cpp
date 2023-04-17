@@ -4,10 +4,6 @@
 #include <godot_cpp/variant/utility_functions.hpp>
 #include <godot_cpp/classes/input.hpp>
 
-#include "library/levels/MazeLevel.hh"
-#include "library/levels/ArenaLevel.hh"
-#include "library/levels/WaveLevel.hh"
-
 // octopus
 #include "state/entity/Entity.hh"
 
