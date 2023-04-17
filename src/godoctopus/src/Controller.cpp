@@ -9,7 +9,9 @@
 
 
 // octopus
+#include "command/building/BuildingBlueprintCommand.hh"
 #include "command/building/BuildingUnitProductionCommand.hh"
+#include "command/building/BuildingUnitCancelCommand.hh"
 #include "command/CommandQueue.hh"
 #include "command/entity/EntityAttackCommand.hh"
 #include "command/entity/EntityAttackMoveCommand.hh"
@@ -83,10 +85,10 @@ void Controller::init(int size_p)
 {
     UtilityFunctions::print("init");
     UtilityFunctions::print("init steps...");
-	// std::list<octopus::Steppable *> spawners_l = ArenaLevelSteps(lib_l, size_p);
-	// std::list<octopus::Command *> commands_l = ArenaLevelCommands(lib_l);
-	std::list<octopus::Steppable *> spawners_l = WaveLevelSteps(lib_l, rand_l, 15, 3*60*100, 0, 250);
-	std::list<octopus::Command *> commands_l = WaveLevelCommands(lib_l, rand_l, 250);
+	// std::list<octopus::Steppable *> spawners_l = ArenaLevelSteps(_lib, size_p);
+	// std::list<octopus::Command *> commands_l = ArenaLevelCommands(_lib);
+	std::list<octopus::Steppable *> spawners_l = WaveLevelSteps(_lib, rand_l, 15, 3*60*100, 0, 250);
+	std::list<octopus::Command *> commands_l = WaveLevelCommands(_lib, rand_l, 250);
     UtilityFunctions::print("ok");
 
     UtilityFunctions::print("delete old controller...");
@@ -200,6 +202,12 @@ TypedArray<String> Controller::get_models(int handle_p, int player_p) const
 		}
 	}
     return models_l;
+}
+
+bool Controller::is_building(String const &model_p) const
+{
+    std::string modelId_l(model_p.utf8().get_data());
+    return _lib.hasBuildingModel(modelId_l);
 }
 
 void Controller::get_productions(TypedArray<int> const &handles_p, int max_p)
@@ -425,17 +433,36 @@ int getBestProductionBuilding(TypedArray<int> const &handles_p, octopus::State c
     return best_l;
 }
 
-void Controller::add_unit_build_command(TypedArray<int> const &handles_p, String model_p, int player_p)
+void Controller::add_unit_build_command(TypedArray<int> const &handles_p, String const &model_p, int player_p)
 {
-    std::string s(model_p.utf8().get_data());
-    octopus::UnitModel const &unit_l = lib_l.getUnitModel(s);
-    int best_l = getBestProductionBuilding(handles_p, *_state, unit_l);
+    std::string modelId_l(model_p.utf8().get_data());
 
-    if(best_l >= 0)
+    if(_lib.hasUnitModel(modelId_l))
     {
-        octopus::BuildingUnitProductionCommand *cmd_l = new octopus::BuildingUnitProductionCommand(best_l, best_l, unit_l);
-        cmd_l->setQueued(true);
-        _controller->commitCommandAsPlayer(cmd_l, player_p);
+        octopus::UnitModel const &unit_l = _lib.getUnitModel(modelId_l);
+        int best_l = getBestProductionBuilding(handles_p, *_state, unit_l);
+
+        if(best_l >= 0)
+        {
+            octopus::BuildingUnitProductionCommand *cmd_l = new octopus::BuildingUnitProductionCommand(best_l, best_l, unit_l);
+            cmd_l->setQueued(true);
+            _controller->commitCommandAsPlayer(cmd_l, player_p);
+        }
+    }
+}
+
+void Controller::add_unit_build_cancel_command(int handle_p, int index_p, int player_p)
+{
+    _controller->commitCommandAsPlayer(new octopus::BuildingUnitCancelCommand(handle_p, index_p), player_p);
+}
+
+void Controller::add_blueprint_command(Vector2 const &target_p, String const &model_p, int player_p)
+{
+    std::string modelId_l(model_p.utf8().get_data());
+
+    if(_lib.hasBuildingModel(modelId_l))
+    {
+        _controller->commitCommandAsPlayer(new octopus::BuildingBlueprintCommand(octopus::Vector(target_p.x, target_p.y), player_p, _lib.getBuildingModel(modelId_l)), player_p);
     }
 }
 
@@ -447,12 +474,15 @@ void Controller::_bind_methods()
     ClassDB::bind_method(D_METHOD("has_state"), &Controller::has_state);
     ClassDB::bind_method(D_METHOD("set_pause", "pause"), &Controller::set_pause);
     ClassDB::bind_method(D_METHOD("get_models", "handle", "player"), &Controller::get_models);
+    ClassDB::bind_method(D_METHOD("is_building", "handle"), &Controller::is_building);
     ClassDB::bind_method(D_METHOD("get_productions", "handles", "max"), &Controller::get_productions);
 
     ClassDB::bind_method(D_METHOD("add_move_commands", "handles", "target", "player"), &Controller::add_move_commands);
     ClassDB::bind_method(D_METHOD("add_move_target_commands", "handles", "target", "handle_target", "player"), &Controller::add_move_target_commands);
     ClassDB::bind_method(D_METHOD("add_attack_move_commands", "handles", "target", "player"), &Controller::add_attack_move_commands);
     ClassDB::bind_method(D_METHOD("add_unit_build_command", "handle", "model", "player"), &Controller::add_unit_build_command);
+    ClassDB::bind_method(D_METHOD("add_unit_build_cancel_command", "handle", "index", "player"), &Controller::add_unit_build_cancel_command);
+    ClassDB::bind_method(D_METHOD("add_blueprint_command", "target", "model", "player"), &Controller::add_blueprint_command);
 
     ADD_GROUP("Controller", "Controller_");
 

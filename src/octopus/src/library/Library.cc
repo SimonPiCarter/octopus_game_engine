@@ -26,6 +26,11 @@ EntityModel const & Library::getEntityModel(std::string const &id_p) const
 	return *_mapEntityModel.at(id_p);
 }
 
+bool Library::hasEntityModel(std::string const &id_p) const
+{
+	return _mapEntityModel.find(id_p) != _mapEntityModel.end();
+}
+
 void Library::registerBuildingModel(std::string const &id_p, BuildingModel const &model_p)
 {
 	_mapBuildingModel[id_p] = new BuildingModel(model_p);
@@ -43,6 +48,11 @@ BuildingModel const & Library::getBuildingModel(std::string const &id_p) const
 	return *_mapBuildingModel.at(id_p);
 }
 
+bool Library::hasBuildingModel(std::string const &id_p) const
+{
+	return _mapBuildingModel.find(id_p) != _mapBuildingModel.end();
+}
+
 void Library::registerUnitModel(std::string const &id_p, UnitModel const &model_p)
 {
 	_mapUnitModel[id_p] = new UnitModel(model_p);
@@ -52,6 +62,11 @@ void Library::registerUnitModel(std::string const &id_p, UnitModel const &model_
 UnitModel const & Library::getUnitModel(std::string const &id_p) const
 {
 	return *_mapUnitModel.at(id_p);
+}
+
+bool Library::hasUnitModel(std::string const &id_p) const
+{
+	return _mapUnitModel.find(id_p) != _mapUnitModel.end();
 }
 
 }

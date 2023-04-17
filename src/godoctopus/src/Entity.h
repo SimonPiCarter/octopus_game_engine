@@ -31,6 +31,10 @@ public:
     float get_hp_max(Controller const *controller_p) const;
     Vector2 get_pos(Controller const *controller_p) const;
     bool is_alive(Controller const *controller_p) const;
+    bool is_blueprint(Controller const *controller_p) const;
+    bool is_building(Controller const *controller_p) const;
+    bool is_resource(Controller const *controller_p) const;
+    bool is_unit(Controller const *controller_p) const;
     int get_player(Controller const *controller_p) const;
     String get_model(Controller const *controller_p) const;
     float get_damage(Controller const *controller_p) const;

@@ -50,6 +50,7 @@ public:
     void set_pause(bool paused_p);
     // getters
     TypedArray<String> get_models(int handle_p, int player_p) const;
+    bool is_building(String const &model_p) const;
 
     /// @brief will emit one signal per production to create
     void get_productions(TypedArray<int> const &handles_p, int max_p);
@@ -60,11 +61,14 @@ public:
     void add_move_target_commands(TypedArray<int> const &handles_p, Vector2 const &target_p, int handleTarget_p, int player_p);
     void add_attack_move_commands(TypedArray<int> const &handles_p, Vector2 const &target_p, int player_p);
     // production
-    void add_unit_build_command(TypedArray<int> const &handles_p, String model_p, int player_p);
+    void add_unit_build_command(TypedArray<int> const &handles_p, String const &model_p, int player_p);
+    void add_unit_build_cancel_command(int handle_p, int index_p, int player_p);
+    // building
+    void add_blueprint_command(Vector2 const &target_p, String const &model_p, int player_p);
 private:
     octopus::Controller * _controller = nullptr;
     std::thread * _controllerThread = nullptr;
-	octopus::Library lib_l;
+	octopus::Library _lib;
 	octopus::RandomGenerator rand_l {42};
 
     octopus::State const * _state = nullptr;

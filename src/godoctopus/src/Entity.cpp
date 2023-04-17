@@ -6,6 +6,7 @@
 
 // octopus
 #include "state/entity/Entity.hh"
+#include "state/entity/Building.hh"
 
 namespace godot {
 
@@ -43,6 +44,36 @@ bool Entity::is_alive(Controller const *controller_p) const
 {
     octopus::Entity const *ent_l = controller_p->getEntity(_handle);
     return ent_l->_alive;
+}
+
+bool Entity::is_blueprint(Controller const *controller_p) const
+{
+    octopus::Entity const *ent_l = controller_p->getEntity(_handle);
+    if(!ent_l->_model._isBuilding)
+    {
+        return false;
+    }
+    octopus::Building const *building_l = static_cast<octopus::Building const *>(ent_l);
+
+    return building_l->isBlueprint();
+}
+
+bool Entity::is_building(Controller const *controller_p) const
+{
+    octopus::Entity const *ent_l = controller_p->getEntity(_handle);
+    return ent_l->_model._isBuilding;
+}
+
+bool Entity::is_resource(Controller const *controller_p) const
+{
+    octopus::Entity const *ent_l = controller_p->getEntity(_handle);
+    return ent_l->_model._isResource;
+}
+
+bool Entity::is_unit(Controller const *controller_p) const
+{
+    octopus::Entity const *ent_l = controller_p->getEntity(_handle);
+    return ent_l->_model._isUnit;
 }
 
 int Entity::get_player(Controller const *controller_p) const
@@ -91,6 +122,10 @@ void Entity::_bind_methods()
     ClassDB::bind_method(D_METHOD("get_hp_max", "controller"), &Entity::get_hp_max);
     ClassDB::bind_method(D_METHOD("get_pos", "controller"), &Entity::get_pos);
     ClassDB::bind_method(D_METHOD("is_alive", "controller"), &Entity::is_alive);
+    ClassDB::bind_method(D_METHOD("is_blueprint", "controller"), &Entity::is_blueprint);
+    ClassDB::bind_method(D_METHOD("is_building", "controller"), &Entity::is_building);
+    ClassDB::bind_method(D_METHOD("is_resource", "controller"), &Entity::is_resource);
+    ClassDB::bind_method(D_METHOD("is_unit", "controller"), &Entity::is_unit);
     ClassDB::bind_method(D_METHOD("get_model", "controller"), &Entity::get_model);
     ClassDB::bind_method(D_METHOD("get_player", "controller"), &Entity::get_player);
     ClassDB::bind_method(D_METHOD("get_damage", "controller"), &Entity::get_damage);
