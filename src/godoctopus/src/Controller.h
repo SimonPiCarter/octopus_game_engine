@@ -30,7 +30,7 @@ public:
     // Use this to add properties to your class
     static void _bind_methods();
 
-    void init(int size_p);
+    void init(int size_p, bool wave_p, bool big_p);
     void loop();
 
     bool has_state() const;
@@ -51,6 +51,18 @@ public:
     // getters
     TypedArray<String> get_models(int handle_p, int player_p) const;
     bool is_building(String const &model_p) const;
+
+    // resources getter
+	float get_steel(int player_p) const;
+	float get_food(int player_p) const;
+	float get_gas(int player_p) const;
+	float get_anchor(int player_p) const;
+	float get_ether(int player_p) const;
+
+    // vision getter
+    bool is_visible(int x, int y, int player_p) const;
+    bool is_unit_visible(int handle_p, int player_p) const;
+    bool is_explored(int x, int y, int player_p) const;
 
     /// @brief will emit one signal per production to create
     void get_productions(TypedArray<int> const &handles_p, int max_p);

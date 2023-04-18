@@ -81,20 +81,28 @@ void Controller::_process(double delta)
     }
 }
 
-void Controller::init(int size_p)
+void Controller::init(int size_p, bool wave_p, bool big_p)
 {
     UtilityFunctions::print("init");
     UtilityFunctions::print("init steps...");
-	// std::list<octopus::Steppable *> spawners_l = ArenaLevelSteps(_lib, size_p);
-	// std::list<octopus::Command *> commands_l = ArenaLevelCommands(_lib);
-	std::list<octopus::Steppable *> spawners_l = WaveLevelSteps(_lib, rand_l, 15, 3*60*100, 0, 250);
-	std::list<octopus::Command *> commands_l = WaveLevelCommands(_lib, rand_l, 250);
+    std::list<octopus::Steppable *> spawners_l;
+    std::list<octopus::Command *> commands_l;
+    if(wave_p)
+    {
+        spawners_l = WaveLevelSteps(_lib, rand_l, 15, 3*60*100, 0, 250);
+        commands_l = WaveLevelCommands(_lib, rand_l, 250);
+    }
+    else
+    {
+        spawners_l = ArenaLevelSteps(_lib, size_p);
+        commands_l = ArenaLevelCommands(_lib);
+    }
     UtilityFunctions::print("ok");
 
     UtilityFunctions::print("delete old controller...");
     delete _controller;
     UtilityFunctions::print("init controller...");
-	_controller = new octopus::Controller(spawners_l, 0.01, commands_l, 1, 50);
+	_controller = new octopus::Controller(spawners_l, 0.01, commands_l, big_p?5:1, 50);
 	_controller->enableORCA();
     UtilityFunctions::print("ok");
 
@@ -208,6 +216,51 @@ bool Controller::is_building(String const &model_p) const
 {
     std::string modelId_l(model_p.utf8().get_data());
     return _lib.hasBuildingModel(modelId_l);
+}
+
+float Controller::get_steel(int player_p) const
+{
+    octopus::Player const *player_l = _state->getPlayer(player_p);
+    return octopus::getResource(*player_l, octopus::ResourceType::Steel);
+}
+float Controller::get_food(int player_p) const
+{
+    octopus::Player const *player_l = _state->getPlayer(player_p);
+    return octopus::getResource(*player_l, octopus::ResourceType::Food);
+}
+float Controller::get_gas(int player_p) const
+{
+    octopus::Player const *player_l = _state->getPlayer(player_p);
+    return octopus::getResource(*player_l, octopus::ResourceType::Gas);
+}
+float Controller::get_anchor(int player_p) const
+{
+    octopus::Player const *player_l = _state->getPlayer(player_p);
+    return octopus::getResource(*player_l, octopus::ResourceType::Anchor);
+}
+float Controller::get_ether(int player_p) const
+{
+    octopus::Player const *player_l = _state->getPlayer(player_p);
+    return octopus::getResource(*player_l, octopus::ResourceType::Ether);
+}
+
+bool Controller::is_visible(int x, int y, int player_p) const
+{
+    octopus::Player const *player_l = _state->getPlayer(player_p);
+    return _state->getVisionHandler().isVisible(player_l->_team, x, y);
+}
+
+bool Controller::is_unit_visible(int handle_p, int player_p) const
+{
+    octopus::Player const *player_l = _state->getPlayer(player_p);
+	octopus::Entity const &entity_l = *_state->getEntity(handle_p);
+    return _state->getVisionHandler().isVisible(player_l->_team, entity_l);
+}
+
+bool Controller::is_explored(int x, int y, int player_p) const
+{
+    octopus::Player const *player_l = _state->getPlayer(player_p);
+    return _state->getVisionHandler().isExplored(player_l->_team, x, y);
 }
 
 void Controller::get_productions(TypedArray<int> const &handles_p, int max_p)
@@ -470,11 +523,19 @@ void Controller::_bind_methods()
 {
     UtilityFunctions::print("Binding Controller methods");
 
-    ClassDB::bind_method(D_METHOD("init", "size"), &Controller::init);
+    ClassDB::bind_method(D_METHOD("init", "size", "wave", "big"), &Controller::init);
     ClassDB::bind_method(D_METHOD("has_state"), &Controller::has_state);
     ClassDB::bind_method(D_METHOD("set_pause", "pause"), &Controller::set_pause);
     ClassDB::bind_method(D_METHOD("get_models", "handle", "player"), &Controller::get_models);
     ClassDB::bind_method(D_METHOD("is_building", "handle"), &Controller::is_building);
+    ClassDB::bind_method(D_METHOD("get_steel", "player"), &Controller::get_steel);
+    ClassDB::bind_method(D_METHOD("get_food", "player"), &Controller::get_food);
+    ClassDB::bind_method(D_METHOD("get_gas", "player"), &Controller::get_gas);
+    ClassDB::bind_method(D_METHOD("get_anchor", "player"), &Controller::get_anchor);
+    ClassDB::bind_method(D_METHOD("get_ether", "player"), &Controller::get_ether);
+    ClassDB::bind_method(D_METHOD("is_visible", "x", "y", "player"), &Controller::is_visible);
+    ClassDB::bind_method(D_METHOD("is_unit_visible", "handle", "player"), &Controller::is_unit_visible);
+    ClassDB::bind_method(D_METHOD("is_explored", "x", "y", "player"), &Controller::is_explored);
     ClassDB::bind_method(D_METHOD("get_productions", "handles", "max"), &Controller::get_productions);
 
     ClassDB::bind_method(D_METHOD("add_move_commands", "handles", "target", "player"), &Controller::add_move_commands);
