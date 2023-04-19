@@ -14,6 +14,7 @@
 namespace octopus
 {
     class Entity;
+    class Player;
     class State;
 } // namespace octopus
 
@@ -38,6 +39,7 @@ public:
     void _process(double delta) override;
 
     octopus::Entity const * getEntity(int handle_p) const;
+    octopus::Player const * getPlayer(int player_p) const;
 
     // signals
 	void spawn(int handle_p);

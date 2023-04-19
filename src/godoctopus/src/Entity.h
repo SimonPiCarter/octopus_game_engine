@@ -36,6 +36,7 @@ public:
     bool is_resource(Controller const *controller_p) const;
     bool is_unit(Controller const *controller_p) const;
     int get_player(Controller const *controller_p) const;
+    int get_team(Controller const *controller_p) const;
     String get_model(Controller const *controller_p) const;
     float get_damage(Controller const *controller_p) const;
     float get_armor(Controller const *controller_p) const;

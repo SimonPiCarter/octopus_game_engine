@@ -5,6 +5,7 @@
 #include <godot_cpp/classes/input.hpp>
 
 // octopus
+#include "state/player/Player.hh"
 #include "state/entity/Entity.hh"
 #include "state/entity/Building.hh"
 
@@ -82,6 +83,13 @@ int Entity::get_player(Controller const *controller_p) const
     return ent_l->_player;
 }
 
+int Entity::get_team(Controller const *controller_p) const
+{
+    octopus::Entity const *ent_l = controller_p->getEntity(_handle);
+    octopus::Player const *player_l = controller_p->getPlayer(ent_l->_player);
+    return player_l->_team;
+}
+
 String Entity::get_model(Controller const *controller_p) const
 {
     octopus::Entity const *ent_l = controller_p->getEntity(_handle);
@@ -128,6 +136,7 @@ void Entity::_bind_methods()
     ClassDB::bind_method(D_METHOD("is_unit", "controller"), &Entity::is_unit);
     ClassDB::bind_method(D_METHOD("get_model", "controller"), &Entity::get_model);
     ClassDB::bind_method(D_METHOD("get_player", "controller"), &Entity::get_player);
+    ClassDB::bind_method(D_METHOD("get_team", "controller"), &Entity::get_team);
     ClassDB::bind_method(D_METHOD("get_damage", "controller"), &Entity::get_damage);
     ClassDB::bind_method(D_METHOD("get_armor", "controller"), &Entity::get_armor);
     ClassDB::bind_method(D_METHOD("get_speed", "controller"), &Entity::get_speed);

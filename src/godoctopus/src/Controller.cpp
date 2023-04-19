@@ -155,6 +155,16 @@ octopus::Entity const * Controller::getEntity(int handle_p) const
     return _state->getEntity(handle_p);
 }
 
+octopus::Player const * Controller::getPlayer(int player_p) const
+{
+    if(!_state)
+    {
+        UtilityFunctions::print("Cannot get player with no state");
+        return nullptr;
+    }
+    return _state->getPlayer(player_p);
+}
+
 void Controller::spawn(int handle_p)
 {
 	octopus::Entity const &entity_l = *_state->getEntity(handle_p);
