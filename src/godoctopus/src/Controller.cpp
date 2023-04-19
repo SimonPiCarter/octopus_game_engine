@@ -218,6 +218,11 @@ bool Controller::is_building(String const &model_p) const
     return _lib.hasBuildingModel(modelId_l);
 }
 
+int Controller::get_world_size() const
+{
+    return _state->getWorldSize();
+}
+
 float Controller::get_steel(int player_p) const
 {
     octopus::Player const *player_l = _state->getPlayer(player_p);
@@ -263,6 +268,25 @@ bool Controller::is_explored(int x, int y, int player_p) const
     return _state->getVisionHandler().isExplored(player_l->_team, x, y);
 }
 
+PackedByteArray Controller::getVisibility(int player_p) const
+{
+    PackedByteArray array_l;
+    octopus::Player const *player_l = _state->getPlayer(player_p);
+    for(unsigned long i = 0; i < _state->getWorldSize(); ++i)
+	{
+		for(unsigned long j = 0; j < _state->getWorldSize(); ++j)
+		{
+			int alpha_l = _state->getVisionHandler().isVisible(player_l->_team, j, i)?255:120;
+			if(!_state->getVisionHandler().isExplored(player_l->_team, j, i))
+			{
+				alpha_l = 0;
+			}
+			array_l.append(alpha_l);
+		}
+	}
+    return array_l;
+}
+
 void Controller::get_productions(TypedArray<int> const &handles_p, int max_p)
 {
     std::vector<CommandInfo> vecCommands_l;
@@ -299,6 +323,38 @@ void Controller::get_productions(TypedArray<int> const &handles_p, int max_p)
         float progress_l = 100.f*vecCommands_l[i].data->_progression/vecCommands_l[i].data->_completeTime;
         emit_signal("production_command", int(info_l.cmd->getHandleCommand()), int(info_l.idx), model_l, progress_l);
 	}
+}
+
+void Controller::get_visible_units(int player_p, int ent_registered_p)
+{
+    octopus::Player const *player_l = _state->getPlayer(player_p);
+    _visibleLastCall.resize(_state->getEntities().size(), true);
+	for(octopus::Entity const *ent_l : _state->getEntities())
+	{
+        // stop when entites are not registered yet in godot
+        if(ent_l->_handle >= ent_registered_p)
+        {
+            break;
+        }
+		// skip unit out of range
+		if(ent_l->_model._isUnit
+		&& !_state->getVisionHandler().isVisible(player_l->_team, *ent_l))
+		{
+            if(_visibleLastCall[ent_l->_handle])
+            {
+			    emit_signal("hide_unit", int(ent_l->_handle));
+                _visibleLastCall[ent_l->_handle] = false;
+            }
+		}
+        else if(ent_l->_alive)
+        {
+            if(!_visibleLastCall[ent_l->_handle])
+            {
+                emit_signal("show_unit", int(ent_l->_handle));
+                _visibleLastCall[ent_l->_handle] = true;
+            }
+        }
+    }
 }
 
 void Controller::add_move_commands(TypedArray<int> const &handles_p, Vector2 const &target_p, int player_p)
@@ -528,6 +584,8 @@ void Controller::_bind_methods()
     ClassDB::bind_method(D_METHOD("set_pause", "pause"), &Controller::set_pause);
     ClassDB::bind_method(D_METHOD("get_models", "handle", "player"), &Controller::get_models);
     ClassDB::bind_method(D_METHOD("is_building", "handle"), &Controller::is_building);
+    ClassDB::bind_method(D_METHOD("get_world_size"), &Controller::get_world_size);
+
     ClassDB::bind_method(D_METHOD("get_steel", "player"), &Controller::get_steel);
     ClassDB::bind_method(D_METHOD("get_food", "player"), &Controller::get_food);
     ClassDB::bind_method(D_METHOD("get_gas", "player"), &Controller::get_gas);
@@ -536,7 +594,9 @@ void Controller::_bind_methods()
     ClassDB::bind_method(D_METHOD("is_visible", "x", "y", "player"), &Controller::is_visible);
     ClassDB::bind_method(D_METHOD("is_unit_visible", "handle", "player"), &Controller::is_unit_visible);
     ClassDB::bind_method(D_METHOD("is_explored", "x", "y", "player"), &Controller::is_explored);
+    ClassDB::bind_method(D_METHOD("getVisibility", "player"), &Controller::getVisibility);
     ClassDB::bind_method(D_METHOD("get_productions", "handles", "max"), &Controller::get_productions);
+    ClassDB::bind_method(D_METHOD("get_visible_units", "player", "ent_registered_p"), &Controller::get_visible_units);
 
     ClassDB::bind_method(D_METHOD("add_move_commands", "handles", "target", "player"), &Controller::add_move_commands);
     ClassDB::bind_method(D_METHOD("add_move_target_commands", "handles", "target", "handle_target", "player"), &Controller::add_move_target_commands);
@@ -553,6 +613,8 @@ void Controller::_bind_methods()
     ADD_SIGNAL(MethodInfo("kill_unit", PropertyInfo(Variant::INT, "handle")));
     ADD_SIGNAL(MethodInfo("hp_change", PropertyInfo(Variant::INT, "handle"), PropertyInfo(Variant::FLOAT, "ratio")));
     ADD_SIGNAL(MethodInfo("harvest_unit", PropertyInfo(Variant::INT, "handle")));
+    ADD_SIGNAL(MethodInfo("hide_unit", PropertyInfo(Variant::INT, "handle")));
+    ADD_SIGNAL(MethodInfo("show_unit", PropertyInfo(Variant::INT, "handle")));
 
     ADD_SIGNAL(MethodInfo("production_command", PropertyInfo(Variant::INT, "handle"), PropertyInfo(Variant::INT, "index"), PropertyInfo(Variant::STRING, "model"), PropertyInfo(Variant::FLOAT, "progress")));
 }

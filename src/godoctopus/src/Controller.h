@@ -51,6 +51,7 @@ public:
     // getters
     TypedArray<String> get_models(int handle_p, int player_p) const;
     bool is_building(String const &model_p) const;
+    int get_world_size() const;
 
     // resources getter
 	float get_steel(int player_p) const;
@@ -63,9 +64,13 @@ public:
     bool is_visible(int x, int y, int player_p) const;
     bool is_unit_visible(int handle_p, int player_p) const;
     bool is_explored(int x, int y, int player_p) const;
+    PackedByteArray getVisibility(int player_p) const;
 
     /// @brief will emit one signal per production to create
     void get_productions(TypedArray<int> const &handles_p, int max_p);
+
+    /// @brief will emit one signal per unit to be shown or hidden
+    void get_visible_units(int player_p, int ent_registered_p);
 
     // commands
     // move & attack
@@ -91,6 +96,9 @@ private:
 	/// @brief handlers for last step used
 	bool _first {true};
 	std::list<octopus::StepBundle>::const_iterator _lastIt;
+
+    /// @brief vector storing last visible units when call of get_visible_units
+    std::vector<bool> _visibleLastCall;
 };
 
 }
