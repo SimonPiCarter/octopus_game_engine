@@ -83,9 +83,11 @@ void Controller::load_wave_level(int playerWave_p, int stepCount_p)
     init(commands_l, spawners_l);
 }
 
-void Controller::load_arena_level(int size_p)
+void Controller::load_arena_level(int size_you_p, int size_them_p, String model_you_p, String model_them_p)
 {
-    std::list<octopus::Steppable *> spawners_l = ArenaLevelSteps(_lib, size_p);
+    std::string modelIdYou_l(model_you_p.utf8().get_data());
+    std::string modelIdThem_l(model_them_p.utf8().get_data());
+    std::list<octopus::Steppable *> spawners_l = ArenaLevelSteps(_lib, size_you_p, size_them_p, modelIdYou_l, modelIdThem_l);
     std::list<octopus::Command *> commands_l = ArenaLevelCommands(_lib);
     init(commands_l, spawners_l);
 }
@@ -429,7 +431,7 @@ void Controller::_bind_methods()
     UtilityFunctions::print("Binding Controller methods");
 
     ClassDB::bind_method(D_METHOD("load_wave_level", "player_wave", "step_count"), &Controller::load_wave_level);
-    ClassDB::bind_method(D_METHOD("load_arena_level", "size"), &Controller::load_arena_level);
+    ClassDB::bind_method(D_METHOD("load_arena_level", "size_you", "size_them", "model_you", "model_them"), &Controller::load_arena_level);
     ClassDB::bind_method(D_METHOD("load_maze_level", "size"), &Controller::load_maze_level);
     ClassDB::bind_method(D_METHOD("load_aoe_level", "size"), &Controller::load_aoe_level);
     ClassDB::bind_method(D_METHOD("load_chaining_level"), &Controller::load_chaining_level);

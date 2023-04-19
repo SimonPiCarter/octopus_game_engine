@@ -62,6 +62,34 @@ std::list<Steppable *> ArenaLevelSteps(Library &lib_p, size_t number_p)
 	return spawners_l;
 }
 
+std::list<octopus::Steppable *> ArenaLevelSteps(octopus::Library &lib_p, size_t numberYou_p, size_t numberThem_p, std::string const &modelYou_p, std::string const &modelThem_p)
+{
+	loadModels(lib_p);
+
+	Unit you_l({ 15, 20. }, false, lib_p.getUnitModel(modelYou_p));
+	you_l._player = 0;
+	Unit them_l({ 35, 20. }, false, lib_p.getUnitModel(modelThem_p));
+	them_l._player = 1;
+
+	std::list<Steppable *> spawners_l =
+	{
+		new PlayerSpawnStep(0, 0),
+		new PlayerSpawnStep(1, 1),
+	};
+
+	unsigned long id_l = 0;
+	for(size_t i = 0; i < numberYou_p ; ++ i)
+	{
+		spawners_l.push_back(new UnitSpawnStep(id_l++, you_l));
+	}
+	for(size_t i = 0; i < numberThem_p ; ++ i)
+	{
+		spawners_l.push_back(new UnitSpawnStep(id_l++, them_l));
+	}
+
+	return spawners_l;
+}
+
 std::list<Command *> ArenaLevelCommands(Library &lib_p)
 {
 	return {};
