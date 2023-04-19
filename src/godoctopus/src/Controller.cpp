@@ -3,10 +3,13 @@
 #include <godot_cpp/variant/utility_functions.hpp>
 #include <godot_cpp/classes/input.hpp>
 
-#include "library/levels/MazeLevel.hh"
 #include "library/levels/ArenaLevel.hh"
+#include "library/levels/MazeLevel.hh"
 #include "library/levels/WaveLevel.hh"
-
+#include "library/levels/showcase/AoeShowcase.hh"
+#include "library/levels/showcase/ChainingShowcase.hh"
+#include "library/levels/showcase/DotShowcase.hh"
+#include "library/levels/showcase/LifestealShowcase.hh"
 
 // octopus
 #include "command/building/BuildingUnitProductionCommand.hh"
@@ -73,30 +76,62 @@ void Controller::_process(double delta)
     }
 }
 
-void Controller::init(int size_p, bool wave_p, bool big_p)
+void Controller::load_wave_level(int playerWave_p, int stepCount_p)
 {
-    UtilityFunctions::print("init");
-    UtilityFunctions::print("init steps...");
-    std::list<octopus::Steppable *> spawners_l;
-    std::list<octopus::Command *> commands_l;
-    if(wave_p)
-    {
-        spawners_l = WaveLevelSteps(_lib, rand_l, 15, 3*60*100, 0, 250);
-        commands_l = WaveLevelCommands(_lib, rand_l, 250);
-    }
-    else
-    {
-        spawners_l = ArenaLevelSteps(_lib, size_p);
-        commands_l = ArenaLevelCommands(_lib);
-    }
-    UtilityFunctions::print("ok");
+    std::list<octopus::Steppable *> spawners_l = WaveLevelSteps(_lib, _rand, 10, stepCount_p, playerWave_p, 250);
+    std::list<octopus::Command *> commands_l = WaveLevelCommands(_lib, _rand, 250);
+    init(commands_l, spawners_l);
+}
 
-    UtilityFunctions::print("delete old controller...");
-    delete _controller;
+void Controller::load_arena_level(int size_p)
+{
+    std::list<octopus::Steppable *> spawners_l = ArenaLevelSteps(_lib, size_p);
+    std::list<octopus::Command *> commands_l = ArenaLevelCommands(_lib);
+    init(commands_l, spawners_l);
+}
+
+void Controller::load_maze_level(int size_p)
+{
+    std::list<octopus::Steppable *> spawners_l = MazeLevelSteps(_lib, size_p);
+    std::list<octopus::Command *> commands_l = MazeLevelCommands(_lib);
+    init(commands_l, spawners_l);
+}
+
+void Controller::load_aoe_level(int size_p)
+{
+    std::list<octopus::Steppable *> spawners_l = aoeShowcaseSteps(_lib, size_p);
+    std::list<octopus::Command *> commands_l = aoeShowcaseCommands(_lib);
+    init(commands_l, spawners_l);
+}
+
+void Controller::load_chaining_level()
+{
+    std::list<octopus::Steppable *> spawners_l = chainingShowcaseSteps(_lib);
+    std::list<octopus::Command *> commands_l = chainingShowcaseCommands(_lib);
+    init(commands_l, spawners_l);
+}
+
+void Controller::load_dot_level(int size_p)
+{
+    std::list<octopus::Steppable *> spawners_l = dotShowcaseSteps(_lib, size_p);
+    std::list<octopus::Command *> commands_l = dotShowcaseCommands(_lib);
+    init(commands_l, spawners_l);
+}
+
+void Controller::load_lifesteal_level(int size_p)
+{
+    std::list<octopus::Steppable *> spawners_l = lifestealShowcaseSteps(_lib, size_p);
+    std::list<octopus::Command *> commands_l = lifestealShowcaseCommands(_lib);
+    init(commands_l, spawners_l);
+}
+
+void Controller::init(std::list<octopus::Command *> const &commands_p, std::list<octopus::Steppable *> const &spawners_p)
+{
     UtilityFunctions::print("init controller...");
-	_controller = new octopus::Controller(spawners_l, 0.01, commands_l, big_p?5:1, 50);
+    delete _controller;
+	_controller = new octopus::Controller(spawners_p, 0.01, commands_p, 5, 50);
 	_controller->enableORCA();
-    UtilityFunctions::print("ok");
+    UtilityFunctions::print("done");
 
     octopus::StateAndSteps stateAndSteps_l = _controller->queryStateAndSteps();
     _state = stateAndSteps_l._state;
@@ -119,7 +154,7 @@ void Controller::loop()
         if(!_paused)
         {
             // update controller
-            _controller->update(elapsed_l);
+            _controller->update(std::min(0.01, elapsed_l));
         }
 		while(!_controller->loop_body()) {}
 
@@ -393,7 +428,14 @@ void Controller::_bind_methods()
 {
     UtilityFunctions::print("Binding Controller methods");
 
-    ClassDB::bind_method(D_METHOD("init", "size", "wave", "big"), &Controller::init);
+    ClassDB::bind_method(D_METHOD("load_wave_level", "player_wave", "step_count"), &Controller::load_wave_level);
+    ClassDB::bind_method(D_METHOD("load_arena_level", "size"), &Controller::load_arena_level);
+    ClassDB::bind_method(D_METHOD("load_maze_level", "size"), &Controller::load_maze_level);
+    ClassDB::bind_method(D_METHOD("load_aoe_level", "size"), &Controller::load_aoe_level);
+    ClassDB::bind_method(D_METHOD("load_chaining_level"), &Controller::load_chaining_level);
+    ClassDB::bind_method(D_METHOD("load_dot_level", "size"), &Controller::load_dot_level);
+    ClassDB::bind_method(D_METHOD("load_lifesteal_level", "size"), &Controller::load_lifesteal_level);
+
     ClassDB::bind_method(D_METHOD("has_state"), &Controller::has_state);
     ClassDB::bind_method(D_METHOD("set_pause", "pause"), &Controller::set_pause);
     ClassDB::bind_method(D_METHOD("get_models", "handle", "player"), &Controller::get_models);
