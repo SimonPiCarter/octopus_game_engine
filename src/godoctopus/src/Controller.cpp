@@ -411,6 +411,11 @@ void Controller::add_attack_move_commands(TypedArray<int> const &handles_p, Vect
     godot::add_attack_move_commands(*_controller, *_state, handles_p, target_p, player_p);
 }
 
+void Controller::add_stop_commands(TypedArray<int> const &handles_p, int player_p)
+{
+    godot::add_stop_commands(*_controller, *_state, handles_p, player_p);
+}
+
 void Controller::add_unit_build_command(TypedArray<int> const &handles_p, String const &model_p, int player_p)
 {
     godot::add_unit_build_command(*_controller, *_state, _lib, handles_p, model_p, player_p);
@@ -459,6 +464,7 @@ void Controller::_bind_methods()
     ClassDB::bind_method(D_METHOD("add_move_commands", "handles", "target", "player"), &Controller::add_move_commands);
     ClassDB::bind_method(D_METHOD("add_move_target_commands", "handles", "target", "handle_target", "player"), &Controller::add_move_target_commands);
     ClassDB::bind_method(D_METHOD("add_attack_move_commands", "handles", "target", "player"), &Controller::add_attack_move_commands);
+    ClassDB::bind_method(D_METHOD("add_stop_commands", "handles", "player"), &Controller::add_stop_commands);
     ClassDB::bind_method(D_METHOD("add_unit_build_command", "handle", "model", "player"), &Controller::add_unit_build_command);
     ClassDB::bind_method(D_METHOD("add_unit_build_cancel_command", "handle", "index", "player"), &Controller::add_unit_build_cancel_command);
     ClassDB::bind_method(D_METHOD("add_blueprint_command", "target", "model", "player"), &Controller::add_blueprint_command);

@@ -9,6 +9,7 @@
 #include "command/entity/EntityAttackMoveCommand.hh"
 #include "command/entity/EntityBuildingCommand.hh"
 #include "command/entity/EntityMoveCommand.hh"
+#include "command/entity/EntityWaitCommand.hh"
 #include "command/unit/UnitDropCommand.hh"
 #include "command/unit/UnitHarvestCommand.hh"
 #include "controller/Controller.hh"
@@ -145,6 +146,22 @@ void add_attack_move_commands(octopus::Controller &controller_p, octopus::State 
             continue;
         }
         controller_p.commitCommandAsPlayer(new octopus::EntityAttackMoveCommand(idx_l, idx_l, octopus::Vector(target_p.x, target_p.y), 0, {octopus::Vector(target_p.x, target_p.y)}, true), player_p);
+    }
+}
+
+void add_stop_commands(octopus::Controller &controller_p, octopus::State const &state_p, TypedArray<int> const &handles_p, int player_p)
+{
+    for(size_t i = 0 ; i < handles_p.size() ; ++ i)
+    {
+        int idx_l = handles_p[i];
+        const octopus::Entity * cur_l = state_p.getEntity(idx_l);
+		bool isStatic_l = cur_l->_model._isStatic;
+
+		if(isStatic_l)
+        {
+            continue;
+        }
+        controller_p.commitCommandAsPlayer(new octopus::EntityWaitCommand(idx_l, idx_l), player_p);
     }
 }
 

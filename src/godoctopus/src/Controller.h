@@ -92,6 +92,7 @@ public:
     void add_move_commands(TypedArray<int> const &handles_p, Vector2 const &target_p, int player_p);
     void add_move_target_commands(TypedArray<int> const &handles_p, Vector2 const &target_p, int handleTarget_p, int player_p);
     void add_attack_move_commands(TypedArray<int> const &handles_p, Vector2 const &target_p, int player_p);
+    void add_stop_commands(TypedArray<int> const &handles_p, int player_p);
     // production
     void add_unit_build_command(TypedArray<int> const &handles_p, String const &model_p, int player_p);
     void add_unit_build_cancel_command(int handle_p, int index_p, int player_p);
