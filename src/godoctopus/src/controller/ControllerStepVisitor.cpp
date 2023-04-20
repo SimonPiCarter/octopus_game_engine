@@ -4,7 +4,9 @@
 
 // octopus
 #include "command/data/AttackMoveData.hh"
+#include "state/entity/Building.hh"
 #include "state/entity/Entity.hh"
+#include "state/entity/Resource.hh"
 #include "state/State.hh"
 #include "step/building/BuildingCancelStep.hh"
 #include "step/building/BuildingStep.hh"
@@ -48,15 +50,21 @@ void ControllerStepVisitor::visit(octopus::UnitSpawnStep const *steppable_p)
 
 void ControllerStepVisitor::visit(octopus::BuildingCancelStep const *steppable_p)
 {
+	_controller.emit_signal("clear_entity", int(steppable_p->_handle));
 }
 
 void ControllerStepVisitor::visit(octopus::UnitHarvestQuantityStep const *steppable_p)
 {
 	_controller.emit_signal("harvest_unit", int(steppable_p->_handle));
+	if(static_cast<octopus::Resource const *>(_state->getEntity(steppable_p->_res))->_resource <= 0.)
+	{
+		_controller.emit_signal("clear_entity", int(steppable_p->_res));
+	}
 }
 
 void ControllerStepVisitor::visit(octopus::CommandHarvestTimeSinceHarvestStep const *steppable_p)
 {
+	// NA (ok)
 }
 
 void ControllerStepVisitor::visit(octopus::EntityHitPointChangeStep const *steppable_p)
@@ -78,10 +86,14 @@ void ControllerStepVisitor::visit(octopus::EntityMoveStep const *steppable_p)
 
 void ControllerStepVisitor::visit(octopus::BuildingStep const *steppable_p)
 {
+	octopus::Entity const * ent_l = _state->getEntity(steppable_p->_handle);
+	octopus::Building const * building_l = static_cast<octopus::Building const *>(ent_l);
+	_controller.emit_signal("build", int(steppable_p->_handle), float(building_l->_buildingProgress/building_l->_buildingModel._buildingTime));
 }
 
 void ControllerStepVisitor::visit(octopus::PlayerAddOptionDivinityStep const *steppable_p)
 {
+	// NA (ok)
 }
 
 void ControllerStepVisitor::visit(octopus::PlayerAddOptionStep const *steppable_p)
