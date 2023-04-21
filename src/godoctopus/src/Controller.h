@@ -10,6 +10,8 @@
 #include "library/Library.hh"
 #include "utils/RandomGenerator.hh"
 #include "controller/Controller.hh"
+#include "option/Option.h"
+#include "option/OptionManager.h"
 
 namespace octopus
 {
@@ -67,6 +69,10 @@ public:
     TypedArray<String> get_models(int handle_p, int player_p) const;
     bool is_building(String const &model_p) const;
     int get_world_size() const;
+    godot::Option *get_available_option_you(int idx_p, int player_p) const;
+    godot::Option *get_available_option_them(int idx_p, int player_p) const;
+    godot::Option *get_chosen_option_you(int idx_p, int player_p) const;
+    godot::Option *get_chosen_option_them(int idx_p, int player_p) const;
 
     // resources getter
 	float get_steel(int player_p) const;
@@ -80,6 +86,12 @@ public:
     bool is_unit_visible(int handle_p, int player_p) const;
     bool is_explored(int x, int y, int player_p) const;
     PackedByteArray getVisibility(int player_p) const;
+
+    // option getter
+    int get_nb_options_available(int player_p) const;
+    int get_nb_options_chosen(int player_p) const;
+
+    // signal emmiter
 
     /// @brief will emit one signal per production to create
     void get_productions(TypedArray<int> const &handles_p, int max_p);
@@ -98,6 +110,12 @@ public:
     void add_unit_build_cancel_command(int handle_p, int index_p, int player_p);
     // building
     void add_blueprint_command(Vector2 const &target_p, String const &model_p, int player_p);
+    // option
+    void add_chose_option_command(int option_p, int player_p);
+
+    //// Non godot methods
+    std::map<unsigned long, OptionManager> &getOptionManagers();
+    std::map<unsigned long, OptionManager> const &getOptionManagers() const;
 private:
     octopus::Controller * _controller = nullptr;
     std::thread * _controllerThread = nullptr;
@@ -113,6 +131,9 @@ private:
 
     /// @brief vector storing last visible units when call of get_visible_units
     std::vector<bool> _visibleLastCall;
+
+    /// @brief manager for each player
+    std::map<unsigned long, OptionManager> _optionManagers;
 };
 
 }

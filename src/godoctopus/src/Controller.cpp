@@ -258,6 +258,34 @@ int Controller::get_world_size() const
     return _state->getWorldSize();
 }
 
+godot::Option *Controller::get_available_option_you(int idx_p, int player_p) const
+{
+    godot::Option * opt_l = memnew(Option);
+    opt_l->set_option(_optionManagers.at(player_p).getOption(idx_p)._playerOption);
+    return opt_l;
+}
+
+godot::Option *Controller::get_available_option_them(int idx_p, int player_p) const
+{
+    godot::Option * opt_l = memnew(Option);
+    opt_l->set_option(_optionManagers.at(player_p).getOption(idx_p)._enemyOption);
+    return opt_l;
+}
+
+godot::Option *Controller::get_chosen_option_you(int idx_p, int player_p) const
+{
+    godot::Option * opt_l = memnew(Option);
+    opt_l->set_option(_optionManagers.at(player_p).getChosenOption(idx_p)._playerOption);
+    return opt_l;
+}
+
+godot::Option *Controller::get_chosen_option_them(int idx_p, int player_p) const
+{
+    godot::Option * opt_l = memnew(Option);
+    opt_l->set_option(_optionManagers.at(player_p).getChosenOption(idx_p)._enemyOption);
+    return opt_l;
+}
+
 float Controller::get_steel(int player_p) const
 {
     octopus::Player const *player_l = _state->getPlayer(player_p);
@@ -320,6 +348,26 @@ PackedByteArray Controller::getVisibility(int player_p) const
 		}
 	}
     return array_l;
+}
+
+int Controller::get_nb_options_available(int player_p) const
+{
+    auto it_l = _optionManagers.find(player_p);
+	if(it_l == _optionManagers.end())
+    {
+        return 0;
+    }
+    return it_l->second.getCurrentOptionSize();
+}
+
+int Controller::get_nb_options_chosen(int player_p) const
+{
+    auto it_l = _optionManagers.find(player_p);
+	if(it_l == _optionManagers.end())
+    {
+        return 0;
+    }
+    return it_l->second.getChosenOptionsSize();
 }
 
 void Controller::get_productions(TypedArray<int> const &handles_p, int max_p)
@@ -427,6 +475,11 @@ void Controller::add_blueprint_command(Vector2 const &target_p, String const &mo
     godot::add_blueprint_command(*_controller, *_state, _lib, target_p, model_p, player_p);
 }
 
+void Controller::add_chose_option_command(int option_p, int player_p)
+{
+    _controller->commitCommandAsPlayer(getOptionManagers().at(player_p).newCommandFromOption(option_p), player_p);
+}
+
 void Controller::_bind_methods()
 {
     UtilityFunctions::print("Binding Controller methods");
@@ -444,6 +497,10 @@ void Controller::_bind_methods()
     ClassDB::bind_method(D_METHOD("get_models", "handle", "player"), &Controller::get_models);
     ClassDB::bind_method(D_METHOD("is_building", "handle"), &Controller::is_building);
     ClassDB::bind_method(D_METHOD("get_world_size"), &Controller::get_world_size);
+    ClassDB::bind_method(D_METHOD("get_available_option_you", "idx", "player"), &Controller::get_available_option_you);
+    ClassDB::bind_method(D_METHOD("get_available_option_them", "idx", "player"), &Controller::get_available_option_them);
+    ClassDB::bind_method(D_METHOD("get_chosen_option_you", "idx", "player"), &Controller::get_chosen_option_you);
+    ClassDB::bind_method(D_METHOD("get_chosen_option_them", "idx", "player"), &Controller::get_chosen_option_them);
 
     ClassDB::bind_method(D_METHOD("get_steel", "player"), &Controller::get_steel);
     ClassDB::bind_method(D_METHOD("get_food", "player"), &Controller::get_food);
@@ -454,6 +511,9 @@ void Controller::_bind_methods()
     ClassDB::bind_method(D_METHOD("is_unit_visible", "handle", "player"), &Controller::is_unit_visible);
     ClassDB::bind_method(D_METHOD("is_explored", "x", "y", "player"), &Controller::is_explored);
     ClassDB::bind_method(D_METHOD("getVisibility", "player"), &Controller::getVisibility);
+    ClassDB::bind_method(D_METHOD("get_nb_options_available", "player"), &Controller::get_nb_options_available);
+    ClassDB::bind_method(D_METHOD("get_nb_options_chosen", "player"), &Controller::get_nb_options_chosen);
+
     ClassDB::bind_method(D_METHOD("get_productions", "handles", "max"), &Controller::get_productions);
     ClassDB::bind_method(D_METHOD("get_visible_units", "player", "ent_registered_p"), &Controller::get_visible_units);
 
@@ -464,6 +524,7 @@ void Controller::_bind_methods()
     ClassDB::bind_method(D_METHOD("add_unit_build_command", "handle", "model", "player"), &Controller::add_unit_build_command);
     ClassDB::bind_method(D_METHOD("add_unit_build_cancel_command", "handle", "index", "player"), &Controller::add_unit_build_cancel_command);
     ClassDB::bind_method(D_METHOD("add_blueprint_command", "target", "model", "player"), &Controller::add_blueprint_command);
+    ClassDB::bind_method(D_METHOD("add_chose_option_command", "option_p", "player"), &Controller::add_chose_option_command);
 
     ADD_GROUP("Controller", "Controller_");
 
@@ -477,8 +538,18 @@ void Controller::_bind_methods()
     ADD_SIGNAL(MethodInfo("hide_unit", PropertyInfo(Variant::INT, "handle")));
     ADD_SIGNAL(MethodInfo("show_unit", PropertyInfo(Variant::INT, "handle")));
     ADD_SIGNAL(MethodInfo("build", PropertyInfo(Variant::INT, "handle"), PropertyInfo(Variant::FLOAT, "progress")));
+    ADD_SIGNAL(MethodInfo("option_update"));
 
     ADD_SIGNAL(MethodInfo("production_command", PropertyInfo(Variant::INT, "handle"), PropertyInfo(Variant::INT, "index"), PropertyInfo(Variant::STRING, "model"), PropertyInfo(Variant::FLOAT, "progress")));
+}
+
+std::map<unsigned long, OptionManager> &Controller::getOptionManagers()
+{
+    return _optionManagers;
+}
+std::map<unsigned long, OptionManager> const &Controller::getOptionManagers() const
+{
+    return _optionManagers;
 }
 
 }

@@ -20,6 +20,7 @@
 #include "step/entity/spawn/UnitSpawnStep.hh"
 #include "step/player/PlayerAddOptionDivinityStep.hh"
 #include "step/player/PlayerAddOptionStep.hh"
+#include "step/player/PlayerPopOptionStep.hh"
 #include "step/unit/UnitHarvestStep.hh"
 
 
@@ -98,10 +99,19 @@ void ControllerStepVisitor::visit(octopus::PlayerAddOptionDivinityStep const *st
 
 void ControllerStepVisitor::visit(octopus::PlayerAddOptionStep const *steppable_p)
 {
+	std::map<unsigned long, OptionManager> & map_l = _controller.getOptionManagers();
+	if(map_l.find(steppable_p->_player) == map_l.end())
+	{
+		map_l.emplace(std::make_pair(steppable_p->_player, OptionManager(steppable_p->_player)));
+	}
+	map_l.at(steppable_p->_player).addOptionLayer(steppable_p);
+	_controller.emit_signal("option_update");
 }
 
 void ControllerStepVisitor::visit(octopus::PlayerPopOptionStep const *steppable_p)
 {
+	_controller.getOptionManagers().at(steppable_p->_player).popOptionLayer(steppable_p);
+	_controller.emit_signal("option_update");
 }
 
 void ControllerStepVisitor::visit(octopus::CommandWindUpDiffStep const *steppable_p)
