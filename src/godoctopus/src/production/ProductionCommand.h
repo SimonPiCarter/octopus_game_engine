@@ -1,7 +1,7 @@
 #ifndef __Godoctopus_ProductionCommand__
 #define __Godoctopus_ProductionCommand__
 
-#include <cstdint>
+#include <cstddef>
 
 #include "state/Handle.hh"
 
