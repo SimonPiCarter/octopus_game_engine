@@ -1,6 +1,5 @@
 #include "Controller.h"
 #include "Entity.h"
-#include "Movement.h"
 
 #include <gdextension_interface.h>
 #include <godot_cpp/core/defs.hpp>
@@ -14,7 +13,6 @@ void initialize_godoctopus_module(godot::ModuleInitializationLevel p_level) {
   }
 
   // REGISTER CLASSES HERE LATER
-    godot::ClassDB::register_class<godot::Movement>();
     godot::ClassDB::register_class<godot::Controller>();
     godot::ClassDB::register_class<godot::Entity>();
 }
