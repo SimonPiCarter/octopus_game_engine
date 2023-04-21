@@ -49,25 +49,10 @@ void Controller::_process(double delta)
         octopus::StateAndSteps stateAndSteps_l = _controller->queryStateAndSteps();
         _state = stateAndSteps_l._state;
 
+
         ControllerStepVisitor vis_l(*this, _state);
-
-        if(_first)
-        {
-            _lastIt = stateAndSteps_l._steps.begin();
-            _first = false;
-
-            // visit intial steps
-            for(octopus::Steppable const * steppable_l : stateAndSteps_l._initialStep.getSteppable())
-            {
-                vis_l(steppable_l);
-            }
-        }
-
-        // this is solving weird case when it_l was looping past _stepIt in Release (iterator would not compare well)
-        // because one was non const and the other was const
-        std::list<octopus::StepBundle>::const_iterator cit_l = stateAndSteps_l._stepIt;
         // Every step missing
-        for(auto it_l = _lastIt ; it_l != cit_l ; ++it_l)
+        for(auto it_l = _lastIt ; it_l != stateAndSteps_l._stepIt ; ++it_l)
         {
             // Visit every stepapble in the step
             for(octopus::Steppable const * steppable_l : it_l->_step->getSteppable())
@@ -140,6 +125,14 @@ void Controller::init(std::list<octopus::Command *> const &commands_p, std::list
 
     octopus::StateAndSteps stateAndSteps_l = _controller->queryStateAndSteps();
     _state = stateAndSteps_l._state;
+    _lastIt = stateAndSteps_l._steps.begin();
+
+    ControllerStepVisitor vis_l(*this, _state);
+    // visit intial steps
+    for(octopus::Steppable const * steppable_l : stateAndSteps_l._initialStep.getSteppable())
+    {
+        vis_l(steppable_l);
+    }
 
     delete _controllerThread;
 	_controllerThread = new std::thread(&Controller::loop, this);

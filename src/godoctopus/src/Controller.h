@@ -109,8 +109,6 @@ private:
     bool _over = false;
     bool _paused = false;
 
-	/// @brief handlers for last step used
-	bool _first {true};
 	std::list<octopus::StepBundle>::const_iterator _lastIt;
 
     /// @brief vector storing last visible units when call of get_visible_units
