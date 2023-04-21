@@ -63,8 +63,11 @@ void Controller::_process(double delta)
             }
         }
 
+        // this is solving weird case when it_l was looping past _stepIt in Release (iterator would not compare well)
+        // because one was non const and the other was const
+        std::list<octopus::StepBundle>::const_iterator cit_l = stateAndSteps_l._stepIt;
         // Every step missing
-        for(auto it_l = _lastIt ; it_l != stateAndSteps_l._stepIt ; ++it_l)
+        for(auto it_l = _lastIt ; it_l != cit_l ; ++it_l)
         {
             // Visit every stepapble in the step
             for(octopus::Steppable const * steppable_l : it_l->_step->getSteppable())
