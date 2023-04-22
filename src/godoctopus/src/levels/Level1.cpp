@@ -37,6 +37,7 @@
 // godot
 #include "controller/step/CameraStep.h"
 #include "controller/step/DialogStep.h"
+#include "controller/step/WaveStep.h"
 
 using namespace octopus;
 
@@ -45,7 +46,7 @@ namespace godot
 namespace level1
 {
 
-std::vector<octopus::Steppable*> defaultGenerator() { return {}; }
+std::vector<octopus::Steppable*> defaultGenerator() { return {new WaveStep()}; }
 
 std::string genModelName(RandomGenerator &gen_p)
 {

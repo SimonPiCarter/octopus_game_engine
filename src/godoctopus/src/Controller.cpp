@@ -32,7 +32,6 @@ namespace godot {
 
 Controller::~Controller()
 {
-    _over = true;
     if(_controllerThread)
     {
         _controllerThread->join();
@@ -51,6 +50,8 @@ void Controller::_process(double delta)
         octopus::StateAndSteps stateAndSteps_l = _controller->queryStateAndSteps();
         _state = stateAndSteps_l._state;
 
+        _over |= _state->isOver();
+        _paused |= _state->isOver();
 
         ControllerStepVisitor vis_l(*this, _state);
         // Every step missing
@@ -63,6 +64,11 @@ void Controller::_process(double delta)
             }
         }
         _lastIt = stateAndSteps_l._stepIt;
+
+        if(_over && _state->hasWinningTeam())
+        {
+            emit_signal("over", int(_state->getWinningTeam()));
+        }
     }
 }
 
@@ -119,11 +125,11 @@ void Controller::load_lifesteal_level(int size_p)
     init(commands_l, spawners_l);
 }
 
-void Controller::load_level1(int seed_p)
+void Controller::load_level1(int seed_p, int nb_wave_p)
 {
     delete _rand;
     _rand = new octopus::RandomGenerator(seed_p);
-    std::list<octopus::Steppable *> spawners_l = level1::WaveLevelSteps(_lib, *_rand, 5, 3*60*100, 150);
+    std::list<octopus::Steppable *> spawners_l = level1::WaveLevelSteps(_lib, *_rand, nb_wave_p, 3*60*100, 150);
     std::list<octopus::Command *> commands_l = level1::WaveLevelCommands(_lib, *_rand, 150);
     init(commands_l, spawners_l);
 }
@@ -222,7 +228,15 @@ void Controller::windup(int handle_p)
 
 void Controller::kill(int handle_p)
 {
-    emit_signal("kill_unit", handle_p);
+	octopus::Entity const &entity_l = *_state->getEntity(handle_p);
+    if(entity_l._model._isUnit)
+    {
+        emit_signal("kill_unit", handle_p);
+    }
+    else
+    {
+        emit_signal("clear_entity", handle_p);
+    }
 }
 
 void Controller::hp_change(int handle_p, float ratio_p)
@@ -233,6 +247,11 @@ void Controller::hp_change(int handle_p, float ratio_p)
 void Controller::set_pause(bool paused_p)
 {
     _paused = paused_p;
+}
+
+void Controller::set_over(bool over_p)
+{
+    _over = over_p;
 }
 
 TypedArray<String> Controller::get_models(int handle_p, int player_p) const
@@ -274,6 +293,11 @@ int Controller::get_world_size() const
 int Controller::get_steps() const
 {
     return _controller->getMetrics()._nbStepsCompiled;
+}
+
+int Controller::get_team(int player_p) const
+{
+    return _state->getPlayer(player_p)->_team;
 }
 
 float Controller::get_steel(int player_p) const
@@ -540,14 +564,16 @@ void Controller::_bind_methods()
     ClassDB::bind_method(D_METHOD("load_chaining_level"), &Controller::load_chaining_level);
     ClassDB::bind_method(D_METHOD("load_dot_level", "size"), &Controller::load_dot_level);
     ClassDB::bind_method(D_METHOD("load_lifesteal_level", "size"), &Controller::load_lifesteal_level);
-    ClassDB::bind_method(D_METHOD("load_level1", "seed"), &Controller::load_level1);
+    ClassDB::bind_method(D_METHOD("load_level1", "seed", "nb_wave"), &Controller::load_level1);
 
     ClassDB::bind_method(D_METHOD("has_state"), &Controller::has_state);
     ClassDB::bind_method(D_METHOD("set_pause", "pause"), &Controller::set_pause);
+    ClassDB::bind_method(D_METHOD("set_over", "over"), &Controller::set_over);
     ClassDB::bind_method(D_METHOD("get_models", "handle", "player"), &Controller::get_models);
     ClassDB::bind_method(D_METHOD("is_building", "handle"), &Controller::is_building);
     ClassDB::bind_method(D_METHOD("get_world_size"), &Controller::get_world_size);
     ClassDB::bind_method(D_METHOD("get_steps"), &Controller::get_steps);
+    ClassDB::bind_method(D_METHOD("get_team", "player"), &Controller::get_team);
 
     ClassDB::bind_method(D_METHOD("get_steel", "player"), &Controller::get_steel);
     ClassDB::bind_method(D_METHOD("get_food", "player"), &Controller::get_food);
@@ -595,6 +621,9 @@ void Controller::_bind_methods()
 
     ADD_SIGNAL(MethodInfo("set_camera", PropertyInfo(Variant::INT, "x"), PropertyInfo(Variant::INT, "y")));
     ADD_SIGNAL(MethodInfo("spawn_dialog", PropertyInfo(Variant::STRING, "model")));
+    ADD_SIGNAL(MethodInfo("wave"));
+
+    ADD_SIGNAL(MethodInfo("over", PropertyInfo(Variant::INT, "winning_team")));
 
     ADD_SIGNAL(MethodInfo("production_command", PropertyInfo(Variant::INT, "handle"), PropertyInfo(Variant::INT, "index"), PropertyInfo(Variant::STRING, "model"), PropertyInfo(Variant::FLOAT, "progress")));
 }

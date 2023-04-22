@@ -45,7 +45,7 @@ public:
     void load_dot_level(int size_p);
     void load_lifesteal_level(int size_p);
     // levels
-    void load_level1(int seed_p);
+    void load_level1(int seed_p, int nb_wave_p);
 
     // start engine with given level
     void init(std::list<octopus::Command *> const &commands_p, std::list<octopus::Steppable *> const &spawners_p);
@@ -67,11 +67,13 @@ public:
 
     // setters
     void set_pause(bool paused_p);
+    void set_over(bool over_p);
     // getters
     TypedArray<String> get_models(int handle_p, int player_p) const;
     bool is_building(String const &model_p) const;
     int get_world_size() const;
     int get_steps() const;
+    int get_team(int player_p) const;
 
     // resources getter
 	float get_steel(int player_p) const;

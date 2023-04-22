@@ -3,6 +3,7 @@
 #include "Controller.h"
 #include "step/CameraStep.h"
 #include "step/DialogStep.h"
+#include "step/WaveStep.h"
 
 // octopus
 #include "command/data/AttackMoveData.hh"
@@ -136,6 +137,7 @@ void ControllerStepVisitor::visit(octopus::CustomStep const *steppable_p)
 {
 	DialogStep const *dialog_l = dynamic_cast<DialogStep const *>(steppable_p);
 	CameraStep const *camera_l = dynamic_cast<CameraStep const *>(steppable_p);
+	WaveStep const *wave_l = dynamic_cast<WaveStep const *>(steppable_p);
 
 	if(camera_l)
 	{
@@ -144,6 +146,10 @@ void ControllerStepVisitor::visit(octopus::CustomStep const *steppable_p)
 	if(dialog_l)
 	{
 		_controller.emit_signal("spawn_dialog", String(dialog_l->_dialog.c_str()));
+	}
+	if(wave_l)
+	{
+		_controller.emit_signal("wave");
 	}
 }
 
