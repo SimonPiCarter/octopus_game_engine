@@ -19,6 +19,9 @@ public:
 	/// @brief check if the given entity is visible
 	bool isVisible(const Entity &ent_p) const;
 
+	/// @brief check if the given entity is explored
+	bool isExplored(const Entity &ent_p) const;
+
 	/// @brief check if the given node is visible
 	/// @warning no sanity check if performed, it assumes x and y are
 	/// < than size_p given in constructor

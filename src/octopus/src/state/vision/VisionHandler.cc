@@ -31,6 +31,15 @@ bool VisionHandler::isVisible(unsigned long team_p, const Entity &ent_p) const
 	return false;
 }
 
+bool VisionHandler::isExplored(unsigned long team_p, const Entity &ent_p) const
+{
+	if(team_p < _grid.size())
+	{
+		return _grid.at(team_p)->isExplored(ent_p);
+	}
+	return false;
+}
+
 
 bool VisionHandler::isVisible(unsigned long team_p, unsigned long x, unsigned long y) const
 {

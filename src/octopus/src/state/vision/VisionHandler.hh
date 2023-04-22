@@ -21,6 +21,9 @@ public:
 	/// @brief check if the given enity is visible for a given team
 	bool isVisible(unsigned long team_p, const Entity &ent_p) const;
 
+	/// @brief check if the given enity is explored for a given team
+	bool isExplored(unsigned long team_p, const Entity &ent_p) const;
+
 	/// @brief check if the given node is visible for a given team
 	bool isVisible(unsigned long team_p, unsigned long x, unsigned long y) const;
 

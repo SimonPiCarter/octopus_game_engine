@@ -36,6 +36,27 @@ bool VisionGrid::isVisible(const Entity &ent_p) const
 	return false;
 }
 
+/// @brief check if the given entity is visible
+bool VisionGrid::isExplored(const Entity &ent_p) const
+{
+	Box<long long> boxNode_l { to_int(std::max(Fixed(0.), ent_p._pos.x - ent_p._model._ray)),
+								to_int(std::max(Fixed(0.), ent_p._pos.x + ent_p._model._ray+0.999)),
+								to_int(std::max(Fixed(0.), ent_p._pos.y - ent_p._model._ray)),
+								to_int(std::max(Fixed(0.), ent_p._pos.y + ent_p._model._ray+0.999))
+					};
+	for(long long x = boxNode_l._lowerX ; x < boxNode_l._upperX && x < _grid.size(); ++x)
+	{
+		for(long long y = boxNode_l._lowerY ; y < boxNode_l._upperY && y <  _grid[x].size(); ++y)
+		{
+			if(isExplored(x, y))
+			{
+				return true;
+			}
+		}
+	}
+	return false;
+}
+
 bool VisionGrid::isVisible(unsigned long x, unsigned long y) const
 {
 	return _grid.at(x).at(y) > 0;
