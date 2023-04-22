@@ -44,6 +44,8 @@ public:
     void load_chaining_level();
     void load_dot_level(int size_p);
     void load_lifesteal_level(int size_p);
+    // levels
+    void load_level1(int seed_p);
 
     // start engine with given level
     void init(std::list<octopus::Command *> const &commands_p, std::list<octopus::Steppable *> const &spawners_p);
@@ -122,7 +124,7 @@ private:
     octopus::Controller * _controller = nullptr;
     std::thread * _controllerThread = nullptr;
 	octopus::Library _lib;
-	octopus::RandomGenerator _rand {42};
+	octopus::RandomGenerator * _rand = nullptr;
 
     octopus::State const * _state = nullptr;
 

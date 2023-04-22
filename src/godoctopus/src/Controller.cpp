@@ -26,6 +26,7 @@
 #include "controller/ControllerStepVisitor.h"
 #include "controller/CommandController.h"
 #include "production/ProductionCommand.h"
+#include "levels/Level1.h"
 
 namespace godot {
 
@@ -38,6 +39,7 @@ Controller::~Controller()
     }
     delete _controllerThread;
     delete _controller;
+    delete _rand;
 }
 
 void Controller::_process(double delta)
@@ -66,8 +68,10 @@ void Controller::_process(double delta)
 
 void Controller::load_wave_level(int playerWave_p, int stepCount_p)
 {
-    std::list<octopus::Steppable *> spawners_l = WaveLevelSteps(_lib, _rand, 10, stepCount_p, playerWave_p, 250);
-    std::list<octopus::Command *> commands_l = WaveLevelCommands(_lib, _rand, 250);
+    delete _rand;
+    _rand = new octopus::RandomGenerator(42);
+    std::list<octopus::Steppable *> spawners_l = WaveLevelSteps(_lib, *_rand, 10, stepCount_p, playerWave_p, 250);
+    std::list<octopus::Command *> commands_l = WaveLevelCommands(_lib, *_rand, 250);
     init(commands_l, spawners_l);
 }
 
@@ -112,6 +116,15 @@ void Controller::load_lifesteal_level(int size_p)
 {
     std::list<octopus::Steppable *> spawners_l = lifestealShowcaseSteps(_lib, size_p);
     std::list<octopus::Command *> commands_l = lifestealShowcaseCommands(_lib);
+    init(commands_l, spawners_l);
+}
+
+void Controller::load_level1(int seed_p)
+{
+    delete _rand;
+    _rand = new octopus::RandomGenerator(seed_p);
+    std::list<octopus::Steppable *> spawners_l = level1::WaveLevelSteps(_lib, *_rand, 5, 3*60*100, 150);
+    std::list<octopus::Command *> commands_l = level1::WaveLevelCommands(_lib, *_rand, 150);
     init(commands_l, spawners_l);
 }
 
@@ -503,6 +516,7 @@ void Controller::_bind_methods()
     ClassDB::bind_method(D_METHOD("load_chaining_level"), &Controller::load_chaining_level);
     ClassDB::bind_method(D_METHOD("load_dot_level", "size"), &Controller::load_dot_level);
     ClassDB::bind_method(D_METHOD("load_lifesteal_level", "size"), &Controller::load_lifesteal_level);
+    ClassDB::bind_method(D_METHOD("load_level1", "seed"), &Controller::load_level1);
 
     ClassDB::bind_method(D_METHOD("has_state"), &Controller::has_state);
     ClassDB::bind_method(D_METHOD("set_pause", "pause"), &Controller::set_pause);
