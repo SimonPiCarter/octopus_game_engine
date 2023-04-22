@@ -69,10 +69,7 @@ public:
     TypedArray<String> get_models(int handle_p, int player_p) const;
     bool is_building(String const &model_p) const;
     int get_world_size() const;
-    godot::Option *get_available_option_you(int idx_p, int player_p) const;
-    godot::Option *get_available_option_them(int idx_p, int player_p) const;
-    godot::Option *get_chosen_option_you(int idx_p, int player_p) const;
-    godot::Option *get_chosen_option_them(int idx_p, int player_p) const;
+    int get_steps() const;
 
     // resources getter
 	float get_steel(int player_p) const;
@@ -85,11 +82,16 @@ public:
     bool is_visible(int x, int y, int player_p) const;
     bool is_unit_visible(int handle_p, int player_p) const;
     bool is_explored(int x, int y, int player_p) const;
+    bool is_entity_explored(int explored_p, int player_p) const;
     PackedByteArray getVisibility(int player_p) const;
 
     // option getter
     int get_nb_options_available(int player_p) const;
     int get_nb_options_chosen(int player_p) const;
+    godot::Option *get_available_option_you(int idx_p, int player_p) const;
+    godot::Option *get_available_option_them(int idx_p, int player_p) const;
+    godot::Option *get_chosen_option_you(int idx_p, int player_p) const;
+    godot::Option *get_chosen_option_them(int idx_p, int player_p) const;
 
     // signal emmiter
 

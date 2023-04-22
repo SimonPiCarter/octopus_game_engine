@@ -112,6 +112,7 @@ void ControllerStepVisitor::visit(octopus::PlayerPopOptionStep const *steppable_
 {
 	_controller.getOptionManagers().at(steppable_p->_player).popOptionLayer(steppable_p);
 	_controller.emit_signal("option_update");
+	_controller.emit_signal("pop_option");
 }
 
 void ControllerStepVisitor::visit(octopus::CommandWindUpDiffStep const *steppable_p)

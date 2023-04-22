@@ -258,32 +258,9 @@ int Controller::get_world_size() const
     return _state->getWorldSize();
 }
 
-godot::Option *Controller::get_available_option_you(int idx_p, int player_p) const
+int Controller::get_steps() const
 {
-    godot::Option * opt_l = memnew(Option);
-    opt_l->set_option(_optionManagers.at(player_p).getOption(idx_p)._playerOption);
-    return opt_l;
-}
-
-godot::Option *Controller::get_available_option_them(int idx_p, int player_p) const
-{
-    godot::Option * opt_l = memnew(Option);
-    opt_l->set_option(_optionManagers.at(player_p).getOption(idx_p)._enemyOption);
-    return opt_l;
-}
-
-godot::Option *Controller::get_chosen_option_you(int idx_p, int player_p) const
-{
-    godot::Option * opt_l = memnew(Option);
-    opt_l->set_option(_optionManagers.at(player_p).getChosenOption(idx_p)._playerOption);
-    return opt_l;
-}
-
-godot::Option *Controller::get_chosen_option_them(int idx_p, int player_p) const
-{
-    godot::Option * opt_l = memnew(Option);
-    opt_l->set_option(_optionManagers.at(player_p).getChosenOption(idx_p)._enemyOption);
-    return opt_l;
+    return _controller->getMetrics()._nbStepsCompiled;
 }
 
 float Controller::get_steel(int player_p) const
@@ -331,6 +308,13 @@ bool Controller::is_explored(int x, int y, int player_p) const
     return _state->getVisionHandler().isExplored(player_l->_team, x, y);
 }
 
+bool Controller::is_entity_explored(int handle_p, int player_p) const
+{
+    octopus::Player const *player_l = _state->getPlayer(player_p);
+	octopus::Entity const &entity_l = *_state->getEntity(handle_p);
+    return _state->getVisionHandler().isExplored(player_l->_team, entity_l);
+}
+
 PackedByteArray Controller::getVisibility(int player_p) const
 {
     PackedByteArray array_l;
@@ -368,6 +352,34 @@ int Controller::get_nb_options_chosen(int player_p) const
         return 0;
     }
     return it_l->second.getChosenOptionsSize();
+}
+
+godot::Option *Controller::get_available_option_you(int idx_p, int player_p) const
+{
+    godot::Option * opt_l = memnew(Option);
+    opt_l->set_option(_optionManagers.at(player_p).getOption(idx_p)._playerOption);
+    return opt_l;
+}
+
+godot::Option *Controller::get_available_option_them(int idx_p, int player_p) const
+{
+    godot::Option * opt_l = memnew(Option);
+    opt_l->set_option(_optionManagers.at(player_p).getOption(idx_p)._enemyOption);
+    return opt_l;
+}
+
+godot::Option *Controller::get_chosen_option_you(int idx_p, int player_p) const
+{
+    godot::Option * opt_l = memnew(Option);
+    opt_l->set_option(_optionManagers.at(player_p).getChosenOption(idx_p)._playerOption);
+    return opt_l;
+}
+
+godot::Option *Controller::get_chosen_option_them(int idx_p, int player_p) const
+{
+    godot::Option * opt_l = memnew(Option);
+    opt_l->set_option(_optionManagers.at(player_p).getChosenOption(idx_p)._enemyOption);
+    return opt_l;
 }
 
 void Controller::get_productions(TypedArray<int> const &handles_p, int max_p)
@@ -497,10 +509,7 @@ void Controller::_bind_methods()
     ClassDB::bind_method(D_METHOD("get_models", "handle", "player"), &Controller::get_models);
     ClassDB::bind_method(D_METHOD("is_building", "handle"), &Controller::is_building);
     ClassDB::bind_method(D_METHOD("get_world_size"), &Controller::get_world_size);
-    ClassDB::bind_method(D_METHOD("get_available_option_you", "idx", "player"), &Controller::get_available_option_you);
-    ClassDB::bind_method(D_METHOD("get_available_option_them", "idx", "player"), &Controller::get_available_option_them);
-    ClassDB::bind_method(D_METHOD("get_chosen_option_you", "idx", "player"), &Controller::get_chosen_option_you);
-    ClassDB::bind_method(D_METHOD("get_chosen_option_them", "idx", "player"), &Controller::get_chosen_option_them);
+    ClassDB::bind_method(D_METHOD("get_steps"), &Controller::get_steps);
 
     ClassDB::bind_method(D_METHOD("get_steel", "player"), &Controller::get_steel);
     ClassDB::bind_method(D_METHOD("get_food", "player"), &Controller::get_food);
@@ -510,9 +519,14 @@ void Controller::_bind_methods()
     ClassDB::bind_method(D_METHOD("is_visible", "x", "y", "player"), &Controller::is_visible);
     ClassDB::bind_method(D_METHOD("is_unit_visible", "handle", "player"), &Controller::is_unit_visible);
     ClassDB::bind_method(D_METHOD("is_explored", "x", "y", "player"), &Controller::is_explored);
+    ClassDB::bind_method(D_METHOD("is_entity_explored", "handle", "player"), &Controller::is_entity_explored);
     ClassDB::bind_method(D_METHOD("getVisibility", "player"), &Controller::getVisibility);
     ClassDB::bind_method(D_METHOD("get_nb_options_available", "player"), &Controller::get_nb_options_available);
     ClassDB::bind_method(D_METHOD("get_nb_options_chosen", "player"), &Controller::get_nb_options_chosen);
+    ClassDB::bind_method(D_METHOD("get_available_option_you", "idx", "player"), &Controller::get_available_option_you);
+    ClassDB::bind_method(D_METHOD("get_available_option_them", "idx", "player"), &Controller::get_available_option_them);
+    ClassDB::bind_method(D_METHOD("get_chosen_option_you", "idx", "player"), &Controller::get_chosen_option_you);
+    ClassDB::bind_method(D_METHOD("get_chosen_option_them", "idx", "player"), &Controller::get_chosen_option_them);
 
     ClassDB::bind_method(D_METHOD("get_productions", "handles", "max"), &Controller::get_productions);
     ClassDB::bind_method(D_METHOD("get_visible_units", "player", "ent_registered_p"), &Controller::get_visible_units);
@@ -539,6 +553,7 @@ void Controller::_bind_methods()
     ADD_SIGNAL(MethodInfo("show_unit", PropertyInfo(Variant::INT, "handle")));
     ADD_SIGNAL(MethodInfo("build", PropertyInfo(Variant::INT, "handle"), PropertyInfo(Variant::FLOAT, "progress")));
     ADD_SIGNAL(MethodInfo("option_update"));
+    ADD_SIGNAL(MethodInfo("pop_option"));
 
     ADD_SIGNAL(MethodInfo("production_command", PropertyInfo(Variant::INT, "handle"), PropertyInfo(Variant::INT, "index"), PropertyInfo(Variant::STRING, "model"), PropertyInfo(Variant::FLOAT, "progress")));
 }
