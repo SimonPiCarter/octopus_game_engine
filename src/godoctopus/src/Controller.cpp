@@ -467,42 +467,66 @@ void Controller::get_visible_units(int player_p, int ent_registered_p)
 
 void Controller::add_move_commands(TypedArray<int> const &handles_p, Vector2 const &target_p, int player_p)
 {
-    godot::add_move_commands(*_controller, *_state, handles_p, target_p, player_p);
+    if(!_paused)
+    {
+        godot::add_move_commands(*_controller, *_state, handles_p, target_p, player_p);
+    }
 }
 
 void Controller::add_move_target_commands(TypedArray<int> const &handles_p, Vector2 const &target_p, int handleTarget_p, int player_p)
 {
-    godot::add_move_target_commands(*_controller, *_state, handles_p, target_p, handleTarget_p, player_p);
+    if(!_paused)
+    {
+        godot::add_move_target_commands(*_controller, *_state, handles_p, target_p, handleTarget_p, player_p);
+    }
 }
 
 void Controller::add_attack_move_commands(TypedArray<int> const &handles_p, Vector2 const &target_p, int player_p)
 {
-    godot::add_attack_move_commands(*_controller, *_state, handles_p, target_p, player_p);
+    if(!_paused)
+    {
+        godot::add_attack_move_commands(*_controller, *_state, handles_p, target_p, player_p);
+    }
 }
 
 void Controller::add_stop_commands(TypedArray<int> const &handles_p, int player_p)
 {
-    godot::add_stop_commands(*_controller, *_state, handles_p, player_p);
+    if(!_paused)
+    {
+        godot::add_stop_commands(*_controller, *_state, handles_p, player_p);
+    }
 }
 
 void Controller::add_unit_build_command(TypedArray<int> const &handles_p, String const &model_p, int player_p)
 {
-    godot::add_unit_build_command(*_controller, *_state, _lib, handles_p, model_p, player_p);
+    if(!_paused)
+    {
+        godot::add_unit_build_command(*_controller, *_state, _lib, handles_p, model_p, player_p);
+    }
 }
 
 void Controller::add_unit_build_cancel_command(int handle_p, int index_p, int player_p)
 {
-    godot::add_unit_build_cancel_command(*_controller, *_state, handle_p, index_p, player_p);
+    if(!_paused)
+    {
+        godot::add_unit_build_cancel_command(*_controller, *_state, handle_p, index_p, player_p);
+    }
 }
 
 void Controller::add_blueprint_command(Vector2 const &target_p, String const &model_p, int player_p)
 {
-    godot::add_blueprint_command(*_controller, *_state, _lib, target_p, model_p, player_p);
+    if(!_paused)
+    {
+        godot::add_blueprint_command(*_controller, *_state, _lib, target_p, model_p, player_p);
+    }
 }
 
 void Controller::add_chose_option_command(int option_p, int player_p)
 {
-    _controller->commitCommandAsPlayer(getOptionManagers().at(player_p).newCommandFromOption(option_p), player_p);
+    if(!_paused)
+    {
+        _controller->commitCommandAsPlayer(getOptionManagers().at(player_p).newCommandFromOption(option_p), player_p);
+    }
 }
 
 void Controller::_bind_methods()
