@@ -555,6 +555,9 @@ void Controller::_bind_methods()
     ADD_SIGNAL(MethodInfo("option_update"));
     ADD_SIGNAL(MethodInfo("pop_option"));
 
+    ADD_SIGNAL(MethodInfo("set_camera", PropertyInfo(Variant::INT, "x"), PropertyInfo(Variant::INT, "y")));
+    ADD_SIGNAL(MethodInfo("spawn_dialog", PropertyInfo(Variant::STRING, "model")));
+
     ADD_SIGNAL(MethodInfo("production_command", PropertyInfo(Variant::INT, "handle"), PropertyInfo(Variant::INT, "index"), PropertyInfo(Variant::STRING, "model"), PropertyInfo(Variant::FLOAT, "progress")));
 }
 

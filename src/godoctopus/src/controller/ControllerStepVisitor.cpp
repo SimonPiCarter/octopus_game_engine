@@ -1,6 +1,8 @@
 #include "ControllerStepVisitor.h"
 
 #include "Controller.h"
+#include "step/CameraStep.h"
+#include "step/DialogStep.h"
 
 // octopus
 #include "command/data/AttackMoveData.hh"
@@ -132,6 +134,17 @@ void ControllerStepVisitor::visit(octopus::CommandWindUpDiffStep const *steppabl
 
 void ControllerStepVisitor::visit(octopus::CustomStep const *steppable_p)
 {
+	DialogStep const *dialog_l = dynamic_cast<DialogStep const *>(steppable_p);
+	CameraStep const *camera_l = dynamic_cast<CameraStep const *>(steppable_p);
+
+	if(camera_l)
+	{
+		_controller.emit_signal("set_camera", camera_l->_x, camera_l->_y);
+	}
+	if(dialog_l)
+	{
+		_controller.emit_signal("spawn_dialog", String(dialog_l->_dialog.c_str()));
+	}
 }
 
 }
