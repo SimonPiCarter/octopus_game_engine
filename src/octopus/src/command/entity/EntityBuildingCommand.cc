@@ -69,12 +69,18 @@ bool EntityBuildingCommand::applyCommand(Step & step_p, State const &state_p, Co
 	}
 
 	if(building_l->isBlueprint()
-	&& !building_l->_buildingModel.checkGrid(*building_l, state_p)
-	&& !step_p.isCanceled(_target))
+	&& !building_l->_buildingModel.checkGrid(*building_l, state_p))
 	{
-		Logger::getDebug() << "EntityBuildingCommand:: space taken"<<std::endl;
-		step_p.addSteppable(new BuildingCancelStep(_target, building_l->_canceled, true));
-		step_p.addSteppable(new PlayerSpendResourceStep(building_l->_player, getReverseCostMap(building_l->_model._cost)));
+		if(!step_p.isCanceled(_target))
+		{
+			Logger::getDebug() << "EntityBuildingCommand:: space taken and not cancelled yet"<<std::endl;
+			step_p.addSteppable(new BuildingCancelStep(_target, building_l->_canceled, true));
+			step_p.addSteppable(new PlayerSpendResourceStep(building_l->_player, getReverseCostMap(building_l->_model._cost)));
+		}
+		else
+		{
+			Logger::getDebug() << "EntityBuildingCommand:: space taken and already cancelled"<<std::endl;
+		}
 		return true;
 	}
 
