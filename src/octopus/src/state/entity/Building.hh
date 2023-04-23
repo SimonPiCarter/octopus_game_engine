@@ -23,6 +23,19 @@ class Building : public Entity
 		/// the space was taken (or if cancelled manually)
 		bool _canceled {false};
 
+		///
+		/// Rally point
+		///
+
+		/// @brief true if there is an active rally point
+		bool _rallyPointActive {false};
+		/// @brief position of the rally point
+		Vector _rallyPoint;
+		/// @brief true if there is an active rally point
+		bool _rallyPointEntityActive {false};
+		/// @brief entity pointed by the rally point
+		Handle _rallyPointEntity;
+
 		/// @brief return true if building is done building
 		bool isBuilt() const;
 		/// @brief return true if building is still a blueprint

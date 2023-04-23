@@ -3,6 +3,7 @@
 
 #include <cmath>
 
+#include "command/entity/EntityRallyPointCommand.hh"
 #include "logger/Logger.hh"
 #include "state/State.hh"
 #include "state/entity/Building.hh"
@@ -76,7 +77,13 @@ bool BuildingUnitProductionCommand::applyCommand(Step & step_p, State const &sta
 
 		Unit unit_l(building_l->_pos + building_l->_buildingModel._productionOutput, false, data_l._model);
 		unit_l._player = building_l->_player;
-		step_p.addSteppable(new UnitSpawnStep(getNextHandle(step_p, state_p), unit_l));
+		Handle handle_l = getNextHandle(step_p, state_p);
+		step_p.addSteppable(new UnitSpawnStep(handle_l, unit_l));
+
+		if(building_l->_rallyPointActive)
+		{
+			step_p.addSteppable(new CommandSpawnStep(new EntityRallyPointCommand(handle_l, building_l->_rallyPointEntity, building_l->_rallyPoint, !building_l->_rallyPointEntityActive)));
+		}
 
 		return true;
 	}
