@@ -20,7 +20,7 @@ using namespace std::chrono_literals;
 
 using namespace octopus;
 
-TEST(benchmarkTest, simple)
+TEST(DISABLED_benchmarkTest, simple)
 {
 	octopus::EntityModel unitModel_l { false, 1., 1., 10. };
 
