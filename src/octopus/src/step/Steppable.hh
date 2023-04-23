@@ -41,6 +41,8 @@ namespace octopus
 
 	class AttackModifierStep;
 	class BuildingCancelStep;
+	class BuildingRemoveRallyPointStep;
+	class BuildingSetRallyPointStep;
 	class BuildingSpawnStep;
 	class BuildingStep;
 	class CancelUnitProductionStep;
@@ -124,6 +126,8 @@ namespace octopus
 
 			virtual void visit(AttackModifierStep const *steppable_p) = 0;
 			virtual void visit(BuildingCancelStep const *steppable_p) = 0;
+			virtual void visit(BuildingRemoveRallyPointStep const *steppable_p) = 0;
+			virtual void visit(BuildingSetRallyPointStep const *steppable_p) = 0;
 			virtual void visit(BuildingSpawnStep const *steppable_p) = 0;
 			virtual void visit(BuildingStep const *steppable_p) = 0;
     		virtual void visit(CancelUnitProductionStep const *) = 0;

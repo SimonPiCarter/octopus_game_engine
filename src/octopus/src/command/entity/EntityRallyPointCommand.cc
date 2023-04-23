@@ -17,13 +17,15 @@ EntityRallyPointCommand::EntityRallyPointCommand(Handle const &source_p, Handle 
 
 bool EntityRallyPointCommand::applyCommand(Step & step_p, State const &state_p, CommandData const *, PathManager &) const
 {
-	Command *cmd_l = newTargetCommand(state_p, _handleCommand, _target, _pos, !_targetNotSet);
+	Command *cmd_l = newTargetCommand(state_p, _handleCommand, _target, _pos, _targetNotSet);
 	if(cmd_l)
 	{
 		step_p.addSteppable(new CommandSpawnStep(cmd_l));
 	}
 
-	return true;
+	// false here is required because if a next step is issued on the same step as a new command is spawn
+	// the newly command is discarded
+	return false;
 }
 
 } // namespace octopus

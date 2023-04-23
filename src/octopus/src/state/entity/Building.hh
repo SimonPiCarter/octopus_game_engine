@@ -30,11 +30,11 @@ class Building : public Entity
 		/// @brief true if there is an active rally point
 		bool _rallyPointActive {false};
 		/// @brief position of the rally point
-		Vector _rallyPoint;
+		Vector _rallyPoint {0,0};
 		/// @brief true if there is an active rally point
 		bool _rallyPointEntityActive {false};
 		/// @brief entity pointed by the rally point
-		Handle _rallyPointEntity;
+		Handle _rallyPointEntity {0};
 
 		/// @brief return true if building is done building
 		bool isBuilt() const;

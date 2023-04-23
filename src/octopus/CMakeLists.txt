@@ -12,6 +12,7 @@ cmake_minimum_required (VERSION 3.14.0)
 add_library(octopus
 	${CMAKE_CURRENT_SOURCE_DIR}/src/command/building/BuildingBlueprintCommand.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/command/building/BuildingCancelCommand.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/src/command/building/BuildingRallyPointCommand.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/command/building/BuildingUnitCancelCommand.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/command/building/BuildingUnitProductionCommand.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/command/Command.cc
@@ -87,6 +88,8 @@ add_library(octopus
 	${CMAKE_CURRENT_SOURCE_DIR}/src/step/command/flying/FlyingCommandSpawnStep.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/step/command/harvest/CommandHarvestStep.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/step/building/BuildingCancelStep.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/src/step/building/BuildingRemoveRallyPointStep.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/src/step/building/BuildingSetRallyPointStep.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/step/building/BuildingStep.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/step/entity/EntityAttackStep.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/step/entity/EntityFrozenStep.cc

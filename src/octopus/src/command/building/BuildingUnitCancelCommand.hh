@@ -17,7 +17,7 @@ public:
 
 	/// @brief register the command into the step
 	/// This method is responsible to
-	/// handle cost of command and spawning command in step
+	/// handle cost of command
 	virtual void registerCommand(Step & step_p, State const &state_p) override;
 
 	/// @brief

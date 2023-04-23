@@ -75,15 +75,14 @@ TEST(rallyPointProductionCommandTest, simple)
 
 	EXPECT_EQ(2u, state_l->getEntities().size());
 
-	// // update time to 10second (16)
-	// controller_l.update(10.);
+	// update time to 10second (16)
+	controller_l.update(10.);
 
-	// // updated until synced up
-	// while(!controller_l.loop_body()) {}
+	// updated until synced up
+	while(!controller_l.loop_body()) {}
 
-	// state_l = controller_l.queryState();
+	state_l = controller_l.queryState();
 
-	// ASSERT_EQ(2u, state_l->getEntities().size());
-	// EXPECT_NEAR(5., to_double(state_l->getEntity(1)->_pos.x), 1e-5);
-	// EXPECT_NEAR(3., to_double(state_l->getEntity(1)->_pos.y), 1e-5);
+	ASSERT_EQ(2u, state_l->getEntities().size());
+	EXPECT_FALSE(is_zero(state_l->getEntity(1)->_pos - Vector(2,3)));
 }

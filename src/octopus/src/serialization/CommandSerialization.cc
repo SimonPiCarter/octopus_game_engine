@@ -5,6 +5,7 @@
 #include "command/building/BuildingBlueprintCommand.hh"
 #include "command/building/BuildingCancelCommand.hh"
 #include "command/building/BuildingUnitCancelCommand.hh"
+#include "command/building/BuildingRallyPointCommand.hh"
 #include "command/building/BuildingUnitProductionCommand.hh"
 #include "command/entity/EntityAttackCommand.hh"
 #include "command/entity/EntityAttackMoveCommand.hh"
@@ -276,6 +277,16 @@ void writeCommand(std::ofstream &file_p, Command const *cmd_p)
         BuildingCancelCommand const *typped_l = dynamic_cast<BuildingCancelCommand const *>(cmd_p);
         write(file_p, typped_l->getHandleCommand());
     }
+    else if(dynamic_cast<BuildingRallyPointCommand const *>(cmd_p))
+    {
+        write(file_p, 14ul);
+        BuildingRallyPointCommand const *typped_l = dynamic_cast<BuildingRallyPointCommand const *>(cmd_p);
+        write(file_p, typped_l->getHandleCommand());
+        write(file_p, typped_l->_reset);
+        write(file_p, typped_l->_rallyPoint);
+        write(file_p, typped_l->_rallyPointEntityActive);
+        write(file_p, typped_l->_rallyPointEntity);
+    }
     else
     {
         throw std::logic_error("unserializable command thrown in file");
@@ -496,6 +507,29 @@ Command * readCommand(std::ifstream &file_p, Library const &lib_p)
         read(file_p, &building_l);
 
         cmd_l = new BuildingCancelCommand(building_l);
+    }
+    else if(cmdId_p == 14)
+    {
+        Handle building_l;
+        bool reset_l;
+        Vector rallyPoint_l;
+        bool rallyPointEntityActive_l;
+        Handle rallyPointEntity_l;
+
+        read(file_p, &building_l);
+        read(file_p, &reset_l);
+        read(file_p, &rallyPoint_l);
+        read(file_p, &rallyPointEntityActive_l);
+        read(file_p, &rallyPointEntity_l);
+
+        if(reset_l)
+        {
+            cmd_l = new BuildingRallyPointCommand(building_l);
+        }
+        else
+        {
+            cmd_l = new BuildingRallyPointCommand(building_l, rallyPoint_l, rallyPointEntityActive_l, rallyPointEntity_l);
+        }
     }
     if(!cmd_l)
     {
