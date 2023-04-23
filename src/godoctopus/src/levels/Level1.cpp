@@ -87,7 +87,7 @@ std::list<Steppable *> WaveLevelSteps(Library &lib_p, RandomGenerator &rand_p, u
 	loadModels(lib_p);
 
 	Building building_l({4, 20}, true, lib_p.getBuildingModel("command_center"));
-	Unit unit_l({ 15, 20. }, false, lib_p.getUnitModel("worker"));
+	Unit unit_l({ 15, 20 }, false, lib_p.getUnitModel("worker"));
 
 	Resource res1_l({20,20}, true, lib_p.getEntityModel("resource_food"));
 	res1_l._type = ResourceType::Food;
@@ -147,6 +147,8 @@ std::list<Steppable *> WaveLevelSteps(Library &lib_p, RandomGenerator &rand_p, u
 		new TriggerSpawn(new AnchorTrigger(lib_p, rand_p, 60)),
 		new TriggerSpawn(new VisionTrigger(pattern_l)),
 		new FlyingCommandSpawnStep(new TimerDamage(0, 100, 0, 0, octopus::ResourceType::Anchor, 0)),
+		new godot::CameraStep(15, 20),
+		new godot::DialogStep("leve1_intro"),
 	};
 
 	return spawners_l;
