@@ -1,6 +1,7 @@
 #include "CommandController.h"
 
 // octopus
+#include "command/CommandHelpers.hh"
 #include "command/CommandQueue.hh"
 #include "command/building/BuildingBlueprintCommand.hh"
 #include "command/building/BuildingUnitProductionCommand.hh"
@@ -44,91 +45,11 @@ void add_move_target_commands(octopus::Controller &controller_p, octopus::State 
 {
     for(size_t i = 0 ; i < handles_p.size() ; ++ i)
     {
-        int idx_l = handles_p[i];
         octopus::Vector worldPos_l(target_p.x, target_p.y);
-
-        const octopus::Entity * cur_l = state_p.getEntity(idx_l);
-		const octopus::Unit * unit_l = dynamic_cast<const octopus::Unit *>(cur_l);
-		const octopus::Player * player_l = state_p.getPlayer(cur_l->_player);
-
-		bool isStatic_l = cur_l->_model._isStatic;
-
-		if(isStatic_l)
+        octopus::Command *cmd_l = octopus::newTargetCommand(state_p, i, handleTarget_p, worldPos_l, false);
+        if(cmd_l)
         {
-            continue;
-        }
-
-        const octopus::Entity * target_l = state_p.getEntity(handleTarget_p);
-        const octopus::Building * targetBuilding_l = dynamic_cast<const octopus::Building *>(target_l);
-        const octopus::Resource * targetResource_l = dynamic_cast<const octopus::Resource *>(target_l);
-        const octopus::Player * targetPlayer_l = state_p.getPlayer(target_l->_player);
-
-        if(targetResource_l
-        && unit_l
-        && unit_l->_unitModel._maxQuantity.find(targetResource_l->_type) != unit_l->_unitModel._maxQuantity.end())
-        {
-            octopus::UnitHarvestCommand * command_l = new octopus::UnitHarvestCommand(
-                idx_l,
-                idx_l,
-                handleTarget_p,
-                worldPos_l,
-                0,
-                {worldPos_l},
-                true
-            );
-            controller_p.commitCommandAsPlayer(command_l, player_p);
-        }
-        else if(target_l && !targetResource_l
-        && player_l->_team != targetPlayer_l->_team)
-        {
-            octopus::EntityAttackCommand * command_l = new octopus::EntityAttackCommand(
-                idx_l,
-                idx_l,
-                handleTarget_p,
-                true
-            );
-            controller_p.commitCommandAsPlayer(command_l, player_p);
-        }
-        else if(targetBuilding_l
-        && !targetBuilding_l->isBuilt())
-        {
-            octopus::EntityBuildingCommand * command_l = new octopus::EntityBuildingCommand(
-                idx_l,
-                idx_l,
-                handleTarget_p,
-                worldPos_l,
-                0,
-                {worldPos_l},
-                true
-            );
-            controller_p.commitCommandAsPlayer(command_l, player_p);
-        }
-        else if(unit_l && targetBuilding_l
-        && targetBuilding_l->_buildingModel.isDeposit(unit_l->_typeOfResource)
-        && unit_l->_quantityOfResource > 0)
-        {
-            octopus::UnitDropCommand * command_l = new octopus::UnitDropCommand(
-                idx_l,
-                idx_l,
-                handleTarget_p,
-                worldPos_l,
-                0,
-                {worldPos_l},
-                true
-            );
-            controller_p.commitCommandAsPlayer(command_l, player_p);
-        }
-        else
-        {
-            octopus::EntityMoveCommand * command_l = new octopus::EntityMoveCommand(
-                idx_l,
-                idx_l,
-                worldPos_l,
-                0,
-                {worldPos_l},
-                true
-            );
-            controller_p.commitCommandAsPlayer(command_l, player_p);
+            controller_p.commitCommandAsPlayer(cmd_l, player_p);
         }
     }
 }
