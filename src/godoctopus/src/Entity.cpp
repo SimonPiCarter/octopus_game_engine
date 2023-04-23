@@ -120,6 +120,31 @@ float Entity::get_reload(Controller const *controller_p) const
     return 100./ent_l->getFullReload();
 }
 
+bool Entity::has_rally_point(Controller const *controller_p) const
+{
+    octopus::Entity const *ent_l = controller_p->getEntity(_handle);
+    if(!ent_l->_model._isBuilding)
+    {
+        return false;
+    }
+
+    octopus::Building const *building_l = static_cast<octopus::Building const *>(ent_l);
+
+    return building_l->_rallyPointActive;
+}
+
+Vector2 Entity::get_rally_point(Controller const *controller_p) const
+{
+    octopus::Entity const *ent_l = controller_p->getEntity(_handle);
+    if(!ent_l->_model._isBuilding)
+    {
+        return Vector2(0,0);
+    }
+
+    octopus::Building const *building_l = static_cast<octopus::Building const *>(ent_l);
+    return Vector2(octopus::to_double(building_l->_rallyPoint.x), octopus::to_double(building_l->_rallyPoint.y));
+}
+
 void Entity::_bind_methods()
 {
     UtilityFunctions::print("Binding Entity methods");
@@ -141,6 +166,8 @@ void Entity::_bind_methods()
     ClassDB::bind_method(D_METHOD("get_armor", "controller"), &Entity::get_armor);
     ClassDB::bind_method(D_METHOD("get_speed", "controller"), &Entity::get_speed);
     ClassDB::bind_method(D_METHOD("get_reload", "controller"), &Entity::get_reload);
+    ClassDB::bind_method(D_METHOD("has_rally_point", "controller"), &Entity::has_rally_point);
+    ClassDB::bind_method(D_METHOD("get_rally_point", "controller"), &Entity::get_rally_point);
 
     ADD_GROUP("Entity", "Entity_");
     ADD_PROPERTY(PropertyInfo(Variant::INT, "entity_handle"), "set_handle", "get_handle");

@@ -29,15 +29,13 @@ void add_move_commands(octopus::Controller &controller_p, octopus::State const &
 {
     for(size_t i = 0 ; i < handles_p.size() ; ++ i)
     {
-        int idx_l = handles_p[i];
-        const octopus::Entity * cur_l = state_p.getEntity(idx_l);
-		bool isStatic_l = cur_l->_model._isStatic;
-
-		if(isStatic_l)
+        octopus::Vector worldPos_l(target_p.x, target_p.y);
+        int handle_l = handles_p[i];
+        octopus::Command *cmd_l = octopus::newTargetCommand(state_p, handle_l, 0, worldPos_l, true);
+        if(cmd_l)
         {
-            continue;
+            controller_p.commitCommandAsPlayer(cmd_l, player_p);
         }
-        controller_p.commitCommandAsPlayer(new octopus::EntityMoveCommand(idx_l, idx_l, octopus::Vector(target_p.x, target_p.y), 0, {octopus::Vector(target_p.x, target_p.y)}, true), player_p);
     }
 }
 
@@ -46,7 +44,8 @@ void add_move_target_commands(octopus::Controller &controller_p, octopus::State 
     for(size_t i = 0 ; i < handles_p.size() ; ++ i)
     {
         octopus::Vector worldPos_l(target_p.x, target_p.y);
-        octopus::Command *cmd_l = octopus::newTargetCommand(state_p, i, handleTarget_p, worldPos_l, false);
+        int handle_l = handles_p[i];
+        octopus::Command *cmd_l = octopus::newTargetCommand(state_p, handle_l, handleTarget_p, worldPos_l, false);
         if(cmd_l)
         {
             controller_p.commitCommandAsPlayer(cmd_l, player_p);

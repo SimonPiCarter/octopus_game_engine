@@ -43,6 +43,10 @@ public:
     float get_speed(Controller const *controller_p) const;
     float get_reload(Controller const *controller_p) const;
 
+    // building getter
+    bool has_rally_point(Controller const *controller_p) const;
+    Vector2 get_rally_point(Controller const *controller_p) const;
+
 private:
     int _handle;
 };
