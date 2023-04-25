@@ -65,6 +65,18 @@ bool Entity::is_building(Controller const *controller_p) const
     return ent_l->_model._isBuilding;
 }
 
+bool Entity::is_built(Controller const *controller_p) const
+{
+    octopus::Entity const *ent_l = controller_p->getEntity(_handle);
+    if(!ent_l->_model._isBuilding)
+    {
+        return true;
+    }
+    octopus::Building const *building_l = static_cast<octopus::Building const *>(ent_l);
+
+    return building_l->isBuilt();
+}
+
 bool Entity::is_resource(Controller const *controller_p) const
 {
     octopus::Entity const *ent_l = controller_p->getEntity(_handle);
@@ -157,6 +169,7 @@ void Entity::_bind_methods()
     ClassDB::bind_method(D_METHOD("is_alive", "controller"), &Entity::is_alive);
     ClassDB::bind_method(D_METHOD("is_blueprint", "controller"), &Entity::is_blueprint);
     ClassDB::bind_method(D_METHOD("is_building", "controller"), &Entity::is_building);
+    ClassDB::bind_method(D_METHOD("is_built", "controller"), &Entity::is_built);
     ClassDB::bind_method(D_METHOD("is_resource", "controller"), &Entity::is_resource);
     ClassDB::bind_method(D_METHOD("is_unit", "controller"), &Entity::is_unit);
     ClassDB::bind_method(D_METHOD("get_model", "controller"), &Entity::get_model);

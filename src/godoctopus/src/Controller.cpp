@@ -13,6 +13,7 @@
 
 // octopus
 #include "command/building/BuildingUnitProductionCommand.hh"
+#include "command/building/BuildingCancelCommand.hh"
 #include "controller/Controller.hh"
 #include "logger/Logger.hh"
 #include "state/entity/Building.hh"
@@ -545,6 +546,14 @@ void Controller::add_blueprint_command(Vector2 const &target_p, String const &mo
     }
 }
 
+void Controller::add_building_cancel_command(int handle_p, int player_p)
+{
+    if(!_paused && _state->getEntity(handle_p)->_model._isBuilding)
+    {
+        _controller->commitCommandAsPlayer(new octopus::BuildingCancelCommand(handle_p), player_p);
+    }
+}
+
 void Controller::add_chose_option_command(int option_p, int player_p)
 {
     if(!_paused)
@@ -602,6 +611,7 @@ void Controller::_bind_methods()
     ClassDB::bind_method(D_METHOD("add_unit_build_command", "handle", "model", "player"), &Controller::add_unit_build_command);
     ClassDB::bind_method(D_METHOD("add_unit_build_cancel_command", "handle", "index", "player"), &Controller::add_unit_build_cancel_command);
     ClassDB::bind_method(D_METHOD("add_blueprint_command", "target", "model", "player"), &Controller::add_blueprint_command);
+    ClassDB::bind_method(D_METHOD("add_building_cancel_command", "handle", "player"), &Controller::add_building_cancel_command);
     ClassDB::bind_method(D_METHOD("add_chose_option_command", "option_p", "player"), &Controller::add_chose_option_command);
 
     ADD_GROUP("Controller", "Controller_");
@@ -618,6 +628,9 @@ void Controller::_bind_methods()
     ADD_SIGNAL(MethodInfo("build", PropertyInfo(Variant::INT, "handle"), PropertyInfo(Variant::FLOAT, "progress")));
     ADD_SIGNAL(MethodInfo("option_update"));
     ADD_SIGNAL(MethodInfo("pop_option"));
+	ADD_SIGNAL(MethodInfo("remove_rally_point", PropertyInfo(Variant::INT, "handle")));
+	ADD_SIGNAL(MethodInfo("set_rally_point", PropertyInfo(Variant::INT, "handle"), PropertyInfo(Variant::VECTOR2, "pos")));
+	ADD_SIGNAL(MethodInfo("set_rally_point_target", PropertyInfo(Variant::INT, "handle"), PropertyInfo(Variant::INT, "target")));
 
     ADD_SIGNAL(MethodInfo("set_camera", PropertyInfo(Variant::INT, "x"), PropertyInfo(Variant::INT, "y")));
     ADD_SIGNAL(MethodInfo("spawn_dialog", PropertyInfo(Variant::STRING, "model")));

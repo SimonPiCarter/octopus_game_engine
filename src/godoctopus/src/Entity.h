@@ -33,6 +33,7 @@ public:
     bool is_alive(Controller const *controller_p) const;
     bool is_blueprint(Controller const *controller_p) const;
     bool is_building(Controller const *controller_p) const;
+    bool is_built(Controller const *controller_p) const;
     bool is_resource(Controller const *controller_p) const;
     bool is_unit(Controller const *controller_p) const;
     int get_player(Controller const *controller_p) const;
