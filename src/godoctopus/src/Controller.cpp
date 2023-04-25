@@ -489,35 +489,35 @@ void Controller::get_visible_units(int player_p, int ent_registered_p)
     }
 }
 
-void Controller::add_move_commands(TypedArray<int> const &handles_p, Vector2 const &target_p, int player_p)
+void Controller::add_move_commands(TypedArray<int> const &handles_p, Vector2 const &target_p, int player_p, bool queued_p)
 {
     if(!_paused)
     {
-        godot::add_move_commands(*_controller, *_state, handles_p, target_p, player_p);
+        godot::add_move_commands(*_controller, *_state, handles_p, target_p, player_p, queued_p);
     }
 }
 
-void Controller::add_move_target_commands(TypedArray<int> const &handles_p, Vector2 const &target_p, int handleTarget_p, int player_p)
+void Controller::add_move_target_commands(TypedArray<int> const &handles_p, Vector2 const &target_p, int handleTarget_p, int player_p, bool queued_p)
 {
     if(!_paused)
     {
-        godot::add_move_target_commands(*_controller, *_state, handles_p, target_p, handleTarget_p, player_p);
+        godot::add_move_target_commands(*_controller, *_state, handles_p, target_p, handleTarget_p, player_p, queued_p);
     }
 }
 
-void Controller::add_attack_move_commands(TypedArray<int> const &handles_p, Vector2 const &target_p, int player_p)
+void Controller::add_attack_move_commands(TypedArray<int> const &handles_p, Vector2 const &target_p, int player_p, bool queued_p)
 {
     if(!_paused)
     {
-        godot::add_attack_move_commands(*_controller, *_state, handles_p, target_p, player_p);
+        godot::add_attack_move_commands(*_controller, *_state, handles_p, target_p, player_p, queued_p);
     }
 }
 
-void Controller::add_stop_commands(TypedArray<int> const &handles_p, int player_p)
+void Controller::add_stop_commands(TypedArray<int> const &handles_p, int player_p, bool queued_p)
 {
     if(!_paused)
     {
-        godot::add_stop_commands(*_controller, *_state, handles_p, player_p);
+        godot::add_stop_commands(*_controller, *_state, handles_p, player_p, queued_p);
     }
 }
 
@@ -595,10 +595,10 @@ void Controller::_bind_methods()
     ClassDB::bind_method(D_METHOD("get_productions", "handles", "max"), &Controller::get_productions);
     ClassDB::bind_method(D_METHOD("get_visible_units", "player", "ent_registered_p"), &Controller::get_visible_units);
 
-    ClassDB::bind_method(D_METHOD("add_move_commands", "handles", "target", "player"), &Controller::add_move_commands);
-    ClassDB::bind_method(D_METHOD("add_move_target_commands", "handles", "target", "handle_target", "player"), &Controller::add_move_target_commands);
-    ClassDB::bind_method(D_METHOD("add_attack_move_commands", "handles", "target", "player"), &Controller::add_attack_move_commands);
-    ClassDB::bind_method(D_METHOD("add_stop_commands", "handles", "player"), &Controller::add_stop_commands);
+    ClassDB::bind_method(D_METHOD("add_move_commands", "handles", "target", "player", "queued"), &Controller::add_move_commands);
+    ClassDB::bind_method(D_METHOD("add_move_target_commands", "handles", "target", "handle_target", "player", "queued"), &Controller::add_move_target_commands);
+    ClassDB::bind_method(D_METHOD("add_attack_move_commands", "handles", "target", "player", "queued"), &Controller::add_attack_move_commands);
+    ClassDB::bind_method(D_METHOD("add_stop_commands", "handles", "player", "queued"), &Controller::add_stop_commands);
     ClassDB::bind_method(D_METHOD("add_unit_build_command", "handle", "model", "player"), &Controller::add_unit_build_command);
     ClassDB::bind_method(D_METHOD("add_unit_build_cancel_command", "handle", "index", "player"), &Controller::add_unit_build_cancel_command);
     ClassDB::bind_method(D_METHOD("add_blueprint_command", "target", "model", "player"), &Controller::add_blueprint_command);

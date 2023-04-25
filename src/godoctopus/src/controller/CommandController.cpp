@@ -25,13 +25,14 @@
 namespace godot
 {
 
-void add_move_commands(octopus::Controller &controller_p, octopus::State const &state_p, TypedArray<int> const &handles_p, Vector2 const &target_p, int player_p)
+void add_move_commands(octopus::Controller &controller_p, octopus::State const &state_p, TypedArray<int> const &handles_p, Vector2 const &target_p, int player_p, bool queued_p)
 {
     for(size_t i = 0 ; i < handles_p.size() ; ++ i)
     {
         octopus::Vector worldPos_l(target_p.x, target_p.y);
         int handle_l = handles_p[i];
         octopus::Command *cmd_l = octopus::newTargetCommand(state_p, handle_l, 0, worldPos_l, true);
+        cmd_l->setQueued(queued_p);
         if(cmd_l)
         {
             controller_p.commitCommandAsPlayer(cmd_l, player_p);
@@ -39,13 +40,14 @@ void add_move_commands(octopus::Controller &controller_p, octopus::State const &
     }
 }
 
-void add_move_target_commands(octopus::Controller &controller_p, octopus::State const &state_p, TypedArray<int> const &handles_p, Vector2 const &target_p, int handleTarget_p, int player_p)
+void add_move_target_commands(octopus::Controller &controller_p, octopus::State const &state_p, TypedArray<int> const &handles_p, Vector2 const &target_p, int handleTarget_p, int player_p, bool queued_p)
 {
     for(size_t i = 0 ; i < handles_p.size() ; ++ i)
     {
         octopus::Vector worldPos_l(target_p.x, target_p.y);
         int handle_l = handles_p[i];
         octopus::Command *cmd_l = octopus::newTargetCommand(state_p, handle_l, handleTarget_p, worldPos_l, false);
+        cmd_l->setQueued(queued_p);
         if(cmd_l)
         {
             controller_p.commitCommandAsPlayer(cmd_l, player_p);
@@ -53,7 +55,7 @@ void add_move_target_commands(octopus::Controller &controller_p, octopus::State 
     }
 }
 
-void add_attack_move_commands(octopus::Controller &controller_p, octopus::State const &state_p, TypedArray<int> const &handles_p, Vector2 const &target_p, int player_p)
+void add_attack_move_commands(octopus::Controller &controller_p, octopus::State const &state_p, TypedArray<int> const &handles_p, Vector2 const &target_p, int player_p, bool queued_p)
 {
     for(size_t i = 0 ; i < handles_p.size() ; ++ i)
     {
@@ -65,11 +67,13 @@ void add_attack_move_commands(octopus::Controller &controller_p, octopus::State 
         {
             continue;
         }
-        controller_p.commitCommandAsPlayer(new octopus::EntityAttackMoveCommand(idx_l, idx_l, octopus::Vector(target_p.x, target_p.y), 0, {octopus::Vector(target_p.x, target_p.y)}, true), player_p);
+        octopus::Command *cmd_l = new octopus::EntityAttackMoveCommand(idx_l, idx_l, octopus::Vector(target_p.x, target_p.y), 0, {octopus::Vector(target_p.x, target_p.y)}, true);
+        cmd_l->setQueued(queued_p);
+        controller_p.commitCommandAsPlayer(cmd_l, player_p);
     }
 }
 
-void add_stop_commands(octopus::Controller &controller_p, octopus::State const &state_p, TypedArray<int> const &handles_p, int player_p)
+void add_stop_commands(octopus::Controller &controller_p, octopus::State const &state_p, TypedArray<int> const &handles_p, int player_p, bool queued_p)
 {
     for(size_t i = 0 ; i < handles_p.size() ; ++ i)
     {
@@ -81,7 +85,9 @@ void add_stop_commands(octopus::Controller &controller_p, octopus::State const &
         {
             continue;
         }
-        controller_p.commitCommandAsPlayer(new octopus::EntityWaitCommand(idx_l, idx_l), player_p);
+        octopus::Command *cmd_l = new octopus::EntityWaitCommand(idx_l, idx_l);
+        cmd_l->setQueued(queued_p);
+        controller_p.commitCommandAsPlayer(cmd_l, player_p);
     }
 }
 
