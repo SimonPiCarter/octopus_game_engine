@@ -12,6 +12,8 @@
 #include "state/entity/Resource.hh"
 #include "state/State.hh"
 #include "step/building/BuildingCancelStep.hh"
+#include "step/building/BuildingRemoveRallyPointStep.hh"
+#include "step/building/BuildingSetRallyPointStep.hh"
 #include "step/building/BuildingStep.hh"
 #include "step/command/harvest/CommandHarvestStep.hh"
 #include "step/command/CommandWindUpDiffStep.hh"
@@ -55,6 +57,23 @@ void ControllerStepVisitor::visit(octopus::UnitSpawnStep const *steppable_p)
 void ControllerStepVisitor::visit(octopus::BuildingCancelStep const *steppable_p)
 {
 	_controller.emit_signal("clear_entity", int(steppable_p->_handle));
+}
+
+void ControllerStepVisitor::visit(octopus::BuildingRemoveRallyPointStep const *steppable_p)
+{
+	_controller.emit_signal("remove_rally_point", int(steppable_p->_handle));
+}
+
+void ControllerStepVisitor::visit(octopus::BuildingSetRallyPointStep const *steppable_p)
+{
+	if(!steppable_p->_rallyPointEntityActive)
+	{
+		_controller.emit_signal("set_rally_point", int(steppable_p->_handle), Vector2(octopus::to_double(steppable_p->_rallyPoint.x), octopus::to_double(steppable_p->_rallyPoint.y)));
+	}
+	else
+	{
+		_controller.emit_signal("set_rally_point_target", int(steppable_p->_handle), int(steppable_p->_rallyPointEntity));
+	}
 }
 
 void ControllerStepVisitor::visit(octopus::UnitHarvestQuantityStep const *steppable_p)

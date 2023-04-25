@@ -38,7 +38,6 @@ class BuildingSetRallyPointStep : public Steppable
 
         virtual SteppableData * newData(State const &) const;
 
-    private:
 		Handle const _handle;
 		Vector const _rallyPoint;
 		bool const _rallyPointEntityActive;

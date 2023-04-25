@@ -27,8 +27,8 @@ public:
 
 	virtual void visit(octopus::AttackModifierStep const *) override {}
 	virtual void visit(octopus::BuildingCancelStep const *) override;
-	virtual void visit(octopus::BuildingRemoveRallyPointStep const *) override {}
-	virtual void visit(octopus::BuildingSetRallyPointStep const *) override {}
+	virtual void visit(octopus::BuildingRemoveRallyPointStep const *) override;
+	virtual void visit(octopus::BuildingSetRallyPointStep const *) override;
 	virtual void visit(octopus::BuildingSpawnStep const *step_p) override;
 	virtual void visit(octopus::BuildingStep const *steppable_p) override;
 	virtual void visit(octopus::CancelUnitProductionStep const *) override {}

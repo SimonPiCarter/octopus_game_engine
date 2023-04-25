@@ -27,7 +27,6 @@ class BuildingRemoveRallyPointStep : public Steppable
 
         virtual SteppableData * newData(State const &) const;
 
-    private:
 		Handle const _handle;
 };
 }
