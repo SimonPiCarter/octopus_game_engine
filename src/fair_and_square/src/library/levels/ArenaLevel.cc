@@ -14,6 +14,7 @@
 #include "state/entity/Unit.hh"
 #include "state/entity/Resource.hh"
 #include "state/model/entity/BuildingModel.hh"
+#include "state/vision/PatternHandler.hh"
 #include "state/State.hh"
 #include "step/Step.hh"
 #include "step/command/CommandQueueStep.hh"
@@ -24,6 +25,7 @@
 #include "step/player/PlayerSpendResourceStep.hh"
 #include "step/state/StateWinStep.hh"
 #include "step/trigger/TriggerSpawn.hh"
+#include "step/team/TeamVisionStep.hh"
 
 using namespace octopus;
 
@@ -65,11 +67,23 @@ std::list<Steppable *> ArenaLevelSteps(Library &lib_p, size_t number_p)
 std::list<octopus::Steppable *> ArenaLevelSteps(octopus::Library &lib_p, std::vector<ArenaInfo> const &you_p, std::vector<ArenaInfo> const &them_p)
 {
 	loadModels(lib_p);
+	PatternHandler patternHandler_l;
+
+    octopus::PatternHandler handler_l;
+	octopus::VisionPattern pattern_l = handler_l.getPattern(50);
+	for(std::pair<long, long> &pair_l : pattern_l)
+	{
+		pair_l.first += 25;
+		pair_l.second += 20;
+	}
+
 
 	std::list<Steppable *> spawners_l =
 	{
 		new PlayerSpawnStep(0, 0),
 		new PlayerSpawnStep(1, 1),
+		new TeamVisionStep(0, pattern_l, true, false),
+		new TeamVisionStep(0, pattern_l, true, true),
 	};
 
 	unsigned long id_l = 0;
