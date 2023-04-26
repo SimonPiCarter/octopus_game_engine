@@ -98,7 +98,14 @@ void Controller::load_arena_level(TypedArray<int> const &size_you_p, TypedArray<
     }
     std::list<octopus::Steppable *> spawners_l = ArenaLevelSteps(_lib, you_l, them_l);
     std::list<octopus::Command *> commands_l = ArenaLevelCommands(_lib);
-    init(commands_l, spawners_l);
+    init(commands_l, spawners_l, 10);
+}
+
+void Controller::load_kamikaze_level(int you_p, int them_p, bool fast_p)
+{
+    std::list<octopus::Steppable *> spawners_l = ArenaKamikazeSteps(_lib, you_p, them_p, fast_p);
+    std::list<octopus::Command *> commands_l = ArenaLevelCommands(_lib);
+    init(commands_l, spawners_l, 10);
 }
 
 void Controller::load_maze_level(int size_p)
@@ -145,11 +152,11 @@ void Controller::load_level1(int seed_p, int nb_wave_p)
     init(commands_l, spawners_l);
 }
 
-void Controller::init(std::list<octopus::Command *> const &commands_p, std::list<octopus::Steppable *> const &spawners_p)
+void Controller::init(std::list<octopus::Command *> const &commands_p, std::list<octopus::Steppable *> const &spawners_p, size_t size_p)
 {
     UtilityFunctions::print("init controller...");
     delete _controller;
-	_controller = new octopus::Controller(spawners_p, 0.01, commands_p, 5, 50);
+	_controller = new octopus::Controller(spawners_p, 0.01, commands_p, 5, size_p);
 	_controller->enableORCA();
     UtilityFunctions::print("done");
 
@@ -578,6 +585,7 @@ void Controller::_bind_methods()
 
     ClassDB::bind_method(D_METHOD("load_wave_level", "player_wave", "step_count"), &Controller::load_wave_level);
     ClassDB::bind_method(D_METHOD("load_arena_level", "size_you", "size_them", "model_you", "model_them"), &Controller::load_arena_level);
+    ClassDB::bind_method(D_METHOD("load_kamikaze_level", "size_you", "size_them", "fast"), &Controller::load_kamikaze_level);
     ClassDB::bind_method(D_METHOD("load_maze_level", "size"), &Controller::load_maze_level);
     ClassDB::bind_method(D_METHOD("load_aoe_level", "size"), &Controller::load_aoe_level);
     ClassDB::bind_method(D_METHOD("load_chaining_level"), &Controller::load_chaining_level);

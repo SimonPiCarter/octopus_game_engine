@@ -38,6 +38,7 @@ public:
     // demo levels
     void load_wave_level(int playerWave_p, int stepCount_p=3*60*100);
     void load_arena_level(TypedArray<int> const &size_you_p, TypedArray<int> const &size_them_p, TypedArray<String> const &model_you_p, TypedArray<String> const &model_them_p);
+    void load_kamikaze_level(int you_p, int them_p, bool fast_p);
     void load_maze_level(int size_p);
     // showcase level
     void load_aoe_level(int size_p);
@@ -48,7 +49,7 @@ public:
     void load_level1(int seed_p, int nb_wave_p);
 
     // start engine with given level
-    void init(std::list<octopus::Command *> const &commands_p, std::list<octopus::Steppable *> const &spawners_p);
+    void init(std::list<octopus::Command *> const &commands_p, std::list<octopus::Steppable *> const &spawners_p, size_t size_p=50);
     void loop();
 
     bool has_state() const;
