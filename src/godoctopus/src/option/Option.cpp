@@ -81,6 +81,20 @@ void Option::updateFromModifier(octopus::LifeStealModifier const &mod_p)
     _params.append(std::to_string(mod_p._ratio*100.).c_str());
 }
 
+void Option::updateFromModifier(octopus::CompositeModifier const &mod_p)
+{
+    _modifier_name = "CompositeModifier";
+    _desc = "NA";
+    _params.clear();
+}
+
+void Option::updateFromModifier(octopus::SelfDamageModifier const &mod_p)
+{
+    _modifier_name = "SelfDamageModifier";
+    _desc = "NA";
+    _params.clear();
+}
+
 void Option::set_option(SingleOption const &option_p)
 {
     std::visit([&](auto && arg) { update(arg); }, option_p);

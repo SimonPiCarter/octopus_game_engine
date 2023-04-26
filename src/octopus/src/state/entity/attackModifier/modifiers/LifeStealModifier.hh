@@ -18,7 +18,7 @@ public:
     LifeStealModifier(double ratio_p) : _ratio(ratio_p) {}
 
 	/// @brief create a new attack steppable
-	std::vector<Steppable *> newAttackSteppable(const Entity &ent_p, const Entity &target_p, State const &state_p, Step const &step_p) const;
+	void newAttackSteppable(std::vector<Steppable *> &vec_r, const Entity &ent_p, const Entity &target_p, State const &state_p, Step const &step_p, bool disableMainAttack_p=false) const;
 
     double _ratio;
 };

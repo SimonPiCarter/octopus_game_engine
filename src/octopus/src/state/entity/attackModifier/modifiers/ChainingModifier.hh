@@ -19,7 +19,7 @@ public:
         : _delay(delay_p), _nbOfTicks(nbOfTicks_p), _ratio(ratio_p), _range(range_p) {}
 
 	/// @brief create a new attack steppable
-	std::vector<Steppable *> newAttackSteppable(const Entity &ent_p, const Entity &target_p, State const &state_p, Step const &step_p) const;
+	void newAttackSteppable(std::vector<Steppable *> &vec_r, const Entity &ent_p, const Entity &target_p, State const &state_p, Step const &step_p, bool disableMainAttack_p=false) const;
 
     unsigned long _delay;
     unsigned long _nbOfTicks;

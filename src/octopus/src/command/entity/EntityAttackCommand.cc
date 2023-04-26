@@ -117,8 +117,10 @@ bool EntityAttackCommand::applyCommand(Step & step_p, State const &state_p, Comm
 			// reset wind up (remove value + 1 because step +1 will be applied before resetting)
 			step_p.addSteppable(new CommandWindUpDiffStep(_handleCommand, - windup_l - 1));
 
+			std::vector<Steppable *> vec_l;
+			newAttackSteppable(vec_l, *entSource_l, *entTarget_l, state_p, step_p);
 			// add damage (with current hp from state and step until now)
-			for(Steppable * steppable_l : newAttackSteppable(*entSource_l, *entTarget_l, state_p, step_p))
+			for(Steppable * steppable_l : vec_l)
 			{
 				step_p.addSteppable(steppable_l);
 			}

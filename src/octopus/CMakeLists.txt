@@ -57,6 +57,7 @@ add_library(octopus
 	${CMAKE_CURRENT_SOURCE_DIR}/src/state/entity/attackModifier/modifiers/ChainingModifier.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/state/entity/attackModifier/modifiers/DotModifier.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/state/entity/attackModifier/modifiers/LifeStealModifier.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/src/state/entity/attackModifier/modifiers/SelfDamageModifier.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/state/model/requirements/Requirements.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/state/model/entity/BuildingModel.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/state/model/entity/EntityModel.cc

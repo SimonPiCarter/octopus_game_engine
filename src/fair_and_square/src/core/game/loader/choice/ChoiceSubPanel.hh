@@ -37,6 +37,8 @@ public:
     void updateFromModifier(octopus::ChainingModifier const &mod_p);
     void updateFromModifier(octopus::DotModifier const &mod_p);
     void updateFromModifier(octopus::LifeStealModifier const &mod_p);
+    void updateFromModifier(octopus::CompositeModifier const &mod_p);
+    void updateFromModifier(octopus::SelfDamageModifier const &mod_p);
 
     void updateIconsPosition();
 private:

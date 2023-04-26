@@ -238,6 +238,16 @@ void OneOptionPanel::updateFromModifier(octopus::LifeStealModifier const &mod_p)
     _descriptionText->updateText("ratio", std::to_string(mod_p._ratio*100.));
 }
 
+void OneOptionPanel::updateFromModifier(octopus::CompositeModifier const &mod_p)
+{
+    throw std::logic_error("CompositeModifier is not handled (yet)!");
+}
+
+void OneOptionPanel::updateFromModifier(octopus::SelfDamageModifier const &mod_p)
+{
+    throw std::logic_error("SelfDamageModifier is not handled (yet)!");
+}
+
 void OneOptionPanel::updateIconsPosition()
 {
     if(_mainIcons.size() == 2)
