@@ -47,6 +47,29 @@ public:
 	Handle const _handle;
 };
 
+
+class CommandMoveLosStep : public Steppable
+{
+public:
+	CommandMoveLosStep(Handle const &handle_p, bool oldLos_p, bool newLos_p)
+		: _handle(handle_p), _oldLos(oldLos_p), _newLos(newLos_p) {}
+
+	virtual void apply(State &state_p) const override;
+	virtual void revert(State &state_p, SteppableData const *) const override;
+
+	virtual bool isNoOp() const override;
+	virtual void visit(SteppableVisitor * visitor_p) const override
+	{
+		visitor_p->visit(this);
+	}
+
+	Handle const _handle;
+	bool const _oldLos;
+	bool const _newLos;
+};
+
+
+
 }
 
 #endif

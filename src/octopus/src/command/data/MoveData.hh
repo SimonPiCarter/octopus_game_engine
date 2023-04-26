@@ -31,6 +31,8 @@ public:
 	Vector _lastPos;
 	// count steps since last progress to waypoint
 	unsigned long _countSinceProgress {0};
+	/// @brief boolean to know if there is los on the final point
+	bool _los {false};
 };
 
 } // namespace octopus

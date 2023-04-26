@@ -54,4 +54,25 @@ bool CommandMoveStepSinceUpdateIncrementStep::isNoOp() const
 	return false;
 }
 
+void CommandMoveLosStep::apply(State &state_p) const
+{
+	Commandable * ent_l = state_p.getCommandable(this->_handle);
+	Logger::getDebug() << "CommandMoveLosStep :: apply " << this->_handle <<std::endl;
+	MoveData *data_l = dynamic_cast<MoveData*>(ent_l->getFrontQueue()._data);
+	data_l->_los = _newLos;
+}
+
+void CommandMoveLosStep::revert(State &state_p, SteppableData const *) const
+{
+	Commandable * ent_l = state_p.getCommandable(this->_handle);
+	Logger::getDebug() << "CommandMoveLosStep :: revert " << this->_handle <<std::endl;
+	MoveData *data_l = dynamic_cast<MoveData*>(ent_l->getFrontQueue()._data);
+	data_l->_los = _oldLos;
+}
+
+bool CommandMoveLosStep::isNoOp() const
+{
+	return _oldLos == _newLos;
+}
+
 } // namespace octopus

@@ -32,7 +32,11 @@ public:
 	GridNode * getNode(size_t x, size_t y);
 	GridNode const * getNode(size_t x, size_t y) const;
 
-	unsigned long getSize() const { return _internalGrid.size(); }
+	size_t getSizeX() const { return _sizeX; }
+	size_t getSizeY() const { return _sizeY; }
+
+	double getStepX() const { return _stepX; }
+	double getStepY() const { return _stepY; }
 
 	std::vector<std::vector<GridNode *> > const & getInternalGrid() const { return _internalGrid; }
 private:
@@ -41,6 +45,9 @@ private:
 
 	/// @brief the underlying graph used for shortest paths
 	Graph _graph;
+
+	size_t const _sizeX;
+	size_t const _sizeY;
 
 	double const _stepX;
 	double const _stepY;

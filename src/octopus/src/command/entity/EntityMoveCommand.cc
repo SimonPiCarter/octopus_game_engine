@@ -12,6 +12,8 @@
 #include "step/entity/EntityMoveStep.hh"
 #include "graph/CanonicalDijkstra.hh"
 #include "graph/PathManager.hh"
+#include "graph/Grid.hh"
+#include "graph/GridNode.hh"
 
 namespace octopus
 {
@@ -25,6 +27,71 @@ EntityMoveCommand::EntityMoveCommand(Handle const &commandHandle_p, Handle const
 	, _waypoints(waypoints_p)
 	, _init(init_p)
 {}
+
+Vector const &getLeftMost(Vector const &pos1_p, Vector const &pos2_p)
+{
+	if(pos1_p.x > pos2_p.x)
+	{
+		return pos2_p;
+	}
+	return pos1_p;
+}
+
+Vector const &getRightMost(Vector const &pos1_p, Vector const &pos2_p)
+{
+	if(pos1_p.x > pos2_p.x)
+	{
+		return pos1_p;
+	}
+	return pos2_p;
+}
+
+bool losCheck(Grid const &grid_p, Vector const &pos1_p, Vector const &pos2_p)
+{
+	Vector const & leftMost_l = getLeftMost(pos1_p, pos2_p);
+	Vector const & rightMost_l = getRightMost(pos2_p, pos1_p);
+
+	Vector const leftToRight_l = rightMost_l - leftMost_l;
+
+	// floor x to perform ray cast check
+	int x = to_int(leftMost_l.x);
+	int x_end = to_int(rightMost_l.x);
+	int cur_l = 0;
+	Fixed range_l(x_end-x);
+
+	// start point is put on a integer value of x (x computed right above)
+	Vector start_l = leftMost_l;
+	if(range_l > 1)
+	{
+		start_l += leftToRight_l * (Fixed(x) - leftMost_l.x) / range_l;
+	}
+	do
+	{
+		Fixed t0 = 0;
+		Fixed t1 = 1;
+		if(range_l > 1)
+		{
+			t0 = cur_l / range_l;
+			t1 = (cur_l+1) / range_l;
+		}
+		// y range along 1 range of x (warning lower may be higher than upper along y in case dy < 0)
+		int lower_y = to_int(start_l.y + leftToRight_l.y * t0);
+		int upper_y = to_int(start_l.y + leftToRight_l.y * t1);
+
+		// perform check on every casted node
+		for(int y = std::max(0, lower_y) ; y <= upper_y && y < grid_p.getSizeY()*grid_p.getStepY() - 1e-3 ; ++ y)
+		{
+			if(!grid_p.getNode(Vector(x+cur_l, y))->isFree())
+			{
+				return false;
+			}
+		}
+
+		++cur_l;
+	} while(cur_l < range_l && x+cur_l < grid_p.getSizeX()*grid_p.getStepX() - 1e-3);
+
+	return true;
+}
 
 bool EntityMoveCommand::applyCommand(Step & step_p, State const &state_p, CommandData const *data_p, PathManager &pathManager_p) const
 {
@@ -43,18 +110,38 @@ bool EntityMoveCommand::applyCommand(Step & step_p, State const &state_p, Comman
 	/// Update waypoints based on current position
 	/// Waypoint must be within two steps
 	///
-	pathManager_p.queryFlowField(to_int(data_l._finalPoint.x), to_int(data_l._finalPoint.y));
-	FlowField const * field_l = pathManager_p.getFlowField(to_int(data_l._finalPoint.x), to_int(data_l._finalPoint.y));
 	Vector next_l = data_l._finalPoint;
-	if(field_l )
+
+	bool los_l = data_l._los;
+	// line check every several steps
+	if(data_l._stepSinceUpdate % 50 == 0)
 	{
-		// direction directly on the square
-		Vector unitDir_l = unitary_direction(ent_l->_pos.x, ent_l->_pos.y, *field_l);
-		if(unitDir_l.x > 1e-5 || unitDir_l.x < -1e-5 || unitDir_l.y > 1e-5 || unitDir_l.y < -1e-5)
+		// reset step since update count (do not update grid status (not used anyway))
+		step_p.addSteppable(new CommandMoveUpdateStep(_handleCommand, data_l._stepSinceUpdate, data_l._gridStatus, data_l._gridStatus));
+		// perform a line check
+		los_l = losCheck(state_p.getPathGrid(), ent_l->_pos, data_l._finalPoint);
+		Logger::getDebug() << "los check returned " << los_l << std::endl;
+		step_p.addSteppable(new CommandMoveLosStep(_handleCommand, data_l._los, los_l));
+	}
+	// increment step since update (everytime otherwise will loop reseting)
+	step_p.addSteppable(new CommandMoveStepSinceUpdateIncrementStep(_handleCommand));
+
+	// query field if no los
+	if(!los_l)
+	{
+		pathManager_p.queryFlowField(to_int(data_l._finalPoint.x), to_int(data_l._finalPoint.y));
+		FlowField const * field_l = pathManager_p.getFlowField(to_int(data_l._finalPoint.x), to_int(data_l._finalPoint.y));
+		if(field_l )
 		{
-			next_l = ent_l->_pos + direction(ent_l->_pos.x, ent_l->_pos.y, *field_l);
+			// direction directly on the square
+			Vector unitDir_l = unitary_direction(ent_l->_pos.x, ent_l->_pos.y, *field_l);
+			if(unitDir_l.x > 1e-5 || unitDir_l.x < -1e-5 || unitDir_l.y > 1e-5 || unitDir_l.y < -1e-5)
+			{
+				next_l = ent_l->_pos + direction(ent_l->_pos.x, ent_l->_pos.y, *field_l);
+			}
 		}
 	}
+
 	Vector delta_l = ent_l->_pos - data_l._finalPoint;
 
 	// No more waypoint -> terminate

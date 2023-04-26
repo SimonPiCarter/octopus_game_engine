@@ -19,6 +19,8 @@ std::vector<std::vector<GridNode *> > setUpGrid(size_t sizeX_p, size_t sizeY_p, 
 Grid::Grid(size_t sizeX_p, size_t sizeY_p, double stepX_p, double stepY_p, bool noGraph_p) :
 	_internalGrid(setUpGrid(sizeX_p, sizeY_p, stepX_p, stepY_p)),
 	_graph(noGraph_p?std::vector<std::vector<GridNode *> >():_internalGrid),
+	_sizeX(sizeX_p),
+	_sizeY(sizeY_p),
 	_stepX(stepX_p),
 	_stepY(stepY_p)
 {}

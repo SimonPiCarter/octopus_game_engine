@@ -84,7 +84,7 @@ void AreaSpawnerCommand::registerCommand(Step & step_p, State const &state_p)
 	Logger::getDebug() << "AreaSpawnerCommand:: register Command "<<std::endl;
 
 	/// init grid from state
-	SpawningGrid grid_l(state_p.getPathGrid().getSize());
+	SpawningGrid grid_l(state_p.getPathGrid().getSizeX());
 	initGrid(0, 0, grid_l, state_p.getPathGrid());
 
 	/// @todo maybe update from step?
