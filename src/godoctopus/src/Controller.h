@@ -37,7 +37,7 @@ public:
 
     // demo levels
     void load_wave_level(int playerWave_p, int stepCount_p=3*60*100);
-    void load_arena_level(int size_you_p, int size_them_p, String model_you_p, String model_them_p);
+    void load_arena_level(TypedArray<int> const &size_you_p, TypedArray<int> const &size_them_p, TypedArray<String> const &model_you_p, TypedArray<String> const &model_them_p);
     void load_maze_level(int size_p);
     // showcase level
     void load_aoe_level(int size_p);

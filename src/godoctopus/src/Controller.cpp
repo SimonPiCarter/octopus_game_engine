@@ -82,11 +82,21 @@ void Controller::load_wave_level(int playerWave_p, int stepCount_p)
     init(commands_l, spawners_l);
 }
 
-void Controller::load_arena_level(int size_you_p, int size_them_p, String model_you_p, String model_them_p)
+void Controller::load_arena_level(TypedArray<int> const &size_you_p, TypedArray<int> const &size_them_p, TypedArray<String> const &model_you_p, TypedArray<String> const &model_them_p)
 {
-    std::string modelIdYou_l(model_you_p.utf8().get_data());
-    std::string modelIdThem_l(model_them_p.utf8().get_data());
-    std::list<octopus::Steppable *> spawners_l = ArenaLevelSteps(_lib, size_you_p, size_them_p, modelIdYou_l, modelIdThem_l);
+    std::vector<ArenaInfo> you_l;
+    std::vector<ArenaInfo> them_l;
+    for(size_t i = 0 ; i < size_you_p.size() && i < model_you_p.size() ; ++ i)
+    {
+        String str_l = model_you_p[i];
+        you_l.push_back({size_you_p[i], std::string(str_l.utf8().get_data())});
+    }
+    for(size_t i = 0 ; i < size_them_p.size() && i < model_them_p.size() ; ++ i)
+    {
+        String str_l = model_them_p[i];
+        them_l.push_back({size_them_p[i], std::string(str_l.utf8().get_data())});
+    }
+    std::list<octopus::Steppable *> spawners_l = ArenaLevelSteps(_lib, you_l, them_l);
     std::list<octopus::Command *> commands_l = ArenaLevelCommands(_lib);
     init(commands_l, spawners_l);
 }
