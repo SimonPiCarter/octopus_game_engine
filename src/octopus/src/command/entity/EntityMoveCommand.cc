@@ -77,6 +77,10 @@ bool losCheck(Grid const &grid_p, Vector const &pos1_p, Vector const &pos2_p)
 		// y range along 1 range of x (warning lower may be higher than upper along y in case dy < 0)
 		int lower_y = to_int(start_l.y + leftToRight_l.y * t0);
 		int upper_y = to_int(start_l.y + leftToRight_l.y * t1);
+		if(lower_y > upper_y)
+		{
+			std::swap(lower_y, upper_y);
+		}
 
 		// perform check on every casted node
 		for(int y = std::max(0, lower_y) ; y <= upper_y && y < grid_p.getSizeY()*grid_p.getStepY() - 1e-3 ; ++ y)
