@@ -28,18 +28,22 @@ Command * newTargetCommand(State const &state_p, Handle const &handle_p,
 
 	bool isStatic_l = cur_l->_model._isStatic;
 
-	if(isStatic_l && building_l)
+	if(isStatic_l)
 	{
-		// If target is building itself we reset the rally point
-		if(!targetNotSet_p && target_p == handle_p)
+		if(building_l)
 		{
-			return new octopus::BuildingRallyPointCommand(handle_p);
+			// If target is building itself we reset the rally point
+			if(!targetNotSet_p && target_p == handle_p)
+			{
+				return new octopus::BuildingRallyPointCommand(handle_p);
+			}
+			// Else set the rally point
+			else
+			{
+				return new octopus::BuildingRallyPointCommand(handle_p, pos_p, !targetNotSet_p, target_p);
+			}
 		}
-		// Else set the rally point
-		else
-		{
-			return new octopus::BuildingRallyPointCommand(handle_p, pos_p, !targetNotSet_p, target_p);
-		}
+		return nullptr;
 	}
 
 	const Entity * target_l = state_p.getEntity(target_p);
