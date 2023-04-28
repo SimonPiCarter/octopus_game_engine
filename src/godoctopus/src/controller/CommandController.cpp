@@ -32,9 +32,9 @@ void add_move_commands(octopus::Controller &controller_p, octopus::State const &
         octopus::Vector worldPos_l(target_p.x, target_p.y);
         int handle_l = handles_p[i];
         octopus::Command *cmd_l = octopus::newTargetCommand(state_p, handle_l, 0, worldPos_l, true);
-        cmd_l->setQueued(queued_p);
         if(cmd_l)
         {
+            cmd_l->setQueued(queued_p);
             controller_p.commitCommandAsPlayer(cmd_l, player_p);
         }
     }
@@ -47,9 +47,9 @@ void add_move_target_commands(octopus::Controller &controller_p, octopus::State 
         octopus::Vector worldPos_l(target_p.x, target_p.y);
         int handle_l = handles_p[i];
         octopus::Command *cmd_l = octopus::newTargetCommand(state_p, handle_l, handleTarget_p, worldPos_l, false);
-        cmd_l->setQueued(queued_p);
         if(cmd_l)
         {
+            cmd_l->setQueued(queued_p);
             controller_p.commitCommandAsPlayer(cmd_l, player_p);
         }
     }
