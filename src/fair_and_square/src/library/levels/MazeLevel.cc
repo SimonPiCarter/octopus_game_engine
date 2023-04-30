@@ -94,3 +94,22 @@ std::list<Command *> MazeLevelCommands(Library &lib_p)
 {
 	return {};
 }
+
+/// @brief write header for classic arena level
+void writeMazeLevelHeader(std::ofstream &file_p, size_t number_p)
+{
+    file_p.write((char*)&number_p, sizeof(number_p));
+}
+
+/// @brief read header for classic arena level and return a pair of steppable and command
+std::pair<std::list<octopus::Steppable *>, std::list<octopus::Command *> > readMazeLevelHeader(octopus::Library &lib_p, std::ifstream &file_p)
+{
+	size_t number_l;
+
+	file_p.read((char*)&number_l, sizeof(number_l));
+
+	std::pair<std::list<octopus::Steppable *>, std::list<octopus::Command *> > pair_l;
+	pair_l.first = MazeLevelSteps(lib_p, number_l);
+	pair_l.second = MazeLevelCommands(lib_p);
+	return pair_l;
+}

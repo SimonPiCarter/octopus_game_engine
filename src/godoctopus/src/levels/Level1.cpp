@@ -81,8 +81,7 @@ private:
 	octopus::VisionPattern const _pattern;
 };
 
-std::list<Steppable *> WaveLevelSteps(Library &lib_p, RandomGenerator &rand_p, unsigned long waveCount_p, unsigned long stepCount_p, unsigned long worldSize_p,
-	std::function<std::vector<octopus::Steppable *>(void)> waveStepGenerator_p)
+std::list<Steppable *> WaveLevelSteps(Library &lib_p, RandomGenerator &rand_p, unsigned long waveCount_p, unsigned long stepCount_p, unsigned long worldSize_p)
 {
 	loadModels(lib_p);
 
@@ -104,7 +103,7 @@ std::list<Steppable *> WaveLevelSteps(Library &lib_p, RandomGenerator &rand_p, u
 	mapRes_l[octopus::ResourceType::Steel] = -200;
 	mapRes_l[octopus::ResourceType::Anchor] = -180;
 
-	Trigger * triggerWave_l = new WaveSpawn(new ListenerStepCount(stepCount_p), lib_p, rand_p, 1, stepCount_p, waveCount_p, worldSize_p, waveStepGenerator_p);
+	Trigger * triggerWave_l = new WaveSpawn(new ListenerStepCount(stepCount_p), lib_p, rand_p, 1, stepCount_p, waveCount_p, worldSize_p, defaultGenerator);
 	Trigger * triggerLose_l = new LoseTrigger(new ListenerEntityModelDied(&lib_p.getBuildingModel("command_center"), 0));
 
 
@@ -224,6 +223,38 @@ std::list<Command *> WaveLevelCommands(Library &lib_p, RandomGenerator &rand_p, 
 	};
 
 	return commands_l;
+}
+
+/// @brief write header for classic arena level
+void writeWaveLevelHeader(std::ofstream &file_p, int seed_p, unsigned long waveCount_p,
+	unsigned long stepCount_p, unsigned long worldSize_p)
+{
+    file_p.write((char*)&seed_p, sizeof(seed_p));
+    file_p.write((char*)&waveCount_p, sizeof(waveCount_p));
+    file_p.write((char*)&stepCount_p, sizeof(stepCount_p));
+    file_p.write((char*)&worldSize_p, sizeof(worldSize_p));
+
+}
+/// @brief read header for classic arena level and return a pair of steppable and command
+std::pair<std::list<octopus::Steppable *>, std::list<octopus::Command *> > readWaveLevelHeader(octopus::Library &lib_p, std::ifstream &file_p,
+	octopus::RandomGenerator * &rand_p)
+{
+	int seed_l;
+	unsigned long waveCount_l;
+	unsigned long stepCount_l;
+	unsigned long worldSize_l;
+    file_p.read((char*)&seed_l, sizeof(seed_l));
+    file_p.read((char*)&waveCount_l, sizeof(waveCount_l));
+    file_p.read((char*)&stepCount_l, sizeof(stepCount_l));
+    file_p.read((char*)&worldSize_l, sizeof(worldSize_l));
+
+	delete rand_p;
+	rand_p = new octopus::RandomGenerator(seed_l);
+
+	std::pair<std::list<octopus::Steppable *>, std::list<octopus::Command *> > pair_l;
+	pair_l.first = WaveLevelSteps(lib_p, *rand_p, waveCount_l, stepCount_l, worldSize_l);
+	pair_l.second = WaveLevelCommands(lib_p, *rand_p, worldSize_l);
+	return pair_l;
 }
 
 /////////////////////////////////////////////

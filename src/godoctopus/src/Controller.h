@@ -1,9 +1,10 @@
 #ifndef __Godoctopus_Controller__
 #define __Godoctopus_Controller__
 
-#include <thread>
 #include <list>
 #include <cstdint>
+#include <fstream>
+#include <thread>
 #include <godot_cpp/godot.hpp>
 #include <godot_cpp/classes/node2d.hpp>
 
@@ -45,11 +46,16 @@ public:
     void load_chaining_level();
     void load_dot_level(int size_p);
     void load_lifesteal_level(int size_p);
+
     // levels
     void load_level1(int seed_p, int nb_wave_p);
 
+    // replay
+    void replay_level(String const &filename_p);
+
     // start engine with given level
-    void init(std::list<octopus::Command *> const &commands_p, std::list<octopus::Steppable *> const &spawners_p, size_t size_p=50);
+    void init(std::list<octopus::Command *> const &commands_p, std::list<octopus::Steppable *> const &spawners_p, size_t size_p=50, std::ofstream *file_p=nullptr);
+    void init_replay(std::list<octopus::Command *> const &commands_p, std::list<octopus::Steppable *> const &spawners_p, size_t size_p, std::ifstream &file_p);
     void loop();
 
     bool has_state() const;
@@ -125,8 +131,10 @@ public:
     std::map<unsigned long, OptionManager> &getOptionManagers();
     std::map<unsigned long, OptionManager> const &getOptionManagers() const;
 private:
+    void newAutoSaveFile();
     octopus::Controller * _controller = nullptr;
     std::thread * _controllerThread = nullptr;
+    std::ofstream * _autoSaveFile = nullptr;
 	octopus::Library _lib;
 	octopus::RandomGenerator * _rand = nullptr;
 

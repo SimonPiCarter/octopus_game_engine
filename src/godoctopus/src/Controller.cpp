@@ -4,6 +4,7 @@
 #include <godot_cpp/classes/input.hpp>
 
 #include "library/levels/ArenaLevel.hh"
+#include "library/levels/LevelId.hh"
 #include "library/levels/MazeLevel.hh"
 #include "library/levels/WaveLevel.hh"
 #include "library/levels/showcase/AoeShowcase.hh"
@@ -16,6 +17,7 @@
 #include "command/building/BuildingCancelCommand.hh"
 #include "controller/Controller.hh"
 #include "logger/Logger.hh"
+#include "serialization/CommandSerialization.hh"
 #include "state/entity/Building.hh"
 #include "state/entity/Entity.hh"
 #include "state/entity/Resource.hh"
@@ -37,6 +39,7 @@ Controller::~Controller()
     {
         _controllerThread->join();
     }
+    delete _autoSaveFile;
     delete _controllerThread;
     delete _controller;
     delete _rand;
@@ -98,21 +101,35 @@ void Controller::load_arena_level(TypedArray<int> const &size_you_p, TypedArray<
     }
     std::list<octopus::Steppable *> spawners_l = ArenaLevelSteps(_lib, you_l, them_l);
     std::list<octopus::Command *> commands_l = ArenaLevelCommands(_lib);
-    init(commands_l, spawners_l, 10);
+    // enable auto save
+    newAutoSaveFile();
+    writeLevelId(*_autoSaveFile, LEVEL_ID_ARENA, 10);
+    writeArenaLevelHeader(*_autoSaveFile, you_l, them_l);
+    // init with autosave
+    init(commands_l, spawners_l, 10, _autoSaveFile);
 }
 
 void Controller::load_kamikaze_level(int you_p, int them_p, bool fast_p)
 {
     std::list<octopus::Steppable *> spawners_l = ArenaKamikazeSteps(_lib, you_p, them_p, fast_p);
     std::list<octopus::Command *> commands_l = ArenaLevelCommands(_lib);
-    init(commands_l, spawners_l, 10);
+    // enable auto save
+    newAutoSaveFile();
+    writeLevelId(*_autoSaveFile, LEVEL_ID_ARENA_KAMIKAZE, 10);
+    writeArenaKamikazeHeader(*_autoSaveFile, you_p, them_p, fast_p);
+    // init with autosave
+    init(commands_l, spawners_l, 10, _autoSaveFile);
 }
 
 void Controller::load_maze_level(int size_p)
 {
     std::list<octopus::Steppable *> spawners_l = MazeLevelSteps(_lib, size_p);
     std::list<octopus::Command *> commands_l = MazeLevelCommands(_lib);
-    init(commands_l, spawners_l);
+    // enable auto save
+    newAutoSaveFile();
+    writeLevelId(*_autoSaveFile, LEVEL_ID_MAZE, 50);
+    writeMazeLevelHeader(*_autoSaveFile, size_p);
+    init(commands_l, spawners_l, 50, _autoSaveFile);
 }
 
 void Controller::load_aoe_level(int size_p)
@@ -149,16 +166,96 @@ void Controller::load_level1(int seed_p, int nb_wave_p)
     _rand = new octopus::RandomGenerator(seed_p);
     std::list<octopus::Steppable *> spawners_l = level1::WaveLevelSteps(_lib, *_rand, nb_wave_p, 3*60*100, 150);
     std::list<octopus::Command *> commands_l = level1::WaveLevelCommands(_lib, *_rand, 150);
-    init(commands_l, spawners_l);
+    // enable auto save
+    newAutoSaveFile();
+    writeLevelId(*_autoSaveFile, LEVEL_ID_LEVEL_1, 50);
+    level1::writeWaveLevelHeader(*_autoSaveFile, seed_p, nb_wave_p, 3*60*100, 150);
+    init(commands_l, spawners_l, 50, _autoSaveFile);
 }
 
-void Controller::init(std::list<octopus::Command *> const &commands_p, std::list<octopus::Steppable *> const &spawners_p, size_t size_p)
+void Controller::replay_level(String const &filename_p)
+{
+    std::string filename_l(filename_p.utf8().get_data());
+    std::ifstream file_l(filename_l, std::ios::in | std::ios::binary);
+
+    size_t levelId_l;
+    size_t size_l;
+    file_l.read((char*)&levelId_l, sizeof(levelId_l));
+    file_l.read((char*)&size_l, sizeof(size_l));
+
+    bool valid_l = true;
+    std::pair<std::list<octopus::Steppable *>, std::list<octopus::Command *> > levelInfo_l;
+    if(levelId_l == LEVEL_ID_ARENA)
+    {
+        levelInfo_l = readArenaLevelHeader(_lib, file_l);
+    }
+    else if(levelId_l == LEVEL_ID_ARENA_KAMIKAZE)
+    {
+        levelInfo_l = readArenaKamikazeHeader(_lib, file_l);
+    }
+    else if(levelId_l == LEVEL_ID_MAZE)
+    {
+        levelInfo_l = readMazeLevelHeader(_lib, file_l);
+    }
+    else if(levelId_l == LEVEL_ID_LEVEL_1)
+    {
+        levelInfo_l = level1::readWaveLevelHeader(_lib, file_l, _rand);
+    }
+    else
+    {
+        valid_l = false;
+    }
+
+    if(valid_l)
+    {
+        init_replay(levelInfo_l.second, levelInfo_l.first, size_l, file_l);
+    }
+}
+
+void Controller::init(std::list<octopus::Command *> const &commands_p, std::list<octopus::Steppable *> const &spawners_p, size_t size_p, std::ofstream *file_p)
 {
     UtilityFunctions::print("init controller...");
     delete _controller;
 	_controller = new octopus::Controller(spawners_p, 0.01, commands_p, 5, size_p);
 	_controller->enableORCA();
     UtilityFunctions::print("done");
+
+    if(file_p)
+    {
+        UtilityFunctions::print("autosave enabled");
+        // neeed nb of steps in header of the file
+        size_t header_l = 0;
+        file_p->write((char*)&header_l, sizeof(header_l));
+        _controller->setOnlineSaveFile(file_p);
+    }
+
+    octopus::StateAndSteps stateAndSteps_l = _controller->queryStateAndSteps();
+    _state = stateAndSteps_l._state;
+    _lastIt = stateAndSteps_l._steps.begin();
+
+    ControllerStepVisitor vis_l(*this, _state);
+    // visit intial steps
+    for(octopus::Steppable const * steppable_l : stateAndSteps_l._initialStep.getSteppable())
+    {
+        vis_l(steppable_l);
+    }
+
+    delete _controllerThread;
+	_controllerThread = new std::thread(&Controller::loop, this);
+}
+
+void Controller::init_replay(std::list<octopus::Command *> const &commands_p, std::list<octopus::Steppable *> const &spawners_p, size_t size_p, std::ifstream &file_p)
+{
+    UtilityFunctions::print("init controller...");
+    delete _controller;
+	_controller = new octopus::Controller(spawners_p, 0.01, commands_p, 5, size_p);
+	_controller->enableORCA();
+    UtilityFunctions::print("done");
+
+	octopus::readCommands(file_p, *_controller, _lib);
+
+	_controller->setOngoingStep(1);
+	_controller->setReplayMode(true);
 
     octopus::StateAndSteps stateAndSteps_l = _controller->queryStateAndSteps();
     _state = stateAndSteps_l._state;
@@ -593,6 +690,8 @@ void Controller::_bind_methods()
     ClassDB::bind_method(D_METHOD("load_lifesteal_level", "size"), &Controller::load_lifesteal_level);
     ClassDB::bind_method(D_METHOD("load_level1", "seed", "nb_wave"), &Controller::load_level1);
 
+    ClassDB::bind_method(D_METHOD("replay_level", "filename"), &Controller::replay_level);
+
     ClassDB::bind_method(D_METHOD("has_state"), &Controller::has_state);
     ClassDB::bind_method(D_METHOD("set_pause", "pause"), &Controller::set_pause);
     ClassDB::bind_method(D_METHOD("set_over", "over"), &Controller::set_over);
@@ -666,6 +765,15 @@ std::map<unsigned long, OptionManager> &Controller::getOptionManagers()
 std::map<unsigned long, OptionManager> const &Controller::getOptionManagers() const
 {
     return _optionManagers;
+}
+
+void Controller::newAutoSaveFile()
+{
+    if(_autoSaveFile)
+    {
+        delete _autoSaveFile;
+    }
+    _autoSaveFile = new std::ofstream("autosave.fas", std::ios::out | std::ios::binary);
 }
 
 }
