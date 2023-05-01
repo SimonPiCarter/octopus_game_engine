@@ -6,6 +6,7 @@
 #include "ResourceType.hh"
 #include "graph/Grid.hh"
 #include "utils/DynamicBitset.hh"
+#include "step/ConstraintPosition.hh"
 
 #include "vision/VisionHandler.hh"
 
@@ -87,6 +88,12 @@ public:
 	std::vector<TriggerData *> &getTriggersData() { return _triggersData; }
 	const std::vector<TriggerData *> &getTriggersData() const { return _triggersData; }
 
+	///
+	/// constraint position library
+	///
+	ConstraintPositionLibrary &getConstraintPositionLibrary() { return _constraintPositionLibrary; }
+	const ConstraintPositionLibrary &getConstraintPositionLibrary() const { return _constraintPositionLibrary; }
+
 	unsigned long getGridSize() const;
 	unsigned long getWorldSize() const;
 
@@ -144,6 +151,9 @@ private:
 
 	/// @brief trigger data (multiple trigger for one shot but only one allowed for on each)
 	std::vector<TriggerData *> _triggersData;
+
+	/// @brief library of constraints on position applying in this state
+	ConstraintPositionLibrary _constraintPositionLibrary;
 
 	/// @brief grid for position indexing
 	std::vector<std::vector<AbstractBitset *> > _grid;

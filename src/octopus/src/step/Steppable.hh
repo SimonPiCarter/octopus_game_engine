@@ -92,7 +92,9 @@ namespace octopus
 	class ProductionPaidStep;
 	class ProductionProgressionStep;
 	class ResourceSpawnStep;
+	class StateAddConstraintPositionStep;
 	class StateDrawStep;
+	class StateRemoveConstraintPositionStep;
 	class StateTemplePositionAddStep;
 	class StateTemplePositionRemoveStep;
 	class StateWinStep;
@@ -178,7 +180,9 @@ namespace octopus
 			virtual void visit(ProductionPaidStep const *steppable_p) = 0;
 			virtual void visit(ProductionProgressionStep const *steppable_p) = 0;
 			virtual void visit(ResourceSpawnStep const *steppable_p) = 0;
+			virtual void visit(StateAddConstraintPositionStep const *) = 0;
 			virtual void visit(StateDrawStep const *steppable_p) = 0;
+			virtual void visit(StateRemoveConstraintPositionStep const *) = 0;
 			virtual void visit(StateTemplePositionAddStep const *steppable_p) = 0;
 			virtual void visit(StateTemplePositionRemoveStep const *steppable_p) = 0;
 			virtual void visit(StateWinStep const *steppable_p) = 0;

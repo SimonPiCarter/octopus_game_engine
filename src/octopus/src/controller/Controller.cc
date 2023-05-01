@@ -15,6 +15,7 @@
 #include "orca/OrcaManager.hh"
 #include "serialization/CommandSerialization.hh"
 #include "state/State.hh"
+#include "step/ConstraintPosition.hh"
 #include "step/command/CommandQueueStep.hh"
 #include "step/command/flying/FlyingCommandPopStep.hh"
 #include "step/command/flying/FlyingCommandSpawnStep.hh"
@@ -230,6 +231,8 @@ bool Controller::loop_body()
 			{
 				for(size_t i = 0; i < 1 && octopus::updateStepFromConflictPosition(step_l, *state_l) ; ++ i) {}
 			}
+
+			octopus::updateStepFromConstraintPosition(step_l, *state_l, state_l->getConstraintPositionLibrary());
 
 			// push new triggers
 			for(Trigger * trigger_l : _queuedTriggers[_backState->_stepHandled-1])
