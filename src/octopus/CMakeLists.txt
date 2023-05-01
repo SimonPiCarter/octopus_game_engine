@@ -69,6 +69,7 @@ add_library(octopus
 	${CMAKE_CURRENT_SOURCE_DIR}/src/state/ResourceType.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/state/State.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/step/ConflictPositionSolver.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/src/step/ConstraintPosition.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/step/Step.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/step/StepAdditionVisitor.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/step/TickingStep.cc

@@ -36,6 +36,7 @@ target_sources (unit_tests
 	src/commandQueue.test.cc
 	src/commandSerialization.test.cc
 	src/conflictSolver.test.cc
+	src/constraintPosition.test.cc
 	src/controller.test.cc
 	src/divinityCommand.test.cc
 	src/entityHitPointChange.test.cc
