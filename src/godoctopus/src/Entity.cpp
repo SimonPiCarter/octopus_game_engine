@@ -8,6 +8,7 @@
 #include "state/player/Player.hh"
 #include "state/entity/Entity.hh"
 #include "state/entity/Building.hh"
+#include "state/entity/Resource.hh"
 
 namespace godot {
 
@@ -157,6 +158,28 @@ Vector2 Entity::get_rally_point(Controller const *controller_p) const
     return Vector2(octopus::to_double(building_l->_rallyPoint.x), octopus::to_double(building_l->_rallyPoint.y));
 }
 
+String Entity::get_resource_type(Controller const *controller_p) const
+{
+    octopus::Entity const *ent_l = controller_p->getEntity(_handle);
+    if(!ent_l->_model._isResource)
+    {
+        return "";
+    }
+    octopus::Resource const *res_l = static_cast<octopus::Resource const *>(ent_l);
+    return octopus::to_string(res_l->_type).c_str();
+}
+
+float Entity::get_resource_quantity(Controller const *controller_p) const
+{
+    octopus::Entity const *ent_l = controller_p->getEntity(_handle);
+    if(!ent_l->_model._isResource)
+    {
+        return 0.;
+    }
+    octopus::Resource const *res_l = static_cast<octopus::Resource const *>(ent_l);
+    return res_l->_resource;
+}
+
 void Entity::_bind_methods()
 {
     UtilityFunctions::print("Binding Entity methods");
@@ -181,6 +204,8 @@ void Entity::_bind_methods()
     ClassDB::bind_method(D_METHOD("get_reload", "controller"), &Entity::get_reload);
     ClassDB::bind_method(D_METHOD("has_rally_point", "controller"), &Entity::has_rally_point);
     ClassDB::bind_method(D_METHOD("get_rally_point", "controller"), &Entity::get_rally_point);
+    ClassDB::bind_method(D_METHOD("get_resource_type", "controller"), &Entity::get_resource_type);
+    ClassDB::bind_method(D_METHOD("get_resource_quantity", "controller"), &Entity::get_resource_quantity);
 
     ADD_GROUP("Entity", "Entity_");
     ADD_PROPERTY(PropertyInfo(Variant::INT, "entity_handle"), "set_handle", "get_handle");

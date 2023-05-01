@@ -48,6 +48,10 @@ public:
     bool has_rally_point(Controller const *controller_p) const;
     Vector2 get_rally_point(Controller const *controller_p) const;
 
+    // resource getter
+    String get_resource_type(Controller const *controller_p) const;
+    float get_resource_quantity(Controller const *controller_p) const;
+
 private:
     int _handle;
 };
