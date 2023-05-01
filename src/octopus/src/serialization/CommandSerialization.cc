@@ -211,6 +211,11 @@ void writeCommand(std::ofstream &file_p, Command const *cmd_p)
         write(file_p, typped_l->getPos());
         write(file_p, typped_l->getPlayer());
         write(file_p, typped_l->getModel()._id);
+        write(file_p, typped_l->getBuilders().size());
+        for(Handle const &handle_l : typped_l->getBuilders())
+        {
+            write(file_p, handle_l);
+        }
     }
     else if(dynamic_cast<BuildingUnitProductionCommand const *>(cmd_p))
     {
@@ -401,12 +406,22 @@ Command * readCommand(std::ifstream &file_p, Library const &lib_p)
         Vector pos_l;
         unsigned long player_l;
         std::string id_l;
+        size_t size_l;
+        std::vector<Handle> builders_l;
 
         read(file_p, &pos_l);
         read(file_p, &player_l);
         read(file_p, &id_l);
 
-        cmd_l = new BuildingBlueprintCommand(pos_l, player_l, lib_p.getBuildingModel(id_l));
+        read(file_p, &size_l);
+        for(size_t i = 0 ; i < size_l ; ++ i)
+        {
+            Handle handle_l;
+            read(file_p, &handle_l);
+            builders_l.push_back(handle_l);
+        }
+
+        cmd_l = new BuildingBlueprintCommand(pos_l, player_l, lib_p.getBuildingModel(id_l), builders_l);
     }
     else if(cmdId_p == 7)
     {

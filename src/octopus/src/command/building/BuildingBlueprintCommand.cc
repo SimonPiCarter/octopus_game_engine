@@ -1,6 +1,7 @@
 
 #include "BuildingBlueprintCommand.hh"
 
+#include "command/entity/EntityBuildingCommand.hh"
 #include "logger/Logger.hh"
 #include "step/Step.hh"
 #include "state/State.hh"
@@ -13,11 +14,12 @@
 namespace octopus
 {
 
-BuildingBlueprintCommand::BuildingBlueprintCommand(Vector const &pos_p, unsigned long player_p, BuildingModel const &model_p)
+BuildingBlueprintCommand::BuildingBlueprintCommand(Vector const &pos_p, unsigned long player_p, BuildingModel const &model_p, std::vector<Handle> const &builders_p)
 	: Command(0)
 	, _pos(pos_p)
 	, _player(player_p)
 	, _model(model_p)
+	, _builders(builders_p)
 {}
 
 void BuildingBlueprintCommand::registerCommand(Step & step_p, State const &state_p)
@@ -38,7 +40,12 @@ void BuildingBlueprintCommand::registerCommand(Step & step_p, State const &state
 		{
 			Logger::getDebug() << "BuildingBlueprintCommand:: spawn building "<<_player <<std::endl;
 			step_p.addSteppable(new PlayerSpendResourceStep(_player, _model._cost));
-			step_p.addSteppable(new BuildingSpawnStep(getNextHandle(step_p, state_p), building_l, false));
+			Handle buildingHandle_l = getNextHandle(step_p, state_p);
+			step_p.addSteppable(new BuildingSpawnStep(buildingHandle_l, building_l, false));
+			for(Handle const &handle_l : _builders)
+			{
+				step_p.addSteppable(new CommandSpawnStep(new EntityBuildingCommand(handle_l, handle_l, buildingHandle_l, _pos, 0, {_pos}, true)));
+			}
 		}
 	}
 
