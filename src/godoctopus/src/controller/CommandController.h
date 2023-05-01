@@ -27,7 +27,7 @@ void add_stop_commands(octopus::Controller &controller_p, octopus::State const &
 void add_unit_build_command(octopus::Controller &controller_p, octopus::State const &state_p, octopus::Library const &lib_p, TypedArray<int> const &handles_p, String const &model_p, int player_p);
 void add_unit_build_cancel_command(octopus::Controller &controller_p, octopus::State const &state_p, int handle_p, int index_p, int player_p);
 // building
-void add_blueprint_command(octopus::Controller &controller_p, octopus::State const &state_p, octopus::Library const &lib_p, Vector2 const &target_p, String const &model_p, int player_p);
+void add_blueprint_command(octopus::Controller &controller_p, octopus::State const &state_p, octopus::Library const &lib_p, Vector2 const &target_p, String const &model_p, int player_p, TypedArray<int> const &builders_p);
 
 } // namespace godot
 

@@ -174,13 +174,19 @@ void add_unit_build_cancel_command(octopus::Controller &controller_p, octopus::S
     controller_p.commitCommandAsPlayer(new octopus::BuildingUnitCancelCommand(handle_p, index_p), player_p);
 }
 
-void add_blueprint_command(octopus::Controller &controller_p, octopus::State const &state_p, octopus::Library const &lib_p, Vector2 const &target_p, String const &model_p, int player_p)
+void add_blueprint_command(octopus::Controller &controller_p, octopus::State const &state_p, octopus::Library const &lib_p, Vector2 const &target_p, String const &model_p, int player_p, TypedArray<int> const &builders_p)
 {
     std::string modelId_l(model_p.utf8().get_data());
+    std::vector<octopus::Handle> builders_l;
+    for(size_t i = 0 ; i < builders_p.size() ; ++ i)
+    {
+        int idx_l = builders_p[i];
+        builders_l.push_back(idx_l);
+    }
 
     if(lib_p.hasBuildingModel(modelId_l))
     {
-        controller_p.commitCommandAsPlayer(new octopus::BuildingBlueprintCommand(octopus::Vector(target_p.x, target_p.y), player_p, lib_p.getBuildingModel(modelId_l)), player_p);
+        controller_p.commitCommandAsPlayer(new octopus::BuildingBlueprintCommand(octopus::Vector(target_p.x, target_p.y), player_p, lib_p.getBuildingModel(modelId_l), builders_l), player_p);
     }
 }
 

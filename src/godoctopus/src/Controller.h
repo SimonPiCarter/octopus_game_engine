@@ -125,7 +125,7 @@ public:
     void add_unit_build_command(TypedArray<int> const &handles_p, String const &model_p, int player_p);
     void add_unit_build_cancel_command(int handle_p, int index_p, int player_p);
     // building
-    void add_blueprint_command(Vector2 const &target_p, String const &model_p, int player_p);
+    void add_blueprint_command(Vector2 const &target_p, String const &model_p, int player_p, TypedArray<int> const &builders_p);
     void add_building_cancel_command(int handle_p, int player_p);
     // option
     void add_chose_option_command(int option_p, int player_p);

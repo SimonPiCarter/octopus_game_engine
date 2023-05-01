@@ -706,11 +706,11 @@ void Controller::add_unit_build_cancel_command(int handle_p, int index_p, int pl
     }
 }
 
-void Controller::add_blueprint_command(Vector2 const &target_p, String const &model_p, int player_p)
+void Controller::add_blueprint_command(Vector2 const &target_p, String const &model_p, int player_p, TypedArray<int> const &builders_p)
 {
     if(!_paused)
     {
-        godot::add_blueprint_command(*_controller, *_state, _lib, target_p, model_p, player_p);
+        godot::add_blueprint_command(*_controller, *_state, _lib, target_p, model_p, player_p, builders_p);
     }
 }
 
@@ -782,7 +782,7 @@ void Controller::_bind_methods()
     ClassDB::bind_method(D_METHOD("add_stop_commands", "handles", "player", "queued"), &Controller::add_stop_commands);
     ClassDB::bind_method(D_METHOD("add_unit_build_command", "handle", "model", "player"), &Controller::add_unit_build_command);
     ClassDB::bind_method(D_METHOD("add_unit_build_cancel_command", "handle", "index", "player"), &Controller::add_unit_build_cancel_command);
-    ClassDB::bind_method(D_METHOD("add_blueprint_command", "target", "model", "player"), &Controller::add_blueprint_command);
+    ClassDB::bind_method(D_METHOD("add_blueprint_command", "target", "model", "player", "builders"), &Controller::add_blueprint_command);
     ClassDB::bind_method(D_METHOD("add_building_cancel_command", "handle", "player"), &Controller::add_building_cancel_command);
     ClassDB::bind_method(D_METHOD("add_chose_option_command", "option_p", "player"), &Controller::add_chose_option_command);
 
