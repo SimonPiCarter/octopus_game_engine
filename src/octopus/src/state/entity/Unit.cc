@@ -49,7 +49,7 @@ void Unit::runCommands(Step & step_p, State const &state_p, PathManager &pathMan
 		{
 			// reset waiting time
 			step_p.addSteppable(new EntityUpdateWaitingStep(_handle, _waiting, 0));
-			Entity const * target_l = lookUpNewTarget(state_p, _handle, 8);
+			Entity const * target_l = lookUpNewTarget(state_p, _handle, _aggroDistance);
 			if(target_l)
 			{
 				Logger::getDebug() << " Entity::runCommands :: add attack command" << _handle << " -> " << target_l->_handle << std::endl;
