@@ -18,7 +18,7 @@ namespace octopus
 	class FlyingCommand;
 	class State;
 	class Steppable;
-	class SteppableData;
+	struct SteppableData;
 	class SteppableVisitor;
 
 	struct CommandIdx
