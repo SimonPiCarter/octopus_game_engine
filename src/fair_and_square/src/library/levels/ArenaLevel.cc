@@ -174,6 +174,7 @@ std::list<octopus::Steppable *> ArenaKamikazeSteps(octopus::Library &lib_p, size
 	mod_l._modifiers.emplace_back(AoEModifier(1., 2.2));
 	mod_l._modifiers.emplace_back(SelfDamageModifier(100,0.,0.,true));
     square_l._attackMod = mod_l;
+	square_l._aggroDistance = 20;
 
 	unsigned long id_l = 0;
 	for(size_t i = 0; i < numberYou_p ; ++ i)
@@ -183,7 +184,6 @@ std::list<octopus::Steppable *> ArenaKamikazeSteps(octopus::Library &lib_p, size
 	for(size_t i = 0; i < numberThem_p ; ++ i)
 	{
 		spawners_l.push_back(new UnitSpawnStep(id_l, square_l));
-		spawners_l.push_back(new CommandSpawnStep(new EntityAttackMoveCommand(id_l, id_l, { 15, 20. }, 0, {{ 15, 20. }}, true)));
 		++id_l;
 	}
 	return spawners_l;
