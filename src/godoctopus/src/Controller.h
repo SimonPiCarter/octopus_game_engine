@@ -51,11 +51,13 @@ public:
     void load_level1(int seed_p, int nb_wave_p);
 
     // replay
-    void replay_level(String const &filename_p);
+    void replay_level(String const &filename_p, bool replay_mode_p);
 
     // start engine with given level
     void init(std::list<octopus::Command *> const &commands_p, std::list<octopus::Steppable *> const &spawners_p, size_t size_p=50, std::ofstream *file_p=nullptr);
     void init_replay(std::list<octopus::Command *> const &commands_p, std::list<octopus::Steppable *> const &spawners_p, size_t size_p, std::ifstream &file_p);
+    void init_loading(std::list<octopus::Command *> const &commands_p, std::list<octopus::Steppable *> const &spawners_p, size_t size_p, std::ifstream &file_p);
+    void loading_loop();
     void loop();
 
     bool has_state() const;

@@ -173,7 +173,7 @@ void Controller::load_level1(int seed_p, int nb_wave_p)
     init(commands_l, spawners_l, 50, _autoSaveFile);
 }
 
-void Controller::replay_level(String const &filename_p)
+void Controller::replay_level(String const &filename_p, bool replay_mode_p)
 {
     std::string filename_l(filename_p.utf8().get_data());
     std::ifstream file_l(filename_l, std::ios::in | std::ios::binary);
@@ -208,7 +208,14 @@ void Controller::replay_level(String const &filename_p)
 
     if(valid_l)
     {
-        init_replay(levelInfo_l.second, levelInfo_l.first, size_l, file_l);
+        if(replay_mode_p)
+        {
+            init_replay(levelInfo_l.second, levelInfo_l.first, size_l, file_l);
+        }
+        else
+        {
+            init_loading(levelInfo_l.second, levelInfo_l.first, size_l, file_l);
+        }
     }
 }
 
@@ -270,6 +277,47 @@ void Controller::init_replay(std::list<octopus::Command *> const &commands_p, st
 
     delete _controllerThread;
 	_controllerThread = new std::thread(&Controller::loop, this);
+}
+
+void Controller::init_loading(std::list<octopus::Command *> const &commands_p, std::list<octopus::Steppable *> const &spawners_p, size_t size_p, std::ifstream &file_p)
+{
+    UtilityFunctions::print("init controller...");
+    delete _controller;
+	_controller = new octopus::Controller(spawners_p, 0.01, commands_p, 5, size_p);
+	_controller->enableORCA();
+    UtilityFunctions::print("done");
+
+	octopus::readCommands(file_p, *_controller, _lib);
+
+	auto last_l = std::chrono::steady_clock::now();
+
+    octopus::StateAndSteps stateAndSteps_l = _controller->queryStateAndSteps();
+    _state = stateAndSteps_l._state;
+    _lastIt = stateAndSteps_l._steps.begin();
+
+    ControllerStepVisitor vis_l(*this, _state);
+    // visit intial steps
+    for(octopus::Steppable const * steppable_l : stateAndSteps_l._initialStep.getSteppable())
+    {
+        vis_l(steppable_l);
+    }
+
+    delete _controllerThread;
+	_controllerThread = new std::thread(&Controller::loading_loop, this);
+}
+
+void Controller::loading_loop()
+{
+    unsigned long totalSteps_l = _controller->getOngoingStep();
+
+    // fast speed loading
+    while(!_controller->loop_body())
+    {
+        emit_signal("loading_state", double(_controller->getMetrics()._nbStepsCompiled)/totalSteps_l);
+    }
+    emit_signal("loading_done");
+
+    loop();
 }
 
 void Controller::loop()
@@ -690,7 +738,7 @@ void Controller::_bind_methods()
     ClassDB::bind_method(D_METHOD("load_lifesteal_level", "size"), &Controller::load_lifesteal_level);
     ClassDB::bind_method(D_METHOD("load_level1", "seed", "nb_wave"), &Controller::load_level1);
 
-    ClassDB::bind_method(D_METHOD("replay_level", "filename"), &Controller::replay_level);
+    ClassDB::bind_method(D_METHOD("replay_level", "filename", "replay_mode"), &Controller::replay_level);
 
     ClassDB::bind_method(D_METHOD("has_state"), &Controller::has_state);
     ClassDB::bind_method(D_METHOD("set_pause", "pause"), &Controller::set_pause);
@@ -756,6 +804,9 @@ void Controller::_bind_methods()
     ADD_SIGNAL(MethodInfo("over", PropertyInfo(Variant::INT, "winning_team")));
 
     ADD_SIGNAL(MethodInfo("production_command", PropertyInfo(Variant::INT, "handle"), PropertyInfo(Variant::INT, "index"), PropertyInfo(Variant::STRING, "model"), PropertyInfo(Variant::FLOAT, "progress")));
+
+    ADD_SIGNAL(MethodInfo("loading_state", PropertyInfo(Variant::FLOAT, "loading")));
+    ADD_SIGNAL(MethodInfo("loading_done"));
 }
 
 std::map<unsigned long, OptionManager> &Controller::getOptionManagers()
