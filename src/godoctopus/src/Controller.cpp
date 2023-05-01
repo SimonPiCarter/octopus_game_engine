@@ -417,6 +417,12 @@ void Controller::set_over(bool over_p)
     _over = over_p;
 }
 
+void Controller::set_auto_file_path(String const &path_p)
+{
+    std::string path_l(path_p.utf8().get_data());
+    _autoSavePath = path_l;
+}
+
 TypedArray<String> Controller::get_models(int handle_p, int player_p) const
 {
     TypedArray<String> models_l;
@@ -743,6 +749,7 @@ void Controller::_bind_methods()
     ClassDB::bind_method(D_METHOD("has_state"), &Controller::has_state);
     ClassDB::bind_method(D_METHOD("set_pause", "pause"), &Controller::set_pause);
     ClassDB::bind_method(D_METHOD("set_over", "over"), &Controller::set_over);
+    ClassDB::bind_method(D_METHOD("set_auto_file_path", "path"), &Controller::set_auto_file_path);
     ClassDB::bind_method(D_METHOD("get_models", "handle", "player"), &Controller::get_models);
     ClassDB::bind_method(D_METHOD("is_building", "handle"), &Controller::is_building);
     ClassDB::bind_method(D_METHOD("get_world_size"), &Controller::get_world_size);
@@ -824,7 +831,7 @@ void Controller::newAutoSaveFile()
     {
         delete _autoSaveFile;
     }
-    _autoSaveFile = new std::ofstream("autosave.fas", std::ios::out | std::ios::binary);
+    _autoSaveFile = new std::ofstream(_autoSavePath, std::ios::out | std::ios::binary);
 }
 
 }
