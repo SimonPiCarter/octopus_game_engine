@@ -138,7 +138,7 @@ TEST(constraintPositionTest, constraint_y_less)
 	step_l.addEntityMoveStep(moveStep_l);
 
 	ConstraintPositionLibrary constraintLib_l;
-	ConstraintPositionY cstr_l {-2.,-5.,5.,true};
+	ConstraintPositionY cstr_l {-2.,-5.,10.,true};
 	constraintLib_l.getYConstraintForPlayer(0).push_back(cstr_l);
 
 	updateStepFromConstraintPosition(step_l, state_l, constraintLib_l);
@@ -164,7 +164,7 @@ TEST(constraintPositionTest, constraint_y_more)
 	step_l.addEntityMoveStep(moveStep_l);
 
 	ConstraintPositionLibrary constraintLib_l;
-	ConstraintPositionY cstr_l {5.,-5.,5.,false};
+	ConstraintPositionY cstr_l {5.,-5.,10.,false};
 	constraintLib_l.getYConstraintForPlayer(0).push_back(cstr_l);
 
 	updateStepFromConstraintPosition(step_l, state_l, constraintLib_l);

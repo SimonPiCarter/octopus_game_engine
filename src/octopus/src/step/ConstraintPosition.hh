@@ -24,7 +24,7 @@ struct ConstraintPositionX
     bool const less;
 
     /// @brief check if the position violates the constraint
-    bool apply(Vector const &pos_p) const;
+    bool apply(Vector const &pos_p, Vector const &newPos_p) const;
 };
 
 /// @brief Object to add a constraint on Y for any entity
@@ -42,7 +42,7 @@ struct ConstraintPositionY
     bool const less;
 
     /// @brief check if the position violates the constraint
-    bool apply(Vector const &pos_p) const;
+    bool apply(Vector const &pos_p, Vector const &newPos_p) const;
 };
 
 /// @brief class that stors all constraint for every player

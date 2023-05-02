@@ -7,28 +7,28 @@
 namespace octopus
 {
 
-bool ConstraintPositionX::apply(Vector const &pos_p) const
+bool ConstraintPositionX::apply(Vector const &pos_p, Vector const &newPos_p) const
 {
     if(pos_p.y <= maxY && pos_p.y >= minY)
     {
         if(less)
         {
-            return pos_p.x > x;
+            return newPos_p.x > x;
         }
-        return pos_p.x < x;
+        return newPos_p.x < x;
     }
     return false;
 }
 
-bool ConstraintPositionY::apply(Vector const &pos_p) const
+bool ConstraintPositionY::apply(Vector const &pos_p, Vector const &newPos_p) const
 {
     if(pos_p.x <= maxX && pos_p.x >= minX)
     {
         if(less)
         {
-            return pos_p.y > y;
+            return newPos_p.y > y;
         }
-        return pos_p.y < y;
+        return newPos_p.y < y;
     }
     return false;
 }
@@ -80,7 +80,7 @@ void updateStepFromConstraintPosition(Step &step_p, State const &state_p, Constr
         for(ConstraintPositionX const &cst_l : xConstraints_l)
         {
             Vector newPos_l = ent_l->_pos + move_l->_move;
-            if(cst_l.apply(newPos_l))
+            if(cst_l.apply(ent_l->_pos, newPos_l))
             {
                 move_l->_move.x = cst_l.x - ent_l->_pos.x;
             }
@@ -90,7 +90,7 @@ void updateStepFromConstraintPosition(Step &step_p, State const &state_p, Constr
         for(ConstraintPositionY const &cst_l : yConstraints_l)
         {
             Vector newPos_l = ent_l->_pos + move_l->_move;
-            if(cst_l.apply(newPos_l))
+            if(cst_l.apply(ent_l->_pos, newPos_l))
             {
                 move_l->_move.y = cst_l.y - ent_l->_pos.y;
             }
