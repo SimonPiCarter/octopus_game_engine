@@ -21,7 +21,7 @@ class Unit : public Entity
 
 		UnitModel const &_unitModel;
 
-		Fixed _aggroDistance = 0.;
+		Fixed _aggroDistance = 8;
 };
 
 }
