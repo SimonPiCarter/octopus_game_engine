@@ -30,6 +30,7 @@
 #include "controller/CommandController.h"
 #include "production/ProductionCommand.h"
 #include "levels/Level1.h"
+#include "levels/Level2.h"
 
 namespace godot {
 
@@ -173,6 +174,19 @@ void Controller::load_level1(int seed_p, int nb_wave_p)
     init(commands_l, spawners_l, 50, _autoSaveFile);
 }
 
+void Controller::load_level2(int seed_p)
+{
+    delete _rand;
+    _rand = new octopus::RandomGenerator(seed_p);
+    std::list<octopus::Steppable *> spawners_l = level2::WaveLevelSteps(_lib, *_rand);
+    std::list<octopus::Command *> commands_l = level2::WaveLevelCommands(_lib, *_rand);
+    // enable auto save
+    newAutoSaveFile();
+    writeLevelId(*_autoSaveFile, LEVEL_ID_LEVEL_2, 50);
+    level2::writeWaveLevelHeader(*_autoSaveFile, seed_p);
+    init(commands_l, spawners_l, 50, _autoSaveFile);
+}
+
 void Controller::replay_level(String const &filename_p, bool replay_mode_p)
 {
     std::string filename_l(filename_p.utf8().get_data());
@@ -200,6 +214,10 @@ void Controller::replay_level(String const &filename_p, bool replay_mode_p)
     else if(levelId_l == LEVEL_ID_LEVEL_1)
     {
         levelInfo_l = level1::readWaveLevelHeader(_lib, file_l, _rand);
+    }
+    else if(levelId_l == LEVEL_ID_LEVEL_2)
+    {
+        levelInfo_l = level2::readWaveLevelHeader(_lib, file_l, _rand);
     }
     else
     {
@@ -743,6 +761,7 @@ void Controller::_bind_methods()
     ClassDB::bind_method(D_METHOD("load_dot_level", "size"), &Controller::load_dot_level);
     ClassDB::bind_method(D_METHOD("load_lifesteal_level", "size"), &Controller::load_lifesteal_level);
     ClassDB::bind_method(D_METHOD("load_level1", "seed", "nb_wave"), &Controller::load_level1);
+    ClassDB::bind_method(D_METHOD("load_level2", "seed"), &Controller::load_level2);
 
     ClassDB::bind_method(D_METHOD("replay_level", "filename", "replay_mode"), &Controller::replay_level);
 

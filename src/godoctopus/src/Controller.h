@@ -49,6 +49,7 @@ public:
 
     // levels
     void load_level1(int seed_p, int nb_wave_p);
+    void load_level2(int seed_p);
 
     // replay
     void replay_level(String const &filename_p, bool replay_mode_p);
