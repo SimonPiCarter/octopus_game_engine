@@ -12,7 +12,7 @@ void ProductionPaidStep::apply(State &state_p) const
 {
 	Commandable * cmdable_l = state_p.getCommandable(this->_handle);
 	Logger::getDebug() << "ProductionPaidStep :: apply " << this->_handle <<std::endl;
-	ProductionData *data_l = dynamic_cast<ProductionData *>(cmdable_l->getFrontQueue()._data);
+	ProductionData *data_l = dynamic_cast<ProductionData *>(cmdable_l->getFrontQueue()._cmd->getData());
 	data_l->_paid = true;
 }
 
@@ -20,7 +20,7 @@ void ProductionPaidStep::revert(State &state_p, SteppableData const *) const
 {
 	Commandable * cmdable_l = state_p.getCommandable(this->_handle);
 	Logger::getDebug() << "ProductionPaidStep :: revert " << this->_handle <<std::endl;
-	ProductionData *data_l = dynamic_cast<ProductionData *>(cmdable_l->getFrontQueue()._data);
+	ProductionData *data_l = dynamic_cast<ProductionData *>(cmdable_l->getFrontQueue()._cmd->getData());
 	data_l->_paid = false;
 }
 

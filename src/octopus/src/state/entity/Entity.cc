@@ -18,10 +18,10 @@ Entity::Entity(Vector const &pos_p, bool frozen_p, EntityModel const &model_p)
 
 bool Entity::isIgnoringCollision() const
 {
-	if(getQueue().hasCurrentCommand())
+	if(getQueue().hasCommand())
 	{
-		return getQueue().getFrontCommand()._data
-			&& getQueue().getFrontCommand()._data->_ignoreCollision;
+		return getQueue().getFrontCommand()._cmd->getData()
+			&& getQueue().getFrontCommand()._cmd->getData()->_ignoreCollision;
 	}
 	return false;
 }

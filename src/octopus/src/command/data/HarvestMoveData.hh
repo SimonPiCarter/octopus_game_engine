@@ -14,6 +14,7 @@ class EntityAttackCommand;
 /// harvest and move
 struct HarvestMoveData : public MoveData
 {
+	HarvestMoveData() {}
 	HarvestMoveData(Handle const &resource_p, Handle const &deposit_p,
 		Vector const &finalPoint_p, unsigned long gridStatus_p, std::list<Vector> const &waypoints_p)
 		: MoveData(finalPoint_p, gridStatus_p, waypoints_p), _resource(resource_p), _deposit(deposit_p)

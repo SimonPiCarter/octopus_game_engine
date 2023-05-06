@@ -33,25 +33,23 @@ void Commandable::runCommands(Step & step_p, State const &state_p, PathManager &
 {
 	if(!_queue.hasCommand())
 	{
-		return;
+		return nullptr;
 	}
-	CommandQueue::ConstQueueIterator it_l = _queue.getCurrentCommand();
-	if(_hasLastCommand && it_l != _queue.getEnd() && _lastCommand != it_l->_id)
+	std::list<CommandBundle>::const_iterator it_l = _queue.getList().begin();
+	CommandBundle const &bundle_l = *it_l;
+	if(_hasLastCommand && _lastCommand->_idx != bundle_l._idx)
 	{
-		CommandBundle const & cmd_l = _queue.getBundle(_lastCommand);
-		cmd_l._cmd->cleanUp(step_p, state_p, cmd_l._data);
+		cleanUp(_lastCommand->_var);
 	}
 	// while we have commands and the front one is over go on
-	while(it_l != _queue.getEnd()
-	   && it_l->_cmd->applyCommand(step_p, state_p, it_l->_data, pathManager_p))
+	while(it_l != _queue.getList().cend()
+	   && applyCommand(it_l->_var))
 	{
 		// clean up
-		it_l->_cmd->cleanUp(step_p, state_p, it_l->_data);
-		step_p.addSteppable(new CommandNextStep(_commandableHandle));
+		cleanUp(it_l->_var);
 		++it_l;
 	}
-	_hasLastCommand = true;
-	if(it_l != _queue.getEnd())
+	if(it_l != _queue.getList().cend())
 	{
 		step_p.addSteppable(new CommandUpdateLastIdStep(_commandableHandle, _lastCommand, it_l->_id));
 	}
@@ -77,9 +75,9 @@ const CommandQueue &Commandable::getQueue() const
 	return _queue;
 }
 
-void Commandable::setIdLast(size_t id_p)
+void Commandable::setLastCommand(CommandBundle const& bundle_p)
 {
-	_lastCommand = id_p;
+	_lastCommand = bundle_p;
 }
 
 

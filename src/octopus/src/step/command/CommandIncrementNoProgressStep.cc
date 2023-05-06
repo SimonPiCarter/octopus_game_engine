@@ -12,7 +12,7 @@ void CommandIncrementNoProgressStep::apply(State &state_p) const
 {
 	Commandable * ent_l = state_p.getCommandable(this->_handle);
 	Logger::getDebug() << "CommandIncrementNoProgressStep :: apply " << this->_handle <<std::endl;
-	MoveData *data_l = dynamic_cast<MoveData*>(ent_l->getFrontQueue()._data);
+	MoveData *data_l = dynamic_cast<MoveData*>(ent_l->getFrontQueue()._cmd->getData());
 	if(data_l->_countSinceProgress != _old)
 	{
 		throw std::logic_error("Setting target had incoherent old target regarding content in state");
@@ -24,7 +24,7 @@ void CommandIncrementNoProgressStep::revert(State &state_p, SteppableData const 
 {
 	Commandable * ent_l = state_p.getCommandable(this->_handle);
 	Logger::getDebug() << "CommandIncrementNoProgressStep :: revert " << this->_handle <<std::endl;
-	MoveData *data_l = dynamic_cast<MoveData*>(ent_l->getFrontQueue()._data);
+	MoveData *data_l = dynamic_cast<MoveData*>(ent_l->getFrontQueue()._cmd->getData());
 	if(data_l->_countSinceProgress != _new)
 	{
 		throw std::logic_error("Setting target had incoherent old target regarding content in state");

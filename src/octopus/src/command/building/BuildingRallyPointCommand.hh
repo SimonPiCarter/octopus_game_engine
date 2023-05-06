@@ -25,8 +25,6 @@ public:
 
 	virtual bool applyCommand(Step &, State const &, CommandData const *, PathManager &) const override { return true; }
 
-	virtual CommandData * newData() const override { return nullptr; }
-
 	bool _reset {false};
 	Vector _rallyPoint {0,0};
 	bool _rallyPointEntityActive {false};

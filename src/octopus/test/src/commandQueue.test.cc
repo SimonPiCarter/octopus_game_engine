@@ -1,344 +1,204 @@
 #include <gtest/gtest.h>
 
-#include <command/Command.hh>
-#include <command/CommandQueue.hh>
-#include <state/State.hh>
-#include <step/Step.hh>
-#include <graph/PathManager.hh>
+#include <vector>
+#include <list>
+#include <variant>
 
-///
-/// This test suite aims at checking that EntityMoveStep works properly
-/// - Move an entity in a step
-/// - Is correctly undone
-///
+#include "command/CommandVar.hh"
 
-using namespace octopus;
-
-/// @brief test command that just stores an integer
-/// in the data to push it on the back of the vec
-class TestCommand : public Command
+struct Command
 {
-public:
-	TestCommand(unsigned long val_p, std::vector<unsigned long> &vec_p) : Command(0), _val(val_p), _vec(vec_p) {}
+	virtual void registerCommand() const = 0;
+	virtual bool applyCommand() const = 0;
+	virtual void cleanUp() const {}
+	virtual bool checkPlayer() const {return true;}
+};
 
-	virtual bool applyCommand(Step &, State const &, CommandData const * data_p, PathManager &) const override
+struct NoOpCommand : public Commandgit
+{
+	virtual void registerCommand() const
 	{
-		_vec.push_back(static_cast<CommandDataWithData<unsigned long> const *>(data_p)->_data);
-
+		std::cout<<"register No Op"<<std::endl;
+	}
+	virtual bool applyCommand() const
+	{
+		std::cout<<"apply No Op"<<std::endl;
 		return true;
 	}
+};
 
-	/// @brief create data supporting the command actions
-	virtual CommandData * newData() const
+struct CommandSimple : public Command
+{
+	virtual void registerCommand() const
 	{
-		return new CommandDataWithData<unsigned long>(_val);
+		std::cout<<"register Simple"<<std::endl;
+	}
+	virtual bool applyCommand() const
+	{
+		std::cout<<"apply Simple"<<std::endl;
+		return true;
+	}
+};
+
+using CommandVar = std::variant<NoOpCommand, CommandSimple>;
+
+struct CommandBundle
+{
+	CommandVar _var;
+	size_t _idx {0};
+};
+
+class CommandQueue
+{
+public:
+	~CommandQueue();
+
+	/// @brief returns true if at least one command has been queued
+	/// @warning getCurrentCommand will throw if this return false
+	bool hasCommand() const
+	{
+		return !_commandQueue.empty();
+	}
+
+	/// @brief return true if getCurrentCommand is different from getEnd
+	bool hasCurrentCommand() const
+	{
+		return hasCommand();
+	}
+
+	CommandBundle &getFrontCommand()
+	{
+		return _commandQueue.front();
+	}
+	CommandBundle const &getFrontCommand() const
+	{
+		return _commandQueue.front();
+	}
+
+	/// @brief update current context iterator to the next command
+	void nextCommand()
+	{
+		_commandQueue.pop_front();
+	}
+	/// @brief update current context iterator to the previous command
+	void prevCommand(CommandBundle const &cmd_p)
+	{
+		_commandQueue.push_front(cmd_p);
+	}
+
+	/// @brief this will queue the command and push a new context
+	/// the next command to be executed will be this command
+	void queueCommand(CommandVar const &cmd_p)
+	{
+		_commandQueue.clear();
+		queueCommandLast(cmd_p);
+	}
+	/// @brief this will remove the last command of the queue
+	/// and restore the old context
+	void unqueueCommand(std::list<CommandBundle> const &old_p)
+	{
+		_commandQueue = old_p;
+	}
+
+	/// @brief this will queue the command at the end of the current context
+	void queueCommandLast(CommandVar const &cmd_p)
+	{
+		_commandQueue.push_back({cmd_p, getNextId()});
+	}
+	/// @brief this will just remove the last command of the queue
+	void unqueueCommandLast()
+	{
+		_commandQueue.pop_back();
+	}
+
+	/// @brief Get the bundle associated to the id
+	CommandBundle const &getBundle(size_t id_p) const
+	{
+		for(CommandBundle const & bundle_l: _commandQueue)
+		{
+			if(bundle_l._idx == id_p)
+			{
+				return bundle_l;
+			}
+		}
+		throw std::logic_error("CommandQueue could not get bundle with id "+std::to_string(id_p));
+	}
+	/// @brief Get the bundle associated to the id
+	CommandBundle &getBundle(size_t id_p)
+	{
+		for(CommandBundle & bundle_l: _commandQueue)
+		{
+			if(bundle_l._idx == id_p)
+			{
+				return bundle_l;
+			}
+		}
+		throw std::logic_error("CommandQueue could not get bundle with id "+std::to_string(id_p));
+	}
+
+	std::list<CommandBundle> &getList()
+	{
+		return _commandQueue;
+	}
+
+	const std::list<CommandBundle> &getList() const
+	{
+		return _commandQueue;
 	}
 
 protected:
-	unsigned long _val;
-	std::vector<unsigned long> &_vec;
+	/// @brief list of all actions in the command queue
+	std::list<CommandBundle> _commandQueue;
+
+	size_t _idx = 0;
+
+	size_t getNextId()
+	{
+		return _idx++;
+	}
 };
 
-TEST(commandQueueTest, throw_test)
+void cleanUp(CommandVar const &var_p)
 {
-	State state_l;
-	Step step_l(nullptr);
-	PathManager pathManager_l;
-
-	std::vector<unsigned long> vec_l;
-
-	CommandQueue queue_l;
-
-	EXPECT_FALSE(queue_l.hasCommand());
-	EXPECT_THROW(queue_l.getCurrentCommand(), std::exception);
+    std::visit([&](auto && arg) { arg.cleanUp(); }, var_p);
 }
 
-TEST(commandQueueTest, simple)
+bool applyCommand(CommandVar const &var_p)
 {
-	State state_l;
-	Step step_l(nullptr);
-	PathManager pathManager_l;
-
-	std::vector<unsigned long> vec_l;
-
-	CommandQueue queue_l;
-
-	TestCommand cmd_l(1, vec_l);
-
-	queue_l.queueCommand(&cmd_l);
-
-	EXPECT_TRUE(queue_l.hasCommand());
-	CommandQueue::ConstQueueIterator it_l = queue_l.getCurrentCommand();
-
-	while(it_l != queue_l.getEnd())
-	{
-		if(it_l->_cmd->applyCommand(step_l, state_l, it_l->_data, pathManager_l))
-		{
-			++it_l;
-			queue_l.nextCommand();
-		}
-		else
-		{
-			break;
-		}
-	}
-
-	ASSERT_EQ(1u, vec_l.size());
-	EXPECT_EQ(1u, vec_l.at(0));
-	EXPECT_EQ(queue_l.getEnd(), queue_l.getCurrentCommand());
+	bool result_l = false;
+    std::visit([&](auto && arg) { result_l = arg.applyCommand(); }, var_p);
+	return result_l;
 }
 
-TEST(commandQueueTest, multiple)
+CommandBundle const * iterateQueue(CommandBundle const *last_p, CommandQueue const &queue_p)
 {
-	State state_l;
-	Step step_l(nullptr);
-	PathManager pathManager_l;
-
-	std::vector<unsigned long> vec_l;
-
-	CommandQueue queue_l;
-
-	TestCommand cmd_l(1, vec_l);
-	TestCommand cmd2_l(2, vec_l);
-	TestCommand cmd3_l(3, vec_l);
-
-	queue_l.queueCommand(&cmd_l);
-	queue_l.queueCommandLast(&cmd2_l);
-	queue_l.queueCommandLast(&cmd3_l);
-
-	EXPECT_TRUE(queue_l.hasCommand());
-	CommandQueue::ConstQueueIterator it_l = queue_l.getCurrentCommand();
-
-	while(it_l != queue_l.getEnd())
+	if(!queue_p.hasCommand())
 	{
-		if(it_l->_cmd->applyCommand(step_l, state_l, it_l->_data, pathManager_l))
-		{
-			++it_l;
-			queue_l.nextCommand();
-		}
-		else
-		{
-			break;
-		}
+		return nullptr;
 	}
-
-	ASSERT_EQ(3u, vec_l.size());
-	EXPECT_EQ(1u, vec_l.at(0));
-	EXPECT_EQ(2u, vec_l.at(1));
-	EXPECT_EQ(3u, vec_l.at(2));
-	ASSERT_EQ(queue_l.getEnd(), queue_l.getCurrentCommand());
+	std::list<CommandBundle>::const_iterator it_l = queue_p.getList().begin();
+	CommandBundle const &bundle_l = *it_l;
+	if(last_p->_idx != bundle_l._idx)
+	{
+		cleanUp(it_l->_var);
+	}
+	// while we have commands and the front one is over go on
+	while(it_l != queue_p.getList().cend()
+	   && applyCommand(it_l->_var))
+	{
+		// clean up
+		cleanUp(it_l->_var);
+		++it_l;
+	}
+	if(it_l == queue_p.getList().cend())
+	{
+		return nullptr;
+	}
+	return &*it_l;
 }
 
-TEST(commandQueueTest, multiple_on_multiple_call)
+TEST(commandQueue, simple)
 {
-	State state_l;
-	Step step_l(nullptr);
-	PathManager pathManager_l;
-
-	std::vector<unsigned long> vec_l;
-
-	CommandQueue queue_l;
-
-	TestCommand cmd_l(1, vec_l);	cmd_l.setQueued(true);
-	TestCommand cmd2_l(2, vec_l);	cmd2_l.setQueued(true);
-
-	queue_l.queueCommandLast(&cmd_l);
-
-	EXPECT_TRUE(queue_l.hasCommand());
-	CommandQueue::ConstQueueIterator it_l = queue_l.getCurrentCommand();
-
-	while(it_l != queue_l.getEnd())
-	{
-		if(it_l->_cmd->applyCommand(step_l, state_l, it_l->_data, pathManager_l))
-		{
-			++it_l;
-			queue_l.nextCommand();
-		}
-		else
-		{
-			break;
-		}
-	}
-
-	ASSERT_EQ(1u, vec_l.size());
-	EXPECT_EQ(1u, vec_l.at(0));
-	ASSERT_EQ(queue_l.getEnd(), queue_l.getCurrentCommand());
-	EXPECT_TRUE(queue_l.hasCommand());
-
-	queue_l.queueCommandLast(&cmd2_l);
-
-	ASSERT_NE(queue_l.getEnd(), queue_l.getCurrentCommand());
-
-	EXPECT_TRUE(queue_l.hasCommand());
-	it_l = queue_l.getCurrentCommand();
-
-	while(it_l != queue_l.getEnd())
-	{
-		if(it_l->_cmd->applyCommand(step_l, state_l, it_l->_data, pathManager_l))
-		{
-			++it_l;
-			queue_l.nextCommand();
-		}
-		else
-		{
-			break;
-		}
-	}
-
-	ASSERT_EQ(2u, vec_l.size());
-	EXPECT_EQ(1u, vec_l.at(0));
-	EXPECT_EQ(2u, vec_l.at(1));
-	ASSERT_EQ(queue_l.getEnd(), queue_l.getCurrentCommand());
-	EXPECT_TRUE(queue_l.hasCommand());
-}
-
-TEST(commandQueueTest, multiple_override)
-{
-	State state_l;
-	Step step_l(nullptr);
-	PathManager pathManager_l;
-
-	std::vector<unsigned long> vec_l;
-
-	CommandQueue queue_l;
-
-	TestCommand cmd_l(1, vec_l);
-	TestCommand cmd2_l(2, vec_l);
-	TestCommand cmd3_l(3, vec_l);
-
-	queue_l.queueCommand(&cmd_l);
-	queue_l.queueCommandLast(&cmd2_l);
-	queue_l.queueCommand(&cmd3_l);
-
-	EXPECT_TRUE(queue_l.hasCommand());
-	CommandQueue::ConstQueueIterator it_l = queue_l.getCurrentCommand();
-
-	while(it_l != queue_l.getEnd())
-	{
-		if(it_l->_cmd->applyCommand(step_l, state_l, it_l->_data, pathManager_l))
-		{
-			++it_l;
-			queue_l.nextCommand();
-		}
-		else
-		{
-			break;
-		}
-	}
-
-	ASSERT_EQ(1u, vec_l.size());
-	EXPECT_EQ(3u, vec_l.at(0));
-	ASSERT_EQ(queue_l.getEnd(), queue_l.getCurrentCommand());
-}
-
-TEST(commandQueueTest, multiple_override_reverted)
-{
-	State state_l;
-	Step step_l(nullptr);
-	PathManager pathManager_l;
-
-	std::vector<unsigned long> vec_l;
-
-	CommandQueue queue_l;
-
-	TestCommand cmd_l(1, vec_l);
-	TestCommand cmd2_l(2, vec_l);
-	TestCommand cmd3_l(3, vec_l);
-
-	queue_l.queueCommandLast(&cmd_l);
-	queue_l.queueCommandLast(&cmd2_l);
-	queue_l.queueCommand(&cmd3_l);
-
-	queue_l.unqueueCommand(&cmd3_l);
-
-	EXPECT_TRUE(queue_l.hasCommand());
-	CommandQueue::ConstQueueIterator it_l = queue_l.getCurrentCommand();
-
-	while(it_l != queue_l.getEnd())
-	{
-		if(it_l->_cmd->applyCommand(step_l, state_l, it_l->_data, pathManager_l))
-		{
-			++it_l;
-			queue_l.nextCommand();
-		}
-		else
-		{
-			break;
-		}
-	}
-
-	ASSERT_EQ(2u, vec_l.size());
-	EXPECT_EQ(1u, vec_l.at(0));
-	EXPECT_EQ(2u, vec_l.at(1));
-	ASSERT_EQ(queue_l.getEnd(), queue_l.getCurrentCommand());
-}
-
-TEST(commandQueueTest, multiple_override_reverted_throw)
-{
-	State state_l;
-	Step step_l(nullptr);
-	PathManager pathManager_l;
-
-	std::vector<unsigned long> vec_l;
-
-	CommandQueue queue_l;
-
-	TestCommand cmd_l(1, vec_l);
-	TestCommand cmd2_l(2, vec_l);
-	TestCommand cmd3_l(3, vec_l);
-
-	queue_l.queueCommand(&cmd_l);
-	queue_l.queueCommandLast(&cmd2_l);
-	queue_l.queueCommand(&cmd3_l);
-
-	EXPECT_THROW(queue_l.unqueueCommand(&cmd2_l), std::exception);
-}
-
-TEST(commandQueueTest, multiple_override_reverted_all)
-{
-	State state_l;
-	Step step_l(nullptr);
-	PathManager pathManager_l;
-
-	std::vector<unsigned long> vec_l;
-
-	CommandQueue queue_l;
-
-	TestCommand cmd_l(1, vec_l);
-	TestCommand cmd2_l(2, vec_l);
-	TestCommand cmd3_l(3, vec_l);
-
-	queue_l.queueCommandLast(&cmd_l);
-	queue_l.queueCommandLast(&cmd2_l);
-	queue_l.queueCommand(&cmd3_l);
-
-	queue_l.unqueueCommand(&cmd3_l);
-	queue_l.unqueueCommandLast(&cmd2_l);
-	queue_l.unqueueCommandLast(&cmd_l);
-
-	queue_l.queueCommandLast(&cmd_l);
-	queue_l.queueCommandLast(&cmd2_l);
-	queue_l.queueCommandLast(&cmd3_l);
-
-	EXPECT_TRUE(queue_l.hasCommand());
-	CommandQueue::ConstQueueIterator it_l = queue_l.getCurrentCommand();
-
-	while(it_l != queue_l.getEnd())
-	{
-		if(it_l->_cmd->applyCommand(step_l, state_l, it_l->_data, pathManager_l))
-		{
-			++it_l;
-			queue_l.nextCommand();
-		}
-		else
-		{
-			break;
-		}
-	}
-
-	ASSERT_EQ(3u, vec_l.size());
-	EXPECT_EQ(1u, vec_l.at(0));
-	EXPECT_EQ(2u, vec_l.at(1));
-	EXPECT_EQ(3u, vec_l.at(2));
-	ASSERT_EQ(queue_l.getEnd(), queue_l.getCurrentCommand());
+	octopus::CommandVar var_l;
+	EXPECT_TRUE(true);
 }

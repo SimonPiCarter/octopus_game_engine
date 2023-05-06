@@ -13,16 +13,6 @@ public:
 	bool _ignoreCollision {false};
 };
 
-template<typename data>
-class CommandDataWithData : public CommandData
-{
-public:
-	CommandDataWithData() {}
-	CommandDataWithData(data const &data_p) : _data(data_p) {}
-
-	data _data;
-};
-
 } // namespace octopus
 
 

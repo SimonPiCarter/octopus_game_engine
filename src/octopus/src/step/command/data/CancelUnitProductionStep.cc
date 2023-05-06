@@ -14,10 +14,9 @@ void CancelUnitProductionStep::apply(State &state_p) const
 	Logger::getDebug() << "CancelUnitProductionStep :: apply " << this->_handle <<std::endl;
     Entity *ent_l = state_p.getEntity(this->_handle);
 
-    auto it_l = ent_l->getQueue().getCurrentCommand();
-    while(it_l != ent_l->getQueue().getEnd())
+    for(CommandBundle const &bundle_l : ent_l.getQueue().getList())
     {
-        octopus::UnitProductionData *data_l = dynamic_cast<octopus::UnitProductionData*>(it_l->_data);
+        octopus::UnitProductionData *data_l = dynamic_cast<octopus::UnitProductionData*>(bundle_l._cmd->getData());
         if(it_l->_id == _idx)
         {
             data_l->_canceled = true;
@@ -32,10 +31,9 @@ void CancelUnitProductionStep::revert(State &state_p, SteppableData const *) con
 	Logger::getDebug() << "CancelUnitProductionStep :: revert " << this->_handle <<std::endl;
     Entity *ent_l = state_p.getEntity(this->_handle);
 
-    auto it_l = ent_l->getQueue().getCurrentCommand();
-    while(it_l != ent_l->getQueue().getEnd())
+    for(CommandBundle const &bundle_l : ent_l.getQueue().getList())
     {
-        octopus::UnitProductionData *data_l = dynamic_cast<octopus::UnitProductionData*>(it_l->_data);
+        octopus::UnitProductionData *data_l = dynamic_cast<octopus::UnitProductionData*>(bundle_l._cmd->getData());
         if(it_l->_id == _idx)
         {
             data_l->_canceled = false;

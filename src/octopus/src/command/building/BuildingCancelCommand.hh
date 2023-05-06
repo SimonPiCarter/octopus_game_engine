@@ -23,8 +23,6 @@ public:
 
 	/// @brief
 	virtual bool applyCommand(Step & , State const &, CommandData const *, PathManager &) const override { return true; }
-
-	virtual CommandData * newData() const override { return nullptr; }
 };
 
 } // namespace octopus

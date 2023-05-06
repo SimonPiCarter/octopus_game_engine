@@ -140,11 +140,11 @@ void ControllerStepVisitor::visit(octopus::PlayerPopOptionStep const *steppable_
 void ControllerStepVisitor::visit(octopus::CommandWindUpDiffStep const *steppable_p)
 {
 	octopus::Entity const * ent_l = _state->getEntity(steppable_p->_handle);
-	if (!ent_l->getQueue().hasCurrentCommand())
+	if (!ent_l->getQueue().hasCommand())
 	{
 		return;
 	}
-	octopus::AttackMoveData const *data_l = dynamic_cast<octopus::AttackMoveData const *>(ent_l->getFrontQueue()._data);
+	octopus::AttackMoveData const *data_l = dynamic_cast<octopus::AttackMoveData const *>(ent_l->getFrontQueue()._cmd->getData());
 	// set wind up state
 	if(data_l && data_l->_windup == 1)
 	{

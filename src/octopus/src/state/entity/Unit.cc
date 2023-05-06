@@ -24,7 +24,7 @@ void Unit::runCommands(Step & step_p, State const &state_p, PathManager &pathMan
 		step_p.addSteppable(new EntityUpdateWaitingStep(_handle, _waiting, _waiting+1));
 	}
 	// if no command and buff we check for target
-	if(!getQueue().hasCurrentCommand() && _unitModel._buffer._active )
+	if(!getQueue().hasCommand() && _unitModel._buffer._active )
 	{
 		Logger::getDebug() << " Entity::runCommands :: no command (buff)"<< std::endl;
 		if(_waiting+1 >= _unitModel._buffer._reload)
@@ -42,7 +42,7 @@ void Unit::runCommands(Step & step_p, State const &state_p, PathManager &pathMan
 		}
 	}
 	// If no command we check for target if we have damage
-	else if(!getQueue().hasCurrentCommand() && _model._damage > 1e-3)
+	else if(!getQueue().hasCommand() && _model._damage > 1e-3)
 	{
 		Logger::getDebug() << " Entity::runCommands :: no command (attack)"<< std::endl;
 		if(_waiting >= 50)

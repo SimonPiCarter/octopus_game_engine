@@ -24,7 +24,8 @@ public:
 	/// @brief
 	virtual bool applyCommand(Step & step_p, State const &state_p, CommandData const *data_p, PathManager &pathManager_p) const override;
 
-	virtual CommandData * newData() const override { return new AttackMoveData(_target, Vector{}, 0, {}); }
+	virtual CommandData * getData() override { return &_data; }
+	virtual CommandData const * getData() const override { return &_data; }
 
 	virtual void cleanUp(Step & step_p, State const &state_p, CommandData const *data_p) const override;
 
@@ -37,6 +38,8 @@ private:
 	Handle _target {0};
 	/// @brief if true we wont change target except when it dies
 	bool _frozenTarget {false};
+
+	AttackMoveData _data;
 
 	/// @brief return true if the target is not valid anymore
 	bool checkTarget(State const &state_p, Handle const & target_p) const;

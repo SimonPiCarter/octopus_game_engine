@@ -4,13 +4,12 @@
 #include "state/Handle.hh"
 #include "step/Steppable.hh"
 
+#include "command/CommandQueue.hh"
+
 #include <cstddef>
 
 namespace octopus
 {
-
-class Command;
-
 /// @brief this step is only used to store and delete properly commands
 /// that wont register as usual (missing resources for example)
 class CommandStorageStep : public Steppable
@@ -35,6 +34,12 @@ private:
 	Command * const _cmd;
 };
 
+/// @brief data used to restore command removed
+struct CommandSpawnStepData: public SteppableData
+{
+	std::list<CommandBundle> bundles;
+};
+
 class CommandSpawnStep : public Steppable
 {
 public:
@@ -51,10 +56,18 @@ public:
 		visitor_p->visit(this);
 	}
 
+	virtual SteppableData * newData(State const &state_p);
+
 	Command * getCmd() const { return _cmd; }
 
 private:
 	Command * const _cmd;
+};
+
+/// @brief data used to restore command removed
+struct CommandNextStepData: public SteppableData
+{
+	CommandBundle bundle;
 };
 
 class CommandNextStep : public Steppable
@@ -72,6 +85,8 @@ public:
 		visitor_p->visit(this);
 	}
 
+	virtual SteppableData * newData(State const &state_p);
+
 private:
 	Handle const _handle {0};
 };
@@ -79,13 +94,13 @@ private:
 class CommandUpdateLastIdStep : public Steppable
 {
 public:
-	CommandUpdateLastIdStep(Handle const &handle_p, size_t oldIdLast_p, size_t newIdLast_p)
-		: _handle(handle_p), _oldIdLast(oldIdLast_p), _newIdLast(newIdLast_p) {}
+	CommandUpdateLastIdStep(Handle const &handle_p, CommandBundle const &old_p, CommandBundle const &new_p)
+		: _handle(handle_p), _old(old_p), _new(new_p) {}
 
 	virtual void apply(State &state_p) const override;
 	virtual void revert(State &state_p, SteppableData const *) const override;
 
-	virtual bool isNoOp() const override { return _oldIdLast == _newIdLast; }
+	virtual bool isNoOp() const override { return _old._idx == _new._idx; }
 	virtual void visit(SteppableVisitor * visitor_p) const override
 	{
 		visitor_p->visit(this);
@@ -93,8 +108,8 @@ public:
 
 private:
 	Handle const _handle {0};
-	size_t const _oldIdLast {0};
-	size_t const _newIdLast {0};
+	CommandBundle _old;
+	CommandBundle _new;
 };
 
 

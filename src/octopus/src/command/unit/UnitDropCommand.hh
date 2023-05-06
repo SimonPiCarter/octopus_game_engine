@@ -22,10 +22,8 @@ public:
 	/// @brief
 	virtual bool applyCommand(Step & step_p, State const &state_p, CommandData const *data_p, PathManager &pathManager_p) const override;
 
-	virtual CommandData * newData() const override
-	{
-		return new MoveData(_subMoveCommand.getFinalPoint(), _subMoveCommand.getGridStatus(), _subMoveCommand.getWaypoints());
-	}
+	virtual CommandData * getData() override { return _subMoveCommand.getData(); }
+	virtual CommandData const * getData() const override { return _subMoveCommand.getData(); }
 
 	virtual void cleanUp(Step & step_p, State const &state_p, CommandData const *data_p) const override
 	{

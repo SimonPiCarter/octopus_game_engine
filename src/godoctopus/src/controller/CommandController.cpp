@@ -98,11 +98,10 @@ unsigned long remainingQueueTime(octopus::Building const &building_p)
 
 	if(building_p.getQueue().hasCommand())
 	{
-		auto it_l = building_p.getQueue().getCurrentCommand();
-		while(it_l != building_p.getQueue().getEnd())
+	    for(CommandBundle const &bundle_l : ent_l.getQueue().getList())
 		{
-			octopus::BuildingUnitProductionCommand const *cmd_l = dynamic_cast<octopus::BuildingUnitProductionCommand const *>(it_l->_cmd);
-			octopus::UnitProductionData const *data_l = dynamic_cast<octopus::UnitProductionData const *>(it_l->_data);
+			octopus::BuildingUnitProductionCommand const *cmd_l = dynamic_cast<octopus::BuildingUnitProductionCommand const *>(bundle_l._cmd);
+			octopus::UnitProductionData const *data_l = dynamic_cast<octopus::UnitProductionData const *>(bundle_l._cmd->getData());
 			if(cmd_l && data_l
 			&& data_l->_completeTime > data_l->_progression)
 			{

@@ -25,7 +25,8 @@ public:
 	/// @brief
 	virtual bool applyCommand(Step & step_p, State const &state_p, CommandData const *data_p, PathManager &pathManager_p) const override;
 
-	virtual CommandData * newData() const override { return new UnitProductionData(*_model); }
+	virtual CommandData * getData() override { return &_data; }
+	virtual CommandData const * getData() const override { return &_data; }
 
 	UnitModel const &getModel() const { return *_model; }
 
@@ -33,6 +34,8 @@ private:
 	Handle _source {0};
 
 	UnitModel const *_model {nullptr};
+
+	UnitProductionData _data;
 };
 
 } // namespace octopus

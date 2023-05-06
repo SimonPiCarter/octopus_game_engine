@@ -179,11 +179,11 @@ void WorldUpdaterStepVisitor::visit(octopus::PlayerPopOptionStep const *steppabl
 void WorldUpdaterStepVisitor::visit(octopus::CommandWindUpDiffStep const *steppable_p)
 {
 	octopus::Entity const * ent_l = _state->getEntity(steppable_p->_handle);
-	if (!ent_l->getQueue().hasCurrentCommand())
+	if (!ent_l->getQueue().hasCommand())
 	{
 		return;
 	}
-	octopus::AttackMoveData const *data_l = dynamic_cast<octopus::AttackMoveData const *>(ent_l->getFrontQueue()._data);
+	octopus::AttackMoveData const *data_l = dynamic_cast<octopus::AttackMoveData const *>(ent_l->getFrontQueue()._cmd->getData());
 	if(_world._sprites[steppable_p->_handle])
 	{
 		// set wind up state

@@ -2,6 +2,7 @@
 #define __CommandQueue__
 
 #include <list>
+#include "CommandVar.hh"
 
 namespace octopus
 {
@@ -9,71 +10,120 @@ namespace octopus
 class Command;
 class CommandData;
 
-struct CommandBundle
-{
-	Command * _cmd {nullptr};
-	CommandData * _data {nullptr};
-	size_t _id {0};
-};
-
 /// @brief This class represent a command queue
 /// enabling step for modification
 /// Supported oprations are
 /// - queue up new command after the current list
 /// - queue up command in place of the current list
+
+struct CommandBundle
+{
+	CommandVar _var;
+	size_t _idx {0};
+};
+
 class CommandQueue
 {
 public:
-	typedef std::list<CommandBundle>::const_iterator ConstQueueIterator;
-	typedef std::list<CommandBundle>::iterator QueueIterator;
-
-	~CommandQueue();
+	~CommandQueue() {}
 
 	/// @brief returns true if at least one command has been queued
-	/// @warning getCurrentCommand will throw if this return false
-	bool hasCommand() const;
+	bool hasCommand() const
+	{
+		return !_commandQueue.empty();
+	}
 
-	/// @brief return true if getCurrentCommand is different from getEnd
-	bool hasCurrentCommand() const;
-
-	CommandBundle &getFrontCommand();
-	CommandBundle const &getFrontCommand() const;
-	/// @brief return an iterator of the current command
-	/// this is the iterator stored in the front of _contextList
-	ConstQueueIterator getCurrentCommand() const;
-	/// @brief return the end iterator of the CommandQueue
-	ConstQueueIterator getEnd() const;
+	CommandBundle &getFrontCommand()
+	{
+		return _commandQueue.front();
+	}
+	CommandBundle const &getFrontCommand() const
+	{
+		return _commandQueue.front();
+	}
 
 	/// @brief update current context iterator to the next command
-	void nextCommand();
+	void nextCommand()
+	{
+		_commandQueue.pop_front();
+	}
 	/// @brief update current context iterator to the previous command
-	void prevCommand();
+	void prevCommand(CommandBundle const &cmd_p)
+	{
+		_commandQueue.push_front(cmd_p);
+	}
 
 	/// @brief this will queue the command and push a new context
 	/// the next command to be executed will be this command
-	void queueCommand(Command *cmd_p);
+	void queueCommand(CommandVar const &cmd_p)
+	{
+		_commandQueue.clear();
+		queueCommandLast(cmd_p);
+	}
 	/// @brief this will remove the last command of the queue
 	/// and restore the old context
-	void unqueueCommand(Command *cmd_p);
+	void unqueueCommand(std::list<CommandBundle> const &old_p)
+	{
+		_commandQueue = old_p;
+	}
 
 	/// @brief this will queue the command at the end of the current context
-	void queueCommandLast(Command *cmd_p);
+	void queueCommandLast(CommandVar const &cmd_p)
+	{
+		_commandQueue.push_back({cmd_p, getNextId()});
+	}
 	/// @brief this will just remove the last command of the queue
-	void unqueueCommandLast(Command *cmd_p);
+	void unqueueCommandLast()
+	{
+		_commandQueue.pop_back();
+	}
 
 	/// @brief Get the bundle associated to the id
-	CommandBundle const &getBundle(size_t id_p) const;
-
+	CommandBundle const &getBundle(size_t id_p) const
+	{
+		for(CommandBundle const & bundle_l: _commandQueue)
+		{
+			if(bundle_l._idx == id_p)
+			{
+				return bundle_l;
+			}
+		}
+		throw std::logic_error("CommandQueue could not get bundle with id "+std::to_string(id_p));
+	}
 	/// @brief Get the bundle associated to the id
-	CommandBundle &getBundle(size_t id_p);
+	CommandBundle &getBundle(size_t id_p)
+	{
+		for(CommandBundle & bundle_l: _commandQueue)
+		{
+			if(bundle_l._idx == id_p)
+			{
+				return bundle_l;
+			}
+		}
+		throw std::logic_error("CommandQueue could not get bundle with id "+std::to_string(id_p));
+	}
+
+	std::list<CommandBundle> &getList()
+	{
+		return _commandQueue;
+	}
+
+	const std::list<CommandBundle> &getList() const
+	{
+		return _commandQueue;
+	}
 
 protected:
 	/// @brief list of all actions in the command queue
 	std::list<CommandBundle> _commandQueue;
 
-	/// @brief list of the successive iterator in the command queue
-	/// This allow poping front element to immediatly retrieve last known position in the command queue
-	std::list<QueueIterator> _contextList;
+	/// @brief used to set up command bundles unique identifiers
+	size_t _idx = 0;
+
+	size_t getNextId()
+	{
+		return _idx++;
+	}
 };
 
 } // namespace octopus

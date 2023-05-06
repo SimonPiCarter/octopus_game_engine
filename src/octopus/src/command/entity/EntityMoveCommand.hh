@@ -33,13 +33,17 @@ public:
 	std::list<Vector> const &getWaypoints() const { return _waypoints; }
 	bool isInit() const { return _init; }
 
-	virtual CommandData * newData() const override { return new MoveData(_finalPoint, _gridStatus, _waypoints); }
+	virtual CommandData * getData() override { return &_data; }
+	virtual CommandData const * getData() const override { return &_data; }
 private:
 	Handle _source {0};
 	Vector _finalPoint {1,1};
 	unsigned long _gridStatus {0};
 	std::list<Vector> _waypoints;
 	bool _init {false};
+
+	// data to be updated
+	MoveData _data;
 };
 
 } // namespace octopus

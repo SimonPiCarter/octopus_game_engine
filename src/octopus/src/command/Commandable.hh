@@ -41,13 +41,13 @@ public:
 	CommandQueue & getQueue();
 	const CommandQueue & getQueue() const;
 
-	void setIdLast(size_t id_p);
+	void setLastCommand(CommandBundle const& bundle_p);
 
 	Handle _commandableHandle {0};
 private:
 	CommandQueue _queue;
 	bool _hasLastCommand {false};
-	size_t _lastCommand {0};
+	CommandBundle _lastCommand;
 };
 
 } // namespace octopus

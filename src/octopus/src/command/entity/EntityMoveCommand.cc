@@ -26,6 +26,7 @@ EntityMoveCommand::EntityMoveCommand(Handle const &commandHandle_p, Handle const
 	, _gridStatus(gridStatus_p)
 	, _waypoints(waypoints_p)
 	, _init(init_p)
+	, _data(_finalPoint, _gridStatus, _waypoints)
 {}
 
 Vector const &getLeftMost(Vector const &pos1_p, Vector const &pos2_p)
@@ -97,10 +98,9 @@ bool losCheck(Grid const &grid_p, Vector const &pos1_p, Vector const &pos2_p)
 	return true;
 }
 
-bool EntityMoveCommand::applyCommand(Step & step_p, State const &state_p, CommandData const *data_p, PathManager &pathManager_p) const
+bool EntityMoveCommand::applyCommand(Step & step_p, State const &state_p, CommandData const *, PathManager &pathManager_p) const
 {
-	MoveData const &data_l = *static_cast<MoveData const *>(data_p);
-	std::list<Vector> const &waypoints_l =  data_l._waypoints;
+	std::list<Vector> const &waypoints_l =  _data._waypoints;
 	// No waypoint -> terminate
 	if(waypoints_l.empty())
 	{
@@ -114,18 +114,18 @@ bool EntityMoveCommand::applyCommand(Step & step_p, State const &state_p, Comman
 	/// Update waypoints based on current position
 	/// Waypoint must be within two steps
 	///
-	Vector next_l = data_l._finalPoint;
+	Vector next_l = _data._finalPoint;
 
-	bool los_l = data_l._los;
+	bool los_l = _data._los;
 	// line check every several steps
-	if(data_l._stepSinceUpdate % 50 == 0)
+	if(_data._stepSinceUpdate % 50 == 0)
 	{
 		// reset step since update count (do not update grid status (not used anyway))
-		step_p.addSteppable(new CommandMoveUpdateStep(_handleCommand, data_l._stepSinceUpdate, data_l._gridStatus, data_l._gridStatus));
+		step_p.addSteppable(new CommandMoveUpdateStep(_handleCommand, _data._stepSinceUpdate, _data._gridStatus, _data._gridStatus));
 		// perform a line check
-		los_l = losCheck(state_p.getPathGrid(), ent_l->_pos, data_l._finalPoint);
+		los_l = losCheck(state_p.getPathGrid(), ent_l->_pos, _data._finalPoint);
 		Logger::getDebug() << "los check returned " << los_l << std::endl;
-		step_p.addSteppable(new CommandMoveLosStep(_handleCommand, data_l._los, los_l));
+		step_p.addSteppable(new CommandMoveLosStep(_handleCommand, _data._los, los_l));
 	}
 	// increment step since update (everytime otherwise will loop reseting)
 	step_p.addSteppable(new CommandMoveStepSinceUpdateIncrementStep(_handleCommand));
@@ -133,8 +133,8 @@ bool EntityMoveCommand::applyCommand(Step & step_p, State const &state_p, Comman
 	// query field if no los
 	if(!los_l)
 	{
-		pathManager_p.queryFlowField(to_int(data_l._finalPoint.x), to_int(data_l._finalPoint.y));
-		FlowField const * field_l = pathManager_p.getFlowField(to_int(data_l._finalPoint.x), to_int(data_l._finalPoint.y));
+		pathManager_p.queryFlowField(to_int(_data._finalPoint.x), to_int(_data._finalPoint.y));
+		FlowField const * field_l = pathManager_p.getFlowField(to_int(_data._finalPoint.x), to_int(_data._finalPoint.y));
 		if(field_l )
 		{
 			// direction directly on the square
@@ -146,7 +146,7 @@ bool EntityMoveCommand::applyCommand(Step & step_p, State const &state_p, Comman
 		}
 	}
 
-	Vector delta_l = ent_l->_pos - data_l._finalPoint;
+	Vector delta_l = ent_l->_pos - _data._finalPoint;
 
 	// No more waypoint -> terminate
 	if(square_length(delta_l) < ent_l->_model._ray*ent_l->_model._ray)
@@ -156,29 +156,29 @@ bool EntityMoveCommand::applyCommand(Step & step_p, State const &state_p, Comman
 	}
 
 	// add step to increment count since progress
-	step_p.addSteppable(new CommandIncrementNoProgressStep(_handleCommand, data_l._countSinceProgress, data_l._countSinceProgress+1));
+	step_p.addSteppable(new CommandIncrementNoProgressStep(_handleCommand, _data._countSinceProgress, _data._countSinceProgress+1));
 
 	// check for progress
-	Fixed sqLastDiff_l = square_length(ent_l->_pos - data_l._lastPos);
+	Fixed sqLastDiff_l = square_length(ent_l->_pos - _data._lastPos);
 	// progress => update position and reset count
 	if(sqLastDiff_l >= 0.5)
 	{
-		step_p.addSteppable(new CommandUpdateLastPosStep(_handleCommand, _source, data_l._lastPos));
+		step_p.addSteppable(new CommandUpdateLastPosStep(_handleCommand, _source, _data._lastPos));
 		// reset no progress count
-		step_p.addSteppable(new CommandIncrementNoProgressStep(_handleCommand, data_l._countSinceProgress+1, 0));
+		step_p.addSteppable(new CommandIncrementNoProgressStep(_handleCommand, _data._countSinceProgress+1, 0));
 	}
 	// add step to record last position
 	// If no progress for too long we stop
-	else if(data_l._countSinceProgress == 500)
+	else if(_data._countSinceProgress == 500)
 	{
 		// no progress
 		if(sqLastDiff_l < 0.5)
 		{
 			return true;
 		}
-		step_p.addSteppable(new CommandUpdateLastPosStep(_handleCommand, _source, data_l._lastPos));
+		step_p.addSteppable(new CommandUpdateLastPosStep(_handleCommand, _source, _data._lastPos));
 		// reset no progress count
-		step_p.addSteppable(new CommandIncrementNoProgressStep(_handleCommand, data_l._countSinceProgress+1, 0));
+		step_p.addSteppable(new CommandIncrementNoProgressStep(_handleCommand, _data._countSinceProgress+1, 0));
 	}
 
 	Logger::getDebug() << "Adding move step orig = "<<ent_l->_pos<<" target = "<<next_l<<" step speed = " << ent_l->getStepSpeed() << std::endl;

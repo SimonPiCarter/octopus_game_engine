@@ -26,6 +26,7 @@ EntityAttackCommand::EntityAttackCommand(Handle const &commandHandle_p, Handle c
 	, _source(source_p)
 	, _target(target_p)
 	, _frozenTarget(frozenTarget_p)
+	, _data(_target, Vector{}, 0, {})
 {}
 
 bool EntityAttackCommand::applyCommand(Step & step_p, State const &state_p, CommandData const *data_p, PathManager &pathManager_p) const

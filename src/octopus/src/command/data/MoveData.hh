@@ -13,6 +13,7 @@ namespace octopus
 class MoveData : public CommandData
 {
 public:
+	MoveData() {}
 	MoveData(Vector const &finalPoint_p, unsigned long gridStatus_p, std::list<Vector> const &waypoints_p) :
 		_finalPoint(finalPoint_p), _gridStatus(gridStatus_p) ,_waypoints(waypoints_p) {}
 

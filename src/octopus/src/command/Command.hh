@@ -30,7 +30,10 @@ public:
 	virtual bool applyCommand(Step & step_p, State const &state_p, CommandData const * data_p, PathManager &pathManager_p) const = 0;
 
 	/// @brief create data supporting the command actions
-	virtual CommandData * newData() const = 0;
+	virtual CommandData * newData() const { return nullptr; }
+
+	virtual CommandData * getData() { return nullptr; }
+	virtual CommandData const * getData() const { return nullptr; }
 };
 
 /// @brief symbolise a command given (by player; by ai)

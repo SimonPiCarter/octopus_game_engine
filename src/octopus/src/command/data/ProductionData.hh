@@ -31,10 +31,11 @@ public:
 class UnitProductionData : public ProductionData
 {
 public:
+	UnitProductionData() : ProductionData(0) {}
 	UnitProductionData(UnitModel const &model_p) :
-		ProductionData(model_p._productionTime), _model(model_p) {}
+		ProductionData(model_p._productionTime), _model(&model_p) {}
 
-	UnitModel const &_model;
+	UnitModel const * _model {nullptr};
 };
 
 } // namespace octopus

@@ -12,7 +12,7 @@ void ProductionProgressionStep::apply(State &state_p) const
 {
 	Commandable * cmdable_l = state_p.getCommandable(this->_handle);
 	Logger::getDebug() << "ProductionProgressionStep :: apply " << this->_handle <<std::endl;
-	ProductionData *data_l = dynamic_cast<ProductionData *>(cmdable_l->getFrontQueue()._data);
+	ProductionData *data_l = dynamic_cast<ProductionData *>(cmdable_l->getFrontQueue()._cmd->getData());
 	data_l->_progression += _delta;
 }
 
@@ -20,7 +20,7 @@ void ProductionProgressionStep::revert(State &state_p, SteppableData const *) co
 {
 	Commandable * cmdable_l = state_p.getCommandable(this->_handle);
 	Logger::getDebug() << "ProductionProgressionStep :: revert " << this->_handle <<std::endl;
-	ProductionData *data_l = dynamic_cast<ProductionData *>(cmdable_l->getFrontQueue()._data);
+	ProductionData *data_l = dynamic_cast<ProductionData *>(cmdable_l->getFrontQueue()._cmd->getData());
 	data_l->_progression -= _delta;
 }
 

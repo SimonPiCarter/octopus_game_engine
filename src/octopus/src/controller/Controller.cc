@@ -498,17 +498,15 @@ void Controller::handleTriggers(State const &state_p, Step &step_p, Step const &
 		if(died_l->_model._isBuilding && ent_l.getQueue().hasCommand())
 		{
 			// inspect running commands
-			auto it_l = ent_l.getQueue().getCurrentCommand();
-			while(it_l != ent_l.getQueue().getEnd())
+			for(CommandBundle const &bundle_l : ent_l.getQueue().getList())
 			{
-				BuildingUnitProductionCommand const *cmd_l = dynamic_cast<BuildingUnitProductionCommand const *>(it_l->_cmd);
-				UnitProductionData const *data_l = dynamic_cast<UnitProductionData const *>(it_l->_data);
+				BuildingUnitProductionCommand const *cmd_l = dynamic_cast<BuildingUnitProductionCommand const *>(bundle_l._cmd);
+				UnitProductionData const *data_l = dynamic_cast<UnitProductionData const *>(bundle_l._cmd->getData());
 				// refund cost of unit production
 				if(cmd_l && data_l)
 				{
 					step_p.addSteppable(new PlayerSpendResourceStep(ent_l._player, getReverseCostMap(cmd_l->getModel()._cost)));
 				}
-				++it_l;
 			}
 		}
 	}

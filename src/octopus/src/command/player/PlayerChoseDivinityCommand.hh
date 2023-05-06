@@ -22,8 +22,6 @@ public:
 	/// @brief
 	virtual bool applyCommand(Step & step_p, State const &state_p, CommandData const *data_p, PathManager &pathManager_p) const override;
 
-	virtual CommandData * newData() const override { return nullptr; }
-
 	virtual bool checkPlayer(State const &, unsigned long player_p) const override { return _player == player_p; }
 
 	unsigned long getPlayer() const { return _player; }

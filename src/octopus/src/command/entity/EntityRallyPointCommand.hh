@@ -19,8 +19,6 @@ public:
 	/// @brief
 	virtual bool applyCommand(Step & step_p, State const &state_p, CommandData const *, PathManager &) const override;
 
-	virtual CommandData * newData() const override { return nullptr; }
-
 private:
     Handle _target {0};
     Vector _pos {0,0};

@@ -24,6 +24,7 @@ UnitHarvestCommand::UnitHarvestCommand(Handle const &commandHandle_p, Handle con
 	, _source(source_p)
 	, _resource(resource_p)
 	, _subMoveCommand(commandHandle_p, source_p, finalPoint_p, gridStatus_p, waypoints_p, init_p)
+	, _data(_resource, 0, _subMoveCommand.getFinalPoint(), _subMoveCommand.getGridStatus(), _subMoveCommand.getWaypoints())
 {}
 
 void UnitHarvestCommand::registerCommand(Step &step_p, State const &state_p)

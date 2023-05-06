@@ -27,10 +27,8 @@ public:
 	/// @brief
 	virtual bool applyCommand(Step & step_p, State const &state_p, CommandData const *data_p, PathManager &pathManager_p) const override;
 
-	virtual CommandData * newData() const override
-	{
-		return new AttackMoveData(0, _subMoveCommand.getFinalPoint(), _subMoveCommand.getGridStatus(), _subMoveCommand.getWaypoints());
-	}
+	virtual CommandData * getData() override { return &_data; }
+	virtual CommandData const * getData() const override { return &_data; }
 
 	virtual void cleanUp(Step & step_p, State const &state_p, CommandData const *data_p) const override;
 
@@ -41,6 +39,8 @@ private:
 
 	/// @brief sub move command
 	EntityMoveCommand _subMoveCommand;
+
+	AttackMoveData _data;
 };
 
 } // namespace octopus
