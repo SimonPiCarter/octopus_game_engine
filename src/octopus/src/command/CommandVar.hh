@@ -46,6 +46,38 @@ using CommandVar = std::variant<
     UnitDropCommand,
     UnitHarvestCommand
 >;
-}
+
+/// @brief register the command into the step
+/// This method is responsible for
+/// handling cost of command and spawning command in step
+/// and checking legality
+void registerCommand(Step & step_p, State const &state_p);
+
+/// @brief compile command or info into the step
+/// @return true if command is over
+bool applyCommand(Step & step_p, State const &state_p, CommandData const * data_p, PathManager &pathManager_p);
+
+/// @brief create data supporting the command actions
+CommandData * newData();
+
+/// @brief compile clean up for command (may reset some state values for example)
+/// is useful when command are interupted
+/// @param step_p push actions in this step
+/// @param state_p the state to use to get information
+/// @param data_p date of the command
+/// @note this will only be used on started commands when going to next command
+void cleanUp(Step & step_p, State const &state_p, CommandData const * data_p);
+
+/// @brief Check if command is valid for given player
+/// @param state_p the state in case we need to get some info
+/// @param player_p the player supposed to commit the command
+/// @return true if the command can be commited for said player
+bool checkPlayer(State const &state_p, unsigned long player_p);
+
+void setQueued(bool queued_p);
+bool isQueued();
+Handle const &getHandleCommand();
+
+} // octopus
 
 #endif
