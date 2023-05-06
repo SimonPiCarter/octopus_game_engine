@@ -12,7 +12,7 @@ void CommandSetPositionFromStep::apply(State &state_p) const
 {
 	Commandable * ent_l = state_p.getCommandable(this->_handle);
 	Logger::getDebug() << "CommandSetPositionFromStep :: apply " << this->_handle <<std::endl;
-	AttackMoveData *data_l = dynamic_cast<AttackMoveData *>(ent_l->getFrontQueue()._data);
+	AttackMoveData *data_l = dynamic_cast<AttackMoveData *>(getData(ent_l->getFrontQueue()._var));
 	if(data_l->_positionFromAttack != _oldPos)
 	{
 		throw std::logic_error("Setting positionFrom had incoherent old position regarding content in state");
@@ -24,7 +24,7 @@ void CommandSetPositionFromStep::revert(State &state_p, SteppableData const *) c
 {
 	Commandable * ent_l = state_p.getCommandable(this->_handle);
 	Logger::getDebug() << "CommandSetPositionFromStep :: revert " << this->_handle <<std::endl;
-	AttackMoveData *data_l = dynamic_cast<AttackMoveData *>(ent_l->getFrontQueue()._data);
+	AttackMoveData *data_l = dynamic_cast<AttackMoveData *>(getData(ent_l->getFrontQueue()._var));
 	if(data_l->_positionFromAttack != _newPos)
 	{
 		throw std::logic_error("Setting positionFrom had incoherent old position regarding content in state");

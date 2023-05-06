@@ -12,7 +12,7 @@ void CommandWindUpDiffStep::apply(State &state_p) const
 {
 	Commandable * ent_l = state_p.getCommandable(this->_handle);
 	Logger::getDebug() << "CommandWindUpDiffStep :: apply " << this->_handle <<std::endl;
-	AttackMoveData *data_l = dynamic_cast<AttackMoveData *>(ent_l->getFrontQueue()._data);
+	AttackMoveData *data_l = dynamic_cast<AttackMoveData *>(getData(ent_l->getFrontQueue()._var));
 	data_l->_windup += _diff;
 }
 
@@ -20,7 +20,7 @@ void CommandWindUpDiffStep::revert(State &state_p, SteppableData const *) const
 {
 	Commandable * ent_l = state_p.getCommandable(this->_handle);
 	Logger::getDebug() << "CommandWindUpDiffStep :: revert " << this->_handle <<std::endl;
-	AttackMoveData *data_l = dynamic_cast<AttackMoveData *>(ent_l->getFrontQueue()._data);
+	AttackMoveData *data_l = dynamic_cast<AttackMoveData *>(getData(ent_l->getFrontQueue()._var));
 	data_l->_windup -= _diff;
 }
 

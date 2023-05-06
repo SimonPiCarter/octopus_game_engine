@@ -39,7 +39,7 @@ TEST(moveCommandTest, simple)
 	EntityMoveCommand command_l(0, 0, {4, 3}, 0, { {4, 3}});
 
 	state_l.getEntity(0)->enqueue(&command_l, false);
-	MoveData *data_l = dynamic_cast<MoveData *>(state_l.getEntity(0)->getFrontQueue()._data);
+	MoveData *data_l = dynamic_cast<MoveData *>(getData(state_l.getEntity(0)->getFrontQueue()._var));
 	EXPECT_NE(nullptr, data_l);
 
 	///

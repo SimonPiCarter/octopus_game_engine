@@ -13,6 +13,7 @@ namespace octopus
 class ProductionData : public CommandData
 {
 public:
+	ProductionData() : ProductionData(0) {}
 	ProductionData(unsigned long completeTime_p) :
 		_progression(0.),
 		_completeTime(completeTime_p),
@@ -20,7 +21,7 @@ public:
 		_canceled(false) {}
 
 	double _progression;
-	unsigned long const _completeTime;
+	unsigned long _completeTime;
 
 	bool _paid;
 
@@ -31,7 +32,7 @@ public:
 class UnitProductionData : public ProductionData
 {
 public:
-	UnitProductionData() : ProductionData(0) {}
+	UnitProductionData() {}
 	UnitProductionData(UnitModel const &model_p) :
 		ProductionData(model_p._productionTime), _model(&model_p) {}
 

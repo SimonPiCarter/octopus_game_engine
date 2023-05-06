@@ -20,8 +20,8 @@ bool Entity::isIgnoringCollision() const
 {
 	if(getQueue().hasCommand())
 	{
-		return getQueue().getFrontCommand()._cmd->getData()
-			&& getQueue().getFrontCommand()._cmd->getData()->_ignoreCollision;
+		return getData(getQueue().getFrontCommand()._var)
+			&& getData(getQueue().getFrontCommand()._var)->_ignoreCollision;
 	}
 	return false;
 }

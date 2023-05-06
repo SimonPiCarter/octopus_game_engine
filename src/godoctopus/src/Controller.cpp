@@ -615,15 +615,14 @@ void Controller::get_productions(TypedArray<int> const &handles_p, int max_p)
         int idx_l = handles_p[i];
 		octopus::Entity const * ent_l = _state->getEntity(idx_l);
 		size_t posInQueue_l = 0;
-	    for(CommandBundle const &bundle_l : ent_l.getQueue().getList())
+	    for(octopus::CommandBundle const &bundle_l : ent_l->getQueue().getList())
 		{
-			octopus::BuildingUnitProductionCommand const *cmd_l = dynamic_cast<octopus::BuildingUnitProductionCommand const *>(bundle_l._cmd);
-			octopus::UnitProductionData const *data_l = dynamic_cast<octopus::UnitProductionData const *>(bundle_l._cmd->getData());
+			octopus::BuildingUnitProductionCommand const *cmd_l = dynamic_cast<octopus::BuildingUnitProductionCommand const *>(getCommandFromVar(bundle_l._var));
+			octopus::UnitProductionData const *data_l = dynamic_cast<octopus::UnitProductionData const *>(getData(bundle_l._var));
 			if(cmd_l && data_l && !data_l->_canceled)
 			{
-				vecCommands_l.push_back({cmd_l, data_l, it_l->_id, posInQueue_l});
+				vecCommands_l.push_back({cmd_l, data_l, bundle_l._idx, posInQueue_l});
 			}
-			++it_l;
 			++posInQueue_l;
 		}
 	}

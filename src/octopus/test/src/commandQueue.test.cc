@@ -14,7 +14,7 @@ struct Command
 	virtual bool checkPlayer() const {return true;}
 };
 
-struct NoOpCommand : public Commandgit
+struct NoOpCommand : public Command
 {
 	virtual void registerCommand() const
 	{

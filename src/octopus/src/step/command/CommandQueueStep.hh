@@ -37,6 +37,8 @@ private:
 /// @brief data used to restore command removed
 struct CommandSpawnStepData: public SteppableData
 {
+	CommandSpawnStepData() {}
+	CommandSpawnStepData(std::list<CommandBundle> const &bundles_p) : bundles(bundles_p) {}
 	std::list<CommandBundle> bundles;
 };
 
@@ -67,6 +69,8 @@ private:
 /// @brief data used to restore command removed
 struct CommandNextStepData: public SteppableData
 {
+	CommandNextStepData() {}
+	CommandNextStepData(CommandBundle const &bundle_p) : bundle(bundle_p) {}
 	CommandBundle bundle;
 };
 

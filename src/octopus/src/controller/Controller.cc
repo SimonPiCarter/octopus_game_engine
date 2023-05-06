@@ -500,12 +500,16 @@ void Controller::handleTriggers(State const &state_p, Step &step_p, Step const &
 			// inspect running commands
 			for(CommandBundle const &bundle_l : ent_l.getQueue().getList())
 			{
-				BuildingUnitProductionCommand const *cmd_l = dynamic_cast<BuildingUnitProductionCommand const *>(bundle_l._cmd);
-				UnitProductionData const *data_l = dynamic_cast<UnitProductionData const *>(bundle_l._cmd->getData());
-				// refund cost of unit production
-				if(cmd_l && data_l)
+				if(!std::holds_alternative<BuildingUnitProductionCommand>(bundle_l._var))
 				{
-					step_p.addSteppable(new PlayerSpendResourceStep(ent_l._player, getReverseCostMap(cmd_l->getModel()._cost)));
+					continue;
+				}
+				BuildingUnitProductionCommand const &cmd_l = std::get<BuildingUnitProductionCommand>(bundle_l._var);
+				UnitProductionData const *data_l = dynamic_cast<UnitProductionData const *>(getData(bundle_l._var));
+				// refund cost of unit production
+				if(data_l)
+				{
+					step_p.addSteppable(new PlayerSpendResourceStep(ent_l._player, getReverseCostMap(cmd_l.getModel()._cost)));
 				}
 			}
 		}

@@ -86,7 +86,7 @@ void ProductionPanel::refresh(Window &window_p, octopus::State const &state_p)
 		for(CommandBundle const &bundle_l : ent_l.getQueue().getList())
 		{
 			octopus::BuildingUnitProductionCommand const *cmd_l = dynamic_cast<octopus::BuildingUnitProductionCommand const *>(bundle_l._cmd);
-			octopus::UnitProductionData const *data_l = dynamic_cast<octopus::UnitProductionData const *>(bundle_l._cmd->getData());
+			octopus::UnitProductionData const *data_l = dynamic_cast<octopus::UnitProductionData const *>(getData(bundle_l._var));
 			if(cmd_l && data_l && !data_l->_canceled)
 			{
 				vecCommands_l.push_back({cmd_l, data_l, it_l->_id, posInQueue_l});

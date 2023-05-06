@@ -51,14 +51,20 @@ using CommandVar = std::variant<
 /// This method is responsible for
 /// handling cost of command and spawning command in step
 /// and checking legality
-void registerCommand(Step & step_p, State const &state_p);
+void registerCommand(CommandVar const &var_p, Step & step_p, State const &state_p);
 
 /// @brief compile command or info into the step
 /// @return true if command is over
-bool applyCommand(Step & step_p, State const &state_p, CommandData const * data_p, PathManager &pathManager_p);
+bool applyCommand(CommandVar const &var_p, Step & step_p, State const &state_p, CommandData const * data_p, PathManager &pathManager_p);
 
 /// @brief create data supporting the command actions
-CommandData * newData();
+CommandData * newData(CommandVar const &var_p);
+
+/// @brief get data supporting the command actions
+CommandData const * getData(CommandVar const &var_p);
+
+/// @brief get data supporting the command actions
+CommandData * getData(CommandVar &var_p);
 
 /// @brief compile clean up for command (may reset some state values for example)
 /// is useful when command are interupted
@@ -66,17 +72,21 @@ CommandData * newData();
 /// @param state_p the state to use to get information
 /// @param data_p date of the command
 /// @note this will only be used on started commands when going to next command
-void cleanUp(Step & step_p, State const &state_p, CommandData const * data_p);
+void cleanUp(CommandVar const &var_p, Step & step_p, State const &state_p, CommandData const * data_p);
 
 /// @brief Check if command is valid for given player
 /// @param state_p the state in case we need to get some info
 /// @param player_p the player supposed to commit the command
 /// @return true if the command can be commited for said player
-bool checkPlayer(State const &state_p, unsigned long player_p);
+bool checkPlayer(CommandVar const &var_p, State const &state_p, unsigned long player_p);
 
-void setQueued(bool queued_p);
-bool isQueued();
-Handle const &getHandleCommand();
+void setQueued(CommandVar const &var_p, bool queued_p);
+bool isQueued(CommandVar const &var_p);
+Handle const &getHandleCommand(CommandVar const &var_p);
+
+CommandVar getVarFromCommand(Command *cmd_p);
+
+Command const *getCommandFromVar(CommandVar const &var_p);
 
 } // octopus
 

@@ -3,6 +3,7 @@
 
 #include <cstddef>
 #include <fstream>
+#include <list>
 
 namespace octopus
 {

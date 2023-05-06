@@ -24,7 +24,7 @@ BuildingUnitProductionCommand::BuildingUnitProductionCommand(Handle const &comma
 	: Command(commandHandle_p)
 	, _source(source_p)
 	, _model(&model_p)
-	, UnitProductionData(model_p)
+	, _data(model_p)
 {}
 
 void BuildingUnitProductionCommand::registerCommand(Step & step_p, State const &state_p)

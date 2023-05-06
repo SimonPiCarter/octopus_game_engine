@@ -13,7 +13,7 @@ void CommandUpdateLastPosStep::apply(State &state_p) const
 {
 	Commandable * ent_l = state_p.getCommandable(this->_handle);
 	Logger::getDebug() << "CommandUpdateLastPosStep :: apply " << this->_handle <<std::endl;
-	MoveData *data_l = dynamic_cast<MoveData *>(ent_l->getFrontQueue()._data);
+	MoveData *data_l = dynamic_cast<MoveData *>(getData(ent_l->getFrontQueue()._var));
 	data_l->_lastPos = state_p.getEntity(_entity)->_pos;
 }
 
@@ -21,7 +21,7 @@ void CommandUpdateLastPosStep::revert(State &state_p, SteppableData const *) con
 {
 	Commandable * ent_l = state_p.getCommandable(this->_handle);
 	Logger::getDebug() << "CommandUpdateLastPosStep :: revert " << this->_handle <<std::endl;
-	MoveData *data_l = dynamic_cast<MoveData *>(ent_l->getFrontQueue()._data);
+	MoveData *data_l = dynamic_cast<MoveData *>(getData(ent_l->getFrontQueue()._var));
 	data_l->_lastPos = _oldPos;
 }
 
