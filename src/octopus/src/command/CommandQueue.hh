@@ -1,6 +1,7 @@
 #ifndef __CommandQueue__
 #define __CommandQueue__
 
+#include <cstddef>
 #include <list>
 #include "CommandVar.hh"
 

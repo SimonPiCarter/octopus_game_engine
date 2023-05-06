@@ -2,6 +2,7 @@
 #define __OrcaManager__
 
 #include "state/Handle.hh"
+#include <cstddef>
 #include <unordered_map>
 
 namespace RVO

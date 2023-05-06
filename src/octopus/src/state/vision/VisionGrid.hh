@@ -1,6 +1,7 @@
 #ifndef __VisionGrid__
 #define __VisionGrid__
 
+#include <cstddef>
 #include <vector>
 
 namespace octopus

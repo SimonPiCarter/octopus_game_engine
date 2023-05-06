@@ -1,6 +1,7 @@
 #ifndef __DotShowcase__
 #define __DotShowcase__
 
+#include <cstddef>
 #include <list>
 
 namespace octopus

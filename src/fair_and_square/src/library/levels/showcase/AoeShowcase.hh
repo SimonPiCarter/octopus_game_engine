@@ -1,6 +1,7 @@
 #ifndef __AoeShowcase__
 #define __AoeShowcase__
 
+#include <cstddef>
 #include <list>
 
 namespace octopus

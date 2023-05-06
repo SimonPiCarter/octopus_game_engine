@@ -2,6 +2,7 @@
 #define __VisionChangeStep__
 
 #include "step/Steppable.hh"
+#include <cstddef>
 #include <unordered_map>
 #include <list>
 

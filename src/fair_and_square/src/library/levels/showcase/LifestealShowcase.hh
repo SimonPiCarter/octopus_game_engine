@@ -1,6 +1,7 @@
 #ifndef __LifestealShowcase__
 #define __LifestealShowcase__
 
+#include <cstddef>
 #include <list>
 
 namespace octopus

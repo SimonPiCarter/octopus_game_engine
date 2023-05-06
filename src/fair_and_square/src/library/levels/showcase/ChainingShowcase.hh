@@ -1,6 +1,7 @@
 #ifndef __ChainingShowcase__
 #define __ChainingShowcase__
 
+#include <cstddef>
 #include <list>
 
 namespace octopus
