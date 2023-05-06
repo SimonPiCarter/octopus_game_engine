@@ -14,6 +14,7 @@ namespace octopus
 class BuildingRallyPointCommand : public Command
 {
 public:
+	BuildingRallyPointCommand() {}
 	/// @brief Rally point command constructor to set the rallypoint
 	BuildingRallyPointCommand(Handle const &handle_p, Vector const &rallyPoint_p, bool rallyPointEntityActive_p, Handle const &rallyPointEntity_p);
 	/// @brief Rally point command constructor to reset the rallypoint
@@ -26,10 +27,10 @@ public:
 
 	virtual CommandData * newData() const override { return nullptr; }
 
-	bool const _reset;
-	Vector const _rallyPoint;
-	bool const _rallyPointEntityActive;
-	Handle const _rallyPointEntity;
+	bool _reset {false};
+	Vector _rallyPoint {0,0};
+	bool _rallyPointEntityActive {false};
+	Handle _rallyPointEntity {0};
 };
 
 } // namespace octopus

@@ -23,7 +23,7 @@ namespace octopus
 BuildingUnitProductionCommand::BuildingUnitProductionCommand(Handle const &commandHandle_p, Handle const &source_p, UnitModel const &model_p)
 	: Command(commandHandle_p)
 	, _source(source_p)
-	, _model(model_p)
+	, _model(&model_p)
 {}
 
 void BuildingUnitProductionCommand::registerCommand(Step & step_p, State const &state_p)
@@ -38,10 +38,10 @@ void BuildingUnitProductionCommand::registerCommand(Step & step_p, State const &
 	}
 
 	// check if we can pay for it and if building can produce it
-	if(checkResource(state_p, building_l->_player, _model._cost, step_p.getResourceSpent(building_l->_player))
-	&& building_l->_buildingModel.canProduce(&_model))
+	if(checkResource(state_p, building_l->_player, _model->_cost, step_p.getResourceSpent(building_l->_player))
+	&& building_l->_buildingModel.canProduce(_model))
 	{
-		step_p.addSteppable(new PlayerSpendResourceStep(building_l->_player, _model._cost));
+		step_p.addSteppable(new PlayerSpendResourceStep(building_l->_player, _model->_cost));
 		step_p.addSteppable(new CommandSpawnStep(this));
 	}
 	// else add informative step for failure

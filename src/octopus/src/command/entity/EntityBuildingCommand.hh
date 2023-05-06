@@ -14,6 +14,7 @@ struct UnitModel;;
 class EntityBuildingCommand : public Command
 {
 public:
+	EntityBuildingCommand() {}
 	EntityBuildingCommand(Handle const &commandHandle_p, Handle const &source_p, Handle const &target_p,
 		Vector const &finalPoint_p, unsigned long gridStatus_p, std::list<Vector> const &waypoints_p, bool init_p=false);
 
@@ -34,8 +35,8 @@ public:
 	EntityMoveCommand const &getSubMoveCommand() const { return _subMoveCommand; }
 
 private:
-	Handle const _source;
-	Handle const _target;
+	Handle _source {0};
+	Handle _target {0};
 
 	/// @brief sub move command
 	EntityMoveCommand _subMoveCommand;

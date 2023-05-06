@@ -13,6 +13,7 @@ namespace octopus
 class UnitDropCommand : public Command
 {
 public:
+	UnitDropCommand() {}
 	UnitDropCommand(Handle const &commandHandle_p, Handle const &source_p, Handle const &deposit_p,
 		Vector const &finalPoint_p, unsigned long gridStatus_p, std::list<Vector> const &waypoints_p, bool init_p=false);
 
@@ -34,8 +35,8 @@ public:
 	Handle const &getDeposit() const { return _deposit; }
 	EntityMoveCommand const &getSubMoveCommand() const { return _subMoveCommand; }
 private:
-	Handle const _source;
-	Handle const _deposit;
+	Handle _source {0};
+	Handle _deposit {0};
 
 	/// @brief sub move command
 	EntityMoveCommand _subMoveCommand;

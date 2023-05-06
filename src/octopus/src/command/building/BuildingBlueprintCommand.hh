@@ -17,6 +17,7 @@ struct BuildingModel;
 class BuildingBlueprintCommand : public Command
 {
 public:
+	BuildingBlueprintCommand();
 	BuildingBlueprintCommand(Vector const &pos_p, unsigned long player_p, BuildingModel const &model_p,
 		std::vector<Handle> const &builders_p = {});
 
@@ -31,16 +32,16 @@ public:
 
 	Vector const &getPos() const { return _pos; }
 	unsigned long getPlayer() const { return _player; }
-	BuildingModel const & getModel() const { return _model; }
+	BuildingModel const & getModel() const { return *_model; }
 	std::vector<Handle> const & getBuilders() const { return _builders; }
 
 private:
-	Vector const _pos;
-	unsigned long const _player;
+	Vector _pos;
+	unsigned long _player;
 
-	BuildingModel const &_model;
+	BuildingModel const *_model;
 
-	std::vector<Handle> const _builders;
+	std::vector<Handle> _builders;
 };
 
 } // namespace octopus

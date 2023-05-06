@@ -15,6 +15,7 @@ struct BuildingModel;
 class PlayerChoseOptionCommand : public Command
 {
 public:
+	PlayerChoseOptionCommand() {}
 	PlayerChoseOptionCommand(unsigned long player_p, std::string const &key_p, unsigned long option_p);
 
 	virtual void registerCommand(Step & step_p, State const &state_p) override;
@@ -31,9 +32,9 @@ public:
 	unsigned long getOption() const { return _option; }
 
 private:
-	unsigned long const _player;
-	std::string const _key;
-	unsigned long const _option;
+	unsigned long _player {0};
+	std::string _key {""};
+	unsigned long _option {0};
 };
 
 } // namespace octopus

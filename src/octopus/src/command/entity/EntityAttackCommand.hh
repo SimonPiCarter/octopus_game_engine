@@ -18,6 +18,7 @@ namespace octopus
 class EntityAttackCommand : public Command
 {
 public:
+	EntityAttackCommand() {}
 	EntityAttackCommand(Handle const &commandHandle_p, Handle const &source_p, Handle const &target_p, bool frozenTarget_p);
 
 	/// @brief
@@ -31,11 +32,11 @@ public:
 	Handle const &getTarget() const;
 	bool isFrozenTarget() const;
 private:
-	Handle const _source;
+	Handle _source {0};
 	/// @brief initial target
-	Handle _target;
+	Handle _target {0};
 	/// @brief if true we wont change target except when it dies
-	bool const _frozenTarget;
+	bool _frozenTarget {false};
 
 	/// @brief return true if the target is not valid anymore
 	bool checkTarget(State const &state_p, Handle const & target_p) const;

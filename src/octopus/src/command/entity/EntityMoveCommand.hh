@@ -18,6 +18,7 @@ namespace octopus
 class EntityMoveCommand : public Command
 {
 public:
+	EntityMoveCommand() {}
 	EntityMoveCommand(Handle const &commandHandle_p, Handle const &source_p,
 		Vector const &finalPoint_p, unsigned long gridStatus_p, std::list<Vector> const &waypoints_p, bool init_p=false);
 
@@ -34,11 +35,11 @@ public:
 
 	virtual CommandData * newData() const override { return new MoveData(_finalPoint, _gridStatus, _waypoints); }
 private:
-	Handle const _source;
-	Vector _finalPoint;
-	unsigned long _gridStatus;
+	Handle _source {0};
+	Vector _finalPoint {1,1};
+	unsigned long _gridStatus {0};
 	std::list<Vector> _waypoints;
-	bool const _init;
+	bool _init {false};
 };
 
 } // namespace octopus

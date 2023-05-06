@@ -14,6 +14,7 @@ namespace octopus
 class EntityWaitCommand : public Command
 {
 public:
+	EntityWaitCommand() {}
 	EntityWaitCommand(Handle const &commandHandle_p, Handle const &source_p);
 
 	/// @brief
@@ -21,7 +22,7 @@ public:
 
 	virtual CommandData * newData() const override { return nullptr; }
 private:
-	Handle const _source;
+	Handle _source {0};
 };
 
 } // namespace octopus

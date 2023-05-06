@@ -13,6 +13,7 @@ namespace octopus
 class BuildingUnitCancelCommand : public Command
 {
 public:
+	BuildingUnitCancelCommand() {}
 	BuildingUnitCancelCommand(Handle const &commandHandle_p, unsigned long idx_p) : Command(commandHandle_p), _idx(idx_p) {}
 
 	/// @brief register the command into the step
@@ -25,7 +26,7 @@ public:
 
 	virtual CommandData * newData() const override { return nullptr; }
 
-	unsigned long const _idx;
+	unsigned long _idx {0};
 };
 
 } // namespace octopus

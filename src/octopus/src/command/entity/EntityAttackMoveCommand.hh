@@ -20,6 +20,7 @@ class Entity;
 class EntityAttackMoveCommand : public Command
 {
 public:
+	EntityAttackMoveCommand() {}
 	EntityAttackMoveCommand(Handle const &commandHandle_p, Handle const &source_p,
 		Vector const &finalPoint_p, unsigned long gridStatus_p, std::list<Vector> const &waypoints_p, bool init_p=false);
 
@@ -36,7 +37,7 @@ public:
 	EntityMoveCommand const &getSubMoveCommand() const { return _subMoveCommand; }
 
 private:
-	Handle const _source;
+	Handle _source {0};
 
 	/// @brief sub move command
 	EntityMoveCommand _subMoveCommand;

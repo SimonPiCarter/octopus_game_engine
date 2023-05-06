@@ -38,6 +38,7 @@ public:
 class Command : public AbstractCommand
 {
 public:
+	Command() : _handleCommand(0) {}
 	Command(Handle const &handle_p) : _handleCommand(handle_p) {}
 	virtual ~Command() {}
 
@@ -67,7 +68,7 @@ public:
 
 protected:
 	/// @brief the commandable handle for the executor of this command
-	Handle const _handleCommand {0};
+	Handle _handleCommand {0};
 
 	/// @brief if set to true the command will be queued up
 	bool _queued { false };

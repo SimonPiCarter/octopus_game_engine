@@ -13,6 +13,7 @@ namespace octopus
 class BuildingCancelCommand : public Command
 {
 public:
+	BuildingCancelCommand() {}
 	BuildingCancelCommand(Handle const &commandHandle_p) : Command(commandHandle_p) {}
 
 	/// @brief register the command into the step

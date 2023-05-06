@@ -17,7 +17,7 @@ namespace octopus
 AreaSpawnerCommand::AreaSpawnerCommand(RandomGenerator &rand_p, std::list<AreaSpawn> const &spawns_p)
 	: Command(0)
 	, _spawns(spawns_p)
-	, _rand(rand_p)
+	, _rand(&rand_p)
 {}
 
 AreaSpawnerCommand::~AreaSpawnerCommand()
@@ -174,7 +174,7 @@ unsigned long AreaSpawnerCommand::random(unsigned long min_p, unsigned long max_
 	unsigned long rdm_l = min_p;
 	if(!_nonRandom)
 	{
-		rdm_l = _rand.roll(min_p, max_p-1);
+		rdm_l = _rand->roll(min_p, max_p-1);
 	}
 	return rdm_l;
 }

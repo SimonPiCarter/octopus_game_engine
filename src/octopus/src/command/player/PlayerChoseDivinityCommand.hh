@@ -14,6 +14,7 @@ struct BuildingModel;;
 class PlayerChoseDivinityCommand : public Command
 {
 public:
+	PlayerChoseDivinityCommand() {}
 	PlayerChoseDivinityCommand(unsigned long player_p, DivinityType type_p);
 
 	virtual void registerCommand(Step & step_p, State const &state_p) override;
@@ -29,8 +30,8 @@ public:
 	DivinityType getType() const { return _type; }
 
 private:
-	unsigned long const _player;
-	DivinityType const _type;
+	unsigned long _player = 0;
+	DivinityType _type;
 };
 
 } // namespace octopus

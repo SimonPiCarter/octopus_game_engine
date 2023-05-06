@@ -13,6 +13,7 @@ namespace octopus
 class EntityRallyPointCommand : public Command
 {
 public:
+	EntityRallyPointCommand() {}
 	EntityRallyPointCommand(Handle const &source_p, Handle const &target_p, Vector const &pos_p, bool targetNotSet_p);
 
 	/// @brief
@@ -21,9 +22,9 @@ public:
 	virtual CommandData * newData() const override { return nullptr; }
 
 private:
-    Handle const _target;
-    Vector const _pos;
-    bool const _targetNotSet;
+    Handle _target {0};
+    Vector _pos {0,0};
+    bool _targetNotSet {false};
 };
 
 } // namespace octopus

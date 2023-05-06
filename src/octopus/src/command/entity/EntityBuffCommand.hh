@@ -14,6 +14,7 @@ namespace octopus
 class EntityBuffCommand : public Command
 {
 public:
+	EntityBuffCommand() {}
 	EntityBuffCommand(Handle const &commandHandle_p, Handle const &target_p, TyppedBuff const &buff_p);
 
 	/// @brief
@@ -21,9 +22,9 @@ public:
 
 	virtual CommandData * newData() const override { return nullptr; }
 private:
-	Handle const _target;
+	Handle _target {0};
 
-	TyppedBuff const _buff;
+	TyppedBuff _buff;
 };
 
 } // namespace octopus

@@ -1,5 +1,5 @@
-#ifndef __BuildingBlueprintCommand__
-#define __BuildingBlueprintCommand__
+#ifndef __AreaSpawnerCommand__
+#define __AreaSpawnerCommand__
 
 #include <list>
 #include <random>
@@ -32,6 +32,7 @@ struct AreaSpawn
 class AreaSpawnerCommand : public Command
 {
 public:
+	AreaSpawnerCommand() {}
 	AreaSpawnerCommand(RandomGenerator &rand_p, std::list<AreaSpawn> const &spawns_p);
 	~AreaSpawnerCommand();
 
@@ -55,10 +56,10 @@ private:
 	unsigned long random(unsigned long min_p, unsigned long max_p);
 
 	/// @brief list of spawns
-	std::list<AreaSpawn> const _spawns;
+	std::list<AreaSpawn> _spawns;
 
 	/// @brief random generator
-	RandomGenerator &_rand;
+	RandomGenerator *_rand {nullptr};
 
 	bool _nonRandom {false};
 };
