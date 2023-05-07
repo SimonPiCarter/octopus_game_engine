@@ -144,7 +144,7 @@ void ControllerStepVisitor::visit(octopus::CommandWindUpDiffStep const *steppabl
 	{
 		return;
 	}
-	octopus::AttackMoveData const *data_l = dynamic_cast<octopus::AttackMoveData const *>(getData(ent_l->getFrontQueue()._var));
+	octopus::AttackData const *data_l = dynamic_cast<octopus::AttackData const *>(getData(ent_l->getFrontQueue()._var));
 	// set wind up state
 	if(data_l && data_l->_windup == 1)
 	{
