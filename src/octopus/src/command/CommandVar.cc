@@ -10,7 +10,7 @@ void registerCommand(CommandVar &var_p, Step & step_p, State const &state_p)
 bool applyCommand(CommandVar const &var_p, Step & step_p, State const &state_p, CommandData const * data_p, PathManager &pathManager_p)
 {
     bool isDone_l = false;
-    std::visit([&](auto && arg) { arg.applyCommand(step_p, state_p, data_p, pathManager_p); }, var_p);
+    std::visit([&](auto && arg) { isDone_l = arg.applyCommand(step_p, state_p, data_p, pathManager_p); }, var_p);
     return isDone_l;
 }
 CommandData * newData(CommandVar const &var_p)

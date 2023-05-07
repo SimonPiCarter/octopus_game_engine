@@ -47,6 +47,7 @@ void Commandable::runCommands(Step & step_p, State const &state_p, PathManager &
 	{
 		// clean up
 		cleanUp(it_l->_var, step_p, state_p, getData(it_l->_var));
+		step_p.addSteppable(new CommandNextStep(_commandableHandle));
 		++it_l;
 	}
 	if(it_l != _queue.getList().cend())
