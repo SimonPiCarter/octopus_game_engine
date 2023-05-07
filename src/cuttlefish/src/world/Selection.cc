@@ -135,16 +135,15 @@ unsigned long remainingQueueTime(octopus::Building const &building_p)
 	// remaining queue time
 	unsigned long time_l = 0;
 
-	for(CommandBundle const &bundle_l : ent_l.getQueue().getList())
+	for(octopus::CommandBundle const &bundle_l : building_p.getQueue().getList())
 	{
-		octopus::BuildingUnitProductionCommand const *cmd_l = dynamic_cast<octopus::BuildingUnitProductionCommand const *>(bundle_l._cmd);
+		octopus::BuildingUnitProductionCommand const *cmd_l = dynamic_cast<octopus::BuildingUnitProductionCommand const *>(getCommandFromVar(bundle_l._var));
 		octopus::UnitProductionData const *data_l = dynamic_cast<octopus::UnitProductionData const *>(getData(bundle_l._var));
 		if(cmd_l && data_l
 		&& data_l->_completeTime > data_l->_progression)
 		{
 			time_l += data_l->_completeTime - data_l->_progression;
 		}
-		++it_l;
 	}
 
 	return time_l;

@@ -183,7 +183,7 @@ void WorldUpdaterStepVisitor::visit(octopus::CommandWindUpDiffStep const *steppa
 	{
 		return;
 	}
-	octopus::AttackMoveData const *data_l = dynamic_cast<octopus::AttackMoveData const *>(getData(ent_l->getFrontQueue()._var));
+	octopus::AttackData const *data_l = dynamic_cast<octopus::AttackData const *>(getData(ent_l->getFrontQueue()._var));
 	if(_world._sprites[steppable_p->_handle])
 	{
 		// set wind up state
