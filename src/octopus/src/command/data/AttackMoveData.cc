@@ -4,8 +4,5 @@
 
 namespace octopus
 {
-AttackMoveData::~AttackMoveData()
-{
-	delete _subAttackCommand;
-}
+
 } // namespace octopus

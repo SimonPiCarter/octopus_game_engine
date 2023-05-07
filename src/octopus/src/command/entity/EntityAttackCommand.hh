@@ -3,7 +3,7 @@
 
 #include "command/Command.hh"
 
-#include "command/data/AttackMoveData.hh"
+#include "command/data/AttackData.hh"
 #include "state/Handle.hh"
 #include "utils/Vector.hh"
 #include <list>
@@ -39,7 +39,7 @@ private:
 	/// @brief if true we wont change target except when it dies
 	bool _frozenTarget {false};
 
-	AttackMoveData _data;
+	AttackData _data;
 
 	/// @brief return true if the target is not valid anymore
 	bool checkTarget(State const &state_p, Handle const & target_p) const;

@@ -39,10 +39,10 @@ bool EntityAttackMoveCommand::applyCommand(Step & step_p, State const &state_p, 
 {
 	Logger::getDebug() << "EntityAttackMoveCommand:: apply Command "<<_source <<std::endl;
 	AttackMoveData const &attackMoveData_l = *static_cast<AttackMoveData const *>(data_p);
-	EntityAttackCommand const * subAttackCommand_l = attackMoveData_l._subAttackCommand;
+	EntityAttackCommand const * subAttackCommand_l = &attackMoveData_l._subAttackCommand;
 	Entity const * ent_l = state_p.getEntity(_source);
 
-	if(subAttackCommand_l)
+	if(attackMoveData_l._hasSubAttackCommand)
 	{
 		if(!subAttackCommand_l->applyCommand(step_p, state_p, data_p, pathManager_p))
 		{
@@ -52,9 +52,9 @@ bool EntityAttackMoveCommand::applyCommand(Step & step_p, State const &state_p, 
 			}
 		}
 		/// clean up attack command
-		attackMoveData_l._subAttackCommand->cleanUp(step_p, state_p, data_p);
+		attackMoveData_l._subAttackCommand.cleanUp(step_p, state_p, data_p);
 		// get non const pointer here (required by the step)
-		step_p.addSteppable(new CommandDelSubAttackStep(_handleCommand, attackMoveData_l._subAttackCommand->getSource(), attackMoveData_l._subAttackCommand->getTarget()));
+		step_p.addSteppable(new CommandDelSubAttackStep(_handleCommand, attackMoveData_l._subAttackCommand.getSource(), attackMoveData_l._subAttackCommand.getTarget()));
 		// return false is necessary here to avoid double move step
 		return false;
 	}
@@ -78,10 +78,10 @@ bool EntityAttackMoveCommand::applyCommand(Step & step_p, State const &state_p, 
 void EntityAttackMoveCommand::cleanUp(Step & step_p, State const &state_p, CommandData const *data_p) const
 {
 	AttackMoveData const &attackMoveData_l = *static_cast<AttackMoveData const *>(data_p);
-	EntityAttackCommand const * subAttackCommand_l = attackMoveData_l._subAttackCommand;
-	if(subAttackCommand_l)
+	EntityAttackCommand const & subAttackCommand_l = attackMoveData_l._subAttackCommand;
+	if(attackMoveData_l._hasSubAttackCommand)
 	{
-		subAttackCommand_l->cleanUp(step_p, state_p, data_p);
+		subAttackCommand_l.cleanUp(step_p, state_p, data_p);
 	}
 	_subMoveCommand.cleanUp(step_p, state_p, data_p);
 }

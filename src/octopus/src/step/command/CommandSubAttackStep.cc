@@ -15,11 +15,12 @@ void CommandAddSubAttackStep::apply(State &state_p) const
 	Logger::getDebug() << "CommandAddSubAttackStep :: apply " << this->_handle <<std::endl;
 	AttackMoveData *data_l = dynamic_cast<AttackMoveData *>(getData(ent_l->getFrontQueue()._var));
 
-	if(data_l->_subAttackCommand)
+	if(data_l->_hasSubAttackCommand)
 	{
 		throw std::logic_error("Cannot add a sub attack command when one is already set up");
 	}
-	data_l->_subAttackCommand = new EntityAttackCommand(_handle, _source, _target, false);
+	data_l->_hasSubAttackCommand = true;
+	data_l->_subAttackCommand = EntityAttackCommand(_handle, _source, _target, false);
 }
 
 void CommandAddSubAttackStep::revert(State &state_p, SteppableData const *) const
@@ -27,12 +28,11 @@ void CommandAddSubAttackStep::revert(State &state_p, SteppableData const *) cons
 	Commandable * ent_l = state_p.getCommandable(this->_handle);
 	Logger::getDebug() << "CommandAddSubAttackStep :: revert " << this->_handle <<std::endl;
 	AttackMoveData *data_l = dynamic_cast<AttackMoveData *>(getData(ent_l->getFrontQueue()._var));
-	if(data_l->_subAttackCommand == nullptr)
+	if(!data_l->_hasSubAttackCommand)
 	{
 		throw std::logic_error("Cannot remove a sub attack command when the one set up is not coherent with this step");
 	}
-	delete data_l->_subAttackCommand;
-	data_l->_subAttackCommand = nullptr;
+	data_l->_hasSubAttackCommand = false;
 }
 
 bool CommandAddSubAttackStep::isNoOp() const
@@ -45,8 +45,7 @@ void CommandDelSubAttackStep::apply(State &state_p) const
 	Commandable * ent_l = state_p.getCommandable(this->_handle);
 	Logger::getDebug() << "CommandDelSubAttackStep :: apply " << this->_handle <<std::endl;
 	AttackMoveData *data_l = dynamic_cast<AttackMoveData *>(getData(ent_l->getFrontQueue()._var));
-	delete data_l->_subAttackCommand;
-	data_l->_subAttackCommand = nullptr;
+	data_l->_hasSubAttackCommand = false;
 }
 
 void CommandDelSubAttackStep::revert(State &state_p, SteppableData const *) const
@@ -54,11 +53,12 @@ void CommandDelSubAttackStep::revert(State &state_p, SteppableData const *) cons
 	Commandable * ent_l = state_p.getCommandable(this->_handle);
 	Logger::getDebug() << "CommandDelSubAttackStep :: revert " << this->_handle <<std::endl;
 	AttackMoveData *data_l = dynamic_cast<AttackMoveData *>(getData(ent_l->getFrontQueue()._var));
-	if(data_l->_subAttackCommand)
+	if(data_l->_hasSubAttackCommand)
 	{
 		throw std::logic_error("Cannot add a sub attack command when one is already set up");
 	}
-	data_l->_subAttackCommand = new EntityAttackCommand(_handle, _source, _target, false);
+	data_l->_subAttackCommand = EntityAttackCommand(_handle, _source, _target, false);
+	data_l->_hasSubAttackCommand = true;
 }
 
 bool CommandDelSubAttackStep::isNoOp() const
