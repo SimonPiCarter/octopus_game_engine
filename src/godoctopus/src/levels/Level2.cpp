@@ -29,8 +29,6 @@
 #include "step/entity/spawn/BuildingSpawnStep.hh"
 #include "step/player/PlayerSpawnStep.hh"
 #include "step/player/PlayerSpendResourceStep.hh"
-#include "step/state/StateAddConstraintPositionStep.hh"
-#include "step/state/StateRemoveConstraintPositionStep.hh"
 #include "step/state/StateTemplePositionAddStep.hh"
 #include "step/state/StateWinStep.hh"
 #include "step/team/TeamVisionStep.hh"
@@ -39,7 +37,9 @@
 // godot
 #include "controller/step/CameraStep.h"
 #include "controller/step/DialogStep.h"
-#include "controller/step/WaveStep.h"
+
+#include "level2/WaveSpawn.h"
+#include "level2/UtilsLevel2.h"
 
 using namespace octopus;
 
@@ -47,24 +47,6 @@ namespace godot
 {
 namespace level2
 {
-
-std::vector<octopus::Steppable*> defaultGenerator() { return {new WaveStep()}; }
-
-std::string genModelName(RandomGenerator &gen_p)
-{
-	std::string model_l = "square";
-	int random_l = gen_p.roll(0, 2);
-	if(random_l==1)
-	{
-		model_l = "triangle";
-	}
-	else if(random_l==2)
-	{
-		model_l = "circle";
-	}
-	return model_l;
-}
-
 
 class VisionTrigger : public octopus::OneShotTrigger
 {
@@ -88,9 +70,7 @@ private:
 std::list<Steppable *> WaveLevelSteps(Library &lib_p, RandomGenerator &rand_p)
 {
 	// 5 waves every 5 minutes
-	unsigned long waveCount_p = 5;
-	unsigned long stepCount_p = 5*60*100;
-	unsigned long worldSize_p = 250;
+	unsigned long stepCount_p = 3*60*100;
 
 	loadModels(lib_p);
 
@@ -116,7 +96,12 @@ std::list<Steppable *> WaveLevelSteps(Library &lib_p, RandomGenerator &rand_p)
 	mapRes_l[octopus::ResourceType::Steel] = -200;
 	mapRes_l[octopus::ResourceType::Anchor] = -420;
 
-	Trigger * triggerWave_l = new WaveSpawn(new ListenerStepCount(stepCount_p), lib_p, rand_p, 1, stepCount_p, waveCount_p, worldSize_p, defaultGenerator);
+	WaveParam params_l;
+	params_l.stepWait = stepCount_p;
+	params_l.spawnPoint = octopus::Vector(60,10);
+	params_l.number = 50;
+
+	Trigger * triggerWave_l = new WaveSpawn(new ListenerStepCount(stepCount_p), lib_p, rand_p,{params_l, params_l}, defaultGenerator);
 	Trigger * triggerLose_l = new LoseTrigger(new ListenerEntityModelDied(&lib_p.getBuildingModel("command_center"), 0));
 
 	Building anchorSpot_l({60,10}, true, lib_p.getBuildingModel("anchor_spot"));
@@ -160,34 +145,19 @@ std::list<Steppable *> WaveLevelSteps(Library &lib_p, RandomGenerator &rand_p)
 		new TriggerSpawn(new AnchorTrigger(lib_p, rand_p, 60)),
 		new TriggerSpawn(new VisionTrigger(to_int(anchorSpot_l._pos.x), to_int(anchorSpot_l._pos.y), pattern_l)),
 		new FlyingCommandSpawnStep(new TimerDamage(0, 100, 0, 0, octopus::ResourceType::Anchor, 0)),
-		new StateAddConstraintPositionStep(0, 45, 0, 40, true, true),
-		new StateAddConstraintPositionStep(0, 30, 0, 45, true, false),
 		new godot::CameraStep(to_int(building_l._pos.x), to_int(building_l._pos.y)),
 		new godot::DialogStep("leve1_intro"),
 	};
 
-	// create walls for zone 1
-	for(size_t i = 0 ; i < 32 ; i+=2)
-	{
-		if(i > 5 && i < 14)
-		{
-			continue;
-		}
-		Building building_l({46, i}, true, lib_p.getBuildingModel("barrack"));
-		building_l._player = 1;
-		spawners_l.push_back(new BuildingSpawnStep(handle_l++, building_l, true));
-	}
-	for(size_t i = 0 ; i < 45 ; i+=2)
-	{
-		Building building_l({i, 31}, true, lib_p.getBuildingModel("barrack"));
-		building_l._player = 1;
-		spawners_l.push_back(new BuildingSpawnStep(handle_l++, building_l, true));
-	}
+	// zone 1
+	std::list<Steppable *> zone1_l = createWallSpawners(lib_p, 45, 30, 4, 14, handle_l);
+	spawners_l.insert(spawners_l.end(), zone1_l.begin(), zone1_l.end());
 
 	return spawners_l;
 }
 
-std::list<Command *> WaveLevelCommands(Library &lib_p, RandomGenerator &rand_p)
+AreaSpawnerCommand * createArenaSpawnCommmand(Library &lib_p, RandomGenerator &rand_p, unsigned long x, unsigned long y, unsigned long size,
+	size_t nbRes_p, size_t nbAnchorSpot_p, size_t nbUnits_p)
 {
 	std::list<AreaSpawn> spawners_l;
 
@@ -204,22 +174,25 @@ std::list<Command *> WaveLevelCommands(Library &lib_p, RandomGenerator &rand_p)
 	Building anchorSpot_l({0,0}, true, lib_p.getBuildingModel("anchor_spot"));
 	anchorSpot_l._player = 2;
 
-
 	{
 		AreaSpawn area_l;
-		area_l.size = 20;
-		area_l.x = 50;
-		area_l.y = 0;
-		area_l.entities.emplace_back(new Resource(res3_l), 1);
-		area_l.entities.emplace_back(new Resource(res2_l), 1);
+		area_l.size = size;
+		area_l.x = x;
+		area_l.y = y;
+		area_l.entities.emplace_back(new Resource(res3_l), nbRes_p);
+		area_l.entities.emplace_back(new Resource(res2_l), nbRes_p);
+		if(nbAnchorSpot_p>0)
+		{
+			area_l.entities.emplace_back(new Building(anchorSpot_l), nbAnchorSpot_p);
+		}
 		spawners_l.push_back(area_l);
 	}
 	{
 		AreaSpawn area_l;
-		area_l.size = 10;
-		area_l.x = 55;
-		area_l.y = 5;
-		for(unsigned long c = 0 ; c < 20 ; ++ c)
+		area_l.size = size-10;
+		area_l.x = x+5;
+		area_l.y = y+5;
+		for(unsigned long c = 0 ; c < nbUnits_p ; ++ c)
 		{
 			Unit *unit_l = new Unit({0, 0}, false, lib_p.getUnitModel(genModelName(rand_p)));
 			unit_l->_player = 1;
@@ -228,8 +201,15 @@ std::list<Command *> WaveLevelCommands(Library &lib_p, RandomGenerator &rand_p)
 		spawners_l.push_back(area_l);
 	}
 
+	return new AreaSpawnerCommand(rand_p, spawners_l);
+}
+
+std::list<Command *> WaveLevelCommands(Library &lib_p, RandomGenerator &rand_p)
+{
 	std::list<Command *> commands_l {
-		new AreaSpawnerCommand(rand_p, spawners_l),
+		createArenaSpawnCommmand(lib_p, rand_p, 50, 0, 20, 1, 0, 20),
+		createArenaSpawnCommmand(lib_p, rand_p, 50, 30, 20, 1, 1, 30),
+		createArenaSpawnCommmand(lib_p, rand_p, 15, 30, 20, 1, 1, 40),
 	};
 
 	return commands_l;
@@ -262,45 +242,6 @@ std::pair<std::list<octopus::Steppable *>, std::list<octopus::Command *> > readW
 /// 				Triggers			  ///
 /////////////////////////////////////////////
 /////////////////////////////////////////////
-
-WaveSpawn::WaveSpawn(Listener * listener_p, Library const &lib_p, RandomGenerator &rand_p, unsigned long wave_p, unsigned long stepWait_p, unsigned long finalWave_p, unsigned long worldSize_p,
-	std::function<std::vector<octopus::Steppable *>(void)> waveStepGenerator_p) :
-		OneShotTrigger({listener_p}),
-		_lib(lib_p),
-		_rand(rand_p),
-		_wave(wave_p),
-		_stepWait(stepWait_p),
-		_finalWave(finalWave_p),
-		_worldSize(worldSize_p),
-		_waveStepGenerator(waveStepGenerator_p)
-{}
-
-void WaveSpawn::trigger(State const &state_p, Step &step_p, unsigned long, octopus::TriggerData const &) const
-{
-	for(unsigned long i = 0 ; i < _wave * 10 ; ++ i)
-	{
-		std::string modelName_l = genModelName(_rand);
-		Unit unit_l({ _worldSize-_rand.roll(10,20), _worldSize-_rand.roll(10,20) }, false, _lib.getUnitModel(modelName_l));
-		unit_l._player = 1;
-		Handle handle_l = getNextHandle(step_p, state_p);
-		step_p.addSteppable(new UnitSpawnStep(handle_l, unit_l));
-		step_p.addSteppable(new CommandSpawnStep(new EntityAttackMoveCommand(handle_l, handle_l, {7., 20.}, 0, {{7., 20.}}, true )));
-	}
-	step_p.addSteppable(new StateRemoveConstraintPositionStep(0, 45, 0, 40, true, true));
-
-	std::vector<octopus::Steppable *> stepsGenerated_l = _waveStepGenerator();
-	for(octopus::Steppable *step_l : stepsGenerated_l)
-	{
-		step_p.addSteppable(step_l);
-	}
-	step_p.addSteppable(new TriggerSpawn(new WaveSpawn(new ListenerStepCount(_stepWait), _lib, _rand, _wave+1, _stepWait, _finalWave, _worldSize, _waveStepGenerator)));
-
-	// win after X waves
-	if(_wave == _finalWave)
-	{
-		step_p.addSteppable(new StateWinStep(state_p.isOver(), state_p.hasWinningTeam(), state_p.getWinningTeam(), 0));
-	}
-}
 
 LoseTrigger::LoseTrigger(Listener * listener_p) : OneShotTrigger({listener_p}) {}
 

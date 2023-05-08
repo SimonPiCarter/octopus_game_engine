@@ -180,6 +180,19 @@ void createResourceSteel(Library &lib_p)
 	lib_p.registerEntityModel("resource_steel", resModel_l);
 }
 
+void createWater(Library &lib_p)
+{
+	BuildingModel buildingModel_l { true, 1., 500. };
+	buildingModel_l._isBuilding = true;
+	buildingModel_l._isStatic = true;
+	buildingModel_l._invulnerable = true;
+	lib_p.registerBuildingModel("water_h", buildingModel_l);
+	lib_p.registerBuildingModel("water_v", buildingModel_l);
+	lib_p.registerBuildingModel("water_v_down", buildingModel_l);
+	lib_p.registerBuildingModel("water_v_up", buildingModel_l);
+	lib_p.registerBuildingModel("water_corner", buildingModel_l);
+}
+
 void loadModels(octopus::Library &lib_p)
 {
 	createWorker(lib_p);
@@ -191,6 +204,7 @@ void loadModels(octopus::Library &lib_p)
     createDeposit(lib_p);
     createAnchor(lib_p);
     createAnchorSpot(lib_p);
+    createWater(lib_p);
 
 	createResourceFood(lib_p);
 	createResourceSteel(lib_p);
