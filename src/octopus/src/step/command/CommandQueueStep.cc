@@ -71,6 +71,7 @@ void CommandUpdateLastIdStep::apply(State &state_p) const
 	Commandable * ent_l = state_p.getCommandable(this->_handle);
 	Logger::getDebug() << "CommandUpdateLastIdStep :: apply " << this->_handle <<std::endl;
 	ent_l->setLastCommand(_new);
+	ent_l->setHasLastCommand(true);
 }
 
 void CommandUpdateLastIdStep::revert(State &state_p, SteppableData const *) const
@@ -78,6 +79,7 @@ void CommandUpdateLastIdStep::revert(State &state_p, SteppableData const *) cons
 	Commandable * ent_l = state_p.getCommandable(this->_handle);
 	Logger::getDebug() << "CommandUpdateLastIdStep :: revert " << this->_handle <<std::endl;
 	ent_l->setLastCommand(_old);
+	ent_l->setHasLastCommand(_hasLast);
 }
 
 } // namespace octopus

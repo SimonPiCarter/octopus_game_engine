@@ -52,7 +52,7 @@ void Commandable::runCommands(Step & step_p, State const &state_p, PathManager &
 	}
 	if(it_l != _queue.getList().cend())
 	{
-		step_p.addSteppable(new CommandUpdateLastIdStep(_commandableHandle, _lastCommand, *it_l));
+		step_p.addSteppable(new CommandUpdateLastIdStep(_commandableHandle, _lastCommand, *it_l, _hasLastCommand));
 	}
 }
 
@@ -81,6 +81,10 @@ void Commandable::setLastCommand(CommandBundle const& bundle_p)
 	_lastCommand = bundle_p;
 }
 
+void Commandable::setHasLastCommand(bool hasLastCommand_p)
+{
+	_hasLastCommand = hasLastCommand_p;
+}
 
 } // namespace octopus
 

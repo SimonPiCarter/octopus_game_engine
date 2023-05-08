@@ -98,13 +98,13 @@ private:
 class CommandUpdateLastIdStep : public Steppable
 {
 public:
-	CommandUpdateLastIdStep(Handle const &handle_p, CommandBundle const &old_p, CommandBundle const &new_p)
-		: _handle(handle_p), _old(old_p), _new(new_p) {}
+	CommandUpdateLastIdStep(Handle const &handle_p, CommandBundle const &old_p, CommandBundle const &new_p, bool hasLast_p)
+		: _handle(handle_p), _old(old_p), _new(new_p), _hasLast(hasLast_p) {}
 
 	virtual void apply(State &state_p) const override;
 	virtual void revert(State &state_p, SteppableData const *) const override;
 
-	virtual bool isNoOp() const override { return _old._idx == _new._idx; }
+	virtual bool isNoOp() const override { return false; }
 	virtual void visit(SteppableVisitor * visitor_p) const override
 	{
 		visitor_p->visit(this);
@@ -114,6 +114,7 @@ private:
 	Handle const _handle {0};
 	CommandBundle _old;
 	CommandBundle _new;
+	bool _hasLast;
 };
 
 

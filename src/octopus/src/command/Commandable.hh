@@ -42,6 +42,7 @@ public:
 	const CommandQueue & getQueue() const;
 
 	void setLastCommand(CommandBundle const& bundle_p);
+	void setHasLastCommand(bool hasLastCommand_p);
 
 	Handle _commandableHandle {0};
 private:
