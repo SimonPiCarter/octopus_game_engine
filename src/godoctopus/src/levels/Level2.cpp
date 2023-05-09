@@ -51,7 +51,7 @@ namespace level2
 class VisionTrigger : public octopus::OneShotTrigger
 {
 public:
-	VisionTrigger(int x, int y, octopus::VisionPattern const &pattern_p) : OneShotTrigger({new octopus::ListenerStepCount(36000)}), _x(x), _y(y), _pattern(pattern_p) {}
+	VisionTrigger(unsigned long timer_p, int x, int y, octopus::VisionPattern const &pattern_p) : OneShotTrigger({new octopus::ListenerStepCount(timer_p)}), _x(x), _y(y), _pattern(pattern_p) {}
 
 	virtual void trigger(State const &state_p, Step &step_p, unsigned long, TriggerData const &) const override
 	{
@@ -69,17 +69,10 @@ private:
 
 std::list<Steppable *> WaveLevelSteps(Library &lib_p, RandomGenerator &rand_p)
 {
-	// 5 waves every 5 minutes
-	unsigned long stepCount_p = 3*60*100;
-
 	loadModels(lib_p);
 
 	Building building_l({20, 10}, true, lib_p.getBuildingModel("command_center"));
 	Unit unit_l({ 17, 10 }, false, lib_p.getUnitModel("worker"));
-
-	/// TEMP
-	Unit square_l({ 17, 10 }, false, lib_p.getUnitModel("square"));
-
 
 	Resource res1_l({15,12}, true, lib_p.getEntityModel("resource_food"));
 	res1_l._type = ResourceType::Food;
@@ -91,17 +84,22 @@ std::list<Steppable *> WaveLevelSteps(Library &lib_p, RandomGenerator &rand_p)
 	res3_l._resource = 2000.;
 	res3_l._player = 2;
 
+	long anchor_l = 420;
 	std::map<ResourceType, double> mapRes_l;
 	mapRes_l[octopus::ResourceType::Food] = -200;
 	mapRes_l[octopus::ResourceType::Steel] = -200;
-	mapRes_l[octopus::ResourceType::Anchor] = -420;
+	mapRes_l[octopus::ResourceType::Anchor] = -anchor_l;
+	unsigned long visionTrigger_l = (anchor_l-60)*100;
 
-	WaveParam params_l;
-	params_l.stepWait = stepCount_p;
-	params_l.spawnPoint = octopus::Vector(60,10);
-	params_l.number = 50;
+	std::list<WaveParam> params_l;
+	params_l.push_back({octopus::Vector(60,10), 3*60*100, 10});
+	params_l.push_back({octopus::Vector(90,35), 5*60*100, 50});
+	params_l.push_back({octopus::Vector(90,35), 5*60*100, 100});
+	params_l.push_back({octopus::Vector(90,35), 5*60*100, 200});
+	//params_l.push_back({octopus::Vector(90,35), 5*60*100, 300});
+	//params_l.push_back({octopus::Vector(90,35), 5*60*100, 300});
 
-	Trigger * triggerWave_l = new WaveSpawn(new ListenerStepCount(stepCount_p), lib_p, rand_p,{params_l, params_l}, defaultGenerator);
+	Trigger * triggerWave_l = new WaveSpawn(new ListenerStepCount(3*60*100), lib_p, rand_p, params_l, defaultGenerator);
 	Trigger * triggerLose_l = new LoseTrigger(new ListenerEntityModelDied(&lib_p.getBuildingModel("command_center"), 0));
 
 	Building anchorSpot_l({60,10}, true, lib_p.getBuildingModel("anchor_spot"));
@@ -139,19 +137,30 @@ std::list<Steppable *> WaveLevelSteps(Library &lib_p, RandomGenerator &rand_p)
 		new UnitSpawnStep(handle_l++, unit_l),
 		new UnitSpawnStep(handle_l++, unit_l),
 		new UnitSpawnStep(handle_l++, unit_l),
-		new UnitSpawnStep(handle_l++, square_l),
 		new TriggerSpawn(triggerWave_l),
 		new TriggerSpawn(triggerLose_l),
 		new TriggerSpawn(new AnchorTrigger(lib_p, rand_p, 60)),
-		new TriggerSpawn(new VisionTrigger(to_int(anchorSpot_l._pos.x), to_int(anchorSpot_l._pos.y), pattern_l)),
+		new TriggerSpawn(new VisionTrigger(visionTrigger_l, to_int(anchorSpot_l._pos.x), to_int(anchorSpot_l._pos.y), pattern_l)),
 		new FlyingCommandSpawnStep(new TimerDamage(0, 100, 0, 0, octopus::ResourceType::Anchor, 0)),
 		new godot::CameraStep(to_int(building_l._pos.x), to_int(building_l._pos.y)),
 		new godot::DialogStep("leve1_intro"),
 	};
 
 	// zone 1
-	std::list<Steppable *> zone1_l = createWallSpawners(lib_p, 45, 30, 4, 14, handle_l);
-	spawners_l.insert(spawners_l.end(), zone1_l.begin(), zone1_l.end());
+	std::list<Steppable *> zone_l = createWallSpawners(lib_p, 45, 30, 4, 14, handle_l);
+	spawners_l.insert(spawners_l.end(), zone_l.begin(), zone_l.end());
+
+	// zone 2
+	zone_l = createWallSpawners(lib_p, 75, 60, 40, 50, handle_l);
+	spawners_l.insert(spawners_l.end(), zone_l.begin(), zone_l.end());
+
+	// zone 3
+	zone_l = createWallSpawners(lib_p, 105, 90, 70, 80, handle_l);
+	spawners_l.insert(spawners_l.end(), zone_l.begin(), zone_l.end());
+
+	// zone 4
+	zone_l = createWallSpawners(lib_p, 135, 120, 100, 110, handle_l);
+	spawners_l.insert(spawners_l.end(), zone_l.begin(), zone_l.end());
 
 	return spawners_l;
 }
@@ -207,9 +216,14 @@ AreaSpawnerCommand * createArenaSpawnCommmand(Library &lib_p, RandomGenerator &r
 std::list<Command *> WaveLevelCommands(Library &lib_p, RandomGenerator &rand_p)
 {
 	std::list<Command *> commands_l {
+		// zone 1
 		createArenaSpawnCommmand(lib_p, rand_p, 50, 0, 20, 1, 0, 20),
-		createArenaSpawnCommmand(lib_p, rand_p, 50, 30, 20, 1, 1, 30),
-		createArenaSpawnCommmand(lib_p, rand_p, 15, 30, 20, 1, 1, 40),
+		createArenaSpawnCommmand(lib_p, rand_p, 50, 35, 20, 1, 1, 30),
+		createArenaSpawnCommmand(lib_p, rand_p, 15, 35, 20, 1, 1, 40),
+		// zone 2
+		createArenaSpawnCommmand(lib_p, rand_p, 80, 30, 20, 1, 1, 20),
+		createArenaSpawnCommmand(lib_p, rand_p, 80, 65, 20, 1, 1, 30),
+		createArenaSpawnCommmand(lib_p, rand_p, 45, 65, 20, 1, 1, 40),
 	};
 
 	return commands_l;

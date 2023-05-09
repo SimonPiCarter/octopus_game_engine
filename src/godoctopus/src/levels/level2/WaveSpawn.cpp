@@ -45,6 +45,7 @@ void WaveSpawn::trigger(State const &state_p, Step &step_p, unsigned long, octop
 		step_p.addSteppable(new CommandSpawnStep(new EntityAttackMoveCommand(handle_l, handle_l, {7., 20.}, 0, {{7., 20.}}, true )));
 	}
 	step_p.addSteppable(new StateRemoveConstraintPositionStep(0, 45, 0, 30, true, true));
+	step_p.addSteppable(new StateRemoveConstraintPositionStep(0, 30, 0, 45, true, false));
 
 	std::vector<octopus::Steppable *> stepsGenerated_l = _waveStepGenerator();
 	for(octopus::Steppable *step_l : stepsGenerated_l)
