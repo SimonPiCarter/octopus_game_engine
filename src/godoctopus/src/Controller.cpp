@@ -31,6 +31,7 @@
 #include "production/ProductionCommand.h"
 #include "levels/Level1.h"
 #include "levels/Level2.h"
+#include "levels/LevelTestAnchor.h"
 
 namespace godot {
 
@@ -184,6 +185,19 @@ void Controller::load_level2(int seed_p)
     newAutoSaveFile();
     writeLevelId(*_autoSaveFile, LEVEL_ID_LEVEL_2, 50);
     level2::writeWaveLevelHeader(*_autoSaveFile, seed_p);
+    init(commands_l, spawners_l, 50, _autoSaveFile);
+}
+
+void Controller::load_level_test_anchor(int seed_p)
+{
+    delete _rand;
+    _rand = new octopus::RandomGenerator(seed_p);
+    std::list<octopus::Steppable *> spawners_l = level_test_anchor::LevelSteps(_lib, *_rand);
+    std::list<octopus::Command *> commands_l = level_test_anchor::LevelCommands(_lib, *_rand);
+    // enable auto save
+    newAutoSaveFile();
+    writeLevelId(*_autoSaveFile, LEVEL_ID_LEVEL_TEST_ANCHOR, 50);
+    level_test_anchor::writeLevelHeader(*_autoSaveFile, seed_p);
     init(commands_l, spawners_l, 50, _autoSaveFile);
 }
 
@@ -561,7 +575,7 @@ PackedByteArray Controller::getVisibility(int player_p) const
 int Controller::get_nb_options_available(int player_p) const
 {
     auto it_l = _optionManagers.find(player_p);
-	if(it_l == _optionManagers.end())
+	if(it_l == _optionManagers.end() || it_l->second.getQueuedOptionsSize() == 0)
     {
         return 0;
     }
@@ -756,6 +770,7 @@ void Controller::_bind_methods()
     ClassDB::bind_method(D_METHOD("load_lifesteal_level", "size"), &Controller::load_lifesteal_level);
     ClassDB::bind_method(D_METHOD("load_level1", "seed", "nb_wave"), &Controller::load_level1);
     ClassDB::bind_method(D_METHOD("load_level2", "seed"), &Controller::load_level2);
+    ClassDB::bind_method(D_METHOD("load_level_test_anchor", "seed"), &Controller::load_level_test_anchor);
 
     ClassDB::bind_method(D_METHOD("replay_level", "filename", "replay_mode"), &Controller::replay_level);
 
