@@ -4,35 +4,81 @@
 #include <godot_cpp/variant/utility_functions.hpp>
 #include <godot_cpp/classes/input.hpp>
 
+#include <sstream>
+
 // octopus
 #include "state/player/Player.hh"
+
+namespace
+{
+/// @brief convert double to string and avoid trailing 0
+std::string double_to_string(double const &val_p)
+{
+    std::stringstream ss_l;
+    ss_l << val_p;
+    return ss_l.str();
+}
+
+} // namespace
 
 namespace godot {
 
 Option::~Option()
 {}
 
+void Option::pushOption(octopus::TyppedBuff const &buff_p)
+{
+    std::stringstream ss_l;
+    if(buff_p._offset > 0)
+    {
+        ss_l << "+{1}\n";
+    }
+    if(buff_p._offset < 0)
+    {
+        ss_l << "{1}\n";
+    }
+    if(buff_p._coef > 0)
+    {
+        ss_l << "+{2}%\n";
+    }
+    if(buff_p._coef < 0)
+    {
+        ss_l << "{2}%\n";
+    }
+
+    _params.push_back(TypedArray<String>());
+    _params.back().append(octopus::to_string(buff_p._type).c_str());
+    _params.back().append(std::to_string(int(buff_p._offset)).c_str());
+    _params.back().append(std::to_string(int(buff_p._coef*100.)).c_str());
+
+    _stats_name.push_back(octopus::to_string(buff_p._type).c_str());
+    _desc.push_back(ss_l.str().c_str());
+}
 
 void Option::update(BuffOption const &option_p)
 {
-    _desc = "offset : {1}\ncoef : {2}%";
     _model_name = option_p._model.c_str();
     _modifier_name = "";
     _player = option_p._player;
 
-    _params.clear();
-    _params.append(octopus::to_string(option_p._buff._type).c_str());
-    _params.append(std::to_string(int(option_p._buff._offset)).c_str());
-    _params.append(std::to_string(int(option_p._buff._coef*100.)).c_str());
+    pushOption(option_p._buff);
+}
 
-    _stats_name = octopus::to_string(option_p._buff._type).c_str();
+void Option::update(DoubleBuffOption const &option_p)
+{
+    _model_name = option_p._model.c_str();
+    _modifier_name = "";
+    _player = option_p._player;
+
+    pushOption(option_p._buff1);
+    pushOption(option_p._buff2);
 }
 
 void Option::update(ModifierOption const &option_p)
 {
     _model_name = option_p._model.c_str();
     _player = option_p._player;
-    _stats_name = "";
+    _stats_name.push_back("");
 
     std::visit([&](auto &&arg) { this->updateFromModifier(arg); }, option_p._mod);
 }
@@ -40,79 +86,84 @@ void Option::update(ModifierOption const &option_p)
 void Option::updateFromModifier(octopus::NoModifier const &mod_p)
 {
     _modifier_name = "NoModifier";
-    _desc = "No modifier";
-    _params.clear();
+    _desc.push_back("No modifier");
 }
 
 void Option::updateFromModifier(octopus::AoEModifier const &mod_p)
 {
     _modifier_name = "AoEModifier";
-    _desc = "dmg : {0}\nrange : {1}";
-    _params.clear();
-    _params.append(std::to_string(mod_p._ratio*100.).c_str());
-    _params.append(std::to_string(octopus::to_double(mod_p._range)).c_str());
+    _desc.push_back("dmg : {0}%\nrange : {1}");
+    _params.push_back(TypedArray<String>());
+    _params.back().append(double_to_string(mod_p._ratio*100.).c_str());
+    _params.back().append(double_to_string(octopus::to_double(mod_p._range)).c_str());
 }
 
 void Option::updateFromModifier(octopus::ChainingModifier const &mod_p)
 {
     _modifier_name = "ChainingModifier";
-    _desc = "Chains : {0}\nDmg : {1}%\nRange : {2}";
-    _params.clear();
-    _params.append(std::to_string(mod_p._nbOfTicks).c_str());
-    _params.append(std::to_string(mod_p._ratio).c_str());
-    _params.append(std::to_string(mod_p._range).c_str());
+    _desc.push_back("Chains : {0}\nDmg : {1}%\nRange : {2}");
+    _params.push_back(TypedArray<String>());
+    _params.back().append(std::to_string(mod_p._nbOfTicks).c_str());
+    _params.back().append(double_to_string(mod_p._ratio*100).c_str());
+    _params.back().append(double_to_string(mod_p._range).c_str());
 }
 
 void Option::updateFromModifier(octopus::DotModifier const &mod_p)
 {
     _modifier_name = "DotModifier";
-    _desc = "Ticks : {0}\nTicks/s : {1}\nDmg : {2}";
-    _params.clear();
-    _params.append(std::to_string(mod_p._nbOfTicks).c_str());
-    _params.append(std::to_string(1./(mod_p._tickRate/100.)).c_str());
-    _params.append(std::to_string(mod_p._dmg).c_str());
+    _desc.push_back("Ticks : {0}\nTicks/s : {1}\nDmg : {2}");
+    _params.push_back(TypedArray<String>());
+    _params.back().append(std::to_string(mod_p._nbOfTicks).c_str());
+    _params.back().append(double_to_string(1./(mod_p._tickRate/100.)).c_str());
+    _params.back().append(double_to_string(mod_p._dmg).c_str());
 }
 
 void Option::updateFromModifier(octopus::LifeStealModifier const &mod_p)
 {
     _modifier_name = "LifeStealModifier";
-    _desc = "leach : {0}%";
-    _params.clear();
-    _params.append(std::to_string(mod_p._ratio*100.).c_str());
+    _desc.push_back("leach : {0}%");
+    _params.push_back(TypedArray<String>());
+    _params.back().append(double_to_string(mod_p._ratio*100.).c_str());
 }
 
 void Option::updateFromModifier(octopus::CompositeModifier const &mod_p)
 {
     _modifier_name = "CompositeModifier";
-    _desc = "NA";
-    _params.clear();
+    _desc.push_back("NA");
 }
 
 void Option::updateFromModifier(octopus::SelfDamageModifier const &mod_p)
 {
     _modifier_name = "SelfDamageModifier";
-    _desc = "NA";
-    _params.clear();
+    _desc.push_back("NA");
 }
 
 void Option::set_option(SingleOption const &option_p)
 {
+    _params.clear();
+    _desc.clear();
+    _stats_name.clear();
     std::visit([&](auto && arg) { update(arg); }, option_p);
 }
 
-TypedArray<String> Option::get_params() const
+int Option::get_nb_desc() const
 {
-    return _params;
+    return _desc.size();
 }
 
-String Option::get_desc() const
+TypedArray<String> Option::get_params(int i) const
 {
-    return _desc;
+    return _params.at(i);
 }
 
-String Option::get_stats_name() const
+String Option::get_desc(int i) const
 {
-    return _stats_name;
+    return _desc.at(i);
+}
+
+String Option::get_stats_name(int i) const
+{
+    return _stats_name.at(i);
 }
 
 String Option::get_model_name() const
@@ -134,9 +185,10 @@ void Option::_bind_methods()
 {
     UtilityFunctions::print("Binding Option methods");
 
-    ClassDB::bind_method(D_METHOD("get_params"), &Option::get_params);
-    ClassDB::bind_method(D_METHOD("get_desc"), &Option::get_desc);
-    ClassDB::bind_method(D_METHOD("get_stats_name"), &Option::get_stats_name);
+    ClassDB::bind_method(D_METHOD("get_nb_desc"), &Option::get_nb_desc);
+    ClassDB::bind_method(D_METHOD("get_params", "index"), &Option::get_params);
+    ClassDB::bind_method(D_METHOD("get_desc", "index"), &Option::get_desc);
+    ClassDB::bind_method(D_METHOD("get_stats_name", "index"), &Option::get_stats_name);
     ClassDB::bind_method(D_METHOD("get_model_name"), &Option::get_model_name);
     ClassDB::bind_method(D_METHOD("get_modifier_name"), &Option::get_modifier_name);
     ClassDB::bind_method(D_METHOD("get_player"), &Option::get_player);

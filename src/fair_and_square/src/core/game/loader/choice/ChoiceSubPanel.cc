@@ -161,6 +161,16 @@ void OneOptionPanel::update(BuffOption const &option_p)
     }
 }
 
+void OneOptionPanel::update(DoubleBuffOption const &option_p)
+{
+    // fast implemntation not very good
+    BuffOption opt_l;
+    opt_l._player = option_p._player;
+    opt_l._buff = option_p._buff1;
+    opt_l._model = option_p._model;
+    update(opt_l);
+}
+
 void OneOptionPanel::update(ModifierOption const &option_p)
 {
     delete _descriptionText; _descriptionText = nullptr;

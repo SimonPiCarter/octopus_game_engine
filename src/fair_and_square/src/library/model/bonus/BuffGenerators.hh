@@ -16,6 +16,14 @@ struct BuffOption
     std::string _model;
 };
 
+struct DoubleBuffOption
+{
+    unsigned long _player;
+    octopus::TyppedBuff _buff1;
+    octopus::TyppedBuff _buff2;
+    std::string _model;
+};
+
 struct ModifierOption
 {
     unsigned long _player;
@@ -23,7 +31,7 @@ struct ModifierOption
     std::string _model;
 };
 
-using SingleOption = std::variant<BuffOption, ModifierOption>;
+using SingleOption = std::variant<BuffOption, ModifierOption, DoubleBuffOption>;
 
 struct Option
 {

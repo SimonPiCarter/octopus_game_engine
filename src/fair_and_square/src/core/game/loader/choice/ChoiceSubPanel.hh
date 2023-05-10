@@ -29,6 +29,8 @@ public:
 
     /// @brief update the sub panel from the buff option
     void update(BuffOption const &option_p);
+    /// @brief update the sub panel from the double buff option
+    void update(DoubleBuffOption const &option_p);
     /// @brief update the sub panel from the modifier option
     void update(ModifierOption const &option_p);
 
