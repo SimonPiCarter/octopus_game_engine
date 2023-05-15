@@ -14,6 +14,7 @@ Entity::Entity(Vector const &pos_p, bool frozen_p, EntityModel const &model_p)
 	, _hp(model_p._hpMax)
 	, _reload(model_p._fullReload)
 	, _model(model_p)
+	, _attackMod(model_p._defaultAttackMod)
 {}
 
 bool Entity::isIgnoringCollision() const

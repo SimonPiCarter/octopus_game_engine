@@ -3,6 +3,7 @@
 
 #include <map>
 #include <unordered_map>
+#include "state/entity/attackModifier/AttackModifier.hh"
 #include "state/model/requirements/Requirements.hh"
 #include "state/ResourceType.hh"
 
@@ -15,6 +16,9 @@ namespace octopus
 		{}
 
 		virtual ~EntityModel() {}
+
+		/// @brief default modifier
+		AttackModifier  _defaultAttackMod {NoModifier()};
 
 		/// @brief if true is a static (in that case _ray is the width if the building)
 		/// buildings are squared
