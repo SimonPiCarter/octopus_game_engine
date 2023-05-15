@@ -107,6 +107,13 @@ public:
 	/// @note only accepts command matching the player (entity needs to match player)
 	void commitCommandAsPlayer(Command * cmd_p, unsigned long player_p);
 
+	/// @brief add a Command to the queued step
+	/// @note only accepts command matching the player (entity needs to match player)
+	void queueCommandAsPlayer(Command * cmd_p, unsigned long player_p);
+
+	/// @brief add a queued step layer
+	void addQueuedLayer();
+
 	/// @brief add a trigger on the ongoing step
 	void commitTrigger(Trigger * trigger_p);
 
@@ -159,6 +166,10 @@ private:
 	unsigned long _lastHandledStep {0};
 	/// @brief list of commit commands for every step
 	std::vector<std::list<Command *> *> _commitedCommands;
+	/// @brief list of queued commands for next steps
+	/// when a new element is added to commitedCommands it will pop the first
+	/// element of this list and use it
+	std::list<std::list<Command *> *> _queuedCommands;
 	/// @brief memory handling list (per step of adding in case of rewind)
 	std::vector<std::list<AbstractCommand const *>> _commands;
 	/// @brief list of all triggers (for memory management)

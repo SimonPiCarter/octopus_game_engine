@@ -127,6 +127,14 @@ Controller::~Controller()
 	{
 		delete cmds_l;
 	}
+	for(std::list<Command *> const *cmds_l : _queuedCommands)
+	{
+		for(Command const * cmd_l : *cmds_l)
+		{
+			delete cmd_l;
+		}
+		delete cmds_l;
+	}
 	for(std::list<AbstractCommand const *> const &cmds_l : _commands)
 	{
 		for(AbstractCommand const * cmd_l : cmds_l)
@@ -421,6 +429,27 @@ void Controller::commitCommandAsPlayer(Command * cmd_p, unsigned long player_p)
 	}
 }
 
+void Controller::queueCommandAsPlayer(Command * cmd_p, unsigned long player_p)
+{
+	if(_replayMode)
+	{
+		return;
+	}
+	// lock to avoid multi swap
+	std::lock_guard<std::mutex> lock_l(_mutex);
+	if(!_queuedCommands.empty() && cmd_p->checkPlayer(*_frontState->_state, player_p))
+	{
+		_queuedCommands.back()->push_back(cmd_p);
+	}
+}
+
+void Controller::addQueuedLayer()
+{
+	// lock to avoid multi swap
+	std::lock_guard<std::mutex> lock_l(_mutex);
+	_queuedCommands.push_back(new std::list<Command *>());
+}
+
 /// @brief add a trigger on the ongoing step
 void Controller::commitTrigger(Trigger * trigger_p)
 {
@@ -478,7 +507,16 @@ void Controller::updateCommitedCommand()
 		{
 			writeListOfCommand(*_of, _commitedCommands.back(), _commitedCommands.size()-1);
 		}
-		_commitedCommands.push_back(new std::list<Command *>());
+		if(_queuedCommands.empty())
+		{
+			_commitedCommands.push_back(new std::list<Command *>());
+		}
+		else
+		{
+			// use queued command
+			_commitedCommands.push_back(_queuedCommands.front());
+			_queuedCommands.pop_front();
+		}
 		_triggers.push_back(std::list<Trigger const *>());
 		_commands.push_back(std::list<AbstractCommand const *>());
 	}
