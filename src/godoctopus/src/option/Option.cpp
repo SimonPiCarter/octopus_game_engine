@@ -83,9 +83,27 @@ void Option::update(ModifierOption const &option_p)
     std::visit([&](auto &&arg) { this->updateFromModifier(arg); }, option_p._mod);
 }
 
+void Option::update(DivinityOption const &option_p)
+{
+    _modifier_name = "";
+    _model_name = "long_square";
+    _player = option_p._player;
+    _stats_name.push_back("");
+    _params.push_back(TypedArray<String>());
+    if(option_p._div == octopus::DivinityType::Divinity_1)
+    {
+        _desc.push_back("up tech I");
+    }
+    else if(option_p._div == octopus::DivinityType::Divinity_2)
+    {
+        _desc.push_back("up tech II");
+    }
+}
+
 void Option::updateFromModifier(octopus::NoModifier const &mod_p)
 {
     _modifier_name = "NoModifier";
+    _params.push_back(TypedArray<String>());
     _desc.push_back("No modifier");
 }
 

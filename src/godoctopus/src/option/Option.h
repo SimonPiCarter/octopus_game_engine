@@ -23,6 +23,7 @@ public:
     void update(BuffOption const &option_p);
     void update(DoubleBuffOption const &option_p);
     void update(ModifierOption const &option_p);
+    void update(DivinityOption const &option_p);
     void updateFromModifier(octopus::NoModifier const &mod_p);
     void updateFromModifier(octopus::AoEModifier const &mod_p);
     void updateFromModifier(octopus::ChainingModifier const &mod_p);

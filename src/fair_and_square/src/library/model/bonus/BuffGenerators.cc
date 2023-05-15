@@ -3,6 +3,7 @@
 #include "state/entity/attackModifier/AttackModifier.hh"
 #include "step/player/PlayerBuffAllStep.hh"
 #include "step/player/PlayerAttackModAllStep.hh"
+#include "step/player/PlayerLevelUpDivinityStep.hh"
 
 using namespace octopus;
 
@@ -20,6 +21,11 @@ void genStep(std::vector<Steppable *> &steppables_p, DoubleBuffOption const &opt
 void genStep(std::vector<Steppable *> &steppables_p, ModifierOption const &option_p)
 {
     steppables_p.push_back(new PlayerAttackModAllStep(option_p._player, option_p._mod, option_p._model));
+}
+
+void genStep(std::vector<Steppable *> &steppables_p, DivinityOption const &option_p)
+{
+    steppables_p.push_back(new PlayerLevelUpDivinityStep(option_p._player, option_p._div));
 }
 
 std::vector<Steppable *> BuffGenerator::getSteppables(unsigned long options_p) const
@@ -315,7 +321,16 @@ ModifierOption generateRandomModifierOption(unsigned long player_p, RandomGenera
 
 SingleOption generatePlayerOption(unsigned long player_p, octopus::RandomGenerator &gen_p, std::string const &id_p)
 {
-    int type_l = gen_p.roll(0, 4);
+    int type_l = gen_p.roll(0, 10);
+    if(type_l==0)
+    {
+        return DivinityOption {player_p, octopus::DivinityType::Divinity_1};
+    }
+    if(type_l==1)
+    {
+        return DivinityOption {player_p, octopus::DivinityType::Divinity_2};
+    }
+    type_l = gen_p.roll(0, 4);
     if(type_l==0)
     {
         return generateRandomModifierOption(player_p, gen_p);

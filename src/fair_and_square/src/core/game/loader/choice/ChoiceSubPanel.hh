@@ -29,10 +29,12 @@ public:
 
     /// @brief update the sub panel from the buff option
     void update(BuffOption const &option_p);
-    /// @brief update the sub panel from the double buff option
+    /// @brief update the sub panel from the double buff option (not implemented yet)
     void update(DoubleBuffOption const &option_p);
     /// @brief update the sub panel from the modifier option
     void update(ModifierOption const &option_p);
+    /// @brief update the sub panel from the div option (not implemented yet)
+    void update(DivinityOption const &divOption_p);
 
     void updateFromModifier(octopus::NoModifier const &mod_p);
     void updateFromModifier(octopus::AoEModifier const &mod_p);

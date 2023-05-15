@@ -4,6 +4,7 @@
 #include <variant>
 #include <vector>
 
+#include "state/DivinityType.hh"
 #include "state/player/StepOptionsGenerator.hh"
 #include "state/entity/Buff.hh"
 #include "state/entity/attackModifier/AttackModifier.hh"
@@ -31,7 +32,13 @@ struct ModifierOption
     std::string _model;
 };
 
-using SingleOption = std::variant<BuffOption, ModifierOption, DoubleBuffOption>;
+struct DivinityOption
+{
+    unsigned long _player;
+    octopus::DivinityType _div;
+};
+
+using SingleOption = std::variant<BuffOption, ModifierOption, DoubleBuffOption, DivinityOption>;
 
 struct Option
 {
