@@ -35,7 +35,7 @@ void add_move_commands(octopus::Controller &controller_p, octopus::State const &
         if(cmd_l)
         {
             cmd_l->setQueued(queued_p);
-            controller_p.commitCommandAsPlayer(cmd_l, player_p);
+            controller_p.queueCommandAsPlayer(cmd_l, player_p);
         }
     }
 }
@@ -50,7 +50,7 @@ void add_move_target_commands(octopus::Controller &controller_p, octopus::State 
         if(cmd_l)
         {
             cmd_l->setQueued(queued_p);
-            controller_p.commitCommandAsPlayer(cmd_l, player_p);
+            controller_p.queueCommandAsPlayer(cmd_l, player_p);
         }
     }
 }
@@ -69,7 +69,7 @@ void add_attack_move_commands(octopus::Controller &controller_p, octopus::State 
         }
         octopus::Command *cmd_l = new octopus::EntityAttackMoveCommand(idx_l, idx_l, octopus::Vector(target_p.x, target_p.y), 0, {octopus::Vector(target_p.x, target_p.y)}, true);
         cmd_l->setQueued(queued_p);
-        controller_p.commitCommandAsPlayer(cmd_l, player_p);
+        controller_p.queueCommandAsPlayer(cmd_l, player_p);
     }
 }
 
@@ -87,7 +87,7 @@ void add_stop_commands(octopus::Controller &controller_p, octopus::State const &
         }
         octopus::Command *cmd_l = new octopus::EntityWaitCommand(idx_l, idx_l);
         cmd_l->setQueued(queued_p);
-        controller_p.commitCommandAsPlayer(cmd_l, player_p);
+        controller_p.queueCommandAsPlayer(cmd_l, player_p);
     }
 }
 
@@ -160,14 +160,14 @@ void add_unit_build_command(octopus::Controller &controller_p, octopus::State co
         {
             octopus::BuildingUnitProductionCommand *cmd_l = new octopus::BuildingUnitProductionCommand(best_l, best_l, unit_l);
             cmd_l->setQueued(true);
-            controller_p.commitCommandAsPlayer(cmd_l, player_p);
+            controller_p.queueCommandAsPlayer(cmd_l, player_p);
         }
     }
 }
 
 void add_unit_build_cancel_command(octopus::Controller &controller_p, octopus::State const &state_p, int handle_p, int index_p, int player_p)
 {
-    controller_p.commitCommandAsPlayer(new octopus::BuildingUnitCancelCommand(handle_p, index_p), player_p);
+    controller_p.queueCommandAsPlayer(new octopus::BuildingUnitCancelCommand(handle_p, index_p), player_p);
 }
 
 void add_blueprint_command(octopus::Controller &controller_p, octopus::State const &state_p, octopus::Library const &lib_p, Vector2 const &target_p, String const &model_p, int player_p, TypedArray<int> const &builders_p)
@@ -182,7 +182,7 @@ void add_blueprint_command(octopus::Controller &controller_p, octopus::State con
 
     if(lib_p.hasBuildingModel(modelId_l))
     {
-        controller_p.commitCommandAsPlayer(new octopus::BuildingBlueprintCommand(octopus::Vector(target_p.x, target_p.y), player_p, lib_p.getBuildingModel(modelId_l), builders_l), player_p);
+        controller_p.queueCommandAsPlayer(new octopus::BuildingBlueprintCommand(octopus::Vector(target_p.x, target_p.y), player_p, lib_p.getBuildingModel(modelId_l), builders_l), player_p);
     }
 }
 

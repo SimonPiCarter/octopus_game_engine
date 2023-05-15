@@ -256,6 +256,7 @@ void Controller::init(std::list<octopus::Command *> const &commands_p, std::list
     UtilityFunctions::print("init controller...");
     delete _controller;
 	_controller = new octopus::Controller(spawners_p, 0.01, commands_p, 5, size_p);
+    _controller->addQueuedLayer();
 	_controller->enableORCA();
     UtilityFunctions::print("done");
 
@@ -361,9 +362,13 @@ void Controller::loop()
 
     UtilityFunctions::print("Playing...");
 
-	while(!_over)
+    // control if step is locked
+    bool lockStep_l = !_stepControl;
+
+    while(!_over)
 	{
-        if(!_paused)
+        lockStep_l = !_stepControl || _controller->getMetrics()._nbStepsCompiled < _stepDone;
+        if(!_paused && lockStep_l)
         {
             // update controller
             _controller->update(std::min(0.01, elapsed_l));
@@ -744,7 +749,7 @@ void Controller::add_building_cancel_command(int handle_p, int player_p)
 {
     if(!_paused && _state->getEntity(handle_p)->_model._isBuilding)
     {
-        _controller->commitCommandAsPlayer(new octopus::BuildingCancelCommand(handle_p), player_p);
+        _controller->queueCommandAsPlayer(new octopus::BuildingCancelCommand(handle_p), player_p);
     }
 }
 
@@ -752,8 +757,22 @@ void Controller::add_chose_option_command(int option_p, int player_p)
 {
     if(!_paused)
     {
-        _controller->commitCommandAsPlayer(getOptionManagers().at(player_p).newCommandFromOption(option_p), player_p);
+        _controller->queueCommandAsPlayer(getOptionManagers().at(player_p).newCommandFromOption(option_p), player_p);
     }
+}
+
+void Controller::setStepControl(int prequeued_p)
+{
+    for(int i = 0 ; i < prequeued_p-1 ; ++ i)
+    {
+        _controller->addQueuedLayer();
+    }
+}
+
+void Controller::nextStep()
+{
+    ++_stepDone;
+    _controller->addQueuedLayer();
 }
 
 void Controller::_bind_methods()
@@ -813,6 +832,9 @@ void Controller::_bind_methods()
     ClassDB::bind_method(D_METHOD("add_blueprint_command", "target", "model", "player", "builders"), &Controller::add_blueprint_command);
     ClassDB::bind_method(D_METHOD("add_building_cancel_command", "handle", "player"), &Controller::add_building_cancel_command);
     ClassDB::bind_method(D_METHOD("add_chose_option_command", "option_p", "player"), &Controller::add_chose_option_command);
+
+    ClassDB::bind_method(D_METHOD("setStepControl", "prequeued_p"), &Controller::setStepControl);
+    ClassDB::bind_method(D_METHOD("nextStep"), &Controller::nextStep);
 
     ADD_GROUP("Controller", "Controller_");
 

@@ -132,6 +132,10 @@ public:
     // option
     void add_chose_option_command(int option_p, int player_p);
 
+    // step
+    void setStepControl(int prequeued_p);
+    void nextStep();
+
     //// Non godot methods
     std::map<unsigned long, OptionManager> &getOptionManagers();
     std::map<unsigned long, OptionManager> const &getOptionManagers() const;
@@ -156,6 +160,11 @@ private:
 
     /// @brief manager for each player
     std::map<unsigned long, OptionManager> _optionManagers;
+
+    /// @brief if set to true controller loop will be capped by _stepDone
+    bool _stepControl = true;
+    /// @brief idx of last complete step so the controller can step by
+    int _stepDone = 0;
 };
 
 }
