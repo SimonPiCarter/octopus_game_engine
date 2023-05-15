@@ -53,6 +53,47 @@ void createSquare(Library &lib_p)
     lib_p.registerUnitModel("square", unitModel_l);
 }
 
+void createLongSquare(Library &lib_p)
+{
+    // square
+    UnitModel unitModel_l { false, 0.5, 0.025, 180. };
+    unitModel_l._isUnit = true;
+    unitModel_l._productionTime = 2500;
+    unitModel_l._cost[ResourceType::Food] = 100;
+    unitModel_l._cost[ResourceType::Steel] = 150;
+    unitModel_l._damage = 25;
+    unitModel_l._armor = 0;
+    unitModel_l._range = 8;
+    unitModel_l._lineOfSight = 10;
+    unitModel_l._fullReload = 200.;
+    unitModel_l._windup = 20;
+    unitModel_l._defaultAttackMod = AoEModifier(1., 3., false);
+
+    unitModel_l._requirements._divLvl[DivinityType::Divinity_1] = 1;
+
+    lib_p.registerUnitModel("long_square", unitModel_l);
+}
+
+void createReverseTriangle(Library &lib_p)
+{
+    // square
+    UnitModel unitModel_l { false, 0.5, 0.035, 90. };
+    unitModel_l._isUnit = true;
+    unitModel_l._productionTime = 2500;
+    unitModel_l._cost[ResourceType::Food] = 125;
+    unitModel_l._cost[ResourceType::Steel] = 110;
+    unitModel_l._damage = 50;
+    unitModel_l._armor = 0;
+    unitModel_l._range = 8;
+    unitModel_l._lineOfSight = 10;
+    unitModel_l._fullReload = 150.;
+    unitModel_l._windup = 20;
+
+    unitModel_l._requirements._divLvl[DivinityType::Divinity_2] = 1;
+
+    lib_p.registerUnitModel("reverse_triangle", unitModel_l);
+}
+
 void createTriangle(Library &lib_p)
 {
     // square
@@ -118,6 +159,8 @@ void createBarrack(Library &lib_p)
 	buildingModel_l._unitModels.push_back(&lib_p.getUnitModel("square"));
 	buildingModel_l._unitModels.push_back(&lib_p.getUnitModel("circle"));
 	buildingModel_l._unitModels.push_back(&lib_p.getUnitModel("triangle"));
+	buildingModel_l._unitModels.push_back(&lib_p.getUnitModel("long_square"));
+	buildingModel_l._unitModels.push_back(&lib_p.getUnitModel("reverse_triangle"));
 	buildingModel_l._buildingTime = 200;
 	buildingModel_l._cost[ResourceType::Steel] = 150;
 	lib_p.registerBuildingModel("barrack", buildingModel_l);
@@ -197,6 +240,8 @@ void loadModels(octopus::Library &lib_p)
 {
 	createWorker(lib_p);
 	createSquare(lib_p);
+	createLongSquare(lib_p);
+    createReverseTriangle(lib_p);
 	createTriangle(lib_p);
 	createCircle(lib_p);
 	createCommandCenter(lib_p);
