@@ -761,7 +761,7 @@ void Controller::add_chose_option_command(int option_p, int player_p)
     }
 }
 
-void Controller::setStepControl(int prequeued_p)
+void Controller::set_step_control(int prequeued_p)
 {
     for(int i = 0 ; i < prequeued_p-1 ; ++ i)
     {
@@ -769,10 +769,15 @@ void Controller::setStepControl(int prequeued_p)
     }
 }
 
-void Controller::nextStep()
+void Controller::next_step()
 {
     ++_stepDone;
     _controller->addQueuedLayer();
+}
+
+int Controller::get_queued_size() const
+{
+    return _controller->getQueuedSize();
 }
 
 void Controller::_bind_methods()
@@ -833,8 +838,9 @@ void Controller::_bind_methods()
     ClassDB::bind_method(D_METHOD("add_building_cancel_command", "handle", "player"), &Controller::add_building_cancel_command);
     ClassDB::bind_method(D_METHOD("add_chose_option_command", "option_p", "player"), &Controller::add_chose_option_command);
 
-    ClassDB::bind_method(D_METHOD("setStepControl", "prequeued_p"), &Controller::setStepControl);
-    ClassDB::bind_method(D_METHOD("nextStep"), &Controller::nextStep);
+    ClassDB::bind_method(D_METHOD("set_step_control", "prequeued_p"), &Controller::set_step_control);
+    ClassDB::bind_method(D_METHOD("next_step"), &Controller::next_step);
+    ClassDB::bind_method(D_METHOD("get_queued_size"), &Controller::get_queued_size);
 
     ADD_GROUP("Controller", "Controller_");
 

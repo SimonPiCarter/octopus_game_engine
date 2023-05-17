@@ -133,8 +133,12 @@ public:
     void add_chose_option_command(int option_p, int player_p);
 
     // step
-    void setStepControl(int prequeued_p);
-    void nextStep();
+    /// @brief set the number of queued layer to be setup
+    void set_step_control(int prequeued_p);
+    /// @brief allow controller to proceed to next step while adding a queued layer
+    void next_step();
+    /// @brief get the size of the queued layers
+    int get_queued_size() const;
 
     //// Non godot methods
     std::map<unsigned long, OptionManager> &getOptionManagers();
