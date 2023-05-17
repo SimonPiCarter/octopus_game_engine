@@ -58,6 +58,7 @@ target_sources (unit_tests
 	src/stepOptionsGenerator.test.cc
 	src/triggerBuilding.test.cc
 	src/triggerTime.test.cc
+	src/triggerUnitDied.test.cc
 	src/triggerUnitSpawn.test.cc
 	src/unitProductionCommand.test.cc
 	src/visionGridMoveStep.test.cc
