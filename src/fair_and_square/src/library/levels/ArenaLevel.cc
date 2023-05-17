@@ -84,6 +84,8 @@ std::list<octopus::Steppable *> ArenaLevelSteps(octopus::Library &lib_p, std::ve
 		new PlayerSpawnStep(1, 1),
 		new TeamVisionStep(0, pattern_l, true, false),
 		new TeamVisionStep(0, pattern_l, true, true),
+		new TeamVisionStep(1, pattern_l, true, false),
+		new TeamVisionStep(1, pattern_l, true, true),
 	};
 
 	unsigned long id_l = 0;
