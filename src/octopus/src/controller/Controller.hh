@@ -114,6 +114,9 @@ public:
 	/// @brief add a queued step layer
 	void addQueuedLayer();
 
+	/// @brief get the queued layer command size
+	size_t getQueuedSize() const;
+
 	/// @brief add a trigger on the ongoing step
 	void commitTrigger(Trigger * trigger_p);
 

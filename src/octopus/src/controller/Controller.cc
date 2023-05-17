@@ -450,6 +450,11 @@ void Controller::addQueuedLayer()
 	_queuedCommands.push_back(new std::list<Command *>());
 }
 
+size_t Controller::getQueuedSize() const
+{
+	return _queuedCommands.size();
+}
+
 /// @brief add a trigger on the ongoing step
 void Controller::commitTrigger(Trigger * trigger_p)
 {
