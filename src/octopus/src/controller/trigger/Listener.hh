@@ -1,6 +1,7 @@
 #ifndef __Listener__
 #define __Listener__
 
+#include <unordered_set>
 #include <vector>
 #include "state/Handle.hh"
 
@@ -102,6 +103,21 @@ public:
 
 	EntityModel const * const _model;
 	unsigned long const _player;
+};
+
+/// @brief listener that triggers when all entities from the given group have died
+class ListenerEntityDied : public ListenerEntity
+{
+public:
+	ListenerEntityDied(std::unordered_set<Handle> const handles_p) :
+		_handles(handles_p) {}
+
+	/// @brief compile listener steps based on events in controller
+	/// @param count_p if set to true will count the number of time completed
+	virtual void compile(EventCollection const &controller_p, Step &step_p, bool count_p, ListenerData const &data_p) const override;
+
+	/// @brief the handles that triggers when they are all dead
+	std::unordered_set<Handle> const _handles;
 };
 
 /// @brief

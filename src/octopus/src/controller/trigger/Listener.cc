@@ -4,6 +4,7 @@
 #include "controller/event/EventEntityModelDied.hh"
 #include "controller/event/EventEntityModelFinished.hh"
 
+#include "state/entity/Entity.hh"
 #include "step/Step.hh"
 #include "step/trigger/TriggerCountChange.hh"
 #include "step/trigger/TriggerStepCountChange.hh"
@@ -69,6 +70,25 @@ void ListenerEntityModelDied::compile(EventCollection const &controller_p, Step 
 		}
 	}
 	step_p.addSteppable(new TriggerCountChange(data_p._triggerHandle, data_p._listenerHandle, data_p._count, data_p._count+count_l));
+}
+
+void ListenerEntityDied::compile(EventCollection const &controller_p, Step &step_p, bool count_p, ListenerData const &data_p) const
+{
+	ListenerEntityData const &entData_l = static_cast<ListenerEntityData const &>(data_p);
+	unsigned long count_l = 0;
+	for(EventEntityModelDied const *event_l : controller_p._listEventEntityModelDied)
+	{
+		// handle comparison
+		if(_handles.find(event_l->_entity._handle) != _handles.end())
+		{
+			step_p.addSteppable(new TriggerEntityAddStep(data_p._triggerHandle, data_p._listenerHandle, &event_l->_entity));
+			++count_l;
+		}
+	}
+	if(entData_l._entities.size() + count_l == _handles.size() )
+	{
+		step_p.addSteppable(new TriggerCountChange(data_p._triggerHandle, data_p._listenerHandle, data_p._count, data_p._count+1));
+	}
 }
 
 void ListenerEntityModelFinished::compile(EventCollection const &controller_p, Step &step_p, bool count_p, ListenerData const &data_p) const
