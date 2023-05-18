@@ -412,7 +412,7 @@ octopus::Player const * Controller::getPlayer(int player_p) const
 void Controller::spawn(int handle_p)
 {
 	octopus::Entity const &entity_l = *_state->getEntity(handle_p);
-    emit_signal("spawn_unit", handle_p, entity_l._model._id.c_str(), Vector2(octopus::to_double(entity_l._pos.x), octopus::to_double(entity_l._pos.y)), entity_l._model._ray);
+    emit_signal("spawn_unit", handle_p, entity_l._model._id.c_str(), Vector2(octopus::to_double(entity_l._pos.x), octopus::to_double(entity_l._pos.y)), octopus::to_double(entity_l._model._ray));
 }
 
 void Controller::move(int handle_p)
@@ -509,27 +509,27 @@ int Controller::get_team(int player_p) const
 float Controller::get_steel(int player_p) const
 {
     octopus::Player const *player_l = _state->getPlayer(player_p);
-    return octopus::getResource(*player_l, octopus::ResourceType::Steel);
+    return octopus::to_double(octopus::getResource(*player_l, octopus::ResourceType::Steel));
 }
 float Controller::get_food(int player_p) const
 {
     octopus::Player const *player_l = _state->getPlayer(player_p);
-    return octopus::getResource(*player_l, octopus::ResourceType::Food);
+    return octopus::to_double(octopus::getResource(*player_l, octopus::ResourceType::Food));
 }
 float Controller::get_gas(int player_p) const
 {
     octopus::Player const *player_l = _state->getPlayer(player_p);
-    return octopus::getResource(*player_l, octopus::ResourceType::Gas);
+    return octopus::to_double(octopus::getResource(*player_l, octopus::ResourceType::Gas));
 }
 float Controller::get_anchor(int player_p) const
 {
     octopus::Player const *player_l = _state->getPlayer(player_p);
-    return octopus::getResource(*player_l, octopus::ResourceType::Anchor);
+    return octopus::to_double(octopus::getResource(*player_l, octopus::ResourceType::Anchor));
 }
 float Controller::get_ether(int player_p) const
 {
     octopus::Player const *player_l = _state->getPlayer(player_p);
-    return octopus::getResource(*player_l, octopus::ResourceType::Ether);
+    return octopus::to_double(octopus::getResource(*player_l, octopus::ResourceType::Ether));
 }
 
 bool Controller::is_visible(int x, int y, int player_p) const
@@ -652,7 +652,7 @@ void Controller::get_productions(TypedArray<int> const &handles_p, int max_p)
 	{
         CommandInfo const &info_l = vecCommands_l[i];
         String model_l(info_l.cmd->getModel()._id.c_str());
-        float progress_l = 100.f*vecCommands_l[i].data->_progression/vecCommands_l[i].data->_completeTime;
+        float progress_l = octopus::to_double(vecCommands_l[i].data->_progression/vecCommands_l[i].data->_completeTime*100.);
         emit_signal("production_command", int(info_l.cmd->getHandleCommand()), int(info_l.idx), model_l, progress_l);
 	}
 }

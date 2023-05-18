@@ -103,7 +103,7 @@ unsigned long remainingQueueTime(octopus::Building const &building_p)
 			octopus::UnitProductionData const *data_l = dynamic_cast<octopus::UnitProductionData const *>(getData(bundle_l._var));
 			if(data_l && data_l->_completeTime > data_l->_progression)
 			{
-				time_l += data_l->_completeTime - data_l->_progression;
+				time_l += data_l->_completeTime - octopus::to_uint(data_l->_progression);
 			}
 		}
 	}

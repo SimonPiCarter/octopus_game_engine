@@ -48,8 +48,8 @@ void Option::pushOption(octopus::TyppedBuff const &buff_p)
 
     _params.push_back(TypedArray<String>());
     _params.back().append(octopus::to_string(buff_p._type).c_str());
-    _params.back().append(std::to_string(int(buff_p._offset)).c_str());
-    _params.back().append(std::to_string(int(buff_p._coef*100.)).c_str());
+    _params.back().append(std::to_string(octopus::to_int(buff_p._offset)).c_str());
+    _params.back().append(std::to_string(octopus::to_int(buff_p._coef*100.)).c_str());
 
     _stats_name.push_back(octopus::to_string(buff_p._type).c_str());
     _desc.push_back(ss_l.str().c_str());
@@ -112,7 +112,7 @@ void Option::updateFromModifier(octopus::AoEModifier const &mod_p)
     _modifier_name = "AoEModifier";
     _desc.push_back("dmg : {0}%\nrange : {1}");
     _params.push_back(TypedArray<String>());
-    _params.back().append(double_to_string(mod_p._ratio*100.).c_str());
+    _params.back().append(double_to_string(octopus::to_double(mod_p._ratio*100.)).c_str());
     _params.back().append(double_to_string(octopus::to_double(mod_p._range)).c_str());
 }
 
@@ -122,8 +122,8 @@ void Option::updateFromModifier(octopus::ChainingModifier const &mod_p)
     _desc.push_back("Chains : {0}\nDmg : {1}%\nRange : {2}");
     _params.push_back(TypedArray<String>());
     _params.back().append(std::to_string(mod_p._nbOfTicks).c_str());
-    _params.back().append(double_to_string(mod_p._ratio*100).c_str());
-    _params.back().append(double_to_string(mod_p._range).c_str());
+    _params.back().append(double_to_string(octopus::to_double(mod_p._ratio*100)).c_str());
+    _params.back().append(double_to_string(octopus::to_double(mod_p._range)).c_str());
 }
 
 void Option::updateFromModifier(octopus::DotModifier const &mod_p)
@@ -132,8 +132,8 @@ void Option::updateFromModifier(octopus::DotModifier const &mod_p)
     _desc.push_back("Ticks : {0}\nTicks/s : {1}\nDmg : {2}");
     _params.push_back(TypedArray<String>());
     _params.back().append(std::to_string(mod_p._nbOfTicks).c_str());
-    _params.back().append(double_to_string(1./(mod_p._tickRate/100.)).c_str());
-    _params.back().append(double_to_string(mod_p._dmg).c_str());
+    _params.back().append(double_to_string(octopus::to_double(1./(mod_p._tickRate/100.))).c_str());
+    _params.back().append(double_to_string(octopus::to_double(mod_p._dmg)).c_str());
 }
 
 void Option::updateFromModifier(octopus::LifeStealModifier const &mod_p)
@@ -141,7 +141,7 @@ void Option::updateFromModifier(octopus::LifeStealModifier const &mod_p)
     _modifier_name = "LifeStealModifier";
     _desc.push_back("leach : {0}%");
     _params.push_back(TypedArray<String>());
-    _params.back().append(double_to_string(mod_p._ratio*100.).c_str());
+    _params.back().append(double_to_string(octopus::to_double(mod_p._ratio*100.)).c_str());
 }
 
 void Option::updateFromModifier(octopus::CompositeModifier const &mod_p)

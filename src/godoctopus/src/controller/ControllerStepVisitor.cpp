@@ -93,9 +93,9 @@ void ControllerStepVisitor::visit(octopus::CommandHarvestTimeSinceHarvestStep co
 void ControllerStepVisitor::visit(octopus::EntityHitPointChangeStep const *steppable_p)
 {
 	octopus::Entity const * ent_l = _state->getEntity(steppable_p->_handle);
-	double hp_l = ent_l->_hp;
+	double hp_l = octopus::to_double(ent_l->_hp);
 	// warning when we have deleted it already (can happens when multiple change step in one step)
-	_controller.hp_change(steppable_p->_handle, ent_l->_hp/ent_l->getHpMax());
+	_controller.hp_change(steppable_p->_handle, octopus::to_double(ent_l->_hp/ent_l->getHpMax()));
 	if(!ent_l->_alive)
 	{
 		_controller.kill(steppable_p->_handle);
@@ -111,7 +111,7 @@ void ControllerStepVisitor::visit(octopus::BuildingStep const *steppable_p)
 {
 	octopus::Entity const * ent_l = _state->getEntity(steppable_p->_handle);
 	octopus::Building const * building_l = static_cast<octopus::Building const *>(ent_l);
-	_controller.emit_signal("build", int(steppable_p->_handle), float(building_l->_buildingProgress/building_l->_buildingModel._buildingTime));
+	_controller.emit_signal("build", int(steppable_p->_handle), octopus::to_double(building_l->_buildingProgress/building_l->_buildingModel._buildingTime));
 }
 
 void ControllerStepVisitor::visit(octopus::PlayerAddOptionDivinityStep const *steppable_p)

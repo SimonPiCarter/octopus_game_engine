@@ -112,25 +112,25 @@ String Entity::get_model(Controller const *controller_p) const
 float Entity::get_damage(Controller const *controller_p) const
 {
     octopus::Entity const *ent_l = controller_p->getEntity(_handle);
-    return ent_l->getDamageNoBonus();
+    return octopus::to_double(ent_l->getDamageNoBonus());
 }
 
 float Entity::get_armor(Controller const *controller_p) const
 {
     octopus::Entity const *ent_l = controller_p->getEntity(_handle);
-    return ent_l->getArmor();
+    return octopus::to_double(ent_l->getArmor());
 }
 
 float Entity::get_speed(Controller const *controller_p) const
 {
     octopus::Entity const *ent_l = controller_p->getEntity(_handle);
-    return ent_l->getStepSpeed()*100;
+    return octopus::to_double(ent_l->getStepSpeed()*100);
 }
 
 float Entity::get_reload(Controller const *controller_p) const
 {
     octopus::Entity const *ent_l = controller_p->getEntity(_handle);
-    return 100./ent_l->getFullReload();
+    return octopus::to_double(100./ent_l->getFullReload());
 }
 
 bool Entity::has_rally_point(Controller const *controller_p) const
@@ -177,7 +177,7 @@ float Entity::get_resource_quantity(Controller const *controller_p) const
         return 0.;
     }
     octopus::Resource const *res_l = static_cast<octopus::Resource const *>(ent_l);
-    return res_l->_resource;
+    return octopus::to_double(res_l->_resource);
 }
 
 void Entity::_bind_methods()
