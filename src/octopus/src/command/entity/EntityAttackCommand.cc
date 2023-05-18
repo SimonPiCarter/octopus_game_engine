@@ -16,6 +16,7 @@
 #include "step/entity/EntityMoveStep.hh"
 #include "step/entity/EntityFrozenStep.hh"
 #include "step/entity/EntityUpdateWaitingStep.hh"
+#include "utils/Fixed.hh"
 
 
 namespace octopus
@@ -64,7 +65,7 @@ bool EntityAttackCommand::applyCommand(Step & step_p, State const &state_p, Comm
 
 	Entity const * entSource_l = state_p.getEntity(_source);
 	Entity const * entTarget_l = state_p.getEntity(curTarget_l);
-
+	Logger::getDebug() << "reload" <<entSource_l->_reload<<" / "<<entSource_l->getFullReload().data() << std::endl;
 	// If not in range we move to the target
 	// if windup started we skip this
 	if(!inRange(state_p, curTarget_l) && windup_l == 0)
@@ -76,7 +77,7 @@ bool EntityAttackCommand::applyCommand(Step & step_p, State const &state_p, Comm
 		Fixed sqDistance_l = square_length(dir_l);
 		// range squared (+ ray of target), we do not add ray of source because we might stop earlier to attack anyway plus move command
 		// stops as soon as source touch target point
-		Fixed sqRange_l = (entSource_l->_model._range + entTarget_l->_model._ray) * (entSource_l->_model._range +  + entTarget_l->_model._ray);
+		Fixed sqRange_l = (entSource_l->_model._range + entTarget_l->_model._ray) * (entSource_l->_model._range + entTarget_l->_model._ray);
 		// ratio of direction to keep (square rooted)
 		Fixed ratio_l = numeric::square_root(sqRange_l/sqDistance_l);
 
@@ -102,7 +103,7 @@ bool EntityAttackCommand::applyCommand(Step & step_p, State const &state_p, Comm
 
 		/// @todo if no closer target try to move randomly (orthogonal move)
 
-		Logger::getDebug() << "\t\tEntityAttackCommand:: adding move step "<< _source << " target " << closest_l << " speed " <<entSource_l->getStepSpeed()<<std::endl;
+		Logger::getDebug() << "\t\tEntityAttackCommand:: adding move step "<< _source << " target " << closest_l.x.to_double()<<";"<<closest_l.y.to_double() << " speed " <<entSource_l->getStepSpeed().to_double()<<std::endl;
 		// add move command
 		step_p.addEntityMoveStep(new EntityMoveStep(createEntityMoveStep(*entSource_l, closest_l, entSource_l->getStepSpeed())));
 	}

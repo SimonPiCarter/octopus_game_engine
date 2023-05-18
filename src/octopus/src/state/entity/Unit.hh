@@ -17,7 +17,7 @@ class Unit : public Entity
 
 		/// used when harvesting
 		ResourceType _typeOfResource { ResourceType::Food };
-		double _quantityOfResource { 0. };
+		Fixed _quantityOfResource { 0. };
 
 		UnitModel const &_unitModel;
 

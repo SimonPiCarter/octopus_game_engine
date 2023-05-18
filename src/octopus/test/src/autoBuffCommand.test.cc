@@ -88,11 +88,11 @@ TEST(autoBuffCommandTest, simple)
 	EXPECT_NEAR(3., to_double(state_l->getEntity(0)->_pos.y), 1e-5);
 
 	// not buffed
-	EXPECT_NEAR(1., state_l->getEntity(0)->getStepSpeed(), 1e-5);
-	EXPECT_NEAR(1., state_l->getEntity(1)->getStepSpeed(), 1e-5);
-	EXPECT_NEAR(1., state_l->getEntity(2)->getStepSpeed(), 1e-5);
-	EXPECT_NEAR(1., state_l->getEntity(3)->getStepSpeed(), 1e-5);
-	EXPECT_NEAR(1., state_l->getEntity(4)->getStepSpeed(), 1e-5);
+	EXPECT_NEAR(1., to_double(state_l->getEntity(0)->getStepSpeed()), 1e-5);
+	EXPECT_NEAR(1., to_double(state_l->getEntity(1)->getStepSpeed()), 1e-5);
+	EXPECT_NEAR(1., to_double(state_l->getEntity(2)->getStepSpeed()), 1e-5);
+	EXPECT_NEAR(1., to_double(state_l->getEntity(3)->getStepSpeed()), 1e-5);
+	EXPECT_NEAR(1., to_double(state_l->getEntity(4)->getStepSpeed()), 1e-5);
 
 	// update time to 1 second (3)
 	// one step to apply it (during ticking step)
@@ -104,12 +104,12 @@ TEST(autoBuffCommandTest, simple)
 	state_l = controller_l.queryState();
 
 	// ent2 should be buffed
-	EXPECT_NEAR(4., state_l->getEntity(1)->getStepSpeed(), 1e-5);
+	EXPECT_NEAR(4., to_double(state_l->getEntity(1)->getStepSpeed()), 1e-5);
 	// not buffed
-	EXPECT_NEAR(1., state_l->getEntity(0)->getStepSpeed(), 1e-5);
-	EXPECT_NEAR(1., state_l->getEntity(2)->getStepSpeed(), 1e-5);
-	EXPECT_NEAR(1., state_l->getEntity(3)->getStepSpeed(), 1e-5);
-	EXPECT_NEAR(1., state_l->getEntity(4)->getStepSpeed(), 1e-5);
+	EXPECT_NEAR(1., to_double(state_l->getEntity(0)->getStepSpeed()), 1e-5);
+	EXPECT_NEAR(1., to_double(state_l->getEntity(2)->getStepSpeed()), 1e-5);
+	EXPECT_NEAR(1., to_double(state_l->getEntity(3)->getStepSpeed()), 1e-5);
+	EXPECT_NEAR(1., to_double(state_l->getEntity(4)->getStepSpeed()), 1e-5);
 
 	// update time to 2 second (5)
 	// 3 steps to relaod buff
@@ -123,12 +123,12 @@ TEST(autoBuffCommandTest, simple)
 	state_l = controller_l.queryState();
 
 	// ent2 should be buffed
-	EXPECT_NEAR(4., state_l->getEntity(1)->getStepSpeed(), 1e-5);
+	EXPECT_NEAR(4., to_double(state_l->getEntity(1)->getStepSpeed()), 1e-5);
 	// not buffed
-	EXPECT_NEAR(1., state_l->getEntity(0)->getStepSpeed(), 1e-5);
-	EXPECT_NEAR(1., state_l->getEntity(2)->getStepSpeed(), 1e-5);
-	EXPECT_NEAR(1., state_l->getEntity(3)->getStepSpeed(), 1e-5);
-	EXPECT_NEAR(1., state_l->getEntity(4)->getStepSpeed(), 1e-5);
+	EXPECT_NEAR(1., to_double(state_l->getEntity(0)->getStepSpeed()), 1e-5);
+	EXPECT_NEAR(1., to_double(state_l->getEntity(2)->getStepSpeed()), 1e-5);
+	EXPECT_NEAR(1., to_double(state_l->getEntity(3)->getStepSpeed()), 1e-5);
+	EXPECT_NEAR(1., to_double(state_l->getEntity(4)->getStepSpeed()), 1e-5);
 
 	// update time to 1 second (6)
 	// one step to apply it (during ticking step)
@@ -140,12 +140,12 @@ TEST(autoBuffCommandTest, simple)
 	state_l = controller_l.queryState();
 
 	// ent2 & ent3 should be buffed
-	EXPECT_NEAR(4., state_l->getEntity(1)->getStepSpeed(), 1e-5);
-	EXPECT_NEAR(4., state_l->getEntity(2)->getStepSpeed(), 1e-5);
+	EXPECT_NEAR(4., to_double(state_l->getEntity(1)->getStepSpeed()), 1e-5);
+	EXPECT_NEAR(4., to_double(state_l->getEntity(2)->getStepSpeed()), 1e-5);
 	// not buffed
-	EXPECT_NEAR(1., state_l->getEntity(0)->getStepSpeed(), 1e-5);
-	EXPECT_NEAR(1., state_l->getEntity(3)->getStepSpeed(), 1e-5);
-	EXPECT_NEAR(1., state_l->getEntity(4)->getStepSpeed(), 1e-5);
+	EXPECT_NEAR(1., to_double(state_l->getEntity(0)->getStepSpeed()), 1e-5);
+	EXPECT_NEAR(1., to_double(state_l->getEntity(3)->getStepSpeed()), 1e-5);
+	EXPECT_NEAR(1., to_double(state_l->getEntity(4)->getStepSpeed()), 1e-5);
 
 	// update time to 4 second (10)
 	controller_l.update(4.);
@@ -156,12 +156,12 @@ TEST(autoBuffCommandTest, simple)
 	state_l = controller_l.queryState();
 
 	// ent2 & ent3 should be buffed
-	EXPECT_NEAR(4., state_l->getEntity(1)->getStepSpeed(), 1e-5);
-	EXPECT_NEAR(4., state_l->getEntity(2)->getStepSpeed(), 1e-5);
+	EXPECT_NEAR(4., to_double(state_l->getEntity(1)->getStepSpeed()), 1e-5);
+	EXPECT_NEAR(4., to_double(state_l->getEntity(2)->getStepSpeed()), 1e-5);
 	// not buffed
-	EXPECT_NEAR(1., state_l->getEntity(0)->getStepSpeed(), 1e-5);
-	EXPECT_NEAR(1., state_l->getEntity(3)->getStepSpeed(), 1e-5);
-	EXPECT_NEAR(1., state_l->getEntity(4)->getStepSpeed(), 1e-5);
+	EXPECT_NEAR(1., to_double(state_l->getEntity(0)->getStepSpeed()), 1e-5);
+	EXPECT_NEAR(1., to_double(state_l->getEntity(3)->getStepSpeed()), 1e-5);
+	EXPECT_NEAR(1., to_double(state_l->getEntity(4)->getStepSpeed()), 1e-5);
 
 	// update time to 20 second (30)
 	controller_l.update(20.);
@@ -172,10 +172,10 @@ TEST(autoBuffCommandTest, simple)
 	state_l = controller_l.queryState();
 
 	// ent2 & ent3 should be buffed (reload is enough)
-	EXPECT_NEAR(4., state_l->getEntity(1)->getStepSpeed(), 1e-5);
-	EXPECT_NEAR(4., state_l->getEntity(2)->getStepSpeed(), 1e-5);
+	EXPECT_NEAR(4., to_double(state_l->getEntity(1)->getStepSpeed()), 1e-5);
+	EXPECT_NEAR(4., to_double(state_l->getEntity(2)->getStepSpeed()), 1e-5);
 	// not buffed
-	EXPECT_NEAR(1., state_l->getEntity(0)->getStepSpeed(), 1e-5);
-	EXPECT_NEAR(1., state_l->getEntity(3)->getStepSpeed(), 1e-5);
-	EXPECT_NEAR(1., state_l->getEntity(4)->getStepSpeed(), 1e-5);
+	EXPECT_NEAR(1., to_double(state_l->getEntity(0)->getStepSpeed()), 1e-5);
+	EXPECT_NEAR(1., to_double(state_l->getEntity(3)->getStepSpeed()), 1e-5);
+	EXPECT_NEAR(1., to_double(state_l->getEntity(4)->getStepSpeed()), 1e-5);
 }

@@ -15,12 +15,12 @@ class Steppable;
 class AoEModifier
 {
 public:
-    AoEModifier(double ratio_p, Fixed const &range_p, bool friendlyFire_p=false) : _ratio(ratio_p), _range(range_p), _friendlyFire(friendlyFire_p) {}
+    AoEModifier(Fixed ratio_p, Fixed const &range_p, bool friendlyFire_p=false) : _ratio(ratio_p), _range(range_p), _friendlyFire(friendlyFire_p) {}
 
 	/// @brief create a new attack steppable
 	void newAttackSteppable(std::vector<Steppable *> &vec_r, const Entity &ent_p, const Entity &target_p, State const &state_p, Step const &step_p, bool disableMainAttack_p=false) const;
 
-    double _ratio;
+    Fixed _ratio;
     Fixed _range;
     bool _friendlyFire;
 };

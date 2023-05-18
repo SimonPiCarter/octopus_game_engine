@@ -69,10 +69,10 @@ void TyppedBuff::apply(Entity &ent_p) const
 			break;
 		case Type::HpMax:
 		{
-			double hpMax_l = ent_p.getHpMax();
+			Fixed hpMax_l = ent_p.getHpMax();
 			ent_p._buffHpMax._offset += _offset;
 			ent_p._buffHpMax._coef += _coef;
-			double newHpMax_l = ent_p.getHpMax();
+			Fixed newHpMax_l = ent_p.getHpMax();
 			ent_p._hp += newHpMax_l - hpMax_l;
 			break;
 		}
@@ -109,10 +109,10 @@ void TyppedBuff::revert(Entity &ent_p) const
 			break;
 		case Type::HpMax:
 		{
-			double hpMax_l = ent_p.getHpMax();
+			Fixed hpMax_l = ent_p.getHpMax();
 			ent_p._buffHpMax._offset -= _offset;
 			ent_p._buffHpMax._coef -= _coef;
-			double newHpMax_l = ent_p.getHpMax();
+			Fixed newHpMax_l = ent_p.getHpMax();
 			ent_p._hp += newHpMax_l - hpMax_l;
 			break;
 		}

@@ -13,13 +13,13 @@ namespace octopus
 class DamageOverTime : public CommandEffectOverTime
 {
 public:
-    DamageOverTime(Handle handle_p, unsigned long tickRate_p, unsigned long nbOfTicks_p, double dmg_p, Handle ent_p)
+    DamageOverTime(Handle handle_p, unsigned long tickRate_p, unsigned long nbOfTicks_p, Fixed dmg_p, Handle ent_p)
         : CommandEffectOverTime(handle_p, tickRate_p, nbOfTicks_p), _dmg(dmg_p), _ent(ent_p) {}
 
 	virtual void applyEffect(Step & step_p, State const &state_p, CommandData const * , PathManager &) const override;
 protected:
     /// @brief damage per tick
-    double const _dmg;
+    Fixed const _dmg;
     /// @brief the handle of entity to deal damage to
     Handle const _ent;
 };

@@ -13,7 +13,7 @@ class Resource : public Entity
 		Resource(Vector const &pos_p, bool frozen_p, EntityModel const &model_p);
 
 		ResourceType _type { ResourceType::Food };
-		double _resource {0.};
+		Fixed _resource {0.};
 };
 
 }

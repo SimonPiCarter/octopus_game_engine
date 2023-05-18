@@ -56,7 +56,7 @@ TEST(moveCommandTest, simple)
 	EntityMoveStep * entStep_l = *step_l.getEntityMoveStep().begin();
 
 	Vector expected_l {1., 0};
-	EXPECT_TRUE(expected_l == entStep_l->_move) << "expected : "<<expected_l<<" real : "<<entStep_l->_move;
+	EXPECT_TRUE(expected_l == entStep_l->_move);// << "expected : "<<expected_l<<" real : "<<entStep_l->_move;
 
 	apply(step_l, state_l, stepData_l);
 

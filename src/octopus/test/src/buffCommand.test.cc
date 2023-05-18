@@ -32,7 +32,7 @@ TEST(buffCommandTest, simple_speed)
 	// query state
 	State const * state_l = controller_l.queryState();
 
-	EXPECT_NEAR(1., state_l->getEntity(0)->getStepSpeed(), 1e-5);
+	EXPECT_NEAR(1., to_double(state_l->getEntity(0)->getStepSpeed()), 1e-5);
 
 	// update time to 1second (1)
 	// buf has registered but not been applied yet
@@ -43,7 +43,7 @@ TEST(buffCommandTest, simple_speed)
 
 	state_l = controller_l.queryState();
 
-	EXPECT_NEAR(1., state_l->getEntity(0)->getStepSpeed(), 1e-5);
+	EXPECT_NEAR(1., to_double(state_l->getEntity(0)->getStepSpeed()), 1e-5);
 
 	// update time to 1 seconds (2)
 	// buff has been applied
@@ -54,7 +54,7 @@ TEST(buffCommandTest, simple_speed)
 
 	state_l = controller_l.queryState();
 
-	EXPECT_NEAR(2., state_l->getEntity(0)->getStepSpeed(), 1e-5);
+	EXPECT_NEAR(2., to_double(state_l->getEntity(0)->getStepSpeed()), 1e-5);
 
 	// update time to 4 seconds (6)
 	// buff is still active
@@ -65,7 +65,7 @@ TEST(buffCommandTest, simple_speed)
 
 	state_l = controller_l.queryState();
 
-	EXPECT_NEAR(2., state_l->getEntity(0)->getStepSpeed(), 1e-5);
+	EXPECT_NEAR(2., to_double(state_l->getEntity(0)->getStepSpeed()), 1e-5);
 
 	// Queue a new command to reset buff
 	controller_l.commitCommand(new EntityBuffCommand(0, 0, buff_l));
@@ -79,7 +79,7 @@ TEST(buffCommandTest, simple_speed)
 
 	state_l = controller_l.queryState();
 
-	EXPECT_NEAR(2., state_l->getEntity(0)->getStepSpeed(), 1e-5);
+	EXPECT_NEAR(2., to_double(state_l->getEntity(0)->getStepSpeed()), 1e-5);
 
 	// update time to 16 seconds (16)
 	// buff should not be reverted yet
@@ -90,7 +90,7 @@ TEST(buffCommandTest, simple_speed)
 
 	state_l = controller_l.queryState();
 
-	EXPECT_NEAR(2., state_l->getEntity(0)->getStepSpeed(), 1e-5);
+	EXPECT_NEAR(2., to_double(state_l->getEntity(0)->getStepSpeed()), 1e-5);
 
 	// update time to 17 seconds (17)
 	// buff should now be reverted
@@ -101,7 +101,7 @@ TEST(buffCommandTest, simple_speed)
 
 	state_l = controller_l.queryState();
 
-	EXPECT_NEAR(1., state_l->getEntity(0)->getStepSpeed(), 1e-5);
+	EXPECT_NEAR(1., to_double(state_l->getEntity(0)->getStepSpeed()), 1e-5);
 
 	// Queue a new command to reset buff
 	controller_l.commitCommand(new EntityBuffCommand(0, 0, buff_l));
@@ -116,5 +116,5 @@ TEST(buffCommandTest, simple_speed)
 	state_l = controller_l.queryState();
 
 	// should be buffed again
-	EXPECT_NEAR(2., state_l->getEntity(0)->getStepSpeed(), 1e-5);
+	EXPECT_NEAR(2., to_double(state_l->getEntity(0)->getStepSpeed()), 1e-5);
 }

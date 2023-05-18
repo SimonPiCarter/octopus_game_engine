@@ -4,6 +4,7 @@
 #include "state/Handle.hh"
 #include "step/Steppable.hh"
 #include "state/ResourceType.hh"
+#include "utils/Fixed.hh"
 
 namespace octopus
 {
@@ -11,7 +12,7 @@ namespace octopus
 class UnitHarvestQuantityStep : public Steppable
 {
 public:
-	UnitHarvestQuantityStep(Handle const &handle_p, Handle const &res_p, double const &qty_p)
+	UnitHarvestQuantityStep(Handle const &handle_p, Handle const &res_p, Fixed const &qty_p)
 		: _handle(handle_p) , _res(res_p), _qty(qty_p) {}
 
 	virtual void apply(State &state_p) const override;
@@ -25,13 +26,13 @@ public:
 
 	Handle const _handle {0};
 	Handle const _res {0};
-	double const _qty {0};
+	Fixed const _qty {0};
 };
 
 class UnitHarvestTypeStep : public Steppable
 {
 public:
-	UnitHarvestTypeStep(Handle const &handle_p, double oldVal_p, ResourceType old_p, ResourceType new_p)
+	UnitHarvestTypeStep(Handle const &handle_p, Fixed oldVal_p, ResourceType old_p, ResourceType new_p)
 		: _handle(handle_p) , _oldVal(oldVal_p), _old(old_p) , _new(new_p) {}
 
 	virtual void apply(State &state_p) const override;
@@ -44,7 +45,7 @@ public:
 	}
 
 	Handle const _handle {0};
-	double const _oldVal {0.};
+	Fixed const _oldVal {0.};
 	ResourceType const _old {ResourceType::Food};
 	ResourceType const _new {ResourceType::Food};
 };
@@ -53,7 +54,7 @@ class UnitHarvestDropStep : public Steppable
 {
 public:
 	/// @brief dropped is the qty buffed
-	UnitHarvestDropStep(Handle const &handle_p, double qty_p, double dropped_p)
+	UnitHarvestDropStep(Handle const &handle_p, Fixed qty_p, Fixed dropped_p)
 		: _handle(handle_p), _qty(qty_p), _dropped(dropped_p) {}
 
 	virtual void apply(State &state_p) const override;
@@ -66,8 +67,8 @@ public:
 	}
 
 	Handle const _handle {0};
-	double const _qty {0};
-	double const _dropped {0};
+	Fixed const _qty {0};
+	Fixed const _dropped {0};
 };
 
 } // namespace octopus

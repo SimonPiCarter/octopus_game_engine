@@ -14,7 +14,7 @@ class Building : public Entity
 		Building(Vector const &pos_p, bool frozen_p, BuildingModel const &model_p);
 
 		/// @brief building progress in steps
-		double _buildingProgress {0};
+		Fixed _buildingProgress {0};
 
 		BuildingModel const &_buildingModel;
 

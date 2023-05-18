@@ -29,7 +29,7 @@ public:
 
 	virtual void trigger(State const &, Step &step_p, unsigned long, TriggerData const &) const override
 	{
-		std::map<ResourceType, double> map_l;
+		std::map<ResourceType, Fixed> map_l;
 		map_l[ResourceType::Food] = -10.;
 		step_p.addSteppable(new PlayerSpendResourceStep(0, map_l));
 	}
@@ -71,8 +71,8 @@ TEST(triggerUnitDiedTest, one_unit)
 
 	state_l = controller_l.queryState();
 
-	EXPECT_NEAR(5., state_l->getEntity(0)->_hp, 1e-3);
-	EXPECT_NEAR(0., getResource(*state_l->getPlayer(0), ResourceType::Food), 1e-3);
+	EXPECT_NEAR(5., to_double(state_l->getEntity(0)->_hp), 1e-3);
+	EXPECT_NEAR(0., to_double(getResource(*state_l->getPlayer(0), ResourceType::Food)), 1e-3);
 
 	// update time to 1second (11)
 	// damage should be dealt but trigger not applied yet
@@ -83,8 +83,8 @@ TEST(triggerUnitDiedTest, one_unit)
 
 	state_l = controller_l.queryState();
 
-	EXPECT_NEAR(0., state_l->getEntity(0)->_hp, 1e-3);
-	EXPECT_NEAR(0., getResource(*state_l->getPlayer(0), ResourceType::Food), 1e-3);
+	EXPECT_NEAR(0., to_double(state_l->getEntity(0)->_hp), 1e-3);
+	EXPECT_NEAR(0., to_double(getResource(*state_l->getPlayer(0), ResourceType::Food)), 1e-3);
 
 	// update time to 2second (13)
 	// trigger should be applied
@@ -97,8 +97,8 @@ TEST(triggerUnitDiedTest, one_unit)
 
 	state_l = controller_l.queryState();
 
-	EXPECT_NEAR(0., state_l->getEntity(0)->_hp, 1e-3);
-	EXPECT_NEAR(10., getResource(*state_l->getPlayer(0), ResourceType::Food), 1e-3);
+	EXPECT_NEAR(0., to_double(state_l->getEntity(0)->_hp), 1e-3);
+	EXPECT_NEAR(10., to_double(getResource(*state_l->getPlayer(0), ResourceType::Food)), 1e-3);
 }
 
 ///
@@ -137,8 +137,8 @@ TEST(triggerUnitDiedTest, two_units)
 
 	state_l = controller_l.queryState();
 
-	EXPECT_NEAR(5., state_l->getEntity(0)->_hp, 1e-3);
-	EXPECT_NEAR(0., getResource(*state_l->getPlayer(0), ResourceType::Food), 1e-3);
+	EXPECT_NEAR(5., to_double(state_l->getEntity(0)->_hp), 1e-3);
+	EXPECT_NEAR(0., to_double(getResource(*state_l->getPlayer(0), ResourceType::Food)), 1e-3);
 
 	// update time to 1second (11)
 	// damage should be dealt but trigger not applied yet
@@ -149,8 +149,8 @@ TEST(triggerUnitDiedTest, two_units)
 
 	state_l = controller_l.queryState();
 
-	EXPECT_NEAR(0., state_l->getEntity(0)->_hp, 1e-3);
-	EXPECT_NEAR(0., getResource(*state_l->getPlayer(0), ResourceType::Food), 1e-3);
+	EXPECT_NEAR(0., to_double(state_l->getEntity(0)->_hp), 1e-3);
+	EXPECT_NEAR(0., to_double(getResource(*state_l->getPlayer(0), ResourceType::Food)), 1e-3);
 
 	// update time to 2second (13)
 	// trigger should be applied
@@ -163,9 +163,9 @@ TEST(triggerUnitDiedTest, two_units)
 
 	state_l = controller_l.queryState();
 
-	EXPECT_NEAR(0., state_l->getEntity(0)->_hp, 1e-3);
-	EXPECT_NEAR(5., state_l->getEntity(1)->_hp, 1e-3);
-	EXPECT_NEAR(0., getResource(*state_l->getPlayer(0), ResourceType::Food), 1e-3);
+	EXPECT_NEAR(0., to_double(state_l->getEntity(0)->_hp), 1e-3);
+	EXPECT_NEAR(5., to_double(state_l->getEntity(1)->_hp), 1e-3);
+	EXPECT_NEAR(0., to_double(getResource(*state_l->getPlayer(0), ResourceType::Food)), 1e-3);
 
 	// update time to 8second (21)
 	controller_l.update(8.);
@@ -175,9 +175,9 @@ TEST(triggerUnitDiedTest, two_units)
 
 	state_l = controller_l.queryState();
 
-	EXPECT_NEAR(0., state_l->getEntity(0)->_hp, 1e-3);
-	EXPECT_NEAR(0., state_l->getEntity(1)->_hp, 1e-3);
-	EXPECT_NEAR(0., getResource(*state_l->getPlayer(0), ResourceType::Food), 1e-3);
+	EXPECT_NEAR(0., to_double(state_l->getEntity(0)->_hp), 1e-3);
+	EXPECT_NEAR(0., to_double(state_l->getEntity(1)->_hp), 1e-3);
+	EXPECT_NEAR(0., to_double(getResource(*state_l->getPlayer(0), ResourceType::Food)), 1e-3);
 
 	// update time to 2second (23)
 	// trigger should be applied
@@ -190,7 +190,7 @@ TEST(triggerUnitDiedTest, two_units)
 
 	state_l = controller_l.queryState();
 
-	EXPECT_NEAR(0., state_l->getEntity(0)->_hp, 1e-3);
-	EXPECT_NEAR(0., state_l->getEntity(1)->_hp, 1e-3);
-	EXPECT_NEAR(10., getResource(*state_l->getPlayer(0), ResourceType::Food), 1e-3);
+	EXPECT_NEAR(0., to_double(state_l->getEntity(0)->_hp), 1e-3);
+	EXPECT_NEAR(0., to_double(state_l->getEntity(1)->_hp), 1e-3);
+	EXPECT_NEAR(10., to_double(getResource(*state_l->getPlayer(0), ResourceType::Food)), 1e-3);
 }

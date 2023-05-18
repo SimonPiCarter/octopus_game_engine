@@ -51,7 +51,7 @@ void BuildingStep::revert(State &state_p, SteppableData const *) const
 
 bool BuildingStep::isNoOp() const
 {
-	return std::abs(_delta) < 1e-3;
+	return ::is_zero(_delta);
 }
 
 } // namespace octopus

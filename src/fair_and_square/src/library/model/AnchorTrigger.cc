@@ -18,7 +18,7 @@ AnchorTrigger::AnchorTrigger(octopus::Library const &lib_p, octopus::RandomGener
 
 void AnchorTrigger::trigger(octopus::State const &, octopus::Step &step_p, unsigned long, octopus::TriggerData const &) const
 {
-    std::map<octopus::ResourceType, double> map_l;
+    std::map<octopus::ResourceType, octopus::Fixed> map_l;
     map_l[octopus::ResourceType::Anchor] = -_bonus;
     step_p.addSteppable(new octopus::PlayerSpendResourceStep(_player, map_l));
 

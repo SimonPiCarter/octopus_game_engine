@@ -37,7 +37,7 @@ namespace octopus
 			/// @brief is alive in the state
 			bool _alive {true};
 
-			double _hp { 10. };
+			Fixed _hp { 10. };
 			/// @brief time since last attack in step
 			unsigned long _reload { 10 };
 			/// @brief time waiting since last command for entity
@@ -71,21 +71,21 @@ namespace octopus
 			/// Getters for buffer properties
 			///
 			/// @brief get step speed updated using buffing info
-			double getStepSpeed() const;
+			Fixed getStepSpeed() const;
 			/// @brief get step speed updated using buffing info
-			double getFullReload() const;
+			Fixed getFullReload() const;
 			/// @brief get damage updated using buffing info and bonus from type
-			double getDamage(EntityModel const &target_p) const;
+			Fixed getDamage(EntityModel const &target_p) const;
 			/// @brief get damage updated using buffing info but not bonus from type
-			double getDamageNoBonus() const;
+			Fixed getDamageNoBonus() const;
 			/// @brief get armor updated using buffing info
-			double getArmor() const;
+			Fixed getArmor() const;
 			/// @brief get hp max updated using buffing info
-			double getHpMax() const;
+			Fixed getHpMax() const;
 			/// @brief get production updated using buffing info
-			double getProduction() const;
+			Fixed getProduction() const;
 			/// @brief get harvest updated using buffing info
-			double getHarvest() const;
+			Fixed getHarvest() const;
 
 			/// @brief if frozen ou static
 			bool isFrozen() const;

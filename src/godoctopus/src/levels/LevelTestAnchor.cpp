@@ -53,7 +53,7 @@ std::list<Steppable *> LevelSteps(Library &lib_p, RandomGenerator &rand_p)
 	Unit unit_l({ 17, 10 }, false, lib_p.getUnitModel("worker"));
 
 	long anchor_l = 420;
-	std::map<ResourceType, double> mapRes_l;
+	std::map<ResourceType, Fixed> mapRes_l;
 	mapRes_l[octopus::ResourceType::Food] = -2000;
 	mapRes_l[octopus::ResourceType::Steel] = -2000;
 

@@ -9,10 +9,10 @@ namespace octopus
 /// @brief clamp the hp of the entity between 0 and max life
 /// @param ent_p
 /// @return the new delta to be applied
-double getDelta(double hp_p, double delta_p, double hpMax_p)
+Fixed getDelta(Fixed hp_p, Fixed delta_p, Fixed hpMax_p)
 {
-	double curHp_l = hp_p+delta_p;
-	double newDelta_l = delta_p;
+	Fixed curHp_l = hp_p+delta_p;
+	Fixed newDelta_l = delta_p;
 	if(curHp_l < 0)
 	{
 		newDelta_l = -hp_p;
@@ -44,7 +44,7 @@ void updateFromHp(State &state_p, Entity *ent_p)
 	}
 }
 
-EntityHitPointChangeStep::EntityHitPointChangeStep(Handle const &handle_p, double delta_p, double anticipatedHp_p, double hpMax_p)
+EntityHitPointChangeStep::EntityHitPointChangeStep(Handle const &handle_p, Fixed delta_p, Fixed anticipatedHp_p, Fixed hpMax_p)
 	: _handle(handle_p), _delta(getDelta(anticipatedHp_p, delta_p, hpMax_p))
 {}
 
@@ -69,7 +69,7 @@ void EntityHitPointChangeStep::revert(State &state_p, SteppableData const *) con
 
 bool EntityHitPointChangeStep::isNoOp() const
 {
-	return std::abs(_delta) < 1e-3;
+	return ::is_zero(_delta);
 }
 
 } // namespace octopus

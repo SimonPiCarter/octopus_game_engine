@@ -81,7 +81,7 @@ class Controller
 {
 
 public:
-	Controller(std::list<Steppable *> const &initSteppables_p, double timePerStep_p,
+	Controller(std::list<Steppable *> const &initSteppables_p, Fixed timePerStep_p,
 		std::list<Command *> const &initCommands_p = {}, unsigned long gridPointSize_p=1, unsigned long gridSize_p=50);
 	~Controller();
 
@@ -91,7 +91,7 @@ public:
 	/// @brief increment ongoing step if necessary
 	/// increment back buffer for as much as required
 	/// perform internal swaps if necessary
-	unsigned long update(double elapsedTime_p);
+	unsigned long update(Fixed elapsedTime_p);
 
 	/// @brief update and return the front state
 	/// only swap the buffer and front state if buffer state is more advanced than front state
@@ -130,7 +130,7 @@ public:
 
 	void enableORCA() { _orcaCollision = true; }
 
-	double getTimePerStep() const { return _timePerStep; }
+	Fixed getTimePerStep() const { return _timePerStep; }
 
 	std::vector<std::list<Command *> *> const & getCommitedCommands() const { return _commitedCommands; }
 
@@ -160,9 +160,9 @@ private:
 	PathManager _pathManager;
 
 	/// @brief required time per step
-	double const _timePerStep {0.1};
+	Fixed const _timePerStep {0.1};
 	/// @brief time since last update of step
-	double _overTime {0.};
+	Fixed _overTime {0.};
 	/// @brief ongoing step, all command received are aggregated into this step
 	unsigned long _ongoingStep {0};
 	/// @brief last handled step, all commands for steps after this one have not been processed

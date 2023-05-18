@@ -222,7 +222,7 @@ std::list<Steppable *> Case4(Library &lib_p)
 	res4_l._type = ResourceType::Ether;
 	res4_l._resource = 500.;
 
-	std::map<ResourceType, double> mapRes_l;
+	std::map<ResourceType, Fixed> mapRes_l;
 	mapRes_l[octopus::ResourceType::Food] = -200;
 	mapRes_l[octopus::ResourceType::Steel] = -200;
 

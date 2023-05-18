@@ -43,7 +43,7 @@ TEST(resourceSpentSimultaneousTest, simple_ok)
 	Building production1_l({1,3}, true, buildingModel_l);
 	Building production2_l({1,5}, true, buildingModel_l);
 
-	std::map<ResourceType, double> mapRes_l;
+	std::map<ResourceType, Fixed> mapRes_l;
 	mapRes_l[octopus::ResourceType::Food] = -100;
 
 	Controller controller_l({
@@ -102,7 +102,7 @@ TEST(resourceSpentSimultaneousTest, simple_ko)
 	Building production1_l({1,3}, true, buildingModel_l);
 	Building production2_l({1,5}, true, buildingModel_l);
 
-	std::map<ResourceType, double> mapRes_l;
+	std::map<ResourceType, Fixed> mapRes_l;
 	mapRes_l[octopus::ResourceType::Food] = -50;
 
 	Controller controller_l({

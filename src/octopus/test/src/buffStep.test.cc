@@ -31,7 +31,7 @@ TEST(buffStepTest, simple_speed)
 	// query state
 	State const * state_l = controller_l.queryState();
 
-	EXPECT_NEAR(1., state_l->getEntity(0)->getStepSpeed(), 1e-5);
+	EXPECT_NEAR(1., to_double(state_l->getEntity(0)->getStepSpeed()), 1e-5);
 
 	// update time to 1second (1)
 	// buf has registered but not been applied yet
@@ -42,7 +42,7 @@ TEST(buffStepTest, simple_speed)
 
 	state_l = controller_l.queryState();
 
-	EXPECT_NEAR(1., state_l->getEntity(0)->getStepSpeed(), 1e-5);
+	EXPECT_NEAR(1., to_double(state_l->getEntity(0)->getStepSpeed()), 1e-5);
 
 	// update time to 1 seconds (2)
 	// buff has been applied
@@ -53,7 +53,7 @@ TEST(buffStepTest, simple_speed)
 
 	state_l = controller_l.queryState();
 
-	EXPECT_NEAR(2., state_l->getEntity(0)->getStepSpeed(), 1e-5);
+	EXPECT_NEAR(2., to_double(state_l->getEntity(0)->getStepSpeed()), 1e-5);
 
 	// update time to 8 seconds (10)
 	// buff is still active
@@ -64,7 +64,7 @@ TEST(buffStepTest, simple_speed)
 
 	state_l = controller_l.queryState();
 
-	EXPECT_NEAR(2., state_l->getEntity(0)->getStepSpeed(), 1e-5);
+	EXPECT_NEAR(2., to_double(state_l->getEntity(0)->getStepSpeed()), 1e-5);
 
 	// update time to 1 seconds (11)
 	// buhf has been reverted
@@ -75,7 +75,7 @@ TEST(buffStepTest, simple_speed)
 
 	state_l = controller_l.queryState();
 
-	EXPECT_NEAR(1., state_l->getEntity(0)->getStepSpeed(), 1e-5);
+	EXPECT_NEAR(1., to_double(state_l->getEntity(0)->getStepSpeed()), 1e-5);
 }
 
 TEST(buffStepTest, simple_armor)
@@ -96,7 +96,7 @@ TEST(buffStepTest, simple_armor)
 	// query state
 	State const * state_l = controller_l.queryState();
 
-	EXPECT_NEAR(1., state_l->getEntity(0)->getArmor(), 1e-5);
+	EXPECT_NEAR(1., to_double(state_l->getEntity(0)->getArmor()), 1e-5);
 
 	// update time to 1second (1)
 	// buf has registered but not been applied yet
@@ -107,7 +107,7 @@ TEST(buffStepTest, simple_armor)
 
 	state_l = controller_l.queryState();
 
-	EXPECT_NEAR(1., state_l->getEntity(0)->getArmor(), 1e-5);
+	EXPECT_NEAR(1., to_double(state_l->getEntity(0)->getArmor()), 1e-5);
 
 	// update time to 1 seconds (2)
 	// buff has been applied
@@ -118,7 +118,7 @@ TEST(buffStepTest, simple_armor)
 
 	state_l = controller_l.queryState();
 
-	EXPECT_NEAR(2., state_l->getEntity(0)->getArmor(), 1e-5);
+	EXPECT_NEAR(2., to_double(state_l->getEntity(0)->getArmor()), 1e-5);
 
 	// update time to 8 seconds (10)
 	// buff is still active
@@ -129,7 +129,7 @@ TEST(buffStepTest, simple_armor)
 
 	state_l = controller_l.queryState();
 
-	EXPECT_NEAR(2., state_l->getEntity(0)->getArmor(), 1e-5);
+	EXPECT_NEAR(2., to_double(state_l->getEntity(0)->getArmor()), 1e-5);
 
 	// update time to 1 seconds (11)
 	// buhf has been reverted
@@ -140,7 +140,7 @@ TEST(buffStepTest, simple_armor)
 
 	state_l = controller_l.queryState();
 
-	EXPECT_NEAR(1., state_l->getEntity(0)->getArmor(), 1e-5);
+	EXPECT_NEAR(1., to_double(state_l->getEntity(0)->getArmor()), 1e-5);
 }
 
 TEST(buffStepTest, simple_infinite)
@@ -161,7 +161,7 @@ TEST(buffStepTest, simple_infinite)
 	// query state
 	State const * state_l = controller_l.queryState();
 
-	EXPECT_NEAR(1., state_l->getEntity(0)->getArmor(), 1e-5);
+	EXPECT_NEAR(1., to_double(state_l->getEntity(0)->getArmor()), 1e-5);
 
 	// update time to 1second (1)
 	// buf has registered but not been applied yet
@@ -172,7 +172,7 @@ TEST(buffStepTest, simple_infinite)
 
 	state_l = controller_l.queryState();
 
-	EXPECT_NEAR(1., state_l->getEntity(0)->getArmor(), 1e-5);
+	EXPECT_NEAR(1., to_double(state_l->getEntity(0)->getArmor()), 1e-5);
 
 	// update time to 1 seconds (2)
 	// buff has been applied
@@ -183,7 +183,7 @@ TEST(buffStepTest, simple_infinite)
 
 	state_l = controller_l.queryState();
 
-	EXPECT_NEAR(2., state_l->getEntity(0)->getArmor(), 1e-5);
+	EXPECT_NEAR(2., to_double(state_l->getEntity(0)->getArmor()), 1e-5);
 
 	// update time to 100 seconds (102)
 	// buff is still active
@@ -194,5 +194,5 @@ TEST(buffStepTest, simple_infinite)
 
 	state_l = controller_l.queryState();
 
-	EXPECT_NEAR(2., state_l->getEntity(0)->getArmor(), 1e-5);
+	EXPECT_NEAR(2., to_double(state_l->getEntity(0)->getArmor()), 1e-5);
 }

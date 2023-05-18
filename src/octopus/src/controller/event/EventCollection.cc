@@ -65,8 +65,8 @@ void EventCollection::visit(EntityHitPointChangeStep const *step_p)
 {
 	Entity const * ent_l = _state.getEntity(step_p->_handle);
 
-	int newHp_l = ent_l->_hp - _hpChange[step_p->_handle];
-	int hp_l = newHp_l - step_p->_delta;
+	Fixed newHp_l = ent_l->_hp - _hpChange[step_p->_handle];
+	Fixed hp_l = newHp_l - step_p->_delta;
 
 	_hpChange[step_p->_handle] += step_p->_delta;
 

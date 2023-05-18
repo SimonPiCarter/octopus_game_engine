@@ -28,7 +28,7 @@ namespace octopus
 
 	EntityMoveStep createEntityMoveStep(Entity const &ent_p);
 	/// @brief Compute the step of an Entity going to the target position with a given step speed
-	EntityMoveStep createEntityMoveStep(Entity const &ent_p, Vector const &target_p, double stepSpeed_p);
+	EntityMoveStep createEntityMoveStep(Entity const &ent_p, Vector const &target_p, Fixed stepSpeed_p);
 
 	/// @brief check if step is no op (no position update)
 	bool isEntityMoveStepNoOp(EntityMoveStep const &step_p);

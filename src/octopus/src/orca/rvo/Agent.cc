@@ -357,6 +357,7 @@ namespace RVO {
 				}
 				else
 				{
+					/// @todo make this consistent with fixed computation
 					const Vector2 unitW = Vector2(std::cos(2.0 * 3.14 * double(id_) / double(sim_->getNumAgents())),
 											std::sin(2.0 * 3.14 * double(id_) / double(sim_->getNumAgents())));
 

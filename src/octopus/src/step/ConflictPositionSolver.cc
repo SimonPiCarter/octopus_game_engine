@@ -197,7 +197,7 @@ bool updateStepFromConflictPosition(Step &step_p, State const &state_p)
 				}
 				else
 				{
-					normalizedAxis_l = Vector { double(gen_l.nextFromRange(1, 10)), double(gen_l.nextFromRange(1, 10))};
+					normalizedAxis_l = Vector { Fixed(gen_l.nextFromRange(1, 10)), Fixed(gen_l.nextFromRange(1, 10))};
 					if(gen_l.nextFromRange(0, 1) > 0)
 					{
 						normalizedAxis_l.x = -normalizedAxis_l.x;
@@ -272,7 +272,7 @@ bool updateStepFromConflictPosition(Step &step_p, State const &state_p)
 		// {
 		// 	// try a small perpendicular move to avoid two entities to block each other
 		// 	Vector perpendicular_l {origMove_l.y, -origMove_l.x};
-		// 	double rdmFactr_l = gen_l.nextFromRange(5, 20)/100.;
+		// 	Fixed rdmFactr_l = gen_l.nextFromRange(5, 20)/100.;
 		// 	ent_l->_move += perpendicular_l * rdmFactr_l;
 		// }
 
@@ -366,8 +366,8 @@ bool updateStepFromConflictPosition(Step &step_p, State const &state_p)
 					diff_l = {0., dYDown_l};
 				}
 
-				double coefA_l = 0.5;
-				double coefB_l = 0.5;
+				Fixed coefA_l = 0.5;
+				Fixed coefB_l = 0.5;
 				if(entA_l->isFrozen() && entB_l->isFrozen())
 				{
 					coefA_l = 0.;

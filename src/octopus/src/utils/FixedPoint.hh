@@ -225,25 +225,25 @@ octopus::FixedPoint<e> operator-(Number const &f, octopus::FixedPoint<e> const &
 template <long long e, class Number, class = typename std::enable_if<std::is_arithmetic<Number>::value>::type>
 bool operator>(Number const &f, octopus::FixedPoint<e> const &fp)
 {
-	return fp <= f;
+	return fp < f;
 }
 
 template <long long e, class Number, class = typename std::enable_if<std::is_arithmetic<Number>::value>::type>
 bool operator<(Number const &f, octopus::FixedPoint<e> const &fp)
 {
-	return fp >= f;
+	return fp > f;
 }
 
 template <long long e, class Number, class = typename std::enable_if<std::is_arithmetic<Number>::value>::type>
 bool operator>=(Number const &f, octopus::FixedPoint<e> const &fp)
 {
-	return fp < f;
+	return fp <= f;
 }
 
 template <long long e, class Number, class = typename std::enable_if<std::is_arithmetic<Number>::value>::type>
 bool operator<=(Number const &f, octopus::FixedPoint<e> const &fp)
 {
-	return fp > f;
+	return fp >= f;
 }
 
 template <long long e, class Number, class = typename std::enable_if<std::is_arithmetic<Number>::value>::type>
@@ -311,6 +311,12 @@ octopus::FixedPoint<e> abs(octopus::FixedPoint<e> const &f)
 	return octopus::FixedPoint<e>(std::abs(f.data()), true);
 }
 
+template <long long e>
+octopus::FixedPoint<e> ceil(octopus::FixedPoint<e> const &f)
+{
+	long long data_l = f.data() + e - 1;
+	return octopus::FixedPoint<e>((data_l/e)*e, true);
+}
 
 template<class Number, class = typename std::enable_if<std::is_arithmetic<Number>::value>::type>
 Number infinity()

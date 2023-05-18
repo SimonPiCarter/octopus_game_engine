@@ -10,6 +10,7 @@
 
 #include "state/ResourceType.hh"
 #include "state/Handle.hh"
+#include "utils/Fixed.hh"
 
 namespace octopus
 {
@@ -54,10 +55,10 @@ namespace octopus
 			std::list<Steppable const *> &getSteppable();
 			std::list<Steppable const *> const &getSteppable() const;
 
-			double & getResourceSpent(unsigned long player_p, ResourceType res_p);
-			double getResourceSpent(unsigned long player_p, ResourceType res_p) const;
+			Fixed & getResourceSpent(unsigned long player_p, ResourceType res_p);
+			Fixed getResourceSpent(unsigned long player_p, ResourceType res_p) const;
 
-			const std::map<ResourceType, double> & getResourceSpent(unsigned long player_p) const;
+			const std::map<ResourceType, Fixed> & getResourceSpent(unsigned long player_p) const;
 
 			unsigned long & getDivOptionSpent(unsigned long player_p);
 			unsigned long getDivOptionSpent(unsigned long player_p) const;
@@ -81,11 +82,11 @@ namespace octopus
 			bool isCmdCanceled(CommandIdx cmdidx_p) const;
 
 			/// @brief add an hp change
-			void addHpChange(Handle const &handle_p, double delta_p);
+			void addHpChange(Handle const &handle_p, Fixed delta_p);
 			/// @brief get all cumulative hp change
-			std::unordered_map<Handle, double> const& getHpChange() const;
+			std::unordered_map<Handle, Fixed> const& getHpChange() const;
 			/// @brief get hp change for given handle
-			double getHpChange(Handle const &handle_p) const;
+			Fixed getHpChange(Handle const &handle_p) const;
 
 			/// @brief get previous step
 			/// @return previous step
@@ -101,7 +102,7 @@ namespace octopus
 			unsigned long long const _id {0};
 
 			/// @brief a map of map of resource spent (player, resource) -> value spent this step
-			std::map<unsigned long, std::map<ResourceType, double> > _spent;
+			std::map<unsigned long, std::map<ResourceType, Fixed> > _spent;
 
 			/// @brief a map of number of div option spent in this step (player) -> number of div option spent this step
 			std::map<unsigned long, unsigned long> _divOptionsSpent;
@@ -119,7 +120,7 @@ namespace octopus
 			std::set<CommandIdx> _canceledCmd;
 
 			/// @brief vector of hp change for entities
-			std::unordered_map<Handle, double> _hpChange;
+			std::unordered_map<Handle, Fixed> _hpChange;
 
 			Step const * const _prev {nullptr};
 

@@ -31,7 +31,7 @@ public:
 
 	virtual void trigger(State const &state_p, Step &step_p, unsigned long, TriggerData const &) const override
 	{
-		std::map<ResourceType, double> map_l;
+		std::map<ResourceType, Fixed> map_l;
 		map_l[ResourceType::Food] = -10.;
 
 		step_p.addSteppable(new PlayerSpendResourceStep(0, map_l));
@@ -51,7 +51,7 @@ public:
 
 	virtual void trigger(State const &, Step &step_p, unsigned long, TriggerData const &) const override
 	{
-		std::map<ResourceType, double> map_l;
+		std::map<ResourceType, Fixed> map_l;
 		map_l[ResourceType::Food] = -10.;
 
 		step_p.addSteppable(new PlayerSpendResourceStep(0, map_l));
@@ -89,7 +89,7 @@ TEST(triggerTimeTest, simple)
 
 	state_l = controller_l.queryState();
 
-	EXPECT_NEAR(0., getResource(*state_l->getPlayer(0), ResourceType::Food), 1e-3);
+	EXPECT_NEAR(0., to_double(getResource(*state_l->getPlayer(0), ResourceType::Food)), 1e-3);
 	EXPECT_EQ(0, state_l->getEntities().size());
 
 	// update time to 1 seconds (12)
@@ -100,7 +100,7 @@ TEST(triggerTimeTest, simple)
 
 	state_l = controller_l.queryState();
 
-	EXPECT_NEAR(10., getResource(*state_l->getPlayer(0), ResourceType::Food), 1e-3);
+	EXPECT_NEAR(10., to_double(getResource(*state_l->getPlayer(0), ResourceType::Food)), 1e-3);
 	EXPECT_EQ(1, state_l->getEntities().size());
 
 	// update time to 2 seconds (14)
@@ -113,7 +113,7 @@ TEST(triggerTimeTest, simple)
 
 	state_l = controller_l.queryState();
 
-	EXPECT_NEAR(20., getResource(*state_l->getPlayer(0), ResourceType::Food), 1e-3);
+	EXPECT_NEAR(20., to_double(getResource(*state_l->getPlayer(0), ResourceType::Food)), 1e-3);
 	EXPECT_EQ(1, state_l->getEntities().size());
 
 	// update time to 10 seconds (24)
@@ -124,6 +124,6 @@ TEST(triggerTimeTest, simple)
 
 	state_l = controller_l.queryState();
 
-	EXPECT_NEAR(20., getResource(*state_l->getPlayer(0), ResourceType::Food), 1e-3);
+	EXPECT_NEAR(20., to_double(getResource(*state_l->getPlayer(0), ResourceType::Food)), 1e-3);
 	EXPECT_EQ(1, state_l->getEntities().size());
 }

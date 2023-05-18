@@ -4,6 +4,7 @@
 #include "state/Handle.hh"
 #include <cstddef>
 #include <unordered_map>
+#include "utils/Fixed.hh"
 
 namespace RVO
 {
@@ -25,7 +26,7 @@ class Step;
 class OrcaManager
 {
 public:
-    OrcaManager(double timeStep_p, double neighborDist_p, size_t maxNeighbors_p, double timeHorizon_p, double timeHorizonObst_p);
+    OrcaManager(Fixed timeStep_p, Fixed neighborDist_p, size_t maxNeighbors_p, Fixed timeHorizon_p, Fixed timeHorizonObst_p);
     ~OrcaManager();
 
     /// @brief will load actors and obstacles from current state
@@ -53,11 +54,11 @@ public:
     static bool ShouldReset(OrcaManager const *manager_p, State const &state_p, Step const &step_p);
 
 private:
-    double const _timeStep;
-    double const _neighborDist;
+    Fixed const _timeStep;
+    Fixed const _neighborDist;
     size_t const _maxNeighbors;
-    double const _timeHorizon;
-    double const _timeHorizonObst;
+    Fixed const _timeHorizon;
+    Fixed const _timeHorizonObst;
 
     unsigned long _gridStatus {0};
 

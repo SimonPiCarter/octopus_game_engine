@@ -15,7 +15,7 @@ class Steppable;
 class ChainingModifier
 {
 public:
-    ChainingModifier(unsigned long delay_p, unsigned long nbOfTicks_p, double ratio_p, double range_p)
+    ChainingModifier(unsigned long delay_p, unsigned long nbOfTicks_p, Fixed ratio_p, Fixed range_p)
         : _delay(delay_p), _nbOfTicks(nbOfTicks_p), _ratio(ratio_p), _range(range_p) {}
 
 	/// @brief create a new attack steppable
@@ -23,8 +23,8 @@ public:
 
     unsigned long _delay;
     unsigned long _nbOfTicks;
-    double _ratio;
-    double _range;
+    Fixed _ratio;
+    Fixed _range;
 };
 
 } // namespace octopus

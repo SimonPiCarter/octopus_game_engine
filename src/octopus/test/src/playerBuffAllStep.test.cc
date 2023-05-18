@@ -35,20 +35,20 @@ TEST(PlayerBuffAllStepStepTest, simple)
 	// required to apply buff or revert
 	TickingStep tickStep_l;
 
-	EXPECT_NEAR(10., state_l.getEntity(0)->getHpMax(), 1e-5);
+	EXPECT_NEAR(10., to_double(state_l.getEntity(0)->getHpMax()), 1e-5);
 
 	SteppableData *data_l = step_l.newData(state_l);
 	step_l.apply(state_l);
 	tickStep_l.apply(state_l);
 
-	EXPECT_NEAR(20., state_l.getEntity(0)->getHpMax(), 1e-5);
+	EXPECT_NEAR(20., to_double(state_l.getEntity(0)->getHpMax()), 1e-5);
 
 	tickStep_l.revert(state_l, nullptr);
 	step_l.revert(state_l, data_l);
 	delete data_l;
 	tickStep_l.apply(state_l);
 
-	EXPECT_NEAR(10., state_l.getEntity(0)->getHpMax(), 1e-5);
+	EXPECT_NEAR(10., to_double(state_l.getEntity(0)->getHpMax()), 1e-5);
 }
 
 TEST(PlayerBuffAllStepStepTest, simple_wrong_player)
@@ -69,20 +69,20 @@ TEST(PlayerBuffAllStepStepTest, simple_wrong_player)
 	// required to apply buff or revert
 	TickingStep tickStep_l;
 
-	EXPECT_NEAR(10., state_l.getEntity(0)->getHpMax(), 1e-5);
+	EXPECT_NEAR(10., to_double(state_l.getEntity(0)->getHpMax()), 1e-5);
 
 	SteppableData *data_l = step_l.newData(state_l);
 	step_l.apply(state_l);
 	tickStep_l.apply(state_l);
 
-	EXPECT_NEAR(10., state_l.getEntity(0)->getHpMax(), 1e-5);
+	EXPECT_NEAR(10., to_double(state_l.getEntity(0)->getHpMax()), 1e-5);
 
 	tickStep_l.revert(state_l, nullptr);
 	step_l.revert(state_l, data_l);
 	delete data_l;
 	tickStep_l.apply(state_l);
 
-	EXPECT_NEAR(10., state_l.getEntity(0)->getHpMax(), 1e-5);
+	EXPECT_NEAR(10., to_double(state_l.getEntity(0)->getHpMax()), 1e-5);
 }
 
 TEST(PlayerBuffAllStepStepTest, simple_wrong_model)
@@ -103,20 +103,20 @@ TEST(PlayerBuffAllStepStepTest, simple_wrong_model)
 	// required to apply buff or revert
 	TickingStep tickStep_l;
 
-	EXPECT_NEAR(10., state_l.getEntity(0)->getHpMax(), 1e-5);
+	EXPECT_NEAR(10., to_double(state_l.getEntity(0)->getHpMax()), 1e-5);
 
 	SteppableData *data_l = step_l.newData(state_l);
 	step_l.apply(state_l);
 	tickStep_l.apply(state_l);
 
-	EXPECT_NEAR(10., state_l.getEntity(0)->getHpMax(), 1e-5);
+	EXPECT_NEAR(10., to_double(state_l.getEntity(0)->getHpMax()), 1e-5);
 
 	tickStep_l.revert(state_l, nullptr);
 	step_l.revert(state_l, data_l);
 	delete data_l;
 	tickStep_l.apply(state_l);
 
-	EXPECT_NEAR(10., state_l.getEntity(0)->getHpMax(), 1e-5);
+	EXPECT_NEAR(10., to_double(state_l.getEntity(0)->getHpMax()), 1e-5);
 }
 
 TEST(PlayerBuffAllStepStepTest, spawn)
@@ -138,17 +138,17 @@ TEST(PlayerBuffAllStepStepTest, spawn)
 	// required to apply buff or revert
 	TickingStep tickStep_l;
 
-	EXPECT_NEAR(10., state_l.getEntity(0)->getHpMax(), 1e-5);
+	EXPECT_NEAR(10., to_double(state_l.getEntity(0)->getHpMax()), 1e-5);
 
 	step_l.apply(state_l);
 	tickStep_l.apply(state_l);
 
-	EXPECT_NEAR(20., state_l.getEntity(0)->getHpMax(), 1e-5);
+	EXPECT_NEAR(20., to_double(state_l.getEntity(0)->getHpMax()), 1e-5);
 
 	EntitySpawnStep spawnStep_l(1, *state_l.getEntity(0));
 
 	spawnStep_l.apply(state_l);
 
-	EXPECT_NEAR(20., state_l.getEntity(1)->getHpMax(), 1e-5);
+	EXPECT_NEAR(20., to_double(state_l.getEntity(1)->getHpMax()), 1e-5);
 
 }

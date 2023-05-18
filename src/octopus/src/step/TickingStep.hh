@@ -25,7 +25,7 @@ namespace octopus
 				visitor_p->visit(this);
 			}
 
-			static double const _anchorLoss;
+			static Fixed const _anchorLoss;
 	};
 }
 

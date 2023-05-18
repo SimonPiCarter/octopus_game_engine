@@ -40,7 +40,7 @@ void FlyingCommandPopStep::revert(State &state_p, SteppableData const *) const
 	// reuse stored data
 	state_p.getFlyingCommands().emplace_hint(state_p.getFlyingCommands().end(), _cmd->getHandle(), FlyingCommandBundle{_mapData[state_p._id], _cmd});
 
-	// forget data stored to avoid double deletion
+	// forget data stored to avoid Fixed deletion
 	_mapData[state_p._id] = nullptr;
 
 	if(size_l == state_p.getFlyingCommands().size())

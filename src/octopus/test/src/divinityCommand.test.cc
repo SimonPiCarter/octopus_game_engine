@@ -37,7 +37,7 @@ TEST(divinityCommandTest, simple_ko)
 	state_l = controller_l.queryState();
 
 	EXPECT_EQ(0, getDivLvl(*state_l->getPlayer(0), DivinityType::Divinity_3));
-	EXPECT_NEAR(0., getDivAnchor(*state_l->getPlayer(0), DivinityType::Divinity_3, true), 1e-5);
+	EXPECT_NEAR(0., to_double(getDivAnchor(*state_l->getPlayer(0), DivinityType::Divinity_3, true)), 1e-5);
 }
 
 TEST(divinityCommandTest, simple_ok)
@@ -61,7 +61,7 @@ TEST(divinityCommandTest, simple_ok)
 	state_l = controller_l.queryState();
 
 	EXPECT_EQ(0, getDivLvl(*state_l->getPlayer(0), DivinityType::Divinity_1));
-	EXPECT_NEAR(120., getDivAnchor(*state_l->getPlayer(0), DivinityType::Divinity_1, true), 1e-5);
+	EXPECT_NEAR(120., to_double(getDivAnchor(*state_l->getPlayer(0), DivinityType::Divinity_1, true)), 1e-5);
 }
 
 TEST(divinityCommandTest, simple_lvlup_ko)
@@ -85,7 +85,7 @@ TEST(divinityCommandTest, simple_lvlup_ko)
 	state_l = controller_l.queryState();
 
 	EXPECT_EQ(0, getDivLvl(*state_l->getPlayer(0), DivinityType::Divinity_3));
-	EXPECT_NEAR(0., getDivAnchor(*state_l->getPlayer(0), DivinityType::Divinity_3, true), 1e-5);
+	EXPECT_NEAR(0., to_double(getDivAnchor(*state_l->getPlayer(0), DivinityType::Divinity_3, true)), 1e-5);
 }
 
 TEST(divinityCommandTest, simple_lvlup_ok)
@@ -109,7 +109,7 @@ TEST(divinityCommandTest, simple_lvlup_ok)
 	state_l = controller_l.queryState();
 
 	EXPECT_EQ(1, getDivLvl(*state_l->getPlayer(0), DivinityType::Divinity_1));
-	EXPECT_NEAR(120., getDivAnchor(*state_l->getPlayer(0), DivinityType::Divinity_1, true), 1e-5);
+	EXPECT_NEAR(120., to_double(getDivAnchor(*state_l->getPlayer(0), DivinityType::Divinity_1, true)), 1e-5);
 }
 
 TEST(divinityCommandTest, simple_lvlup_two_same_step)
@@ -134,7 +134,7 @@ TEST(divinityCommandTest, simple_lvlup_two_same_step)
 	state_l = controller_l.queryState();
 
 	EXPECT_EQ(1, getDivLvl(*state_l->getPlayer(0), DivinityType::Divinity_1));
-	EXPECT_NEAR(120., getDivAnchor(*state_l->getPlayer(0), DivinityType::Divinity_1, true), 1e-5);
+	EXPECT_NEAR(120., to_double(getDivAnchor(*state_l->getPlayer(0), DivinityType::Divinity_1, true)), 1e-5);
 }
 
 TEST(divinityCommandTest, simple_lvlup_three_same_step_diff_options)
@@ -162,7 +162,7 @@ TEST(divinityCommandTest, simple_lvlup_three_same_step_diff_options)
 	state_l = controller_l.queryState();
 
 	EXPECT_EQ(1, getDivLvl(*state_l->getPlayer(0), DivinityType::Divinity_1));
-	EXPECT_NEAR(120., getDivAnchor(*state_l->getPlayer(0), DivinityType::Divinity_1, true), 1e-5);
+	EXPECT_NEAR(120., to_double(getDivAnchor(*state_l->getPlayer(0), DivinityType::Divinity_1, true)), 1e-5);
 	EXPECT_EQ(1, getDivLvl(*state_l->getPlayer(0), DivinityType::Divinity_3));
-	EXPECT_NEAR(120., getDivAnchor(*state_l->getPlayer(0), DivinityType::Divinity_3, true), 1e-5);
+	EXPECT_NEAR(120., to_double(getDivAnchor(*state_l->getPlayer(0), DivinityType::Divinity_3, true)), 1e-5);
 }

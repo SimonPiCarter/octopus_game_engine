@@ -23,7 +23,7 @@ namespace octopus
 		public:
 			~Player();
 
-			std::map<ResourceType, double> _resources;
+			std::map<ResourceType, Fixed> _resources;
 
 			unsigned long _popCap {0};
 			unsigned long _pop {0};
@@ -40,7 +40,7 @@ namespace octopus
 			/// @brief the level for every divinity
 			std::map<DivinityType, unsigned long> _divLvl;
 			/// @brief the anchor for every divinity
-			std::map<DivinityType, double> _divAnchor;
+			std::map<DivinityType, Fixed> _divAnchor;
 			/// @brief the options currently available to the player
 			std::list<DivinityOption> _divOptions;
 
@@ -64,14 +64,14 @@ namespace octopus
 	};
 
 	/// @brief safe getter for resource of a player
-	double getResource(Player const &player_p, ResourceType type_p);
+	Fixed getResource(Player const &player_p, ResourceType type_p);
 	/// @brief safe getter for divinity option of a player
 	bool getDivOption(DivinityOption const &option_p, DivinityType type_p);
 	/// @brief safe getter for divinity level of a player
 	unsigned long getDivLvl(Player const &player_p, DivinityType type_p);
 	/// @brief safe getter for divinity anchor of a player
 	/// @param floor_p if true the value will be floored to zero if negative
-	double getDivAnchor(Player const &player_p, DivinityType type_p, bool floor_p=true);
+	Fixed getDivAnchor(Player const &player_p, DivinityType type_p, bool floor_p=true);
 
 	/// @brief return availables building models from building
 	std::list<BuildingModel const *> getAvailableBuildingModels(Player const &player_p);

@@ -319,7 +319,7 @@ TEST(unitProductionCommandTest, destroy_building_one_step_before_production)
 
 	state_l = controller_l.queryState();
 
-	EXPECT_NEAR(0., getResource(*state_l->getPlayer(0), ResourceType::Food), 1e-5);
+	EXPECT_NEAR(0., to_double(getResource(*state_l->getPlayer(0), ResourceType::Food)), 1e-5);
 	EXPECT_EQ(1u, state_l->getEntities().size());
 
 	// update time to 1second (6)
@@ -330,7 +330,7 @@ TEST(unitProductionCommandTest, destroy_building_one_step_before_production)
 
 	state_l = controller_l.queryState();
 
-	EXPECT_NEAR(50., getResource(*state_l->getPlayer(0), ResourceType::Food), 1e-5);
+	EXPECT_NEAR(50., to_double(getResource(*state_l->getPlayer(0), ResourceType::Food)), 1e-5);
 	EXPECT_EQ(1u, state_l->getEntities().size());
 }
 
@@ -383,7 +383,7 @@ TEST(unitProductionCommandTest, destroy_building_when_production_is_over)
 
 	state_l = controller_l.queryState();
 
-	EXPECT_NEAR(0., getResource(*state_l->getPlayer(0), ResourceType::Food), 1e-5);
+	EXPECT_NEAR(0., to_double(getResource(*state_l->getPlayer(0), ResourceType::Food)), 1e-5);
 	EXPECT_EQ(1u, state_l->getEntities().size());
 
 	// update time to 1second (6)
@@ -394,6 +394,6 @@ TEST(unitProductionCommandTest, destroy_building_when_production_is_over)
 
 	state_l = controller_l.queryState();
 
-	EXPECT_NEAR(0., getResource(*state_l->getPlayer(0), ResourceType::Food), 1e-5);
+	EXPECT_NEAR(0., to_double(getResource(*state_l->getPlayer(0), ResourceType::Food)), 1e-5);
 	EXPECT_EQ(2u, state_l->getEntities().size());
 }

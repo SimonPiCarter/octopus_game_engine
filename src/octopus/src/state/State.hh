@@ -191,7 +191,7 @@ struct TargetPanel
 /// @return all targets within range
 TargetPanel lookUpNewTargets(State const &state_p, Handle const &sourceHandle_p, Fixed matchDistance_p, bool filterTeam_p=true);
 
-Entity const * lookUpNewBuffTarget(State const &state_p, Handle const &sourceHandle_p, double range_p, TyppedBuff const &buff_p);
+Entity const * lookUpNewBuffTarget(State const &state_p, Handle const &sourceHandle_p, Fixed range_p, TyppedBuff const &buff_p);
 Entity const * lookUpNewTarget(State const &state_p, Handle const &sourceHandle_p, Fixed matchDistance_p = 5.);
 Entity const * lookUpDeposit(State const &state_p, Handle const &sourceHandle_p, Handle const &res_p);
 Entity const * lookUpNewResource(State const &state_p, Handle const &sourceHandle_p, Handle const &res_p);
@@ -202,7 +202,7 @@ Entity const * lookUpNewResource(State const &state_p, Handle const &sourceHandl
 /// @param cost_p the cost
 /// @param spent_p the resources already spent (not applied yet on the state)
 /// @return true iif player has enough resource
-bool checkResource(State const &state_p, unsigned long player_p, std::map<ResourceType, double> const & cost_p, std::map<ResourceType, double> const & spent_p);
+bool checkResource(State const &state_p, unsigned long player_p, std::map<ResourceType, Fixed> const & cost_p, std::map<ResourceType, Fixed> const & spent_p);
 
 /// @brief update positional info based on the entity and the set parameter
 void updateGrid(State &state_p, Entity const *ent_p, bool set_p);

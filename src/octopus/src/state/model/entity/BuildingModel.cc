@@ -10,7 +10,7 @@
 namespace octopus
 {
 
-BuildingModel::BuildingModel(bool isStatic_p, double ray_p, double hpMax_p)
+BuildingModel::BuildingModel(bool isStatic_p, Fixed ray_p, Fixed hpMax_p)
 	: EntityModel(isStatic_p, ray_p, 0., hpMax_p)
 {
 	_isBuilding = true;

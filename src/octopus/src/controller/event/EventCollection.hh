@@ -7,6 +7,7 @@
 
 #include "state/Handle.hh"
 #include "step/Steppable.hh"
+#include "utils/Fixed.hh"
 
 namespace octopus
 {
@@ -106,10 +107,10 @@ private:
 	State const &_state;
 	/// statefull data
 	std::unordered_set<Handle> _finishedHandles;
-	std::unordered_map<Handle, double> _buildingProgress;
+	std::unordered_map<Handle, Fixed> _buildingProgress;
 
 	std::unordered_set<Handle> _diedHandles;
-	std::unordered_map<Handle, double> _hpChange;
+	std::unordered_map<Handle, Fixed> _hpChange;
 };
 
 }

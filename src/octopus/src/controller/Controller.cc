@@ -46,7 +46,7 @@ unsigned long long BufferedState::getNextStepToApplyId() const
 
 Controller::Controller(
 	std::list<Steppable *> const &initSteppables_p,
-	double timePerStep_p,
+	Fixed timePerStep_p,
 	std::list<Command *> const &initCommands_p,
 	unsigned long gridPointSize_p,
 	unsigned long gridSize_p)
@@ -352,7 +352,7 @@ bool Controller::loop_body()
 /// @brief increment ongoing step if necessary
 /// increment back buffer for as much as required
 /// perform internal swaps if necessary
-unsigned long Controller::update(double elapsedTime_p)
+unsigned long Controller::update(Fixed elapsedTime_p)
 {
 	unsigned long steps_l = 0;
 

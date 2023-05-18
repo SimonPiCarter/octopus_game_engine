@@ -7,7 +7,7 @@ namespace octopus
 {
 	struct TempleModel : public BuildingModel
 	{
-		TempleModel(bool isStatic_p, double ray_p, double hpMax_p)
+		TempleModel(bool isStatic_p, Fixed ray_p, Fixed hpMax_p)
 			: BuildingModel(isStatic_p, ray_p, hpMax_p)
 		{
 			_isBuilding = true;

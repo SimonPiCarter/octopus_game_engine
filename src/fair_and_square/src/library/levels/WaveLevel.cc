@@ -71,7 +71,7 @@ std::list<Steppable *> WaveLevelSteps(Library &lib_p, RandomGenerator &rand_p, u
 	res3_l._resource = 500.;
 	res3_l._player = 2;
 
-	std::map<ResourceType, double> mapRes_l;
+	std::map<ResourceType, Fixed> mapRes_l;
 	mapRes_l[octopus::ResourceType::Food] = -2000;
 	mapRes_l[octopus::ResourceType::Steel] = -2000;
 	mapRes_l[octopus::ResourceType::Anchor] = -5;

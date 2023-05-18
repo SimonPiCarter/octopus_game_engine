@@ -75,9 +75,9 @@ std::list<VisionChangeStep *> newVisionChangeStep(State const &state_p, Step con
 	std::unordered_map<unsigned long , std::unordered_map<size_t , std::unordered_map<size_t, long long> > > deltaPerTeam_l;
 	std::unordered_map<unsigned long , std::unordered_map<size_t , std::unordered_map<size_t, long long> > > deltaPerTeamExploration_l;
 
-	std::vector<double> hitpoints_l;
-	std::vector<double> dead_l;
-	std::vector<double> alreadyDead_l;
+	std::vector<Fixed> hitpoints_l;
+	std::vector<bool> dead_l;
+	std::vector<bool> alreadyDead_l;
 	hitpoints_l.reserve(state_p.getEntities().size());
 	dead_l.reserve(state_p.getEntities().size());
 	alreadyDead_l.reserve(state_p.getEntities().size());
@@ -89,7 +89,7 @@ std::list<VisionChangeStep *> newVisionChangeStep(State const &state_p, Step con
 	}
 	// need to tag all dead entities to avoid updating them
 	// only do so by checking hit point changes
-	for(std::pair<Handle, double> pair_l : step_p.getHpChange())
+	for(std::pair<Handle, Fixed> pair_l : step_p.getHpChange())
 	{
 		if(hitpoints_l[pair_l.first] + pair_l.second < 1e-3)
 		{
@@ -105,7 +105,7 @@ std::list<VisionChangeStep *> newVisionChangeStep(State const &state_p, Step con
 		{
 			continue;
 		}
-		VisionPattern const &pattern_l = handler_p.getPattern(ent_l->_model._lineOfSight);
+		VisionPattern const &pattern_l = handler_p.getPattern(ent_l->_model._lineOfSight.to_int());
 		for(std::pair<long, long> const &pair_l : pattern_l)
 		{
 			unsigned long x = std::max(0l, std::min<long>(to_int(pair_l.first+ent_l->_pos.x), worldSize_p-1));
@@ -131,7 +131,7 @@ std::list<VisionChangeStep *> newVisionChangeStep(State const &state_p, Step con
 		long dx = newx_l - to_int(ent_l->_pos.x);
 		long dy = newy_l - to_int(ent_l->_pos.y);
 
-		VisionPattern const &pattern_l = handler_p.getMovementPattern(ent_l->_model._lineOfSight, dx, dy);
+		VisionPattern const &pattern_l = handler_p.getMovementPattern(ent_l->_model._lineOfSight.to_int(), dx, dy);
 
 		for(std::pair<long, long> const &pair_l : pattern_l)
 		{
@@ -142,7 +142,7 @@ std::list<VisionChangeStep *> newVisionChangeStep(State const &state_p, Step con
 			deltaPerTeamExploration_l[team_l][x][y] += 1;
 		}
 
-		VisionPattern const &patternOpposite_l = handler_p.getMovementPattern(ent_l->_model._lineOfSight, -dx, -dy);
+		VisionPattern const &patternOpposite_l = handler_p.getMovementPattern(ent_l->_model._lineOfSight.to_int(), -dx, -dy);
 
 		for(std::pair<long, long> const &pair_l : patternOpposite_l)
 		{

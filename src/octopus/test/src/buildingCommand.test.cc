@@ -79,7 +79,7 @@ TEST(buildingCommandTest, simple)
 	EXPECT_NEAR(3., to_double(state_l->getEntity(0)->_pos.x), 1e-5);
 	EXPECT_NEAR(3.5, to_double(state_l->getEntity(0)->_pos.y), 1e-5);
 	build_l = static_cast<Building const *>(state_l->getEntity(1));
-	EXPECT_NEAR(2., build_l->_buildingProgress, 1e-5);
+	EXPECT_NEAR(2., to_double(build_l->_buildingProgress), 1e-5);
 	EXPECT_TRUE(build_l->_alive);
 }
 
@@ -158,6 +158,6 @@ TEST(buildingCommandTest, cancelled)
 	EXPECT_NEAR(5., to_double(state_l->getEntity(1)->_pos.x), 1e-5);
 	EXPECT_NEAR(3.5, to_double(state_l->getEntity(1)->_pos.y), 1e-5);
 	build_l = static_cast<Building const *>(state_l->getEntity(2));
-	EXPECT_NEAR(2., build_l->_buildingProgress, 1e-5);
+	EXPECT_NEAR(2., to_double(build_l->_buildingProgress), 1e-5);
 	EXPECT_TRUE(build_l->_alive);
 }

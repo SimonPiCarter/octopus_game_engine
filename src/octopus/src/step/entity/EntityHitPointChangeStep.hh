@@ -18,7 +18,7 @@ namespace octopus
 			/// @param anticipatedHp_p this is the hp of the entity based on the current state and step this steppable is added
 			/// using getHpChange from step would be required here
 			/// @param hpMax_p max hop of the target to clamp delta if necessary
-			EntityHitPointChangeStep(Handle const &handle_p, double delta_p, double anticipatedHp_p, double hpMax_p);
+			EntityHitPointChangeStep(Handle const &handle_p, Fixed delta_p, Fixed anticipatedHp_p, Fixed hpMax_p);
 
 			virtual void apply(State &state_p) const override;
 			virtual void revert(State &state_p, SteppableData const *) const override;
@@ -30,7 +30,7 @@ namespace octopus
 			}
 
 			Handle _handle {0};
-			double _delta;
+			Fixed _delta;
 	};
 }
 

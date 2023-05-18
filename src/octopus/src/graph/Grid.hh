@@ -20,7 +20,7 @@ class Grid
 {
 public:
 	/// @brief create the grid with the given dimensions
-	Grid(size_t sizeX_p, size_t sizeY_p, double stepX_p, double stepY_p, bool noGraph_p=false);
+	Grid(size_t sizeX_p, size_t sizeY_p, Fixed stepX_p, Fixed stepY_p, bool noGraph_p=false);
 
 	~Grid();
 
@@ -35,8 +35,8 @@ public:
 	size_t getSizeX() const { return _sizeX; }
 	size_t getSizeY() const { return _sizeY; }
 
-	double getStepX() const { return _stepX; }
-	double getStepY() const { return _stepY; }
+	Fixed getStepX() const { return _stepX; }
+	Fixed getStepY() const { return _stepY; }
 
 	std::vector<std::vector<GridNode *> > const & getInternalGrid() const { return _internalGrid; }
 private:
@@ -49,8 +49,8 @@ private:
 	size_t const _sizeX;
 	size_t const _sizeY;
 
-	double const _stepX;
-	double const _stepY;
+	Fixed const _stepX;
+	Fixed const _stepY;
 };
 
 } // namespace octopus

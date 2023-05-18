@@ -2,6 +2,7 @@
 #define __Buff__
 
 #include <string>
+#include "utils/Fixed.hh"
 
 namespace octopus
 {
@@ -10,8 +11,8 @@ class State;
 
 struct Buff
 {
-	double _offset {0.};
-	double _coef {0.};
+	Fixed _offset {0.};
+	Fixed _coef {0.};
 };
 
 struct TyppedBuff : public Buff
@@ -59,7 +60,7 @@ struct Buffer
 	/// @brief reload time to apply buff
 	unsigned long _reload {0};
 	/// @brief range to apply buff
-	double _range {3.};
+	Fixed _range {3.};
 	/// @brief the buff than can be applied
 	TyppedBuff _buff;
 };

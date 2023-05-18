@@ -27,44 +27,44 @@ bool Entity::isIgnoringCollision() const
 	return false;
 }
 
-double applyBuff(double val_p, Buff const &buff_p)
+Fixed applyBuff(Fixed val_p, Buff const &buff_p)
 {
-	return std::max(0., val_p + buff_p._offset ) * std::max( 0.1, 1. + buff_p._coef );
+	return std::max(Fixed(0.), val_p + buff_p._offset ) * std::max( Fixed(0.1), 1. + buff_p._coef );
 }
 
-double Entity::getStepSpeed() const
+Fixed Entity::getStepSpeed() const
 {
 	return applyBuff( _model._stepSpeed, _buffSpeed);
 }
 
-double Entity::getFullReload() const
+Fixed Entity::getFullReload() const
 {
 	return applyBuff( _model._fullReload, _buffFullReload);
 }
 
-double Entity::getDamage(EntityModel const &target_p) const
+Fixed Entity::getDamage(EntityModel const &target_p) const
 {
 	return applyBuff( _model._damage, _buffDamage) + getBonus(target_p._id, _model);
 }
-double Entity::getDamageNoBonus() const
+Fixed Entity::getDamageNoBonus() const
 {
 	return applyBuff( _model._damage, _buffDamage);
 }
-double Entity::getArmor() const
+Fixed Entity::getArmor() const
 {
 	return applyBuff( _model._armor, _buffArmor);
 }
-double Entity::getHpMax() const
+Fixed Entity::getHpMax() const
 {
-	return std::max(1., applyBuff( _model._hpMax, _buffHpMax));
+	return std::max(Fixed(1), applyBuff( _model._hpMax, _buffHpMax));
 }
 
-double Entity::getProduction() const
+Fixed Entity::getProduction() const
 {
 	return applyBuff( 1., _buffProduction);
 }
 
-double Entity::getHarvest() const
+Fixed Entity::getHarvest() const
 {
 	return applyBuff( 1., _buffHarvest);
 }

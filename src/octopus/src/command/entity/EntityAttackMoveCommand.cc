@@ -30,7 +30,7 @@ EntityAttackMoveCommand::EntityAttackMoveCommand(Handle const &commandHandle_p, 
 bool shouldStopAttacking(AttackMoveData const &attackMoveData_p, Entity const *ent_p)
 {
 	/// distance when to stop running after target (squared)
-	double maxSqDistance_l = 25.;
+	Fixed maxSqDistance_l = 25.;
 	Vector diff_l = ent_p->_pos - attackMoveData_p._positionFromAttack;
 	return square_length(diff_l) > maxSqDistance_l;
 }
@@ -55,7 +55,7 @@ bool EntityAttackMoveCommand::applyCommand(Step & step_p, State const &state_p, 
 		attackMoveData_l._subAttackCommand.cleanUp(step_p, state_p, data_p);
 		// get non const pointer here (required by the step)
 		step_p.addSteppable(new CommandDelSubAttackStep(_handleCommand, attackMoveData_l._subAttackCommand.getSource(), attackMoveData_l._subAttackCommand.getTarget()));
-		// return false is necessary here to avoid double move step
+		// return false is necessary here to avoid Fixed move step
 		return false;
 	}
 	else

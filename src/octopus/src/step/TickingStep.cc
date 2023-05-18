@@ -9,7 +9,7 @@
 namespace octopus
 {
 
-double const TickingStep::_anchorLoss = 0.01;
+Fixed const TickingStep::_anchorLoss = 0.01;
 
 void TickingStep::apply(State &state_p) const
 {

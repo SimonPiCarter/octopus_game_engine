@@ -18,9 +18,9 @@ namespace octopus
 class ChainingOverTime : public CommandEffectOverTime
 {
 public:
-    ChainingOverTime(Handle handle_p, unsigned long tickRate_p, double dmg_p,
-                    Handle ent_p, unsigned long nbOfOccurence_p, double ratio_p,
-                    double range_p, unsigned long team_p, std::list<Handle> const &oldTargets_p = {})
+    ChainingOverTime(Handle handle_p, unsigned long tickRate_p, Fixed dmg_p,
+                    Handle ent_p, unsigned long nbOfOccurence_p, Fixed ratio_p,
+                    Fixed range_p, unsigned long team_p, std::list<Handle> const &oldTargets_p = {})
         : CommandEffectOverTime(handle_p, tickRate_p, 1)
         , _dmg(dmg_p)
         , _ent(ent_p)
@@ -34,13 +34,13 @@ public:
 	virtual void applyEffect(Step & step_p, State const &state_p, CommandData const * , PathManager &) const override;
 protected:
     /// @brief damage per tick
-    double const _dmg;
+    Fixed const _dmg;
     /// @brief the handle of entity to deal damage to
     Handle const _ent;
 
     unsigned long const _nbOfOccurence;
-    double const _ratio;
-    double const _range;
+    Fixed const _ratio;
+    Fixed const _range;
     unsigned long const _team;
 
     std::list<Handle> _oldTargets;
@@ -67,8 +67,8 @@ void ChainingOverTime::applyEffect(Step & step_p, State const &state_p, CommandD
         return;
     }
 
-    double maxHp_l = target_l->getHpMax();
-    double curHp_l = target_l->_hp + step_p.getHpChange(_ent);
+    Fixed maxHp_l = target_l->getHpMax();
+    Fixed curHp_l = target_l->_hp + step_p.getHpChange(_ent);
     step_p.addSteppable(new EntityHitPointChangeStep(target_l->_handle, -_dmg, curHp_l, maxHp_l));
 
     if(_nbOfOccurence > 1)
@@ -92,9 +92,9 @@ void ChainingModifier::newAttackSteppable(std::vector<Steppable *> &vec_r, const
 
     if(!disableMainAttack_p)
     {
-        double dmg_l = std::min(-1., target_p.getArmor() - ent_p.getDamage(target_p._model));
-        double curHp_l = target_p._hp + step_p.getHpChange(target_p._handle);
-        double maxHp_l = target_p.getHpMax();
+        Fixed dmg_l = std::min(Fixed(-1), target_p.getArmor() - ent_p.getDamage(target_p._model));
+        Fixed curHp_l = target_p._hp + step_p.getHpChange(target_p._handle);
+        Fixed maxHp_l = target_p.getHpMax();
         vec_r.push_back(new EntityHitPointChangeStep(target_p._handle, dmg_l, curHp_l, maxHp_l));
     }
 }

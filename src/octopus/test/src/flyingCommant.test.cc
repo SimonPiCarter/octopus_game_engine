@@ -32,7 +32,7 @@ public:
 
 	virtual void applyEffect(Step & step_p, State const &, CommandData const *, PathManager &) const
 	{
-		std::map<ResourceType, double> map_l;
+		std::map<ResourceType, Fixed> map_l;
 		map_l[ResourceType::Food] = -10.;
 
 		step_p.addSteppable(new PlayerSpendResourceStep(0, map_l));
@@ -64,7 +64,7 @@ TEST(flyingCommantTest, simple)
 
 	state_l = controller_l.queryState();
 
-	EXPECT_NEAR(0., getResource(*state_l->getPlayer(0), ResourceType::Food), 1e-3);
+	EXPECT_NEAR(0., to_double(getResource(*state_l->getPlayer(0), ResourceType::Food)), 1e-3);
 
 	// update time to 1 seconds (11)
 	controller_l.update(1.);
@@ -74,7 +74,7 @@ TEST(flyingCommantTest, simple)
 
 	state_l = controller_l.queryState();
 
-	EXPECT_NEAR(10., getResource(*state_l->getPlayer(0), ResourceType::Food), 1e-3);
+	EXPECT_NEAR(10., to_double(getResource(*state_l->getPlayer(0), ResourceType::Food)), 1e-3);
 
 	// update time to 9 seconds (20)
 	// One step to trigger effect
@@ -85,7 +85,7 @@ TEST(flyingCommantTest, simple)
 
 	state_l = controller_l.queryState();
 
-	EXPECT_NEAR(10., getResource(*state_l->getPlayer(0), ResourceType::Food), 1e-3);
+	EXPECT_NEAR(10., to_double(getResource(*state_l->getPlayer(0), ResourceType::Food)), 1e-3);
 
 	// update time to 1 seconds (21)
 	controller_l.update(1.);
@@ -95,7 +95,7 @@ TEST(flyingCommantTest, simple)
 
 	state_l = controller_l.queryState();
 
-	EXPECT_NEAR(20., getResource(*state_l->getPlayer(0), ResourceType::Food), 1e-3);
+	EXPECT_NEAR(20., to_double(getResource(*state_l->getPlayer(0), ResourceType::Food)), 1e-3);
 
 	// update time to 100 seconds (121)
 	controller_l.update(100.);
@@ -105,5 +105,5 @@ TEST(flyingCommantTest, simple)
 
 	state_l = controller_l.queryState();
 
-	EXPECT_NEAR(20., getResource(*state_l->getPlayer(0), ResourceType::Food), 1e-3);
+	EXPECT_NEAR(20., to_double(getResource(*state_l->getPlayer(0), ResourceType::Food)), 1e-3);
 }

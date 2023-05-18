@@ -52,11 +52,11 @@ std::list<Steppable const *> const &Step::getSteppable() const
 	return _listSteppable;
 }
 
-double & Step::getResourceSpent(unsigned long player_p, ResourceType res_p)
+Fixed & Step::getResourceSpent(unsigned long player_p, ResourceType res_p)
 {
 	return _spent[player_p][res_p];
 }
-double Step::getResourceSpent(unsigned long player_p, ResourceType res_p) const
+Fixed Step::getResourceSpent(unsigned long player_p, ResourceType res_p) const
 {
 	auto &&itPlayer_l = _spent.find(player_p);
 	if(itPlayer_l == _spent.end())
@@ -71,10 +71,10 @@ double Step::getResourceSpent(unsigned long player_p, ResourceType res_p) const
 	return itRes_l->second;
 }
 
-const std::map<ResourceType, double> & Step::getResourceSpent(unsigned long player_p) const
+const std::map<ResourceType, Fixed> & Step::getResourceSpent(unsigned long player_p) const
 {
 	/// @brief static empty map when no resources spent for player
-	static std::map<ResourceType, double> empty_l;
+	static std::map<ResourceType, Fixed> empty_l;
 	auto &&itPlayer_l = _spent.find(player_p);
 	if(itPlayer_l == _spent.end())
 	{
@@ -138,17 +138,17 @@ bool Step::isCmdCanceled(CommandIdx cmdidx_p) const
 	return _canceledCmd.find(cmdidx_p) != _canceledCmd.end();
 }
 
-void Step::addHpChange(Handle const &handle_p, double delta_p)
+void Step::addHpChange(Handle const &handle_p, Fixed delta_p)
 {
 	_hpChange[handle_p] += delta_p;
 }
 
-std::unordered_map<Handle, double> const& Step::getHpChange() const
+std::unordered_map<Handle, Fixed> const& Step::getHpChange() const
 {
 	return _hpChange;
 }
 
-double Step::getHpChange(Handle const &handle_p) const
+Fixed Step::getHpChange(Handle const &handle_p) const
 {
 	auto it_l = _hpChange.find(handle_p);
 	if(it_l != _hpChange.end())

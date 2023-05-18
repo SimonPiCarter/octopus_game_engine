@@ -11,7 +11,7 @@ namespace octopus
 class ProductionProgressionStep : public Steppable
 {
 	public:
-		ProductionProgressionStep(Handle const &handle_p, double delta_p) : _handle(handle_p), _delta(delta_p) {}
+		ProductionProgressionStep(Handle const &handle_p, Fixed delta_p) : _handle(handle_p), _delta(delta_p) {}
 
 		virtual void apply(State &state_p) const override;
 		virtual void revert(State &state_p, SteppableData const *) const override;
@@ -23,7 +23,7 @@ class ProductionProgressionStep : public Steppable
 		}
 
 		Handle const _handle {0};
-		double const _delta;
+		Fixed const _delta;
 };
 }
 

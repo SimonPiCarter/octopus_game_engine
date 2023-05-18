@@ -6,6 +6,7 @@
 #include "state/Handle.hh"
 #include "step/Steppable.hh"
 #include "state/ResourceType.hh"
+#include "utils/Fixed.hh"
 
 namespace octopus
 {
@@ -14,7 +15,7 @@ class PlayerSpendResourceStep : public Steppable
 {
 public:
 	/// @brief dropped is the qty buffed
-	PlayerSpendResourceStep(unsigned long player_p, std::map<ResourceType, double> const & delta_p)
+	PlayerSpendResourceStep(unsigned long player_p, std::map<ResourceType, Fixed> const & delta_p)
 		: _player(player_p), _delta(delta_p) {}
 
 	virtual void apply(State &state_p) const override;
@@ -27,7 +28,7 @@ public:
 	}
 
 	unsigned long _player {0};
-	std::map<ResourceType, double> _delta;
+	std::map<ResourceType, Fixed> _delta;
 };
 
 } // namespace octopus

@@ -9,7 +9,7 @@
 
 namespace octopus
 {
-OrcaManager::OrcaManager(double timeStep_p, double neighborDist_p, size_t maxNeighbors_p, double timeHorizon_p, double timeHorizonObst_p) :
+OrcaManager::OrcaManager(Fixed timeStep_p, Fixed neighborDist_p, size_t maxNeighbors_p, Fixed timeHorizon_p, Fixed timeHorizonObst_p) :
     _timeStep(timeStep_p),
     _neighborDist(neighborDist_p),
     _maxNeighbors(maxNeighbors_p),

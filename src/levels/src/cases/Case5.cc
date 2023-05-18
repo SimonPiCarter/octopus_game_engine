@@ -159,7 +159,7 @@ std::list<Steppable *> Case5(Library &lib_p)
 	Building abandonnedTemple_l({23, 20}, true, lib_p.getBuildingModel("abandonned_temple"));
 
 
-	std::map<ResourceType, double> mapRes_l;
+	std::map<ResourceType, Fixed> mapRes_l;
 	mapRes_l[octopus::ResourceType::Gas] = -1000;
 	mapRes_l[octopus::ResourceType::Ether] = -1000;
 	mapRes_l[octopus::ResourceType::Food] = -1000;

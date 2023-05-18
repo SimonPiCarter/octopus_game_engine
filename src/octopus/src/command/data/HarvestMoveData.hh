@@ -28,7 +28,7 @@ struct HarvestMoveData : public MoveData
 	bool _harvesting { true };
 
 	/// @brief time since harvest
-	double _timeSinceHarvest {0.};
+	Fixed _timeSinceHarvest {0.};
 };
 
 } // namespace octopus

@@ -18,9 +18,9 @@ void DotModifier::newAttackSteppable(std::vector<Steppable *> &vec_r, const Enti
 
     if(!disableMainAttack_p)
     {
-        double dmg_l = std::min(-1., target_p.getArmor() - ent_p.getDamage(target_p._model));
-        double curHp_l = target_p._hp + step_p.getHpChange(target_p._handle);
-        double maxHp_l = target_p.getHpMax();
+        Fixed dmg_l = std::min(Fixed(-1), target_p.getArmor() - ent_p.getDamage(target_p._model));
+        Fixed curHp_l = target_p._hp + step_p.getHpChange(target_p._handle);
+        Fixed maxHp_l = target_p.getHpMax();
         vec_r.push_back(new EntityHitPointChangeStep(target_p._handle, dmg_l, curHp_l, maxHp_l));
     }
 }

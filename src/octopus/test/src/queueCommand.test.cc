@@ -70,7 +70,7 @@ TEST(queueCommandTest, simple)
 
 	EXPECT_NEAR(6., to_double(state_l->getEntity(0)->_pos.x), 1e-5);
 	EXPECT_NEAR(3., to_double(state_l->getEntity(0)->_pos.y), 1e-5);
-	EXPECT_NEAR(3., state_l->getEntity(1)->_hp, 1e-5);
+	EXPECT_NEAR(3., to_double(state_l->getEntity(1)->_hp), 1e-5);
 
 	// update time to 2 seconds (5)
 	controller_l.update(2.);
@@ -80,7 +80,7 @@ TEST(queueCommandTest, simple)
 	state_l = controller_l.queryState();
 
 	// wind up should just be over but no damage still
-	EXPECT_NEAR(3., state_l->getEntity(1)->_hp, 1e-5);
+	EXPECT_NEAR(3., to_double(state_l->getEntity(1)->_hp), 1e-5);
 
 
 	// update time to 1 second (6)
@@ -91,7 +91,7 @@ TEST(queueCommandTest, simple)
 	state_l = controller_l.queryState();
 
 	// damage has been done
-	EXPECT_NEAR(0., state_l->getEntity(1)->_hp, 1e-5);
+	EXPECT_NEAR(0., to_double(state_l->getEntity(1)->_hp), 1e-5);
 
 
 	// update time to 1 second (7)

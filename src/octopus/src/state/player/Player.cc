@@ -14,7 +14,7 @@ Player::~Player()
 	}
 }
 
-double getResource(Player const &player_p, ResourceType type_p)
+Fixed getResource(Player const &player_p, ResourceType type_p)
 {
 	auto &&it_l = player_p._resources.find(type_p);
 	if(it_l != player_p._resources.end())
@@ -44,14 +44,14 @@ unsigned long getDivLvl(Player const &player_p, DivinityType type_p)
 	return 0;
 }
 
-double getDivAnchor(Player const &player_p, DivinityType type_p, bool floor_p)
+Fixed getDivAnchor(Player const &player_p, DivinityType type_p, bool floor_p)
 {
 	auto &&it_l = player_p._divAnchor.find(type_p);
 	if(it_l != player_p._divAnchor.end())
 	{
-		return floor_p ? std::max(0., it_l->second) : it_l->second;
+		return floor_p ? std::max(Fixed(0), it_l->second) : it_l->second;
 	}
-	return 0.;
+	return 0;
 }
 
 

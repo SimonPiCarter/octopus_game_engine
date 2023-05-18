@@ -50,7 +50,7 @@ EntityMoveStep createEntityMoveStep(Entity const &ent_p)
 	return EntityMoveStep { ent_p._handle, {0., 0.} };
 }
 
-EntityMoveStep createEntityMoveStep(Entity const &ent_p, Vector const &target_p, double stepSpeed_p)
+EntityMoveStep createEntityMoveStep(Entity const &ent_p, Vector const &target_p, Fixed stepSpeed_p)
 {
 	Vector move_l = target_p - ent_p._pos;
 	Fixed length_l = length(move_l);

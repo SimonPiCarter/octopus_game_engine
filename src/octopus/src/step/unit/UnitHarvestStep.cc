@@ -56,7 +56,7 @@ void UnitHarvestQuantityStep::revert(State &state_p, SteppableData const *) cons
 
 bool UnitHarvestQuantityStep::isNoOp() const
 {
-	return std::abs(_qty) < 1e-3;
+	return ::is_zero(_qty);
 }
 
 void UnitHarvestTypeStep::apply(State &state_p) const
@@ -101,7 +101,7 @@ void UnitHarvestDropStep::revert(State &state_p, SteppableData const *) const
 
 bool UnitHarvestDropStep::isNoOp() const
 {
-	return std::abs(_qty) < 1e-3;
+	return ::is_zero(_qty);
 }
 
 } // namespace octopus

@@ -13,9 +13,9 @@ namespace octopus
 
 void SelfDamageModifier::newAttackSteppable(std::vector<Steppable *> &vec_r, const Entity &ent_p, const Entity &, State const &state_p, Step const &step_p, bool) const
 {
-	double curHp_l = ent_p._hp + step_p.getHpChange(ent_p._handle);
-	double maxHp_l = ent_p.getHpMax();
-    double dmg_l = _damage + (ent_p._hp + step_p.getHpChange(ent_p._handle)) * _ratioCurHp + ent_p.getHpMax() * _ratioMaxHp;
+	Fixed curHp_l = ent_p._hp + step_p.getHpChange(ent_p._handle);
+	Fixed maxHp_l = ent_p.getHpMax();
+    Fixed dmg_l = _damage + (ent_p._hp + step_p.getHpChange(ent_p._handle)) * _ratioCurHp + ent_p.getHpMax() * _ratioMaxHp;
     // if cannot kill we set hp to 1 at minimum
     if(!_canKill && dmg_l >= curHp_l)
     {

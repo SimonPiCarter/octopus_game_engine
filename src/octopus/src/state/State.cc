@@ -230,7 +230,7 @@ long State::getGridIndex(Fixed idx_p) const
 	return std::min(std::max(0l, long(to_int(idx_p/long(_gridPointSize)))), size_l-1);
 }
 
-Entity const * lookUpNewBuffTarget(State const &state_p, Handle const &sourceHandle_p, double range_p, TyppedBuff const &buff_p)
+Entity const * lookUpNewBuffTarget(State const &state_p, Handle const &sourceHandle_p, Fixed range_p, TyppedBuff const &buff_p)
 {
 	Entity const * source_l = state_p.getEntity(sourceHandle_p);
 	Fixed matchDistance_p = range_p + source_l->_model._ray;
@@ -529,10 +529,10 @@ Entity const * lookUpNewResource(State const &state_p, Handle const &sourceHandl
 	return closest_l;
 }
 
-double safeGetInMapResource(std::map<ResourceType, double> const &map_p, ResourceType type_p)
+Fixed safeGetInMapResource(std::map<ResourceType, Fixed> const &map_p, ResourceType type_p)
 {
 	auto && it_l = map_p.find(type_p);
-	double res_l = 0.;
+	Fixed res_l = 0.;
 	if(it_l != map_p.end())
 	{
 		res_l = it_l->second;
@@ -540,13 +540,13 @@ double safeGetInMapResource(std::map<ResourceType, double> const &map_p, Resourc
 	return res_l;
 }
 
-bool checkResource(State const &state_p, unsigned long player_p, std::map<ResourceType, double> const &cost_p, std::map<ResourceType, double> const & spent_p)
+bool checkResource(State const &state_p, unsigned long player_p, std::map<ResourceType, Fixed> const &cost_p, std::map<ResourceType, Fixed> const & spent_p)
 {
 	Player const * player_l = state_p.getPlayer(player_p);
 	for(auto && pair_l : cost_p)
 	{
-		double res_l = safeGetInMapResource(player_l->_resources, pair_l.first);
-		double spent_l = safeGetInMapResource(spent_p, pair_l.first);
+		Fixed res_l = safeGetInMapResource(player_l->_resources, pair_l.first);
+		Fixed spent_l = safeGetInMapResource(spent_p, pair_l.first);
 		// One resource is too much for player resources
 		if(pair_l.second + spent_l > res_l + 1e-5)
 		{

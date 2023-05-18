@@ -53,7 +53,7 @@ void EntityBuffStep::revert(State &state_p, SteppableData const *data_p) const
 
 bool EntityBuffStep::isNoOp() const
 {
-	return std::abs(_buff._offset) < 1e-3 && std::abs(_buff._coef) < 1e-3;
+	return ::is_zero(_buff._offset) && ::is_zero(_buff._coef);
 }
 
 SteppableData * EntityBuffStep::newData(State const &state_p) const

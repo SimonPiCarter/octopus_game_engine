@@ -4,6 +4,7 @@
 #include "state/Handle.hh"
 #include "step/Steppable.hh"
 #include "state/ResourceType.hh"
+#include "utils/Fixed.hh"
 
 namespace octopus
 {
@@ -72,7 +73,7 @@ class CommandHarvestTimeSinceHarvestStep : public Steppable
 {
 public:
 	/// @brief dropped is the qty buffed
-	CommandHarvestTimeSinceHarvestStep(Handle const &handle_p, double old_p, double new_p)
+	CommandHarvestTimeSinceHarvestStep(Handle const &handle_p, Fixed old_p, Fixed new_p)
 		: _handle(handle_p), _old(old_p), _new(new_p) {}
 
 	virtual void apply(State &state_p) const override;
@@ -85,8 +86,8 @@ public:
 	}
 
 	Handle const _handle {0};
-	double const _old {0};
-	double const _new {0};
+	Fixed const _old {0};
+	Fixed const _new {0};
 };
 
 } // namespace octopus

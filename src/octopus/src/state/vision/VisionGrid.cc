@@ -87,25 +87,25 @@ void updateGrid(const Entity &ent_p, bool set_p, std::vector<std::vector<long lo
 
 void VisionGrid::updateVision(const Entity &ent_p, bool set_p, PatternHandler &patternHandler_p)
 {
-	VisionPattern const &pattern_l = patternHandler_p.getPattern(ent_p._model._lineOfSight);
+	VisionPattern const &pattern_l = patternHandler_p.getPattern(ent_p._model._lineOfSight.to_int());
 	updateGrid(ent_p, set_p, _grid, pattern_l);
 }
 
 void VisionGrid::updateExploration(const Entity &ent_p, bool set_p, PatternHandler &patternHandler_p)
 {
-	VisionPattern const &pattern_l = patternHandler_p.getPattern(ent_p._model._lineOfSight);
+	VisionPattern const &pattern_l = patternHandler_p.getPattern(ent_p._model._lineOfSight.to_int());
 	updateGrid(ent_p, set_p, _exploration, pattern_l);
 }
 
 void VisionGrid::updateVisionFromMovement(const Entity &ent_p, long dx, long dy, PatternHandler &patternHandler_p)
 {
-	VisionPattern const &pattern_l = patternHandler_p.getMovementPattern(ent_p._model._lineOfSight, dx, dy);
+	VisionPattern const &pattern_l = patternHandler_p.getMovementPattern(ent_p._model._lineOfSight.to_int(), dx, dy);
 	updateGrid(ent_p, true, _grid, pattern_l);
 }
 
 void VisionGrid::updateExplorationFromMovement(const Entity &ent_p, long dx, long dy, PatternHandler &patternHandler_p)
 {
-	VisionPattern const &pattern_l = patternHandler_p.getPattern(ent_p._model._lineOfSight);
+	VisionPattern const &pattern_l = patternHandler_p.getPattern(ent_p._model._lineOfSight.to_int());
 	updateGrid(ent_p, true, _exploration, pattern_l);
 }
 

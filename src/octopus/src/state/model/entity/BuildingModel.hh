@@ -14,7 +14,7 @@ namespace octopus
 
 	struct BuildingModel : public EntityModel
 	{
-		BuildingModel(bool isStatic_p, double ray_p, double hpMax_p);
+		BuildingModel(bool isStatic_p, Fixed ray_p, Fixed hpMax_p);
 
 		std::map<ResourceType, bool> _deposit;
 

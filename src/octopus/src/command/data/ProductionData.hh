@@ -20,7 +20,7 @@ public:
 		_paid(false),
 		_canceled(false) {}
 
-	double _progression;
+	Fixed _progression;
 	unsigned long _completeTime;
 
 	bool _paid;

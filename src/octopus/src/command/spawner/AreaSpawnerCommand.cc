@@ -33,7 +33,7 @@ AreaSpawnerCommand::~AreaSpawnerCommand()
 
 void spawn(State const &state_p, Step & step_p, Entity const *model_p, Option const &option_p)
 {
-	Vector pos_l {option_p.x + std::ceil(2*model_p->_model._ray)/2., option_p.y + std::ceil(2*model_p->_model._ray)/2. };
+	Vector pos_l {option_p.x + numeric::ceil(2*model_p->_model._ray)/2., option_p.y + numeric::ceil(2*model_p->_model._ray)/2. };
 	if(model_p->_model._isUnit)
 	{
 		Logger::getDebug()<<"AreaSpawnerCommand :: spawn unit at " << pos_l<<std::endl;
@@ -76,7 +76,7 @@ void spawn(State const &state_p, Step & step_p, Entity const *model_p, Option co
 
 void update(SpawningGrid &grid_p, EntityModel const &model_p, Option const &option_p)
 {
-	grid_p.fillGrid(option_p.x, option_p.y, std::ceil(2*model_p._ray));
+	grid_p.fillGrid(option_p.x, option_p.y, numeric::ceil(2.*model_p._ray).to_uint());
 }
 
 void AreaSpawnerCommand::registerCommand(Step & step_p, State const &state_p)
@@ -106,7 +106,7 @@ void AreaSpawnerCommand::registerCommand(Step & step_p, State const &state_p)
 			for(unsigned long i = 0 ; i < pair_l.second ; ++ i)
 			{
 				// size is 2*ray that we ceil
-				std::vector<Option> options_l = getOptions(spawn_l.x, spawn_l.y, spawn_l.size, spawn_l.size, grid_l, std::ceil(2*model_l->_model._ray));
+				std::vector<Option> options_l = getOptions(spawn_l.x, spawn_l.y, spawn_l.size, spawn_l.size, grid_l, numeric::ceil(2*model_l->_model._ray).to_uint());
 
 				// no room to spawn
 				if(options_l.empty())
@@ -142,7 +142,7 @@ void AreaSpawnerCommand::registerCommand(Step & step_p, State const &state_p)
 			for(unsigned long i = 0 ; i < pair_l.second ; ++ i)
 			{
 				// size is 2*ray that we ceil
-				std::vector<Option> options_l = getOptions(spawn_l.x, spawn_l.y, spawn_l.size, spawn_l.size, grid_l, std::ceil(2*model_l->_model._ray));
+				std::vector<Option> options_l = getOptions(spawn_l.x, spawn_l.y, spawn_l.size, spawn_l.size, grid_l, numeric::ceil(2*model_l->_model._ray).to_uint());
 
 				// no room to spawn
 				if(options_l.empty())

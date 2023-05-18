@@ -23,15 +23,15 @@ TEST(entityHitPointChangeTest, simple_overheal)
 
 	EntityHitPointChangeStep step_l(0, 10., 10., 10.);
 
-	EXPECT_NEAR(10., state_l.getEntity(0)->_hp, 1e-5);
+	EXPECT_NEAR(10., to_double(state_l.getEntity(0)->_hp), 1e-5);
 
 	step_l.apply(state_l);
 
-	EXPECT_NEAR(10., state_l.getEntity(0)->_hp, 1e-5);
+	EXPECT_NEAR(10., to_double(state_l.getEntity(0)->_hp), 1e-5);
 
 	step_l.revert(state_l, nullptr);
 
-	EXPECT_NEAR(10., state_l.getEntity(0)->_hp, 1e-5);
+	EXPECT_NEAR(10., to_double(state_l.getEntity(0)->_hp), 1e-5);
 }
 
 TEST(entityHitPointChangeTest, simple_overkill)
@@ -44,15 +44,15 @@ TEST(entityHitPointChangeTest, simple_overkill)
 
 	EntityHitPointChangeStep step_l(0, -100., 10., 10.);
 
-	EXPECT_NEAR(10., state_l.getEntity(0)->_hp, 1e-5);
+	EXPECT_NEAR(10., to_double(state_l.getEntity(0)->_hp), 1e-5);
 
 	step_l.apply(state_l);
 
-	EXPECT_NEAR(0., state_l.getEntity(0)->_hp, 1e-5);
+	EXPECT_NEAR(0., to_double(state_l.getEntity(0)->_hp), 1e-5);
 
 	step_l.revert(state_l, nullptr);
 
-	EXPECT_NEAR(10., state_l.getEntity(0)->_hp, 1e-5);
+	EXPECT_NEAR(10., to_double(state_l.getEntity(0)->_hp), 1e-5);
 }
 
 TEST(entityHitPointChangeTest, simple_buff_heal)
@@ -66,13 +66,13 @@ TEST(entityHitPointChangeTest, simple_buff_heal)
 
 	EntityHitPointChangeStep step_l(0, 5, 10., 10.);
 
-	EXPECT_NEAR(10., state_l.getEntity(0)->_hp, 1e-5);
+	EXPECT_NEAR(10., to_double(state_l.getEntity(0)->_hp), 1e-5);
 
 	step_l.apply(state_l);
 
-	EXPECT_NEAR(10., state_l.getEntity(0)->_hp, 1e-5);
+	EXPECT_NEAR(10., to_double(state_l.getEntity(0)->_hp), 1e-5);
 
 	step_l.revert(state_l, nullptr);
 
-	EXPECT_NEAR(10., state_l.getEntity(0)->_hp, 1e-5);
+	EXPECT_NEAR(10., to_double(state_l.getEntity(0)->_hp), 1e-5);
 }

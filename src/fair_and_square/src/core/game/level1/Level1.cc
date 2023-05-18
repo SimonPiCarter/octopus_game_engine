@@ -106,7 +106,7 @@ std::list<Steppable *> WaveLevelSteps(cuttlefish::Window &window_p, Library &lib
 	res3_l._resource = 2000.;
 	res3_l._player = 2;
 
-	std::map<ResourceType, double> mapRes_l;
+	std::map<ResourceType, Fixed> mapRes_l;
 	mapRes_l[octopus::ResourceType::Food] = -200;
 	mapRes_l[octopus::ResourceType::Steel] = -200;
 	mapRes_l[octopus::ResourceType::Anchor] = -180;
