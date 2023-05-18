@@ -80,6 +80,7 @@ public:
     void set_pause(bool paused_p);
     void set_over(bool over_p);
     void set_auto_file_path(String const &path_p);
+    void set_auto_file_debug(bool debug_p);
     // getters
     TypedArray<String> get_models(int handle_p, int player_p) const;
     bool is_building(String const &model_p) const;
@@ -149,6 +150,8 @@ private:
     std::thread * _controllerThread = nullptr;
     std::string _autoSavePath = "autosave.fas";
     std::ofstream * _autoSaveFile = nullptr;
+    std::ofstream * _autoSaveFileDebug = nullptr;
+    bool _enableAutoSaveFileDebug = false;
 	octopus::Library _lib;
 	octopus::RandomGenerator * _rand = nullptr;
 

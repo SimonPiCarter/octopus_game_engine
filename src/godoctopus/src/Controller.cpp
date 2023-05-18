@@ -42,6 +42,7 @@ Controller::~Controller()
         _controllerThread->join();
     }
     delete _autoSaveFile;
+    delete _autoSaveFileDebug;
     delete _controllerThread;
     delete _controller;
     delete _rand;
@@ -267,6 +268,7 @@ void Controller::init(std::list<octopus::Command *> const &commands_p, std::list
         size_t header_l = 0;
         file_p->write((char*)&header_l, sizeof(header_l));
         _controller->setOnlineSaveFile(file_p);
+        _controller->setOnlineSaveFileDebug(_autoSaveFileDebug);
     }
 
     octopus::StateAndSteps stateAndSteps_l = _controller->queryStateAndSteps();
@@ -459,6 +461,12 @@ void Controller::set_auto_file_path(String const &path_p)
     std::string path_l(path_p.utf8().get_data());
     _autoSavePath = path_l;
 }
+
+void Controller::set_auto_file_debug(bool debug_p)
+{
+    _enableAutoSaveFileDebug = debug_p;
+}
+
 
 TypedArray<String> Controller::get_models(int handle_p, int player_p) const
 {
@@ -802,6 +810,7 @@ void Controller::_bind_methods()
     ClassDB::bind_method(D_METHOD("set_pause", "pause"), &Controller::set_pause);
     ClassDB::bind_method(D_METHOD("set_over", "over"), &Controller::set_over);
     ClassDB::bind_method(D_METHOD("set_auto_file_path", "path"), &Controller::set_auto_file_path);
+    ClassDB::bind_method(D_METHOD("set_auto_file_debug", "debug"), &Controller::set_auto_file_debug);
     ClassDB::bind_method(D_METHOD("get_models", "handle", "player"), &Controller::get_models);
     ClassDB::bind_method(D_METHOD("is_building", "handle"), &Controller::is_building);
     ClassDB::bind_method(D_METHOD("get_world_size"), &Controller::get_world_size);
@@ -883,11 +892,13 @@ std::map<unsigned long, OptionManager> const &Controller::getOptionManagers() co
 
 void Controller::newAutoSaveFile()
 {
-    if(_autoSaveFile)
-    {
-        delete _autoSaveFile;
-    }
+    delete _autoSaveFile;
+    delete _autoSaveFileDebug;
     _autoSaveFile = new std::ofstream(_autoSavePath, std::ios::out | std::ios::binary);
+    if(_enableAutoSaveFileDebug)
+    {
+        _autoSaveFileDebug = new std::ofstream(_autoSavePath+".d", std::ios::out);
+    }
 }
 
 }
