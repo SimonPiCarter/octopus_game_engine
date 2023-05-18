@@ -38,6 +38,34 @@ void write(std::ofstream &file_p, std::string const &data_p)
     file_p.write((char*)data_p.c_str(), data_p.size());
 }
 
+struct BinaryWriter
+{
+    template<typename T>
+    void operator()(std::ofstream &file_p, T const &data_p)
+    {
+        write(file_p, data_p);
+    }
+};
+
+struct TextWriter
+{
+    template<typename T>
+    void operator()(std::ofstream &file_p, T const &data_p)
+    {
+        file_p<<data_p<<std::endl;
+    }
+    template<>
+    void operator()(std::ofstream &file_p, Fixed const &data_p)
+    {
+        file_p<<data_p.data()<<std::endl;
+    }
+    template<>
+    void operator()(std::ofstream &file_p, DivinityType const &data_p)
+    {
+        file_p<<(int)data_p<<std::endl;
+    }
+};
+
 template<typename T>
 void read(std::ifstream &file_p, T *data_p)
 {
@@ -53,7 +81,8 @@ void read(std::ifstream &file_p, std::string *data_p)
 }
 
 /// @brief write a command to the file based on the command id
-void writeCommand(std::ofstream &file_p, Command const *cmd_p);
+template<typename Writer_t>
+void writeCommand(std::ofstream &file_p, Command const *cmd_p, Writer_t writer_p);
 
 /// @brief read a command from the file based on the command id
 /// @return a new command to be commited to the controller
@@ -94,7 +123,20 @@ void writeListOfCommand(std::ofstream &file_p, std::list<Command *> const * list
 
     for(Command const * cmd_l : *list_p)
     {
-        writeCommand(file_p, cmd_l);
+        writeCommand(file_p, cmd_l, BinaryWriter());
+    }
+}
+
+void writeDebugListOfCommand(std::ofstream &file_p, std::list<Command *> const * list_p, size_t step_p)
+{
+    // write the step id
+    file_p<<"step : "<<step_p<<std::endl;
+    // write the number of commands for this step
+    file_p<<"size : "<<list_p->size()<<std::endl;
+
+    for(Command const * cmd_l : *list_p)
+    {
+        writeCommand(file_p, cmd_l, TextWriter());
     }
 }
 
@@ -142,155 +184,156 @@ void readCommands(std::ifstream &file_p, Controller &controller_p, Library const
     }
 }
 
-void writeCommand(std::ofstream &file_p, Command const *cmd_p)
+template<typename Writer_t>
+void writeCommand(std::ofstream &file_p, Command const *cmd_p, Writer_t writer_p)
 {
     // write common info
-    write(file_p, cmd_p->isQueued());
+    writer_p(file_p, cmd_p->isQueued());
 
     if(dynamic_cast<EntityAttackCommand const *>(cmd_p))
     {
-        write(file_p, 1ul);
+        writer_p(file_p, 1ul);
         EntityAttackCommand const *typped_l = dynamic_cast<EntityAttackCommand const *>(cmd_p);
-        write(file_p, typped_l->getSource());
-        write(file_p, typped_l->getTarget());
-        write(file_p, typped_l->isFrozenTarget());
+        writer_p(file_p, typped_l->getSource());
+        writer_p(file_p, typped_l->getTarget());
+        writer_p(file_p, typped_l->isFrozenTarget());
     }
     else if(dynamic_cast<EntityMoveCommand const *>(cmd_p))
     {
-        write(file_p, 2ul);
+        writer_p(file_p, 2ul);
         EntityMoveCommand const *typped_l = dynamic_cast<EntityMoveCommand const *>(cmd_p);
-        write(file_p, typped_l->getHandleCommand());
-        write(file_p, typped_l->getFinalPoint());
-        write(file_p, typped_l->getGridStatus());
-        write(file_p, typped_l->getWaypoints().size());
+        writer_p(file_p, typped_l->getHandleCommand());
+        writer_p(file_p, typped_l->getFinalPoint());
+        writer_p(file_p, typped_l->getGridStatus());
+        writer_p(file_p, typped_l->getWaypoints().size());
         for(Vector const &vec_l : typped_l->getWaypoints())
         {
-            write(file_p, vec_l);
+            writer_p(file_p, vec_l);
         }
-        write(file_p, typped_l->isInit());
+        writer_p(file_p, typped_l->isInit());
     }
     else if(dynamic_cast<EntityAttackMoveCommand const *>(cmd_p))
     {
-        write(file_p, 3ul);
+        writer_p(file_p, 3ul);
         EntityAttackMoveCommand const *typped_l = dynamic_cast<EntityAttackMoveCommand const *>(cmd_p);
-        write(file_p, typped_l->getSubMoveCommand().getHandleCommand());
-        write(file_p, typped_l->getSubMoveCommand().getFinalPoint());
-        write(file_p, typped_l->getSubMoveCommand().getGridStatus());
-        write(file_p, typped_l->getSubMoveCommand().getWaypoints().size());
+        writer_p(file_p, typped_l->getSubMoveCommand().getHandleCommand());
+        writer_p(file_p, typped_l->getSubMoveCommand().getFinalPoint());
+        writer_p(file_p, typped_l->getSubMoveCommand().getGridStatus());
+        writer_p(file_p, typped_l->getSubMoveCommand().getWaypoints().size());
         for(Vector const &vec_l : typped_l->getSubMoveCommand().getWaypoints())
         {
-            write(file_p, vec_l);
+            writer_p(file_p, vec_l);
         }
-        write(file_p, typped_l->getSubMoveCommand().isInit());
+        writer_p(file_p, typped_l->getSubMoveCommand().isInit());
     }
     else if(dynamic_cast<EntityBuildingCommand const *>(cmd_p))
     {
-        write(file_p, 4ul);
+        writer_p(file_p, 4ul);
         EntityBuildingCommand const *typped_l = dynamic_cast<EntityBuildingCommand const *>(cmd_p);
-        write(file_p, typped_l->getTarget());
-        write(file_p, typped_l->getSubMoveCommand().getHandleCommand());
-        write(file_p, typped_l->getSubMoveCommand().getFinalPoint());
-        write(file_p, typped_l->getSubMoveCommand().getGridStatus());
-        write(file_p, typped_l->getSubMoveCommand().getWaypoints().size());
+        writer_p(file_p, typped_l->getTarget());
+        writer_p(file_p, typped_l->getSubMoveCommand().getHandleCommand());
+        writer_p(file_p, typped_l->getSubMoveCommand().getFinalPoint());
+        writer_p(file_p, typped_l->getSubMoveCommand().getGridStatus());
+        writer_p(file_p, typped_l->getSubMoveCommand().getWaypoints().size());
         for(Vector const &vec_l : typped_l->getSubMoveCommand().getWaypoints())
         {
-            write(file_p, vec_l);
+            writer_p(file_p, vec_l);
         }
-        write(file_p, typped_l->getSubMoveCommand().isInit());
+        writer_p(file_p, typped_l->getSubMoveCommand().isInit());
     }
     else if(dynamic_cast<EntityWaitCommand const *>(cmd_p))
     {
-        write(file_p, 5ul);
+        writer_p(file_p, 5ul);
         EntityWaitCommand const *typped_l = dynamic_cast<EntityWaitCommand const *>(cmd_p);
-        write(file_p, typped_l->getHandleCommand());
+        writer_p(file_p, typped_l->getHandleCommand());
     }
     else if(dynamic_cast<BuildingBlueprintCommand const *>(cmd_p))
     {
-        write(file_p, 6ul);
+        writer_p(file_p, 6ul);
         BuildingBlueprintCommand const *typped_l = dynamic_cast<BuildingBlueprintCommand const *>(cmd_p);
-        write(file_p, typped_l->getPos());
-        write(file_p, typped_l->getPlayer());
-        write(file_p, typped_l->getModel()._id);
-        write(file_p, typped_l->getBuilders().size());
+        writer_p(file_p, typped_l->getPos());
+        writer_p(file_p, typped_l->getPlayer());
+        writer_p(file_p, typped_l->getModel()._id);
+        writer_p(file_p, typped_l->getBuilders().size());
         for(Handle const &handle_l : typped_l->getBuilders())
         {
-            write(file_p, handle_l);
+            writer_p(file_p, handle_l);
         }
     }
     else if(dynamic_cast<BuildingUnitProductionCommand const *>(cmd_p))
     {
-        write(file_p, 7ul);
+        writer_p(file_p, 7ul);
         BuildingUnitProductionCommand const *typped_l = dynamic_cast<BuildingUnitProductionCommand const *>(cmd_p);
-        write(file_p, typped_l->getHandleCommand());
-        write(file_p, typped_l->getModel()._id);
+        writer_p(file_p, typped_l->getHandleCommand());
+        writer_p(file_p, typped_l->getModel()._id);
     }
     else if(dynamic_cast<UnitDropCommand const *>(cmd_p))
     {
-        write(file_p, 8ul);
+        writer_p(file_p, 8ul);
         UnitDropCommand const *typped_l = dynamic_cast<UnitDropCommand const *>(cmd_p);
-        write(file_p, typped_l->getDeposit());
-        write(file_p, typped_l->getSubMoveCommand().getHandleCommand());
-        write(file_p, typped_l->getSubMoveCommand().getFinalPoint());
-        write(file_p, typped_l->getSubMoveCommand().getGridStatus());
-        write(file_p, typped_l->getSubMoveCommand().getWaypoints().size());
+        writer_p(file_p, typped_l->getDeposit());
+        writer_p(file_p, typped_l->getSubMoveCommand().getHandleCommand());
+        writer_p(file_p, typped_l->getSubMoveCommand().getFinalPoint());
+        writer_p(file_p, typped_l->getSubMoveCommand().getGridStatus());
+        writer_p(file_p, typped_l->getSubMoveCommand().getWaypoints().size());
         for(Vector const &vec_l : typped_l->getSubMoveCommand().getWaypoints())
         {
-            write(file_p, vec_l);
+            writer_p(file_p, vec_l);
         }
-        write(file_p, typped_l->getSubMoveCommand().isInit());
+        writer_p(file_p, typped_l->getSubMoveCommand().isInit());
     }
     else if(dynamic_cast<UnitHarvestCommand const *>(cmd_p))
     {
-        write(file_p, 9ul);
+        writer_p(file_p, 9ul);
         UnitHarvestCommand const *typped_l = dynamic_cast<UnitHarvestCommand const *>(cmd_p);
-        write(file_p, typped_l->getResource());
-        write(file_p, typped_l->getSubMoveCommand().getHandleCommand());
-        write(file_p, typped_l->getSubMoveCommand().getFinalPoint());
-        write(file_p, typped_l->getSubMoveCommand().getGridStatus());
-        write(file_p, typped_l->getSubMoveCommand().getWaypoints().size());
+        writer_p(file_p, typped_l->getResource());
+        writer_p(file_p, typped_l->getSubMoveCommand().getHandleCommand());
+        writer_p(file_p, typped_l->getSubMoveCommand().getFinalPoint());
+        writer_p(file_p, typped_l->getSubMoveCommand().getGridStatus());
+        writer_p(file_p, typped_l->getSubMoveCommand().getWaypoints().size());
         for(Vector const &vec_l : typped_l->getSubMoveCommand().getWaypoints())
         {
-            write(file_p, vec_l);
+            writer_p(file_p, vec_l);
         }
-        write(file_p, typped_l->getSubMoveCommand().isInit());
+        writer_p(file_p, typped_l->getSubMoveCommand().isInit());
     }
     else if(dynamic_cast<PlayerChoseOptionCommand const *>(cmd_p))
     {
-        write(file_p, 10ul);
+        writer_p(file_p, 10ul);
         PlayerChoseOptionCommand const *typped_l = dynamic_cast<PlayerChoseOptionCommand const *>(cmd_p);
-        write(file_p, typped_l->getPlayer());
-        write(file_p, typped_l->getKey());
-        write(file_p, typped_l->getOption());
+        writer_p(file_p, typped_l->getPlayer());
+        writer_p(file_p, typped_l->getKey());
+        writer_p(file_p, typped_l->getOption());
     }
     else if(dynamic_cast<PlayerChoseDivinityCommand const *>(cmd_p))
     {
-        write(file_p, 11ul);
+        writer_p(file_p, 11ul);
         PlayerChoseDivinityCommand const *typped_l = dynamic_cast<PlayerChoseDivinityCommand const *>(cmd_p);
-        write(file_p, typped_l->getPlayer());
-        write(file_p, typped_l->getType());
+        writer_p(file_p, typped_l->getPlayer());
+        writer_p(file_p, typped_l->getType());
     }
     else if(dynamic_cast<BuildingUnitCancelCommand const *>(cmd_p))
     {
-        write(file_p, 12ul);
+        writer_p(file_p, 12ul);
         BuildingUnitCancelCommand const *typped_l = dynamic_cast<BuildingUnitCancelCommand const *>(cmd_p);
-        write(file_p, typped_l->getHandleCommand());
-        write(file_p, typped_l->_idx);
+        writer_p(file_p, typped_l->getHandleCommand());
+        writer_p(file_p, typped_l->_idx);
     }
     else if(dynamic_cast<BuildingCancelCommand const *>(cmd_p))
     {
-        write(file_p, 13ul);
+        writer_p(file_p, 13ul);
         BuildingCancelCommand const *typped_l = dynamic_cast<BuildingCancelCommand const *>(cmd_p);
-        write(file_p, typped_l->getHandleCommand());
+        writer_p(file_p, typped_l->getHandleCommand());
     }
     else if(dynamic_cast<BuildingRallyPointCommand const *>(cmd_p))
     {
-        write(file_p, 14ul);
+        writer_p(file_p, 14ul);
         BuildingRallyPointCommand const *typped_l = dynamic_cast<BuildingRallyPointCommand const *>(cmd_p);
-        write(file_p, typped_l->getHandleCommand());
-        write(file_p, typped_l->_reset);
-        write(file_p, typped_l->_rallyPoint);
-        write(file_p, typped_l->_rallyPointEntityActive);
-        write(file_p, typped_l->_rallyPointEntity);
+        writer_p(file_p, typped_l->getHandleCommand());
+        writer_p(file_p, typped_l->_reset);
+        writer_p(file_p, typped_l->_rallyPoint);
+        writer_p(file_p, typped_l->_rallyPointEntityActive);
+        writer_p(file_p, typped_l->_rallyPointEntity);
     }
     else
     {

@@ -30,6 +30,9 @@ void writeCommands(std::ofstream &file_p, Controller const &controller_p);
 /// @param list_p
 void writeListOfCommand(std::ofstream &file_p, std::list<Command *> const * list_p, size_t step_l);
 
+/// @brief Same ad writeListOfCommand but write plain text instead of binary
+void writeDebugListOfCommand(std::ofstream &file_p, std::list<Command *> const * list_p, size_t step_l);
+
 /// @brief Read commands from a file
 /// @param file_p
 /// @param controller_p

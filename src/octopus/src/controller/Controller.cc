@@ -503,6 +503,11 @@ void Controller::setOnlineSaveFile(std::ofstream* of_p)
 	_of = of_p;
 }
 
+void Controller::setOnlineSaveFileDebug(std::ofstream* of_p)
+{
+	_ofDebug = of_p;
+}
+
 void Controller::updateCommitedCommand()
 {
 	while(_commitedCommands.size() <= _ongoingStep)
@@ -511,6 +516,10 @@ void Controller::updateCommitedCommand()
 		if(_of && !_commitedCommands.back()->empty())
 		{
 			writeListOfCommand(*_of, _commitedCommands.back(), _commitedCommands.size()-1);
+		}
+		if(_ofDebug && !_commitedCommands.back()->empty())
+		{
+			writeDebugListOfCommand(*_ofDebug, _commitedCommands.back(), _commitedCommands.size()-1);
 		}
 		if(_queuedCommands.empty())
 		{

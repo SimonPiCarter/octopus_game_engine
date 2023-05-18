@@ -147,6 +147,10 @@ public:
 	/// @note nullptr to disable
 	void setOnlineSaveFile(std::ofstream* of_p);
 
+	/// @brief allow online save when necessary print text file
+	/// @note nullptr to disable
+	void setOnlineSaveFileDebug(std::ofstream* of_p);
+
 private:
 	/// @brief set to true to enable orca Collision
 	/// way better performance but less predictible (should not be used in tests)
@@ -206,6 +210,9 @@ private:
 
 	/// @brief output file for online save (nullptr to disable)
 	std::ofstream* _of {nullptr};
+
+	/// @brief output file for debug online save (nullptr to disable)
+	std::ofstream* _ofDebug {nullptr};
 };
 
 } // namespace octopus
