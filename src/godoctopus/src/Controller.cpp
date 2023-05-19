@@ -517,27 +517,27 @@ int Controller::get_team(int player_p) const
 float Controller::get_steel(int player_p) const
 {
     octopus::Player const *player_l = _state->getPlayer(player_p);
-    return octopus::to_double(octopus::getResource(*player_l, octopus::ResourceType::Steel));
+    return octopus::to_double(octopus::getResource(*player_l, "Steel"));
 }
 float Controller::get_food(int player_p) const
 {
     octopus::Player const *player_l = _state->getPlayer(player_p);
-    return octopus::to_double(octopus::getResource(*player_l, octopus::ResourceType::Food));
+    return octopus::to_double(octopus::getResource(*player_l, "Food"));
 }
 float Controller::get_gas(int player_p) const
 {
     octopus::Player const *player_l = _state->getPlayer(player_p);
-    return octopus::to_double(octopus::getResource(*player_l, octopus::ResourceType::Gas));
+    return octopus::to_double(octopus::getResource(*player_l, "Gas"));
 }
 float Controller::get_anchor(int player_p) const
 {
     octopus::Player const *player_l = _state->getPlayer(player_p);
-    return octopus::to_double(octopus::getResource(*player_l, octopus::ResourceType::Anchor));
+    return octopus::to_double(octopus::getResource(*player_l, "Anchor"));
 }
 float Controller::get_ether(int player_p) const
 {
     octopus::Player const *player_l = _state->getPlayer(player_p);
-    return octopus::to_double(octopus::getResource(*player_l, octopus::ResourceType::Ether));
+    return octopus::to_double(octopus::getResource(*player_l, "Ether"));
 }
 
 bool Controller::is_visible(int x, int y, int player_p) const

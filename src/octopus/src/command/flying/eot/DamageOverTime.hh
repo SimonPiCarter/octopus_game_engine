@@ -2,7 +2,6 @@
 #define __DamageOverTime__
 
 #include "command/flying/CommandEffectOverTime.hh"
-#include "state/ResourceType.hh"
 
 namespace octopus
 {

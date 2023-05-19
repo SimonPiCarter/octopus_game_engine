@@ -19,7 +19,7 @@ std::list<Steppable *> Case3(Library &lib_p)
 {
 	UnitModel unitModel_l { false, 1., 0.25, 10. };
 	unitModel_l._isUnit = true;
-	unitModel_l._maxQuantity[ResourceType::Food] = 10;
+	unitModel_l._maxQuantity["Food"] = 10;
 	unitModel_l._productionTime = 100;
 	lib_p.registerUnitModel("unit", unitModel_l);
 

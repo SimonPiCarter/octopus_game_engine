@@ -529,7 +529,7 @@ Entity const * lookUpNewResource(State const &state_p, Handle const &sourceHandl
 	return closest_l;
 }
 
-Fixed safeGetInMapResource(std::map<ResourceType, Fixed> const &map_p, ResourceType type_p)
+Fixed safeGetInMapResource(std::map<std::string, Fixed> const &map_p, std::string type_p)
 {
 	auto && it_l = map_p.find(type_p);
 	Fixed res_l = 0.;
@@ -540,7 +540,7 @@ Fixed safeGetInMapResource(std::map<ResourceType, Fixed> const &map_p, ResourceT
 	return res_l;
 }
 
-bool checkResource(State const &state_p, unsigned long player_p, std::map<ResourceType, Fixed> const &cost_p, std::map<ResourceType, Fixed> const & spent_p)
+bool checkResource(State const &state_p, unsigned long player_p, std::map<std::string, Fixed> const &cost_p, std::map<std::string, Fixed> const & spent_p)
 {
 	Player const * player_l = state_p.getPlayer(player_p);
 	for(auto && pair_l : cost_p)

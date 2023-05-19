@@ -18,7 +18,7 @@ BuildingModel::BuildingModel(bool isStatic_p, Fixed ray_p, Fixed hpMax_p)
 	_damage = 0.;
 }
 
-bool BuildingModel::isDeposit(ResourceType type_p) const
+bool BuildingModel::isDeposit(std::string type_p) const
 {
 	auto && it_l = _deposit.find(type_p);
 	if(it_l != _deposit.end())

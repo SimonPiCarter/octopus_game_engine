@@ -3,7 +3,6 @@
 
 #include "state/Handle.hh"
 #include "step/Steppable.hh"
-#include "state/ResourceType.hh"
 #include "utils/Fixed.hh"
 
 namespace octopus
@@ -32,7 +31,7 @@ public:
 class UnitHarvestTypeStep : public Steppable
 {
 public:
-	UnitHarvestTypeStep(Handle const &handle_p, Fixed oldVal_p, ResourceType old_p, ResourceType new_p)
+	UnitHarvestTypeStep(Handle const &handle_p, Fixed oldVal_p, std::string old_p, std::string new_p)
 		: _handle(handle_p) , _oldVal(oldVal_p), _old(old_p) , _new(new_p) {}
 
 	virtual void apply(State &state_p) const override;
@@ -46,8 +45,8 @@ public:
 
 	Handle const _handle {0};
 	Fixed const _oldVal {0.};
-	ResourceType const _old {ResourceType::Food};
-	ResourceType const _new {ResourceType::Food};
+	std::string const _old {"Food"};
+	std::string const _new {"Food"};
 };
 
 class UnitHarvestDropStep : public Steppable

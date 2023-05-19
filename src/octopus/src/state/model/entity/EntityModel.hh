@@ -5,7 +5,6 @@
 #include <unordered_map>
 #include "state/entity/attackModifier/AttackModifier.hh"
 #include "state/model/requirements/Requirements.hh"
-#include "state/ResourceType.hh"
 
 namespace octopus
 {
@@ -54,7 +53,7 @@ namespace octopus
 		/// @brief those buildings are ignored when testing grid for TempleModel
 		bool _isAbandonedTemple {false};
 
-		std::map<ResourceType, Fixed> _cost;
+		std::map<std::string, Fixed> _cost;
 		/// @brief requirements
 		Requirements _requirements;
 
@@ -65,7 +64,7 @@ namespace octopus
 		std::string _id;
 	};
 
-	std::map<ResourceType, Fixed> getReverseCostMap(std::map<ResourceType, Fixed> const &cost_p);
+	std::map<std::string, Fixed> getReverseCostMap(std::map<std::string, Fixed> const &cost_p);
 
 	Fixed getBonus(std::string const &id_p, EntityModel const &model_p);
 } // namespace octopus

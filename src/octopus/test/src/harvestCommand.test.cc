@@ -33,7 +33,7 @@ TEST(harvestCommandTest, simple)
 {
 	UnitModel unitModel_l { false, 1., 1., 10. };
 	unitModel_l._isUnit = true;
-	unitModel_l._maxQuantity[ResourceType::Food] = 10;
+	unitModel_l._maxQuantity["Food"] = 10;
 	Unit unit_l({ 5, 3 }, false, unitModel_l);
 
 	EntityModel resModel_l { true, 1., 1., 10. };
@@ -43,7 +43,7 @@ TEST(harvestCommandTest, simple)
 
 	BuildingModel depositModel_l { true, 1., 10. };
 	depositModel_l._isBuilding = true;
-	depositModel_l._deposit[ResourceType::Food] = true;
+	depositModel_l._deposit["Food"] = true;
 
 	Building deposit_l({1,3}, true, depositModel_l);
 
@@ -96,7 +96,7 @@ TEST(harvestCommandTest, simple)
 
 	EXPECT_NEAR(7, to_double(state_l->getEntity(0)->_pos.x), 1e-5);
 	EXPECT_NEAR(3, to_double(state_l->getEntity(0)->_pos.y), 1e-5);
-	EXPECT_EQ(ResourceType::Food, stateUnit_l->_typeOfResource);
+	EXPECT_EQ("Food", stateUnit_l->_typeOfResource);
 	EXPECT_NEAR(1., to_double(stateUnit_l->_quantityOfResource), 1e-5);
 
 	// update time to 9 seconds (12)
@@ -110,7 +110,7 @@ TEST(harvestCommandTest, simple)
 
 	EXPECT_NEAR(7, to_double(state_l->getEntity(0)->_pos.x), 1e-5);
 	EXPECT_NEAR(3, to_double(state_l->getEntity(0)->_pos.y), 1e-5);
-	EXPECT_EQ(ResourceType::Food, stateUnit_l->_typeOfResource);
+	EXPECT_EQ("Food", stateUnit_l->_typeOfResource);
 	EXPECT_NEAR(10., to_double(stateUnit_l->_quantityOfResource), 1e-5);
 
 	// update time to 2 seconds (14) : scanning for deposit + moving
@@ -124,7 +124,7 @@ TEST(harvestCommandTest, simple)
 
 	EXPECT_NEAR(6, to_double(state_l->getEntity(0)->_pos.x), 1e-5);
 	EXPECT_NEAR(3, to_double(state_l->getEntity(0)->_pos.y), 1e-5);
-	EXPECT_EQ(ResourceType::Food, stateUnit_l->_typeOfResource);
+	EXPECT_EQ("Food", stateUnit_l->_typeOfResource);
 	EXPECT_NEAR(10., to_double(stateUnit_l->_quantityOfResource), 1e-5);
 
 	// update time to 3 seconds (17)
@@ -138,7 +138,7 @@ TEST(harvestCommandTest, simple)
 
 	EXPECT_NEAR(3, to_double(state_l->getEntity(0)->_pos.x), 1e-5);
 	EXPECT_NEAR(3, to_double(state_l->getEntity(0)->_pos.y), 1e-5);
-	EXPECT_EQ(ResourceType::Food, stateUnit_l->_typeOfResource);
+	EXPECT_EQ("Food", stateUnit_l->_typeOfResource);
 	EXPECT_NEAR(10., to_double(stateUnit_l->_quantityOfResource), 1e-5);
 
 	// update time to 1 seconds (18)
@@ -153,9 +153,9 @@ TEST(harvestCommandTest, simple)
 
 	EXPECT_NEAR(3, to_double(state_l->getEntity(0)->_pos.x), 1e-5);
 	EXPECT_NEAR(3, to_double(state_l->getEntity(0)->_pos.y), 1e-5);
-	EXPECT_EQ(ResourceType::Food, stateUnit_l->_typeOfResource);
+	EXPECT_EQ("Food", stateUnit_l->_typeOfResource);
 	EXPECT_NEAR(0., to_double(stateUnit_l->_quantityOfResource), 1e-5);
-	EXPECT_NEAR(10., to_double(getResource(*player_l, ResourceType::Food)), 1e-5);
+	EXPECT_NEAR(10., to_double(getResource(*player_l, "Food")), 1e-5);
 
 	// update time to 19 seconds (27) : full trip just before trop
 	// 4 steps : move to harvest
@@ -173,9 +173,9 @@ TEST(harvestCommandTest, simple)
 
 	EXPECT_NEAR(3, to_double(state_l->getEntity(0)->_pos.x), 1e-5);
 	EXPECT_NEAR(3, to_double(state_l->getEntity(0)->_pos.y), 1e-5);
-	EXPECT_EQ(ResourceType::Food, stateUnit_l->_typeOfResource);
+	EXPECT_EQ("Food", stateUnit_l->_typeOfResource);
 	EXPECT_NEAR(10., to_double(stateUnit_l->_quantityOfResource), 1e-5);
-	EXPECT_NEAR(10., to_double(getResource(*player_l, ResourceType::Food)), 1e-5);
+	EXPECT_NEAR(10., to_double(getResource(*player_l, "Food")), 1e-5);
 
 	// update time to 1 seconds (28) : drop
 	controller_l.update(1.);
@@ -189,9 +189,9 @@ TEST(harvestCommandTest, simple)
 
 	EXPECT_NEAR(3, to_double(state_l->getEntity(0)->_pos.x), 1e-5);
 	EXPECT_NEAR(3, to_double(state_l->getEntity(0)->_pos.y), 1e-5);
-	EXPECT_EQ(ResourceType::Food, stateUnit_l->_typeOfResource);
+	EXPECT_EQ("Food", stateUnit_l->_typeOfResource);
 	EXPECT_NEAR(0., to_double(stateUnit_l->_quantityOfResource), 1e-5);
-	EXPECT_NEAR(20., to_double(getResource(*player_l, ResourceType::Food)), 1e-5);
+	EXPECT_NEAR(20., to_double(getResource(*player_l, "Food")), 1e-5);
 
 	// no more resurce to harvest stop here
 
@@ -207,9 +207,9 @@ TEST(harvestCommandTest, simple)
 
 	EXPECT_NEAR(3, to_double(state_l->getEntity(0)->_pos.x), 1e-5);
 	EXPECT_NEAR(3, to_double(state_l->getEntity(0)->_pos.y), 1e-5);
-	EXPECT_EQ(ResourceType::Food, stateUnit_l->_typeOfResource);
+	EXPECT_EQ("Food", stateUnit_l->_typeOfResource);
 	EXPECT_NEAR(0., to_double(stateUnit_l->_quantityOfResource), 1e-5);
-	EXPECT_NEAR(20., to_double(getResource(*player_l, ResourceType::Food)), 1e-5);
+	EXPECT_NEAR(20., to_double(getResource(*player_l, "Food")), 1e-5);
 }
 
 ///
@@ -223,7 +223,7 @@ TEST(harvestCommandTest, simple_new_res)
 {
 	UnitModel unitModel_l { false, 1., 1., 10. };
 	unitModel_l._isUnit = true;
-	unitModel_l._maxQuantity[ResourceType::Food] = 10;
+	unitModel_l._maxQuantity["Food"] = 10;
 	Unit unit_l({ 5, 3 }, false, unitModel_l);
 
 	EntityModel resModel_l { true, 1., 1., 10. };
@@ -235,7 +235,7 @@ TEST(harvestCommandTest, simple_new_res)
 
 	BuildingModel depositModel_l { true, 1., 10. };
 	depositModel_l._isBuilding = true;
-	depositModel_l._deposit[ResourceType::Food] = true;
+	depositModel_l._deposit["Food"] = true;
 
 	Building deposit_l({1,3}, true, depositModel_l);
 
@@ -267,9 +267,9 @@ TEST(harvestCommandTest, simple_new_res)
 
 	EXPECT_NEAR(3, to_double(state_l->getEntity(0)->_pos.x), 1e-5);
 	EXPECT_NEAR(3, to_double(state_l->getEntity(0)->_pos.y), 1e-5);
-	EXPECT_EQ(ResourceType::Food, stateUnit_l->_typeOfResource);
+	EXPECT_EQ("Food", stateUnit_l->_typeOfResource);
 	EXPECT_NEAR(0., to_double(stateUnit_l->_quantityOfResource), 1e-5);
-	EXPECT_NEAR(10., to_double(getResource(*player_l, ResourceType::Food)), 1e-5);
+	EXPECT_NEAR(10., to_double(getResource(*player_l, "Food")), 1e-5);
 
 	// update time to 22 seconds (30) : full trip just before trop
 	// 1 step : scan for new resource
@@ -288,9 +288,9 @@ TEST(harvestCommandTest, simple_new_res)
 
 	EXPECT_NEAR(3, to_double(state_l->getEntity(0)->_pos.x), 1e-5);
 	EXPECT_NEAR(3, to_double(state_l->getEntity(0)->_pos.y), 1e-5);
-	EXPECT_EQ(ResourceType::Food, stateUnit_l->_typeOfResource);
+	EXPECT_EQ("Food", stateUnit_l->_typeOfResource);
 	EXPECT_NEAR(10., to_double(stateUnit_l->_quantityOfResource), 1e-5);
-	EXPECT_NEAR(10., to_double(getResource(*player_l, ResourceType::Food)), 1e-5);
+	EXPECT_NEAR(10., to_double(getResource(*player_l, "Food")), 1e-5);
 
 	// update time to 1 seconds (31) : drop
 	controller_l.update(1.);
@@ -304,9 +304,9 @@ TEST(harvestCommandTest, simple_new_res)
 
 	EXPECT_NEAR(3, to_double(state_l->getEntity(0)->_pos.x), 1e-5);
 	EXPECT_NEAR(3, to_double(state_l->getEntity(0)->_pos.y), 1e-5);
-	EXPECT_EQ(ResourceType::Food, stateUnit_l->_typeOfResource);
+	EXPECT_EQ("Food", stateUnit_l->_typeOfResource);
 	EXPECT_NEAR(0., to_double(stateUnit_l->_quantityOfResource), 1e-5);
-	EXPECT_NEAR(20., to_double(getResource(*player_l, ResourceType::Food)), 1e-5);
+	EXPECT_NEAR(20., to_double(getResource(*player_l, "Food")), 1e-5);
 
 	// no more resurce to harvest stop here
 
@@ -322,7 +322,7 @@ TEST(harvestCommandTest, simple_new_res)
 
 	EXPECT_NEAR(3, to_double(state_l->getEntity(0)->_pos.x), 1e-5);
 	EXPECT_NEAR(3, to_double(state_l->getEntity(0)->_pos.y), 1e-5);
-	EXPECT_EQ(ResourceType::Food, stateUnit_l->_typeOfResource);
+	EXPECT_EQ("Food", stateUnit_l->_typeOfResource);
 	EXPECT_NEAR(0., to_double(stateUnit_l->_quantityOfResource), 1e-5);
-	EXPECT_NEAR(20., to_double(getResource(*player_l, ResourceType::Food)), 1e-5);
+	EXPECT_NEAR(20., to_double(getResource(*player_l, "Food")), 1e-5);
 }

@@ -14,7 +14,7 @@ Player::~Player()
 	}
 }
 
-Fixed getResource(Player const &player_p, ResourceType type_p)
+Fixed getResource(Player const &player_p, std::string const &type_p)
 {
 	auto &&it_l = player_p._resources.find(type_p);
 	if(it_l != player_p._resources.end())

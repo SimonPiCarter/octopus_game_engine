@@ -13,7 +13,7 @@ void TimerDamage::applyEffect(octopus::Step & step_p, octopus::State const &stat
     // If resource > 0 decrease it
     if(!is_zero(res_l))
     {
-        std::map<octopus::ResourceType, octopus::Fixed> map_l;
+        std::map<std::string, octopus::Fixed> map_l;
         map_l[_res] = 1;
         step_p.addSteppable(new octopus::PlayerSpendResourceStep(_player, map_l));
     }

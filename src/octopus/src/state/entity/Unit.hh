@@ -2,7 +2,6 @@
 #define __UNIT__
 
 #include "Entity.hh"
-#include "state/ResourceType.hh"
 #include "state/model/entity/UnitModel.hh"
 
 namespace octopus
@@ -16,7 +15,7 @@ class Unit : public Entity
 		virtual void runCommands(Step & step_p, State const &state_p, PathManager &pathManager_p) override;
 
 		/// used when harvesting
-		ResourceType _typeOfResource { ResourceType::Food };
+		std::string _typeOfResource { "Food" };
 		Fixed _quantityOfResource { 0. };
 
 		UnitModel const &_unitModel;

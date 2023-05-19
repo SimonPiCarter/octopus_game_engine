@@ -48,7 +48,7 @@ std::list<Steppable *> MazeLevelSteps(Library &lib_p, size_t number_p)
 	}
 
 	Resource res_l({20,20}, true, lib_p.getEntityModel("resource_food"));
-	res_l._type = ResourceType::Food;
+	res_l._type = "Food";
 	res_l._resource = 500.;
 	res_l._player = 0;
 

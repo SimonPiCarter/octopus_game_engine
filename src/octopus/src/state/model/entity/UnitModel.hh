@@ -14,7 +14,7 @@ namespace octopus
 			_isUnit = true;
 		}
 
-		std::map<ResourceType, Fixed> _maxQuantity;
+		std::map<std::string, Fixed> _maxQuantity;
 
 		/// @brief production time in steps
 		unsigned long _productionTime {0};

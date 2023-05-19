@@ -34,7 +34,7 @@ TEST(resourceSpentSimultaneousTest, simple_ok)
 	UnitModel unitModel_l { false, 1., 1., 10. };
 	unitModel_l._isUnit = true;
 	unitModel_l._productionTime = 5;
-	unitModel_l._cost[ResourceType::Food] = 50;
+	unitModel_l._cost["Food"] = 50;
 
 	BuildingModel buildingModel_l { true, 1., 10. };
 	buildingModel_l._isBuilding = true;
@@ -43,8 +43,8 @@ TEST(resourceSpentSimultaneousTest, simple_ok)
 	Building production1_l({1,3}, true, buildingModel_l);
 	Building production2_l({1,5}, true, buildingModel_l);
 
-	std::map<ResourceType, Fixed> mapRes_l;
-	mapRes_l[octopus::ResourceType::Food] = -100;
+	std::map<std::string, Fixed> mapRes_l;
+	mapRes_l["Food"] = -100;
 
 	Controller controller_l({
             new PlayerSpawnStep(0, 0),
@@ -93,7 +93,7 @@ TEST(resourceSpentSimultaneousTest, simple_ko)
 	UnitModel unitModel_l { false, 1., 1., 10. };
 	unitModel_l._isUnit = true;
 	unitModel_l._productionTime = 5;
-	unitModel_l._cost[ResourceType::Food] = 50;
+	unitModel_l._cost["Food"] = 50;
 
 	BuildingModel buildingModel_l { true, 1., 10. };
 	buildingModel_l._isBuilding = true;
@@ -102,8 +102,8 @@ TEST(resourceSpentSimultaneousTest, simple_ko)
 	Building production1_l({1,3}, true, buildingModel_l);
 	Building production2_l({1,5}, true, buildingModel_l);
 
-	std::map<ResourceType, Fixed> mapRes_l;
-	mapRes_l[octopus::ResourceType::Food] = -50;
+	std::map<std::string, Fixed> mapRes_l;
+	mapRes_l["Food"] = -50;
 
 	Controller controller_l({
             new PlayerSpawnStep(0, 0),

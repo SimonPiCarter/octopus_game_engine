@@ -3,9 +3,9 @@
 namespace octopus
 {
 
-std::map<ResourceType, Fixed> getReverseCostMap(std::map<ResourceType, Fixed> const &cost_p)
+std::map<std::string, Fixed> getReverseCostMap(std::map<std::string, Fixed> const &cost_p)
 {
-	std::map<ResourceType, Fixed> reversedCost_l;
+	std::map<std::string, Fixed> reversedCost_l;
 	for(auto && pair_l : cost_p)
 	{
 		reversedCost_l[pair_l.first] = -pair_l.second;

@@ -3,7 +3,6 @@
 
 #include "state/Handle.hh"
 #include "step/Steppable.hh"
-#include "state/ResourceType.hh"
 #include "utils/Fixed.hh"
 
 namespace octopus

@@ -52,11 +52,11 @@ std::list<Steppable const *> const &Step::getSteppable() const
 	return _listSteppable;
 }
 
-Fixed & Step::getResourceSpent(unsigned long player_p, ResourceType res_p)
+Fixed & Step::getResourceSpent(unsigned long player_p, std::string res_p)
 {
 	return _spent[player_p][res_p];
 }
-Fixed Step::getResourceSpent(unsigned long player_p, ResourceType res_p) const
+Fixed Step::getResourceSpent(unsigned long player_p, std::string res_p) const
 {
 	auto &&itPlayer_l = _spent.find(player_p);
 	if(itPlayer_l == _spent.end())
@@ -71,10 +71,10 @@ Fixed Step::getResourceSpent(unsigned long player_p, ResourceType res_p) const
 	return itRes_l->second;
 }
 
-const std::map<ResourceType, Fixed> & Step::getResourceSpent(unsigned long player_p) const
+const std::map<std::string, Fixed> & Step::getResourceSpent(unsigned long player_p) const
 {
 	/// @brief static empty map when no resources spent for player
-	static std::map<ResourceType, Fixed> empty_l;
+	static std::map<std::string, Fixed> empty_l;
 	auto &&itPlayer_l = _spent.find(player_p);
 	if(itPlayer_l == _spent.end())
 	{

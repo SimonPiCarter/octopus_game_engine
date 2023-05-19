@@ -57,24 +57,24 @@ std::list<Steppable *> WaveLevelSteps(Library &lib_p, RandomGenerator &rand_p, u
 	Unit unit_l({ 15, 20. }, false, lib_p.getUnitModel("worker"));
 
 	Resource res1_l({20,20}, true, lib_p.getEntityModel("resource_food"));
-	res1_l._type = ResourceType::Food;
+	res1_l._type = "Food";
 	res1_l._resource = 500.;
 	res1_l._player = 2;
 
 	Resource res2_l({21,17}, true, lib_p.getEntityModel("resource_food"));
-	res2_l._type = ResourceType::Food;
+	res2_l._type = "Food";
 	res2_l._resource = 500.;
 	res2_l._player = 2;
 
 	Resource res3_l({15,17}, true, lib_p.getEntityModel("resource_steel"));
-	res3_l._type = ResourceType::Steel;
+	res3_l._type = "Steel";
 	res3_l._resource = 500.;
 	res3_l._player = 2;
 
-	std::map<ResourceType, Fixed> mapRes_l;
-	mapRes_l[octopus::ResourceType::Food] = -2000;
-	mapRes_l[octopus::ResourceType::Steel] = -2000;
-	mapRes_l[octopus::ResourceType::Anchor] = -5;
+	std::map<std::string, Fixed> mapRes_l;
+	mapRes_l["Food"] = -2000;
+	mapRes_l["Steel"] = -2000;
+	mapRes_l["Anchor"] = -5;
 
 	Trigger * triggerWave_l = new WaveSpawn(new ListenerStepCount(stepCount_p), lib_p, rand_p, 1, stepCount_p, waveCount_p, player_p, worldSize_p, waveStepGenerator_p);
 	Trigger * triggerLose_l = new LoseTrigger(new ListenerEntityModelDied(&lib_p.getBuildingModel("command_center"), 0));
@@ -105,7 +105,7 @@ std::list<Steppable *> WaveLevelSteps(Library &lib_p, RandomGenerator &rand_p, u
 		new TriggerSpawn(triggerWave_l),
 		new TriggerSpawn(triggerLose_l),
 		new TriggerSpawn(new AnchorTrigger(lib_p, rand_p, 120)),
-		new FlyingCommandSpawnStep(new TimerDamage(0, 100, 0, 0, octopus::ResourceType::Anchor, 0)),
+		new FlyingCommandSpawnStep(new TimerDamage(0, 100, 0, 0, "Anchor", 0)),
 	};
 
 	return spawners_l;
@@ -116,12 +116,12 @@ std::list<Command *> WaveLevelCommands(Library &lib_p, RandomGenerator &rand_p, 
 	std::list<AreaSpawn> spawners_l;
 
 	Resource res2_l({21,17}, true, lib_p.getEntityModel("resource_food"));
-	res2_l._type = ResourceType::Food;
+	res2_l._type = "Food";
 	res2_l._resource = 500.;
 	res2_l._player = 2;
 
 	Resource res3_l({15,17}, true, lib_p.getEntityModel("resource_steel"));
-	res3_l._type = ResourceType::Steel;
+	res3_l._type = "Steel";
 	res3_l._resource = 500.;
 	res3_l._player = 2;
 

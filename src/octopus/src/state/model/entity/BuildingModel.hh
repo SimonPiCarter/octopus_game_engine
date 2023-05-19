@@ -16,7 +16,7 @@ namespace octopus
 	{
 		BuildingModel(bool isStatic_p, Fixed ray_p, Fixed hpMax_p);
 
-		std::map<ResourceType, bool> _deposit;
+		std::map<std::string, bool> _deposit;
 
 		/// @brief building time in steps
 		unsigned long _buildingTime {0};
@@ -28,7 +28,7 @@ namespace octopus
 		std::list<UnitModel const *> _unitModels;
 
 		/// @brief safe getter for the deposit map
-		bool isDeposit(ResourceType type_p) const;
+		bool isDeposit(std::string type_p) const;
 
 		bool isAnyDeposit() const;
 

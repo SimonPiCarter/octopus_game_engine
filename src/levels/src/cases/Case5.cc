@@ -137,33 +137,33 @@ std::list<Steppable *> Case5(Library &lib_p)
 	Unit unit_l({ 18, 20. }, false, lib_p.getUnitModel("worker"));
 
 	Resource res1_l({20,20}, true, lib_p.getEntityModel("resource_food"));
-	res1_l._type = ResourceType::Food;
+	res1_l._type = "Food";
 	res1_l._resource = 500.;
 
 	Resource res2_l({21,17}, true, lib_p.getEntityModel("resource_food"));
-	res2_l._type = ResourceType::Food;
+	res2_l._type = "Food";
 	res2_l._resource = 500.;
 
 	Resource res3_l({21,13}, true, lib_p.getEntityModel("resource_steel"));
-	res3_l._type = ResourceType::Steel;
+	res3_l._type = "Steel";
 	res3_l._resource = 500.;
 
 	Resource res4_l({15,17}, true, lib_p.getEntityModel("resource_ether"));
-	res4_l._type = ResourceType::Ether;
+	res4_l._type = "Ether";
 	res4_l._resource = 500.;
 
 	Resource res5_l({7,17}, true, lib_p.getEntityModel("resource_gas"));
-	res5_l._type = ResourceType::Gas;
+	res5_l._type = "Gas";
 	res5_l._resource = 500.;
 
 	Building abandonnedTemple_l({23, 20}, true, lib_p.getBuildingModel("abandonned_temple"));
 
 
-	std::map<ResourceType, Fixed> mapRes_l;
-	mapRes_l[octopus::ResourceType::Gas] = -1000;
-	mapRes_l[octopus::ResourceType::Ether] = -1000;
-	mapRes_l[octopus::ResourceType::Food] = -1000;
-	mapRes_l[octopus::ResourceType::Steel] = -1000;
+	std::map<std::string, Fixed> mapRes_l;
+	mapRes_l["Gas"] = -1000;
+	mapRes_l["Ether"] = -1000;
+	mapRes_l["Food"] = -1000;
+	mapRes_l["Steel"] = -1000;
 
 	Trigger * divTrigger_l = new Case5DivinitiesOptionTrigger(new ListenerEntityModelFinished(&lib_p.getBuildingModel("temple"), 0), 0);
 	Trigger * winTrigger_l = new Case5WinTrigger(new ListenerEntityModelFinished(&lib_p.getBuildingModel("temple"), 0), 0);

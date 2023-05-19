@@ -8,7 +8,6 @@
 #include <set>
 #include <vector>
 
-#include "state/ResourceType.hh"
 #include "state/Handle.hh"
 #include "utils/Fixed.hh"
 
@@ -55,10 +54,10 @@ namespace octopus
 			std::list<Steppable const *> &getSteppable();
 			std::list<Steppable const *> const &getSteppable() const;
 
-			Fixed & getResourceSpent(unsigned long player_p, ResourceType res_p);
-			Fixed getResourceSpent(unsigned long player_p, ResourceType res_p) const;
+			Fixed & getResourceSpent(unsigned long player_p, std::string res_p);
+			Fixed getResourceSpent(unsigned long player_p, std::string res_p) const;
 
-			const std::map<ResourceType, Fixed> & getResourceSpent(unsigned long player_p) const;
+			const std::map<std::string, Fixed> & getResourceSpent(unsigned long player_p) const;
 
 			unsigned long & getDivOptionSpent(unsigned long player_p);
 			unsigned long getDivOptionSpent(unsigned long player_p) const;
@@ -102,7 +101,7 @@ namespace octopus
 			unsigned long long const _id {0};
 
 			/// @brief a map of map of resource spent (player, resource) -> value spent this step
-			std::map<unsigned long, std::map<ResourceType, Fixed> > _spent;
+			std::map<unsigned long, std::map<std::string, Fixed> > _spent;
 
 			/// @brief a map of number of div option spent in this step (player) -> number of div option spent this step
 			std::map<unsigned long, unsigned long> _divOptionsSpent;

@@ -75,20 +75,20 @@ std::list<Steppable *> WaveLevelSteps(Library &lib_p, RandomGenerator &rand_p)
 	Unit unit_l({ 17, 10 }, false, lib_p.getUnitModel("worker"));
 
 	Resource res1_l({15,12}, true, lib_p.getEntityModel("resource_food"));
-	res1_l._type = ResourceType::Food;
+	res1_l._type = "Food";
 	res1_l._resource = 2000.;
 	res1_l._player = 2;
 
 	Resource res3_l({15,8}, true, lib_p.getEntityModel("resource_steel"));
-	res3_l._type = ResourceType::Steel;
+	res3_l._type = "Steel";
 	res3_l._resource = 2000.;
 	res3_l._player = 2;
 
 	long anchor_l = 420;
-	std::map<ResourceType, Fixed> mapRes_l;
-	mapRes_l[octopus::ResourceType::Food] = -200;
-	mapRes_l[octopus::ResourceType::Steel] = -200;
-	mapRes_l[octopus::ResourceType::Anchor] = -anchor_l;
+	std::map<std::string, Fixed> mapRes_l;
+	mapRes_l["Food"] = -200;
+	mapRes_l["Steel"] = -200;
+	mapRes_l["Anchor"] = -anchor_l;
 	unsigned long visionTrigger_l = (anchor_l-60)*100;
 
 	std::list<WaveParam> params_l;
@@ -143,7 +143,7 @@ std::list<Steppable *> WaveLevelSteps(Library &lib_p, RandomGenerator &rand_p)
 		new TriggerSpawn(triggerLose_l),
 		new TriggerSpawn(new AnchorTrigger(lib_p, rand_p, 60)),
 		new TriggerSpawn(new VisionTrigger(visionTrigger_l, to_int(anchorSpot_l._pos.x), to_int(anchorSpot_l._pos.y), pattern_l)),
-		new FlyingCommandSpawnStep(new TimerDamage(0, 100, 0, 0, octopus::ResourceType::Anchor, 0)),
+		new FlyingCommandSpawnStep(new TimerDamage(0, 100, 0, 0, "Anchor", 0)),
 		new godot::CameraStep(to_int(building_l._pos.x), to_int(building_l._pos.y)),
 		new godot::DialogStep("leve1_intro"),
 	};
@@ -173,12 +173,12 @@ AreaSpawnerCommand * createArenaSpawnCommmand(Library &lib_p, RandomGenerator &r
 	std::list<AreaSpawn> spawners_l;
 
 	Resource res2_l({0,0}, true, lib_p.getEntityModel("resource_food"));
-	res2_l._type = ResourceType::Food;
+	res2_l._type = "Food";
 	res2_l._resource = 2000.;
 	res2_l._player = 2;
 
 	Resource res3_l({0,0}, true, lib_p.getEntityModel("resource_steel"));
-	res3_l._type = ResourceType::Steel;
+	res3_l._type = "Steel";
 	res3_l._resource = 2000.;
 	res3_l._player = 2;
 

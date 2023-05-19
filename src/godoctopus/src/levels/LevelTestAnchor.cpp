@@ -53,9 +53,9 @@ std::list<Steppable *> LevelSteps(Library &lib_p, RandomGenerator &rand_p)
 	Unit unit_l({ 17, 10 }, false, lib_p.getUnitModel("worker"));
 
 	long anchor_l = 420;
-	std::map<ResourceType, Fixed> mapRes_l;
-	mapRes_l[octopus::ResourceType::Food] = -2000;
-	mapRes_l[octopus::ResourceType::Steel] = -2000;
+	std::map<std::string, Fixed> mapRes_l;
+	mapRes_l["Food"] = -2000;
+	mapRes_l["Steel"] = -2000;
 
 	Handle handle_l = 0;
 	std::list<Steppable *> spawners_l =

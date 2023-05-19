@@ -5,7 +5,6 @@
 #include <vector>
 #include <list>
 #include <map>
-#include "state/ResourceType.hh"
 #include "state/DivinityType.hh"
 #include "state/entity/Buff.hh"
 #include "state/entity/attackModifier/AttackModifier.hh"
@@ -23,7 +22,7 @@ namespace octopus
 		public:
 			~Player();
 
-			std::map<ResourceType, Fixed> _resources;
+			std::map<std::string, Fixed> _resources;
 
 			unsigned long _popCap {0};
 			unsigned long _pop {0};
@@ -64,7 +63,7 @@ namespace octopus
 	};
 
 	/// @brief safe getter for resource of a player
-	Fixed getResource(Player const &player_p, ResourceType type_p);
+	Fixed getResource(Player const &player_p, std::string const &type_p);
 	/// @brief safe getter for divinity option of a player
 	bool getDivOption(DivinityOption const &option_p, DivinityType type_p);
 	/// @brief safe getter for divinity level of a player
