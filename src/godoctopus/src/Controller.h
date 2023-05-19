@@ -1,9 +1,10 @@
 #ifndef __Godoctopus_Controller__
 #define __Godoctopus_Controller__
 
-#include <list>
 #include <cstdint>
 #include <fstream>
+#include <list>
+#include <map>
 #include <thread>
 #include <godot_cpp/godot.hpp>
 #include <godot_cpp/classes/node2d.hpp>
@@ -120,18 +121,18 @@ public:
 
     // commands
     // move & attack
-    void add_move_commands(TypedArray<int> const &handles_p, Vector2 const &target_p, int player_p, bool queued_p);
-    void add_move_target_commands(TypedArray<int> const &handles_p, Vector2 const &target_p, int handleTarget_p, int player_p, bool queued_p);
-    void add_attack_move_commands(TypedArray<int> const &handles_p, Vector2 const &target_p, int player_p, bool queued_p);
-    void add_stop_commands(TypedArray<int> const &handles_p, int player_p, bool queued_p);
+    void add_move_commands(int peer, TypedArray<int> const &handles_p, Vector2 const &target_p, int player_p, bool queued_p);
+    void add_move_target_commands(int peer, TypedArray<int> const &handles_p, Vector2 const &target_p, int handleTarget_p, int player_p, bool queued_p);
+    void add_attack_move_commands(int peer, TypedArray<int> const &handles_p, Vector2 const &target_p, int player_p, bool queued_p);
+    void add_stop_commands(int peer, TypedArray<int> const &handles_p, int player_p, bool queued_p);
     // production
-    void add_unit_build_command(TypedArray<int> const &handles_p, String const &model_p, int player_p);
-    void add_unit_build_cancel_command(int handle_p, int index_p, int player_p);
+    void add_unit_build_command(int peer, TypedArray<int> const &handles_p, String const &model_p, int player_p);
+    void add_unit_build_cancel_command(int peer, int handle_p, int index_p, int player_p);
     // building
-    void add_blueprint_command(Vector2 const &target_p, String const &model_p, int player_p, TypedArray<int> const &builders_p);
-    void add_building_cancel_command(int handle_p, int player_p);
+    void add_blueprint_command(int peer_p, Vector2 const &target_p, String const &model_p, int player_p, TypedArray<int> const &builders_p);
+    void add_building_cancel_command(int peer_p, int handle_p, int player_p);
     // option
-    void add_chose_option_command(int option_p, int player_p);
+    void add_chose_option_command(int peer_p, int option_p, int player_p);
 
     // step
     /// @brief set the number of queued layer to be setup
@@ -140,6 +141,13 @@ public:
     void next_step();
     /// @brief get the size of the queued layers
     int get_queued_size() const;
+
+    // handling of peer information
+    /// @brief add peer info on player
+    void add_peer_info(int peer_p, int player_p);
+    /// @brief register that peer is done with current queue
+    /// will add a new queue layer for the given peer
+    void step_done_for_peer(int peer_p);
 
     //// Non godot methods
     std::map<unsigned long, OptionManager> &getOptionManagers();
@@ -172,6 +180,11 @@ private:
     bool _stepControl = true;
     /// @brief idx of last complete step so the controller can step by
     int _stepDone = 0;
+
+    /// @brief queued command per peer
+    std::map<int, std::list<std::list<octopus::Command*> > > _queuedCommandsPerPeer;
+    /// @brief player per peer
+    std::map<int, unsigned long> _playerPerPeer;
 };
 
 }

@@ -697,75 +697,75 @@ void Controller::get_visible_units(int player_p, int ent_registered_p)
     }
 }
 
-void Controller::add_move_commands(TypedArray<int> const &handles_p, Vector2 const &target_p, int player_p, bool queued_p)
+void Controller::add_move_commands(int peer_p, TypedArray<int> const &handles_p, Vector2 const &target_p, int player_p, bool queued_p)
 {
     if(!_paused)
     {
-        godot::add_move_commands(*_controller, *_state, handles_p, target_p, player_p, queued_p);
+        godot::add_move_commands(_queuedCommandsPerPeer.at(peer_p).back(), *_state, handles_p, target_p, player_p, queued_p);
     }
 }
 
-void Controller::add_move_target_commands(TypedArray<int> const &handles_p, Vector2 const &target_p, int handleTarget_p, int player_p, bool queued_p)
+void Controller::add_move_target_commands(int peer_p, TypedArray<int> const &handles_p, Vector2 const &target_p, int handleTarget_p, int player_p, bool queued_p)
 {
     if(!_paused)
     {
-        godot::add_move_target_commands(*_controller, *_state, handles_p, target_p, handleTarget_p, player_p, queued_p);
+        godot::add_move_target_commands(_queuedCommandsPerPeer.at(peer_p).back(), *_state, handles_p, target_p, handleTarget_p, player_p, queued_p);
     }
 }
 
-void Controller::add_attack_move_commands(TypedArray<int> const &handles_p, Vector2 const &target_p, int player_p, bool queued_p)
+void Controller::add_attack_move_commands(int peer_p, TypedArray<int> const &handles_p, Vector2 const &target_p, int player_p, bool queued_p)
 {
     if(!_paused)
     {
-        godot::add_attack_move_commands(*_controller, *_state, handles_p, target_p, player_p, queued_p);
+        godot::add_attack_move_commands(_queuedCommandsPerPeer.at(peer_p).back(), *_state, handles_p, target_p, player_p, queued_p);
     }
 }
 
-void Controller::add_stop_commands(TypedArray<int> const &handles_p, int player_p, bool queued_p)
+void Controller::add_stop_commands(int peer_p, TypedArray<int> const &handles_p, int player_p, bool queued_p)
 {
     if(!_paused)
     {
-        godot::add_stop_commands(*_controller, *_state, handles_p, player_p, queued_p);
+        godot::add_stop_commands(_queuedCommandsPerPeer.at(peer_p).back(), *_state, handles_p, player_p, queued_p);
     }
 }
 
-void Controller::add_unit_build_command(TypedArray<int> const &handles_p, String const &model_p, int player_p)
+void Controller::add_unit_build_command(int peer_p, TypedArray<int> const &handles_p, String const &model_p, int player_p)
 {
     if(!_paused)
     {
-        godot::add_unit_build_command(*_controller, *_state, _lib, handles_p, model_p, player_p);
+        godot::add_unit_build_command(_queuedCommandsPerPeer.at(peer_p).back(), *_state, _lib, handles_p, model_p, player_p);
     }
 }
 
-void Controller::add_unit_build_cancel_command(int handle_p, int index_p, int player_p)
+void Controller::add_unit_build_cancel_command(int peer_p, int handle_p, int index_p, int player_p)
 {
     if(!_paused)
     {
-        godot::add_unit_build_cancel_command(*_controller, *_state, handle_p, index_p, player_p);
+        godot::add_unit_build_cancel_command(_queuedCommandsPerPeer.at(peer_p).back(), *_state, handle_p, index_p, player_p);
     }
 }
 
-void Controller::add_blueprint_command(Vector2 const &target_p, String const &model_p, int player_p, TypedArray<int> const &builders_p)
+void Controller::add_blueprint_command(int peer_p, Vector2 const &target_p, String const &model_p, int player_p, TypedArray<int> const &builders_p)
 {
     if(!_paused)
     {
-        godot::add_blueprint_command(*_controller, *_state, _lib, target_p, model_p, player_p, builders_p);
+        godot::add_blueprint_command(_queuedCommandsPerPeer.at(peer_p).back(), *_state, _lib, target_p, model_p, player_p, builders_p);
     }
 }
 
-void Controller::add_building_cancel_command(int handle_p, int player_p)
+void Controller::add_building_cancel_command(int peer_p, int handle_p, int player_p)
 {
     if(!_paused && _state->getEntity(handle_p)->_model._isBuilding)
     {
-        _controller->queueCommandAsPlayer(new octopus::BuildingCancelCommand(handle_p), player_p);
+        _queuedCommandsPerPeer.at(peer_p).back().push_back(new octopus::BuildingCancelCommand(handle_p));
     }
 }
 
-void Controller::add_chose_option_command(int option_p, int player_p)
+void Controller::add_chose_option_command(int peer_p, int option_p, int player_p)
 {
     if(!_paused)
     {
-        _controller->queueCommandAsPlayer(getOptionManagers().at(player_p).newCommandFromOption(option_p), player_p);
+        _queuedCommandsPerPeer.at(peer_p).back().push_back(getOptionManagers().at(player_p).newCommandFromOption(option_p));
     }
 }
 
@@ -779,6 +779,16 @@ void Controller::set_step_control(int prequeued_p)
 
 void Controller::next_step()
 {
+    for(auto &&pair_l : _queuedCommandsPerPeer)
+    {
+        int peer_l = pair_l.first;
+        std::list<octopus::Command*> const &cmds_l = pair_l.second.front();
+        for(octopus::Command * cmd_l : cmds_l)
+        {
+            _controller->queueCommandAsPlayer(cmd_l, _playerPerPeer.at(peer_l));
+        }
+        pair_l.second.pop_front();
+    }
     ++_stepDone;
     _controller->addQueuedLayer();
 }
@@ -786,6 +796,21 @@ void Controller::next_step()
 int Controller::get_queued_size() const
 {
     return _controller->getQueuedSize();
+}
+
+void Controller::add_peer_info(int peer_p, int player_p)
+{
+    if(player_p>=0)
+    {
+        _playerPerPeer[peer_p] = player_p;
+        // also set up command per peer with one list
+        _queuedCommandsPerPeer[peer_p].push_back({});
+    }
+}
+
+void Controller::step_done_for_peer(int peer_p)
+{
+    _queuedCommandsPerPeer[peer_p].push_back({});
 }
 
 void Controller::_bind_methods()
@@ -837,19 +862,21 @@ void Controller::_bind_methods()
     ClassDB::bind_method(D_METHOD("get_productions", "handles", "max"), &Controller::get_productions);
     ClassDB::bind_method(D_METHOD("get_visible_units", "player", "ent_registered_p"), &Controller::get_visible_units);
 
-    ClassDB::bind_method(D_METHOD("add_move_commands", "handles", "target", "player", "queued"), &Controller::add_move_commands);
-    ClassDB::bind_method(D_METHOD("add_move_target_commands", "handles", "target", "handle_target", "player", "queued"), &Controller::add_move_target_commands);
-    ClassDB::bind_method(D_METHOD("add_attack_move_commands", "handles", "target", "player", "queued"), &Controller::add_attack_move_commands);
-    ClassDB::bind_method(D_METHOD("add_stop_commands", "handles", "player", "queued"), &Controller::add_stop_commands);
-    ClassDB::bind_method(D_METHOD("add_unit_build_command", "handle", "model", "player"), &Controller::add_unit_build_command);
-    ClassDB::bind_method(D_METHOD("add_unit_build_cancel_command", "handle", "index", "player"), &Controller::add_unit_build_cancel_command);
-    ClassDB::bind_method(D_METHOD("add_blueprint_command", "target", "model", "player", "builders"), &Controller::add_blueprint_command);
-    ClassDB::bind_method(D_METHOD("add_building_cancel_command", "handle", "player"), &Controller::add_building_cancel_command);
-    ClassDB::bind_method(D_METHOD("add_chose_option_command", "option_p", "player"), &Controller::add_chose_option_command);
+    ClassDB::bind_method(D_METHOD("add_move_commands", "peer", "handles", "target", "player", "queued"), &Controller::add_move_commands);
+    ClassDB::bind_method(D_METHOD("add_move_target_commands", "peer", "handles", "target", "handle_target", "player", "queued"), &Controller::add_move_target_commands);
+    ClassDB::bind_method(D_METHOD("add_attack_move_commands", "peer", "handles", "target", "player", "queued"), &Controller::add_attack_move_commands);
+    ClassDB::bind_method(D_METHOD("add_stop_commands", "peer", "handles", "player", "queued"), &Controller::add_stop_commands);
+    ClassDB::bind_method(D_METHOD("add_unit_build_command", "peer", "handle", "model", "player"), &Controller::add_unit_build_command);
+    ClassDB::bind_method(D_METHOD("add_unit_build_cancel_command", "peer", "handle", "index", "player"), &Controller::add_unit_build_cancel_command);
+    ClassDB::bind_method(D_METHOD("add_blueprint_command", "peer", "target", "model", "player", "builders"), &Controller::add_blueprint_command);
+    ClassDB::bind_method(D_METHOD("add_building_cancel_command", "peer", "handle", "player"), &Controller::add_building_cancel_command);
+    ClassDB::bind_method(D_METHOD("add_chose_option_command", "peer", "option_p", "player"), &Controller::add_chose_option_command);
 
     ClassDB::bind_method(D_METHOD("set_step_control", "prequeued_p"), &Controller::set_step_control);
     ClassDB::bind_method(D_METHOD("next_step"), &Controller::next_step);
     ClassDB::bind_method(D_METHOD("get_queued_size"), &Controller::get_queued_size);
+    ClassDB::bind_method(D_METHOD("add_peer_info", "peer_p", "player_p"), &Controller::add_peer_info);
+    ClassDB::bind_method(D_METHOD("step_done_for_peer", "peer_p"), &Controller::step_done_for_peer);
 
     ADD_GROUP("Controller", "Controller_");
 
