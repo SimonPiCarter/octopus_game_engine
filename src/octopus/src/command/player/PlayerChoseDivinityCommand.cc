@@ -43,7 +43,7 @@ DivinityOption const *getCurrentDivOption(Step const & step_p, Player const & pl
 	return &(*rit_l);
 }
 
-PlayerChoseDivinityCommand::PlayerChoseDivinityCommand(unsigned long player_p, DivinityType type_p)
+PlayerChoseDivinityCommand::PlayerChoseDivinityCommand(unsigned long player_p, std::string type_p)
 	: Command(0)
 	, _player(player_p)
 	, _type(type_p)

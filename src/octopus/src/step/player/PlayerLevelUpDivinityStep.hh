@@ -2,7 +2,7 @@
 #define __PlayerLevelUpDivinityStep__
 
 #include "step/Steppable.hh"
-#include "state/DivinityType.hh"
+#include <string>
 
 namespace octopus
 {
@@ -11,7 +11,7 @@ namespace octopus
 class PlayerLevelUpDivinityStep : public Steppable
 {
 public:
-	PlayerLevelUpDivinityStep(unsigned long player_p, DivinityType type_p)
+	PlayerLevelUpDivinityStep(unsigned long player_p, std::string type_p)
 		: _player(player_p), _type(type_p) {}
 
 	virtual void apply(State &state_p) const override;
@@ -24,7 +24,7 @@ public:
 	}
 
 	unsigned long const _player {0};
-	DivinityType const _type;
+	std::string const _type;
 };
 
 } // namespace octopus

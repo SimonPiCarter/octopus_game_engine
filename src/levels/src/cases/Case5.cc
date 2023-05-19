@@ -69,11 +69,11 @@ public:
 
 	virtual void trigger(State const &, Step &step_p, unsigned long, TriggerData const &) const override
 	{
-		std::vector<DivinityType> vector_l;
-		vector_l.push_back(DivinityType::Divinity_1);
-		vector_l.push_back(DivinityType::Divinity_3);
-		vector_l.push_back(DivinityType::Divinity_4);
-		vector_l.push_back(DivinityType::Divinity_5);
+		std::vector<std::string> vector_l;
+		vector_l.push_back("Divinity_1");
+		vector_l.push_back("Divinity_3");
+		vector_l.push_back("Divinity_4");
+		vector_l.push_back("Divinity_5");
 
 		while(vector_l.size() > 3)
 		{
@@ -83,7 +83,7 @@ public:
 			vector_l.erase(vector_l.begin() + idx_l);
 		}
 
-		std::set<DivinityType> set_l(vector_l.begin(), vector_l.end());
+		std::set<std::string> set_l(vector_l.begin(), vector_l.end());
 
 
 		step_p.addSteppable(new PlayerAddOptionDivinityStep(_player, set_l, true));

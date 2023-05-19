@@ -5,7 +5,7 @@
 
 #include "state/Handle.hh"
 #include "step/Steppable.hh"
-#include "state/DivinityType.hh"
+#include <string>
 
 namespace octopus
 {
@@ -14,7 +14,7 @@ namespace octopus
 class PlayerAddOptionDivinityStep : public Steppable
 {
 public:
-	PlayerAddOptionDivinityStep(unsigned long player_p, std::set<DivinityType> types_p, bool lvlUp_p)
+	PlayerAddOptionDivinityStep(unsigned long player_p, std::set<std::string> types_p, bool lvlUp_p)
 		: _player(player_p), _types(types_p), _lvlUp(lvlUp_p) {}
 
 	virtual void apply(State &state_p) const override;
@@ -27,7 +27,7 @@ public:
 	}
 
 	unsigned long const _player {0};
-	std::set<DivinityType> const _types;
+	std::set<std::string> const _types;
 	bool const _lvlUp;
 };
 

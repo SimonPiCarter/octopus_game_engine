@@ -2,9 +2,9 @@
 #define __PlayerAnchorDivinityStep__
 
 #include <cmath>
+#include <string>
 
 #include "step/Steppable.hh"
-#include "state/DivinityType.hh"
 #include "utils/Fixed.hh"
 
 namespace octopus
@@ -14,7 +14,7 @@ namespace octopus
 class PlayerAnchorDivinityStep : public Steppable
 {
 public:
-	PlayerAnchorDivinityStep(unsigned long player_p, DivinityType type_p, Fixed old_p, Fixed new_p)
+	PlayerAnchorDivinityStep(unsigned long player_p, std::string type_p, Fixed old_p, Fixed new_p)
 		: _player(player_p), _type(type_p), _old(old_p), _new(new_p) {}
 
 	virtual void apply(State &state_p) const override;
@@ -27,7 +27,7 @@ public:
 	}
 
 	unsigned long const _player {0};
-	DivinityType const _type;
+	std::string const _type;
 	Fixed const _old;
 	Fixed const _new;
 };

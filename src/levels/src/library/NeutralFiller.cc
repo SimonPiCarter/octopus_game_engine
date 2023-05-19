@@ -4,7 +4,6 @@
 #include "state/model/entity/BuildingModel.hh"
 #include "state/model/entity/TempleModel.hh"
 #include "state/model/entity/UnitModel.hh"
-#include "state/DivinityType.hh"
 
 using namespace octopus;
 

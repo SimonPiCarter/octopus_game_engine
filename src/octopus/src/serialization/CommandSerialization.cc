@@ -59,11 +59,6 @@ struct TextWriter
     {
         file_p<<data_p.data()<<std::endl;
     }
-    template<>
-    void operator()(std::ofstream &file_p, DivinityType const &data_p)
-    {
-        file_p<<(int)data_p<<std::endl;
-    }
 };
 
 template<typename T>
@@ -541,7 +536,7 @@ Command * readCommand(std::ifstream &file_p, Library const &lib_p)
     else if(cmdId_p == 11)
     {
         unsigned long player_l;
-        DivinityType type_l;
+        std::string type_l;
 
         read(file_p, &player_l);
         read(file_p, &type_l);

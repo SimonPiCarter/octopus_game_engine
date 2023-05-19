@@ -5,7 +5,6 @@
 #include <string>
 
 #include "state/Handle.hh"
-#include "state/DivinityType.hh"
 
 namespace octopus
 {

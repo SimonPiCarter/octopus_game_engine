@@ -4,7 +4,6 @@
 #include <map>
 
 #include "step/Steppable.hh"
-#include "state/DivinityType.hh"
 #include "state/player/DivinityOption.hh"
 
 namespace octopus

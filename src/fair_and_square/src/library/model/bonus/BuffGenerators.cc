@@ -324,11 +324,11 @@ SingleOption generatePlayerOption(unsigned long player_p, octopus::RandomGenerat
     int type_l = gen_p.roll(0, 10);
     if(type_l==0)
     {
-        return DivinityOption {player_p, octopus::DivinityType::Divinity_1};
+        return DivinityOption {player_p, "Divinity_1"};
     }
     if(type_l==1)
     {
-        return DivinityOption {player_p, octopus::DivinityType::Divinity_2};
+        return DivinityOption {player_p, "Divinity_2"};
     }
     type_l = gen_p.roll(0, 4);
     if(type_l==0)

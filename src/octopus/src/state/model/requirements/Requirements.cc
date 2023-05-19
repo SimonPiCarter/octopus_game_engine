@@ -40,7 +40,7 @@ bool meetRequirements(Requirements const &req_p, Player const &player_p)
 	// check divinity lvl
 	for(auto &&pair_l : req_p._divLvl)
 	{
-		DivinityType type_l = pair_l.first;
+		std::string type_l = pair_l.first;
 		unsigned long lvl_l = pair_l.second;
 		auto &&it_l = player_p._divLvl.find(type_l);
 		if(it_l == player_p._divLvl.end() || it_l->second < lvl_l)

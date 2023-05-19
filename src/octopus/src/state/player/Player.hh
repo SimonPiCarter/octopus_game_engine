@@ -5,7 +5,6 @@
 #include <vector>
 #include <list>
 #include <map>
-#include "state/DivinityType.hh"
 #include "state/entity/Buff.hh"
 #include "state/entity/attackModifier/AttackModifier.hh"
 
@@ -37,9 +36,9 @@ namespace octopus
 			/// Divinity info
 			///
 			/// @brief the level for every divinity
-			std::map<DivinityType, unsigned long> _divLvl;
+			std::map<std::string, unsigned long> _divLvl;
 			/// @brief the anchor for every divinity
-			std::map<DivinityType, Fixed> _divAnchor;
+			std::map<std::string, Fixed> _divAnchor;
 			/// @brief the options currently available to the player
 			std::list<DivinityOption> _divOptions;
 
@@ -65,12 +64,12 @@ namespace octopus
 	/// @brief safe getter for resource of a player
 	Fixed getResource(Player const &player_p, std::string const &type_p);
 	/// @brief safe getter for divinity option of a player
-	bool getDivOption(DivinityOption const &option_p, DivinityType type_p);
+	bool getDivOption(DivinityOption const &option_p, std::string const  &type_p);
 	/// @brief safe getter for divinity level of a player
-	unsigned long getDivLvl(Player const &player_p, DivinityType type_p);
+	unsigned long getDivLvl(Player const &player_p, std::string const  &type_p);
 	/// @brief safe getter for divinity anchor of a player
 	/// @param floor_p if true the value will be floored to zero if negative
-	Fixed getDivAnchor(Player const &player_p, DivinityType type_p, bool floor_p=true);
+	Fixed getDivAnchor(Player const &player_p, std::string const  &type_p, bool floor_p=true);
 
 	/// @brief return availables building models from building
 	std::list<BuildingModel const *> getAvailableBuildingModels(Player const &player_p);

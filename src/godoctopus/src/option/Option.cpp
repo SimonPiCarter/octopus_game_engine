@@ -90,11 +90,11 @@ void Option::update(DivinityOption const &option_p)
     _player = option_p._player;
     _stats_name.push_back("");
     _params.push_back(TypedArray<String>());
-    if(option_p._div == octopus::DivinityType::Divinity_1)
+    if(option_p._div == "Divinity_1")
     {
         _desc.push_back("up tech I");
     }
-    else if(option_p._div == octopus::DivinityType::Divinity_2)
+    else if(option_p._div == "Divinity_2")
     {
         _desc.push_back("up tech II");
     }

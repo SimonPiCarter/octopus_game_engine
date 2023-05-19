@@ -6,7 +6,6 @@
 #include <set>
 #include <string>
 
-#include "state/DivinityType.hh"
 
 namespace octopus
 {
@@ -18,7 +17,7 @@ namespace octopus
 		std::set<std::string> _noBuildings;
 		std::set<std::string> _buildings;
 		std::set<std::string> _technologies;
-		std::map<DivinityType, unsigned long> _divLvl;
+		std::map<std::string, unsigned long> _divLvl;
 	};
 
 	/// @brief check if a given player meet the given requirements

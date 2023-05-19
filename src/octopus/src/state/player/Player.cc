@@ -24,7 +24,7 @@ Fixed getResource(Player const &player_p, std::string const &type_p)
 	return 0.;
 }
 
-bool getDivOption(DivinityOption const &option_p, DivinityType type_p)
+bool getDivOption(DivinityOption const &option_p, std::string const &type_p)
 {
 	auto &&it_l = option_p._types.find(type_p);
 	if(it_l != option_p._types.end())
@@ -34,7 +34,7 @@ bool getDivOption(DivinityOption const &option_p, DivinityType type_p)
 	return false;
 }
 
-unsigned long getDivLvl(Player const &player_p, DivinityType type_p)
+unsigned long getDivLvl(Player const &player_p, std::string const &type_p)
 {
 	auto &&it_l = player_p._divLvl.find(type_p);
 	if(it_l != player_p._divLvl.end())
@@ -44,7 +44,7 @@ unsigned long getDivLvl(Player const &player_p, DivinityType type_p)
 	return 0;
 }
 
-Fixed getDivAnchor(Player const &player_p, DivinityType type_p, bool floor_p)
+Fixed getDivAnchor(Player const &player_p, std::string const &type_p, bool floor_p)
 {
 	auto &&it_l = player_p._divAnchor.find(type_p);
 	if(it_l != player_p._divAnchor.end())
