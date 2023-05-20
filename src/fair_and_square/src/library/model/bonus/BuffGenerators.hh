@@ -9,6 +9,12 @@
 #include "state/entity/attackModifier/AttackModifier.hh"
 #include "utils/RandomGenerator.hh"
 
+namespace octopus
+{
+    class State;
+} // namespace octopus
+
+
 struct BuffOption
 {
     unsigned long _player;
@@ -59,7 +65,7 @@ public:
     std::vector<Option> const _options;
 };
 
-SingleOption generatePlayerOption(unsigned long player_p, octopus::RandomGenerator &gen_p, std::string const &id_p);
+SingleOption generatePlayerOption(octopus::State const &state_p, unsigned long player_p, octopus::RandomGenerator &gen_p, std::string const &id_p, bool rare_p);
 SingleOption generateEnemyOption(unsigned long player_p, octopus::RandomGenerator &gen_p, std::string const &id_p);
 
 #endif

@@ -16,7 +16,7 @@ AnchorTrigger::AnchorTrigger(octopus::Library const &lib_p, octopus::RandomGener
     _bonus(bonus_p)
 {}
 
-void AnchorTrigger::trigger(octopus::State const &, octopus::Step &step_p, unsigned long, octopus::TriggerData const &) const
+void AnchorTrigger::trigger(octopus::State const &state_p, octopus::Step &step_p, unsigned long, octopus::TriggerData const &) const
 {
     std::map<std::string, octopus::Fixed> map_l;
     map_l["Anchor"] = -_bonus;
@@ -28,7 +28,7 @@ void AnchorTrigger::trigger(octopus::State const &, octopus::Step &step_p, unsig
     {
         Option option_l;
 
-        option_l._playerOption = generatePlayerOption(_player, _rand, id_l);
+        option_l._playerOption = generatePlayerOption(state_p, _player, _rand, id_l, i==2);
         option_l._enemyOption = generateEnemyOption((_player+1)%2, _rand, id_l);
 
         options_l.push_back(option_l);
