@@ -20,6 +20,7 @@ struct BuffOption
     unsigned long _player;
     octopus::TyppedBuff _buff;
     std::string _model;
+    std::string _div {""};
 };
 
 struct DoubleBuffOption

@@ -1,5 +1,7 @@
 #include "BuffGenerators.hh"
 
+#include "state/State.hh"
+#include "state/player/Player.hh"
 #include "state/entity/attackModifier/AttackModifier.hh"
 #include "step/player/PlayerBuffAllStep.hh"
 #include "step/player/PlayerAttackModAllStep.hh"
@@ -10,6 +12,10 @@ using namespace octopus;
 void genStep(std::vector<Steppable *> &steppables_p, BuffOption const &option_p)
 {
     steppables_p.push_back(new PlayerBuffAllStep(option_p._player, option_p._buff, option_p._model));
+    if(option_p._div != "")
+    {
+        steppables_p.push_back(new PlayerLevelUpDivinityStep(option_p._player, option_p._div));
+    }
 }
 
 void genStep(std::vector<Steppable *> &steppables_p, DoubleBuffOption const &option_p)
@@ -23,7 +29,7 @@ void genStep(std::vector<Steppable *> &steppables_p, ModifierOption const &optio
     steppables_p.push_back(new PlayerAttackModAllStep(option_p._player, option_p._mod, option_p._model));
 }
 
-void genStep(std::vector<Steppable *> &steppables_p, DivinityOption const &option_p)
+void genStep(std::vector<Steppable *> &steppables_p, ::DivinityOption const &option_p)
 {
     steppables_p.push_back(new PlayerLevelUpDivinityStep(option_p._player, option_p._div));
 }
@@ -128,7 +134,7 @@ std::vector<SingleOption> getClassicOptions(unsigned long player_p, std::string 
         option_l._buff._type = TyppedBuff::Type::Damage;
         option_l._buff._offset = rare_p?2:1;
         option_l._buff._id = id_p;
-        option_l._model = "square";
+        option_l._model = model_l;
         commons_l.push_back(option_l);
     }
     for(std::string const &model_l : models_l)
@@ -138,7 +144,7 @@ std::vector<SingleOption> getClassicOptions(unsigned long player_p, std::string 
         option_l._buff._type = TyppedBuff::Type::Armor;
         option_l._buff._offset = rare_p?2:1;
         option_l._buff._id = id_p;
-        option_l._model = "square";
+        option_l._model = model_l;
         commons_l.push_back(option_l);
     }
 
@@ -155,20 +161,113 @@ std::vector<SingleOption> getRareOptions(unsigned long player_p, std::string con
     return getClassicOptions(player_p, id_p, tierTwo_p, true);
 }
 
+std::vector<SingleOption> getEpicOptions(octopus::Player const &player_p, std::string const &id_p, bool tierTwo_p, bool tierThree_p)
+{
+    std::vector<SingleOption> options_l;
+
+    std::vector<std::string> models_l = {"square", "triangle", "circle"};
+    if(tierTwo_p)
+    {
+        models_l.push_back("double_square");
+        models_l.push_back("reverse_triangle");
+    }
+    if(tierThree_p)
+    {
+        models_l.push_back("long_square");
+        models_l.push_back("long_triangle");
+    }
+
+    // epic options are unique so we check levels to know if player used it already or not
+
+    // reload epic option
+    for(std::string const &model_l : models_l)
+    {
+        std::string levelName_p = model_l+"_reload";
+        // not chosen yet
+        if(octopus::getDivLvl(player_p, levelName_p) == 0)
+        {
+            BuffOption option_l;
+            option_l._player = player_p._id;
+            option_l._buff._type = TyppedBuff::Type::FullReload;
+            option_l._buff._coef = -0.5;
+            option_l._buff._id = id_p;
+            option_l._model = model_l;
+            option_l._div = levelName_p;
+            options_l.push_back(option_l);
+        }
+    }
+
+    // double damage epic option
+    models_l = {"long_square", "long_triangle"};
+    for(std::string const &model_l : models_l)
+    {
+        std::string levelName_p = model_l+"_double_damage";
+        // not chosen yet
+        if(octopus::getDivLvl(player_p, levelName_p) == 0)
+        {
+            BuffOption option_l;
+            option_l._player = player_p._id;
+            option_l._buff._type = TyppedBuff::Type::Damage;
+            option_l._buff._coef = 1;
+            option_l._buff._id = id_p;
+            option_l._model = model_l;
+            option_l._div = levelName_p;
+            options_l.push_back(option_l);
+        }
+    }
+
+    // buffer (model = div level now)
+    models_l = {"buff_harvest", "buff_production", "buff_damage", "buff_reload", "buff_armor"};
+    bool bufferUnlocked_l = false;
+    for(std::string const &model_l : models_l)
+    {
+        if(octopus::getDivLvl(player_p, model_l) > 0)
+        {
+            bufferUnlocked_l = true;
+        }
+    }
+
+    // none chosen yet
+    if(!bufferUnlocked_l)
+    {
+        for(std::string const &model_l : models_l)
+        {
+            ::DivinityOption option_l;
+            option_l._player = player_p._id;
+            option_l._div = model_l;
+            options_l.push_back(option_l);
+        }
+    }
+
+    return options_l;
+}
+
 SingleOption generatePlayerOption(octopus::State const &state_p, unsigned long player_p, octopus::RandomGenerator &gen_p, std::string const &id_p, bool rare_p)
 {
     SingleOption result_l;
-    int type_l = gen_p.roll(0, 10);
-    // rare option
-    if(rare_p || type_l >= 7)
+    int type_l = gen_p.roll(0, 100);
+    octopus::Player const * player_l = state_p.getPlayer(player_p);
+    bool tierTwo_l = octopus::getDivLvl(*player_l, "tier") > 1;
+    bool tierThree_l = octopus::getDivLvl(*player_l, "tier") > 2;
+    std::vector<SingleOption> optionsEpic_l = getEpicOptions(*player_l, id_p, tierTwo_l, tierThree_l);
+    // epic option : rare 20% / non rare 5%
+    if(optionsEpic_l.size() > 0
+    && ((rare_p && type_l <= 20) || type_l <= 5))
     {
-        std::vector<SingleOption> options_l = getRareOptions(player_p, id_p, false);
+        int roll_l = gen_p.roll(0, optionsEpic_l.size());
+        result_l = optionsEpic_l.at(roll_l);
+    }
+    // rare option : rare 100% / non rare 30% (5% epic)
+    else if(rare_p || type_l <= 30)
+    {
+        std::vector<SingleOption> options_l = getRareOptions(player_p, id_p, tierTwo_l);
         int roll_l = gen_p.roll(0, options_l.size());
         result_l = options_l.at(roll_l);
     }
+    // common
     else
     {
-        std::vector<SingleOption> options_l = getCommonOptions(player_p, id_p, false);
+        std::vector<SingleOption> options_l = getCommonOptions(player_p, id_p, tierTwo_l);
         int roll_l = gen_p.roll(0, options_l.size());
         result_l = options_l.at(roll_l);
     }
