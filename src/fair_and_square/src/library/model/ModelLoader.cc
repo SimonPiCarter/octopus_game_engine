@@ -184,7 +184,6 @@ void createCommandCenter(Library &lib_p)
 {
 	BuildingModel buildingModel_l { true, 1.9, 5000. };
 	buildingModel_l._isBuilding = true;
-	buildingModel_l._isStatic = true;
 	buildingModel_l._productionOutput = {2, 0};
 	buildingModel_l._deposit["Food"] = true;
 	buildingModel_l._deposit["Steel"] = true;
@@ -201,7 +200,6 @@ void createBarrackSquare(Library &lib_p)
 {
 	BuildingModel buildingModel_l { true, 0.9, 1000. };
 	buildingModel_l._isBuilding = true;
-	buildingModel_l._isStatic = true;
 	buildingModel_l._unitModels.push_back(&lib_p.getUnitModel("square"));
 	buildingModel_l._unitModels.push_back(&lib_p.getUnitModel("long_square"));
 	buildingModel_l._unitModels.push_back(&lib_p.getUnitModel("double_square"));
@@ -214,7 +212,6 @@ void createBarrackCircle(Library &lib_p)
 {
 	BuildingModel buildingModel_l { true, 0.9, 1000. };
 	buildingModel_l._isBuilding = true;
-	buildingModel_l._isStatic = true;
 	buildingModel_l._unitModels.push_back(&lib_p.getUnitModel("circle"));
 	buildingModel_l._buildingTime = 1000;
 	buildingModel_l._cost["Steel"] = 150;
@@ -225,7 +222,6 @@ void createBarrackTriangle(Library &lib_p)
 {
 	BuildingModel buildingModel_l { true, 0.9, 1000. };
 	buildingModel_l._isBuilding = true;
-	buildingModel_l._isStatic = true;
 	buildingModel_l._unitModels.push_back(&lib_p.getUnitModel("triangle"));
 	buildingModel_l._unitModels.push_back(&lib_p.getUnitModel("reverse_triangle"));
 	buildingModel_l._unitModels.push_back(&lib_p.getUnitModel("long_triangle"));
@@ -238,7 +234,6 @@ void createDeposit(Library &lib_p)
 {
 	BuildingModel buildingModel_l { true, 0.9, 500. };
 	buildingModel_l._isBuilding = true;
-	buildingModel_l._isStatic = true;
 	buildingModel_l._buildingTime = 100;
 	buildingModel_l._cost["Steel"] = 50;
 
@@ -253,7 +248,6 @@ void createAnchor(Library &lib_p)
 	// temple
 	TempleModel buildingModel_l { true, 0.9, 1000. };
 	buildingModel_l._isBuilding = true;
-	buildingModel_l._isStatic = true;
 	buildingModel_l._buildingTime = 500;
 	buildingModel_l._cost["Steel"] = 150;
 	buildingModel_l._cost["Food"] = 50;
@@ -267,7 +261,6 @@ void createAnchorSpot(Library &lib_p)
 	// temple
 	BuildingModel buildingModel_l { true, 0.9, 1000. };
 	buildingModel_l._isBuilding = true;
-	buildingModel_l._isStatic = true;
 	buildingModel_l._invulnerable = true;
 	buildingModel_l._isAbandonedTemple = true;
 	buildingModel_l._armor = 5;
@@ -279,7 +272,6 @@ void createResourceFood(Library &lib_p)
 {
 	EntityModel resModel_l { true, 0.9, 1., 10. };
 	resModel_l._isResource = true;
-	resModel_l._isStatic = true;
 	lib_p.registerEntityModel("resource_food", resModel_l);
 }
 
@@ -287,7 +279,6 @@ void createResourceSteel(Library &lib_p)
 {
 	EntityModel resModel_l { true, 0.9, 1., 10. };
 	resModel_l._isResource = true;
-	resModel_l._isStatic = true;
 	lib_p.registerEntityModel("resource_steel", resModel_l);
 }
 
@@ -295,7 +286,6 @@ void createWater(Library &lib_p)
 {
 	BuildingModel buildingModel_l { true, 1., 500. };
 	buildingModel_l._isBuilding = true;
-	buildingModel_l._isStatic = true;
 	buildingModel_l._invulnerable = true;
 	lib_p.registerBuildingModel("water_h", buildingModel_l);
 	lib_p.registerBuildingModel("water_v", buildingModel_l);
