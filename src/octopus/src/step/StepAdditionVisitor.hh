@@ -69,6 +69,7 @@ public:
 	virtual void visit(PlayerResetOptionDivinityStep const *);
 	virtual void visit(PlayerSpawnStep const *) {}
 	virtual void visit(PlayerSpendResourceStep const *);
+	virtual void visit(PlayerUpdateBuildingCountStep const *) override {}
 	virtual void visit(ProductionPaidStep const *) {}
 	virtual void visit(ProductionProgressionStep const *) {}
 	virtual void visit(ResourceSpawnStep const *);

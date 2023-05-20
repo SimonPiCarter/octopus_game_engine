@@ -56,7 +56,7 @@ namespace octopus
 			/// Unlock info
 			///
 			/// @brief keep track of how many buildings of the given model are standing for this player
-			std::map<std::string, unsigned long> _buildingCount;
+			std::map<std::string, long> _buildingCount;
 			/// @brief keep track if a research has been unlocked already
 			std::map<std::string, bool> _techUnlocked;
 	};

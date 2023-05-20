@@ -39,6 +39,11 @@ void BuildingBlueprintCommand::registerCommand(Step & step_p, State const &state
 		Logger::getDebug() << "BuildingBlueprintCommand:: missing resource "<<_player <<std::endl;
 		step_p.addSteppable(new MissingResourceStep(_player));
 	}
+	else if(!meetRequirements(_model->_requirements, *state_p.getPlayer(_player)))
+	{
+		Logger::getDebug() << "BuildingBlueprintCommand:: missing requirements "<<_player <<std::endl;
+		step_p.addSteppable(new MissingResourceStep(_player));
+	}
 	else
 	{
 		Building building_l(_pos, true, *_model);

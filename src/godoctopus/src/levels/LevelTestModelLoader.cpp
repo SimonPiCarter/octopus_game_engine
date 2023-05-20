@@ -56,6 +56,7 @@ std::list<Steppable *> LevelSteps(Library &lib_p, RandomGenerator &rand_p)
 		new PlayerSpawnStep(0, 0),
 		new PlayerAddBuildingModel(0, lib_p.getBuildingModel("barrack_circle")),
 		new PlayerAddBuildingModel(0, lib_p.getBuildingModel("deposit")),
+		new PlayerAddBuildingModel(0, lib_p.getBuildingModel("anchor")),
 		new PlayerSpendResourceStep(0, mapRes_l),
 		new BuildingSpawnStep(handle_l++, building_l, true),
 		new UnitSpawnStep(handle_l++, unit_l),

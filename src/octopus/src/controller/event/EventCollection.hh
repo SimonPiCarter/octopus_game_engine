@@ -30,12 +30,12 @@ public:
 	// may create event
 	virtual void visit(BuildingStep const *);
 	virtual void visit(EntityHitPointChangeStep const *);
+	virtual void visit(BuildingSpawnStep const *);
 	virtual void visit(EntitySpawnStep const *);
 	virtual void visit(UnitSpawnStep const *);
 
 	/// NA
 	virtual void visit(AttackModifierStep const *) {}
-	virtual void visit(BuildingSpawnStep const *) {}
 	virtual void visit(BuildingCancelStep const *) {}
 	virtual void visit(BuildingRemoveRallyPointStep const *) {}
 	virtual void visit(BuildingSetRallyPointStep const *) {}
@@ -80,6 +80,7 @@ public:
 	virtual void visit(PlayerResetOptionDivinityStep const *) {}
 	virtual void visit(PlayerSpawnStep const *) {}
 	virtual void visit(PlayerSpendResourceStep const *) {}
+	virtual void visit(PlayerUpdateBuildingCountStep const *) override {}
 	virtual void visit(ProductionPaidStep const *) {}
 	virtual void visit(ProductionProgressionStep const *) {}
 	virtual void visit(ResourceSpawnStep const *) {}

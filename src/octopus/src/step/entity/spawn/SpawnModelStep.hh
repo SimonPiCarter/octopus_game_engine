@@ -80,6 +80,7 @@ public:
 
 	Handle const &getHandle() const { return _handle; }
 	class_t const &getModel() const { return _model; }
+	bool isForceAlive() const { return _forceAlive; }
 protected:
 	Handle const _handle {0};
 	bool const _forceAlive;

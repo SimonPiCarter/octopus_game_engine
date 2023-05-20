@@ -10,6 +10,7 @@
 #include "command/building/BuildingUnitProductionCommand.hh"
 #include "controller/event/EventCollection.hh"
 #include "controller/event/EventEntityModelDied.hh"
+#include "controller/event/EventEntityModelFinished.hh"
 #include "controller/trigger/Listener.hh"
 #include "logger/Logger.hh"
 #include "orca/OrcaManager.hh"
@@ -22,6 +23,7 @@
 #include "step/ConflictPositionSolver.hh"
 #include "step/TickingStep.hh"
 #include "step/player/PlayerSpendResourceStep.hh"
+#include "step/player/PlayerUpdateBuildingCountStep.hh"
 #include "step/trigger/TriggerEnableChange.hh"
 #include "step/trigger/TriggerSpawn.hh"
 #include "step/vision/VisionChangeStep.hh"
@@ -543,6 +545,9 @@ void Controller::handleTriggers(State const &state_p, Step &step_p, Step const &
 	EventCollection visitor_l(state_p);
 	visitAll(prevStep_p, visitor_l);
 
+	// handle update for every player of building counts using a map of delta (+1 means a new building)
+	std::map<unsigned long, std::map<std::string, long> > mapDeltaBuildingPerPlayer_l;
+
 	// check every unit destroyed to cancel BuildingUnitProductionCommand and refund
 	for(EventEntityModelDied const * died_l : visitor_l._listEventEntityModelDied)
 	{
@@ -565,6 +570,26 @@ void Controller::handleTriggers(State const &state_p, Step &step_p, Step const &
 				}
 			}
 		}
+		// decrement building count for the given player
+		if(died_l->_model._isBuilding)
+		{
+			mapDeltaBuildingPerPlayer_l[ent_l._player][ent_l._model._id] -= 1;
+		}
+	}
+
+	for(EventEntityModelFinished const * spanwed_l : visitor_l._listEventEntityModelFinished)
+	{
+		Entity const & ent_l = spanwed_l->_entity;
+		// increment building count for the given player
+		if(ent_l._model._isBuilding)
+		{
+			mapDeltaBuildingPerPlayer_l[ent_l._player][ent_l._model._id] += 1;
+		}
+	}
+
+	for(auto &&pair_l : mapDeltaBuildingPerPlayer_l)
+	{
+		step_p.addSteppable(new PlayerUpdateBuildingCountStep(pair_l.first, pair_l.second));
 	}
 
 	Handle curHandle_l = 0;
