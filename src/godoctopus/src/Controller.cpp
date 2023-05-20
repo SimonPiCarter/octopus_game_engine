@@ -203,11 +203,18 @@ void Controller::load_level_test_anchor(int seed_p)
     init(commands_l, spawners_l, 50, _autoSaveFile);
 }
 
-void Controller::load_level_test_model(int seed_p)
+void Controller::load_level_test_model(int seed_p, godot::LevelModel *level_model_p)
 {
     delete _rand;
     _rand = new octopus::RandomGenerator(seed_p);
-    std::list<octopus::Steppable *> spawners_l = level_test_model::LevelSteps(_lib, *_rand);
+    std::list<octopus::Steppable *> spawners_l = {};
+    if(level_model_p)
+    {
+        spawners_l = level_model_p->generateLevelSteps(_lib);
+    }
+    std::list<octopus::Steppable *> levelsteps_l = level_test_model::LevelSteps(_lib, *_rand);
+    spawners_l.splice(spawners_l.end(), levelsteps_l);
+
     std::list<octopus::Command *> commands_l = level_test_model::LevelCommands(_lib, *_rand);
     // enable auto save
     newAutoSaveFile();
@@ -842,7 +849,7 @@ void Controller::_bind_methods()
     ClassDB::bind_method(D_METHOD("load_level1", "seed", "nb_wave"), &Controller::load_level1);
     ClassDB::bind_method(D_METHOD("load_level2", "seed"), &Controller::load_level2);
     ClassDB::bind_method(D_METHOD("load_level_test_anchor", "seed"), &Controller::load_level_test_anchor);
-    ClassDB::bind_method(D_METHOD("load_level_test_model", "seed"), &Controller::load_level_test_model);
+    ClassDB::bind_method(D_METHOD("load_level_test_model", "seed", "level_model"), &Controller::load_level_test_model);
 
     ClassDB::bind_method(D_METHOD("replay_level", "filename", "replay_mode"), &Controller::replay_level);
 

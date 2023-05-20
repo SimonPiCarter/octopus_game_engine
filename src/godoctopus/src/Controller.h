@@ -14,6 +14,7 @@
 #include "controller/Controller.hh"
 #include "option/Option.h"
 #include "option/OptionManager.h"
+#include "LevelModel.h"
 
 namespace octopus
 {
@@ -52,7 +53,7 @@ public:
     void load_level1(int seed_p, int nb_wave_p);
     void load_level2(int seed_p);
     void load_level_test_anchor(int seed_p);
-    void load_level_test_model(int seed_p);
+    void load_level_test_model(int seed_p, godot::LevelModel *level_model_p);
 
     // replay
     void replay_level(String const &filename_p, bool replay_mode_p);

@@ -42,25 +42,9 @@ namespace level_test_model
 
 std::list<Steppable *> LevelSteps(Library &lib_p, RandomGenerator &rand_p)
 {
-	Building building_l({20, 10}, true, lib_p.getBuildingModel("barrack_circle"));
-	Unit unit_l({ 17, 10 }, false, lib_p.getUnitModel("worker"));
-
-	long model_l = 420;
-	std::map<std::string, Fixed> mapRes_l;
-	mapRes_l["Food"] = -2000;
-	mapRes_l["Steel"] = -2000;
-
-	Handle handle_l = 0;
 	std::list<Steppable *> spawners_l =
 	{
-		new PlayerSpawnStep(0, 0),
-		new PlayerAddBuildingModel(0, lib_p.getBuildingModel("barrack_circle")),
-		new PlayerAddBuildingModel(0, lib_p.getBuildingModel("deposit")),
-		new PlayerAddBuildingModel(0, lib_p.getBuildingModel("anchor")),
-		new PlayerSpendResourceStep(0, mapRes_l),
-		new BuildingSpawnStep(handle_l++, building_l, true),
-		new UnitSpawnStep(handle_l++, unit_l),
-		new godot::CameraStep(to_int(building_l._pos.x), to_int(building_l._pos.y)),
+		new godot::CameraStep(20, 10),
 	};
 
 	return spawners_l;
