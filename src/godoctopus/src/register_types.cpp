@@ -1,6 +1,7 @@
 #include "Controller.h"
 #include "Entity.h"
 #include "option/Option.h"
+#include "Model.h"
 
 #include <gdextension_interface.h>
 #include <godot_cpp/core/defs.hpp>
@@ -17,6 +18,7 @@ void initialize_godoctopus_module(godot::ModuleInitializationLevel p_level) {
     godot::ClassDB::register_class<godot::Controller>();
     godot::ClassDB::register_class<godot::Entity>();
     godot::ClassDB::register_class<godot::Option>();
+    godot::ClassDB::register_class<godot::Model>();
 }
 
 void uninitialize_godoctopus_module(godot::ModuleInitializationLevel p_level) {

@@ -32,6 +32,7 @@
 #include "levels/Level1.h"
 #include "levels/Level2.h"
 #include "levels/LevelTestAnchor.h"
+#include "levels/LevelTestModelLoader.h"
 
 namespace godot {
 
@@ -199,6 +200,19 @@ void Controller::load_level_test_anchor(int seed_p)
     newAutoSaveFile();
     writeLevelId(*_autoSaveFile, LEVEL_ID_LEVEL_TEST_ANCHOR, 50);
     level_test_anchor::writeLevelHeader(*_autoSaveFile, seed_p);
+    init(commands_l, spawners_l, 50, _autoSaveFile);
+}
+
+void Controller::load_level_test_model(int seed_p)
+{
+    delete _rand;
+    _rand = new octopus::RandomGenerator(seed_p);
+    std::list<octopus::Steppable *> spawners_l = level_test_model::LevelSteps(_lib, *_rand);
+    std::list<octopus::Command *> commands_l = level_test_model::LevelCommands(_lib, *_rand);
+    // enable auto save
+    newAutoSaveFile();
+    writeLevelId(*_autoSaveFile, LEVEL_ID_LEVEL_TEST_MODEL, 50);
+    level_test_model::writeLevelHeader(*_autoSaveFile, seed_p);
     init(commands_l, spawners_l, 50, _autoSaveFile);
 }
 
@@ -828,6 +842,7 @@ void Controller::_bind_methods()
     ClassDB::bind_method(D_METHOD("load_level1", "seed", "nb_wave"), &Controller::load_level1);
     ClassDB::bind_method(D_METHOD("load_level2", "seed"), &Controller::load_level2);
     ClassDB::bind_method(D_METHOD("load_level_test_anchor", "seed"), &Controller::load_level_test_anchor);
+    ClassDB::bind_method(D_METHOD("load_level_test_model", "seed"), &Controller::load_level_test_model);
 
     ClassDB::bind_method(D_METHOD("replay_level", "filename", "replay_mode"), &Controller::replay_level);
 
@@ -915,6 +930,11 @@ std::map<unsigned long, OptionManager> &Controller::getOptionManagers()
 std::map<unsigned long, OptionManager> const &Controller::getOptionManagers() const
 {
     return _optionManagers;
+}
+
+octopus::Library &Controller::getLib()
+{
+    return _lib;
 }
 
 void Controller::newAutoSaveFile()

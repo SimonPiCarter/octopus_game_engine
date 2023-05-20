@@ -52,6 +52,7 @@ public:
     void load_level1(int seed_p, int nb_wave_p);
     void load_level2(int seed_p);
     void load_level_test_anchor(int seed_p);
+    void load_level_test_model(int seed_p);
 
     // replay
     void replay_level(String const &filename_p, bool replay_mode_p);
@@ -152,6 +153,8 @@ public:
     //// Non godot methods
     std::map<unsigned long, OptionManager> &getOptionManagers();
     std::map<unsigned long, OptionManager> const &getOptionManagers() const;
+
+    octopus::Library &getLib();
 private:
     void newAutoSaveFile();
     octopus::Controller * _controller = nullptr;
