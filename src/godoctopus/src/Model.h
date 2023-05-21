@@ -57,10 +57,11 @@ public:
     void set_dot_modifier(int tickrate_p, int nb_ticks_p, float dmg_p);
     void set_lifesteal_modifier(float ratio_p);
     void set_selfdamage_modifier(float dmg_p, float ratio_cur_hp_p, float ratio_max_hp_p, bool can_kill_p);
-    // requirements todo
+    // requirements
     void add_no_building_requirements(String const &name_p);
     void add_building_requirements(String const &name_p);
-    void add_div_lvl_requirements(String const &name_p, int level_p);
+    void add_upgrade_lvl_requirements_min(String const &name_p, int level_p);
+    void add_upgrade_lvl_requirements_max(String const &name_p, int level_p);
 
     /////////////////
     //   Building  //

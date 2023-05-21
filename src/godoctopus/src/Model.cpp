@@ -130,9 +130,14 @@ void Model::add_building_requirements(String const &name_p)
     _model->_requirements._buildings.insert(name_p.utf8().get_data());
 }
 
-void Model::add_div_lvl_requirements(String const &name_p, int level_p)
+void Model::add_upgrade_lvl_requirements_min(String const &name_p, int level_p)
 {
     _model->_requirements._upgradeLvl[name_p.utf8().get_data()] = level_p;
+}
+
+void Model::add_upgrade_lvl_requirements_max(String const &name_p, int level_p)
+{
+    _model->_requirements._upgradeLvlMax[name_p.utf8().get_data()] = level_p;
 }
 
 /////////////////
@@ -238,7 +243,8 @@ void Model::_bind_methods()
 
     ClassDB::bind_method(D_METHOD("add_no_building_requirements", "name"), &Model::add_no_building_requirements);
     ClassDB::bind_method(D_METHOD("add_building_requirements", "name"), &Model::add_building_requirements);
-    ClassDB::bind_method(D_METHOD("add_div_lvl_requirements", "name", "level"), &Model::add_div_lvl_requirements);
+    ClassDB::bind_method(D_METHOD("add_upgrade_lvl_requirements_min", "name", "level"), &Model::add_upgrade_lvl_requirements_min);
+    ClassDB::bind_method(D_METHOD("add_upgrade_lvl_requirements_max", "name", "level"), &Model::add_upgrade_lvl_requirements_max);
 
     // Building
     ClassDB::bind_method(D_METHOD("add_unit_produced", "controller", "unit"), &Model::add_unit_produced);
