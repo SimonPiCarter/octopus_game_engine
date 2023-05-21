@@ -50,6 +50,11 @@ bool BuildingModel::canProduce(UnitModel const * model_p) const
 	return std::find(_unitModels.begin(), _unitModels.end(), model_p) != _unitModels.end();
 }
 
+bool BuildingModel::canProduce(Upgrade const * upgrade_p) const
+{
+	return std::find(_upgrades.begin(), _upgrades.end(), upgrade_p) != _upgrades.end();
+}
+
 bool BuildingModel::checkLegality(Building const &, State const &) const
 {
 	return true;

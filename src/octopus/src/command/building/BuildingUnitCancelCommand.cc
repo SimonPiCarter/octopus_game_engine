@@ -18,11 +18,12 @@ void BuildingUnitCancelCommand::registerCommand(Step & step_p, State const &stat
 	Logger::getDebug() << "BuildingUnitCancelCommand:: register Command "<<_handleCommand <<std::endl;
 	Entity const * ent_l = state_p.getEntity(_handleCommand);
 
-	UnitProductionData const * const data_l = dynamic_cast<UnitProductionData const *>(octopus::getData(ent_l->getQueue().getBundle(_idx)._var));
+	CommandData const * const data_l = octopus::getData(ent_l->getQueue().getBundle(_idx)._var);
+	ProductionData const * const prodData_l = dynamic_cast<ProductionData const *>(data_l);
 
-	if(data_l && !data_l->_canceled && !step_p.isCmdCanceled(CommandIdx(_handleCommand, _idx)))
+	if(prodData_l && !prodData_l->_canceled && !step_p.isCmdCanceled(CommandIdx(_handleCommand, _idx)))
 	{
-		step_p.addSteppable(new PlayerSpendResourceStep(ent_l->_player, getReverseCostMap(data_l->_model->_cost)));
+		step_p.addSteppable(new PlayerSpendResourceStep(ent_l->_player, getReverseCostMap(prodData_l->getCost())));
 		step_p.addSteppable(new CancelUnitProductionStep(_handleCommand, _idx));
 	}
 	step_p.addSteppable(new CommandStorageStep(this));

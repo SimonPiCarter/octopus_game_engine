@@ -4,6 +4,7 @@
 #include "state/model/entity/EntityModel.hh"
 #include "state/model/entity/TempleModel.hh"
 #include "state/model/entity/UnitModel.hh"
+#include "state/player/upgrade/Upgrade.hh"
 
 namespace octopus
 {
@@ -13,6 +14,7 @@ Library::~Library()
 	for(auto &&pair_l : _mapEntityModel) { delete pair_l.second; }
 	for(auto &&pair_l : _mapBuildingModel) { delete pair_l.second; }
 	for(auto &&pair_l : _mapUnitModel) { delete pair_l.second; }
+	for(auto &&pair_l : _mapUpgrade) { delete pair_l.second; }
 }
 
 void Library::registerEntityModel(std::string const &id_p, EntityModel const &model_p)
@@ -67,6 +69,22 @@ UnitModel const & Library::getUnitModel(std::string const &id_p) const
 bool Library::hasUnitModel(std::string const &id_p) const
 {
 	return _mapUnitModel.find(id_p) != _mapUnitModel.end();
+}
+
+void Library::registerUpgrade(std::string const &id_p, Upgrade *upgrade_p)
+{
+	_mapUpgrade[id_p] = upgrade_p;
+	_mapUpgrade[id_p]->_id = id_p;
+}
+
+Upgrade const & Library::getUpgrade(std::string const &id_p) const
+{
+	return *_mapUpgrade.at(id_p);
+}
+
+bool Library::hasUpgrade(std::string const &id_p) const
+{
+	return _mapUpgrade.find(id_p) != _mapUpgrade.end();
 }
 
 }

@@ -6,8 +6,6 @@
 
 namespace octopus
 {
-class UnitProductionData;
-
 class CancelUnitProductionStep : public Steppable
 {
 public:

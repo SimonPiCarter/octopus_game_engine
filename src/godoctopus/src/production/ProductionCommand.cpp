@@ -1,7 +1,6 @@
 #include "ProductionCommand.h"
 #include "Controller.h"
 
-#include "command/building/BuildingUnitProductionCommand.hh"
 #include "command/CommandQueue.hh"
 
 namespace godot {
@@ -16,9 +15,9 @@ bool CommandSorter::operator()(CommandInfo const &a, CommandInfo const &b) const
     {
         return a.posInQueue < b.posInQueue;
     }
-    if(a.cmd->getHandleCommand() != b.cmd->getHandleCommand())
+    if(a.handle != b.handle)
     {
-        return a.cmd->getHandleCommand() < b.cmd->getHandleCommand();
+        return a.handle < b.handle;
     }
     return a.idx < b.idx;
 }

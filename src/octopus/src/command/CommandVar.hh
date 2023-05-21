@@ -8,6 +8,7 @@
 #include "command/building/BuildingRallyPointCommand.hh"
 #include "command/building/BuildingUnitCancelCommand.hh"
 #include "command/building/BuildingUnitProductionCommand.hh"
+#include "command/building/BuildingUpgradeProductionCommand.hh"
 #include "command/data/MoveData.hh"
 #include "command/data/ProductionData.hh"
 #include "command/data/TimerData.hh"
@@ -32,6 +33,7 @@ using CommandVar = std::variant<
     BuildingRallyPointCommand,
     BuildingUnitCancelCommand,
     BuildingUnitProductionCommand,
+    BuildingUpgradeProductionCommand,
     EntityAttackCommand,
     EntityMoveCommand,
     EntityAttackMoveCommand,

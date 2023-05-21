@@ -100,10 +100,10 @@ unsigned long remainingQueueTime(octopus::Building const &building_p)
 	{
 	    for(octopus::CommandBundle const &bundle_l : building_p.getQueue().getList())
 		{
-			octopus::UnitProductionData const *data_l = dynamic_cast<octopus::UnitProductionData const *>(getData(bundle_l._var));
+			octopus::ProductionData const *data_l = dynamic_cast<octopus::ProductionData const *>(getData(bundle_l._var));
 			if(data_l && data_l->_completeTime > data_l->_progression)
 			{
-				time_l += data_l->_completeTime - octopus::to_uint(data_l->_progression);
+				time_l += octopus::to_double(data_l->_completeTime - data_l->_progression);
 			}
 		}
 	}
@@ -111,7 +111,8 @@ unsigned long remainingQueueTime(octopus::Building const &building_p)
 	return time_l;
 }
 
-int getBestProductionBuilding(TypedArray<int> const &handles_p, octopus::State const &state_p, octopus::UnitModel const &model_p)
+template<typename production_t>
+int getBestProductionBuilding(TypedArray<int> const &handles_p, octopus::State const &state_p, production_t const &model_p)
 {
     int best_l = -1;
     unsigned long lowestQueue_l = 0;
@@ -159,6 +160,18 @@ void add_unit_build_command(std::list<octopus::Command*> &list_r, octopus::State
         if(best_l >= 0)
         {
             octopus::BuildingUnitProductionCommand *cmd_l = new octopus::BuildingUnitProductionCommand(best_l, best_l, unit_l);
+            cmd_l->setQueued(true);
+            list_r.push_back(cmd_l);
+        }
+    }
+    else if(lib_p.hasUpgrade(modelId_l))
+    {
+        octopus::Upgrade const &upgrade_l = lib_p.getUpgrade(modelId_l);
+        int best_l = getBestProductionBuilding(handles_p, state_p, upgrade_l);
+
+        if(best_l >= 0)
+        {
+            octopus::BuildingUpgradeProductionCommand *cmd_l = new octopus::BuildingUpgradeProductionCommand(best_l, best_l, upgrade_l);
             cmd_l->setQueued(true);
             list_r.push_back(cmd_l);
         }

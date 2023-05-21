@@ -11,9 +11,10 @@ struct EntityModel;
 struct BuildingModel;
 struct TempleModel;
 struct UnitModel;
+struct Upgrade;
 
 /// @brief This class is storing resources like
-/// EntityModel, UnitModel, BuildingModel, TempleModel
+/// EntityModel, UnitModel, BuildingModel, TempleModel, Upgrade
 class Library
 {
 public:
@@ -32,10 +33,14 @@ public:
 	UnitModel const & getUnitModel(std::string const &id_p) const;
 	bool hasUnitModel(std::string const &id_p) const;
 
+	void registerUpgrade(std::string const &id_p, Upgrade *upgrade_p);
+	Upgrade const & getUpgrade(std::string const &id_p) const;
+	bool hasUpgrade(std::string const &id_p) const;
 private:
 	std::unordered_map<std::string, EntityModel *> _mapEntityModel;
 	std::unordered_map<std::string, BuildingModel *> _mapBuildingModel;
 	std::unordered_map<std::string, UnitModel *> _mapUnitModel;
+	std::unordered_map<std::string, Upgrade *> _mapUpgrade;
 };
 
 }

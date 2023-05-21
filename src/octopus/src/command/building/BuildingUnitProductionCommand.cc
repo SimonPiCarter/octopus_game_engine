@@ -14,7 +14,6 @@
 #include "step/command/MissingResourceStep.hh"
 #include "step/command/ProductionPaidStep.hh"
 #include "step/command/ProductionProgressionStep.hh"
-#include "step/command/data/CancelUnitProductionStep.hh"
 #include "step/player/PlayerSpendResourceStep.hh"
 
 namespace octopus

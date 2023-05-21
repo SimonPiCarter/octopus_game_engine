@@ -10,7 +10,8 @@ namespace octopus
 {
 	class Building;
 	class State;
-	struct UnitModel;;
+	struct UnitModel;
+	struct Upgrade;
 
 	struct BuildingModel : public EntityModel
 	{
@@ -27,6 +28,9 @@ namespace octopus
 		/// @brief list of UnitModel available in this building
 		std::list<UnitModel const *> _unitModels;
 
+		/// @brief list of Upgrades available in this building
+		std::list<Upgrade const *> _upgrades;
+
 		/// @brief safe getter for the deposit map
 		bool isDeposit(std::string type_p) const;
 
@@ -35,6 +39,7 @@ namespace octopus
 		bool isProduction() const;
 
 		bool canProduce(UnitModel const * model_p) const;
+		bool canProduce(Upgrade const * upgrade_p) const;
 
 		virtual bool checkLegality(Building const &, State const &) const;
 

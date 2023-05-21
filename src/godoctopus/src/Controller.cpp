@@ -665,11 +665,11 @@ void Controller::get_productions(TypedArray<int> const &handles_p, int max_p)
 		size_t posInQueue_l = 0;
 	    for(octopus::CommandBundle const &bundle_l : ent_l->getQueue().getList())
 		{
-			octopus::BuildingUnitProductionCommand const *cmd_l = dynamic_cast<octopus::BuildingUnitProductionCommand const *>(getCommandFromVar(bundle_l._var));
-			octopus::UnitProductionData const *data_l = dynamic_cast<octopus::UnitProductionData const *>(getData(bundle_l._var));
+			octopus::Command const *cmd_l = getCommandFromVar(bundle_l._var);
+			octopus::ProductionData const *data_l = dynamic_cast<octopus::UnitProductionData const *>(getData(bundle_l._var));
 			if(cmd_l && data_l && !data_l->_canceled)
 			{
-				vecCommands_l.push_back({cmd_l, data_l, bundle_l._idx, posInQueue_l});
+				vecCommands_l.push_back({cmd_l->getHandleCommand(), data_l, bundle_l._idx, posInQueue_l});
 			}
 			++posInQueue_l;
 		}
@@ -680,9 +680,9 @@ void Controller::get_productions(TypedArray<int> const &handles_p, int max_p)
 	for(size_t i = 0 ; i < std::min<size_t>(vecCommands_l.size(), max_p) ; ++i)
 	{
         CommandInfo const &info_l = vecCommands_l[i];
-        String model_l(info_l.cmd->getModel()._id.c_str());
-        float progress_l = octopus::to_double(vecCommands_l[i].data->_progression/vecCommands_l[i].data->_completeTime*100.);
-        emit_signal("production_command", int(info_l.cmd->getHandleCommand()), int(info_l.idx), model_l, progress_l);
+        String model_l(info_l.data->getIdModel().c_str());
+        float progress_l = octopus::to_double(info_l.data->_progression/info_l.data->_completeTime*100.);
+        emit_signal("production_command", int(info_l.handle), int(info_l.idx), model_l, progress_l);
 	}
 }
 

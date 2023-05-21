@@ -7,8 +7,7 @@
 
 namespace octopus
 {
-    class BuildingUnitProductionCommand;
-    class UnitProductionData;
+    class ProductionData;
 } // namespace octopus
 
 
@@ -16,8 +15,8 @@ namespace godot {
 
 struct CommandInfo
 {
-	octopus::BuildingUnitProductionCommand const * cmd;
-	octopus::UnitProductionData const * data;
+	octopus::Handle handle;
+	octopus::ProductionData const * data;
 	size_t idx;
 	/// @brief used for sorting purpose
 	size_t posInQueue;

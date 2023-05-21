@@ -15,6 +15,7 @@ add_library(octopus
 	${CMAKE_CURRENT_SOURCE_DIR}/src/command/building/BuildingRallyPointCommand.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/command/building/BuildingUnitCancelCommand.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/command/building/BuildingUnitProductionCommand.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/src/command/building/BuildingUpgradeProductionCommand.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/command/Command.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/command/Commandable.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/command/CommandHelpers.cc
@@ -63,6 +64,9 @@ add_library(octopus
 	${CMAKE_CURRENT_SOURCE_DIR}/src/state/model/entity/EntityModel.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/state/model/entity/TempleModel.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/state/player/Player.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/src/state/player/upgrade/StepUpgradeNoOpGenerator.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/src/state/player/upgrade/Upgrade.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/src/state/player/upgrade/StepUpgradeTyppedBuffGenerator.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/state/vision/PatternHandler.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/state/vision/VisionGrid.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/state/vision/VisionHandler.cc

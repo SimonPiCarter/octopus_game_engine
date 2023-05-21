@@ -96,6 +96,13 @@ CommandVar getVarFromCommand(Command *cmd_p)
         }
     }
     {
+        BuildingUpgradeProductionCommand * typped_l = dynamic_cast<BuildingUpgradeProductionCommand *>(cmd_p);
+        if(typped_l)
+        {
+            return *typped_l;
+        }
+    }
+    {
         EntityAttackCommand * typped_l = dynamic_cast<EntityAttackCommand *>(cmd_p);
         if(typped_l)
         {

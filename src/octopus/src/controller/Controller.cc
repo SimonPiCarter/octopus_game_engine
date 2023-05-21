@@ -7,7 +7,6 @@
 
 #include "command/Command.hh"
 #include "command/Commandable.hh"
-#include "command/building/BuildingUnitProductionCommand.hh"
 #include "controller/event/EventCollection.hh"
 #include "controller/event/EventEntityModelDied.hh"
 #include "controller/event/EventEntityModelFinished.hh"
@@ -548,7 +547,7 @@ void Controller::handleTriggers(State const &state_p, Step &step_p, Step const &
 	// handle update for every player of building counts using a map of delta (+1 means a new building)
 	std::map<unsigned long, std::map<std::string, long> > mapDeltaBuildingPerPlayer_l;
 
-	// check every unit destroyed to cancel BuildingUnitProductionCommand and refund
+	// check every unit destroyed to cancel any command with ProductionData and refund
 	for(EventEntityModelDied const * died_l : visitor_l._listEventEntityModelDied)
 	{
 		Entity const & ent_l = died_l->_entity;
@@ -557,16 +556,11 @@ void Controller::handleTriggers(State const &state_p, Step &step_p, Step const &
 			// inspect running commands
 			for(CommandBundle const &bundle_l : ent_l.getQueue().getList())
 			{
-				if(!std::holds_alternative<BuildingUnitProductionCommand>(bundle_l._var))
-				{
-					continue;
-				}
-				BuildingUnitProductionCommand const &cmd_l = std::get<BuildingUnitProductionCommand>(bundle_l._var);
-				UnitProductionData const *data_l = dynamic_cast<UnitProductionData const *>(getData(bundle_l._var));
+				ProductionData const *data_l = dynamic_cast<ProductionData const *>(getData(bundle_l._var));
 				// refund cost of unit production
 				if(data_l)
 				{
-					step_p.addSteppable(new PlayerSpendResourceStep(ent_l._player, getReverseCostMap(cmd_l.getModel()._cost)));
+					step_p.addSteppable(new PlayerSpendResourceStep(ent_l._player, getReverseCostMap(data_l->getCost())));
 				}
 			}
 		}

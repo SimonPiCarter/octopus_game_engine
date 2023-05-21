@@ -12,6 +12,7 @@
 
 ### Building
 - BuildingUnitProductionCommand : produce an unit from a UnitModel
+- BuildingUpgradeProductionCommand : produce an unit from a UnitModel
 
 ## to implement
 

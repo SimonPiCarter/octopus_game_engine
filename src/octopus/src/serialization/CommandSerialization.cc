@@ -7,6 +7,7 @@
 #include "command/building/BuildingUnitCancelCommand.hh"
 #include "command/building/BuildingRallyPointCommand.hh"
 #include "command/building/BuildingUnitProductionCommand.hh"
+#include "command/building/BuildingUpgradeProductionCommand.hh"
 #include "command/entity/EntityAttackCommand.hh"
 #include "command/entity/EntityAttackMoveCommand.hh"
 #include "command/entity/EntityBuildingCommand.hh"
@@ -299,6 +300,13 @@ void writeCommand(std::ofstream &file_p, Command const *cmd_p, Writer_t writer_p
         writer_p(file_p, typped_l->getKey());
         writer_p(file_p, typped_l->getOption());
     }
+    else if(dynamic_cast<BuildingUpgradeProductionCommand const *>(cmd_p))
+    {
+        writer_p(file_p, 11ul);
+        BuildingUpgradeProductionCommand const *typped_l = dynamic_cast<BuildingUpgradeProductionCommand const *>(cmd_p);
+        writer_p(file_p, typped_l->getHandleCommand());
+        writer_p(file_p, typped_l->getUpgrade()._id);
+    }
     else if(dynamic_cast<BuildingUnitCancelCommand const *>(cmd_p))
     {
         writer_p(file_p, 12ul);
@@ -524,6 +532,16 @@ Command * readCommand(std::ifstream &file_p, Library const &lib_p)
         read(file_p, &option_l);
 
         cmd_l = new PlayerChoseOptionCommand(player_l, key_l, option_l);
+    }
+    else if(cmdId_p == 11)
+    {
+        Handle source_l;
+        std::string id_l;
+
+        read(file_p, &source_l);
+        read(file_p, &id_l);
+
+        cmd_l = new BuildingUpgradeProductionCommand(source_l, source_l, lib_p.getUpgrade(id_l));
     }
     else if(cmdId_p == 12)
     {
