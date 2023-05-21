@@ -67,6 +67,7 @@ public:
     //   Building  //
     /////////////////
     void add_unit_produced(Controller *controller_p, String const &unit_p);
+    void add_upgrade_produced(Controller *controller_p, String const &upgrade_p);
     void set_deposit(String const &res_p, bool deposit_p);
     void set_building_time(int time_p);
 

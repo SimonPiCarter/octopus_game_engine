@@ -2,6 +2,7 @@
 #include "Entity.h"
 #include "option/Option.h"
 #include "Model.h"
+#include "ModelUpgrade.h"
 #include "LevelModel.h"
 
 #include <gdextension_interface.h>
@@ -21,6 +22,7 @@ void initialize_godoctopus_module(godot::ModuleInitializationLevel p_level) {
     godot::ClassDB::register_class<godot::Option>();
     godot::ClassDB::register_class<godot::Model>();
     godot::ClassDB::register_class<godot::LevelModel>();
+    godot::ClassDB::register_class<godot::ModelUpgrade>();
 }
 
 void uninitialize_godoctopus_module(godot::ModuleInitializationLevel p_level) {

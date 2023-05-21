@@ -23,6 +23,7 @@
 #include "state/entity/Resource.hh"
 #include "state/entity/Unit.hh"
 #include "state/player/Player.hh"
+#include "state/player/upgrade/Upgrade.hh"
 #include "state/State.hh"
 
 // godot
@@ -510,6 +511,12 @@ TypedArray<String> Controller::get_models(int handle_p, int player_p) const
 		{
             models_l.push_back(model_l->_id.c_str());
 		}
+		std::list<octopus::Upgrade const *> updates_l = octopus::getAvailableUpgrades(
+			static_cast<octopus::BuildingModel const &>(ent_l->_model), *_state->getPlayer(player_p));
+		for(octopus::Upgrade const * update_l : updates_l)
+		{
+            models_l.push_back(update_l->_id.c_str());
+		}
 	}
     return models_l;
 }
@@ -666,7 +673,7 @@ void Controller::get_productions(TypedArray<int> const &handles_p, int max_p)
 	    for(octopus::CommandBundle const &bundle_l : ent_l->getQueue().getList())
 		{
 			octopus::Command const *cmd_l = getCommandFromVar(bundle_l._var);
-			octopus::ProductionData const *data_l = dynamic_cast<octopus::UnitProductionData const *>(getData(bundle_l._var));
+			octopus::ProductionData const *data_l = dynamic_cast<octopus::ProductionData const *>(getData(bundle_l._var));
 			if(cmd_l && data_l && !data_l->_canceled)
 			{
 				vecCommands_l.push_back({cmd_l->getHandleCommand(), data_l, bundle_l._idx, posInQueue_l});

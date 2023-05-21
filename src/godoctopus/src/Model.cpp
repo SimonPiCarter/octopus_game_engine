@@ -162,6 +162,25 @@ void Model::add_unit_produced(Controller *controller_p, String const &unit_p)
     _buildingModel->_unitModels.push_back(&controller_p->getLib().getUnitModel(unitType_l));
 }
 
+void Model::add_upgrade_produced(Controller *controller_p, String const &upgrade_p)
+{
+    if(!_buildingModel)
+    {
+        UtilityFunctions::print("ignored add_upgrade_produced for ", upgrade_p, " because not a building model");
+        return;
+    }
+
+    std::string upgradeType_l(upgrade_p.utf8().get_data());
+
+    if(!controller_p->getLib().hasUpgrade(upgradeType_l))
+    {
+        UtilityFunctions::print("Could not add_upgrade_produced, upgrade not found : ", upgrade_p);
+        return;
+    }
+
+    _buildingModel->_upgrades.push_back(&controller_p->getLib().getUpgrade(upgradeType_l));
+}
+
 void Model::set_deposit(String const &res_p, bool deposit_p)
 {
     if(!_buildingModel)
@@ -248,6 +267,7 @@ void Model::_bind_methods()
 
     // Building
     ClassDB::bind_method(D_METHOD("add_unit_produced", "controller", "unit"), &Model::add_unit_produced);
+    ClassDB::bind_method(D_METHOD("add_upgrade_produced", "controller", "unit"), &Model::add_upgrade_produced);
     ClassDB::bind_method(D_METHOD("set_deposit", "res", "deposit"), &Model::set_deposit);
     ClassDB::bind_method(D_METHOD("set_building_time", "time"), &Model::set_building_time);
 
