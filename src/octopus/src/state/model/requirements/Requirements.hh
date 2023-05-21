@@ -17,6 +17,7 @@ namespace octopus
 		std::set<std::string> _noBuildings;
 		std::set<std::string> _buildings;
 		std::map<std::string, unsigned long> _upgradeLvl;
+		std::map<std::string, unsigned long> _upgradeLvlMax;
 	};
 
 	/// @brief check if a given player meet the given requirements

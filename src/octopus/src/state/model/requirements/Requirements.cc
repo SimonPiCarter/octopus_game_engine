@@ -27,13 +27,25 @@ bool meetRequirements(Requirements const &req_p, Player const &player_p)
 		}
 	}
 
-	// check divinity lvl
+	// check upgrade lvl min
 	for(auto &&pair_l : req_p._upgradeLvl)
 	{
 		std::string type_l = pair_l.first;
 		unsigned long lvl_l = pair_l.second;
 		auto &&it_l = player_p._upgradeLvl.find(type_l);
 		if(it_l == player_p._upgradeLvl.end() || it_l->second < lvl_l)
+		{
+			return false;
+		}
+	}
+
+	// check upgrade lvl max
+	for(auto &&pair_l : req_p._upgradeLvlMax)
+	{
+		std::string type_l = pair_l.first;
+		unsigned long lvl_l = pair_l.second;
+		auto &&it_l = player_p._upgradeLvl.find(type_l);
+		if(it_l == player_p._upgradeLvl.end() || it_l->second > lvl_l)
 		{
 			return false;
 		}
