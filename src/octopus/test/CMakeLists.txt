@@ -60,6 +60,7 @@ target_sources (unit_tests
 	src/triggerUnitDied.test.cc
 	src/triggerUnitSpawn.test.cc
 	src/unitProductionCommand.test.cc
+	src/upgradeProductionCommand.test.cc
 	src/visionGridMoveStep.test.cc
 	src/visionGridOnStep.test.cc
 )
