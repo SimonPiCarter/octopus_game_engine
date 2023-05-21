@@ -40,7 +40,8 @@ void BuildingUnitProductionCommand::registerCommand(Step & step_p, State const &
 
 	// check if we can pay for it and if building can produce it
 	if(checkResource(state_p, building_l->_player, _model->_cost, step_p.getResourceSpent(building_l->_player))
-	&& building_l->_buildingModel.canProduce(_model))
+	&& building_l->_buildingModel.canProduce(_model)
+	&& meetRequirements(_model->_requirements, *state_p.getPlayer(building_l->_player)))
 	{
 		step_p.addSteppable(new PlayerSpendResourceStep(building_l->_player, _model->_cost));
 		step_p.addSteppable(new CommandSpawnStep(this));
