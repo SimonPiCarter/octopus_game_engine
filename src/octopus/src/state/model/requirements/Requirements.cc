@@ -45,7 +45,7 @@ bool meetRequirements(Requirements const &req_p, Player const &player_p)
 		std::string type_l = pair_l.first;
 		unsigned long lvl_l = pair_l.second;
 		auto &&it_l = player_p._upgradeLvl.find(type_l);
-		if(it_l == player_p._upgradeLvl.end() || it_l->second > lvl_l)
+		if(it_l != player_p._upgradeLvl.end() && it_l->second > lvl_l)
 		{
 			return false;
 		}
