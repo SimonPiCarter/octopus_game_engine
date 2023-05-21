@@ -33,6 +33,8 @@ struct Upgrade
     std::string _id;
     /// @brief step genrator to be used when upgrade is done
     StepUpgradeGenerator const * const _generator;
+
+    bool _repeatable { false };
 };
 
 } // namespace octopus

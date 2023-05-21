@@ -9,6 +9,7 @@
 #include "step/command/CommandQueueStep.hh"
 #include "step/command/data/CancelUnitProductionStep.hh"
 #include "step/player/PlayerSpendResourceStep.hh"
+#include "step/player/PlayerProducedUpgradeStep.hh"
 
 namespace octopus
 {
@@ -25,6 +26,12 @@ void BuildingUnitCancelCommand::registerCommand(Step & step_p, State const &stat
 	{
 		step_p.addSteppable(new PlayerSpendResourceStep(ent_l->_player, getReverseCostMap(prodData_l->getCost())));
 		step_p.addSteppable(new CancelUnitProductionStep(_handleCommand, _idx));
+		// if update remove update being processed
+		UpgradeProductionData const * upgradeData_l = dynamic_cast<UpgradeProductionData const *>(data_l);
+		if(upgradeData_l)
+		{
+			step_p.addSteppable(new PlayerProducedUpgradeStep(ent_l->_player, upgradeData_l->_upgrade->_id, false));
+		}
 	}
 	step_p.addSteppable(new CommandStorageStep(this));
 }

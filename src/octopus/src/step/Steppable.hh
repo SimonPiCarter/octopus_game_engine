@@ -84,6 +84,7 @@ namespace octopus
 	class PlayerBuffAllStep;
 	class PlayerLevelUpUpgradeStep;
 	class PlayerPopOptionStep;
+	class PlayerProducedUpgradeStep;
 	class PlayerSpawnStep;
 	class PlayerSpendResourceStep;
 	class PlayerUpdateBuildingCountStep;
@@ -170,6 +171,7 @@ namespace octopus
 			virtual void visit(PlayerBuffAllStep const *) = 0;
 			virtual void visit(PlayerLevelUpUpgradeStep const *) = 0;
 			virtual void visit(PlayerPopOptionStep const *) = 0;
+			virtual void visit(PlayerProducedUpgradeStep const *) = 0;
 			virtual void visit(PlayerSpawnStep const *) = 0;
 			virtual void visit(PlayerSpendResourceStep const *) = 0;
 			virtual void visit(PlayerUpdateBuildingCountStep const *) = 0;

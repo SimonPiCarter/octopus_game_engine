@@ -70,6 +70,7 @@ public:
 	virtual void visit(octopus::PlayerBuffAllStep const *) {}
 	virtual void visit(octopus::PlayerLevelUpUpgradeStep const *) override {}
 	virtual void visit(octopus::PlayerPopOptionStep const *);
+	virtual void visit(octopus::PlayerProducedUpgradeStep const *) override {}
 	virtual void visit(octopus::PlayerSpawnStep const *) override {}
 	virtual void visit(octopus::PlayerSpendResourceStep const *) override {}
 	virtual void visit(octopus::PlayerUpdateBuildingCountStep const *) override {}

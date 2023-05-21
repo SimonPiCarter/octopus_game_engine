@@ -22,6 +22,7 @@
 #include "step/ConflictPositionSolver.hh"
 #include "step/TickingStep.hh"
 #include "step/player/PlayerSpendResourceStep.hh"
+#include "step/player/PlayerProducedUpgradeStep.hh"
 #include "step/player/PlayerUpdateBuildingCountStep.hh"
 #include "step/trigger/TriggerEnableChange.hh"
 #include "step/trigger/TriggerSpawn.hh"
@@ -561,6 +562,12 @@ void Controller::handleTriggers(State const &state_p, Step &step_p, Step const &
 				if(data_l)
 				{
 					step_p.addSteppable(new PlayerSpendResourceStep(ent_l._player, getReverseCostMap(data_l->getCost())));
+				}
+				// if update remove update being processed
+				UpgradeProductionData const * upgradeData_l = dynamic_cast<UpgradeProductionData const *>(data_l);
+				if(upgradeData_l)
+				{
+					step_p.addSteppable(new PlayerProducedUpgradeStep(ent_l._player, upgradeData_l->_upgrade->_id, false));
 				}
 			}
 		}

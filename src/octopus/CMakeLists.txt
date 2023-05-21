@@ -112,6 +112,7 @@ add_library(octopus
 	${CMAKE_CURRENT_SOURCE_DIR}/src/step/player/PlayerBuffAllStep.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/step/player/PlayerLevelUpUpgradeStep.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/step/player/PlayerPopOptionStep.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/src/step/player/PlayerProducedUpgradeStep.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/step/player/PlayerSpawnStep.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/step/player/PlayerSpendResourceStep.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/step/player/PlayerUpdateBuildingCountStep.cc

@@ -64,6 +64,7 @@ public:
 	virtual void visit(PlayerBuffAllStep const *) {}
 	virtual void visit(PlayerLevelUpUpgradeStep const *) {}
 	virtual void visit(PlayerPopOptionStep const *) {}
+	virtual void visit(PlayerProducedUpgradeStep const *) {}
 	virtual void visit(PlayerSpawnStep const *) {}
 	virtual void visit(PlayerSpendResourceStep const *);
 	virtual void visit(PlayerUpdateBuildingCountStep const *) override {}

@@ -77,7 +77,9 @@ std::list<Upgrade const *> getAvailableUpgrades(BuildingModel const &building_p,
 	std::list<Upgrade const *> availables_l;
 	for(Upgrade const * upgrade_l : building_p._upgrades)
 	{
-		if(meetRequirements(upgrade_l->_requirements, player_p))
+		// meet requirement and avoid repeat upgrade
+		if(meetRequirements(upgrade_l->_requirements, player_p)
+		&& (upgrade_l->_repeatable || player_p._producedUpgrade.find(upgrade_l->_id) == player_p._producedUpgrade.end()))
 		{
 			availables_l.push_back(upgrade_l);
 		}

@@ -5,6 +5,7 @@
 #include <vector>
 #include <list>
 #include <map>
+#include <unordered_set>
 #include "state/entity/Buff.hh"
 #include "state/entity/attackModifier/AttackModifier.hh"
 
@@ -48,6 +49,11 @@ namespace octopus
 
 			/// @brief the level for every upgrade
 			std::map<std::string, unsigned long> _upgradeLvl;
+
+			/// @brief indicates if an upgrade is currently produced
+			/// @note this is useful to avoid the same upgrade to be started multiple time
+			/// @note an upgrade can be tagged repeatable to disregard this constraint
+			std::unordered_set<std::string> _producedUpgrade;
 	};
 
 	/// @brief safe getter for resource of a player

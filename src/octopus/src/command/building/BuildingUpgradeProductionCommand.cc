@@ -8,6 +8,7 @@
 #include "state/State.hh"
 #include "state/entity/Building.hh"
 #include "state/model/entity/EntityModel.hh"
+#include "state/player/Player.hh"
 #include "step/Step.hh"
 #include "step/player/PlayerLevelUpUpgradeStep.hh"
 #include "step/command/CommandQueueStep.hh"
@@ -15,6 +16,7 @@
 #include "step/command/ProductionPaidStep.hh"
 #include "step/command/ProductionProgressionStep.hh"
 #include "step/player/PlayerSpendResourceStep.hh"
+#include "step/player/PlayerProducedUpgradeStep.hh"
 
 namespace octopus
 {
@@ -37,13 +39,16 @@ void BuildingUpgradeProductionCommand::registerCommand(Step & step_p, State cons
 		return;
 	}
 
+	Player const &player_l = *state_p.getPlayer(building_l->_player);
 	// check if we can pay for it and if building can produce it
 	if(checkResource(state_p, building_l->_player, _upgrade->_cost, step_p.getResourceSpent(building_l->_player))
 	&& building_l->_buildingModel.canProduce(_upgrade)
-	&& meetRequirements(_upgrade->_requirements, *state_p.getPlayer(building_l->_player)))
+	&& meetRequirements(_upgrade->_requirements, player_l)
+	&& (_upgrade->_repeatable || player_l._producedUpgrade.find(_upgrade->_id) == player_l._producedUpgrade.end()))
 	{
 		step_p.addSteppable(new PlayerSpendResourceStep(building_l->_player, _upgrade->_cost));
 		step_p.addSteppable(new CommandSpawnStep(this));
+		step_p.addSteppable(new PlayerProducedUpgradeStep(building_l->_player, _upgrade->_id, true));
 	}
 	// else add informative step for failure
 	else
@@ -75,6 +80,7 @@ bool BuildingUpgradeProductionCommand::applyCommand(Step & step_p, State const &
 
 		// set ugrade as researched
 		step_p.addSteppable(new PlayerLevelUpUpgradeStep(building_l->_player, _upgrade->_id));
+		step_p.addSteppable(new PlayerProducedUpgradeStep(building_l->_player, _upgrade->_id, false));
 		if(_upgrade->_generator)
 		{
 			// set all steppable unlocked by the upgrade
