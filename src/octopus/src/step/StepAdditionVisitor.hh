@@ -59,14 +59,11 @@ public:
 	virtual void visit(FlyingCommandPopStep const *) {}
 	virtual void visit(MissingResourceStep const *) {}
 	virtual void visit(PlayerAddBuildingModel const *) {}
-	virtual void visit(PlayerAddOptionDivinityStep const *) {}
 	virtual void visit(PlayerAddOptionStep const *) {}
 	virtual void visit(PlayerAttackModAllStep const *) {}
-	virtual void visit(PlayerAnchorDivinityStep const *) {}
 	virtual void visit(PlayerBuffAllStep const *) {}
-	virtual void visit(PlayerLevelUpDivinityStep const *) {}
+	virtual void visit(PlayerLevelUpUpgradeStep const *) {}
 	virtual void visit(PlayerPopOptionStep const *) {}
-	virtual void visit(PlayerResetOptionDivinityStep const *);
 	virtual void visit(PlayerSpawnStep const *) {}
 	virtual void visit(PlayerSpendResourceStep const *);
 	virtual void visit(PlayerUpdateBuildingCountStep const *) override {}

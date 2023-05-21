@@ -5,7 +5,7 @@
 #include "state/entity/attackModifier/AttackModifier.hh"
 #include "step/player/PlayerBuffAllStep.hh"
 #include "step/player/PlayerAttackModAllStep.hh"
-#include "step/player/PlayerLevelUpDivinityStep.hh"
+#include "step/player/PlayerLevelUpUpgradeStep.hh"
 
 using namespace octopus;
 
@@ -14,7 +14,7 @@ void genStep(std::vector<Steppable *> &steppables_p, BuffOption const &option_p)
     steppables_p.push_back(new PlayerBuffAllStep(option_p._player, option_p._buff, option_p._model));
     if(option_p._div != "")
     {
-        steppables_p.push_back(new PlayerLevelUpDivinityStep(option_p._player, option_p._div));
+        steppables_p.push_back(new PlayerLevelUpUpgradeStep(option_p._player, option_p._div));
     }
 }
 
@@ -31,7 +31,7 @@ void genStep(std::vector<Steppable *> &steppables_p, ModifierOption const &optio
 
 void genStep(std::vector<Steppable *> &steppables_p, ::DivinityOption const &option_p)
 {
-    steppables_p.push_back(new PlayerLevelUpDivinityStep(option_p._player, option_p._div));
+    steppables_p.push_back(new PlayerLevelUpUpgradeStep(option_p._player, option_p._div));
 }
 
 std::vector<Steppable *> BuffGenerator::getSteppables(unsigned long options_p) const
@@ -184,7 +184,7 @@ std::vector<SingleOption> getEpicOptions(octopus::Player const &player_p, std::s
     {
         std::string levelName_p = model_l+"_reload";
         // not chosen yet
-        if(octopus::getDivLvl(player_p, levelName_p) == 0)
+        if(octopus::getUpgradeLvl(player_p, levelName_p) == 0)
         {
             BuffOption option_l;
             option_l._player = player_p._id;
@@ -203,7 +203,7 @@ std::vector<SingleOption> getEpicOptions(octopus::Player const &player_p, std::s
     {
         std::string levelName_p = model_l+"_double_damage";
         // not chosen yet
-        if(octopus::getDivLvl(player_p, levelName_p) == 0)
+        if(octopus::getUpgradeLvl(player_p, levelName_p) == 0)
         {
             BuffOption option_l;
             option_l._player = player_p._id;
@@ -221,7 +221,7 @@ std::vector<SingleOption> getEpicOptions(octopus::Player const &player_p, std::s
     bool bufferUnlocked_l = false;
     for(std::string const &model_l : models_l)
     {
-        if(octopus::getDivLvl(player_p, model_l) > 0)
+        if(octopus::getUpgradeLvl(player_p, model_l) > 0)
         {
             bufferUnlocked_l = true;
         }
@@ -247,8 +247,8 @@ SingleOption generatePlayerOption(octopus::State const &state_p, unsigned long p
     SingleOption result_l;
     int type_l = gen_p.roll(0, 100);
     octopus::Player const * player_l = state_p.getPlayer(player_p);
-    bool tierTwo_l = octopus::getDivLvl(*player_l, "tier") > 1;
-    bool tierThree_l = octopus::getDivLvl(*player_l, "tier") > 2;
+    bool tierTwo_l = octopus::getUpgradeLvl(*player_l, "tier") > 1;
+    bool tierThree_l = octopus::getUpgradeLvl(*player_l, "tier") > 2;
     std::vector<SingleOption> optionsEpic_l = getEpicOptions(*player_l, id_p, tierTwo_l, tierThree_l);
     // epic option : rare 20% / non rare 5%
     if(optionsEpic_l.size() > 0

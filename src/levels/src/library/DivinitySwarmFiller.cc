@@ -24,7 +24,7 @@ void divinitySwarmFiller(Library &lib_p)
         unitModel_l._fullReload = 150.;
         unitModel_l._windup = 25.;
 
-        unitModel_l._requirements._divLvl["Divinity_1"] = 1;
+        unitModel_l._requirements._upgradeLvl["Divinity_1"] = 1;
 
         lib_p.registerUnitModel("div_swarm_1", unitModel_l);
     }
@@ -44,7 +44,7 @@ void divinitySwarmFiller(Library &lib_p)
         unitModel_l._fullReload = 150.;
         unitModel_l._windup = 50.;
 
-        unitModel_l._requirements._divLvl["Divinity_1"] = 2;
+        unitModel_l._requirements._upgradeLvl["Divinity_1"] = 2;
 
         lib_p.registerUnitModel("div_swarm_2", unitModel_l);
     }
@@ -64,7 +64,7 @@ void divinitySwarmFiller(Library &lib_p)
         buildingModel_l._cost["idiem"] = 100;
         buildingModel_l._armor = 5;
 
-        buildingModel_l._requirements._divLvl["Divinity_1"] = 1;
+        buildingModel_l._requirements._upgradeLvl["Divinity_1"] = 1;
 
         lib_p.registerBuildingModel("div_swarm_well", buildingModel_l);
     }

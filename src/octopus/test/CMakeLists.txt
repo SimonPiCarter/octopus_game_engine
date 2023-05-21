@@ -38,7 +38,6 @@ target_sources (unit_tests
 	src/conflictSolver.test.cc
 	src/constraintPosition.test.cc
 	src/controller.test.cc
-	src/divinityCommand.test.cc
 	src/entityHitPointChange.test.cc
 	src/entityMoveStep.test.cc
 	src/entitySpawnStep.test.cc

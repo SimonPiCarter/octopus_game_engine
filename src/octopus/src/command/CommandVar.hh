@@ -19,7 +19,6 @@
 #include "command/entity/EntityRallyPointCommand.hh"
 #include "command/entity/EntityWaitCommand.hh"
 #include "flying/eot/DamageOverTime.hh"
-#include "command/player/PlayerChoseDivinityCommand.hh"
 #include "command/player/PlayerChoseOptionCommand.hh"
 #include "command/spawner/AreaSpawnerCommand.hh"
 #include "command/unit/UnitDropCommand.hh"
@@ -40,7 +39,6 @@ using CommandVar = std::variant<
     EntityBuildingCommand,
     EntityRallyPointCommand,
     EntityWaitCommand,
-    PlayerChoseDivinityCommand,
     PlayerChoseOptionCommand,
     AreaSpawnerCommand,
     UnitDropCommand,

@@ -34,22 +34,12 @@ bool getDivOption(DivinityOption const &option_p, std::string const &type_p)
 	return false;
 }
 
-unsigned long getDivLvl(Player const &player_p, std::string const &type_p)
+unsigned long getUpgradeLvl(Player const &player_p, std::string const &type_p)
 {
-	auto &&it_l = player_p._divLvl.find(type_p);
-	if(it_l != player_p._divLvl.end())
+	auto &&it_l = player_p._upgradeLvl.find(type_p);
+	if(it_l != player_p._upgradeLvl.end())
 	{
 		return it_l->second;
-	}
-	return 0;
-}
-
-Fixed getDivAnchor(Player const &player_p, std::string const &type_p, bool floor_p)
-{
-	auto &&it_l = player_p._divAnchor.find(type_p);
-	if(it_l != player_p._divAnchor.end())
-	{
-		return floor_p ? std::max(Fixed(0), it_l->second) : it_l->second;
 	}
 	return 0;
 }

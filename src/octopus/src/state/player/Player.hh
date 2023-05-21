@@ -23,24 +23,11 @@ namespace octopus
 
 			std::map<std::string, Fixed> _resources;
 
-			unsigned long _popCap {0};
-			unsigned long _pop {0};
-
 			unsigned long _id {0};
 			unsigned long _team {0};
 
 			/// @brief Available building models
 			std::list<BuildingModel const *> _buildingModels;
-
-			///
-			/// Divinity info
-			///
-			/// @brief the level for every divinity
-			std::map<std::string, unsigned long> _divLvl;
-			/// @brief the anchor for every divinity
-			std::map<std::string, Fixed> _divAnchor;
-			/// @brief the options currently available to the player
-			std::list<DivinityOption> _divOptions;
 
 			/// @brief the map of options available to the player
 			/// @note Player is owner of the generator here
@@ -57,8 +44,9 @@ namespace octopus
 			///
 			/// @brief keep track of how many buildings of the given model are standing for this player
 			std::map<std::string, long> _buildingCount;
-			/// @brief keep track if a research has been unlocked already
-			std::map<std::string, bool> _techUnlocked;
+
+			/// @brief the level for every upgrade
+			std::map<std::string, unsigned long> _upgradeLvl;
 	};
 
 	/// @brief safe getter for resource of a player
@@ -66,10 +54,7 @@ namespace octopus
 	/// @brief safe getter for divinity option of a player
 	bool getDivOption(DivinityOption const &option_p, std::string const  &type_p);
 	/// @brief safe getter for divinity level of a player
-	unsigned long getDivLvl(Player const &player_p, std::string const  &type_p);
-	/// @brief safe getter for divinity anchor of a player
-	/// @param floor_p if true the value will be floored to zero if negative
-	Fixed getDivAnchor(Player const &player_p, std::string const  &type_p, bool floor_p=true);
+	unsigned long getUpgradeLvl(Player const &player_p, std::string const  &type_p);
 
 	/// @brief return availables building models from building
 	std::list<BuildingModel const *> getAvailableBuildingModels(Player const &player_p);

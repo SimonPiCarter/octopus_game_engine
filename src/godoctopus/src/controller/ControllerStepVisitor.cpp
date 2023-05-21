@@ -23,7 +23,6 @@
 #include "step/entity/spawn/EntitySpawnStep.hh"
 #include "step/entity/spawn/ResourceSpawnStep.hh"
 #include "step/entity/spawn/UnitSpawnStep.hh"
-#include "step/player/PlayerAddOptionDivinityStep.hh"
 #include "step/player/PlayerAddOptionStep.hh"
 #include "step/player/PlayerPopOptionStep.hh"
 #include "step/unit/UnitHarvestStep.hh"
@@ -112,11 +111,6 @@ void ControllerStepVisitor::visit(octopus::BuildingStep const *steppable_p)
 	octopus::Entity const * ent_l = _state->getEntity(steppable_p->_handle);
 	octopus::Building const * building_l = static_cast<octopus::Building const *>(ent_l);
 	_controller.emit_signal("build", int(steppable_p->_handle), octopus::to_double(building_l->_buildingProgress/building_l->_buildingModel._buildingTime));
-}
-
-void ControllerStepVisitor::visit(octopus::PlayerAddOptionDivinityStep const *steppable_p)
-{
-	// NA (ok)
 }
 
 void ControllerStepVisitor::visit(octopus::PlayerAddOptionStep const *steppable_p)

@@ -27,23 +27,13 @@ bool meetRequirements(Requirements const &req_p, Player const &player_p)
 		}
 	}
 
-	// check techs
-	for(std::string const & id_l : req_p._technologies)
-	{
-		auto &&it_l = player_p._techUnlocked.find(id_l);
-		if(it_l == player_p._techUnlocked.end() || !it_l->second)
-		{
-			return false;
-		}
-	}
-
 	// check divinity lvl
-	for(auto &&pair_l : req_p._divLvl)
+	for(auto &&pair_l : req_p._upgradeLvl)
 	{
 		std::string type_l = pair_l.first;
 		unsigned long lvl_l = pair_l.second;
-		auto &&it_l = player_p._divLvl.find(type_l);
-		if(it_l == player_p._divLvl.end() || it_l->second < lvl_l)
+		auto &&it_l = player_p._upgradeLvl.find(type_l);
+		if(it_l == player_p._upgradeLvl.end() || it_l->second < lvl_l)
 		{
 			return false;
 		}

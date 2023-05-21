@@ -83,21 +83,6 @@ const std::map<std::string, Fixed> & Step::getResourceSpent(unsigned long player
 	return itPlayer_l->second;
 }
 
-unsigned long & Step::getDivOptionSpent(unsigned long player_p)
-{
-	return _divOptionsSpent[player_p];
-}
-
-unsigned long Step::getDivOptionSpent(unsigned long player_p) const
-{
-	auto &&itPlayer_l = _divOptionsSpent.find(player_p);
-	if(itPlayer_l == _divOptionsSpent.end())
-	{
-		return 0;
-	}
-	return itPlayer_l->second;
-}
-
 void Step::addEntitySpawned()
 {
 	++_entitySpawned;

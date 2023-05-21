@@ -65,14 +65,11 @@ public:
 	virtual void visit(octopus::FlyingCommandPopStep const *) override {}
 	virtual void visit(octopus::MissingResourceStep const *) override {}
 	virtual void visit(octopus::PlayerAddBuildingModel const *) override {}
-	virtual void visit(octopus::PlayerAddOptionDivinityStep const *) override;
 	virtual void visit(octopus::PlayerAddOptionStep const *) override;
     virtual void visit(octopus::PlayerAttackModAllStep const *) override {}
-	virtual void visit(octopus::PlayerAnchorDivinityStep const *) override {}
 	virtual void visit(octopus::PlayerBuffAllStep const *) {}
-	virtual void visit(octopus::PlayerLevelUpDivinityStep const *) override {}
+	virtual void visit(octopus::PlayerLevelUpUpgradeStep const *) override {}
 	virtual void visit(octopus::PlayerPopOptionStep const *);
-	virtual void visit(octopus::PlayerResetOptionDivinityStep const *) override {}
 	virtual void visit(octopus::PlayerSpawnStep const *) override {}
 	virtual void visit(octopus::PlayerSpendResourceStep const *) override {}
 	virtual void visit(octopus::PlayerUpdateBuildingCountStep const *) override {}

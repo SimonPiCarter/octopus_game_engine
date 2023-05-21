@@ -15,7 +15,6 @@
 #include "command/unit/UnitDropCommand.hh"
 #include "command/unit/UnitHarvestCommand.hh"
 #include "command/player/PlayerChoseOptionCommand.hh"
-#include "command/player/PlayerChoseDivinityCommand.hh"
 #include "library/Library.hh"
 #include "state/model/entity/BuildingModel.hh"
 
@@ -300,13 +299,6 @@ void writeCommand(std::ofstream &file_p, Command const *cmd_p, Writer_t writer_p
         writer_p(file_p, typped_l->getKey());
         writer_p(file_p, typped_l->getOption());
     }
-    else if(dynamic_cast<PlayerChoseDivinityCommand const *>(cmd_p))
-    {
-        writer_p(file_p, 11ul);
-        PlayerChoseDivinityCommand const *typped_l = dynamic_cast<PlayerChoseDivinityCommand const *>(cmd_p);
-        writer_p(file_p, typped_l->getPlayer());
-        writer_p(file_p, typped_l->getType());
-    }
     else if(dynamic_cast<BuildingUnitCancelCommand const *>(cmd_p))
     {
         writer_p(file_p, 12ul);
@@ -532,16 +524,6 @@ Command * readCommand(std::ifstream &file_p, Library const &lib_p)
         read(file_p, &option_l);
 
         cmd_l = new PlayerChoseOptionCommand(player_l, key_l, option_l);
-    }
-    else if(cmdId_p == 11)
-    {
-        unsigned long player_l;
-        std::string type_l;
-
-        read(file_p, &player_l);
-        read(file_p, &type_l);
-
-        cmd_l = new PlayerChoseDivinityCommand(player_l, type_l);
     }
     else if(cmdId_p == 12)
     {

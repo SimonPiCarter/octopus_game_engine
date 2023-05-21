@@ -103,9 +103,6 @@ namespace octopus
 			/// @brief a map of map of resource spent (player, resource) -> value spent this step
 			std::map<unsigned long, std::map<std::string, Fixed> > _spent;
 
-			/// @brief a map of number of div option spent in this step (player) -> number of div option spent this step
-			std::map<unsigned long, unsigned long> _divOptionsSpent;
-
 			/// @brief the number of entity spawned in this step
 			unsigned long _entitySpawned {0};
 

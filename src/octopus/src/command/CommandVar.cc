@@ -145,13 +145,6 @@ CommandVar getVarFromCommand(Command *cmd_p)
         }
     }
     {
-        PlayerChoseDivinityCommand * typped_l = dynamic_cast<PlayerChoseDivinityCommand *>(cmd_p);
-        if(typped_l)
-        {
-            return *typped_l;
-        }
-    }
-    {
         PlayerChoseOptionCommand * typped_l = dynamic_cast<PlayerChoseOptionCommand *>(cmd_p);
         if(typped_l)
         {

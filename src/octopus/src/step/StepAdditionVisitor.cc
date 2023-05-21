@@ -7,7 +7,6 @@
 #include "step/command/data/CancelUnitProductionStep.hh"
 #include "step/entity/EntityHitPointChangeStep.hh"
 #include "step/player/PlayerSpendResourceStep.hh"
-#include "step/player/PlayerResetOptionDivinityStep.hh"
 
 namespace octopus
 {
@@ -21,12 +20,6 @@ void StepAdditionVisitor::visit(PlayerSpendResourceStep const *step_p)
     {
         _step.getResourceSpent(step_p->_player, pair_l.first) += pair_l.second;
     }
-}
-
-
-void StepAdditionVisitor::visit(PlayerResetOptionDivinityStep const *step_p)
-{
-    ++_step.getDivOptionSpent(step_p->_player);
 }
 
 void StepAdditionVisitor::visit(EntityHitPointChangeStep const *step_p)

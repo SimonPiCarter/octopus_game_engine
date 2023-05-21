@@ -24,7 +24,7 @@ void divinityFireFiller(Library &lib_p)
         unitModel_l._fullReload = 50.;
         unitModel_l._windup = 25.;
 
-        unitModel_l._requirements._divLvl["Divinity_5"] = 1;
+        unitModel_l._requirements._upgradeLvl["Divinity_5"] = 1;
 
         lib_p.registerUnitModel("div_fire_1", unitModel_l);
     }
@@ -54,7 +54,7 @@ void divinityFireFiller(Library &lib_p)
         unitModel_l._buffer._reload = 500;
         unitModel_l._buffer._active = true;
 
-        unitModel_l._requirements._divLvl["Divinity_5"] = 2;
+        unitModel_l._requirements._upgradeLvl["Divinity_5"] = 2;
 
         lib_p.registerUnitModel("div_fire_2", unitModel_l);
     }
@@ -74,7 +74,7 @@ void divinityFireFiller(Library &lib_p)
         unitModel_l._fullReload = 200.;
         unitModel_l._windup = 50.;
 
-        unitModel_l._requirements._divLvl["Divinity_5"] = 3;
+        unitModel_l._requirements._upgradeLvl["Divinity_5"] = 3;
 
         lib_p.registerUnitModel("div_fire_3", unitModel_l);
     }
@@ -91,7 +91,7 @@ void divinityFireFiller(Library &lib_p)
         buildingModel_l._cost["idiem"] = 100;
         buildingModel_l._armor = 5;
 
-        buildingModel_l._requirements._divLvl["Divinity_5"] = 1;
+        buildingModel_l._requirements._upgradeLvl["Divinity_5"] = 1;
 
         lib_p.registerBuildingModel("div_fire_well", buildingModel_l);
     }

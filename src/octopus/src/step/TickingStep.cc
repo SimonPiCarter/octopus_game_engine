@@ -42,14 +42,6 @@ void TickingStep::apply(State &state_p) const
 			++ time_l;
 		}
 	}
-
-	for(Player *player_l : state_p.getPlayers())
-	{
-		for(auto &&pair_l : player_l->_divAnchor)
-		{
-			pair_l.second -= _anchorLoss;
-		}
-	}
 }
 
 void TickingStep::revert(State &state_p, SteppableData const *) const
@@ -85,14 +77,6 @@ void TickingStep::revert(State &state_p, SteppableData const *) const
 				// decrement time
 				-- time_l;
 			}
-		}
-	}
-
-	for(Player *player_l : state_p.getPlayers())
-	{
-		for(auto &&pair_l : player_l->_divAnchor)
-		{
-			pair_l.second += _anchorLoss;
 		}
 	}
 }

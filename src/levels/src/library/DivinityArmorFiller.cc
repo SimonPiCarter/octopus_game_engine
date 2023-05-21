@@ -25,7 +25,7 @@ void divinityArmorFiller(Library &lib_p)
         unitModel_l._fullReload = 400.;
         unitModel_l._windup = 50.;
 
-        unitModel_l._requirements._divLvl["Divinity_4"] = 1;
+        unitModel_l._requirements._upgradeLvl["Divinity_4"] = 1;
 
         lib_p.registerUnitModel("div_armor_1", unitModel_l);
     }
@@ -55,7 +55,7 @@ void divinityArmorFiller(Library &lib_p)
         unitModel_l._buffer._reload = 500;
         unitModel_l._buffer._active = true;
 
-        unitModel_l._requirements._divLvl["Divinity_4"] = 2;
+        unitModel_l._requirements._upgradeLvl["Divinity_4"] = 2;
 
         lib_p.registerUnitModel("div_armor_2", unitModel_l);
     }
@@ -75,7 +75,7 @@ void divinityArmorFiller(Library &lib_p)
         unitModel_l._fullReload = 400.;
         unitModel_l._windup = 100.;
 
-        unitModel_l._requirements._divLvl["Divinity_4"] = 3;
+        unitModel_l._requirements._upgradeLvl["Divinity_4"] = 3;
 
         lib_p.registerUnitModel("div_armor_3", unitModel_l);
     }
@@ -92,7 +92,7 @@ void divinityArmorFiller(Library &lib_p)
         buildingModel_l._cost["idiem"] = 100;
         buildingModel_l._armor = 5;
 
-        buildingModel_l._requirements._divLvl["Divinity_4"] = 1;
+        buildingModel_l._requirements._upgradeLvl["Divinity_4"] = 1;
 
         lib_p.registerBuildingModel("div_armor_well", buildingModel_l);
     }

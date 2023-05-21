@@ -1,5 +1,5 @@
-#ifndef __PlayerLevelUpDivinityStep__
-#define __PlayerLevelUpDivinityStep__
+#ifndef __PlayerLevelUpUpgradeStep__
+#define __PlayerLevelUpUpgradeStep__
 
 #include "step/Steppable.hh"
 #include <string>
@@ -8,10 +8,10 @@ namespace octopus
 {
 
 /// @brief increase lvl of the given divinity type for the player
-class PlayerLevelUpDivinityStep : public Steppable
+class PlayerLevelUpUpgradeStep : public Steppable
 {
 public:
-	PlayerLevelUpDivinityStep(unsigned long player_p, std::string type_p)
+	PlayerLevelUpUpgradeStep(unsigned long player_p, std::string type_p)
 		: _player(player_p), _type(type_p) {}
 
 	virtual void apply(State &state_p) const override;

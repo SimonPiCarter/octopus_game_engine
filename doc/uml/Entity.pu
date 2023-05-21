@@ -54,8 +54,7 @@ EntityModel : std::string _id
 
 Requirements : std::set<std::string> _noBuildings
 Requirements : std::set<std::string> _buildings
-Requirements : std::set<std::string> _technologies
-Requirements : std::map<DivinityType,unsigned long> _divLvl
+Requirements : std::map<std::string, unsigned long> _upgradeLvl
 
 Building --|> Entity
 Building : double _buildingProgress

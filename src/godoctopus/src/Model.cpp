@@ -130,14 +130,9 @@ void Model::add_building_requirements(String const &name_p)
     _model->_requirements._buildings.insert(name_p.utf8().get_data());
 }
 
-void Model::add_techonology_requirements(String const &name_p)
-{
-    _model->_requirements._technologies.insert(name_p.utf8().get_data());
-}
-
 void Model::add_div_lvl_requirements(String const &name_p, int level_p)
 {
-    _model->_requirements._divLvl[name_p.utf8().get_data()] = level_p;
+    _model->_requirements._upgradeLvl[name_p.utf8().get_data()] = level_p;
 }
 
 /////////////////
@@ -243,7 +238,6 @@ void Model::_bind_methods()
 
     ClassDB::bind_method(D_METHOD("add_no_building_requirements", "name"), &Model::add_no_building_requirements);
     ClassDB::bind_method(D_METHOD("add_building_requirements", "name"), &Model::add_building_requirements);
-    ClassDB::bind_method(D_METHOD("add_techonology_requirements", "name"), &Model::add_techonology_requirements);
     ClassDB::bind_method(D_METHOD("add_div_lvl_requirements", "name", "level"), &Model::add_div_lvl_requirements);
 
     // Building

@@ -60,7 +60,6 @@ public:
     // requirements todo
     void add_no_building_requirements(String const &name_p);
     void add_building_requirements(String const &name_p);
-    void add_techonology_requirements(String const &name_p);
     void add_div_lvl_requirements(String const &name_p, int level_p);
 
     /////////////////

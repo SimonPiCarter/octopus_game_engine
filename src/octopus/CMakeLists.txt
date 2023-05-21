@@ -30,7 +30,6 @@ add_library(octopus
 	${CMAKE_CURRENT_SOURCE_DIR}/src/command/entity/EntityWaitCommand.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/command/flying/eot/DamageOverTime.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/command/flying/CommandEffectOverTime.cc
-	${CMAKE_CURRENT_SOURCE_DIR}/src/command/player/PlayerChoseDivinityCommand.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/command/player/PlayerChoseOptionCommand.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/command/spawner/AreaSpawnerCommand.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/command/spawner/SpawningGrid.cc
@@ -105,13 +104,10 @@ add_library(octopus
 	${CMAKE_CURRENT_SOURCE_DIR}/src/step/entity/spawn/BuildingSpawnStep.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/step/entity/spawn/ResourceSpawnStep.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/step/player/PlayerAddOptionStep.cc
-	${CMAKE_CURRENT_SOURCE_DIR}/src/step/player/PlayerAddOptionDivinityStep.cc
-	${CMAKE_CURRENT_SOURCE_DIR}/src/step/player/PlayerAnchorDivinityStep.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/step/player/PlayerAttackModAllStep.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/step/player/PlayerBuffAllStep.cc
-	${CMAKE_CURRENT_SOURCE_DIR}/src/step/player/PlayerLevelUpDivinityStep.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/src/step/player/PlayerLevelUpUpgradeStep.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/step/player/PlayerPopOptionStep.cc
-	${CMAKE_CURRENT_SOURCE_DIR}/src/step/player/PlayerResetOptionDivinityStep.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/step/player/PlayerSpawnStep.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/step/player/PlayerSpendResourceStep.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/step/player/PlayerUpdateBuildingCountStep.cc

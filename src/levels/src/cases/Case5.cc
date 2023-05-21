@@ -19,7 +19,6 @@
 #include "step/entity/spawn/BuildingSpawnStep.hh"
 #include "step/player/PlayerSpawnStep.hh"
 #include "step/player/PlayerSpendResourceStep.hh"
-#include "step/player/PlayerAddOptionDivinityStep.hh"
 #include "step/trigger/TriggerSpawn.hh"
 #include "step/state/StateDrawStep.hh"
 #include "step/state/StateTemplePositionAddStep.hh"
@@ -82,11 +81,6 @@ public:
 			int idx_l = distrib_l(_gen);
 			vector_l.erase(vector_l.begin() + idx_l);
 		}
-
-		std::set<std::string> set_l(vector_l.begin(), vector_l.end());
-
-
-		step_p.addSteppable(new PlayerAddOptionDivinityStep(_player, set_l, true));
 	}
 private:
 	unsigned long const _player;
