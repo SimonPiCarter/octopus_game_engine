@@ -15,14 +15,14 @@ void createWorker(Library &lib_p)
 	unitModel_l._isBuilder = true;
 	unitModel_l._productionTime = 2000;
 	unitModel_l._timeToHarvest = 100;
-	unitModel_l._cost["Food"] = 50;
-	unitModel_l._cost["Steel"] = 0;
-	unitModel_l._cost["Gas"] = 0;
-	unitModel_l._cost["Ether"] = 0;
-	unitModel_l._maxQuantity["Ether"] = 10;
-	unitModel_l._maxQuantity["Food"] = 10;
-	unitModel_l._maxQuantity["Gas"] = 10;
-	unitModel_l._maxQuantity["Steel"] = 10;
+	unitModel_l._cost["bloc"] = 50;
+	unitModel_l._cost["ether"] = 0;
+	unitModel_l._cost["steel"] = 0;
+	unitModel_l._cost["idiem"] = 0;
+	unitModel_l._maxQuantity["idiem"] = 10;
+	unitModel_l._maxQuantity["bloc"] = 10;
+	unitModel_l._maxQuantity["steel"] = 10;
+	unitModel_l._maxQuantity["ether"] = 10;
 	unitModel_l._damage = 5;
 	unitModel_l._armor = 0;
 	unitModel_l._range = 3.;
@@ -39,8 +39,8 @@ void createSquare(Library &lib_p)
 	UnitModel unitModel_l { false, 0.5, 0.05, 120 };
 	unitModel_l._isUnit = true;
 	unitModel_l._productionTime = 2300;
-	unitModel_l._cost["Food"] = 100;
-	unitModel_l._cost["Steel"] = 20;
+	unitModel_l._cost["bloc"] = 100;
+	unitModel_l._cost["ether"] = 20;
 	unitModel_l._damage = 9;
 	unitModel_l._armor = 0;
 	unitModel_l._range = 0.5;
@@ -62,8 +62,8 @@ void createDoubleSquare(Library &lib_p)
 	UnitModel unitModel_l { false, 0.5, 0.045, 155 };
 	unitModel_l._isUnit = true;
 	unitModel_l._productionTime = 1500;
-	unitModel_l._cost["Food"] = 100;
-	unitModel_l._cost["Steel"] = 20;
+	unitModel_l._cost["bloc"] = 100;
+	unitModel_l._cost["ether"] = 20;
 	unitModel_l._damage = 12;
 	unitModel_l._armor = 4;
 	unitModel_l._range = 0.5;
@@ -83,8 +83,8 @@ void createLongSquare(Library &lib_p)
 	UnitModel unitModel_l { false, 0.5, 0.025, 140 };
 	unitModel_l._isUnit = true;
 	unitModel_l._productionTime = 4000;
-	unitModel_l._cost["Food"] = 200;
-	unitModel_l._cost["Steel"] = 400;
+	unitModel_l._cost["bloc"] = 200;
+	unitModel_l._cost["ether"] = 400;
 	unitModel_l._damage = 36;
 	unitModel_l._armor = 20;
 	unitModel_l._range = 8;
@@ -105,8 +105,8 @@ void createReverseTriangle(Library &lib_p)
 	UnitModel unitModel_l { false, 0.5, 0.035, 80. };
 	unitModel_l._isUnit = true;
 	unitModel_l._productionTime = 2300;
-	unitModel_l._cost["Food"] = 80;
-	unitModel_l._cost["Steel"] = 40;
+	unitModel_l._cost["bloc"] = 80;
+	unitModel_l._cost["ether"] = 40;
 	unitModel_l._damage = 12;
 	unitModel_l._armor = 0;
 	unitModel_l._range = 8;
@@ -125,8 +125,8 @@ void createTriangle(Library &lib_p)
 	UnitModel unitModel_l { false, 0.5, 0.045, 70. };
 	unitModel_l._isUnit = true;
 	unitModel_l._productionTime = 1500;
-	unitModel_l._cost["Food"] = 30;
-	unitModel_l._cost["Steel"] = 50;
+	unitModel_l._cost["bloc"] = 30;
+	unitModel_l._cost["ether"] = 50;
 	unitModel_l._damage = 5;
 	unitModel_l._armor = 0;
 	unitModel_l._range = 5;
@@ -145,8 +145,8 @@ void createLongTriangle(Library &lib_p)
 	UnitModel unitModel_l { false, 0.5, 0.025, 125 };
 	unitModel_l._isUnit = true;
 	unitModel_l._productionTime = 3000;
-	unitModel_l._cost["Food"] = 250;
-	unitModel_l._cost["Steel"] = 250;
+	unitModel_l._cost["bloc"] = 250;
+	unitModel_l._cost["ether"] = 250;
 	unitModel_l._damage = 30;
 	unitModel_l._armor = 20;
 	unitModel_l._range = 10;
@@ -166,8 +166,8 @@ void createCircle(Library &lib_p)
 	UnitModel unitModel_l { false, 0.5, 0.05, 90. };
 	unitModel_l._isUnit = true;
 	unitModel_l._productionTime = 1500;
-	unitModel_l._cost["Food"] = 60;
-	unitModel_l._cost["Steel"] = 20;
+	unitModel_l._cost["bloc"] = 60;
+	unitModel_l._cost["ether"] = 20;
 	unitModel_l._damage = 8;
 	unitModel_l._armor = 3;
 	unitModel_l._range = 0.5;
@@ -185,14 +185,14 @@ void createCommandCenter(Library &lib_p)
 	BuildingModel buildingModel_l { true, 1.9, 5000. };
 	buildingModel_l._isBuilding = true;
 	buildingModel_l._productionOutput = {2, 0};
-	buildingModel_l._deposit["Food"] = true;
-	buildingModel_l._deposit["Steel"] = true;
-	buildingModel_l._deposit["Ether"] = true;
-	buildingModel_l._deposit["Gas"] = true;
+	buildingModel_l._deposit["bloc"] = true;
+	buildingModel_l._deposit["ether"] = true;
+	buildingModel_l._deposit["idiem"] = true;
+	buildingModel_l._deposit["steel"] = true;
 	buildingModel_l._unitModels.push_back(&lib_p.getUnitModel("worker"));
 	buildingModel_l._buildingTime = 500;
-	buildingModel_l._cost["Food"] = 250;
-	buildingModel_l._cost["Steel"] = 550;
+	buildingModel_l._cost["bloc"] = 250;
+	buildingModel_l._cost["ether"] = 550;
 	lib_p.registerBuildingModel("command_center", buildingModel_l);
 }
 
@@ -204,7 +204,7 @@ void createBarrackSquare(Library &lib_p)
 	buildingModel_l._unitModels.push_back(&lib_p.getUnitModel("long_square"));
 	buildingModel_l._unitModels.push_back(&lib_p.getUnitModel("double_square"));
 	buildingModel_l._buildingTime = 1000;
-	buildingModel_l._cost["Steel"] = 150;
+	buildingModel_l._cost["ether"] = 150;
 	lib_p.registerBuildingModel("barrack_square", buildingModel_l);
 }
 
@@ -214,7 +214,7 @@ void createBarrackCircle(Library &lib_p)
 	buildingModel_l._isBuilding = true;
 	buildingModel_l._unitModels.push_back(&lib_p.getUnitModel("circle"));
 	buildingModel_l._buildingTime = 1000;
-	buildingModel_l._cost["Steel"] = 150;
+	buildingModel_l._cost["ether"] = 150;
 	lib_p.registerBuildingModel("barrack_circle", buildingModel_l);
 }
 
@@ -226,7 +226,7 @@ void createBarrackTriangle(Library &lib_p)
 	buildingModel_l._unitModels.push_back(&lib_p.getUnitModel("reverse_triangle"));
 	buildingModel_l._unitModels.push_back(&lib_p.getUnitModel("long_triangle"));
 	buildingModel_l._buildingTime = 1000;
-	buildingModel_l._cost["Steel"] = 150;
+	buildingModel_l._cost["ether"] = 150;
 	lib_p.registerBuildingModel("barrack_triangle", buildingModel_l);
 }
 
@@ -235,10 +235,10 @@ void createDeposit(Library &lib_p)
 	BuildingModel buildingModel_l { true, 0.9, 500. };
 	buildingModel_l._isBuilding = true;
 	buildingModel_l._buildingTime = 100;
-	buildingModel_l._cost["Steel"] = 50;
+	buildingModel_l._cost["ether"] = 50;
 
-	buildingModel_l._deposit["Food"] = true;
-	buildingModel_l._deposit["Steel"] = true;
+	buildingModel_l._deposit["bloc"] = true;
+	buildingModel_l._deposit["ether"] = true;
 
 	lib_p.registerBuildingModel("deposit", buildingModel_l);
 }
@@ -249,8 +249,8 @@ void createAnchor(Library &lib_p)
 	TempleModel buildingModel_l { true, 0.9, 1000. };
 	buildingModel_l._isBuilding = true;
 	buildingModel_l._buildingTime = 500;
-	buildingModel_l._cost["Steel"] = 150;
-	buildingModel_l._cost["Food"] = 50;
+	buildingModel_l._cost["ether"] = 150;
+	buildingModel_l._cost["bloc"] = 50;
 	buildingModel_l._armor = 5;
 
 	lib_p.registerTempleModel("anchor", buildingModel_l);

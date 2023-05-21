@@ -15,7 +15,7 @@ class Unit : public Entity
 		virtual void runCommands(Step & step_p, State const &state_p, PathManager &pathManager_p) override;
 
 		/// used when harvesting
-		std::string _typeOfResource { "Food" };
+		std::string _typeOfResource { "bloc" };
 		Fixed _quantityOfResource { 0. };
 
 		UnitModel const &_unitModel;

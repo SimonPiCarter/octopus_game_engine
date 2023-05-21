@@ -33,7 +33,7 @@ public:
 	virtual void trigger(State const &, Step &step_p, unsigned long, TriggerData const &) const override
 	{
 		std::map<std::string, Fixed> map_l;
-		map_l["Food"] = -10.;
+		map_l["bloc"] = -10.;
 		step_p.addSteppable(new PlayerSpendResourceStep(0, map_l));
 	}
 };
@@ -46,7 +46,7 @@ public:
 	virtual void trigger(State const &, Step &step_p, unsigned long, TriggerData const &) const override
 	{
 		std::map<std::string, Fixed> map_l;
-		map_l["Food"] = -10.;
+		map_l["bloc"] = -10.;
 		step_p.addSteppable(new PlayerSpendResourceStep(0, map_l));
 	}
 };
@@ -103,7 +103,7 @@ TEST(triggerUnitSpawnTest, two_players)
 	state_l = controller_l.queryState();
 
 	EXPECT_EQ(4u, state_l->getEntities().size());
-	EXPECT_NEAR(0., to_double(getResource(*state_l->getPlayer(0), "Food")), 1e-3);
+	EXPECT_NEAR(0., to_double(getResource(*state_l->getPlayer(0), "bloc")), 1e-3);
 
 	// update time to 1second (8)
 	controller_l.update(1.);
@@ -115,7 +115,7 @@ TEST(triggerUnitSpawnTest, two_players)
 
 	EXPECT_EQ(4u, state_l->getEntities().size());
 	// only 10 food because trigger triggered only on 1 player
-	EXPECT_NEAR(10., to_double(getResource(*state_l->getPlayer(0), "Food")), 1e-3);
+	EXPECT_NEAR(10., to_double(getResource(*state_l->getPlayer(0), "bloc")), 1e-3);
 }
 
 
@@ -172,7 +172,7 @@ TEST(triggerUnitSpawnTest, two_models)
 	state_l = controller_l.queryState();
 
 	EXPECT_EQ(4u, state_l->getEntities().size());
-	EXPECT_NEAR(0., to_double(getResource(*state_l->getPlayer(0), "Food")), 1e-3);
+	EXPECT_NEAR(0., to_double(getResource(*state_l->getPlayer(0), "bloc")), 1e-3);
 
 	// update time to 1second (8)
 	controller_l.update(1.);
@@ -184,7 +184,7 @@ TEST(triggerUnitSpawnTest, two_models)
 
 	EXPECT_EQ(4u, state_l->getEntities().size());
 	// only 10 food because trigger triggered only on 1 model
-	EXPECT_NEAR(10., to_double(getResource(*state_l->getPlayer(0), "Food")), 1e-3);
+	EXPECT_NEAR(10., to_double(getResource(*state_l->getPlayer(0), "bloc")), 1e-3);
 }
 
 
@@ -237,7 +237,7 @@ TEST(triggerUnitSpawnTest, one_model)
 	state_l = controller_l.queryState();
 
 	EXPECT_EQ(4u, state_l->getEntities().size());
-	EXPECT_NEAR(0., to_double(getResource(*state_l->getPlayer(0), "Food")), 1e-3);
+	EXPECT_NEAR(0., to_double(getResource(*state_l->getPlayer(0), "bloc")), 1e-3);
 
 	// update time to 1second (8)
 	controller_l.update(1.);
@@ -249,7 +249,7 @@ TEST(triggerUnitSpawnTest, one_model)
 
 	EXPECT_EQ(4u, state_l->getEntities().size());
 	// 20 food because trigger triggered on 2 model
-	EXPECT_NEAR(20., to_double(getResource(*state_l->getPlayer(0), "Food")), 1e-3);
+	EXPECT_NEAR(20., to_double(getResource(*state_l->getPlayer(0), "bloc")), 1e-3);
 }
 
 
@@ -302,7 +302,7 @@ TEST(triggerUnitSpawnTest, one_shot)
 	state_l = controller_l.queryState();
 
 	EXPECT_EQ(4u, state_l->getEntities().size());
-	EXPECT_NEAR(0., to_double(getResource(*state_l->getPlayer(0), "Food")), 1e-3);
+	EXPECT_NEAR(0., to_double(getResource(*state_l->getPlayer(0), "bloc")), 1e-3);
 
 	// update time to 1second (8)
 	controller_l.update(1.);
@@ -314,5 +314,5 @@ TEST(triggerUnitSpawnTest, one_shot)
 
 	EXPECT_EQ(4u, state_l->getEntities().size());
 	// 10 food because trigger triggered on 2 model but was one shot
-	EXPECT_NEAR(10., to_double(getResource(*state_l->getPlayer(0), "Food")), 1e-3);
+	EXPECT_NEAR(10., to_double(getResource(*state_l->getPlayer(0), "bloc")), 1e-3);
 }

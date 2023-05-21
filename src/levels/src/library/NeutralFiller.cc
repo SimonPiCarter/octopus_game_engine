@@ -16,14 +16,14 @@ void neutralFiller(Library &lib_p)
         unitModel_l._isBuilder = true;
         unitModel_l._productionTime = 2000;
         unitModel_l._timeToHarvest = 100;
-        unitModel_l._cost["Food"] = 50;
-        unitModel_l._cost["Steel"] = 0;
-        unitModel_l._cost["Gas"] = 0;
-        unitModel_l._cost["Ether"] = 0;
-        unitModel_l._maxQuantity["Ether"] = 10;
-        unitModel_l._maxQuantity["Food"] = 10;
-        unitModel_l._maxQuantity["Gas"] = 10;
-        unitModel_l._maxQuantity["Steel"] = 10;
+        unitModel_l._cost["bloc"] = 50;
+        unitModel_l._cost["ether"] = 0;
+        unitModel_l._cost["steel"] = 0;
+        unitModel_l._cost["idiem"] = 0;
+        unitModel_l._maxQuantity["idiem"] = 10;
+        unitModel_l._maxQuantity["bloc"] = 10;
+        unitModel_l._maxQuantity["steel"] = 10;
+        unitModel_l._maxQuantity["ether"] = 10;
         unitModel_l._damage = 5;
         unitModel_l._armor = 0;
         unitModel_l._range = 3.;
@@ -38,13 +38,13 @@ void neutralFiller(Library &lib_p)
         buildingModel_l._isBuilding = true;
         buildingModel_l._isStatic = true;
         buildingModel_l._unitModels.push_back(&lib_p.getUnitModel("worker"));
-        buildingModel_l._deposit["Food"] = true;
-        buildingModel_l._deposit["Steel"] = true;
-        buildingModel_l._deposit["Ether"] = true;
-        buildingModel_l._deposit["Gas"] = true;
+        buildingModel_l._deposit["bloc"] = true;
+        buildingModel_l._deposit["ether"] = true;
+        buildingModel_l._deposit["idiem"] = true;
+        buildingModel_l._deposit["steel"] = true;
         buildingModel_l._buildingTime = 18000;
-        buildingModel_l._cost["Steel"] = 450;
-        buildingModel_l._cost["Gas"] = 450;
+        buildingModel_l._cost["ether"] = 450;
+        buildingModel_l._cost["steel"] = 450;
         buildingModel_l._armor = 5;
 
         lib_p.registerBuildingModel("command_center", buildingModel_l);
@@ -55,10 +55,10 @@ void neutralFiller(Library &lib_p)
         buildingModel_l._isBuilding = true;
         buildingModel_l._isStatic = true;
         buildingModel_l._buildingTime = 2000;
-        buildingModel_l._cost["Steel"] = 50;
-        buildingModel_l._deposit["Food"] = true;
-        buildingModel_l._deposit["Steel"] = true;
-        buildingModel_l._deposit["Gas"] = true;
+        buildingModel_l._cost["ether"] = 50;
+        buildingModel_l._deposit["bloc"] = true;
+        buildingModel_l._deposit["ether"] = true;
+        buildingModel_l._deposit["steel"] = true;
         buildingModel_l._armor = 5;
 
         lib_p.registerBuildingModel("deposit", buildingModel_l);
@@ -69,9 +69,9 @@ void neutralFiller(Library &lib_p)
         buildingModel_l._isBuilding = true;
         buildingModel_l._isStatic = true;
         buildingModel_l._buildingTime = 2000;
-        buildingModel_l._cost["Steel"] = 50;
-        buildingModel_l._cost["Gas"] = 50;
-        buildingModel_l._deposit["Ether"] = true;
+        buildingModel_l._cost["ether"] = 50;
+        buildingModel_l._cost["steel"] = 50;
+        buildingModel_l._deposit["idiem"] = true;
         buildingModel_l._armor = 5;
 
         lib_p.registerBuildingModel("ether_deposit", buildingModel_l);
@@ -82,8 +82,8 @@ void neutralFiller(Library &lib_p)
         buildingModel_l._isBuilding = true;
         buildingModel_l._isStatic = true;
         buildingModel_l._buildingTime = 2000;
-        buildingModel_l._cost["Steel"] = 150;
-        buildingModel_l._cost["Gas"] = 50;
+        buildingModel_l._cost["ether"] = 150;
+        buildingModel_l._cost["steel"] = 50;
         buildingModel_l._armor = 5;
 
         lib_p.registerTempleModel("temple", buildingModel_l);

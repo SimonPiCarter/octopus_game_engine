@@ -14,10 +14,10 @@ void divinityRaidFiller(Library &lib_p)
         UnitModel unitModel_l { false, 0.5, 0.75, 90. };
         unitModel_l._isUnit = true;
         unitModel_l._productionTime = 2000;
-        unitModel_l._cost["Food"] = 25;
-        unitModel_l._cost["Steel"] = 0;
-        unitModel_l._cost["Gas"] = 0;
-        unitModel_l._cost["Ether"] = 75;
+        unitModel_l._cost["bloc"] = 25;
+        unitModel_l._cost["ether"] = 0;
+        unitModel_l._cost["steel"] = 0;
+        unitModel_l._cost["idiem"] = 75;
         unitModel_l._damage = 20;
         unitModel_l._armor = 0;
         unitModel_l._range = 0.1;
@@ -34,10 +34,10 @@ void divinityRaidFiller(Library &lib_p)
         UnitModel unitModel_l { false, 0.75, 0.025, 220. };
         unitModel_l._isUnit = true;
         unitModel_l._productionTime = 3500;
-        unitModel_l._cost["Food"] = 15;
-        unitModel_l._cost["Steel"] = 0;
-        unitModel_l._cost["Gas"] = 25;
-        unitModel_l._cost["Ether"] = 100;
+        unitModel_l._cost["bloc"] = 15;
+        unitModel_l._cost["ether"] = 0;
+        unitModel_l._cost["steel"] = 25;
+        unitModel_l._cost["idiem"] = 100;
         unitModel_l._damage = 20;
         unitModel_l._armor = 1;
         unitModel_l._range = 0.1;
@@ -54,10 +54,10 @@ void divinityRaidFiller(Library &lib_p)
         UnitModel unitModel_l { false, 0.5, 0.025, 75. };
         unitModel_l._isUnit = true;
         unitModel_l._productionTime = 4000;
-        unitModel_l._cost["Food"] = 0;
-        unitModel_l._cost["Steel"] = 0;
-        unitModel_l._cost["Gas"] = 100;
-        unitModel_l._cost["Ether"] = 100;
+        unitModel_l._cost["bloc"] = 0;
+        unitModel_l._cost["ether"] = 0;
+        unitModel_l._cost["steel"] = 100;
+        unitModel_l._cost["idiem"] = 100;
         unitModel_l._damage = 50;
         unitModel_l._armor = 1;
         unitModel_l._range = 6.;
@@ -77,8 +77,8 @@ void divinityRaidFiller(Library &lib_p)
         buildingModel_l._unitModels.push_back(&lib_p.getUnitModel("div_raid_2"));
         buildingModel_l._unitModels.push_back(&lib_p.getUnitModel("div_raid_3"));
         buildingModel_l._buildingTime = 4500;
-        buildingModel_l._cost["Steel"] = 100;
-        buildingModel_l._cost["Ether"] = 100;
+        buildingModel_l._cost["ether"] = 100;
+        buildingModel_l._cost["idiem"] = 100;
         buildingModel_l._armor = 5;
 
         buildingModel_l._requirements._divLvl["Divinity_3"] = 1;

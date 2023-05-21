@@ -32,11 +32,11 @@ void createWorker(Library &lib_p)
 	UnitModel unitModel_l { false, 0.5, 0.05, 10. };
 	unitModel_l._isUnit = true;
 	unitModel_l._isBuilder = true;
-	unitModel_l._maxQuantity["Food"] = 10;
-	unitModel_l._maxQuantity["Steel"] = 50;
-	unitModel_l._maxQuantity["Ether"] = 50;
+	unitModel_l._maxQuantity["bloc"] = 10;
+	unitModel_l._maxQuantity["ether"] = 50;
+	unitModel_l._maxQuantity["idiem"] = 50;
 	unitModel_l._productionTime = 100;
-	unitModel_l._cost["Food"] = 50;
+	unitModel_l._cost["bloc"] = 50;
 	lib_p.registerUnitModel("unit", unitModel_l);
 }
 
@@ -45,8 +45,8 @@ void createSoldier(Library &lib_p)
 	UnitModel unitModel_l { false, 0.5, 0.05, 10. };
 	unitModel_l._isUnit = true;
 	unitModel_l._productionTime = 200;
-	unitModel_l._cost["Food"] = 50;
-	unitModel_l._cost["Steel"] = 20;
+	unitModel_l._cost["bloc"] = 50;
+	unitModel_l._cost["ether"] = 20;
 	unitModel_l._hpMax = 5000.;
 	unitModel_l._damage = 7.;
 	lib_p.registerUnitModel("soldier", unitModel_l);
@@ -57,13 +57,13 @@ void createCommandCenter(Library &lib_p)
 	BuildingModel buildingModel_l { true, 0.9, 10. };
 	buildingModel_l._isBuilding = true;
 	buildingModel_l._isStatic = true;
-	buildingModel_l._deposit["Food"] = true;
-	buildingModel_l._deposit["Steel"] = true;
-	buildingModel_l._deposit["Ether"] = true;
-	buildingModel_l._deposit["Gas"] = true;
+	buildingModel_l._deposit["bloc"] = true;
+	buildingModel_l._deposit["ether"] = true;
+	buildingModel_l._deposit["idiem"] = true;
+	buildingModel_l._deposit["steel"] = true;
 	buildingModel_l._unitModels.push_back(&lib_p.getUnitModel("unit"));
 	buildingModel_l._buildingTime = 500;
-	buildingModel_l._cost["Steel"] = 350;
+	buildingModel_l._cost["ether"] = 350;
 	lib_p.registerBuildingModel("building", buildingModel_l);
 }
 
@@ -74,7 +74,7 @@ void createBarrack(Library &lib_p)
 	buildingModel_l._isStatic = true;
 	buildingModel_l._unitModels.push_back(&lib_p.getUnitModel("soldier"));
 	buildingModel_l._buildingTime = 200;
-	buildingModel_l._cost["Steel"] = 150;
+	buildingModel_l._cost["ether"] = 150;
 	lib_p.registerBuildingModel("barrack", buildingModel_l);
 }
 
@@ -84,7 +84,7 @@ void createTemple(Library &lib_p)
 	buildingModel_l._isBuilding = true;
 	buildingModel_l._isStatic = true;
 	buildingModel_l._buildingTime = 200;
-	buildingModel_l._cost["Steel"] = 150;
+	buildingModel_l._cost["ether"] = 150;
 	lib_p.registerBuildingModel("temple", buildingModel_l);
 }
 
@@ -207,24 +207,24 @@ std::list<Steppable *> Case4(Library &lib_p)
 	Unit unit_l({ 15, 20. }, false, lib_p.getUnitModel("unit"));
 
 	Resource res1_l({20,20}, true, lib_p.getEntityModel("resource_food"));
-	res1_l._type = "Food";
+	res1_l._type = "bloc";
 	res1_l._resource = 500.;
 
 	Resource res2_l({21,17}, true, lib_p.getEntityModel("resource_food"));
-	res2_l._type = "Food";
+	res2_l._type = "bloc";
 	res2_l._resource = 500.;
 
 	Resource res3_l({21,13}, true, lib_p.getEntityModel("resource"));
-	res3_l._type = "Steel";
+	res3_l._type = "ether";
 	res3_l._resource = 500.;
 
 	Resource res4_l({15,17}, true, lib_p.getEntityModel("resource_ether"));
-	res4_l._type = "Ether";
+	res4_l._type = "idiem";
 	res4_l._resource = 500.;
 
 	std::map<std::string, Fixed> mapRes_l;
-	mapRes_l["Food"] = -200;
-	mapRes_l["Steel"] = -200;
+	mapRes_l["bloc"] = -200;
+	mapRes_l["ether"] = -200;
 
 	Trigger * trigger_l = new Case4TriggerSpawn(new ListenerStepCount(200), lib_p);
 

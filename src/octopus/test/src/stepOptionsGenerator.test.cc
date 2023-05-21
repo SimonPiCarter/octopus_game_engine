@@ -33,7 +33,7 @@ public:
 		std::vector<Steppable *> steps_l;
 
 		std::map<std::string, Fixed> map_l;
-		map_l["Food"] = -10.*options_p;
+		map_l["bloc"] = -10.*options_p;
 
 		steps_l.push_back(new PlayerSpendResourceStep(0, map_l));
 
@@ -57,15 +57,15 @@ TEST(stepOptionsGenerator, simple)
 	PlayerAddOptionStep stepAdd_l(0, "test", &generator_l);
 	PlayerPopOptionStep stepPop_l(0, "test", 2);
 
-	EXPECT_NEAR(0., to_double(getResource(*state_l.getPlayer(0), "Food")), 1e-3);
+	EXPECT_NEAR(0., to_double(getResource(*state_l.getPlayer(0), "bloc")), 1e-3);
 
 	stepAdd_l.apply(state_l);
 
-	EXPECT_NEAR(0., to_double(getResource(*state_l.getPlayer(0), "Food")), 1e-3);
+	EXPECT_NEAR(0., to_double(getResource(*state_l.getPlayer(0), "bloc")), 1e-3);
 
 	stepPop_l.apply(state_l);
 
-	EXPECT_NEAR(20., to_double(getResource(*state_l.getPlayer(0), "Food")), 1e-3);
+	EXPECT_NEAR(20., to_double(getResource(*state_l.getPlayer(0), "bloc")), 1e-3);
 }
 
 TEST(stepOptionsGenerator, simple_revert_add)
@@ -78,18 +78,18 @@ TEST(stepOptionsGenerator, simple_revert_add)
 	PlayerAddOptionStep stepAdd_l(0, "test", &generator_l);
 	PlayerPopOptionStep stepPop_l(0, "test", 2);
 
-	EXPECT_NEAR(0., to_double(getResource(*state_l.getPlayer(0), "Food")), 1e-3);
+	EXPECT_NEAR(0., to_double(getResource(*state_l.getPlayer(0), "bloc")), 1e-3);
 
 	stepAdd_l.apply(state_l);
 
-	EXPECT_NEAR(0., to_double(getResource(*state_l.getPlayer(0), "Food")), 1e-3);
+	EXPECT_NEAR(0., to_double(getResource(*state_l.getPlayer(0), "bloc")), 1e-3);
 
 	stepAdd_l.revert(state_l, nullptr);
 	stepAdd_l.apply(state_l);
 
 	stepPop_l.apply(state_l);
 
-	EXPECT_NEAR(20., to_double(getResource(*state_l.getPlayer(0), "Food")), 1e-3);
+	EXPECT_NEAR(20., to_double(getResource(*state_l.getPlayer(0), "bloc")), 1e-3);
 }
 
 TEST(stepOptionsGenerator, simple_revert_pop)
@@ -102,25 +102,25 @@ TEST(stepOptionsGenerator, simple_revert_pop)
 	PlayerAddOptionStep stepAdd_l(0, "test", &generator_l);
 	PlayerPopOptionStep stepPop_l(0, "test", 2);
 
-	EXPECT_NEAR(0., to_double(getResource(*state_l.getPlayer(0), "Food")), 1e-3);
+	EXPECT_NEAR(0., to_double(getResource(*state_l.getPlayer(0), "bloc")), 1e-3);
 
 	stepAdd_l.apply(state_l);
 
-	EXPECT_NEAR(0., to_double(getResource(*state_l.getPlayer(0), "Food")), 1e-3);
+	EXPECT_NEAR(0., to_double(getResource(*state_l.getPlayer(0), "bloc")), 1e-3);
 
 	SteppableData const * data_l = stepPop_l.newData(state_l);
 	stepPop_l.apply(state_l);
 
-	EXPECT_NEAR(20., to_double(getResource(*state_l.getPlayer(0), "Food")), 1e-3);
+	EXPECT_NEAR(20., to_double(getResource(*state_l.getPlayer(0), "bloc")), 1e-3);
 
 	stepPop_l.revert(state_l, data_l);
 	delete data_l;
 
-	EXPECT_NEAR(0., to_double(getResource(*state_l.getPlayer(0), "Food")), 1e-3);
+	EXPECT_NEAR(0., to_double(getResource(*state_l.getPlayer(0), "bloc")), 1e-3);
 
 	stepPop_l.apply(state_l);
 
-	EXPECT_NEAR(20., to_double(getResource(*state_l.getPlayer(0), "Food")), 1e-3);
+	EXPECT_NEAR(20., to_double(getResource(*state_l.getPlayer(0), "bloc")), 1e-3);
 
 }
 
@@ -134,15 +134,15 @@ TEST(stepOptionsGenerator, simple_revert_add_then_stop)
 	PlayerAddOptionStep stepAdd_l(0, "test", &generator_l);
 	PlayerPopOptionStep stepPop_l(0, "test", 2);
 
-	EXPECT_NEAR(0., to_double(getResource(*state_l.getPlayer(0), "Food")), 1e-3);
+	EXPECT_NEAR(0., to_double(getResource(*state_l.getPlayer(0), "bloc")), 1e-3);
 
 	stepAdd_l.apply(state_l);
 
-	EXPECT_NEAR(0., to_double(getResource(*state_l.getPlayer(0), "Food")), 1e-3);
+	EXPECT_NEAR(0., to_double(getResource(*state_l.getPlayer(0), "bloc")), 1e-3);
 
 	stepAdd_l.revert(state_l, nullptr);
 
-	EXPECT_NEAR(0., to_double(getResource(*state_l.getPlayer(0), "Food")), 1e-3);
+	EXPECT_NEAR(0., to_double(getResource(*state_l.getPlayer(0), "bloc")), 1e-3);
 }
 
 TEST(stepOptionsGenerator, simple_revert_pop_then_stop)
@@ -155,19 +155,19 @@ TEST(stepOptionsGenerator, simple_revert_pop_then_stop)
 	PlayerAddOptionStep stepAdd_l(0, "test", &generator_l);
 	PlayerPopOptionStep stepPop_l(0, "test", 2);
 
-	EXPECT_NEAR(0., to_double(getResource(*state_l.getPlayer(0), "Food")), 1e-3);
+	EXPECT_NEAR(0., to_double(getResource(*state_l.getPlayer(0), "bloc")), 1e-3);
 
 	stepAdd_l.apply(state_l);
 
-	EXPECT_NEAR(0., to_double(getResource(*state_l.getPlayer(0), "Food")), 1e-3);
+	EXPECT_NEAR(0., to_double(getResource(*state_l.getPlayer(0), "bloc")), 1e-3);
 
 	SteppableData const * data_l = stepPop_l.newData(state_l);
 	stepPop_l.apply(state_l);
 
-	EXPECT_NEAR(20., to_double(getResource(*state_l.getPlayer(0), "Food")), 1e-3);
+	EXPECT_NEAR(20., to_double(getResource(*state_l.getPlayer(0), "bloc")), 1e-3);
 
 	stepPop_l.revert(state_l, data_l);
 	delete data_l;
 
-	EXPECT_NEAR(0., to_double(getResource(*state_l.getPlayer(0), "Food")), 1e-3);
+	EXPECT_NEAR(0., to_double(getResource(*state_l.getPlayer(0), "bloc")), 1e-3);
 }

@@ -24,7 +24,7 @@ std::list<Steppable *> Case2(Library &lib_p)
 {
 	UnitModel unitModel_l { false, 1., 0.25, 10. };
 	unitModel_l._isUnit = true;
-	unitModel_l._maxQuantity["Food"] = 10;
+	unitModel_l._maxQuantity["bloc"] = 10;
 	lib_p.registerUnitModel("unit", unitModel_l);
 
 	EntityModel resModel_l { true, 3., 1., 10. };
@@ -33,7 +33,7 @@ std::list<Steppable *> Case2(Library &lib_p)
 
 	BuildingModel depositModel_l { true, 3., 10. };
 	depositModel_l._isBuilding = true;
-	depositModel_l._deposit["Food"] = true;
+	depositModel_l._deposit["bloc"] = true;
 	lib_p.registerBuildingModel("deposit", depositModel_l);
 
 	Unit unit_l({ 15, 20. }, false, lib_p.getUnitModel("unit"));

@@ -31,7 +31,7 @@ public:
 	virtual void trigger(State const &, Step &step_p, unsigned long, TriggerData const &) const override
 	{
 		std::map<std::string, Fixed> map_l;
-		map_l["Food"] = -10.;
+		map_l["bloc"] = -10.;
 
 		step_p.addSteppable(new PlayerSpendResourceStep(0, map_l));
 	}
@@ -67,7 +67,7 @@ TEST(triggerBuildingTest, simple)
 	}, 1.);
 
 	std::map<std::string, Fixed> map_l;
-	map_l["Food"] = -10.;
+	map_l["bloc"] = -10.;
 
 	controller_l.commitTrigger(new TestTriggerBuildingTrigger({new ListenerEntityModelFinished(&depositModel_l, 0)}));
 
@@ -82,7 +82,7 @@ TEST(triggerBuildingTest, simple)
 
 	state_l = controller_l.queryState();
 
-	EXPECT_NEAR(0., to_double(getResource(*state_l->getPlayer(0), "Food")), 1e-3);
+	EXPECT_NEAR(0., to_double(getResource(*state_l->getPlayer(0), "bloc")), 1e-3);
 
 	// update time to 10 seconds (12)
 	controller_l.update(10.);
@@ -92,7 +92,7 @@ TEST(triggerBuildingTest, simple)
 
 	state_l = controller_l.queryState();
 
-	EXPECT_NEAR(0., to_double(getResource(*state_l->getPlayer(0), "Food")), 1e-3);
+	EXPECT_NEAR(0., to_double(getResource(*state_l->getPlayer(0), "bloc")), 1e-3);
 
 	// update time to 1 seconds (13)
 	controller_l.update(1.);
@@ -102,5 +102,5 @@ TEST(triggerBuildingTest, simple)
 
 	state_l = controller_l.queryState();
 
-	EXPECT_NEAR(10., to_double(getResource(*state_l->getPlayer(0), "Food")), 1e-3);
+	EXPECT_NEAR(10., to_double(getResource(*state_l->getPlayer(0), "bloc")), 1e-3);
 }

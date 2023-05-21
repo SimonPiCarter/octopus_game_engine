@@ -45,8 +45,8 @@ public:
 
 	Handle const _handle {0};
 	Fixed const _oldVal {0.};
-	std::string const _old {"Food"};
-	std::string const _new {"Food"};
+	std::string const _old {"bloc"};
+	std::string const _new {"bloc"};
 };
 
 class UnitHarvestDropStep : public Steppable

@@ -75,19 +75,19 @@ std::list<Steppable *> WaveLevelSteps(Library &lib_p, RandomGenerator &rand_p)
 	Unit unit_l({ 17, 10 }, false, lib_p.getUnitModel("worker"));
 
 	Resource res1_l({15,12}, true, lib_p.getEntityModel("resource_food"));
-	res1_l._type = "Food";
+	res1_l._type = "bloc";
 	res1_l._resource = 2000.;
 	res1_l._player = 2;
 
 	Resource res3_l({15,8}, true, lib_p.getEntityModel("resource_steel"));
-	res3_l._type = "Steel";
+	res3_l._type = "ether";
 	res3_l._resource = 2000.;
 	res3_l._player = 2;
 
 	long anchor_l = 420;
 	std::map<std::string, Fixed> mapRes_l;
-	mapRes_l["Food"] = -200;
-	mapRes_l["Steel"] = -200;
+	mapRes_l["bloc"] = -200;
+	mapRes_l["ether"] = -200;
 	mapRes_l["Anchor"] = -anchor_l;
 	unsigned long visionTrigger_l = (anchor_l-60)*100;
 
@@ -173,12 +173,12 @@ AreaSpawnerCommand * createArenaSpawnCommmand(Library &lib_p, RandomGenerator &r
 	std::list<AreaSpawn> spawners_l;
 
 	Resource res2_l({0,0}, true, lib_p.getEntityModel("resource_food"));
-	res2_l._type = "Food";
+	res2_l._type = "bloc";
 	res2_l._resource = 2000.;
 	res2_l._player = 2;
 
 	Resource res3_l({0,0}, true, lib_p.getEntityModel("resource_steel"));
-	res3_l._type = "Steel";
+	res3_l._type = "ether";
 	res3_l._resource = 2000.;
 	res3_l._player = 2;
 

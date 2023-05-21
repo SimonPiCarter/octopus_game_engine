@@ -14,10 +14,10 @@ void divinitySwarmFiller(Library &lib_p)
         UnitModel unitModel_l { false, 0.35, 0.05, 35. };
         unitModel_l._isUnit = true;
         unitModel_l._productionTime = 1000;
-        unitModel_l._cost["Food"] = 15;
-        unitModel_l._cost["Steel"] = 0;
-        unitModel_l._cost["Gas"] = 0;
-        unitModel_l._cost["Ether"] = 25;
+        unitModel_l._cost["bloc"] = 15;
+        unitModel_l._cost["ether"] = 0;
+        unitModel_l._cost["steel"] = 0;
+        unitModel_l._cost["idiem"] = 25;
         unitModel_l._damage = 6;
         unitModel_l._armor = 0;
         unitModel_l._range = 0.1;
@@ -34,10 +34,10 @@ void divinitySwarmFiller(Library &lib_p)
         UnitModel unitModel_l { false, 0.5, 0.025, 50. };
         unitModel_l._isUnit = true;
         unitModel_l._productionTime = 2000;
-        unitModel_l._cost["Food"] = 0;
-        unitModel_l._cost["Steel"] = 0;
-        unitModel_l._cost["Gas"] = 10;
-        unitModel_l._cost["Ether"] = 40;
+        unitModel_l._cost["bloc"] = 0;
+        unitModel_l._cost["ether"] = 0;
+        unitModel_l._cost["steel"] = 10;
+        unitModel_l._cost["idiem"] = 40;
         unitModel_l._damage = 6;
         unitModel_l._armor = 0;
         unitModel_l._range = 4;
@@ -60,8 +60,8 @@ void divinitySwarmFiller(Library &lib_p)
         buildingModel_l._unitModels.push_back(&lib_p.getUnitModel("div_swarm_2"));
         ///buildingModel_l._unitModels.push_back(&lib_p.getUnitModel("div_swarm_3")); @todo
         buildingModel_l._buildingTime = 4500;
-        buildingModel_l._cost["Steel"] = 100;
-        buildingModel_l._cost["Ether"] = 100;
+        buildingModel_l._cost["ether"] = 100;
+        buildingModel_l._cost["idiem"] = 100;
         buildingModel_l._armor = 5;
 
         buildingModel_l._requirements._divLvl["Divinity_1"] = 1;
