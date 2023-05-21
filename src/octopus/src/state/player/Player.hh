@@ -15,6 +15,7 @@ namespace octopus
 {
 	struct BuildingModel;
 	struct UnitModel;
+	struct Upgrade;
 
 	class Player
 	{
@@ -60,6 +61,8 @@ namespace octopus
 	std::list<BuildingModel const *> getAvailableBuildingModels(Player const &player_p);
 	/// @brief return availables unit models from building and player
 	std::list<UnitModel const *> getAvailableUnitModels(BuildingModel const &building_p, Player const &player_p);
+	/// @brief return availables upgrades from building and player
+	std::list<Upgrade const *> getAvailableUpgrades(BuildingModel const &building_p, Player const &player_p);
 }
 
 #endif

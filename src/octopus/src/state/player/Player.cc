@@ -2,6 +2,7 @@
 
 #include "state/model/entity/BuildingModel.hh"
 #include "state/model/entity/UnitModel.hh"
+#include "state/player/upgrade/Upgrade.hh"
 
 namespace octopus
 {
@@ -66,6 +67,19 @@ std::list<UnitModel const *> getAvailableUnitModels(BuildingModel const &buildin
 		if(meetRequirements(model_l->_requirements, player_p))
 		{
 			availables_l.push_back(model_l);
+		}
+	}
+	return availables_l;
+}
+
+std::list<Upgrade const *> getAvailableUpgrades(BuildingModel const &building_p, Player const &player_p)
+{
+	std::list<Upgrade const *> availables_l;
+	for(Upgrade const * upgrade_l : building_p._upgrades)
+	{
+		if(meetRequirements(upgrade_l->_requirements, player_p))
+		{
+			availables_l.push_back(upgrade_l);
 		}
 	}
 	return availables_l;

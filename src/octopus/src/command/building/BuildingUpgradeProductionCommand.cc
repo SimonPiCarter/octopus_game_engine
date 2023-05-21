@@ -75,10 +75,13 @@ bool BuildingUpgradeProductionCommand::applyCommand(Step & step_p, State const &
 
 		// set ugrade as researched
 		step_p.addSteppable(new PlayerLevelUpUpgradeStep(building_l->_player, _upgrade->_id));
-		// set all steppable unlocked by the upgrade
-		for(Steppable *steppable_l : _upgrade->_generator->getSteppables(building_l->_player))
+		if(_upgrade->_generator)
 		{
-			step_p.addSteppable(steppable_l);
+			// set all steppable unlocked by the upgrade
+			for(Steppable *steppable_l : _upgrade->_generator->getSteppables(building_l->_player))
+			{
+				step_p.addSteppable(steppable_l);
+			}
 		}
 
 		return true;
