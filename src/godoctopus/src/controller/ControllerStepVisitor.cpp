@@ -98,7 +98,16 @@ void ControllerStepVisitor::visit(octopus::EntityHitPointChangeStep const *stepp
 	if(!ent_l->_alive)
 	{
 		_controller.kill(steppable_p->_handle);
+		if(ent_l->_model._isBuilding)
+		{
+			_controller.emit_signal("updated_requirements");
+		}
 	}
+}
+
+void ControllerStepVisitor::visit(octopus::PlayerLevelUpUpgradeStep const *)
+{
+	_controller.emit_signal("updated_requirements");
 }
 
 void ControllerStepVisitor::visit(octopus::EntityMoveStep const *steppable_p)
@@ -111,6 +120,10 @@ void ControllerStepVisitor::visit(octopus::BuildingStep const *steppable_p)
 	octopus::Entity const * ent_l = _state->getEntity(steppable_p->_handle);
 	octopus::Building const * building_l = static_cast<octopus::Building const *>(ent_l);
 	_controller.emit_signal("build", int(steppable_p->_handle), octopus::to_double(building_l->_buildingProgress/building_l->_buildingModel._buildingTime));
+	if(building_l->isBuilt())
+	{
+		_controller.emit_signal("updated_requirements");
+	}
 }
 
 void ControllerStepVisitor::visit(octopus::PlayerAddOptionStep const *steppable_p)
