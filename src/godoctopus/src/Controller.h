@@ -92,11 +92,7 @@ public:
     int get_team(int player_p) const;
 
     // resources getter
-	float get_steel(int player_p) const;
-	float get_food(int player_p) const;
-	float get_gas(int player_p) const;
-	float get_anchor(int player_p) const;
-	float get_ether(int player_p) const;
+	float get_res(String const &res_p, int player_p) const;
 
     // vision getter
     bool is_visible(int x, int y, int player_p) const;

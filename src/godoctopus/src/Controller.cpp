@@ -542,30 +542,11 @@ int Controller::get_team(int player_p) const
     return _state->getPlayer(player_p)->_team;
 }
 
-float Controller::get_steel(int player_p) const
+float Controller::get_res(String const &res_p, int player_p) const
 {
+    std::string resId_l(res_p.utf8().get_data());
     octopus::Player const *player_l = _state->getPlayer(player_p);
-    return octopus::to_double(octopus::getResource(*player_l, "ether"));
-}
-float Controller::get_food(int player_p) const
-{
-    octopus::Player const *player_l = _state->getPlayer(player_p);
-    return octopus::to_double(octopus::getResource(*player_l, "bloc"));
-}
-float Controller::get_gas(int player_p) const
-{
-    octopus::Player const *player_l = _state->getPlayer(player_p);
-    return octopus::to_double(octopus::getResource(*player_l, "steel"));
-}
-float Controller::get_anchor(int player_p) const
-{
-    octopus::Player const *player_l = _state->getPlayer(player_p);
-    return octopus::to_double(octopus::getResource(*player_l, "Anchor"));
-}
-float Controller::get_ether(int player_p) const
-{
-    octopus::Player const *player_l = _state->getPlayer(player_p);
-    return octopus::to_double(octopus::getResource(*player_l, "idiem"));
+    return octopus::to_double(octopus::getResource(*player_l, resId_l));
 }
 
 bool Controller::is_visible(int x, int y, int player_p) const
@@ -871,11 +852,7 @@ void Controller::_bind_methods()
     ClassDB::bind_method(D_METHOD("get_steps"), &Controller::get_steps);
     ClassDB::bind_method(D_METHOD("get_team", "player"), &Controller::get_team);
 
-    ClassDB::bind_method(D_METHOD("get_steel", "player"), &Controller::get_steel);
-    ClassDB::bind_method(D_METHOD("get_food", "player"), &Controller::get_food);
-    ClassDB::bind_method(D_METHOD("get_gas", "player"), &Controller::get_gas);
-    ClassDB::bind_method(D_METHOD("get_anchor", "player"), &Controller::get_anchor);
-    ClassDB::bind_method(D_METHOD("get_ether", "player"), &Controller::get_ether);
+    ClassDB::bind_method(D_METHOD("get_res", "rest", "player"), &Controller::get_res);
     ClassDB::bind_method(D_METHOD("is_visible", "x", "y", "player"), &Controller::is_visible);
     ClassDB::bind_method(D_METHOD("is_unit_visible", "handle", "player"), &Controller::is_unit_visible);
     ClassDB::bind_method(D_METHOD("is_explored", "x", "y", "player"), &Controller::is_explored);
