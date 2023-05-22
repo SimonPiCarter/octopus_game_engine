@@ -2,6 +2,7 @@
 #define __WaveSpawnLevel2__
 
 #include <list>
+#include <unordered_set>
 #include <vector>
 #include <functional>
 #include "controller/trigger/Trigger.hh"
@@ -28,6 +29,8 @@ struct WaveParam
 	octopus::Vector spawnPoint;
 	unsigned long stepWait;
 	unsigned long number;
+	unsigned long limitX;
+	unsigned long limitY;
 };
 
 class WaveSpawn : public octopus::OneShotTrigger
@@ -45,6 +48,18 @@ private:
 	std::list<WaveParam> _params;
 
 	std::function<std::vector<octopus::Steppable *>(void)> _waveStepGenerator;
+};
+
+/// @brief trigger win for the given player when all given entities are dead
+class WinTrigger : public octopus::OneShotTrigger
+{
+public:
+	WinTrigger(unsigned long winner_p, std::unordered_set<octopus::Handle> const &handles_p);
+
+	virtual void trigger(octopus::State const &state_p, octopus::Step &step_p, unsigned long, octopus::TriggerData const &) const override;
+
+private:
+	unsigned long _winner;
 };
 
 } // namespace level2

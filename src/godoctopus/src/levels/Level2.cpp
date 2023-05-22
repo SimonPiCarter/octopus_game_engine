@@ -92,14 +92,13 @@ std::list<Steppable *> WaveLevelSteps(Library &lib_p, RandomGenerator &rand_p)
 	unsigned long visionTrigger_l = (anchor_l-60)*100;
 
 	std::list<WaveParam> params_l;
-	params_l.push_back({octopus::Vector(60,10), 3*60*100, 10});
-	params_l.push_back({octopus::Vector(90,35), 5*60*100, 50});
-	params_l.push_back({octopus::Vector(90,35), 5*60*100, 100});
-	params_l.push_back({octopus::Vector(90,35), 5*60*100, 200});
-	//params_l.push_back({octopus::Vector(90,35), 5*60*100, 300});
-	//params_l.push_back({octopus::Vector(90,35), 5*60*100, 300});
+	params_l.push_back({octopus::Vector(60,10), 3*60*100, 10, 45, 30});
+	params_l.push_back({octopus::Vector(90,35), 5*60*100, 50, 75, 60});
+	params_l.push_back({octopus::Vector(90,35), 5*60*100, 100, 105, 90});
+	params_l.push_back({octopus::Vector(90,35), 5*60*100, 200, 135, 120});
+	params_l.push_back({octopus::Vector(90,35), 5*60*100, 300, 135, 120});
 
-	Trigger * triggerWave_l = new WaveSpawn(new ListenerStepCount(3*60*100), lib_p, rand_p, params_l, defaultGenerator);
+	Trigger * triggerWave_l = new WaveSpawn(new ListenerStepCount(params_l.front().stepWait), lib_p, rand_p, params_l, defaultGenerator);
 	Trigger * triggerLose_l = new LoseTrigger(new ListenerEntityModelDied(&lib_p.getBuildingModel("command_center"), 0));
 
 	Building anchorSpot_l({60,10}, true, lib_p.getBuildingModel("anchor_spot"));
