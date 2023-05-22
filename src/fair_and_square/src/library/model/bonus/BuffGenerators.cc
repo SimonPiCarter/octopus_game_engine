@@ -216,7 +216,7 @@ std::vector<SingleOption> getEpicOptions(octopus::Player const &player_p, std::s
         }
     }
 
-    // buffer (model = div level now)
+    // buffer (model = upgrade level)
     models_l = {"buff_harvest", "buff_production", "buff_damage", "buff_reload", "buff_armor"};
     bool bufferUnlocked_l = false;
     for(std::string const &model_l : models_l)
