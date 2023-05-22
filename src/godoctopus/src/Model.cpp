@@ -63,6 +63,8 @@ void Model::save(Controller *controller_p, String const &name_p)
 {
     if(_buildingModel)
     {
+        // add spawn
+        _buildingModel->_productionOutput = octopus::Vector(numeric::ceil(_buildingModel->_ray), 0);
 	    controller_p->getLib().registerBuildingModel(name_p.utf8().get_data(), *_buildingModel);
     }
     else if(_unitModel)
