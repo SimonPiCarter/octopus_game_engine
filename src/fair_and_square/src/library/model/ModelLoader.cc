@@ -187,7 +187,7 @@ void createCommandCenter(Library &lib_p)
 	buildingModel_l._productionOutput = {2, 0};
 	buildingModel_l._deposit["bloc"] = true;
 	buildingModel_l._deposit["ether"] = true;
-	buildingModel_l._deposit["idiem"] = true;
+	buildingModel_l._deposit["irium"] = true;
 	buildingModel_l._deposit["steel"] = true;
 	buildingModel_l._unitModels.push_back(&lib_p.getUnitModel("worker"));
 	buildingModel_l._buildingTime = 500;
@@ -239,6 +239,7 @@ void createDeposit(Library &lib_p)
 
 	buildingModel_l._deposit["bloc"] = true;
 	buildingModel_l._deposit["ether"] = true;
+	buildingModel_l._deposit["irium"] = true;
 
 	lib_p.registerBuildingModel("deposit", buildingModel_l);
 }
