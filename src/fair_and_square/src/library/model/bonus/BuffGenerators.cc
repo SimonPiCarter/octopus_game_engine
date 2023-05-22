@@ -245,7 +245,7 @@ std::vector<SingleOption> getEpicOptions(octopus::Player const &player_p, std::s
 SingleOption generatePlayerOption(octopus::State const &state_p, unsigned long player_p, octopus::RandomGenerator &gen_p, std::string const &id_p, bool rare_p)
 {
     SingleOption result_l;
-    int type_l = gen_p.roll(0, 100);
+    int type_l = gen_p.roll(1, 100);
     octopus::Player const * player_l = state_p.getPlayer(player_p);
     bool tierTwo_l = octopus::getUpgradeLvl(*player_l, "tier") > 1;
     bool tierThree_l = octopus::getUpgradeLvl(*player_l, "tier") > 2;
@@ -254,21 +254,21 @@ SingleOption generatePlayerOption(octopus::State const &state_p, unsigned long p
     if(optionsEpic_l.size() > 0
     && ((rare_p && type_l <= 20) || type_l <= 5))
     {
-        int roll_l = gen_p.roll(0, optionsEpic_l.size());
+        int roll_l = gen_p.roll(0, optionsEpic_l.size()-1);
         result_l = optionsEpic_l.at(roll_l);
     }
     // rare option : rare 100% / non rare 30% (5% epic)
     else if(rare_p || type_l <= 30)
     {
         std::vector<SingleOption> options_l = getRareOptions(player_p, id_p, tierTwo_l);
-        int roll_l = gen_p.roll(0, options_l.size());
+        int roll_l = gen_p.roll(0, options_l.size()-1);
         result_l = options_l.at(roll_l);
     }
     // common
     else
     {
         std::vector<SingleOption> options_l = getCommonOptions(player_p, id_p, tierTwo_l);
-        int roll_l = gen_p.roll(0, options_l.size());
+        int roll_l = gen_p.roll(0, options_l.size()-1);
         result_l = options_l.at(roll_l);
     }
     return result_l;
