@@ -69,7 +69,7 @@ private:
 
 std::list<Steppable *> WaveLevelSteps(Library &lib_p, RandomGenerator &rand_p)
 {
-	loadModels(lib_p);
+	loadMinimalModels(lib_p);
 
 	Building building_l({20, 10}, true, lib_p.getBuildingModel("command_center"));
 	Unit unit_l({ 17, 10 }, false, lib_p.getUnitModel("worker"));

@@ -18,8 +18,8 @@ void createWorker(Library &lib_p)
 	unitModel_l._cost["bloc"] = 50;
 	unitModel_l._cost["ether"] = 0;
 	unitModel_l._cost["steel"] = 0;
-	unitModel_l._cost["idiem"] = 0;
-	unitModel_l._maxQuantity["idiem"] = 10;
+	unitModel_l._cost["irium"] = 0;
+	unitModel_l._maxQuantity["irium"] = 10;
 	unitModel_l._maxQuantity["bloc"] = 10;
 	unitModel_l._maxQuantity["steel"] = 10;
 	unitModel_l._maxQuantity["ether"] = 10;
@@ -268,18 +268,25 @@ void createAnchorSpot(Library &lib_p)
 	lib_p.registerBuildingModel("anchor_spot", buildingModel_l);
 }
 
-void createResourceFood(Library &lib_p)
+void createResourceBloc(Library &lib_p)
 {
 	EntityModel resModel_l { true, 0.9, 1., 10. };
 	resModel_l._isResource = true;
 	lib_p.registerEntityModel("resource_food", resModel_l);
 }
 
-void createResourceSteel(Library &lib_p)
+void createResourceEther(Library &lib_p)
 {
 	EntityModel resModel_l { true, 0.9, 1., 10. };
 	resModel_l._isResource = true;
 	lib_p.registerEntityModel("resource_steel", resModel_l);
+}
+
+void createResourceIrium(Library &lib_p)
+{
+	EntityModel resModel_l { true, 0.9, 1., 10. };
+	resModel_l._isResource = true;
+	lib_p.registerEntityModel("resource_irium", resModel_l);
 }
 
 void createWater(Library &lib_p)
@@ -313,6 +320,19 @@ void loadModels(octopus::Library &lib_p)
 	createAnchorSpot(lib_p);
 	createWater(lib_p);
 
-	createResourceFood(lib_p);
-	createResourceSteel(lib_p);
+	createResourceBloc(lib_p);
+	createResourceEther(lib_p);
+	createResourceIrium(lib_p);
+}
+
+void loadMinimalModels(octopus::Library &lib_p)
+{
+	createDeposit(lib_p);
+	createAnchor(lib_p);
+	createAnchorSpot(lib_p);
+	createWater(lib_p);
+
+	createResourceBloc(lib_p);
+	createResourceEther(lib_p);
+	createResourceIrium(lib_p);
 }

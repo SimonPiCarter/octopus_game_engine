@@ -7,5 +7,6 @@ namespace octopus
 } // namespace octopus
 
 void loadModels(octopus::Library &lib_p);
+void loadMinimalModels(octopus::Library &lib_p);
 
 #endif
