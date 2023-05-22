@@ -87,11 +87,13 @@ std::list<octopus::Steppable *> LevelModel::generateLevelSteps(octopus::Library 
         if(ent_l.type == "Unit")
         {
 	        octopus::Unit unit_l({ ent_l.x, ent_l.y }, false, lib_p.getUnitModel(ent_l.model));
+            unit_l._player = ent_l.player;
             steps_l.push_back(new octopus::UnitSpawnStep(idx_l, unit_l));
         }
         else if(ent_l.type == "Building")
         {
 	        octopus::Building building_l({ ent_l.x, ent_l.y }, true, lib_p.getBuildingModel(ent_l.model));
+            building_l._player = ent_l.player;
             steps_l.push_back(new octopus::BuildingSpawnStep(idx_l, building_l, true));
         }
         else
