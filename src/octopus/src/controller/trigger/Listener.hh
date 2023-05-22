@@ -109,7 +109,7 @@ public:
 class ListenerEntityDied : public ListenerEntity
 {
 public:
-	ListenerEntityDied(std::unordered_set<Handle> const handles_p) :
+	ListenerEntityDied(std::unordered_set<Handle> const &handles_p) :
 		_handles(handles_p) {}
 
 	/// @brief compile listener steps based on events in controller
