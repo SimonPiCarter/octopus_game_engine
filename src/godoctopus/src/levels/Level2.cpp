@@ -93,10 +93,10 @@ std::list<Steppable *> WaveLevelSteps(Library &lib_p, RandomGenerator &rand_p)
 
 	std::list<WaveParam> params_l;
 	params_l.push_back({octopus::Vector(60,10), 3*60*100, 10, 45, 30});
-	params_l.push_back({octopus::Vector(90,35), 5*60*100, 50, 75, 60});
-	params_l.push_back({octopus::Vector(90,35), 5*60*100, 100, 105, 90});
-	params_l.push_back({octopus::Vector(90,35), 5*60*100, 200, 135, 120});
-	params_l.push_back({octopus::Vector(90,35), 5*60*100, 300, 135, 120});
+	params_l.push_back({octopus::Vector(90,45), 5*60*100, 50, 75, 60});
+	params_l.push_back({octopus::Vector(120,75), 5*60*100, 100, 105, 90});
+	params_l.push_back({octopus::Vector(150,105), 5*60*100, 200, 105, 90});
+	params_l.push_back({octopus::Vector(150,105), 5*60*100, 300, 105, 90});
 
 	Trigger * triggerWave_l = new WaveSpawn(new ListenerStepCount(params_l.front().stepWait), lib_p, rand_p, params_l, defaultGenerator);
 	Trigger * triggerLose_l = new LoseTrigger(new ListenerEntityModelDied(&lib_p.getBuildingModel("command_center"), 0));
@@ -167,7 +167,7 @@ std::list<Steppable *> WaveLevelSteps(Library &lib_p, RandomGenerator &rand_p)
 }
 
 AreaSpawnerCommand * createArenaSpawnCommmand(Library &lib_p, RandomGenerator &rand_p, unsigned long x, unsigned long y, unsigned long size,
-	size_t nbRes_p, size_t nbAnchorSpot_p, size_t nbUnits_p)
+	size_t nbRes_p, size_t nbAnchorSpot_p, size_t nbUnits_p, size_t qtyIrium_p)
 {
 	std::list<AreaSpawn> spawners_l;
 
@@ -183,7 +183,7 @@ AreaSpawnerCommand * createArenaSpawnCommmand(Library &lib_p, RandomGenerator &r
 
 	Resource res4_l({0,0}, true, lib_p.getEntityModel("resource_irium"));
 	res4_l._type = "irium";
-	res4_l._resource = 300.;
+	res4_l._resource = qtyIrium_p;
 	res4_l._player = 2;
 
 	Building anchorSpot_l({0,0}, true, lib_p.getBuildingModel("anchor_spot"));
@@ -224,13 +224,17 @@ std::list<Command *> WaveLevelCommands(Library &lib_p, RandomGenerator &rand_p)
 {
 	std::list<Command *> commands_l {
 		// zone 1
-		createArenaSpawnCommmand(lib_p, rand_p, 50, 0, 20, 1, 0, 20),
-		createArenaSpawnCommmand(lib_p, rand_p, 50, 35, 20, 1, 1, 30),
-		createArenaSpawnCommmand(lib_p, rand_p, 15, 35, 20, 1, 1, 40),
+		createArenaSpawnCommmand(lib_p, rand_p, 50, 0, 20, 1, 0, 10, 500),
+		createArenaSpawnCommmand(lib_p, rand_p, 50, 35, 20, 1, 1, 10, 500),
+		createArenaSpawnCommmand(lib_p, rand_p, 15, 35, 20, 1, 1, 20, 500),
 		// zone 2
-		createArenaSpawnCommmand(lib_p, rand_p, 80, 30, 20, 1, 1, 20),
-		createArenaSpawnCommmand(lib_p, rand_p, 80, 65, 20, 1, 1, 30),
-		createArenaSpawnCommmand(lib_p, rand_p, 45, 65, 20, 1, 1, 40),
+		createArenaSpawnCommmand(lib_p, rand_p, 80, 30, 20, 1, 1, 10, 1000),
+		createArenaSpawnCommmand(lib_p, rand_p, 80, 65, 20, 1, 1, 20, 1000),
+		createArenaSpawnCommmand(lib_p, rand_p, 45, 65, 20, 1, 1, 30, 1000),
+		// zone 3
+		createArenaSpawnCommmand(lib_p, rand_p, 110, 30, 20, 1, 1, 20, 2000),
+		createArenaSpawnCommmand(lib_p, rand_p, 110, 95, 20, 1, 1, 30, 2000),
+		createArenaSpawnCommmand(lib_p, rand_p, 75, 95, 20, 1, 1, 40, 2000),
 	};
 
 	return commands_l;
