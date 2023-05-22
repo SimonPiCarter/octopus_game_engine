@@ -181,6 +181,11 @@ AreaSpawnerCommand * createArenaSpawnCommmand(Library &lib_p, RandomGenerator &r
 	res3_l._resource = 2000.;
 	res3_l._player = 2;
 
+	Resource res4_l({0,0}, true, lib_p.getEntityModel("resource_irium"));
+	res4_l._type = "irium";
+	res4_l._resource = 300.;
+	res4_l._player = 2;
+
 	Building anchorSpot_l({0,0}, true, lib_p.getBuildingModel("anchor_spot"));
 	anchorSpot_l._player = 2;
 
@@ -191,6 +196,7 @@ AreaSpawnerCommand * createArenaSpawnCommmand(Library &lib_p, RandomGenerator &r
 		area_l.y = y;
 		area_l.entities.emplace_back(new Resource(res3_l), nbRes_p);
 		area_l.entities.emplace_back(new Resource(res2_l), nbRes_p);
+		area_l.entities.emplace_back(new Resource(res4_l), 1);
 		if(nbAnchorSpot_p>0)
 		{
 			area_l.entities.emplace_back(new Building(anchorSpot_l), nbAnchorSpot_p);
