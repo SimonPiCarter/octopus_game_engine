@@ -161,7 +161,7 @@ std::vector<SingleOption> getRareOptions(unsigned long player_p, std::string con
     return getClassicOptions(player_p, id_p, tierTwo_p, true);
 }
 
-std::vector<SingleOption> getEpicOptions(octopus::Player const &player_p, std::string const &id_p, bool tierTwo_p, bool tierThree_p)
+std::vector<SingleOption> getEpicOptions(octopus::Player const &player_p, std::string const &id_p, bool tierTwo_p, bool tierThree_p, bool disabledBuffer_p)
 {
     std::vector<SingleOption> options_l;
 
@@ -227,8 +227,8 @@ std::vector<SingleOption> getEpicOptions(octopus::Player const &player_p, std::s
         }
     }
 
-    // none chosen yet
-    if(!bufferUnlocked_l)
+    // none chosen yet and not disabled
+    if(!bufferUnlocked_l && !disabledBuffer_p)
     {
         for(std::string const &model_l : models_l)
         {
@@ -249,7 +249,7 @@ SingleOption generatePlayerOption(octopus::State const &state_p, unsigned long p
     octopus::Player const * player_l = state_p.getPlayer(player_p);
     bool tierTwo_l = octopus::getUpgradeLvl(*player_l, "tier") > 1;
     bool tierThree_l = octopus::getUpgradeLvl(*player_l, "tier") > 2;
-    std::vector<SingleOption> optionsEpic_l = getEpicOptions(*player_l, id_p, tierTwo_l, tierThree_l);
+    std::vector<SingleOption> optionsEpic_l = getEpicOptions(*player_l, id_p, tierTwo_l, tierThree_l, true);
     // epic option : rare 20% / non rare 5%
     if(optionsEpic_l.size() > 0
     && ((rare_p && type_l <= 20) || type_l <= 5))
