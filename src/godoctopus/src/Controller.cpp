@@ -388,22 +388,28 @@ void Controller::loop()
 
     // control if step is locked
     bool lockStep_l = !_stepControl;
-
-    while(!_over)
-	{
-        lockStep_l = !_stepControl || _controller->getMetrics()._nbStepsCompiled < _stepDone;
-        if(!_paused && lockStep_l)
+    try
+    {
+        while(!_over)
         {
-            // update controller
-            _controller->update(std::min(0.01, elapsed_l));
-        }
-		while(!_controller->loop_body()) {}
+            lockStep_l = !_stepControl || _controller->getMetrics()._nbStepsCompiled < _stepDone;
+            if(!_paused && lockStep_l)
+            {
+                // update controller
+                _controller->update(std::min(0.01, elapsed_l));
+            }
+            while(!_controller->loop_body()) {}
 
-		auto cur_l = std::chrono::steady_clock::now();
-		std::chrono::duration<double> elapsed_seconds_l = cur_l-last_l;
-		elapsed_l = elapsed_seconds_l.count();
-		last_l = cur_l;
-	}
+            auto cur_l = std::chrono::steady_clock::now();
+            std::chrono::duration<double> elapsed_seconds_l = cur_l-last_l;
+            elapsed_l = elapsed_seconds_l.count();
+            last_l = cur_l;
+        }
+    }
+    catch(const std::exception& e)
+    {
+        UtilityFunctions::print("catched exception ", e.what());
+    }
 
     UtilityFunctions::print("Over");
 }
