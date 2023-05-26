@@ -19,13 +19,14 @@ namespace octopus
 {
 
 EntityMoveCommand::EntityMoveCommand(Handle const &commandHandle_p, Handle const &source_p,
-		Vector const &finalPoint_p, unsigned long gridStatus_p, std::list<Vector> const &waypoints_p, bool init_p)
+		Vector const &finalPoint_p, unsigned long gridStatus_p, std::list<Vector> const &waypoints_p, bool init_p, bool neverStop_p)
 	: Command(commandHandle_p)
 	, _source(source_p)
 	, _finalPoint(finalPoint_p)
 	, _gridStatus(gridStatus_p)
 	, _waypoints(waypoints_p)
 	, _init(init_p)
+	, _neverStop(neverStop_p)
 	, _data(_finalPoint, _gridStatus, _waypoints)
 {}
 
@@ -156,30 +157,36 @@ bool EntityMoveCommand::applyCommand(Step & step_p, State const &state_p, Comman
 		return true;
 	}
 
-	// add step to increment count since progress
-	step_p.addSteppable(new CommandIncrementNoProgressStep(_handleCommand, data_l->_countSinceProgress, data_l->_countSinceProgress+1));
+	// skip this if we never want to stop
+	if(!_neverStop)
+	{
+		// add step to increment count since progress
+		step_p.addSteppable(new CommandIncrementNoProgressStep(_handleCommand, data_l->_countSinceProgress, data_l->_countSinceProgress+1));
 
-	// check for progress
-	Fixed sqLastDiff_l = square_length(ent_l->_pos - data_l->_lastPos);
-	// progress => update position and reset count
-	if(sqLastDiff_l >= 0.5)
-	{
-		step_p.addSteppable(new CommandUpdateLastPosStep(_handleCommand, _source, data_l->_lastPos));
-		// reset no progress count
-		step_p.addSteppable(new CommandIncrementNoProgressStep(_handleCommand, data_l->_countSinceProgress+1, 0));
-	}
-	// add step to record last position
-	// If no progress for too long we stop
-	else if(data_l->_countSinceProgress == 500)
-	{
-		// no progress
-		if(sqLastDiff_l < 0.5)
+		// check for progress
+		Fixed sqLastDiff_l = square_length(ent_l->_pos - data_l->_lastPos);
+		// progress => update position and reset count
+		// skip this if we never want to stop
+		if(sqLastDiff_l >= 0.5)
 		{
-			return true;
+			step_p.addSteppable(new CommandUpdateLastPosStep(_handleCommand, _source, data_l->_lastPos));
+			// reset no progress count
+			step_p.addSteppable(new CommandIncrementNoProgressStep(_handleCommand, data_l->_countSinceProgress+1, 0));
 		}
-		step_p.addSteppable(new CommandUpdateLastPosStep(_handleCommand, _source, data_l->_lastPos));
-		// reset no progress count
-		step_p.addSteppable(new CommandIncrementNoProgressStep(_handleCommand, data_l->_countSinceProgress+1, 0));
+		// add step to record last position
+		// If no progress for too long we stop
+		// skip this if we never want to stop
+		else if(data_l->_countSinceProgress == 500)
+		{
+			// no progress
+			if(sqLastDiff_l < 0.5)
+			{
+				return true;
+			}
+			step_p.addSteppable(new CommandUpdateLastPosStep(_handleCommand, _source, data_l->_lastPos));
+			// reset no progress count
+			step_p.addSteppable(new CommandIncrementNoProgressStep(_handleCommand, data_l->_countSinceProgress+1, 0));
+		}
 	}
 
 	Logger::getDebug() << "Adding move step orig = "<<ent_l->_pos<<" target = "<<next_l<<" step speed = " << ent_l->getStepSpeed() << std::endl;

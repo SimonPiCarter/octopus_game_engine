@@ -116,7 +116,6 @@ std::list<Steppable *> WaveLevelSteps(Library &lib_p, RandomGenerator &rand_p)
 		new PlayerSpawnStep(0, 0),
 		new PlayerSpawnStep(1, 1),
 		new PlayerSpawnStep(2, 2),
-		new PlayerAddBuildingModel(0, lib_p.getBuildingModel("command_center")),
 		new PlayerAddBuildingModel(0, lib_p.getBuildingModel("barrack_square")),
 		new PlayerAddBuildingModel(0, lib_p.getBuildingModel("barrack_circle")),
 		new PlayerAddBuildingModel(0, lib_p.getBuildingModel("barrack_triangle")),

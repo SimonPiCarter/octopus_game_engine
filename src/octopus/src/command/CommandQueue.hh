@@ -80,28 +80,28 @@ public:
 	}
 
 	/// @brief Get the bundle associated to the id
-	CommandBundle const &getBundle(size_t id_p) const
+	CommandBundle const *getBundle(size_t id_p) const
 	{
 		for(CommandBundle const & bundle_l: _commandQueue)
 		{
 			if(bundle_l._idx == id_p)
 			{
-				return bundle_l;
+				return &bundle_l;
 			}
 		}
-		throw std::logic_error("CommandQueue could not get bundle with id "+std::to_string(id_p));
+		return nullptr;
 	}
 	/// @brief Get the bundle associated to the id
-	CommandBundle &getBundle(size_t id_p)
+	CommandBundle *getBundle(size_t id_p)
 	{
 		for(CommandBundle & bundle_l: _commandQueue)
 		{
 			if(bundle_l._idx == id_p)
 			{
-				return bundle_l;
+				return &bundle_l;
 			}
 		}
-		throw std::logic_error("CommandQueue could not get bundle with id "+std::to_string(id_p));
+		return nullptr;
 	}
 
 	std::list<CommandBundle> &getList()

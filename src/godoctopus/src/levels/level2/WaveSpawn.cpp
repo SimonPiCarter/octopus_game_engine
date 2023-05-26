@@ -44,7 +44,7 @@ void WaveSpawn::trigger(State const &state_p, Step &step_p, unsigned long, octop
 		unit_l._player = 1;
 		Handle handle_l = getNextHandle(step_p, state_p);
 		step_p.addSteppable(new UnitSpawnStep(handle_l, unit_l));
-		step_p.addSteppable(new CommandSpawnStep(new EntityAttackMoveCommand(handle_l, handle_l, {7., 20.}, 0, {{7., 20.}}, true )));
+		step_p.addSteppable(new CommandSpawnStep(new EntityAttackMoveCommand(handle_l, handle_l, {20, 10}, 0, {{20, 10}}, true, true )));
 		handles_l.insert(handle_l);
 	}
 	step_p.addSteppable(new StateRemoveConstraintPositionStep(0, _params.front().limitX, 0, _params.front().limitY, true, true));

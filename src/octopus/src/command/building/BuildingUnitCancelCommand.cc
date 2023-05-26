@@ -19,7 +19,15 @@ void BuildingUnitCancelCommand::registerCommand(Step & step_p, State const &stat
 	Logger::getDebug() << "BuildingUnitCancelCommand:: register Command "<<_handleCommand <<std::endl;
 	Entity const * ent_l = state_p.getEntity(_handleCommand);
 
-	CommandData const * const data_l = octopus::getData(ent_l->getQueue().getBundle(_idx)._var);
+	step_p.addSteppable(new CommandStorageStep(this));
+	// get bundle
+	CommandBundle const *bundle_l = ent_l->getQueue().getBundle(_idx);
+	// if bundle is null means that the command was already cancelled and cleaned up
+	if(!bundle_l)
+	{
+		return;
+	}
+	CommandData const * const data_l = octopus::getData(bundle_l->_var);
 	ProductionData const * const prodData_l = dynamic_cast<ProductionData const *>(data_l);
 
 	if(prodData_l && !prodData_l->_canceled && !step_p.isCmdCanceled(CommandIdx(_handleCommand, _idx)))
@@ -33,7 +41,6 @@ void BuildingUnitCancelCommand::registerCommand(Step & step_p, State const &stat
 			step_p.addSteppable(new PlayerProducedUpgradeStep(ent_l->_player, upgradeData_l->_upgrade->_id, false));
 		}
 	}
-	step_p.addSteppable(new CommandStorageStep(this));
 }
 
 } // namespace octopus
