@@ -6,6 +6,7 @@
 #include "step/building/BuildingCancelStep.hh"
 #include "step/command/data/CancelUnitProductionStep.hh"
 #include "step/entity/EntityHitPointChangeStep.hh"
+#include "step/player/PlayerProducedUpgradeStep.hh"
 #include "step/player/PlayerSpendResourceStep.hh"
 
 namespace octopus
@@ -53,6 +54,11 @@ void StepAdditionVisitor::visit(EntitySpawnStep const *)
 void StepAdditionVisitor::visit(FlyingCommandSpawnStep const *)
 {
     _step.addFlyingCommnandSpawned();
+}
+
+void StepAdditionVisitor::visit(PlayerProducedUpgradeStep const *step_p)
+{
+    _step.updateProducedUpgrade(step_p->_player, step_p->_upgrade, step_p->_add);
 }
 
 void StepAdditionVisitor::visit(ResourceSpawnStep const *step_p)

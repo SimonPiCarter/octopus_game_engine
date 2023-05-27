@@ -103,6 +103,34 @@ unsigned long Step::getFlyingCommandSpawned() const
 	return _flyingCommandSpawned;
 }
 
+void Step::updateProducedUpgrade(unsigned long const &player_p, std::string const &upgrade_p, bool add_p)
+{
+	if(add_p)
+	{
+		++_producedUpgrade[player_p][upgrade_p];
+	}
+	else
+	{
+		--_producedUpgrade[player_p][upgrade_p];
+	}
+}
+
+bool Step::isUpgradeProduced(unsigned long const &player_p, std::string const &upgrade_p) const
+{
+	auto &&itPlayer_l = _producedUpgrade.find(player_p);
+	if(itPlayer_l != _producedUpgrade.end())
+	{
+		std::unordered_map<std::string, long> map_l;
+		auto &&itUpgrade_l = map_l.find(upgrade_p);
+		if(itUpgrade_l != map_l.end())
+		{
+			return itUpgrade_l->second > 0;
+		}
+	}
+	return false;
+}
+
+
 void Step::addCanceledBuilding(Handle const &handle_p)
 {
 	_canceledBuildings.insert(handle_p);

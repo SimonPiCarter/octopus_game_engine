@@ -72,6 +72,11 @@ namespace octopus
 			/// @brief get the number of flying command spawned in this step
 			unsigned long getFlyingCommandSpawned() const;
 
+			/// @brief update produced upgrade
+			void updateProducedUpgrade(unsigned long const &player_p, std::string const &upgrade_p, bool add_p);
+			/// @brief check if the upgrade has been started during this step
+			bool isUpgradeProduced(unsigned long const &player_p, std::string const &upgrade_p) const;
+
 			/// @brief add a canceled building
 			void addCanceledBuilding(Handle const &handle_p);
 			/// @brief check if the building has been canceled already
@@ -111,6 +116,9 @@ namespace octopus
 
 			/// @brief set of cancelled buildings to avoid refunding them multiple times
 			std::set<Handle> _canceledBuildings;
+
+			/// @brief map of produced upgrade in this step per player and per upgrade id
+			std::unordered_map<unsigned long, std::unordered_map<std::string, long> > _producedUpgrade;
 
 			/// @brief of commands data canceled in this step (to avoid refunding twice)
 			std::set<CommandIdx> _canceledCmd;

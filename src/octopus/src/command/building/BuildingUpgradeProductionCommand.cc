@@ -44,7 +44,9 @@ void BuildingUpgradeProductionCommand::registerCommand(Step & step_p, State cons
 	if(checkResource(state_p, building_l->_player, _upgrade->_cost, step_p.getResourceSpent(building_l->_player))
 	&& building_l->_buildingModel.canProduce(_upgrade)
 	&& meetRequirements(_upgrade->_requirements, player_l)
-	&& (_upgrade->_repeatable || player_l._producedUpgrade.find(_upgrade->_id) == player_l._producedUpgrade.end()))
+	&& (_upgrade->_repeatable ||
+		(player_l._producedUpgrade.find(_upgrade->_id) == player_l._producedUpgrade.end()
+		&& !step_p.isUpgradeProduced(building_l->_player, _upgrade->_id))))
 	{
 		step_p.addSteppable(new PlayerSpendResourceStep(building_l->_player, _upgrade->_cost));
 		step_p.addSteppable(new CommandSpawnStep(this));
