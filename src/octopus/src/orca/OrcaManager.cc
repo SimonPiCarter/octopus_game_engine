@@ -180,17 +180,8 @@ void OrcaManager::commitStep(State const &state_p, Step &step_p)
             continue;
         }
         size_t idx_l = _mapHandleIdx[moveStep_l->_handle];
-
-        if(RVO::absSq(_sim->getAgentVelocity(idx_l)) > 0.00001)
-        {
-            moveStep_l->_move.x = _sim->getAgentVelocity(idx_l).x();
-            moveStep_l->_move.y = _sim->getAgentVelocity(idx_l).y();
-        }
-        else
-        {
-            moveStep_l->_move = moveStep_l->_move * 0.2;
-        }
-
+        moveStep_l->_move.x = _sim->getAgentVelocity(idx_l).x();
+        moveStep_l->_move.y = _sim->getAgentVelocity(idx_l).y();
     }
 }
 
