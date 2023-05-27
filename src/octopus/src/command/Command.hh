@@ -69,12 +69,18 @@ public:
 	bool isQueued() const { return _queued; }
 	Handle const &getHandleCommand() const { return _handleCommand; }
 
+	unsigned long long const & getStepOfRegistration() const { return _stepOfRegistration; }
+	void setStepOfRegristration(unsigned long long const &stepIdx_p) { _stepOfRegistration = stepIdx_p; }
+
 protected:
 	/// @brief the commandable handle for the executor of this command
 	Handle _handleCommand {0};
 
 	/// @brief if set to true the command will be queued up
 	bool _queued { false };
+
+	/// @brief the idx of the step this command was registered at
+	unsigned long long _stepOfRegistration {0};
 };
 
 /// @brief those commands are not tied to an Entity

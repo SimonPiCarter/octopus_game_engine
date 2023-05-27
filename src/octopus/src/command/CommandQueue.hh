@@ -114,6 +114,10 @@ public:
 		return _commandQueue;
 	}
 
+	/// @brief return the set of registration of the current command in queue
+	/// @note return 0 if no command in queue
+	unsigned long long getStepOfRegistation() const;
+
 protected:
 	/// @brief list of all actions in the command queue
 	std::list<CommandBundle> _commandQueue;

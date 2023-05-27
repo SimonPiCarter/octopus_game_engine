@@ -85,6 +85,7 @@ Controller::Controller(
 	for(Command * cmd_l : initCommands_p)
 	{
 		_commitedCommands[0]->push_back(cmd_l);
+		cmd_l->setStepOfRegristration(_initialStep.getId());
 		cmd_l->registerCommand(_initialStep, *_backState->_state);
 	}
 
@@ -212,6 +213,7 @@ bool Controller::loop_body()
 			}
 			for(Command * cmd_l : *commands_l)
 			{
+				cmd_l->setStepOfRegristration(step_l.getId());
 				cmd_l->registerCommand(step_l, *state_l);
 			}
 
