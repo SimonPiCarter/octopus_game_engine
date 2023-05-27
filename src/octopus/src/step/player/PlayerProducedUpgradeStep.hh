@@ -10,6 +10,12 @@
 namespace octopus
 {
 
+struct PlayerProducedUpgradeData: public SteppableData
+{
+	/// @brief true if the step will change the state
+	bool needChange {false};
+};
+
 class PlayerProducedUpgradeStep : public Steppable
 {
 public:
@@ -24,6 +30,8 @@ public:
 	{
 		visitor_p->visit(this);
 	}
+
+	virtual SteppableData * newData(State const &) const;
 
 	unsigned long _player {0};
 	std::string _upgrade;
