@@ -368,7 +368,13 @@ namespace RVO {
 			octopus::Fixed weight_l = other->weight_ / (other->weight_ + weight_);
 			line.point = velocity_ + weight_l * u;
 			// only adjust speed if weight of the agent is lower
-			if(other->weight_ >= weight_)
+			bool ignoreOtherAgent_l = other->weight_ < weight_;
+			// if current agent command is more recent than other agent
+			bool orderMoreRecent_l = ent_->getQueue().getStepOfRegistation() > other->ent_->getQueue().getStepOfRegistation();
+			bool otherIsFrozen_l = other->ent_->isFrozen();
+			bool otherIsSamePlayer_l = other->ent_->_player == ent_->_player;
+			ignoreOtherAgent_l |= otherIsSamePlayer_l && !otherIsFrozen_l && orderMoreRecent_l;
+			if(!ignoreOtherAgent_l)
 			{
 				orcaLines_.push_back(line);
 			}
