@@ -367,7 +367,11 @@ namespace RVO {
 			}
 			octopus::Fixed weight_l = other->weight_ / (other->weight_ + weight_);
 			line.point = velocity_ + weight_l * u;
-			orcaLines_.push_back(line);
+			// only adjust speed if weight of the agent is lower
+			if(other->weight_ >= weight_)
+			{
+				orcaLines_.push_back(line);
+			}
 		}
 
 		size_t lineFail = linearProgram2(orcaLines_, maxSpeed_, prefVelocity_, false, newVelocity_);
