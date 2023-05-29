@@ -18,6 +18,7 @@
 #include "controller/Controller.hh"
 #include "logger/Logger.hh"
 #include "serialization/CommandSerialization.hh"
+#include "serialization/StateDump.hh"
 #include "state/entity/Building.hh"
 #include "state/entity/Entity.hh"
 #include "state/entity/Resource.hh"
@@ -495,6 +496,15 @@ void Controller::set_auto_file_debug(bool debug_p)
     _enableAutoSaveFileDebug = debug_p;
 }
 
+void Controller::dump_state_as_text(String const &path_p)
+{
+    if(has_state())
+    {
+        std::string path_l(path_p.utf8().get_data());
+        std::ofstream file_l(path_l);
+        streamStateAsSimpleText(file_l, *_state);
+    }
+}
 
 TypedArray<String> Controller::get_models(int handle_p, int player_p) const
 {
@@ -852,6 +862,7 @@ void Controller::_bind_methods()
     ClassDB::bind_method(D_METHOD("set_over", "over"), &Controller::set_over);
     ClassDB::bind_method(D_METHOD("set_auto_file_path", "path"), &Controller::set_auto_file_path);
     ClassDB::bind_method(D_METHOD("set_auto_file_debug", "debug"), &Controller::set_auto_file_debug);
+    ClassDB::bind_method(D_METHOD("dump_state_as_text", "path"), &Controller::dump_state_as_text);
     ClassDB::bind_method(D_METHOD("get_models", "handle", "player"), &Controller::get_models);
     ClassDB::bind_method(D_METHOD("is_building", "handle"), &Controller::is_building);
     ClassDB::bind_method(D_METHOD("get_world_size"), &Controller::get_world_size);

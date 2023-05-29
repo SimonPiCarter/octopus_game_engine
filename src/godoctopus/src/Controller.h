@@ -82,8 +82,6 @@ public:
     // setters
     void set_pause(bool paused_p);
     void set_over(bool over_p);
-    void set_auto_file_path(String const &path_p);
-    void set_auto_file_debug(bool debug_p);
     // getters
     TypedArray<String> get_models(int handle_p, int player_p) const;
     bool is_building(String const &model_p) const;
@@ -147,7 +145,21 @@ public:
     /// will add a new queue layer for the given peer
     void step_done_for_peer(int peer_p);
 
+    ////////////////////////////
+    //// Dump methods
+    ////////////////////////////
+
+    // auto saving during game
+    void set_auto_file_path(String const &path_p);
+    void set_auto_file_debug(bool debug_p);
+    // dump state as plain text
+    void dump_state_as_text(String const &path_p);
+
+
+    ////////////////////////////
     //// Non godot methods
+    ////////////////////////////
+
     std::map<unsigned long, OptionManager> &getOptionManagers();
     std::map<unsigned long, OptionManager> const &getOptionManagers() const;
 
