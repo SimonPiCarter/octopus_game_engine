@@ -29,6 +29,23 @@
 
 using namespace octopus;
 
+void writeString(std::ostream &os_p, std::string const str_p)
+{
+	size_t size_l = str_p.size();
+	os_p.write((char*)&size_l, sizeof(size_l));
+	os_p.write(&str_p[0], size_l);
+}
+
+std::string readString(std::istream &is_p)
+{
+	std::string str_l;
+	size_t size_l;
+	is_p.read((char*)&size_l, sizeof(size_l));
+	str_l.resize(size_l);
+	is_p.read(&str_l[0], size_l);
+	return str_l;
+}
+
 std::list<Steppable *> ArenaLevelSteps(Library &lib_p, size_t number_p)
 {
 	loadModels(lib_p);
@@ -205,7 +222,7 @@ void writeArenaLevelHeader(std::ofstream &file_p, std::vector<ArenaInfo> const &
 	for(ArenaInfo const &info_l : you_p)
 	{
 		file_p.write((char*)&info_l.nb, sizeof(info_l.nb));
-		file_p.write((char*)&info_l.model, sizeof(info_l.model));
+		writeString(file_p, info_l.model);
 	}
 	// write their arena info
 	size_l = them_p.size();
@@ -213,7 +230,7 @@ void writeArenaLevelHeader(std::ofstream &file_p, std::vector<ArenaInfo> const &
 	for(ArenaInfo const &info_l : them_p)
 	{
 		file_p.write((char*)&info_l.nb, sizeof(info_l.nb));
-		file_p.write((char*)&info_l.model, sizeof(info_l.model));
+		writeString(file_p, info_l.model);
 	}
 }
 
@@ -228,9 +245,8 @@ std::pair<std::list<octopus::Steppable *>, std::list<octopus::Command *> > readA
 	for(size_t i = 0 ; i < size_l ; ++ i)
 	{
 		size_t nb_l;
-		std::string model_l;
 		file_p.read((char*)&nb_l, sizeof(nb_l));
-		file_p.read((char*)&model_l, sizeof(model_l));
+		std::string model_l = readString(file_p);
 		you_l.push_back({nb_l, model_l});
 	}
 
@@ -238,9 +254,8 @@ std::pair<std::list<octopus::Steppable *>, std::list<octopus::Command *> > readA
 	for(size_t i = 0 ; i < size_l ; ++ i)
 	{
 		size_t nb_l;
-		std::string model_l;
 		file_p.read((char*)&nb_l, sizeof(nb_l));
-		file_p.read((char*)&model_l, sizeof(model_l));
+		std::string model_l = readString(file_p);
 		them_l.push_back({nb_l, model_l});
 	}
 
