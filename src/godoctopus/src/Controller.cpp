@@ -55,7 +55,7 @@ void Controller::_process(double delta)
 {
     Node::_process(delta);
 
-    if(_controller)
+    if(_controller && _initDone)
     {
         octopus::StateAndSteps stateAndSteps_l = _controller->queryStateAndSteps();
         _state = stateAndSteps_l._state;
@@ -74,6 +74,7 @@ void Controller::_process(double delta)
             }
         }
         _lastIt = stateAndSteps_l._stepIt;
+        _controller->setExternalMin(_lastIt->_step->getId());
 
         if(_over && _state->hasWinningTeam())
         {
@@ -278,11 +279,12 @@ void Controller::replay_level(String const &filename_p, bool replay_mode_p)
 void Controller::init(std::list<octopus::Command *> const &commands_p, std::list<octopus::Steppable *> const &spawners_p, size_t size_p, std::ofstream *file_p)
 {
     UtilityFunctions::print("init controller...");
+    _initDone = false;
     delete _controller;
 	_controller = new octopus::Controller(spawners_p, 0.01, commands_p, 5, size_p);
+    _controller->setExternalMin(0);
     _controller->addQueuedLayer();
 	_controller->enableORCA();
-    UtilityFunctions::print("done");
 
     if(file_p)
     {
@@ -305,6 +307,8 @@ void Controller::init(std::list<octopus::Command *> const &commands_p, std::list
         vis_l(steppable_l);
     }
 
+    UtilityFunctions::print("done");
+    _initDone = true;
     delete _controllerThread;
 	_controllerThread = new std::thread(&Controller::loop, this);
 }
@@ -312,10 +316,11 @@ void Controller::init(std::list<octopus::Command *> const &commands_p, std::list
 void Controller::init_replay(std::list<octopus::Command *> const &commands_p, std::list<octopus::Steppable *> const &spawners_p, size_t size_p, std::ifstream &file_p)
 {
     UtilityFunctions::print("init controller...");
+    _initDone = false;
     delete _controller;
 	_controller = new octopus::Controller(spawners_p, 0.01, commands_p, 5, size_p);
+    _controller->setExternalMin(0);
 	_controller->enableORCA();
-    UtilityFunctions::print("done");
 
 	octopus::readCommands(file_p, *_controller, _lib);
 
@@ -333,6 +338,8 @@ void Controller::init_replay(std::list<octopus::Command *> const &commands_p, st
         vis_l(steppable_l);
     }
 
+    UtilityFunctions::print("done");
+    _initDone = true;
     delete _controllerThread;
 	_controllerThread = new std::thread(&Controller::loop, this);
 }
@@ -340,10 +347,11 @@ void Controller::init_replay(std::list<octopus::Command *> const &commands_p, st
 void Controller::init_loading(std::list<octopus::Command *> const &commands_p, std::list<octopus::Steppable *> const &spawners_p, size_t size_p, std::ifstream &file_p)
 {
     UtilityFunctions::print("init controller...");
+    _initDone = false;
     delete _controller;
 	_controller = new octopus::Controller(spawners_p, 0.01, commands_p, 5, size_p);
+    _controller->setExternalMin(0);
 	_controller->enableORCA();
-    UtilityFunctions::print("done");
 
 	octopus::readCommands(file_p, *_controller, _lib);
 
@@ -360,6 +368,8 @@ void Controller::init_loading(std::list<octopus::Command *> const &commands_p, s
         vis_l(steppable_l);
     }
 
+    UtilityFunctions::print("done");
+    _initDone = true;
     delete _controllerThread;
 	_controllerThread = new std::thread(&Controller::loading_loop, this);
 }
@@ -373,6 +383,8 @@ void Controller::loading_loop()
     {
         emit_signal("loading_state", double(_controller->getMetrics()._nbStepsCompiled)/totalSteps_l);
     }
+    // set up step done
+    _stepDone += _controller->getMetrics()._nbStepsCompiled;
     emit_signal("loading_done");
 
     loop();

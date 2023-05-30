@@ -167,6 +167,7 @@ public:
 private:
     void newAutoSaveFile();
     octopus::Controller * _controller = nullptr;
+    bool _initDone = false;
     std::thread * _controllerThread = nullptr;
     std::string _autoSavePath = "autosave.fas";
     std::ofstream * _autoSaveFile = nullptr;
