@@ -151,6 +151,10 @@ public:
 	/// @note nullptr to disable
 	void setOnlineSaveFileDebug(std::ofstream* of_p);
 
+	/// @brief set id of the latest step being referenced outside this controller
+	/// -1 to not use (default value)
+	void setExternalMin(long long externalMinStep_p) { _externalMinStep = externalMinStep_p; }
+
 private:
 	/// @brief set to true to enable orca Collision
 	/// way better performance but less predictible (should not be used in tests)
@@ -159,6 +163,10 @@ private:
 	BufferedState * _backState {nullptr};
 	BufferedState * _bufferState {nullptr};
 	BufferedState * _frontState {nullptr};
+
+	/// @brief external step id that is being referenced
+	/// used to avoid inapropriate step deletion
+	long long _externalMinStep {-1};
 
 	/// @brief path manager
 	PathManager _pathManager;

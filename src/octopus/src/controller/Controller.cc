@@ -336,7 +336,12 @@ bool Controller::loop_body()
 		}
 	}
 
+	/// Add EXTERNAL min id to handle external checking of states
 	unsigned long long minId_l = _backState->getNextStepToApplyId();
+	if(_externalMinStep >= 0)
+	{
+		minId_l = std::min(minId_l, (unsigned long long)_externalMinStep);
+	}
 	{
 		// lock to avoid overlap
 		std::lock_guard<std::mutex> lock_l(_mutex);
@@ -449,6 +454,10 @@ void Controller::queueCommandAsPlayer(Command * cmd_p, unsigned long player_p)
 
 void Controller::addQueuedLayer()
 {
+	if(_replayMode)
+	{
+		return;
+	}
 	// lock to avoid multi swap
 	std::lock_guard<std::mutex> lock_l(_mutex);
 	_queuedCommands.push_back(new std::list<Command *>());
