@@ -1072,6 +1072,8 @@ void Controller::newAutoSaveFile()
     delete _autoSaveFile;
     delete _autoSaveFileDebug;
     _autoSaveFile = new std::ofstream(_autoSavePath, std::ios::out | std::ios::binary);
+    octopus::writeString(*_autoSaveFile, _modelFile);
+    octopus::writeString(*_autoSaveFile, _levelFile);
     if(_enableAutoSaveFileDebug)
     {
         _autoSaveFileDebug = new std::ofstream(_autoSavePath+".d", std::ios::out);
