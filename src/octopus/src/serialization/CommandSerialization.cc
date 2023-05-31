@@ -344,6 +344,7 @@ void writeCommand(std::ofstream &file_p, Command const *cmd_p, Writer_t writer_p
         }
         writer_p(file_p, typped_l->getHandles().size());
         writer_p(file_p, typped_l->getFinalPoint());
+        writer_p(file_p, typped_l->isAttackMove());
         writer_p(file_p, typped_l->isNeverStop());
     }
     else
@@ -609,6 +610,7 @@ Command * readCommand(std::ifstream &file_p, Library const &lib_p)
         size_t size_l;
         std::list<Handle> handles_l;
         Vector point_l;
+        bool attackMove_l;
         bool neverStop_l;
 
         read(file_p, &size_l);
@@ -619,6 +621,7 @@ Command * readCommand(std::ifstream &file_p, Library const &lib_p)
             handles_l.push_back(handle_l);
         }
         read(file_p, &point_l);
+        read(file_p, &attackMove_l);
         read(file_p, &neverStop_l);
 
         cmd_l = new EntityFlockMoveCommand(handles_l, point_l, neverStop_l);

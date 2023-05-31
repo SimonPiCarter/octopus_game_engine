@@ -27,6 +27,11 @@ EntityAttackMoveCommand::EntityAttackMoveCommand(Handle const &commandHandle_p, 
 	, _data(0, _subMoveCommand.getFinalPoint(), _subMoveCommand.getGridStatus(), _subMoveCommand.getWaypoints())
 {}
 
+void EntityAttackMoveCommand::setFlockInformation(FlockInformation * flockInfo_p)
+{
+	_data._flockInfo = flockInfo_p;
+}
+
 bool shouldStopAttacking(AttackMoveData const &attackMoveData_p, Entity const *ent_p)
 {
 	/// distance when to stop running after target (squared)
