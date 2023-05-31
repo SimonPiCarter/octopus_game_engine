@@ -342,7 +342,6 @@ void writeCommand(std::ofstream &file_p, Command const *cmd_p, Writer_t writer_p
         {
             writer_p(file_p, handle_p);
         }
-        writer_p(file_p, typped_l->getHandles().size());
         writer_p(file_p, typped_l->getFinalPoint());
         writer_p(file_p, typped_l->isAttackMove());
         writer_p(file_p, typped_l->isNeverStop());
