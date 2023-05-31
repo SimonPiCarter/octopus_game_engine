@@ -45,7 +45,7 @@ private:
 	std::unordered_map<GridNode const *, Vertex> _nodeIndex;
 	std::vector<GridNode const*> _vecNodes;
 	/// @brief internal graph
-	mygraph_t *_g;
+	mygraph_t *_g = nullptr;
 
 	void buildEdge(mygraph_t &g, size_t i, size_t j, size_t k, size_t l,
 		std::vector<std::vector<GridNode *> > const &nodes_p, std::unordered_map<GridNode const *, Vertex> const & nodeIndex_p);
