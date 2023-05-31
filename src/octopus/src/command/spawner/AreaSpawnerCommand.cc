@@ -119,6 +119,10 @@ void AreaSpawnerCommand::registerCommand(Step & step_p, State const &state_p)
 
 				// add spawn to step
 				spawn(state_p, step_p, model_l, options_l[optionIdx_l]);
+				if(_replicatorSetUp)
+				{
+					spawn(state_p, step_p, model_l, _replicator(options_l[optionIdx_l]));
+				}
 				/// update grid from spawn
 				update(grid_l, model_l->_model, options_l[optionIdx_l]);
 			}
@@ -155,6 +159,10 @@ void AreaSpawnerCommand::registerCommand(Step & step_p, State const &state_p)
 
 				// add spawn to step
 				spawn(state_p, step_p, model_l, options_l[optionIdx_l]);
+				if(_replicatorSetUp)
+				{
+					spawn(state_p, step_p, model_l, _replicator(options_l[optionIdx_l]));
+				}
 				// we do not update grid for non static
 			}
 		}
@@ -178,6 +186,13 @@ unsigned long AreaSpawnerCommand::random(unsigned long min_p, unsigned long max_
 	}
 	return rdm_l;
 }
+
+void AreaSpawnerCommand::setReplicationOption(std::function<Option(Option const &)> const &replicator_p)
+{
+	_replicatorSetUp = true;
+	_replicator = replicator_p;
+}
+
 
 } // namespace octopus
 

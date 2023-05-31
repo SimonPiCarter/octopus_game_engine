@@ -3,6 +3,7 @@
 
 #include <list>
 #include <random>
+#include <functional>
 
 #include "command/Command.hh"
 #include "utils/RandomGenerator.hh"
@@ -48,6 +49,8 @@ public:
 	/// @brief cannot be commited by a player
 	virtual bool checkPlayer(State const &, unsigned long ) const override { return false; }
 
+	void setReplicationOption(std::function<Option(Option const &)> const &replicator_p);
+
 private:
 	/// @brief randomize between min_p and max_p - 1
 	/// @note if _nonRandom is true then always return min_p
@@ -60,6 +63,9 @@ private:
 	RandomGenerator *_rand {nullptr};
 
 	bool _nonRandom {false};
+
+	bool _replicatorSetUp {false};
+	std::function<Option(Option const &)> _replicator;
 };
 
 } // namespace octopus
