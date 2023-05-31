@@ -25,11 +25,16 @@ namespace level_test_model
 std::list<octopus::Steppable *> LevelSteps(octopus::Library &lib_p, octopus::RandomGenerator &rand_p);
 std::list<octopus::Command *> LevelCommands(octopus::Library &lib_p, octopus::RandomGenerator &rand_p);
 
+struct ModelLoaderHeader
+{
+	int seed;
+};
+
 /// @brief write header for classic arena level
-void writeLevelHeader(std::ofstream &file_p, int seed_p);
+void writeLevelHeader(std::ofstream &file_p, ModelLoaderHeader const &header_p);
 /// @brief read header for classic arena level and return a pair of steppable and command (warning delete and reset rand_p using the written seed)
 std::pair<std::list<octopus::Steppable *>, std::list<octopus::Command *> > readLevelHeader(octopus::Library &lib_p, std::ifstream &file_p,
-	octopus::RandomGenerator * &rand_p);
+	octopus::RandomGenerator * &rand_p, ModelLoaderHeader &header_r);
 
 } // namespace level2
 } // namespace godot

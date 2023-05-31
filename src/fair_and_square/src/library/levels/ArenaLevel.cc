@@ -26,25 +26,9 @@
 #include "step/state/StateWinStep.hh"
 #include "step/trigger/TriggerSpawn.hh"
 #include "step/team/TeamVisionStep.hh"
+#include "utils/Binary.hh"
 
 using namespace octopus;
-
-void writeString(std::ostream &os_p, std::string const str_p)
-{
-	size_t size_l = str_p.size();
-	os_p.write((char*)&size_l, sizeof(size_l));
-	os_p.write(&str_p[0], size_l);
-}
-
-std::string readString(std::istream &is_p)
-{
-	std::string str_l;
-	size_t size_l;
-	is_p.read((char*)&size_l, sizeof(size_l));
-	str_l.resize(size_l);
-	is_p.read(&str_l[0], size_l);
-	return str_l;
-}
 
 std::list<Steppable *> ArenaLevelSteps(Library &lib_p, size_t number_p)
 {
@@ -214,20 +198,20 @@ std::list<Command *> ArenaLevelCommands(Library &)
 }
 
 /// @brief write header for classic arena level
-void writeArenaLevelHeader(std::ofstream &file_p, std::vector<ArenaInfo> const &you_p, std::vector<ArenaInfo> const &them_p)
+void writeArenaLevelHeader(std::ofstream &file_p, ArenaLevelHeader const &header_p)
 {
 	// write your arena info
-	size_t size_l = you_p.size();
+	size_t size_l = header_p.you.size();
     file_p.write((char*)&size_l, sizeof(size_l));
-	for(ArenaInfo const &info_l : you_p)
+	for(ArenaInfo const &info_l : header_p.you)
 	{
 		file_p.write((char*)&info_l.nb, sizeof(info_l.nb));
 		writeString(file_p, info_l.model);
 	}
 	// write their arena info
-	size_l = them_p.size();
+	size_l = header_p.them.size();
     file_p.write((char*)&size_l, sizeof(size_l));
-	for(ArenaInfo const &info_l : them_p)
+	for(ArenaInfo const &info_l : header_p.them)
 	{
 		file_p.write((char*)&info_l.nb, sizeof(info_l.nb));
 		writeString(file_p, info_l.model);
@@ -235,10 +219,11 @@ void writeArenaLevelHeader(std::ofstream &file_p, std::vector<ArenaInfo> const &
 }
 
 /// @brief read header for classic arena level and return a pair of steppable and command
-std::pair<std::list<octopus::Steppable *>, std::list<octopus::Command *> > readArenaLevelHeader(octopus::Library &lib_p, std::ifstream &file_p)
+std::pair<std::list<octopus::Steppable *>, std::list<octopus::Command *> > readArenaLevelHeader(octopus::Library &lib_p, std::ifstream &file_p,
+	ArenaLevelHeader &header_r)
 {
-	std::vector<ArenaInfo> you_l;
-	std::vector<ArenaInfo> them_l;
+	header_r.you.clear();
+	header_r.them.clear();
 
 	size_t size_l = 0;
     file_p.read((char*)&size_l, sizeof(size_l));
@@ -247,7 +232,7 @@ std::pair<std::list<octopus::Steppable *>, std::list<octopus::Command *> > readA
 		size_t nb_l;
 		file_p.read((char*)&nb_l, sizeof(nb_l));
 		std::string model_l = readString(file_p);
-		you_l.push_back({nb_l, model_l});
+		header_r.you.push_back({nb_l, model_l});
 	}
 
     file_p.read((char*)&size_l, sizeof(size_l));
@@ -256,36 +241,33 @@ std::pair<std::list<octopus::Steppable *>, std::list<octopus::Command *> > readA
 		size_t nb_l;
 		file_p.read((char*)&nb_l, sizeof(nb_l));
 		std::string model_l = readString(file_p);
-		them_l.push_back({nb_l, model_l});
+		header_r.them.push_back({nb_l, model_l});
 	}
 
 	std::pair<std::list<octopus::Steppable *>, std::list<octopus::Command *> > pair_l;
-	pair_l.first = ArenaLevelSteps(lib_p, you_l, them_l);
+	pair_l.first = ArenaLevelSteps(lib_p, header_r.you, header_r.them);
 	pair_l.second = ArenaLevelCommands(lib_p);
 	return pair_l;
 }
 
-void writeArenaKamikazeHeader(std::ofstream &file_p, size_t const &you_p, size_t const &them_p, bool fast_p)
+void writeArenaKamikazeHeader(std::ofstream &file_p, KamikazeHeader const &header_p)
 {
 	// write your arena info
-	file_p.write((char*)&you_p, sizeof(you_p));
+	file_p.write((char*)&header_p.you, sizeof(header_p.you));
 	// write their arena info
-	file_p.write((char*)&them_p, sizeof(them_p));
-	file_p.write((char*)&fast_p, sizeof(fast_p));
+	file_p.write((char*)&header_p.them, sizeof(header_p.them));
+	file_p.write((char*)&header_p.fast, sizeof(header_p.fast));
 }
 
-std::pair<std::list<octopus::Steppable *>, std::list<octopus::Command *> > readArenaKamikazeHeader(octopus::Library &lib_p, std::ifstream &file_p)
+std::pair<std::list<octopus::Steppable *>, std::list<octopus::Command *> > readArenaKamikazeHeader(octopus::Library &lib_p, std::ifstream &file_p,
+	KamikazeHeader &header_r)
 {
-	size_t you_l;
-	size_t them_l;
-	bool fast_l;
-
-	file_p.read((char*)&you_l, sizeof(you_l));
-	file_p.read((char*)&them_l, sizeof(them_l));
-	file_p.read((char*)&fast_l, sizeof(fast_l));
+	file_p.read((char*)&header_r.you, sizeof(header_r.you));
+	file_p.read((char*)&header_r.them, sizeof(header_r.them));
+	file_p.read((char*)&header_r.fast, sizeof(header_r.fast));
 
 	std::pair<std::list<octopus::Steppable *>, std::list<octopus::Command *> > pair_l;
-	pair_l.first = ArenaKamikazeSteps(lib_p, you_l, them_l, fast_l);
+	pair_l.first = ArenaKamikazeSteps(lib_p, header_r.you, header_r.them, header_r.fast);
 	pair_l.second = ArenaLevelCommands(lib_p);
 	return pair_l;
 }

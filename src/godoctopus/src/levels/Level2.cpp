@@ -240,20 +240,19 @@ std::list<Command *> WaveLevelCommands(Library &lib_p, RandomGenerator &rand_p)
 }
 
 /// @brief write header for classic arena level
-void writeWaveLevelHeader(std::ofstream &file_p, int seed_p)
+void writeWaveLevelHeader(std::ofstream &file_p, WaveLevelHeader const &header_p)
 {
-    file_p.write((char*)&seed_p, sizeof(seed_p));
+    file_p.write((char*)&header_p.seed, sizeof(header_p.seed));
 }
 
 /// @brief read header for classic arena level and return a pair of steppable and command
 std::pair<std::list<octopus::Steppable *>, std::list<octopus::Command *> > readWaveLevelHeader(octopus::Library &lib_p, std::ifstream &file_p,
-	octopus::RandomGenerator * &rand_p)
+	octopus::RandomGenerator * &rand_p, WaveLevelHeader &header_r)
 {
-	int seed_l;
-    file_p.read((char*)&seed_l, sizeof(seed_l));
+    file_p.read((char*)&header_r.seed, sizeof(header_r.seed));
 
 	delete rand_p;
-	rand_p = new octopus::RandomGenerator(seed_l);
+	rand_p = new octopus::RandomGenerator(header_r.seed);
 
 	std::pair<std::list<octopus::Steppable *>, std::list<octopus::Command *> > pair_l;
 	pair_l.first = WaveLevelSteps(lib_p, *rand_p);

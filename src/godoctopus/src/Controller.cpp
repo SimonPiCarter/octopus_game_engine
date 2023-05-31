@@ -26,6 +26,7 @@
 #include "state/player/Player.hh"
 #include "state/player/upgrade/Upgrade.hh"
 #include "state/State.hh"
+#include "utils/Binary.hh"
 
 // godot
 #include "controller/ControllerStepVisitor.h"
@@ -111,7 +112,10 @@ void Controller::load_arena_level(TypedArray<int> const &size_you_p, TypedArray<
     // enable auto save
     newAutoSaveFile();
     writeLevelId(*_autoSaveFile, LEVEL_ID_ARENA, 10);
-    writeArenaLevelHeader(*_autoSaveFile, you_l, them_l);
+    _currentLevel = LEVEL_ID_ARENA;
+    _headerWriter = std::bind(writeArenaLevelHeader, std::placeholders::_1, ArenaLevelHeader {you_l, them_l});
+    _headerWriter(*_autoSaveFile);
+    // writeArenaLevelHeader(*_autoSaveFile, you_l, them_l);
     // init with autosave
     init(commands_l, spawners_l, 10, _autoSaveFile);
 }
@@ -123,7 +127,10 @@ void Controller::load_kamikaze_level(int you_p, int them_p, bool fast_p)
     // enable auto save
     newAutoSaveFile();
     writeLevelId(*_autoSaveFile, LEVEL_ID_ARENA_KAMIKAZE, 10);
-    writeArenaKamikazeHeader(*_autoSaveFile, you_p, them_p, fast_p);
+    _currentLevel = LEVEL_ID_ARENA_KAMIKAZE;
+    _headerWriter = std::bind(writeArenaKamikazeHeader, std::placeholders::_1, KamikazeHeader {size_t(you_p), size_t(them_p), fast_p});
+    _headerWriter(*_autoSaveFile);
+    // writeArenaKamikazeHeader(*_autoSaveFile, you_p, them_p, fast_p);
     // init with autosave
     init(commands_l, spawners_l, 10, _autoSaveFile);
 }
@@ -135,7 +142,10 @@ void Controller::load_maze_level(int size_p)
     // enable auto save
     newAutoSaveFile();
     writeLevelId(*_autoSaveFile, LEVEL_ID_MAZE, 50);
-    writeMazeLevelHeader(*_autoSaveFile, size_p);
+    _currentLevel = LEVEL_ID_MAZE;
+    _headerWriter = std::bind(writeMazeLevelHeader, std::placeholders::_1, size_p);
+    _headerWriter(*_autoSaveFile);
+    // writeMazeLevelHeader(*_autoSaveFile, size_p);
     init(commands_l, spawners_l, 50, _autoSaveFile);
 }
 
@@ -176,7 +186,10 @@ void Controller::load_level1(int seed_p, int nb_wave_p)
     // enable auto save
     newAutoSaveFile();
     writeLevelId(*_autoSaveFile, LEVEL_ID_LEVEL_1, 50);
-    level1::writeWaveLevelHeader(*_autoSaveFile, seed_p, nb_wave_p, 3*60*100, 150);
+    _currentLevel = LEVEL_ID_LEVEL_1;
+    _headerWriter = std::bind(level1::writeWaveLevelHeader, std::placeholders::_1, level1::WaveLevelHeader {seed_p, (unsigned long)nb_wave_p, 3*60*100, 150});
+    _headerWriter(*_autoSaveFile);
+    // level1::writeWaveLevelHeader(*_autoSaveFile, seed_p, nb_wave_p, 3*60*100, 150);
     init(commands_l, spawners_l, 50, _autoSaveFile);
 }
 
@@ -189,7 +202,10 @@ void Controller::load_level2(int seed_p)
     // enable auto save
     newAutoSaveFile();
     writeLevelId(*_autoSaveFile, LEVEL_ID_LEVEL_2, 50);
-    level2::writeWaveLevelHeader(*_autoSaveFile, seed_p);
+    _currentLevel = LEVEL_ID_LEVEL_2;
+    _headerWriter = std::bind(level2::writeWaveLevelHeader, std::placeholders::_1, level2::WaveLevelHeader{seed_p});
+    _headerWriter(*_autoSaveFile);
+    // level2::writeWaveLevelHeader(*_autoSaveFile, seed_p);
     init(commands_l, spawners_l, 50, _autoSaveFile);
 }
 
@@ -202,11 +218,14 @@ void Controller::load_level_test_anchor(int seed_p)
     // enable auto save
     newAutoSaveFile();
     writeLevelId(*_autoSaveFile, LEVEL_ID_LEVEL_TEST_ANCHOR, 50);
-    level_test_anchor::writeLevelHeader(*_autoSaveFile, seed_p);
+    _currentLevel = LEVEL_ID_LEVEL_TEST_ANCHOR;
+    _headerWriter = std::bind(level_test_anchor::writeLevelHeader, std::placeholders::_1, level_test_anchor::TestAnchorHeader {seed_p});
+    _headerWriter(*_autoSaveFile);
+    // level_test_anchor::writeLevelHeader(*_autoSaveFile, seed_p);
     init(commands_l, spawners_l, 50, _autoSaveFile);
 }
 
-void Controller::load_level_test_model(int seed_p, godot::LevelModel *level_model_p)
+void Controller::load_level_test_model_reading(int seed_p, godot::LevelModel *level_model_p)
 {
     delete _rand;
     _rand = new octopus::RandomGenerator(seed_p);
@@ -222,14 +241,54 @@ void Controller::load_level_test_model(int seed_p, godot::LevelModel *level_mode
     // enable auto save
     newAutoSaveFile();
     writeLevelId(*_autoSaveFile, LEVEL_ID_LEVEL_TEST_MODEL, 50);
-    level_test_model::writeLevelHeader(*_autoSaveFile, seed_p);
+    _currentLevel = LEVEL_ID_LEVEL_TEST_MODEL;
+    _headerWriter = std::bind(level_test_model::writeLevelHeader, std::placeholders::_1, level_test_model::ModelLoaderHeader {seed_p});
+    _headerWriter(*_autoSaveFile);
+    // level_test_model::writeLevelHeader(*_autoSaveFile, seed_p);
     init(commands_l, spawners_l, 50, _autoSaveFile);
 }
 
-void Controller::replay_level(String const &filename_p, bool replay_mode_p)
+void Controller::set_model_filename(String const &filename_p)
+{
+    _modelFile = filename_p.utf8().get_data();
+}
+
+void Controller::set_level_filename(String const &filename_p)
+{
+    _levelFile = filename_p.utf8().get_data();
+}
+
+String Controller::get_model_filename(String const &filename_p)
 {
     std::string filename_l(filename_p.utf8().get_data());
     std::ifstream file_l(filename_l, std::ios::in | std::ios::binary);
+
+    std::string modelFileName_l;
+    modelFileName_l = octopus::readString(file_l);
+
+    return String(modelFileName_l.c_str());
+}
+
+String Controller::get_level_filename(String const &filename_p)
+{
+    std::string filename_l(filename_p.utf8().get_data());
+    std::ifstream file_l(filename_l, std::ios::in | std::ios::binary);
+
+    std::string levelFileName_l;
+    // skip model file name
+    octopus::readString(file_l);
+    levelFileName_l = octopus::readString(file_l);
+
+    return String(levelFileName_l.c_str());
+}
+
+void Controller::replay_level(String const &filename_p, bool replay_mode_p, godot::LevelModel *level_model_p)
+{
+    std::string filename_l(filename_p.utf8().get_data());
+    std::ifstream file_l(filename_l, std::ios::in | std::ios::binary);
+
+    _modelFile = octopus::readString(file_l);
+    _levelFile = octopus::readString(file_l);
 
     size_t levelId_l;
     size_t size_l;
@@ -240,11 +299,15 @@ void Controller::replay_level(String const &filename_p, bool replay_mode_p)
     std::pair<std::list<octopus::Steppable *>, std::list<octopus::Command *> > levelInfo_l;
     if(levelId_l == LEVEL_ID_ARENA)
     {
-        levelInfo_l = readArenaLevelHeader(_lib, file_l);
+        ArenaLevelHeader header_l;
+        levelInfo_l = readArenaLevelHeader(_lib, file_l, header_l);
+        _headerWriter = std::bind(writeArenaLevelHeader, std::placeholders::_1, header_l);
     }
     else if(levelId_l == LEVEL_ID_ARENA_KAMIKAZE)
     {
-        levelInfo_l = readArenaKamikazeHeader(_lib, file_l);
+        KamikazeHeader header_l;
+        levelInfo_l = readArenaKamikazeHeader(_lib, file_l, header_l);
+        _headerWriter = std::bind(writeArenaKamikazeHeader, std::placeholders::_1, header_l);
     }
     else if(levelId_l == LEVEL_ID_MAZE)
     {
@@ -252,11 +315,27 @@ void Controller::replay_level(String const &filename_p, bool replay_mode_p)
     }
     else if(levelId_l == LEVEL_ID_LEVEL_1)
     {
-        levelInfo_l = level1::readWaveLevelHeader(_lib, file_l, _rand);
+        level1::WaveLevelHeader header_l;
+        levelInfo_l = level1::readWaveLevelHeader(_lib, file_l, _rand, header_l);
+        _headerWriter = std::bind(level1::writeWaveLevelHeader, std::placeholders::_1, header_l);
     }
     else if(levelId_l == LEVEL_ID_LEVEL_2)
     {
-        levelInfo_l = level2::readWaveLevelHeader(_lib, file_l, _rand);
+        level2::WaveLevelHeader header_l;
+        levelInfo_l = level2::readWaveLevelHeader(_lib, file_l, _rand, header_l);
+        _headerWriter = std::bind(level2::writeWaveLevelHeader, std::placeholders::_1, header_l);
+    }
+    else if(levelId_l == LEVEL_ID_LEVEL_TEST_ANCHOR)
+    {
+        level_test_anchor::TestAnchorHeader header_l;
+        levelInfo_l = level_test_anchor::readLevelHeader(_lib, file_l, _rand, header_l);
+        _headerWriter = std::bind(level_test_anchor::writeLevelHeader, std::placeholders::_1, header_l);
+    }
+    else if(levelId_l == LEVEL_ID_LEVEL_TEST_MODEL)
+    {
+        level_test_model::ModelLoaderHeader header_l;
+        levelInfo_l = level_test_model::readLevelHeader(_lib, file_l, _rand, header_l);
+        _headerWriter = std::bind(level_test_model::writeLevelHeader, std::placeholders::_1, header_l);
     }
     else
     {
@@ -265,13 +344,20 @@ void Controller::replay_level(String const &filename_p, bool replay_mode_p)
 
     if(valid_l)
     {
+
+        std::list<octopus::Steppable *> spawners_l;
+        if(level_model_p)
+        {
+            spawners_l = level_model_p->generateLevelSteps(_lib);
+        }
+        spawners_l.splice(spawners_l.end(), levelInfo_l.first);
         if(replay_mode_p)
         {
-            init_replay(levelInfo_l.second, levelInfo_l.first, size_l, file_l);
+            init_replay(levelInfo_l.second, spawners_l, size_l, file_l);
         }
         else
         {
-            init_loading(levelInfo_l.second, levelInfo_l.first, size_l, file_l);
+            init_loading(levelInfo_l.second, spawners_l, size_l, file_l);
         }
     }
 }
@@ -497,6 +583,20 @@ void Controller::set_over(bool over_p)
     _over = over_p;
 }
 
+void Controller::save_to_file(String const &path_p)
+{
+    if(has_state())
+    {
+        std::string path_l(path_p.utf8().get_data());
+        std::ofstream file_l(path_l, std::ios::out | std::ios::binary);
+        octopus::writeString(file_l, _modelFile);
+        octopus::writeString(file_l, _levelFile);
+        writeLevelId(file_l, _currentLevel, get_world_size()/5);
+        _headerWriter(file_l);
+        writeCommands(file_l, *_controller);
+    }
+}
+
 void Controller::set_auto_file_path(String const &path_p)
 {
     std::string path_l(path_p.utf8().get_data());
@@ -562,7 +662,11 @@ int Controller::get_world_size() const
 
 int Controller::get_steps() const
 {
-    return _controller->getMetrics()._nbStepsCompiled;
+    if(_controller)
+    {
+        return _controller->getMetrics()._nbStepsCompiled;
+    }
+    return 0;
 }
 
 int Controller::get_team(int player_p) const
@@ -865,13 +969,18 @@ void Controller::_bind_methods()
     ClassDB::bind_method(D_METHOD("load_level1", "seed", "nb_wave"), &Controller::load_level1);
     ClassDB::bind_method(D_METHOD("load_level2", "seed"), &Controller::load_level2);
     ClassDB::bind_method(D_METHOD("load_level_test_anchor", "seed"), &Controller::load_level_test_anchor);
-    ClassDB::bind_method(D_METHOD("load_level_test_model", "seed", "level_model"), &Controller::load_level_test_model);
+    ClassDB::bind_method(D_METHOD("load_level_test_model_reading", "seed", "level_model"), &Controller::load_level_test_model_reading);
 
-    ClassDB::bind_method(D_METHOD("replay_level", "filename", "replay_mode"), &Controller::replay_level);
+    ClassDB::bind_method(D_METHOD("set_model_filename", "filename"), &Controller::set_model_filename);
+    ClassDB::bind_method(D_METHOD("set_level_filename", "filename"), &Controller::set_level_filename);
+    ClassDB::bind_method(D_METHOD("get_model_filename", "filename"), &Controller::get_model_filename);
+    ClassDB::bind_method(D_METHOD("get_level_filename", "filename"), &Controller::get_level_filename);
+    ClassDB::bind_method(D_METHOD("replay_level", "filename", "replay_mode", "level_model"), &Controller::replay_level);
 
     ClassDB::bind_method(D_METHOD("has_state"), &Controller::has_state);
     ClassDB::bind_method(D_METHOD("set_pause", "pause"), &Controller::set_pause);
     ClassDB::bind_method(D_METHOD("set_over", "over"), &Controller::set_over);
+    ClassDB::bind_method(D_METHOD("save_to_file", "path"), &Controller::save_to_file);
     ClassDB::bind_method(D_METHOD("set_auto_file_path", "path"), &Controller::set_auto_file_path);
     ClassDB::bind_method(D_METHOD("set_auto_file_debug", "debug"), &Controller::set_auto_file_debug);
     ClassDB::bind_method(D_METHOD("dump_state_as_text", "path"), &Controller::dump_state_as_text);

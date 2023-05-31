@@ -26,11 +26,17 @@ namespace level2
 std::list<octopus::Steppable *> WaveLevelSteps(octopus::Library &lib_p, octopus::RandomGenerator &rand_p);
 std::list<octopus::Command *> WaveLevelCommands(octopus::Library &lib_p, octopus::RandomGenerator &rand_p);
 
+struct WaveLevelHeader
+{
+	// seed for random generation
+	int seed;
+};
+
 /// @brief write header for classic arena level
-void writeWaveLevelHeader(std::ofstream &file_p, int seed_p);
+void writeWaveLevelHeader(std::ofstream &file_p, WaveLevelHeader const &header_p);
 /// @brief read header for classic arena level and return a pair of steppable and command (warning delete and reset rand_p using the written seed)
 std::pair<std::list<octopus::Steppable *>, std::list<octopus::Command *> > readWaveLevelHeader(octopus::Library &lib_p, std::ifstream &file_p,
-	octopus::RandomGenerator * &rand_p);
+	octopus::RandomGenerator * &rand_p, WaveLevelHeader &header_r);
 
 class LoseTrigger : public octopus::OneShotTrigger
 {

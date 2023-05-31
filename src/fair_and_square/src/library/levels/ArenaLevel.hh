@@ -30,14 +30,30 @@ std::list<octopus::Steppable *> ArenaKamikazeSteps(octopus::Library &lib_p, size
 
 std::list<octopus::Command *> ArenaLevelCommands(octopus::Library &lib_p);
 
+struct ArenaLevelHeader
+{
+	std::vector<ArenaInfo> you;
+	std::vector<ArenaInfo> them;
+};
+
 /// @brief write header for classic arena level
-void writeArenaLevelHeader(std::ofstream &file_p, std::vector<ArenaInfo> const &you_p, std::vector<ArenaInfo> const &them_p);
+void writeArenaLevelHeader(std::ofstream &file_p, ArenaLevelHeader const &header_p);
 /// @brief read header for classic arena level and return a pair of steppable and command
-std::pair<std::list<octopus::Steppable *>, std::list<octopus::Command *> > readArenaLevelHeader(octopus::Library &lib_p, std::ifstream &file_p);
+/// @param header_r fill the header with param read
+std::pair<std::list<octopus::Steppable *>, std::list<octopus::Command *> > readArenaLevelHeader(octopus::Library &lib_p, std::ifstream &file_p,
+	ArenaLevelHeader &header_r);
+
+struct KamikazeHeader
+{
+	size_t you;
+	size_t them;
+	bool fast;
+};
 
 /// @brief write header for kamikaze arena level
-void writeArenaKamikazeHeader(std::ofstream &file_p, size_t const &you_p, size_t const &them_p, bool fast_p);
+void writeArenaKamikazeHeader(std::ofstream &file_p, KamikazeHeader const &header_p);
 /// @brief read header for kamikaze arena level and return a pair of steppable and command
-std::pair<std::list<octopus::Steppable *>, std::list<octopus::Command *> > readArenaKamikazeHeader(octopus::Library &lib_p, std::ifstream &file_p);
+std::pair<std::list<octopus::Steppable *>, std::list<octopus::Command *> > readArenaKamikazeHeader(octopus::Library &lib_p, std::ifstream &file_p,
+	KamikazeHeader &header_r);
 
 #endif

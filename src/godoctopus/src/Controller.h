@@ -3,6 +3,7 @@
 
 #include <cstdint>
 #include <fstream>
+#include <functional>
 #include <list>
 #include <map>
 #include <thread>
@@ -53,10 +54,14 @@ public:
     void load_level1(int seed_p, int nb_wave_p);
     void load_level2(int seed_p);
     void load_level_test_anchor(int seed_p);
-    void load_level_test_model(int seed_p, godot::LevelModel *level_model_p);
+    void load_level_test_model_reading(int seed_p, godot::LevelModel *level_model_p);
 
     // replay
-    void replay_level(String const &filename_p, bool replay_mode_p);
+    void set_model_filename(String const &filename_p);
+    void set_level_filename(String const &filename_p);
+    String get_model_filename(String const &filename_p);
+    String get_level_filename(String const &filename_p);
+    void replay_level(String const &filename_p, bool replay_mode_p, godot::LevelModel *level_model_p);
 
     // start engine with given level
     void init(std::list<octopus::Command *> const &commands_p, std::list<octopus::Steppable *> const &spawners_p, size_t size_p=50, std::ofstream *file_p=nullptr);
@@ -149,6 +154,8 @@ public:
     //// Dump methods
     ////////////////////////////
 
+    // save file
+    void save_to_file(String const &path_p);
     // auto saving during game
     void set_auto_file_path(String const &path_p);
     void set_auto_file_debug(bool debug_p);
@@ -169,17 +176,26 @@ private:
     octopus::Controller * _controller = nullptr;
     bool _initDone = false;
     std::thread * _controllerThread = nullptr;
+    // auto save information
     std::string _autoSavePath = "autosave.fas";
     std::ofstream * _autoSaveFile = nullptr;
     std::ofstream * _autoSaveFileDebug = nullptr;
     bool _enableAutoSaveFileDebug = false;
+
+    // game related
 	octopus::Library _lib;
 	octopus::RandomGenerator * _rand = nullptr;
-
     octopus::State const * _state = nullptr;
-
     bool _over = false;
     bool _paused = false;
+    // level id
+    size_t _currentLevel = 0;
+    // header writer of level
+    std::function<void(std::ofstream&)> _headerWriter;
+    // path to model file if any ("" if none)
+    std::string _modelFile = "";
+    // path to level file if any ("" if none)
+    std::string _levelFile = "";
 
 	std::list<octopus::StepBundle>::const_iterator _lastIt;
 
@@ -198,6 +214,7 @@ private:
     std::map<int, std::list<std::list<octopus::Command*> > > _queuedCommandsPerPeer;
     /// @brief player per peer
     std::map<int, unsigned long> _playerPerPeer;
+
 };
 
 }
