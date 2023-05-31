@@ -374,7 +374,7 @@ namespace RVO {
 			bool otherIsFrozen_l = other->ent_->isFrozen();
 			bool otherIsSamePlayer_l = other->ent_->_player == ent_->_player;
 			ignoreOtherAgent_l |= otherIsSamePlayer_l && !otherIsFrozen_l && orderMoreRecent_l;
-			if(!ignoreOtherAgent_l)
+			if(!ignoreOtherAgent_l || distSq < combinedRadiusSq / 2)
 			{
 				orcaLines_.push_back(line);
 			}

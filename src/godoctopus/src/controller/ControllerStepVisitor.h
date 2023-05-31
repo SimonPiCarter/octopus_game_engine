@@ -42,6 +42,7 @@ public:
 	virtual void visit(octopus::CommandHarvestTimeSinceHarvestStep const *) override;
 	virtual void visit(octopus::CommandIncrementNoProgressStep const *) override {}
 	virtual void visit(octopus::CommandMoveLosStep const *) override {}
+	virtual void visit(octopus::CommandUpdateFlockingReached const *) override {}
 	virtual void visit(octopus::CommandMoveStepSinceUpdateIncrementStep const *) {}
 	virtual void visit(octopus::CommandMoveUpdateStep const *) override {}
 	virtual void visit(octopus::CommandNewTargetStep const *) override {}

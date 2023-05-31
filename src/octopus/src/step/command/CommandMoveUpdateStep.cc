@@ -75,4 +75,31 @@ bool CommandMoveLosStep::isNoOp() const
 	return _oldLos == _newLos;
 }
 
+void CommandUpdateFlockingReached::apply(State &state_p) const
+{
+	Commandable * ent_l = state_p.getCommandable(this->_handle);
+	Logger::getDebug() << "CommandUpdateFlockingReached :: apply " << this->_handle <<std::endl;
+	MoveData *data_l = dynamic_cast<MoveData*>(getData(ent_l->getFrontQueue()._var));
+	if(data_l->_flockInfo)
+	{
+		++data_l->_flockInfo->qtyReached;
+	}
+}
+
+void CommandUpdateFlockingReached::revert(State &state_p, SteppableData const *) const
+{
+	Commandable * ent_l = state_p.getCommandable(this->_handle);
+	Logger::getDebug() << "CommandUpdateFlockingReached :: revert " << this->_handle <<std::endl;
+	MoveData *data_l = dynamic_cast<MoveData*>(getData(ent_l->getFrontQueue()._var));
+	if(data_l->_flockInfo)
+	{
+		--data_l->_flockInfo->qtyReached;
+	}
+}
+
+bool CommandUpdateFlockingReached::isNoOp() const
+{
+	return false;
+}
+
 } // namespace octopus

@@ -19,6 +19,7 @@
 #include "command/entity/EntityMoveCommand.hh"
 #include "command/entity/EntityRallyPointCommand.hh"
 #include "command/entity/EntityWaitCommand.hh"
+#include "command/entity/EntityFlockMoveCommand.hh"
 #include "flying/eot/DamageOverTime.hh"
 #include "command/player/PlayerChoseOptionCommand.hh"
 #include "command/spawner/AreaSpawnerCommand.hh"
@@ -44,7 +45,8 @@ using CommandVar = std::variant<
     PlayerChoseOptionCommand,
     AreaSpawnerCommand,
     UnitDropCommand,
-    UnitHarvestCommand
+    UnitHarvestCommand,
+    EntityFlockMoveCommand
 >;
 
 /// @brief register the command into the step

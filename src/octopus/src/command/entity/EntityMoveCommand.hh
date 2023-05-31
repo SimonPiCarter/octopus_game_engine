@@ -22,6 +22,8 @@ public:
 	EntityMoveCommand(Handle const &commandHandle_p, Handle const &source_p,
 		Vector const &finalPoint_p, unsigned long gridStatus_p, std::list<Vector> const &waypoints_p, bool init_p=false, bool neverStop_p=false);
 
+	void setFlockInformation(FlockInformation * flockInfo_p);
+
 	/// @brief check if _ent is close to the waypoint, if so
 	/// remove reached waypoint and create a step to the next waypoint
 	/// multiple waypoint may be removed at once last waypoint
@@ -32,6 +34,7 @@ public:
 	unsigned long const &getGridStatus() const { return _gridStatus; }
 	std::list<Vector> const &getWaypoints() const { return _waypoints; }
 	bool isInit() const { return _init; }
+	bool isNeverStop() const { return _neverStop; }
 
 	virtual CommandData * getData() override { return &_data; }
 	virtual CommandData const * getData() const override { return &_data; }

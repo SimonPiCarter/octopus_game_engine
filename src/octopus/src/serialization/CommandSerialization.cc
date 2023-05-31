@@ -11,6 +11,7 @@
 #include "command/entity/EntityAttackCommand.hh"
 #include "command/entity/EntityAttackMoveCommand.hh"
 #include "command/entity/EntityBuildingCommand.hh"
+#include "command/entity/EntityFlockMoveCommand.hh"
 #include "command/entity/EntityMoveCommand.hh"
 #include "command/entity/EntityWaitCommand.hh"
 #include "command/unit/UnitDropCommand.hh"
@@ -206,6 +207,7 @@ void writeCommand(std::ofstream &file_p, Command const *cmd_p, Writer_t writer_p
             writer_p(file_p, vec_l);
         }
         writer_p(file_p, typped_l->isInit());
+        writer_p(file_p, typped_l->isNeverStop());
     }
     else if(dynamic_cast<EntityAttackMoveCommand const *>(cmd_p))
     {
@@ -220,6 +222,7 @@ void writeCommand(std::ofstream &file_p, Command const *cmd_p, Writer_t writer_p
             writer_p(file_p, vec_l);
         }
         writer_p(file_p, typped_l->getSubMoveCommand().isInit());
+        writer_p(file_p, typped_l->getSubMoveCommand().isNeverStop());
     }
     else if(dynamic_cast<EntityBuildingCommand const *>(cmd_p))
     {
@@ -330,6 +333,19 @@ void writeCommand(std::ofstream &file_p, Command const *cmd_p, Writer_t writer_p
         writer_p(file_p, typped_l->_rallyPointEntityActive);
         writer_p(file_p, typped_l->_rallyPointEntity);
     }
+    else if(dynamic_cast<EntityFlockMoveCommand const *>(cmd_p))
+    {
+        writer_p(file_p, 15ul);
+        EntityFlockMoveCommand const *typped_l = dynamic_cast<EntityFlockMoveCommand const *>(cmd_p);
+        writer_p(file_p, typped_l->getHandles().size());
+        for(Handle const &handle_p : typped_l->getHandles())
+        {
+            writer_p(file_p, handle_p);
+        }
+        writer_p(file_p, typped_l->getHandles().size());
+        writer_p(file_p, typped_l->getFinalPoint());
+        writer_p(file_p, typped_l->isNeverStop());
+    }
     else
     {
         throw std::logic_error("unserializable command thrown in file");
@@ -368,6 +384,7 @@ Command * readCommand(std::ifstream &file_p, Library const &lib_p)
         size_t nbPoints_l;
         std::list<Vector> points_l;
         bool init_l;
+        bool neverStop_l;
 
         read(file_p, &source_l);
         read(file_p, &final_l);
@@ -380,8 +397,9 @@ Command * readCommand(std::ifstream &file_p, Library const &lib_p)
             points_l.push_back(vec_l);
         }
         read(file_p, &init_l);
+        read(file_p, &neverStop_l);
 
-        cmd_l = new EntityMoveCommand(source_l, source_l, final_l, gridStatus_l, points_l, init_l);
+        cmd_l = new EntityMoveCommand(source_l, source_l, final_l, gridStatus_l, points_l, init_l, neverStop_l);
     }
     else if(cmdId_p == 3)
     {
@@ -391,6 +409,7 @@ Command * readCommand(std::ifstream &file_p, Library const &lib_p)
         size_t nbPoints_l;
         std::list<Vector> points_l;
         bool init_l;
+        bool neverStop_l;
 
         read(file_p, &source_l);
         read(file_p, &final_l);
@@ -403,8 +422,9 @@ Command * readCommand(std::ifstream &file_p, Library const &lib_p)
             points_l.push_back(vec_l);
         }
         read(file_p, &init_l);
+        read(file_p, &neverStop_l);
 
-        cmd_l = new EntityAttackMoveCommand(source_l, source_l, final_l, gridStatus_l, points_l, init_l);
+        cmd_l = new EntityAttackMoveCommand(source_l, source_l, final_l, gridStatus_l, points_l, init_l, neverStop_l);
     }
     else if(cmdId_p == 4)
     {
@@ -583,6 +603,25 @@ Command * readCommand(std::ifstream &file_p, Library const &lib_p)
         {
             cmd_l = new BuildingRallyPointCommand(building_l, rallyPoint_l, rallyPointEntityActive_l, rallyPointEntity_l);
         }
+    }
+    else if(cmdId_p == 15)
+    {
+        size_t size_l;
+        std::list<Handle> handles_l;
+        Vector point_l;
+        bool neverStop_l;
+
+        read(file_p, &size_l);
+        for(size_t i = 0 ; i < size_l ; ++i)
+        {
+            Handle handle_l;
+            read(file_p, &handle_l);
+            handles_l.push_back(handle_l);
+        }
+        read(file_p, &point_l);
+        read(file_p, &neverStop_l);
+
+        cmd_l = new EntityFlockMoveCommand(handles_l, point_l, neverStop_l);
     }
     if(!cmd_l)
     {

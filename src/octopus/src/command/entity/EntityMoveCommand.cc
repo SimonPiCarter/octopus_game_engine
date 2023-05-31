@@ -30,6 +30,11 @@ EntityMoveCommand::EntityMoveCommand(Handle const &commandHandle_p, Handle const
 	, _data(_finalPoint, _gridStatus, _waypoints)
 {}
 
+void EntityMoveCommand::setFlockInformation(FlockInformation * flockInfo_p)
+{
+	_data._flockInfo = flockInfo_p;
+}
+
 Vector const &getLeftMost(Vector const &pos1_p, Vector const &pos2_p)
 {
 	if(pos1_p.x > pos2_p.x)
@@ -149,11 +154,17 @@ bool EntityMoveCommand::applyCommand(Step & step_p, State const &state_p, Comman
 	}
 
 	Vector delta_l = ent_l->_pos - data_l->_finalPoint;
-
+	Fixed tol_l = 0.1;
+	if(data_l->_flockInfo && data_l->_flockInfo->qtyReached > 0)
+	{
+		Fixed newTol_l = data_l->_flockInfo->qtyReached/(ent_l->_model._ray*3.14*4);
+		tol_l = std::max(tol_l, newTol_l);
+	}
 	// No more waypoint -> terminate
-	if(square_length(delta_l) < ent_l->_model._ray*ent_l->_model._ray)
+	if(square_length(delta_l) < tol_l)
 	{
 		Logger::getDebug() << "no waypoint" << std::endl;
+		step_p.addSteppable(new CommandUpdateFlockingReached(_handleCommand));
 		return true;
 	}
 

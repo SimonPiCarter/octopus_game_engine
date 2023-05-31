@@ -56,6 +56,7 @@ namespace octopus
 	class CommandHarvestTimeSinceHarvestStep;
 	class CommandIncrementNoProgressStep;
 	class CommandMoveLosStep;
+	class CommandUpdateFlockingReached;
 	class CommandMoveStepSinceUpdateIncrementStep;
 	class CommandMoveUpdateStep;
 	class CommandNewTargetStep;
@@ -143,6 +144,7 @@ namespace octopus
 			virtual void visit(CommandHarvestTimeSinceHarvestStep const *) = 0;
 			virtual void visit(CommandIncrementNoProgressStep const *) = 0;
 			virtual void visit(CommandMoveLosStep const *) = 0;
+			virtual void visit(CommandUpdateFlockingReached const *) = 0;
 			virtual void visit(CommandMoveStepSinceUpdateIncrementStep const *) = 0;
 			virtual void visit(CommandMoveUpdateStep const *) = 0;
 			virtual void visit(CommandNewTargetStep const *) = 0;

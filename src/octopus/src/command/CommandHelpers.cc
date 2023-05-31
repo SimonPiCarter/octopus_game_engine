@@ -52,6 +52,7 @@ Command * newTargetCommand(State const &state_p, Handle const &handle_p,
 	const Player * targetPlayer_l = state_p.getPlayer(target_l->_player);
 
 	bool alive_l = target_l->_alive || (targetBuilding_l && targetBuilding_l->isBlueprint());
+	static FlockInformation flockInfo_l;
 	// if target died or if it is not set
 	if(!alive_l || targetNotSet_p)
 	{
@@ -63,6 +64,7 @@ Command * newTargetCommand(State const &state_p, Handle const &handle_p,
 			{pos_p},
 			true
 		);
+		command_l->setFlockInformation(&flockInfo_l);
 		return command_l;
 	}
 	else if(targetRehandle_p

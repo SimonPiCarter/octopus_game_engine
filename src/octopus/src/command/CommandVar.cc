@@ -179,6 +179,13 @@ CommandVar getVarFromCommand(Command *cmd_p)
             return *typped_l;
         }
     }
+    {
+        EntityFlockMoveCommand * typped_l = dynamic_cast<EntityFlockMoveCommand *>(cmd_p);
+        if(typped_l)
+        {
+            return *typped_l;
+        }
+    }
 
     throw std::logic_error("Could not convert command pointer to CommandVar (missing cast)");
 }

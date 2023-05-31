@@ -8,6 +8,18 @@
 namespace octopus
 {
 
+/// @brief Basic struct to contain flow information for massive movement
+/// this struct should live as long as any command containing it lives
+struct FlockInformation
+{
+	/// @brief total flock size
+	long flockSize = 0;
+	/// @brief number of member of the flock who reached destination
+	long qtyReached = 0;
+	/// @brief unique idx used to create flock unity
+	unsigned long idx = 0;
+};
+
 /// @brief This struct is aimed at supporting
 /// move commands
 class MoveData : public CommandData
@@ -34,6 +46,11 @@ public:
 	unsigned long _countSinceProgress {0};
 	/// @brief boolean to know if there is los on the final point
 	bool _los {false};
+
+	// Flock
+	bool _flockStarted = false;
+	bool _flockReached = false;
+	FlockInformation * _flockInfo {nullptr};
 };
 
 } // namespace octopus

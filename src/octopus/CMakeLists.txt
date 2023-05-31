@@ -26,6 +26,7 @@ add_library(octopus
 	${CMAKE_CURRENT_SOURCE_DIR}/src/command/entity/EntityAttackMoveCommand.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/command/entity/EntityBuffCommand.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/command/entity/EntityBuildingCommand.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/src/command/entity/EntityFlockMoveCommand.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/command/entity/EntityMoveCommand.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/command/entity/EntityRallyPointCommand.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/command/entity/EntityWaitCommand.cc
