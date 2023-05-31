@@ -9,6 +9,7 @@
 #include "command/entity/EntityAttackCommand.hh"
 #include "command/entity/EntityAttackMoveCommand.hh"
 #include "command/entity/EntityBuildingCommand.hh"
+#include "command/entity/EntityFlockMoveCommand.hh"
 #include "command/entity/EntityMoveCommand.hh"
 #include "command/entity/EntityWaitCommand.hh"
 #include "command/unit/UnitDropCommand.hh"
@@ -27,16 +28,36 @@ namespace godot
 
 void add_move_commands(std::list<octopus::Command*> &list_r, octopus::State const &state_p, TypedArray<int> const &handles_p, Vector2 const &target_p, int , bool queued_p)
 {
+    bool isFlocking_l = false;
+    octopus::Vector worldPos_l(target_p.x, target_p.y);
     for(size_t i = 0 ; i < handles_p.size() ; ++ i)
     {
-        octopus::Vector worldPos_l(target_p.x, target_p.y);
         int handle_l = handles_p[i];
         octopus::Command *cmd_l = octopus::newTargetCommand(state_p, handle_l, 0, worldPos_l, true);
+        if(dynamic_cast<octopus::EntityMoveCommand*>(cmd_l))
+        {
+            isFlocking_l = true;
+            delete cmd_l;
+            break;
+        }
         if(cmd_l)
         {
             cmd_l->setQueued(queued_p);
             list_r.push_back(cmd_l);
         }
+    }
+    if(isFlocking_l)
+    {
+        std::list<octopus::Handle> handles_l;
+        for(size_t i = 0 ; i < handles_p.size() ; ++ i)
+        {
+            int handle_l = handles_p[i];
+            handles_l.push_back(handle_l);
+        }
+        octopus::Command * cmd_l = new octopus::EntityFlockMoveCommand(handles_l, worldPos_l, false);
+
+        cmd_l->setQueued(queued_p);
+        list_r.push_back(cmd_l);
     }
 }
 
@@ -57,20 +78,17 @@ void add_move_target_commands(std::list<octopus::Command*> &list_r, octopus::Sta
 
 void add_attack_move_commands(std::list<octopus::Command*> &list_r, octopus::State const &state_p, TypedArray<int> const &handles_p, Vector2 const &target_p, int, bool queued_p)
 {
+    octopus::Vector worldPos_l(target_p.x, target_p.y);
+    std::list<octopus::Handle> handles_l;
     for(size_t i = 0 ; i < handles_p.size() ; ++ i)
     {
-        int idx_l = handles_p[i];
-        const octopus::Entity * cur_l = state_p.getEntity(idx_l);
-		bool isStatic_l = cur_l->_model._isStatic;
-
-		if(isStatic_l)
-        {
-            continue;
-        }
-        octopus::Command *cmd_l = new octopus::EntityAttackMoveCommand(idx_l, idx_l, octopus::Vector(target_p.x, target_p.y), 0, {octopus::Vector(target_p.x, target_p.y)}, true);
-        cmd_l->setQueued(queued_p);
-        list_r.push_back(cmd_l);
+        int handle_l = handles_p[i];
+        handles_l.push_back(handle_l);
     }
+    octopus::Command * cmd_l = new octopus::EntityFlockMoveCommand(handles_l, worldPos_l, true);
+
+    cmd_l->setQueued(queued_p);
+    list_r.push_back(cmd_l);
 }
 
 void add_stop_commands(std::list<octopus::Command*> &list_r, octopus::State const &state_p, TypedArray<int> const &handles_p, int, bool queued_p)
