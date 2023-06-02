@@ -41,6 +41,7 @@ void EntityFlockMoveCommand::registerCommand(Step &step_p, State const &state_p)
 			EntityAttackMoveCommand * cmd_l = new EntityAttackMoveCommand(handle_l, handle_l, _finalPoint, 0, {_finalPoint}, true, _neverStop);
 			cmd_l->setFlockInformation(&_flockInfo);
 			cmd_l->setQueued(isQueued());
+			cmd_l->setStepOfRegristration(getStepOfRegistration());
 			step_p.addSteppable(new CommandSpawnStep(cmd_l));
 		}
 		else
@@ -48,6 +49,7 @@ void EntityFlockMoveCommand::registerCommand(Step &step_p, State const &state_p)
 			EntityMoveCommand * cmd_l = new EntityMoveCommand(handle_l, handle_l, _finalPoint, 0, {_finalPoint}, true, _neverStop);
 			cmd_l->setFlockInformation(&_flockInfo);
 			cmd_l->setQueued(isQueued());
+			cmd_l->setStepOfRegristration(getStepOfRegistration());
 			step_p.addSteppable(new CommandSpawnStep(cmd_l));
 		}
 	}
