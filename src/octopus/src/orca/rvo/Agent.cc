@@ -370,7 +370,7 @@ namespace RVO {
 			// only adjust speed if weight of the agent is lower
 			bool ignoreOtherAgent_l = other->weight_ < weight_;
 			// if current agent command is more recent than other agent
-			bool orderMoreRecent_l = ent_->getQueue().getStepOfRegistation() > other->ent_->getQueue().getStepOfRegistation();
+			bool orderMoreRecent_l = ent_->getQueue().getStepOfRegistration() > other->ent_->getQueue().getStepOfRegistration();
 			bool otherIsFrozen_l = other->ent_->isFrozen();
 			bool otherIsSamePlayer_l = other->ent_->_player == ent_->_player;
 			ignoreOtherAgent_l |= otherIsSamePlayer_l && !otherIsFrozen_l && orderMoreRecent_l;

@@ -6,7 +6,7 @@
 
 namespace octopus
 {
-unsigned long long CommandQueue::getStepOfRegistation() const
+unsigned long long CommandQueue::getStepOfRegistration() const
 {
     if(_commandQueue.empty())
     {
