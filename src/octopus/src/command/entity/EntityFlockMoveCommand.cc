@@ -13,7 +13,7 @@ namespace octopus
 {
 
 EntityFlockMoveCommand::EntityFlockMoveCommand(std::list<Handle> const &handles_p, Vector const &finalPoint_p, bool attackMove_p, bool neverStop_p)
-	: Command(0)
+	: Command(handles_p.empty()?0:*handles_p.begin())
 	, _handles(handles_p)
 	, _finalPoint(finalPoint_p)
 	, _attackMove(attackMove_p)
@@ -25,6 +25,8 @@ void EntityFlockMoveCommand::registerCommand(Step &step_p, State const &state_p)
 	// just store this command
 	step_p.addSteppable(new CommandStorageStep(this));
 
+	unsigned long player_l = state_p.getEntity(_handleCommand)->_player;
+
 	// create all move step command and add them
 	for(Handle const handle_l : _handles)
 	{
@@ -35,6 +37,12 @@ void EntityFlockMoveCommand::registerCommand(Step &step_p, State const &state_p)
         {
             continue;
         }
+
+		// skip entity if not same player than first one
+		if(player_l != cur_l->_player)
+		{
+			continue;
+		}
 
 		if(_attackMove)
 		{
