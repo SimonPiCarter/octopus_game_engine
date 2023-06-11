@@ -190,7 +190,8 @@ AreaSpawnerCommand * createArenaSpawnCommmand(Library &lib_p, RandomGenerator &r
 
 	{
 		AreaSpawn area_l;
-		area_l.size = size;
+		area_l.width = size;
+		area_l.height = size;
 		area_l.x = x;
 		area_l.y = y;
 		area_l.entities.emplace_back(new Resource(res3_l), nbRes_p);
@@ -204,7 +205,8 @@ AreaSpawnerCommand * createArenaSpawnCommmand(Library &lib_p, RandomGenerator &r
 	}
 	{
 		AreaSpawn area_l;
-		area_l.size = size-10;
+		area_l.width = size-10;
+		area_l.height = size-10;
 		area_l.x = x+5;
 		area_l.y = y+5;
 		for(unsigned long c = 0 ; c < nbUnits_p ; ++ c)

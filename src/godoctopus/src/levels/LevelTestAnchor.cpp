@@ -97,7 +97,8 @@ AreaSpawnerCommand * createArenaSpawnCommmand(Library &lib_p, RandomGenerator &r
 
 	{
 		AreaSpawn area_l;
-		area_l.size = size;
+		area_l.height = size;
+		area_l.width = size;
 		area_l.x = x;
 		area_l.y = y;
 		area_l.entities.emplace_back(new Building(anchorSpot_l), nbAnchorSpot_p);

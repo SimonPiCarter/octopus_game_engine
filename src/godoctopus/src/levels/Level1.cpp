@@ -176,7 +176,8 @@ std::list<Command *> WaveLevelCommands(Library &lib_p, RandomGenerator &rand_p, 
 
 	{
 		AreaSpawn area_l;
-		area_l.size = areSize_l;
+		area_l.width = areSize_l;
+		area_l.height = areSize_l;
 		area_l.x = 35;
 		area_l.y = 35;
 		area_l.entities.emplace_back(new Resource(res3_l), 1);
@@ -200,9 +201,10 @@ std::list<Command *> WaveLevelCommands(Library &lib_p, RandomGenerator &rand_p, 
 				continue;
 			}
 			AreaSpawn area_l;
-			area_l.size = areSize_l;
-			area_l.x = 15 + area_l.size*x;
-			area_l.y = 15 + area_l.size*y;
+			area_l.width = areSize_l;
+			area_l.height = areSize_l;
+			area_l.x = 15 + area_l.width*x;
+			area_l.y = 15 + area_l.height*y;
 			area_l.entities.emplace_back(new Resource(res3_l), 1);
 			area_l.entities.emplace_back(new Resource(res2_l), 1);
 			area_l.entities.emplace_back(new Building(anchorSpot_l), 1);

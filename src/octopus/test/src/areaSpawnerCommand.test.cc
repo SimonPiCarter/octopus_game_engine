@@ -29,14 +29,16 @@ TEST(areaSpawnerCommandTest, simple)
 	AreaSpawn area_l;
 	area_l.x = 2;
 	area_l.y = 5;
-	area_l.size = 10;
+	area_l.width = 10;
+	area_l.height = 10;
 	area_l.entities.emplace_back(new Unit(unit_l), 3);
 	area_l.entities.emplace_back(new Building(building_l), 3);
 	spawners_l.push_back(area_l);
 
 	area_l.x = 2;
 	area_l.y = 7;
-	area_l.size = 10;
+	area_l.width = 10;
+	area_l.height = 10;
 	area_l.entities.clear();
 	area_l.entities.emplace_back(new Unit(unit_l), 2);
 	area_l.entities.emplace_back(new Building(building_l), 1);
@@ -96,7 +98,8 @@ TEST(areaSpawnerCommandTest, simple_mirror)
 	AreaSpawn area_l;
 	area_l.x = 2;
 	area_l.y = 5;
-	area_l.size = 10;
+	area_l.width = 10;
+	area_l.height = 10;
 	area_l.entities.emplace_back(new Unit(unit_l), 1);
 	area_l.entities.emplace_back(new Building(building_l), 1);
 	spawners_l.push_back(area_l);

@@ -106,7 +106,7 @@ void AreaSpawnerCommand::registerCommand(Step & step_p, State const &state_p)
 			for(unsigned long i = 0 ; i < pair_l.second ; ++ i)
 			{
 				// size is 2*ray that we ceil
-				std::vector<Option> options_l = getOptions(spawn_l.x, spawn_l.y, spawn_l.size, spawn_l.size, grid_l, numeric::ceil(2*model_l->_model._ray).to_uint());
+				std::vector<Option> options_l = getOptions(spawn_l.x, spawn_l.y, spawn_l.width, spawn_l.height, grid_l, numeric::ceil(2*model_l->_model._ray).to_uint());
 
 				// no room to spawn
 				if(options_l.empty())
@@ -146,7 +146,7 @@ void AreaSpawnerCommand::registerCommand(Step & step_p, State const &state_p)
 			for(unsigned long i = 0 ; i < pair_l.second ; ++ i)
 			{
 				// size is 2*ray that we ceil
-				std::vector<Option> options_l = getOptions(spawn_l.x, spawn_l.y, spawn_l.size, spawn_l.size, grid_l, numeric::ceil(2*model_l->_model._ray).to_uint());
+				std::vector<Option> options_l = getOptions(spawn_l.x, spawn_l.y, spawn_l.width, spawn_l.height, grid_l, numeric::ceil(2*model_l->_model._ray).to_uint());
 
 				// no room to spawn
 				if(options_l.empty())
