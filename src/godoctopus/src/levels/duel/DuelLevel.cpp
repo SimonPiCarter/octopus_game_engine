@@ -94,19 +94,6 @@ std::list<Steppable *> LevelSteps(Library &lib_p, RandomGenerator &rand_p)
         spawners_l.push_back(new UnitSpawnStep(handle_l++, unitP1_l));
     }
 
-
-    octopus::PatternHandler handler_l;
-	octopus::VisionPattern pattern_l = handler_l.getPattern(LEVEL_DUEL_SIZE);
-	for(std::pair<long, long> &pair_l : pattern_l)
-	{
-		pair_l.first += to_int(LEVEL_DUEL_SIZE/2);
-		pair_l.second += to_int(LEVEL_DUEL_SIZE/2);
-	}
-
-    spawners_l.push_back(new TeamVisionStep(0, pattern_l, true, false));
-    spawners_l.push_back(new TeamVisionStep(0, pattern_l, true, true));
-
-
 	return spawners_l;
 }
 
