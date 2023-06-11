@@ -32,6 +32,7 @@
 #include "controller/ControllerStepVisitor.h"
 #include "controller/CommandController.h"
 #include "production/ProductionCommand.h"
+#include "levels/duel/DuelLevel.h"
 #include "levels/Level1.h"
 #include "levels/Level2.h"
 #include "levels/LevelTestAnchor.h"
@@ -248,6 +249,25 @@ void Controller::load_level_test_model_reading(int seed_p, godot::LevelModel *le
     init(commands_l, spawners_l, 50, _autoSaveFile);
 }
 
+void Controller::load_duel_level(int seed_p)
+{
+    UtilityFunctions::print("loading duel level with seed ",seed_p);
+    delete _rand;
+    _rand = new octopus::RandomGenerator(seed_p);
+    std::list<octopus::Steppable *> spawners_l = {};
+    std::list<octopus::Steppable *> levelsteps_l = duellevel::LevelSteps(_lib, *_rand);
+    spawners_l.splice(spawners_l.end(), levelsteps_l);
+
+    std::list<octopus::Command *> commands_l = duellevel::LevelCommands(_lib, *_rand);
+    // enable auto save
+    newAutoSaveFile();
+    writeLevelId(*_autoSaveFile, LEVEL_ID_DUEL, LEVEL_DUEL_SIZE/5);
+    _currentLevel = LEVEL_ID_DUEL;
+    _headerWriter = std::bind(duellevel::writeLevelHeader, std::placeholders::_1, duellevel::DuelLevelHeader {seed_p});
+    _headerWriter(*_autoSaveFile);
+    init(commands_l, spawners_l, LEVEL_DUEL_SIZE/5, _autoSaveFile);
+}
+
 void Controller::set_model_filename(String const &filename_p)
 {
     _modelFile = filename_p.utf8().get_data();
@@ -336,6 +356,12 @@ void Controller::replay_level(String const &filename_p, bool replay_mode_p, godo
         level_test_model::ModelLoaderHeader header_l;
         levelInfo_l = level_test_model::readLevelHeader(_lib, file_l, _rand, header_l);
         _headerWriter = std::bind(level_test_model::writeLevelHeader, std::placeholders::_1, header_l);
+    }
+    else if(levelId_l == LEVEL_ID_DUEL)
+    {
+        duellevel::DuelLevelHeader header_l;
+        levelInfo_l = duellevel::readLevelHeader(_lib, file_l, _rand, header_l);
+        _headerWriter = std::bind(duellevel::writeLevelHeader, std::placeholders::_1, header_l);
     }
     else
     {
@@ -970,6 +996,7 @@ void Controller::_bind_methods()
     ClassDB::bind_method(D_METHOD("load_level2", "seed"), &Controller::load_level2);
     ClassDB::bind_method(D_METHOD("load_level_test_anchor", "seed"), &Controller::load_level_test_anchor);
     ClassDB::bind_method(D_METHOD("load_level_test_model_reading", "seed", "level_model"), &Controller::load_level_test_model_reading);
+    ClassDB::bind_method(D_METHOD("load_duel_level", "seed"), &Controller::load_duel_level);
 
     ClassDB::bind_method(D_METHOD("set_model_filename", "filename"), &Controller::set_model_filename);
     ClassDB::bind_method(D_METHOD("set_level_filename", "filename"), &Controller::set_level_filename);
