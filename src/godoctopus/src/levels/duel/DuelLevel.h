@@ -24,7 +24,7 @@ namespace godot
 namespace duellevel
 {
 
-std::list<octopus::Steppable *> LevelSteps(octopus::Library &lib_p, octopus::RandomGenerator &rand_p);
+std::list<octopus::Steppable *> LevelSteps(octopus::Library &lib_p, octopus::RandomGenerator &rand_p, int stepCount_p);
 std::list<octopus::Command *> LevelCommands(octopus::Library &lib_p, octopus::RandomGenerator &rand_p);
 
 struct DuelLevelHeader

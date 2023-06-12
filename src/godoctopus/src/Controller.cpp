@@ -255,7 +255,7 @@ void Controller::load_duel_level(int seed_p)
     delete _rand;
     _rand = new octopus::RandomGenerator(seed_p);
     std::list<octopus::Steppable *> spawners_l = {};
-    std::list<octopus::Steppable *> levelsteps_l = duellevel::LevelSteps(_lib, *_rand);
+    std::list<octopus::Steppable *> levelsteps_l = duellevel::LevelSteps(_lib, *_rand, 0);
     spawners_l.splice(spawners_l.end(), levelsteps_l);
 
     std::list<octopus::Command *> commands_l = duellevel::LevelCommands(_lib, *_rand);
@@ -267,6 +267,26 @@ void Controller::load_duel_level(int seed_p)
     _headerWriter(*_autoSaveFile);
     init(commands_l, spawners_l, LEVEL_DUEL_SIZE/5, _autoSaveFile);
 }
+
+void Controller::load_multi_test_level(int seed_p, int step_cout_p)
+{
+    UtilityFunctions::print("loading multi test level with seed ",seed_p);
+    delete _rand;
+    _rand = new octopus::RandomGenerator(seed_p);
+    std::list<octopus::Steppable *> spawners_l = {};
+    std::list<octopus::Steppable *> levelsteps_l = duellevel::LevelSteps(_lib, *_rand, step_cout_p);
+    spawners_l.splice(spawners_l.end(), levelsteps_l);
+
+    std::list<octopus::Command *> commands_l = duellevel::LevelCommands(_lib, *_rand);
+    // enable auto save
+    newAutoSaveFile();
+    writeLevelId(*_autoSaveFile, LEVEL_ID_DUEL, LEVEL_DUEL_SIZE/5);
+    _currentLevel = LEVEL_ID_DUEL;
+    _headerWriter = std::bind(duellevel::writeLevelHeader, std::placeholders::_1, duellevel::DuelLevelHeader {seed_p});
+    _headerWriter(*_autoSaveFile);
+    init(commands_l, spawners_l, LEVEL_DUEL_SIZE/5, _autoSaveFile);
+}
+
 
 void Controller::set_model_filename(String const &filename_p)
 {
@@ -997,6 +1017,7 @@ void Controller::_bind_methods()
     ClassDB::bind_method(D_METHOD("load_level_test_anchor", "seed"), &Controller::load_level_test_anchor);
     ClassDB::bind_method(D_METHOD("load_level_test_model_reading", "seed", "level_model"), &Controller::load_level_test_model_reading);
     ClassDB::bind_method(D_METHOD("load_duel_level", "seed"), &Controller::load_duel_level);
+    ClassDB::bind_method(D_METHOD("load_multi_test_level", "seed", "step_count"), &Controller::load_multi_test_level);
 
     ClassDB::bind_method(D_METHOD("set_model_filename", "filename"), &Controller::set_model_filename);
     ClassDB::bind_method(D_METHOD("set_level_filename", "filename"), &Controller::set_level_filename);

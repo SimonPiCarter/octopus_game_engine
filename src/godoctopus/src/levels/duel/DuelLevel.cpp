@@ -46,7 +46,18 @@ namespace godot
 namespace duellevel
 {
 
-std::list<Steppable *> LevelSteps(Library &lib_p, RandomGenerator &rand_p)
+class LoseStepTrigger : public octopus::OneShotTrigger
+{
+public:
+	LoseStepTrigger(unsigned long stepWait_p) : octopus::OneShotTrigger({new ListenerStepCount(stepWait_p)}) {}
+
+	virtual void trigger(octopus::State const &state_p, octopus::Step &step_p, unsigned long, octopus::TriggerData const &) const override
+    {
+        step_p.addSteppable(new StateWinStep(state_p.isOver(), state_p.hasWinningTeam(), state_p.getWinningTeam(), 1));
+    }
+};
+
+std::list<Steppable *> LevelSteps(Library &lib_p, RandomGenerator &rand_p, int stepCount_p)
 {
 	loadMinimalModels(lib_p);
 
@@ -92,6 +103,11 @@ std::list<Steppable *> LevelSteps(Library &lib_p, RandomGenerator &rand_p)
     {
         spawners_l.push_back(new UnitSpawnStep(handle_l++, unitP0_l));
         spawners_l.push_back(new UnitSpawnStep(handle_l++, unitP1_l));
+    }
+
+    if(stepCount_p>0)
+    {
+        spawners_l.push_back(new TriggerSpawn(new LoseStepTrigger(stepCount_p)));
     }
 
 	return spawners_l;
@@ -181,7 +197,7 @@ std::pair<std::list<octopus::Steppable *>, std::list<octopus::Command *> > readL
 	rand_p = new octopus::RandomGenerator(header_r.seed);
 
 	std::pair<std::list<octopus::Steppable *>, std::list<octopus::Command *> > pair_l;
-	pair_l.first = LevelSteps(lib_p, *rand_p);
+	pair_l.first = LevelSteps(lib_p, *rand_p, 0);
 	pair_l.second = LevelCommands(lib_p, *rand_p);
 	return pair_l;
 }
