@@ -164,7 +164,7 @@ bool Controller::loop_body()
 {
 	bool upToDate_l = true;
 	// go as far as handling the step before the ongoing one
-	if(_backState->_stepHandled < _ongoingStep - 1)
+	if(_backState->_stepHandled < _ongoingStep - 1 && !_backState->_state->isOver())
 	{
 		upToDate_l = false;
 		State *state_l = _backState->_state;
