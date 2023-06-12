@@ -130,6 +130,13 @@ public:
 	bool hasWinningTeam() const;
 	/// @brief return the winning team
 	unsigned long getWinningTeam() const;
+
+	/// @brief add step applied
+	void addStepApplied();
+	/// @brief remove step applied
+	void removeStepApplied();
+	/// @brief get the number of step applied
+	unsigned long getStepApplied() const;
 private:
 	State(State const &state_p) = delete;
 
@@ -176,6 +183,9 @@ private:
 	bool _hasWinner {false};
 	/// @brief the idx of the winning team
 	unsigned long _winningTeam {0};
+
+	/// @brief number of step applied
+	unsigned long _stepApplied {0};
 };
 
 /// @brief struct to represent a panel of targets within a range

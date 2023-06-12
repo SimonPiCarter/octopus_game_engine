@@ -721,4 +721,19 @@ unsigned long State::getWinningTeam() const
 	return _winningTeam;
 }
 
+void State::addStepApplied()
+{
+	++_stepApplied;
+}
+
+void State::removeStepApplied()
+{
+	--_stepApplied;
+}
+
+unsigned long State::getStepApplied() const
+{
+	return _stepApplied;
+}
+
 } // octopus

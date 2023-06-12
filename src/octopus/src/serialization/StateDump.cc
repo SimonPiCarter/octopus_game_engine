@@ -8,6 +8,7 @@ namespace octopus
 {
 void streamStateAsSimpleText(std::ostream &os_p, State const &state_p)
 {
+    os_p<<"Step "<<state_p.getStepApplied()<<std::endl;
     for(Player const *player_l : state_p.getPlayers())
     {
         os_p<<"Player "<<player_l->_id<<std::endl;

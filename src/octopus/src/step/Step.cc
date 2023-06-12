@@ -181,6 +181,7 @@ StepData::~StepData()
 
 void apply(Step const & step_p, State &state_p, StepData &stepData_p)
 {
+	state_p.addStepApplied();
 	bool buildData_l = stepData_p._listSteppableData.empty();
 	if(buildData_l)
 	{
@@ -219,6 +220,7 @@ void revert(Step const & step_p, State &state_p, StepData &stepData_p)
 	}
 
 	vecData_l.clear();
+	state_p.removeStepApplied();
 }
 
 void compact(Step & step_p)
