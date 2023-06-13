@@ -71,9 +71,18 @@ std::list<Steppable *> LevelSteps(Library &lib_p, RandomGenerator &rand_p, int s
 
 	long anchor_l = 420;
 	std::map<std::string, Fixed> mapRes_l;
-	mapRes_l["bloc"] = -200;
-	mapRes_l["ether"] = -200;
-	mapRes_l["Anchor"] = -anchor_l;
+    if(stepCount_p>0)
+	{
+		mapRes_l["bloc"] = -20000;
+		mapRes_l["ether"] = -20000;
+		mapRes_l["Anchor"] = -stepCount_p;
+	}
+	else
+	{
+		mapRes_l["bloc"] = -200;
+		mapRes_l["ether"] = -200;
+		mapRes_l["Anchor"] = -anchor_l;
+	}
 
 	Trigger * triggerLoseP0_l = new LoseTrigger(new ListenerEntityModelDied(&lib_p.getBuildingModel("command_center"), 0), 1);
 	Trigger * triggerLoseP1_l = new LoseTrigger(new ListenerEntityModelDied(&lib_p.getBuildingModel("command_center"), 1), 0);
