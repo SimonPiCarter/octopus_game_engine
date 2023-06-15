@@ -160,30 +160,36 @@ namespace RVO {
 	{
 		kdTree_->buildAgentTree();
 
-		std::thread first_l([&](){
-			for (int i = 0; i < static_cast<int>(agents_.size()/2); ++i)
-			{
-				if(agents_[i].active())
-				{
-					agents_[i].computeNeighbors();
-					agents_[i].computeNewVelocity();
-				}
-			}
-		});
+		int nbThreads_l = 8;
+		std::vector<int> indexes_l;
 
-		std::thread second_l([&](){
-			for (int i = static_cast<int>(agents_.size()/2); i < static_cast<int>(agents_.size()); ++i)
-			{
-				if(agents_[i].active())
-				{
-					agents_[i].computeNeighbors();
-					agents_[i].computeNewVelocity();
-				}
-			}
-		});
+		for(int i = 0 ; i < nbThreads_l ; ++ i)
+		{
+			indexes_l.push_back(i*static_cast<int>(agents_.size()/nbThreads_l));
+		}
+		indexes_l.push_back(static_cast<int>(agents_.size()));
 
-		first_l.join();
-		second_l.join();
+		std::vector<std::thread *> threads_l;
+
+		for(int n = 0 ; n < nbThreads_l ; ++ n)
+		{
+			threads_l.push_back(new std::thread([n, &indexes_l, this](){
+				for (int i = indexes_l.at(n); i < indexes_l.at(n+1); ++i)
+				{
+					if(agents_[i].active())
+					{
+						agents_[i].computeNeighbors();
+						agents_[i].computeNewVelocity();
+					}
+				}
+			}));
+		}
+
+		for(int i = 0 ; i < nbThreads_l ; ++ i)
+		{
+			threads_l[i]->join();
+			delete threads_l[i];
+		}
 
 		for (int i = 0; i < static_cast<int>(agents_.size()); ++i)
 		{
