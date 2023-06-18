@@ -2,7 +2,7 @@
 #define __UnitModel__
 
 #include "EntityModel.hh"
-#include "state/entity/buff/TimedBuff.hh"
+#include "state/entity/buff/Buffer.hh"
 
 namespace octopus
 {
