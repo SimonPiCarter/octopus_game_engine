@@ -43,6 +43,7 @@
 #include <vector>
 
 #include "Vector2.hh"
+#include "utils/ThreadPool.hh"
 
 namespace octopus
 {
@@ -90,6 +91,8 @@ namespace RVO {
 		 * \brief      Constructs a simulator instance.
 		 */
 		RVOSimulator();
+
+		ThreadPool pool;
 
 		/**
 		 * \brief      Constructs a simulator instance and sets the default

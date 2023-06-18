@@ -42,12 +42,12 @@
 #include <thread>
 
 namespace RVO {
-	RVOSimulator::RVOSimulator() : defaultAgent_(NULL), globalTime_(0.0f), kdTree_(NULL), timeStep_(0.0f)
+	RVOSimulator::RVOSimulator() : defaultAgent_(NULL), globalTime_(0.0f), kdTree_(NULL), timeStep_(0.0f), pool(12)
 	{
 		kdTree_ = new KdTree(this);
 	}
 
-	RVOSimulator::RVOSimulator(octopus::Fixed timeStep, octopus::Fixed neighborDist, size_t maxNeighbors, octopus::Fixed timeHorizon, octopus::Fixed timeHorizonObst, octopus::Fixed radius, octopus::Fixed maxSpeed, const Vector2 &velocity) : defaultAgent_(NULL), globalTime_(0.0f), kdTree_(NULL), timeStep_(timeStep)
+	RVOSimulator::RVOSimulator(octopus::Fixed timeStep, octopus::Fixed neighborDist, size_t maxNeighbors, octopus::Fixed timeHorizon, octopus::Fixed timeHorizonObst, octopus::Fixed radius, octopus::Fixed maxSpeed, const Vector2 &velocity) : defaultAgent_(NULL), globalTime_(0.0f), kdTree_(NULL), timeStep_(timeStep), pool(12)
 	{
 		kdTree_ = new KdTree(this);
 		defaultAgent_ = new Agent(this);
@@ -71,6 +71,7 @@ namespace RVO {
 			delete obstacles_[i];
 		}
 
+		pool.stop();
 		delete kdTree_;
 	}
 
@@ -160,7 +161,7 @@ namespace RVO {
 	{
 		kdTree_->buildAgentTree();
 
-		int nbThreads_l = 8;
+		int nbThreads_l = 12;
 		std::vector<int> indexes_l;
 
 		for(int i = 0 ; i < nbThreads_l ; ++ i)
@@ -169,11 +170,9 @@ namespace RVO {
 		}
 		indexes_l.push_back(static_cast<int>(agents_.size()));
 
-		std::vector<std::thread *> threads_l;
-
 		for(int n = 0 ; n < nbThreads_l ; ++ n)
 		{
-			threads_l.push_back(new std::thread([n, &indexes_l, this](){
+			pool.queueJob([n, &indexes_l, this](){
 				for (int i = indexes_l.at(n); i < indexes_l.at(n+1); ++i)
 				{
 					if(agents_[i].active())
@@ -182,14 +181,10 @@ namespace RVO {
 						agents_[i].computeNewVelocity();
 					}
 				}
-			}));
+			});
 		}
 
-		for(int i = 0 ; i < nbThreads_l ; ++ i)
-		{
-			threads_l[i]->join();
-			delete threads_l[i];
-		}
+		while(pool.busy()) {}
 
 		for (int i = 0; i < static_cast<int>(agents_.size()); ++i)
 		{
