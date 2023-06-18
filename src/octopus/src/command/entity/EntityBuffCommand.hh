@@ -3,7 +3,7 @@
 
 #include "command/Command.hh"
 #include "state/Handle.hh"
-#include "state/entity/Buff.hh"
+#include "state/entity/buff/TimedBuff.hh"
 
 namespace octopus
 {
@@ -15,7 +15,7 @@ class EntityBuffCommand : public Command
 {
 public:
 	EntityBuffCommand() {}
-	EntityBuffCommand(Handle const &commandHandle_p, Handle const &target_p, TyppedBuff const &buff_p);
+	EntityBuffCommand(Handle const &commandHandle_p, Handle const &target_p, TimedBuff const &buff_p);
 
 	/// @brief
 	virtual bool applyCommand(Step & step_p, State const &state_p, CommandData const *data_p, PathManager &pathManager_p) const override;
@@ -23,7 +23,7 @@ public:
 private:
 	Handle _target {0};
 
-	TyppedBuff _buff;
+	TimedBuff _buff;
 };
 
 } // namespace octopus

@@ -26,7 +26,7 @@ namespace godot {
 Option::~Option()
 {}
 
-void Option::pushOption(octopus::TyppedBuff const &buff_p)
+void Option::pushOption(octopus::TimedBuff const &buff_p)
 {
     std::stringstream ss_l;
     if(buff_p._offset > 0)

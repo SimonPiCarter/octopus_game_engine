@@ -5,7 +5,7 @@
 #include <vector>
 
 #include "state/player/StepOptionsGenerator.hh"
-#include "state/entity/Buff.hh"
+#include "state/entity/buff/TimedBuff.hh"
 #include "state/entity/attackModifier/AttackModifier.hh"
 #include "utils/RandomGenerator.hh"
 
@@ -18,7 +18,7 @@ namespace octopus
 struct BuffOption
 {
     unsigned long _player;
-    octopus::TyppedBuff _buff;
+    octopus::TimedBuff _buff;
     std::string _model;
     std::string _div {""};
 };
@@ -26,8 +26,8 @@ struct BuffOption
 struct DoubleBuffOption
 {
     unsigned long _player;
-    octopus::TyppedBuff _buff1;
-    octopus::TyppedBuff _buff2;
+    octopus::TimedBuff _buff1;
+    octopus::TimedBuff _buff2;
     std::string _model;
 };
 

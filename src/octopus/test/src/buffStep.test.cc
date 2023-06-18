@@ -21,7 +21,7 @@ TEST(buffStepTest, simple_speed)
 
 	EntitySpawnStep * spawn0_l = new EntitySpawnStep(0, Entity { { 3, 3. }, false, unitModel_l});
 
-	TyppedBuff buff_l;
+	TimedBuff buff_l;
 	buff_l._duration = 10;
 	buff_l._id = "speed";
 	buff_l._coef = 1.;
@@ -84,7 +84,7 @@ TEST(buffStepTest, simple_armor)
 
 	EntitySpawnStep * spawn0_l = new EntitySpawnStep(0, Entity { { 3, 3. }, false, unitModel_l});
 
-	TyppedBuff buff_l;
+	TimedBuff buff_l;
 	buff_l._duration = 10;
 	buff_l._id = "armor";
 	buff_l._coef = 0.;
@@ -149,7 +149,7 @@ TEST(buffStepTest, simple_infinite)
 
 	EntitySpawnStep * spawn0_l = new EntitySpawnStep(0, Entity { { 3, 3. }, false, unitModel_l});
 
-	TyppedBuff buff_l;
+	TimedBuff buff_l;
 	buff_l._duration = 0;
 	buff_l._id = "armor";
 	buff_l._coef = 0.;

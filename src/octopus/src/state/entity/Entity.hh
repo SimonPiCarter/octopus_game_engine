@@ -5,7 +5,7 @@
 #include <vector>
 #include <unordered_map>
 
-#include "Buff.hh"
+#include "buff/TimedBuff.hh"
 #include "command/Commandable.hh"
 #include "utils/Vector.hh"
 #include "state/Handle.hh"
@@ -63,7 +63,7 @@ namespace octopus
 			Buff _buffHarvest;
 
 			/// @brief map of registered buff currently applied
-			std::unordered_map<std::string, TyppedBuff> _registeredBuff;
+			std::unordered_map<std::string, TimedBuff> _registeredBuff;
 			/// @brief map of time since the buff has been applied
 			std::unordered_map<std::string, unsigned long> _timeSinceBuff;
 

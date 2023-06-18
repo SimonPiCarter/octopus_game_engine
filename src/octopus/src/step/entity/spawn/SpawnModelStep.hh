@@ -1,7 +1,7 @@
 #ifndef __SPAWN_MODEL_STEP__
 #define __SPAWN_MODEL_STEP__
 
-#include "state/entity/Buff.hh"
+#include "state/entity/buff/Buff.hh"
 #include "state/entity/Entity.hh"
 #include "state/State.hh"
 #include "state/player/Player.hh"
@@ -47,7 +47,7 @@ public:
 
 		Player *player_l = state_p.getPlayer(ent_l->_player);
 		// enable player buffs to the spawned entity
-		for(TyppedBuff const &buff_l : player_l->_mapBuffs[ent_l->_model._id])
+		for(TimedBuff const &buff_l : player_l->_mapBuffs[ent_l->_model._id])
 		{
 			if(buff_l.isApplying(state_p, *ent_l))
 			{

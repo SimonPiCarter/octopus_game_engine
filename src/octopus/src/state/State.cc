@@ -230,7 +230,7 @@ long State::getGridIndex(Fixed idx_p) const
 	return std::min(std::max(0l, long(to_int(idx_p/long(_gridPointSize)))), size_l-1);
 }
 
-Entity const * lookUpNewBuffTarget(State const &state_p, Handle const &sourceHandle_p, Fixed range_p, TyppedBuff const &buff_p)
+Entity const * lookUpNewBuffTarget(State const &state_p, Handle const &sourceHandle_p, Fixed range_p, TimedBuff const &buff_p)
 {
 	Entity const * source_l = state_p.getEntity(sourceHandle_p);
 	Fixed matchDistance_p = range_p + source_l->_model._ray;

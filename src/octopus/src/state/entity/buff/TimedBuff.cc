@@ -1,5 +1,5 @@
 
-#include "Buff.hh"
+#include "TimedBuff.hh"
 
 #include "state/entity/Building.hh"
 #include "state/entity/Entity.hh"
@@ -9,7 +9,7 @@
 namespace octopus
 {
 
-bool TyppedBuff::isApplying(State const &state_p, Entity const &ent_p) const
+bool TimedBuff::isApplying(State const &state_p, Entity const &ent_p) const
 {
 	if(_type == Type::Speed
 	|| _type == Type::FullReload
@@ -30,7 +30,7 @@ bool TyppedBuff::isApplying(State const &state_p, Entity const &ent_p) const
 	return false;
 }
 
-bool TyppedBuff::isApplying(State const &state_p, Entity const &source_p, Entity const &ent_p) const
+bool TimedBuff::isApplying(State const &state_p, Entity const &source_p, Entity const &ent_p) const
 {
 	unsigned long teamSource_l = state_p.getPlayer(source_p._player)->_team;
 	unsigned long teamEnt_l = state_p.getPlayer(ent_p._player)->_team;
@@ -47,7 +47,7 @@ bool TyppedBuff::isApplying(State const &state_p, Entity const &source_p, Entity
 	return isApplying(state_p, ent_p);
 }
 
-void TyppedBuff::apply(Entity &ent_p) const
+void TimedBuff::apply(Entity &ent_p) const
 {
 	switch(_type)
 	{
@@ -87,7 +87,7 @@ void TyppedBuff::apply(Entity &ent_p) const
 	}
 }
 
-void TyppedBuff::revert(Entity &ent_p) const
+void TimedBuff::revert(Entity &ent_p) const
 {
 	switch(_type)
 	{
@@ -127,26 +127,5 @@ void TyppedBuff::revert(Entity &ent_p) const
 	}
 }
 
-std::string to_string(TyppedBuff::Type type_p)
-{
-	switch(type_p)
-	{
-		case TyppedBuff::Type::Speed:
-			return "Speed";
-		case TyppedBuff::Type::FullReload:
-			return "FullReload";
-		case TyppedBuff::Type::Damage:
-			return "Damage";
-		case TyppedBuff::Type::Armor:
-			return "Armor";
-		case TyppedBuff::Type::HpMax:
-			return "HpMax";
-		case TyppedBuff::Type::Production:
-			return "Production";
-		case TyppedBuff::Type::Harvest:
-			return "Harvest";
-	}
-	throw std::logic_error("missing to string implem");
-}
 
 } // namespace octopus

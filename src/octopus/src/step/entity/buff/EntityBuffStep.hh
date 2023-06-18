@@ -4,7 +4,7 @@
 #include <stdexcept>
 
 #include "state/entity/Entity.hh"
-#include "state/entity/Buff.hh"
+#include "state/entity/buff/Buff.hh"
 #include "state/Handle.hh"
 #include "step/Steppable.hh"
 
@@ -24,12 +24,11 @@ struct EntityBuffStepData : public SteppableData {
 	bool const _new;
 };
 
-/// @brief This struct is aimed at supporting
-/// buff data
+/// @brief class handles applying a buff to an entity
 class EntityBuffStep : public Steppable
 {
 public:
-	EntityBuffStep(Handle const &target_p, TyppedBuff const &buff_p)
+	EntityBuffStep(Handle const &target_p, TimedBuff const &buff_p)
 	: _target(target_p)
 	, _buff(buff_p)
 	{}
@@ -51,7 +50,7 @@ private:
 	Handle const _target;
 
 	/// @brief buff to be applied
-	TyppedBuff const _buff;
+	TimedBuff const _buff;
 };
 
 } // namespace octopus

@@ -18,7 +18,7 @@ class Option : public Node {
 public:
     ~Option();
 
-    void pushOption(octopus::TyppedBuff const &buff_p);
+    void pushOption(octopus::TimedBuff const &buff_p);
 
     void update(BuffOption const &option_p);
     void update(DoubleBuffOption const &option_p);

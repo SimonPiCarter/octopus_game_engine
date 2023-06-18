@@ -18,7 +18,7 @@ struct ListenerData;
 class Player;
 class Trigger;
 struct TriggerData;
-struct TyppedBuff;
+struct TimedBuff;
 class FlyingCommand;
 
 struct FlyingCommandBundle
@@ -200,7 +200,7 @@ struct TargetPanel
 /// @return all targets within range
 TargetPanel lookUpNewTargets(State const &state_p, Handle const &sourceHandle_p, Fixed matchDistance_p, bool filterTeam_p=true);
 
-Entity const * lookUpNewBuffTarget(State const &state_p, Handle const &sourceHandle_p, Fixed range_p, TyppedBuff const &buff_p);
+Entity const * lookUpNewBuffTarget(State const &state_p, Handle const &sourceHandle_p, Fixed range_p, TimedBuff const &buff_p);
 Entity const * lookUpNewTarget(State const &state_p, Handle const &sourceHandle_p, Fixed matchDistance_p = 5.);
 Entity const * lookUpDeposit(State const &state_p, Handle const &sourceHandle_p, Handle const &res_p);
 Entity const * lookUpNewResource(State const &state_p, Handle const &sourceHandle_p, Handle const &res_p);
