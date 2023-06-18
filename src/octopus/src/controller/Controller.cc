@@ -28,6 +28,7 @@
 #include "step/trigger/TriggerSpawn.hh"
 #include "step/vision/VisionChangeStep.hh"
 
+#include <fstream>
 
 namespace octopus
 {
@@ -185,6 +186,12 @@ bool Controller::loop_body()
 
 			_pathManager.joinCompute();
 
+			//
+			//
+			// Running commands
+			//
+			//
+
 			// apply all commands
 			for(Commandable * cmdable_l : state_l->getEntities())
 			{
@@ -217,7 +224,17 @@ bool Controller::loop_body()
 				cmd_l->registerCommand(step_l, *state_l);
 			}
 
+			_metrics._timeRunningCommands += std::chrono::nanoseconds( std::chrono::steady_clock::now() - start_l ).count();
+
 			Logger::getDebug() << "processing step " << _backState->_stepHandled << " on state "<<state_l->_id<< std::endl;
+
+			//
+			//
+			// Collision Solver
+			//
+			//
+
+			const std::chrono::time_point<std::chrono::steady_clock> startCollision_l = std::chrono::steady_clock::now();
 
 			if(_orcaCollision)
 			{
@@ -244,7 +261,26 @@ bool Controller::loop_body()
 				for(size_t i = 0; i < 1 && octopus::updateStepFromConflictPosition(step_l, *state_l) ; ++ i) {}
 			}
 
+			_metrics._timeCollisionHandling += std::chrono::nanoseconds( std::chrono::steady_clock::now() - startCollision_l ).count();
+
+			//
+			//
+			// Collision Constraint
+			//
+			//
+
+			const std::chrono::time_point<std::chrono::steady_clock> startCollisionConstraint_l = std::chrono::steady_clock::now();
+
 			octopus::updateStepFromConstraintPosition(step_l, *state_l, state_l->getConstraintPositionLibrary());
+
+			_metrics._timeCollisionConstraint += std::chrono::nanoseconds( std::chrono::steady_clock::now() - startCollisionConstraint_l ).count();
+
+			//
+			//
+			// Trigger
+			//
+			//
+			const std::chrono::time_point<std::chrono::steady_clock> startTrigger_l = std::chrono::steady_clock::now();
 
 			// push new triggers
 			for(Trigger * trigger_l : _queuedTriggers[_backState->_stepHandled-1])
@@ -253,10 +289,29 @@ bool Controller::loop_body()
 			}
 			handleTriggers(*state_l, step_l, getStepBeforeLastCompiledStep());
 
+			_metrics._timeTrigger += std::chrono::nanoseconds( std::chrono::steady_clock::now() - startTrigger_l ).count();
+
+			//
+			//
+			// Vision Step
+			//
+			//
+			const std::chrono::time_point<std::chrono::steady_clock> startVisionStep_l = std::chrono::steady_clock::now();
+
 			std::list<VisionChangeStep *> list_l = newVisionChangeStep(*state_l, step_l, state_l->getWorldSize(), state_l->getVisionHandler().getPatternHandler());
 			std::for_each(list_l.begin(), list_l.end(), std::bind(&Step::addSteppable, &step_l, std::placeholders::_1));
 
+			_metrics._timeVisionChange += std::chrono::nanoseconds( std::chrono::steady_clock::now() - startVisionStep_l ).count();
+
+			//
+			//
+			// Compact
+			//
+			//
+			const std::chrono::time_point<std::chrono::steady_clock> startCompact_l = std::chrono::steady_clock::now();
 			octopus::compact(step_l);
+
+			_metrics._timeCompactingSteps += std::chrono::nanoseconds( std::chrono::steady_clock::now() - startCompact_l ).count();
 
 			// register all commands
 
