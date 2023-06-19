@@ -33,6 +33,8 @@ namespace octopus
 		Fixed _damage { 4. };
 		Fixed _armor { 1. };
 		Fixed _range { 3. };
+		/// @brief hp regeneration every 100 steps
+		Fixed _hpRegeneration { 0. };
 		/// @brief reload time in steps
 		unsigned long _fullReload { 10 };
 

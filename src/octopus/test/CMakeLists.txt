@@ -56,6 +56,7 @@ target_sources (unit_tests
 	src/stateDrawStep.test.cc
 	src/stateWinStep.test.cc
 	src/stepOptionsGenerator.test.cc
+	src/tickingRegen.test.cc
 	src/triggerBuilding.test.cc
 	src/triggerTime.test.cc
 	src/triggerUnitDied.test.cc

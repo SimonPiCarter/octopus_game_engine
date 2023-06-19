@@ -71,6 +71,11 @@ Fixed Entity::getHpMax(bool applyConditional_p) const
 	return std::max(Fixed(1), applyBuff( *this, _model._hpMax, _buffHpMax, applyConditional_p?_condBuffHpMax:std::vector<ConditionalBuff>()));
 }
 
+Fixed Entity::getHpRegeneration() const
+{
+	return std::max(Fixed(0), applyBuff( *this, _model._hpRegeneration, _buffHpRegeneration, _condBuffHpRegeneration));
+}
+
 Fixed Entity::getProduction() const
 {
 	return applyBuff( *this, 1., _buffProduction, _condBuffProduction);

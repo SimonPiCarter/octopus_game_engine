@@ -39,6 +39,7 @@ namespace octopus
 			bool _alive {true};
 
 			Fixed _hp { 10. };
+
 			/// @brief time since last attack in step
 			unsigned long _reload { 10 };
 			/// @brief time waiting since last command for entity
@@ -60,6 +61,7 @@ namespace octopus
 			Buff _buffDamage;
 			Buff _buffArmor;
 			Buff _buffHpMax;
+			Buff _buffHpRegeneration;
 			Buff _buffProduction;
 			Buff _buffHarvest;
 
@@ -71,6 +73,7 @@ namespace octopus
 			std::vector<ConditionalBuff> _condBuffDamage;
 			std::vector<ConditionalBuff> _condBuffArmor;
 			std::vector<ConditionalBuff> _condBuffHpMax;
+			std::vector<ConditionalBuff> _condBuffHpRegeneration;
 			std::vector<ConditionalBuff> _condBuffProduction;
 			std::vector<ConditionalBuff> _condBuffHarvest;
 
@@ -96,6 +99,9 @@ namespace octopus
 			/// @param applyConditional_p if set to false the conditional buffs will not be computed
 			/// this is necessary to avoid infinite loop when a condtional buff for max hp depends on hp ratio
 			Fixed getHpMax(bool applyConditional_p=true) const;
+			/// @brief get hp regenration with buffs
+			Fixed getHpRegeneration() const;
+
 			/// @brief get production updated using buffing info
 			Fixed getProduction() const;
 			/// @brief get harvest updated using buffing info

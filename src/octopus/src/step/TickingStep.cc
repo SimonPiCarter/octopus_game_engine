@@ -9,8 +9,6 @@
 namespace octopus
 {
 
-Fixed const TickingStep::_anchorLoss = 0.01;
-
 void TickingStep::apply(State &state_p) const
 {
 	Logger::getDebug() << "TickingStep :: apply "<<std::endl;
@@ -21,6 +19,11 @@ void TickingStep::apply(State &state_p) const
 			continue;
 		}
 		++ent_l->_reload;
+
+		if(state_p.getStepApplied() % 100 == 0)
+		{
+			ent_l->_hp = std::min(ent_l->_hp + ent_l->getHpRegeneration(), ent_l->getHpMax());
+		}
 
 		// Handle buffs
 		for(auto &&pair_l : ent_l->_timeSinceBuff)
@@ -44,14 +47,21 @@ void TickingStep::apply(State &state_p) const
 	}
 }
 
-void TickingStep::revert(State &state_p, SteppableData const *) const
+void TickingStep::revert(State &state_p, SteppableData const *data_p) const
 {
 	Logger::getDebug() << "TickingStep :: revert "<<std::endl;
+	TickingData const *data_l = static_cast<TickingData const *>(data_p);
 	for(Entity *ent_l : state_p.getEntities())
 	{
 		if(ent_l->_reload > 0)
 		{
 			--ent_l->_reload;
+		}
+
+		// reset hp
+		if(data_l && ent_l->_handle < data_l->_oldHp.size())
+		{
+			ent_l->_hp = data_l->_oldHp[ent_l->_handle];
 		}
 
 		// Handle buffs
@@ -85,6 +95,22 @@ bool TickingStep::isNoOp() const
 {
 	return false;
 }
+
+SteppableData * TickingStep::newData(State const &state_p) const
+{
+	if(state_p.getStepApplied() % 100 != 0)
+	{
+		return nullptr;
+	}
+	TickingData * data_l = new TickingData();
+	data_l->_oldHp.resize(state_p.getEntities().size());
+	for(Entity *ent_l : state_p.getEntities())
+	{
+		data_l->_oldHp[ent_l->_handle] = ent_l->_hp;
+	}
+	return data_l;
+}
+
 
 } // namespace octopus
 

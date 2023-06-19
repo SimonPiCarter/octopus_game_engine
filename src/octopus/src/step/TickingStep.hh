@@ -8,6 +8,11 @@
 
 namespace octopus
 {
+	struct TickingData : public SteppableData
+	{
+		std::vector<Fixed> _oldHp;
+	};
+
 	/// @brief This step will contains all ticking that must happen on every step
 	/// eg reload times, buff duration
 	class TickingStep : public Steppable
@@ -24,6 +29,8 @@ namespace octopus
 			{
 				visitor_p->visit(this);
 			}
+
+			SteppableData * newData(State const &state_p) const;
 
 			static Fixed const _anchorLoss;
 	};
