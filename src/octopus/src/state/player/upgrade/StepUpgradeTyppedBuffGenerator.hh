@@ -5,7 +5,7 @@
 #include <vector>
 
 #include "StepUpgradeGenerator.hh"
-#include "state/entity/Buff.hh"
+#include "state/entity/buff/TimedBuff.hh"
 
 namespace octopus
 {
@@ -15,7 +15,7 @@ namespace octopus
 class StepUpgradeTyppedBuffGenerator : public StepUpgradeGenerator
 {
 public:
-    StepUpgradeTyppedBuffGenerator(TyppedBuff const &buff_p, std::vector<std::string> const &models_p);
+    StepUpgradeTyppedBuffGenerator(TimedBuff const &buff_p, std::vector<std::string> const &models_p);
     ~StepUpgradeTyppedBuffGenerator();
 
     /// @brief Create a new copy of this generator
@@ -29,7 +29,7 @@ public:
     virtual std::vector<Steppable *> getSteppables(unsigned long player_p) const override;
 
 protected:
-    TyppedBuff _buff;
+    TimedBuff _buff;
     std::vector<std::string> _models;
 };
 

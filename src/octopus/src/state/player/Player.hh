@@ -6,7 +6,8 @@
 #include <list>
 #include <map>
 #include <unordered_set>
-#include "state/entity/Buff.hh"
+#include "state/entity/buff/TimedBuff.hh"
+#include "state/entity/buff/ConditionalBuff.hh"
 #include "state/entity/attackModifier/AttackModifier.hh"
 
 #include "DivinityOption.hh"
@@ -36,7 +37,10 @@ namespace octopus
 			std::map<std::string, StepOptionsGenerator*> _options;
 
 			/// @brief the list of all buffs that should be applied on every entity per model
-			std::map<std::string, std::vector<TyppedBuff> > _mapBuffs;
+			std::map<std::string, std::vector<TimedBuff> > _mapBuffs;
+
+			/// @brief the list of all conditional buffs that should be applied on every entity per model
+			std::map<std::string, std::vector<ConditionalBuff> > _mapConditionalBuffs;
 
 			/// @brief the list of modifiers that should be applied on every entity per model
 			std::map<std::string, AttackModifier > _mapModifiers;

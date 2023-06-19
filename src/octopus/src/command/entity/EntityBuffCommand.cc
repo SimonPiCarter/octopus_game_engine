@@ -9,7 +9,7 @@
 namespace octopus
 {
 
-EntityBuffCommand::EntityBuffCommand(Handle const &commandHandle_p, Handle const &target_p, TyppedBuff const &buff_p)
+EntityBuffCommand::EntityBuffCommand(Handle const &commandHandle_p, Handle const &target_p, TimedBuff const &buff_p)
 	: Command(commandHandle_p)
 	, _target(target_p)
 	, _buff(buff_p)

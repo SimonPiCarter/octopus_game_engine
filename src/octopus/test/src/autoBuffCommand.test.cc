@@ -9,7 +9,7 @@
 #include <step/player/PlayerSpawnStep.hh>
 #include <state/State.hh>
 #include <state/model/entity/UnitModel.hh>
-#include <state/entity/Buff.hh>
+#include <state/entity/buff/Buff.hh>
 
 ///
 /// This test suite aims at checking that EntityBuffCommand is correctly output

@@ -27,7 +27,7 @@ TEST(PlayerBuffAllStepStepTest, simple)
 	state_l.addEntity(new Entity { { 3, 3. }, false, unitModel_l});
 	state_l.getEntity(0)->_player = 0;
 
-	TyppedBuff buff_l;
+	TimedBuff buff_l;
 	buff_l._type = TyppedBuff::Type::HpMax;
 	buff_l._offset = 10;
 	PlayerBuffAllStep step_l(0, buff_l, "unit");
@@ -61,7 +61,7 @@ TEST(PlayerBuffAllStepStepTest, simple_wrong_player)
 	state_l.addEntity(new Entity { { 3, 3. }, false, unitModel_l});
 	state_l.getEntity(0)->_player = 1;
 
-	TyppedBuff buff_l;
+	TimedBuff buff_l;
 	buff_l._type = TyppedBuff::Type::HpMax;
 	buff_l._offset = 10;
 	PlayerBuffAllStep step_l(0, buff_l, "unit");
@@ -95,7 +95,7 @@ TEST(PlayerBuffAllStepStepTest, simple_wrong_model)
 	state_l.addEntity(new Entity { { 3, 3. }, false, unitModel_l});
 	state_l.getEntity(0)->_player = 0;
 
-	TyppedBuff buff_l;
+	TimedBuff buff_l;
 	buff_l._type = TyppedBuff::Type::HpMax;
 	buff_l._offset = 10;
 	PlayerBuffAllStep step_l(0, buff_l, "unit2");
@@ -129,7 +129,7 @@ TEST(PlayerBuffAllStepStepTest, spawn)
 	state_l.addEntity(new Entity { { 3, 3. }, false, unitModel_l});
 	state_l.getEntity(0)->_player = 0;
 
-	TyppedBuff buff_l;
+	TimedBuff buff_l;
 	buff_l._type = TyppedBuff::Type::HpMax;
 	buff_l._offset = 10;
 	PlayerBuffAllStep step_l(0, buff_l, "unit");

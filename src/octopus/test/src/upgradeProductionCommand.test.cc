@@ -38,7 +38,7 @@ TEST(upgradeProductionCommandTest, simple)
 
 	BuildingSpawnStep * spawn0_l = new BuildingSpawnStep(0, production_l, true);
 
-	TyppedBuff buff_l;
+	TimedBuff buff_l;
 	buff_l._type = TyppedBuff::Type::Production;
 	buff_l._coef = 0.1;
 	Upgrade up_l("upgrade", new StepUpgradeTyppedBuffGenerator(buff_l, {"prod"}));

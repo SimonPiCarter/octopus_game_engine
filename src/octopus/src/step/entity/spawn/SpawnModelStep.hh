@@ -1,12 +1,13 @@
 #ifndef __SPAWN_MODEL_STEP__
 #define __SPAWN_MODEL_STEP__
 
-#include "state/entity/Buff.hh"
+#include "state/entity/buff/Buff.hh"
 #include "state/entity/Entity.hh"
 #include "state/State.hh"
 #include "state/player/Player.hh"
 #include "state/Handle.hh"
 #include "step/Steppable.hh"
+#include "step/entity/buff/EntityBuffStep.hh"
 #include "utils/Vector.hh"
 
 namespace octopus
@@ -47,7 +48,7 @@ public:
 
 		Player *player_l = state_p.getPlayer(ent_l->_player);
 		// enable player buffs to the spawned entity
-		for(TyppedBuff const &buff_l : player_l->_mapBuffs[ent_l->_model._id])
+		for(TimedBuff const &buff_l : player_l->_mapBuffs[ent_l->_model._id])
 		{
 			if(buff_l.isApplying(state_p, *ent_l))
 			{
@@ -55,6 +56,13 @@ public:
 				ent_l->_registeredBuff[buff_l._id] = buff_l;
 			}
 		}
+		for(ConditionalBuff const &buff_l : player_l->_mapConditionalBuffs[ent_l->_model._id])
+		{
+			// use step to avoid duplicated code
+			EntityConditionalBuffStep buffStep_l(ent_l->_handle, buff_l);
+			buffStep_l.apply(state_p);
+		}
+
 		auto &&itModifier_l = player_l->_mapModifiers.find(ent_l->_model._id);
 		if(itModifier_l != player_l->_mapModifiers.end())
 		{

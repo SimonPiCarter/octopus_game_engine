@@ -1,7 +1,7 @@
 #include "LibraryFillers.hh"
 
 #include "library/Library.hh"
-#include "state/entity/Buff.hh"
+#include "state/entity/buff/Buff.hh"
 #include "state/model/entity/UnitModel.hh"
 #include "state/model/entity/BuildingModel.hh"
 

@@ -1,36 +1,16 @@
-#ifndef __Buff__
-#define __Buff__
+#ifndef __TimedBuff__
+#define __TimedBuff__
 
 #include <string>
+#include "Buff.hh"
 #include "utils/Fixed.hh"
 
 namespace octopus
 {
-class Entity;
-class State;
 
-struct Buff
+struct TimedBuff : public TyppedBuff
 {
-	Fixed _offset {0.};
-	Fixed _coef {0.};
-};
-
-struct TyppedBuff : public Buff
-{
-	enum class Type
-	{
-		Speed,
-		FullReload,
-		Damage,
-		Armor,
-		HpMax,
-		Production,
-		Harvest
-	};
-
-	Type _type {Type::Speed};
-
-	/// @brief 0 for infinite buff
+    /// @brief 0 for infinite buff
 	unsigned long _duration {0};
 
 	/// @brief true if applies to enemies
@@ -53,20 +33,6 @@ struct TyppedBuff : public Buff
 	void revert(Entity &ent_p) const;
 };
 
-struct Buffer
-{
-	/// @brief true if the buffer is active (false if no buff to apply)
-	bool _active {false};
-	/// @brief reload time to apply buff
-	unsigned long _reload {0};
-	/// @brief range to apply buff
-	Fixed _range {3.};
-	/// @brief the buff than can be applied
-	TyppedBuff _buff;
-};
-
-std::string to_string(TyppedBuff::Type type_p);
-
-}
+} // namespace octopus
 
 #endif

@@ -4,7 +4,7 @@
 #include <stdexcept>
 
 #include "state/entity/Entity.hh"
-#include "state/entity/Buff.hh"
+#include "state/entity/buff/Buff.hh"
 #include "state/Handle.hh"
 #include "step/Steppable.hh"
 

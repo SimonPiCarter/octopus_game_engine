@@ -5,7 +5,8 @@
 #include <vector>
 #include <unordered_map>
 
-#include "Buff.hh"
+#include "buff/TimedBuff.hh"
+#include "buff/ConditionalBuff.hh"
 #include "command/Commandable.hh"
 #include "utils/Vector.hh"
 #include "state/Handle.hh"
@@ -62,8 +63,19 @@ namespace octopus
 			Buff _buffProduction;
 			Buff _buffHarvest;
 
+			///
+			/// Conditinal buff properties
+			///
+			std::vector<ConditionalBuff> _condBuffSpeed;
+			std::vector<ConditionalBuff> _condBuffFullReload;
+			std::vector<ConditionalBuff> _condBuffDamage;
+			std::vector<ConditionalBuff> _condBuffArmor;
+			std::vector<ConditionalBuff> _condBuffHpMax;
+			std::vector<ConditionalBuff> _condBuffProduction;
+			std::vector<ConditionalBuff> _condBuffHarvest;
+
 			/// @brief map of registered buff currently applied
-			std::unordered_map<std::string, TyppedBuff> _registeredBuff;
+			std::unordered_map<std::string, TimedBuff> _registeredBuff;
 			/// @brief map of time since the buff has been applied
 			std::unordered_map<std::string, unsigned long> _timeSinceBuff;
 
@@ -81,7 +93,9 @@ namespace octopus
 			/// @brief get armor updated using buffing info
 			Fixed getArmor() const;
 			/// @brief get hp max updated using buffing info
-			Fixed getHpMax() const;
+			/// @param applyConditional_p if set to false the conditional buffs will not be computed
+			/// this is necessary to avoid infinite loop when a condtional buff for max hp depends on hp ratio
+			Fixed getHpMax(bool applyConditional_p=true) const;
 			/// @brief get production updated using buffing info
 			Fixed getProduction() const;
 			/// @brief get harvest updated using buffing info

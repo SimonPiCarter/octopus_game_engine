@@ -1,7 +1,7 @@
 #include "TickingStep.hh"
 
 #include "state/State.hh"
-#include "state/entity/Buff.hh"
+#include "state/entity/buff/Buff.hh"
 #include "state/entity/Entity.hh"
 #include "state/player/Player.hh"
 #include "logger/Logger.hh"
@@ -27,7 +27,7 @@ void TickingStep::apply(State &state_p) const
 		{
 			std::string const &id_l = pair_l.first;
 			unsigned long &time_l = pair_l.second;
-			TyppedBuff const &buff_l = ent_l->_registeredBuff[id_l];
+			TimedBuff const &buff_l = ent_l->_registeredBuff[id_l];
 			// need to apply buff
 			if(time_l == 0)
 			{
@@ -59,7 +59,7 @@ void TickingStep::revert(State &state_p, SteppableData const *) const
 		{
 			std::string const &id_l = pair_l.first;
 			unsigned long &time_l = pair_l.second;
-			TyppedBuff const &buff_l = ent_l->_registeredBuff[id_l];
+			TimedBuff const &buff_l = ent_l->_registeredBuff[id_l];
 
 			// need to revert buff
 			if(time_l == 1)

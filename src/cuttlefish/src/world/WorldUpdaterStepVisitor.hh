@@ -65,6 +65,7 @@ public:
 	virtual void visit(octopus::CustomStep const *) override;
 	virtual void visit(octopus::EntityAttackStep const *) override {}
 	virtual void visit(octopus::EntityBuffStep const *) override {}
+	virtual void visit(octopus::EntityConditionalBuffStep const *) override {}
 	virtual void visit(octopus::EntityFrozenStep const *) {}
 	virtual void visit(octopus::EntityHitPointChangeStep const *step_p) override;
 	virtual void visit(octopus::EntityMoveStep const *step_p) override;
@@ -79,6 +80,7 @@ public:
     virtual void visit(octopus::PlayerAttackModAllStep const *) override {}
 	virtual void visit(octopus::PlayerAnchorDivinityStep const *) override {}
 	virtual void visit(octopus::PlayerBuffAllStep const *) {}
+	virtual void visit(octopus::PlayerConditionalBuffAllStep const *) {}
 	virtual void visit(octopus::PlayerLevelUpDivinityStep const *) override {}
 	virtual void visit(octopus::PlayerPopOptionStep const *);
 	virtual void visit(octopus::PlayerResetOptionDivinityStep const *) override {}

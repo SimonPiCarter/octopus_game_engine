@@ -35,6 +35,7 @@ target_sources (unit_tests
 	src/canonical.test.cc
 	src/commandQueue.test.cc
 	src/commandSerialization.test.cc
+	src/condBuffStep.test.cc
 	src/conflictSolver.test.cc
 	src/constraintPosition.test.cc
 	src/controller.test.cc

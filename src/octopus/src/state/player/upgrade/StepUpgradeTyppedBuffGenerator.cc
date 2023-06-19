@@ -5,7 +5,7 @@
 namespace octopus
 {
 
-StepUpgradeTyppedBuffGenerator::StepUpgradeTyppedBuffGenerator(TyppedBuff const &buff_p, std::vector<std::string> const &models_p)
+StepUpgradeTyppedBuffGenerator::StepUpgradeTyppedBuffGenerator(TimedBuff const &buff_p, std::vector<std::string> const &models_p)
     : _buff(buff_p), _models(models_p)
 {}
 StepUpgradeTyppedBuffGenerator::~StepUpgradeTyppedBuffGenerator()
