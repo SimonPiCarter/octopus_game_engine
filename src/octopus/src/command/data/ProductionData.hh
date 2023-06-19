@@ -3,7 +3,10 @@
 
 #include "command/CommandData.hh"
 
+#include <string>
+
 #include "state/model/entity/UnitModel.hh"
+#include "state/player/Player.hh"
 #include "state/player/upgrade/Upgrade.hh"
 
 namespace octopus
@@ -25,7 +28,7 @@ public:
 	bool _canceled {false};
 
 	/// @brief return the cost of the production
-	virtual const std::map<std::string, Fixed> &getCost() const = 0;
+	virtual std::map<std::string, Fixed> getCost(Player const &player_p) const = 0;
 	/// @brief return the model unique id of the production
 	virtual const std::string &getIdModel() const = 0;
 };
@@ -40,7 +43,7 @@ public:
 
 	UnitModel const * _model {nullptr};
 
-	virtual const std::map<std::string, Fixed> &getCost() const { return _model->_cost; }
+	virtual std::map<std::string, Fixed> getCost(Player const &player_p) const { return octopus::getCost(*_model, player_p); }
 	virtual const std::string &getIdModel() const { return _model->_id; }
 };
 
@@ -54,7 +57,7 @@ public:
 
 	Upgrade const * _upgrade {nullptr};
 
-	virtual const std::map<std::string, Fixed> &getCost() const { return _upgrade->_cost; }
+	virtual std::map<std::string, Fixed> getCost(Player const &) const { return _upgrade->_cost; }
 	virtual const std::string &getIdModel() const { return _upgrade->_id; }
 };
 

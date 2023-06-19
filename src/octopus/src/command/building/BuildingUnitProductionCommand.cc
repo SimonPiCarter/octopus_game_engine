@@ -8,6 +8,7 @@
 #include "state/State.hh"
 #include "state/entity/Building.hh"
 #include "state/model/entity/EntityModel.hh"
+#include "state/player/Player.hh"
 #include "step/Step.hh"
 #include "step/entity/spawn/UnitSpawnStep.hh"
 #include "step/command/CommandQueueStep.hh"
@@ -30,6 +31,7 @@ void BuildingUnitProductionCommand::registerCommand(Step & step_p, State const &
 {
 	Logger::getDebug() << "BuildingUnitProductionCommand:: register Command "<<_source <<std::endl;
 	Building const * building_l = dynamic_cast<Building const *>(state_p.getEntity(_source));
+	Player const & player_l = *state_p.getPlayer(building_l->_player);
 
 	// if building is not build we skip everything
 	if(!building_l->isBuilt())
@@ -37,12 +39,14 @@ void BuildingUnitProductionCommand::registerCommand(Step & step_p, State const &
 		return;
 	}
 
+	std::map<std::string, Fixed> cost_l = getCost(*_model, player_l);
+
 	// check if we can pay for it and if building can produce it
-	if(checkResource(state_p, building_l->_player, _model->_cost, step_p.getResourceSpent(building_l->_player))
+	if(checkResource(state_p, building_l->_player, cost_l, step_p.getResourceSpent(building_l->_player))
 	&& building_l->_buildingModel.canProduce(_model)
 	&& meetRequirements(_model->_requirements, *state_p.getPlayer(building_l->_player)))
 	{
-		step_p.addSteppable(new PlayerSpendResourceStep(building_l->_player, _model->_cost));
+		step_p.addSteppable(new PlayerSpendResourceStep(building_l->_player, cost_l));
 		step_p.addSteppable(new CommandSpawnStep(this));
 	}
 	// else add informative step for failure
@@ -57,6 +61,7 @@ bool BuildingUnitProductionCommand::applyCommand(Step & step_p, State const &sta
 {
 	Logger::getDebug() << "BuildingUnitProductionCommand:: apply Command "<<_source <<std::endl;
 	Building const * building_l = dynamic_cast<Building const *>(state_p.getEntity(_source));
+	Player const & player_l = *state_p.getPlayer(building_l->_player);
 
 	if(_data._canceled)
 	{
@@ -64,7 +69,7 @@ bool BuildingUnitProductionCommand::applyCommand(Step & step_p, State const &sta
 		return true;
 	}
 
-	if(_data._progression < _data._model->_productionTime)
+	if(_data._progression < getProductionTime(*_data._model, player_l))
 	{
 		Logger::getDebug() << "BuildingUnitProductionCommand :: adding production progression step " <<std::endl;
 		step_p.addSteppable(new ProductionProgressionStep(_handleCommand, building_l->getProduction()));
@@ -74,7 +79,7 @@ bool BuildingUnitProductionCommand::applyCommand(Step & step_p, State const &sta
 		Logger::getDebug() << "BuildingUnitProductionCommand :: adding spawn step " <<std::endl;
 
 		Unit unit_l(building_l->_pos + building_l->_buildingModel._productionOutput, false, *_data._model);
-		unit_l._player = building_l->_player;
+		unit_l._player = player_l._id;
 		Handle handle_l = getNextHandle(step_p, state_p);
 		step_p.addSteppable(new UnitSpawnStep(handle_l, unit_l));
 

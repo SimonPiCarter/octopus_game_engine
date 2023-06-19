@@ -32,7 +32,8 @@ void BuildingUnitCancelCommand::registerCommand(Step & step_p, State const &stat
 
 	if(prodData_l && !prodData_l->_canceled && !step_p.isCmdCanceled(CommandIdx(_handleCommand, _idx)))
 	{
-		step_p.addSteppable(new PlayerSpendResourceStep(ent_l->_player, getReverseCostMap(prodData_l->getCost())));
+		Player const &player_l = *state_p.getPlayer(ent_l->_player);
+		step_p.addSteppable(new PlayerSpendResourceStep(ent_l->_player, getReverseCostMap(prodData_l->getCost(player_l))));
 		step_p.addSteppable(new CancelUnitProductionStep(_handleCommand, _idx));
 		// if update remove update being processed
 		UpgradeProductionData const * upgradeData_l = dynamic_cast<UpgradeProductionData const *>(data_l);

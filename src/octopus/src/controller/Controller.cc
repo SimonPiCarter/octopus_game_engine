@@ -627,7 +627,8 @@ void Controller::handleTriggers(State const &state_p, Step &step_p, Step const &
 				// refund cost of unit production
 				if(data_l)
 				{
-					step_p.addSteppable(new PlayerSpendResourceStep(ent_l._player, getReverseCostMap(data_l->getCost())));
+					Player const &player_l = *state_p.getPlayer(ent_l._player);
+					step_p.addSteppable(new PlayerSpendResourceStep(ent_l._player, getReverseCostMap(data_l->getCost(player_l))));
 				}
 				// if update remove update being processed
 				UpgradeProductionData const * upgradeData_l = dynamic_cast<UpgradeProductionData const *>(data_l);
