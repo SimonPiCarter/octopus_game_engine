@@ -41,7 +41,7 @@ SteppableData * BuildingRemoveRallyPointStep::newData(State const &state_p) cons
 	data_l->_rallyPointEntityActive = ent_l->_rallyPointEntityActive;
 	data_l->_rallyPointEntity = ent_l->_rallyPointEntity;
 
-	return nullptr;
+	return data_l;
 }
 
 } // namespace octopus
