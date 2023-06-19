@@ -77,7 +77,9 @@ public:
 	virtual void visit(octopus::FlyingCommandPopStep const *) override {}
 	virtual void visit(octopus::MissingResourceStep const *) override {}
 	virtual void visit(octopus::PlayerAddBuildingModel const *) override {}
+	virtual void visit(octopus::PlayerAddCostBonusStep const *) override {}
 	virtual void visit(octopus::PlayerAddOptionStep const *) override {}
+	virtual void visit(octopus::PlayerAddTimeProdBonusStep const *) override {}
     virtual void visit(octopus::PlayerAttackModAllStep const *) override {}
 	virtual void visit(octopus::PlayerBuffAllStep const *) {}
 	virtual void visit(octopus::PlayerConditionalBuffAllStep const *) {}

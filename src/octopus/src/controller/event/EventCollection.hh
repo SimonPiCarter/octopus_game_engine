@@ -72,7 +72,9 @@ public:
 	virtual void visit(FlyingCommandPopStep const *) {}
 	virtual void visit(MissingResourceStep const *) {}
 	virtual void visit(PlayerAddBuildingModel const *) {}
+	virtual void visit(PlayerAddCostBonusStep const *) {}
 	virtual void visit(PlayerAddOptionStep const *) {}
+	virtual void visit(PlayerAddTimeProdBonusStep const *) {}
     virtual void visit(PlayerAttackModAllStep const *) {}
 	virtual void visit(PlayerBuffAllStep const *) {}
 	virtual void visit(PlayerConditionalBuffAllStep const *) {}

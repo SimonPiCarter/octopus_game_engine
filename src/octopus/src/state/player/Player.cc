@@ -45,6 +45,48 @@ unsigned long getUpgradeLvl(Player const &player_p, std::string const &type_p)
 	return 0;
 }
 
+Fixed getProductionTime(UnitModel const &model_p, Player const & player_p)
+{
+	Fixed prodTime_l = model_p._productionTime;
+	auto &&it_l = player_p._bonuses._bonusTimeProduction.find(model_p._id);
+	if(it_l == player_p._bonuses._bonusTimeProduction.end())
+	{
+		return prodTime_l;
+	}
+	Buff const &buff_l = it_l->second;
+	prodTime_l += buff_l._offset;
+	prodTime_l = std::max(Fixed(0.), prodTime_l);
+	return std::max(Fixed(0.), prodTime_l * (Fixed(1) + buff_l._coef));
+}
+
+std::map<std::string, Fixed> getCost(UnitModel const &model_p, Player const & player_p)
+{
+	// if no bonus return the cost directly
+	auto &&itCost_l = player_p._bonuses._bonusCost.find(model_p._id);
+	if(itCost_l == player_p._bonuses._bonusCost.end())
+	{
+		return model_p._cost;
+	}
+	// else apply bonus on every resource
+	CostBonus const &bonus_p = itCost_l->second;
+	std::map<std::string, Fixed> cost_l;
+	for(auto &&pairRes_l : model_p._cost)
+	{
+		std::string const &res_l = pairRes_l.first;
+		Fixed const &qty_l = pairRes_l.second;
+		cost_l[res_l] = qty_l;
+
+		// if there is a bonus for this resource apply it
+		auto &&itBonusRes_l = bonus_p._resourceModifier.find(res_l);
+		if(itBonusRes_l != bonus_p._resourceModifier.end())
+		{
+			Buff const &buff_l = itBonusRes_l->second;
+			cost_l[res_l] = std::max(Fixed(0.), cost_l[res_l] + buff_l._offset);
+			cost_l[res_l] = std::max(Fixed(0.), cost_l[res_l] * (Fixed(1) + buff_l._coef));
+		}
+	}
+	return cost_l;
+}
 
 std::list<BuildingModel const *> getAvailableBuildingModels(Player const &player_p)
 {

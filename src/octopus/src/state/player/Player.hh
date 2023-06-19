@@ -12,6 +12,7 @@
 
 #include "DivinityOption.hh"
 #include "StepOptionsGenerator.hh"
+#include "bonus/PlayerBonus.hh"
 
 namespace octopus
 {
@@ -45,6 +46,9 @@ namespace octopus
 			/// @brief the list of modifiers that should be applied on every entity per model
 			std::map<std::string, AttackModifier > _mapModifiers;
 
+			/// @brief sub container for all bonuses (production time and cost reduction for units ONLY)
+			PlayerBonus _bonuses;
+
 			///
 			/// Unlock info
 			///
@@ -66,6 +70,10 @@ namespace octopus
 	bool getDivOption(DivinityOption const &option_p, std::string const  &type_p);
 	/// @brief safe getter for divinity level of a player
 	unsigned long getUpgradeLvl(Player const &player_p, std::string const  &type_p);
+	/// @brief get the production time for the given model taking bonuses into account
+	Fixed getProductionTime(UnitModel const &model_p, Player const & player_p);
+	/// @brief get the cost of the given model taking bonuses into account
+	std::map<std::string, Fixed> getCost(UnitModel const &model_p, Player const & player_p);
 
 	/// @brief return availables building models from building
 	std::list<BuildingModel const *> getAvailableBuildingModels(Player const &player_p);

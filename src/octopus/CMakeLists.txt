@@ -122,6 +122,8 @@ add_library(octopus
 	${CMAKE_CURRENT_SOURCE_DIR}/src/step/player/PlayerSpawnStep.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/step/player/PlayerSpendResourceStep.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/step/player/PlayerUpdateBuildingCountStep.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/src/step/player/bonus/PlayerAddCostBonusStep.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/src/step/player/bonus/PlayerAddTimeProdBonusStep.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/step/state/StateAddConstraintPositionStep.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/step/state/StateDrawStep.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/step/state/StateRemoveConstraintPositionStep.cc

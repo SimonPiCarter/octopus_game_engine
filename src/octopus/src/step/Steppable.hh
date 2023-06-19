@@ -81,7 +81,9 @@ namespace octopus
 	class FlyingCommandSpawnStep;
 	class MissingResourceStep;
 	class PlayerAddBuildingModel;
+	class PlayerAddCostBonusStep;
 	class PlayerAddOptionStep;
+	class PlayerAddTimeProdBonusStep;
 	class PlayerAttackModAllStep;
 	class PlayerBuffAllStep;
 	class PlayerConditionalBuffAllStep;
@@ -171,7 +173,9 @@ namespace octopus
 			virtual void visit(EntityUpdateWaitingStep const *) = 0;
 			virtual void visit(MissingResourceStep const *) = 0;
 			virtual void visit(PlayerAddBuildingModel const *) = 0;
+			virtual void visit(PlayerAddCostBonusStep const *) = 0;
 			virtual void visit(PlayerAddOptionStep const *) = 0;
+			virtual void visit(PlayerAddTimeProdBonusStep const *) = 0;
 			virtual void visit(PlayerAttackModAllStep const *) = 0;
 			virtual void visit(PlayerBuffAllStep const *) = 0;
 			virtual void visit(PlayerConditionalBuffAllStep const *) = 0;
