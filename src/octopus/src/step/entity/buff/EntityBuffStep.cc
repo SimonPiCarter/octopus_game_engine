@@ -72,5 +72,72 @@ SteppableData * EntityBuffStep::newData(State const &state_p) const
 	return data_l;
 }
 
+void EntityConditionalBuffStep::apply(State &state_p) const
+{
+	Entity * ent_l = state_p.getEntity(this->_target);
+	Logger::getDebug() << "EntityConditionalBuffStep :: apply " << this->_target <<" ("<<_buff._id<<")"<<std::endl;
+
+	switch(_buff._type)
+	{
+		case TyppedBuff::Type::Speed:
+			ent_l->_condBuffSpeed.push_back(_buff);
+			break;
+		case TyppedBuff::Type::FullReload:
+			ent_l->_condBuffFullReload.push_back(_buff);
+			break;
+		case TyppedBuff::Type::Damage:
+			ent_l->_condBuffDamage.push_back(_buff);
+			break;
+		case TyppedBuff::Type::Armor:
+			ent_l->_condBuffArmor.push_back(_buff);
+			break;
+		case TyppedBuff::Type::HpMax:
+			ent_l->_condBuffHpMax.push_back(_buff);
+			break;
+		case TyppedBuff::Type::Production:
+			ent_l->_condBuffProduction.push_back(_buff);
+			break;
+		case TyppedBuff::Type::Harvest:
+			ent_l->_condBuffHarvest.push_back(_buff);
+			break;
+	}
+}
+
+void EntityConditionalBuffStep::revert(State &state_p, SteppableData const *) const
+{
+	Entity * ent_l = state_p.getEntity(this->_target);
+	Logger::getDebug() << "EntityConditionalBuffStep :: revert " << this->_target<<std::endl;
+
+	switch(_buff._type)
+	{
+		case TyppedBuff::Type::Speed:
+			ent_l->_condBuffSpeed.pop_back();
+			break;
+		case TyppedBuff::Type::FullReload:
+			ent_l->_condBuffFullReload.pop_back();
+			break;
+		case TyppedBuff::Type::Damage:
+			ent_l->_condBuffDamage.pop_back();
+			break;
+		case TyppedBuff::Type::Armor:
+			ent_l->_condBuffArmor.pop_back();
+			break;
+		case TyppedBuff::Type::HpMax:
+			ent_l->_condBuffHpMax.pop_back();
+			break;
+		case TyppedBuff::Type::Production:
+			ent_l->_condBuffProduction.pop_back();
+			break;
+		case TyppedBuff::Type::Harvest:
+			ent_l->_condBuffHarvest.pop_back();
+			break;
+	}
+}
+
+bool EntityConditionalBuffStep::isNoOp() const
+{
+	return ::is_zero(_buff._offset) && ::is_zero(_buff._coef);
+}
+
 } // namespace octopus
 

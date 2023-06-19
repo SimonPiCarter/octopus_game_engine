@@ -71,6 +71,7 @@ namespace octopus
 	class CustomStep;
 	class EntityAttackStep;
 	class EntityBuffStep;
+	class EntityConditionalBuffStep;
 	class EntityFrozenStep;
 	class EntityHitPointChangeStep;
 	class EntityMoveStep;
@@ -83,6 +84,7 @@ namespace octopus
 	class PlayerAddOptionStep;
 	class PlayerAttackModAllStep;
 	class PlayerBuffAllStep;
+	class PlayerConditionalBuffAllStep;
 	class PlayerLevelUpUpgradeStep;
 	class PlayerPopOptionStep;
 	class PlayerProducedUpgradeStep;
@@ -159,6 +161,7 @@ namespace octopus
 			virtual void visit(CustomStep const *steppable_p) {}
 			virtual void visit(EntityAttackStep const *) = 0;
 			virtual void visit(EntityBuffStep const *) = 0;
+			virtual void visit(EntityConditionalBuffStep const *) = 0;
 			virtual void visit(EntityFrozenStep const *) = 0;
 			virtual void visit(EntityHitPointChangeStep const *) = 0;
 			virtual void visit(EntityMoveStep const *) = 0;
@@ -171,6 +174,7 @@ namespace octopus
 			virtual void visit(PlayerAddOptionStep const *) = 0;
 			virtual void visit(PlayerAttackModAllStep const *) = 0;
 			virtual void visit(PlayerBuffAllStep const *) = 0;
+			virtual void visit(PlayerConditionalBuffAllStep const *) = 0;
 			virtual void visit(PlayerLevelUpUpgradeStep const *) = 0;
 			virtual void visit(PlayerPopOptionStep const *) = 0;
 			virtual void visit(PlayerProducedUpgradeStep const *) = 0;

@@ -27,46 +27,58 @@ bool Entity::isIgnoringCollision() const
 	return false;
 }
 
-Fixed applyBuff(Fixed val_p, Buff const &buff_p)
+Fixed applyBuff(Entity const &ent_p, Fixed val_p, Buff const &buff_p, std::vector<ConditionalBuff> const &condBuffs_p)
 {
-	return std::max(Fixed(0.), val_p + buff_p._offset ) * std::max( Fixed(0.1), 1. + buff_p._coef );
+	Fixed offsetVal_l = val_p + buff_p._offset;
+	Fixed coefVal_l = 1. + buff_p._coef;
+	for(ConditionalBuff const &buff_l : condBuffs_p)
+	{
+		if(buff_l.isApplying(ent_p))
+		{
+			offsetVal_l += buff_l._offset;
+			coefVal_l += buff_l._coef;
+		}
+	}
+	offsetVal_l = std::max(Fixed(0.), offsetVal_l);
+	coefVal_l = std::max( Fixed(0.1), coefVal_l );
+	return offsetVal_l * coefVal_l;
 }
 
 Fixed Entity::getStepSpeed() const
 {
-	return applyBuff( _model._stepSpeed, _buffSpeed);
+	return applyBuff( *this, _model._stepSpeed, _buffSpeed, _condBuffSpeed);
 }
 
 Fixed Entity::getFullReload() const
 {
-	return applyBuff( _model._fullReload, _buffFullReload);
+	return applyBuff( *this, _model._fullReload, _buffFullReload, _condBuffFullReload);
 }
 
 Fixed Entity::getDamage(EntityModel const &target_p) const
 {
-	return applyBuff( _model._damage, _buffDamage) + getBonus(target_p._id, _model);
+	return applyBuff( *this, _model._damage, _buffDamage, _condBuffDamage) + getBonus(target_p._id, _model);
 }
 Fixed Entity::getDamageNoBonus() const
 {
-	return applyBuff( _model._damage, _buffDamage);
+	return applyBuff( *this, _model._damage, _buffDamage, _condBuffDamage);
 }
 Fixed Entity::getArmor() const
 {
-	return applyBuff( _model._armor, _buffArmor);
+	return applyBuff( *this, _model._armor, _buffArmor, _condBuffArmor);
 }
-Fixed Entity::getHpMax() const
+Fixed Entity::getHpMax(bool applyConditional_p) const
 {
-	return std::max(Fixed(1), applyBuff( _model._hpMax, _buffHpMax));
+	return std::max(Fixed(1), applyBuff( *this, _model._hpMax, _buffHpMax, applyConditional_p?_condBuffHpMax:std::vector<ConditionalBuff>()));
 }
 
 Fixed Entity::getProduction() const
 {
-	return applyBuff( 1., _buffProduction);
+	return applyBuff( *this, 1., _buffProduction, _condBuffProduction);
 }
 
 Fixed Entity::getHarvest() const
 {
-	return applyBuff( 1., _buffHarvest);
+	return applyBuff( *this, 1., _buffHarvest, _condBuffHarvest);
 }
 
 bool Entity::isFrozen() const

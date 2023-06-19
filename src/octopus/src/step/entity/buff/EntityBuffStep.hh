@@ -4,7 +4,8 @@
 #include <stdexcept>
 
 #include "state/entity/Entity.hh"
-#include "state/entity/buff/Buff.hh"
+#include "state/entity/buff/ConditionalBuff.hh"
+#include "state/entity/buff/TimedBuff.hh"
 #include "state/Handle.hh"
 #include "step/Steppable.hh"
 
@@ -51,6 +52,31 @@ private:
 
 	/// @brief buff to be applied
 	TimedBuff const _buff;
+};
+
+/// @brief class handles applying a conditional buff to an entity
+class EntityConditionalBuffStep : public Steppable
+{
+public:
+	EntityConditionalBuffStep(Handle const &target_p, ConditionalBuff const &buff_p)
+	: _target(target_p)
+	, _buff(buff_p)
+	{}
+
+	virtual void apply(State &state_p) const override;
+	virtual void revert(State &state_p, SteppableData const *data_p) const override;
+
+	virtual bool isNoOp() const override;
+	virtual void visit(SteppableVisitor * visitor_p) const override
+	{
+		visitor_p->visit(this);
+	}
+private:
+	/// @brief target of the buff
+	Handle const _target;
+
+	/// @brief buff to be applied
+	ConditionalBuff const _buff;
 };
 
 } // namespace octopus

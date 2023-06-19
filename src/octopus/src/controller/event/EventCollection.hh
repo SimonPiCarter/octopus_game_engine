@@ -64,6 +64,7 @@ public:
 	virtual void visit(CommandWindUpDiffStep const *) {}
 	virtual void visit(EntityAttackStep const *) {}
 	virtual void visit(EntityBuffStep const *) {}
+	virtual void visit(EntityConditionalBuffStep const *) {}
 	virtual void visit(EntityFrozenStep const *) {}
 	virtual void visit(EntityMoveStep const *) {}
 	virtual void visit(EntityUpdateWaitingStep const *) {}
@@ -74,6 +75,7 @@ public:
 	virtual void visit(PlayerAddOptionStep const *) {}
     virtual void visit(PlayerAttackModAllStep const *) {}
 	virtual void visit(PlayerBuffAllStep const *) {}
+	virtual void visit(PlayerConditionalBuffAllStep const *) {}
 	virtual void visit(PlayerLevelUpUpgradeStep const *) {}
 	virtual void visit(PlayerPopOptionStep const *) {}
 	virtual void visit(PlayerProducedUpgradeStep const *) {}
