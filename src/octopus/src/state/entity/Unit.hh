@@ -12,8 +12,6 @@ class Unit : public Entity
 	public:
 		Unit(Vector const &pos_p, bool frozen_p, UnitModel const &model_p);
 
-		virtual void runCommands(Step & step_p, State const &state_p, PathManager &pathManager_p) override;
-
 		/// used when harvesting
 		std::string _typeOfResource { "bloc" };
 		Fixed _quantityOfResource { 0. };

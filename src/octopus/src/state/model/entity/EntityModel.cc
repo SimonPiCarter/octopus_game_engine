@@ -3,6 +3,8 @@
 namespace octopus
 {
 
+void idleFunctioNoOp(Entity const &, Step &, State const &) {}
+
 std::map<std::string, Fixed> getReverseCostMap(std::map<std::string, Fixed> const &cost_p)
 {
 	std::map<std::string, Fixed> reversedCost_l;

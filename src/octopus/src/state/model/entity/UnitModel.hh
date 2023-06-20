@@ -6,13 +6,11 @@
 
 namespace octopus
 {
+	void unitIdleFunction(Entity const &ent_p, Step & step_p, State const &state_p);
+
 	struct UnitModel : public EntityModel
 	{
-		UnitModel(bool isStatic_p, Fixed ray_p, Fixed stepSpeed_p, Fixed hpMax_p)
-			: EntityModel(isStatic_p, ray_p, stepSpeed_p, hpMax_p)
-		{
-			_isUnit = true;
-		}
+		UnitModel(bool isStatic_p, Fixed ray_p, Fixed stepSpeed_p, Fixed hpMax_p);
 
 		std::map<std::string, Fixed> _maxQuantity;
 

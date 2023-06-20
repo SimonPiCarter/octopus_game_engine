@@ -68,6 +68,7 @@ add_library(octopus
 	${CMAKE_CURRENT_SOURCE_DIR}/src/state/model/entity/BuildingModel.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/state/model/entity/EntityModel.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/state/model/entity/TempleModel.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/src/state/model/entity/UnitModel.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/state/player/Player.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/state/player/upgrade/StepUpgradeNoOpGenerator.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/state/player/upgrade/Upgrade.cc

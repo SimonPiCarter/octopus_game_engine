@@ -114,6 +114,9 @@ namespace octopus
 			/// @param idBuff_p the if od the buff to test
 			/// @return the time since the buff (return limit max if not found)
 			unsigned long getTimeSinceBuff(std::string const &idBuff_p) const;
+
+			virtual void runCommands(Step & step_p, State const &state_p, PathManager &pathManager_p) override;
+
 	};
 }
 

@@ -3,6 +3,9 @@
 #include <limits>
 
 #include "command/CommandData.hh"
+#include "step/command/CommandQueueStep.hh"
+#include "step/entity/EntityUpdateWaitingStep.hh"
+#include "step/Step.hh"
 
 namespace octopus
 {
@@ -99,6 +102,19 @@ unsigned long Entity::getTimeSinceBuff(std::string const &idBuff_p) const
 		return std::numeric_limits<unsigned long>::max();
 	}
 	return it_l->second;
+}
+
+void Entity::runCommands(Step & step_p, State const &state_p, PathManager &pathManager_p)
+{
+	if(_waiting < 100000)
+	{
+		step_p.addSteppable(new EntityUpdateWaitingStep(_handle, _waiting, _waiting+1));
+	}
+	if(!getQueue().hasCommand())
+	{
+		_model._idleFunc(*this, step_p, state_p);
+	}
+	Commandable::runCommands(step_p, state_p, pathManager_p);
 }
 
 } // namespace octopus

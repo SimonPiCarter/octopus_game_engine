@@ -2,12 +2,18 @@
 #define __EntityModel__
 
 #include <map>
+#include <functional>
 #include <unordered_map>
 #include "state/entity/attackModifier/AttackModifier.hh"
 #include "state/model/requirements/Requirements.hh"
 
 namespace octopus
 {
+	class Entity;
+	class Step;
+	class State;
+	void idleFunctioNoOp(Entity const &, Step &, State const &);
+
 	struct EntityModel
 	{
 		EntityModel(bool isStatic_p, Fixed ray_p, Fixed stepSpeed_p, Fixed hpMax_p)
@@ -64,6 +70,8 @@ namespace octopus
 
 		/// @brief id to be set up when library loads a model
 		std::string _id;
+
+		std::function<void(Entity const &, Step &, State const &)> _idleFunc = idleFunctioNoOp;
 	};
 
 	std::map<std::string, Fixed> getReverseCostMap(std::map<std::string, Fixed> const &cost_p);
