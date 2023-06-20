@@ -22,6 +22,7 @@ add_executable (unit_tests)
 
 target_sources (unit_tests
 	PRIVATE
+	src/abilityEntity.test.cc
 	src/areaSpawnerCommand.test.cc
 	src/attackCommand.test.cc
 	src/attackMoveCommand.test.cc
