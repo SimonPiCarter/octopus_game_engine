@@ -13,7 +13,7 @@
 #include "state/State.hh"
 #include "state/entity/Unit.hh"
 #include "step/command/CommandQueueStep.hh"
-#include "step/entity/spawn/EntitySpawnStep.hh"
+#include "step/entity/spawn/UnitSpawnStep.hh"
 #include "step/player/PlayerSpawnStep.hh"
 #include "step/player/PlayerSpendResourceStep.hh"
 
@@ -27,7 +27,7 @@ using namespace octopus;
 class TestTriggerTimeTrigger : public OneShotTrigger
 {
 public:
-	TestTriggerTimeTrigger(std::list<Listener *> const &listeners_p, EntityModel const &model_p) : OneShotTrigger(listeners_p), _model(model_p) {}
+	TestTriggerTimeTrigger(std::list<Listener *> const &listeners_p, UnitModel const &model_p) : OneShotTrigger(listeners_p), _model(model_p) {}
 
 	virtual void trigger(State const &state_p, Step &step_p, unsigned long, TriggerData const &) const override
 	{
@@ -36,12 +36,12 @@ public:
 
 		step_p.addSteppable(new PlayerSpendResourceStep(0, map_l));
 
-		Entity unit_l({ 5, 5. }, false, _model);
+		Unit unit_l({ 5, 5. }, false, _model);
 		unit_l._player = 0;
-		step_p.addSteppable(new EntitySpawnStep(getNextHandle(step_p, state_p), unit_l));
+		step_p.addSteppable(new UnitSpawnStep(getNextHandle(step_p, state_p), unit_l));
 	}
 private:
-	EntityModel const &_model;
+	UnitModel const &_model;
 };
 
 class TestTriggerTimeSpawnTrigger : public OneShotTrigger
