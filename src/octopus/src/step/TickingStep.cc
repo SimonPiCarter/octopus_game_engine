@@ -20,6 +20,11 @@ void TickingStep::apply(State &state_p) const
 		}
 		++ent_l->_reload;
 
+		for(auto &&pair_l : ent_l->_reloadAbilities)
+		{
+			++pair_l.second;
+		}
+
 		if(state_p.getStepApplied() % 100 == 0)
 		{
 			ent_l->_hp = std::min(ent_l->_hp + ent_l->getHpRegeneration(), ent_l->getHpMax());
@@ -56,6 +61,14 @@ void TickingStep::revert(State &state_p, SteppableData const *data_p) const
 		if(ent_l->_reload > 0)
 		{
 			--ent_l->_reload;
+		}
+
+		for(auto &&pair_l : ent_l->_reloadAbilities)
+		{
+			if(pair_l.second > 0)
+			{
+				--pair_l.second;
+			}
 		}
 
 		// reset hp

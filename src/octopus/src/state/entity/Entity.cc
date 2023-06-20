@@ -117,6 +117,16 @@ void Entity::runCommands(Step & step_p, State const &state_p, PathManager &pathM
 	Commandable::runCommands(step_p, state_p, pathManager_p);
 }
 
+unsigned long getReloadAbilityTime(Entity const &ent_p, std::string const &key_p, unsigned long const &default_p)
+{
+	auto &&it_l = ent_p._reloadAbilities.find(key_p);
+	if(it_l == ent_p._reloadAbilities.end())
+	{
+		return default_p;
+	}
+	return it_l->second;
+}
+
 } // namespace octopus
 
 

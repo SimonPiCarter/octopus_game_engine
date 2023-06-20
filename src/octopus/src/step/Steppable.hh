@@ -76,6 +76,7 @@ namespace octopus
 	class EntityHitPointChangeStep;
 	class EntityMoveStep;
 	class EntitySpawnStep;
+	class EntityUpdateReloadAbilityStep;
 	class EntityUpdateWaitingStep;
 	class FlyingCommandPopStep;
 	class FlyingCommandSpawnStep;
@@ -170,6 +171,7 @@ namespace octopus
 			virtual void visit(EntitySpawnStep const *) = 0;
 			virtual void visit(FlyingCommandSpawnStep const *) = 0;
 			virtual void visit(FlyingCommandPopStep const *) = 0;
+			virtual void visit(EntityUpdateReloadAbilityStep const *) = 0;
 			virtual void visit(EntityUpdateWaitingStep const *) = 0;
 			virtual void visit(MissingResourceStep const *) = 0;
 			virtual void visit(PlayerAddBuildingModel const *) = 0;

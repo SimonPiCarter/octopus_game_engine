@@ -6,6 +6,8 @@
 #include <unordered_map>
 #include "state/entity/attackModifier/AttackModifier.hh"
 #include "state/model/requirements/Requirements.hh"
+#include "utils/Vector.hh"
+#include "state/Handle.hh"
 
 namespace octopus
 {
@@ -46,6 +48,9 @@ namespace octopus
 
 		std::unordered_map<std::string, Fixed> _bonusDamage;
 
+		std::unordered_map<std::string, std::function<void(Step &, State const &, Handle const &, Vector const &)> > _abilities;
+		std::unordered_map<std::string, unsigned long > _abilityReloadTime;
+
 		/// @brief time to wind up an attack
 		unsigned long _windup { 3 };
 
@@ -77,6 +82,10 @@ namespace octopus
 	std::map<std::string, Fixed> getReverseCostMap(std::map<std::string, Fixed> const &cost_p);
 
 	Fixed getBonus(std::string const &id_p, EntityModel const &model_p);
+
+	std::function<void(Step &, State const &, Handle const &, Vector const &)> getAbility(EntityModel const &model_p, std::string const &id_p);
+
+	unsigned long getMinReloadTime(EntityModel const &model_p, std::string const &key_p);
 } // namespace octopus
 
 

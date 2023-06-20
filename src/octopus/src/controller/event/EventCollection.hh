@@ -67,6 +67,7 @@ public:
 	virtual void visit(EntityConditionalBuffStep const *) {}
 	virtual void visit(EntityFrozenStep const *) {}
 	virtual void visit(EntityMoveStep const *) {}
+	virtual void visit(EntityUpdateReloadAbilityStep const *) override {}
 	virtual void visit(EntityUpdateWaitingStep const *) {}
 	virtual void visit(FlyingCommandSpawnStep const *) {}
 	virtual void visit(FlyingCommandPopStep const *) {}

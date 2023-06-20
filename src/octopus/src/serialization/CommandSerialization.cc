@@ -8,6 +8,7 @@
 #include "command/building/BuildingRallyPointCommand.hh"
 #include "command/building/BuildingUnitProductionCommand.hh"
 #include "command/building/BuildingUpgradeProductionCommand.hh"
+#include "command/entity/EntityAbilityCommand.hh"
 #include "command/entity/EntityAttackCommand.hh"
 #include "command/entity/EntityAttackMoveCommand.hh"
 #include "command/entity/EntityBuildingCommand.hh"
@@ -346,6 +347,15 @@ void writeCommand(std::ofstream &file_p, Command const *cmd_p, Writer_t writer_p
         writer_p(file_p, typped_l->isAttackMove());
         writer_p(file_p, typped_l->isNeverStop());
     }
+    else if(dynamic_cast<EntityAbilityCommand const *>(cmd_p))
+    {
+        writer_p(file_p, 16ul);
+        EntityAbilityCommand const *typped_l = dynamic_cast<EntityAbilityCommand const *>(cmd_p);
+        writer_p(file_p, typped_l->getHandleCommand());
+        writer_p(file_p, typped_l->_pointTarget);
+        writer_p(file_p, typped_l->_id);
+        writer_p(file_p, typped_l->_reloadKey);
+    }
     else
     {
         throw std::logic_error("unserializable command thrown in file");
@@ -624,6 +634,22 @@ Command * readCommand(std::ifstream &file_p, Library const &lib_p)
         read(file_p, &neverStop_l);
 
         cmd_l = new EntityFlockMoveCommand(handles_l, point_l, neverStop_l);
+    }
+    else if(cmdId_p == 16)
+    {
+        Handle handle_l;
+        Handle target_l;
+        Vector pointTarget_l;
+        std::string id_l;
+        std::string reloadKey_l;
+
+        read(file_p, &handle_l);
+        read(file_p, &target_l);
+        read(file_p, &pointTarget_l);
+        read(file_p, &id_l);
+        read(file_p, &reloadKey_l);
+
+        cmd_l = new EntityAbilityCommand(handle_l, target_l, pointTarget_l, id_l, reloadKey_l);
     }
     if(!cmd_l)
     {

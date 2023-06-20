@@ -186,6 +186,13 @@ CommandVar getVarFromCommand(Command *cmd_p)
             return *typped_l;
         }
     }
+    {
+        EntityAbilityCommand * typped_l = dynamic_cast<EntityAbilityCommand *>(cmd_p);
+        if(typped_l)
+        {
+            return *typped_l;
+        }
+    }
 
     throw std::logic_error("Could not convert command pointer to CommandVar (missing cast)");
 }

@@ -141,6 +141,18 @@ bool Step::isCanceled(Handle const &handle_p) const
 	return _canceledBuildings.find(handle_p) != _canceledBuildings.end();
 }
 
+void Step::addAbilityRegistered(Handle const &handle_p, std::string const &key_p)
+{
+	_commandRegistered[handle_p].insert(key_p);
+}
+
+bool Step::checkAbilityNotAlreadyRegistered(Handle const &handle_p, std::string const &key_p) const
+{
+	auto &&it_l = _commandRegistered.find(handle_p);
+	return it_l == _commandRegistered.end()
+		|| it_l->second.find(key_p) == it_l->second.end();
+}
+
 void Step::addCmdCanceled(CommandIdx cmdidx_p)
 {
 	_canceledCmd.insert(cmdidx_p);

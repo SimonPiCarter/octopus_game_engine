@@ -55,6 +55,7 @@ public:
 	virtual void visit(EntityFrozenStep const *) {}
 	virtual void visit(EntityHitPointChangeStep const *);
 	virtual void visit(EntityMoveStep const *) {}
+	virtual void visit(EntityUpdateReloadAbilityStep const *) override;
 	virtual void visit(EntityUpdateWaitingStep const *) {}
 	virtual void visit(EntitySpawnStep const *);
 	virtual void visit(FlyingCommandSpawnStep const *);

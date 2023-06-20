@@ -5,6 +5,7 @@
 #include <iostream>
 #include <map>
 #include <unordered_map>
+#include <unordered_set>
 #include <set>
 #include <vector>
 
@@ -85,6 +86,9 @@ namespace octopus
 			void addCmdCanceled(CommandIdx cmdidx_p);
 			bool isCmdCanceled(CommandIdx cmdidx_p) const;
 
+			void addAbilityRegistered(Handle const &handle_p, std::string const &key_p);
+			bool checkAbilityNotAlreadyRegistered(Handle const &handle_p, std::string const &key_p) const;
+
 			/// @brief add an hp change
 			void addHpChange(Handle const &handle_p, Fixed delta_p);
 			/// @brief get all cumulative hp change
@@ -119,6 +123,9 @@ namespace octopus
 
 			/// @brief map of produced upgrade in this step per player and per upgrade id
 			std::unordered_map<unsigned long, std::unordered_map<std::string, long> > _producedUpgrade;
+
+			/// @brief map of all comand registered for every entity in this step (using reload key in the set)
+			std::unordered_map<Handle, std::unordered_set<std::string> > _commandRegistered;
 
 			/// @brief of commands data canceled in this step (to avoid refunding twice)
 			std::set<CommandIdx> _canceledCmd;

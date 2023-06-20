@@ -45,6 +45,8 @@ namespace octopus
 			/// @brief time waiting since last command for entity
 			/// used to auto attack nearby enemies
 			unsigned long _waiting { 100000 };
+			/// @brief time since last ability was started
+			std::unordered_map<std::string, unsigned long> _reloadAbilities;
 
 			/// @brief entity model
 			EntityModel const &_model;
@@ -118,6 +120,13 @@ namespace octopus
 			virtual void runCommands(Step & step_p, State const &state_p, PathManager &pathManager_p) override;
 
 	};
+
+	/// @brief return reload time (time since last ability usage) for the entity and the given key
+	/// if the key is not present the default value is used
+	/// @param ent_p entity to get the info from
+	/// @param key_p the reload key to use
+	/// @param default_p the default value if the reload key is not found
+	unsigned long getReloadAbilityTime(Entity const &ent_p, std::string const &key_p, unsigned long const &default_p);
 }
 
 std::ostream &operator<<(std::ostream &os_p, octopus::Entity const &ent_p);

@@ -25,5 +25,27 @@ Fixed getBonus(std::string const &id_p, EntityModel const &model_p)
 	return 0.;
 }
 
+void abilityNoOp(Step &, State const &, Handle const &, Vector const &) {}
+
+std::function<void(Step &, State const &, Handle const &, Vector const &)> getAbility(EntityModel const &model_p, std::string const &id_p)
+{
+	auto &&it_l = model_p._abilities.find(id_p);
+	if(it_l == model_p._abilities.end())
+	{
+		return abilityNoOp;
+	}
+	return it_l->second;
+}
+
+unsigned long getMinReloadTime(EntityModel const &model_p, std::string const &key_p)
+{
+	auto &&it_l = model_p._abilityReloadTime.find(key_p);
+	if(it_l == model_p._abilityReloadTime.end())
+	{
+		return 0;
+	}
+	return it_l->second;
+}
+
 } // namespace octopus
 

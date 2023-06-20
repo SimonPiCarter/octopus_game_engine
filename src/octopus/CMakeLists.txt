@@ -22,6 +22,7 @@ add_library(octopus
 	${CMAKE_CURRENT_SOURCE_DIR}/src/command/CommandQueue.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/command/CommandVar.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/command/data/AttackMoveData.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/src/command/entity/EntityAbilityCommand.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/command/entity/EntityAttackCommand.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/command/entity/EntityAttackMoveCommand.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/command/entity/EntityBuffCommand.cc
@@ -106,6 +107,7 @@ add_library(octopus
 	${CMAKE_CURRENT_SOURCE_DIR}/src/step/entity/EntityFrozenStep.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/step/entity/EntityHitPointChangeStep.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/step/entity/EntityMoveStep.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/src/step/entity/EntityUpdateReloadAbilityStep.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/step/entity/EntityUpdateWaitingStep.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/step/entity/buff/EntityBuffStep.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/step/entity/modifier/AttackModifierStep.cc

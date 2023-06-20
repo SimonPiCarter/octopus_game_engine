@@ -6,6 +6,7 @@
 #include "step/building/BuildingCancelStep.hh"
 #include "step/command/data/CancelUnitProductionStep.hh"
 #include "step/entity/EntityHitPointChangeStep.hh"
+#include "step/entity/EntityUpdateReloadAbilityStep.hh"
 #include "step/player/PlayerProducedUpgradeStep.hh"
 #include "step/player/PlayerSpendResourceStep.hh"
 
@@ -44,6 +45,14 @@ void StepAdditionVisitor::visit(BuildingCancelStep const *step_p)
 void StepAdditionVisitor::visit(CancelUnitProductionStep const *step_p)
 {
     _step.addCmdCanceled(CommandIdx(step_p->_handle, step_p->_idx));
+}
+
+void StepAdditionVisitor::visit(EntityUpdateReloadAbilityStep const *step_p)
+{
+    if(step_p->_new == 0)
+    {
+        _step.addAbilityRegistered(step_p->_handle, step_p->_key);
+    }
 }
 
 void StepAdditionVisitor::visit(EntitySpawnStep const *)

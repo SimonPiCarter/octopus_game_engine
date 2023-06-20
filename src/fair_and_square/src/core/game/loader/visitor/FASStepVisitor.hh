@@ -72,6 +72,7 @@ public:
 	virtual void visit(octopus::EntityHitPointChangeStep const *) override;
 	virtual void visit(octopus::EntityMoveStep const *) override {}
 	virtual void visit(octopus::EntitySpawnStep const *) override {}
+	virtual void visit(octopus::EntityUpdateReloadAbilityStep const *) override {}
 	virtual void visit(octopus::EntityUpdateWaitingStep const *) override {}
 	virtual void visit(octopus::FlyingCommandSpawnStep const *) override {}
 	virtual void visit(octopus::FlyingCommandPopStep const *) override {}
