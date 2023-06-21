@@ -29,10 +29,6 @@ TEST(attackCommandTest, simple)
 
 	Controller controller_l({new PlayerSpawnStep(0, 0), spawn0_l, spawn1_l, commandSpawn_l}, 1);
 
-	State const *a = controller_l.getBackState();
-	State const *b = controller_l.getBufferState();
-	State const *c = controller_l.getFrontState();
-
 	// query state
 	State const * state_l = controller_l.queryState();
 
@@ -121,10 +117,6 @@ TEST(attackCommandTest, simple_bonus_dmg)
 	CommandSpawnStep * commandSpawn_l = new CommandSpawnStep(command_l);
 
 	Controller controller_l({new PlayerSpawnStep(0, 0), spawn0_l, spawn1_l, commandSpawn_l}, 1.);
-
-	State const *a = controller_l.getBackState();
-	State const *b = controller_l.getBufferState();
-	State const *c = controller_l.getFrontState();
 
 	// query state
 	State const * state_l = controller_l.queryState();
