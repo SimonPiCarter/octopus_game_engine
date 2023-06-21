@@ -42,7 +42,7 @@ void TickingStep::apply(State &state_p) const
 				buff_l.apply(*ent_l);
 			}
 			// need to revert buff (only when we go the exact duration to avoid reverting multiple times)
-			if(time_l+1 == buff_l._duration && buff_l._duration != 0)
+			if(time_l+1 == buff_l._duration+1 && buff_l._duration != 0)
 			{
 				buff_l.revert(*ent_l);
 			}
@@ -90,7 +90,7 @@ void TickingStep::revert(State &state_p, SteppableData const *data_p) const
 				buff_l.revert(*ent_l);
 			}
 			// need to apply back buff (only when we go the exact duration to avoid reverting multiple times)
-			if(time_l == buff_l._duration && buff_l._duration != 0)
+			if(time_l == buff_l._duration+1 && buff_l._duration != 0)
 			{
 				buff_l.apply(*ent_l);
 			}

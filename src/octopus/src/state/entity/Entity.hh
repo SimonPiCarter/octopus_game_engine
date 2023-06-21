@@ -40,6 +40,8 @@ namespace octopus
 
 			Fixed _hp { 10. };
 
+			Fixed _aggroDistance = 8;
+
 			/// @brief time since last attack in step
 			unsigned long _reload { 10 };
 			/// @brief time waiting since last command for entity

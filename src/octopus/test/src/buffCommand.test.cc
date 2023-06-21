@@ -3,24 +3,22 @@
 #include <command/entity/EntityBuffCommand.hh>
 #include <controller/Controller.hh>
 #include <step/entity/buff/EntityBuffStep.hh>
-#include <step/entity/spawn/EntitySpawnStep.hh>
+#include <step/entity/spawn/UnitSpawnStep.hh>
 #include <step/command/CommandQueueStep.hh>
 #include <step/player/PlayerSpawnStep.hh>
 #include <state/State.hh>
 
 ///
-/// This test suite aims at checking that EntityAttackCommand works properly
-/// - Move an entity to the target
-/// - Attack the target then terminate
+/// This test suite aims at checking that EntityBuffCommand works properly
 ///
 
 using namespace octopus;
 
 TEST(buffCommandTest, simple_speed)
 {
-	octopus::EntityModel unitModel_l { false, 1., 1., 10. };
+	octopus::UnitModel unitModel_l { false, 1., 1., 10. };
 
-	EntitySpawnStep * spawn0_l = new EntitySpawnStep(0, Entity { { 3, 3. }, false, unitModel_l});
+	UnitSpawnStep * spawn0_l = new UnitSpawnStep(0, Unit { { 3, 3. }, false, unitModel_l});
 
 	TimedBuff buff_l;
 	buff_l._duration = 10;
@@ -34,87 +32,59 @@ TEST(buffCommandTest, simple_speed)
 
 	EXPECT_NEAR(1., to_double(state_l->getEntity(0)->getStepSpeed()), 1e-5);
 
-	// update time to 1second (1)
+	controller_l.update(1.);	// (1)
+	while(!controller_l.loop_body()) {}
+	state_l = controller_l.queryState();
+
 	// buf has registered but not been applied yet
-	controller_l.update(1.);
-
-	// updated until synced up
-	while(!controller_l.loop_body()) {}
-
-	state_l = controller_l.queryState();
-
 	EXPECT_NEAR(1., to_double(state_l->getEntity(0)->getStepSpeed()), 1e-5);
 
-	// update time to 1 seconds (2)
+	controller_l.update(1.);	// (2)
+	while(!controller_l.loop_body()) {}
+	state_l = controller_l.queryState();
+
 	// buff has been applied
-	controller_l.update(1.);
-
-	// updated until synced up
-	while(!controller_l.loop_body()) {}
-
-	state_l = controller_l.queryState();
-
 	EXPECT_NEAR(2., to_double(state_l->getEntity(0)->getStepSpeed()), 1e-5);
 
-	// update time to 4 seconds (6)
-	// buff is still active
-	controller_l.update(6.);
-
-	// updated until synced up
+	controller_l.update(6.);	// (6)
 	while(!controller_l.loop_body()) {}
-
 	state_l = controller_l.queryState();
 
+	// buff is still active
 	EXPECT_NEAR(2., to_double(state_l->getEntity(0)->getStepSpeed()), 1e-5);
 
 	// Queue a new command to reset buff
 	controller_l.commitCommand(new EntityBuffCommand(0, 0, buff_l));
 
-	// update time to 5 seconds (11)
+	controller_l.update(5.);	// (11)
+	while(!controller_l.loop_body()) {}
+	state_l = controller_l.queryState();
+
 	// buff should not be reverted
-	controller_l.update(5.);
-
-	// updated until synced up
-	while(!controller_l.loop_body()) {}
-
-	state_l = controller_l.queryState();
-
 	EXPECT_NEAR(2., to_double(state_l->getEntity(0)->getStepSpeed()), 1e-5);
 
-	// update time to 16 seconds (16)
+	controller_l.update(6.);	// (17)
+	while(!controller_l.loop_body()) {}
+	state_l = controller_l.queryState();
+
 	// buff should not be reverted yet
-	controller_l.update(5.);
-
-	// updated until synced up
-	while(!controller_l.loop_body()) {}
-
-	state_l = controller_l.queryState();
-
 	EXPECT_NEAR(2., to_double(state_l->getEntity(0)->getStepSpeed()), 1e-5);
 
-	// update time to 17 seconds (17)
-	// buff should now be reverted
-	controller_l.update(1.);
-
-	// updated until synced up
+	controller_l.update(1.);	// (18)
 	while(!controller_l.loop_body()) {}
-
 	state_l = controller_l.queryState();
 
+	// buff should now be reverted
 	EXPECT_NEAR(1., to_double(state_l->getEntity(0)->getStepSpeed()), 1e-5);
 
 	// Queue a new command to reset buff
 	controller_l.commitCommand(new EntityBuffCommand(0, 0, buff_l));
 
-	// update time to 5 seconds (22)
-	// buff should not be reverted
-	controller_l.update(5.);
-
-	// updated until synced up
+	controller_l.update(5.);	// (23)
 	while(!controller_l.loop_body()) {}
-
 	state_l = controller_l.queryState();
 
+	// buff should not be reverted
 	// should be buffed again
 	EXPECT_NEAR(2., to_double(state_l->getEntity(0)->getStepSpeed()), 1e-5);
 }

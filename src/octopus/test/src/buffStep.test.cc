@@ -33,48 +33,32 @@ TEST(buffStepTest, simple_speed)
 
 	EXPECT_NEAR(1., to_double(state_l->getEntity(0)->getStepSpeed()), 1e-5);
 
-	// update time to 1second (1)
-	// buf has registered but not been applied yet
-	controller_l.update(1.);
-
-	// updated until synced up
+	controller_l.update(1.);	// (1)
 	while(!controller_l.loop_body()) {}
-
 	state_l = controller_l.queryState();
 
+	// buf has registered but not been applied yet
 	EXPECT_NEAR(1., to_double(state_l->getEntity(0)->getStepSpeed()), 1e-5);
 
-	// update time to 1 seconds (2)
+	controller_l.update(1.);	// (1)
+	while(!controller_l.loop_body()) {}
+	state_l = controller_l.queryState();
+
 	// buff has been applied
-	controller_l.update(1.);
-
-	// updated until synced up
-	while(!controller_l.loop_body()) {}
-
-	state_l = controller_l.queryState();
-
 	EXPECT_NEAR(2., to_double(state_l->getEntity(0)->getStepSpeed()), 1e-5);
 
-	// update time to 8 seconds (10)
+	controller_l.update(9.);	// (11)
+	while(!controller_l.loop_body()) {}
+	state_l = controller_l.queryState();
+
 	// buff is still active
-	controller_l.update(8.);
-
-	// updated until synced up
-	while(!controller_l.loop_body()) {}
-
-	state_l = controller_l.queryState();
-
 	EXPECT_NEAR(2., to_double(state_l->getEntity(0)->getStepSpeed()), 1e-5);
 
-	// update time to 1 seconds (11)
-	// buhf has been reverted
-	controller_l.update(1.);
-
-	// updated until synced up
+	controller_l.update(1.);	// (12)
 	while(!controller_l.loop_body()) {}
-
 	state_l = controller_l.queryState();
 
+	// buff has been reverted
 	EXPECT_NEAR(1., to_double(state_l->getEntity(0)->getStepSpeed()), 1e-5);
 }
 
@@ -98,48 +82,32 @@ TEST(buffStepTest, simple_armor)
 
 	EXPECT_NEAR(1., to_double(state_l->getEntity(0)->getArmor()), 1e-5);
 
-	// update time to 1second (1)
-	// buf has registered but not been applied yet
-	controller_l.update(1.);
-
-	// updated until synced up
+	controller_l.update(1.);	// (1)
 	while(!controller_l.loop_body()) {}
-
 	state_l = controller_l.queryState();
 
+	// buf has registered but not been applied yet
 	EXPECT_NEAR(1., to_double(state_l->getEntity(0)->getArmor()), 1e-5);
 
-	// update time to 1 seconds (2)
+	controller_l.update(1.);	// (2)
+	while(!controller_l.loop_body()) {}
+	state_l = controller_l.queryState();
+
 	// buff has been applied
-	controller_l.update(1.);
-
-	// updated until synced up
-	while(!controller_l.loop_body()) {}
-
-	state_l = controller_l.queryState();
-
 	EXPECT_NEAR(2., to_double(state_l->getEntity(0)->getArmor()), 1e-5);
 
-	// update time to 8 seconds (10)
+	controller_l.update(9.);	// (11)
+	while(!controller_l.loop_body()) {}
+	state_l = controller_l.queryState();
+
 	// buff is still active
-	controller_l.update(8.);
-
-	// updated until synced up
-	while(!controller_l.loop_body()) {}
-
-	state_l = controller_l.queryState();
-
 	EXPECT_NEAR(2., to_double(state_l->getEntity(0)->getArmor()), 1e-5);
 
-	// update time to 1 seconds (11)
-	// buhf has been reverted
-	controller_l.update(1.);
-
-	// updated until synced up
+	controller_l.update(1.);	// (12)
 	while(!controller_l.loop_body()) {}
-
 	state_l = controller_l.queryState();
 
+	// buff has been reverted
 	EXPECT_NEAR(1., to_double(state_l->getEntity(0)->getArmor()), 1e-5);
 }
 
@@ -163,36 +131,24 @@ TEST(buffStepTest, simple_infinite)
 
 	EXPECT_NEAR(1., to_double(state_l->getEntity(0)->getArmor()), 1e-5);
 
-	// update time to 1second (1)
-	// buf has registered but not been applied yet
-	controller_l.update(1.);
-
-	// updated until synced up
+	controller_l.update(1.);	// (1)
 	while(!controller_l.loop_body()) {}
-
 	state_l = controller_l.queryState();
 
+	// buf has registered but not been applied yet
 	EXPECT_NEAR(1., to_double(state_l->getEntity(0)->getArmor()), 1e-5);
 
-	// update time to 1 seconds (2)
-	// buff has been applied
-	controller_l.update(1.);
-
-	// updated until synced up
+	controller_l.update(1.);	// (2)
 	while(!controller_l.loop_body()) {}
-
 	state_l = controller_l.queryState();
 
+	// buff has been applied
 	EXPECT_NEAR(2., to_double(state_l->getEntity(0)->getArmor()), 1e-5);
 
-	// update time to 100 seconds (102)
-	// buff is still active
-	controller_l.update(100.);
-
-	// updated until synced up
+	controller_l.update(100.);	// (102)
 	while(!controller_l.loop_body()) {}
-
 	state_l = controller_l.queryState();
 
+	// buff is still active
 	EXPECT_NEAR(2., to_double(state_l->getEntity(0)->getArmor()), 1e-5);
 }

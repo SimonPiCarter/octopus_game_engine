@@ -27,11 +27,11 @@ public:
 	virtual void visit(BuildingRemoveRallyPointStep const *) {}
 	virtual void visit(BuildingSetRallyPointStep const *) {}
 	virtual void visit(CancelUnitProductionStep const *);
-	virtual void visit(CommandAddSubAttackStep const *) {}
+	virtual void visit(CommandAddSubCommandStep const *) {}
 	virtual void visit(CommandDataWaypointAddStep const *) {}
 	virtual void visit(CommandDataWaypointRemoveStep const *) {}
 	virtual void visit(CommandDataWaypointSetStep const *) {}
-	virtual void visit(CommandDelSubAttackStep const *) {}
+	virtual void visit(CommandDelSubCommandStep const *) {}
 	virtual void visit(CommandDepositChangeStep const *) {}
 	virtual void visit(CommandHarvestingChangeStep const *) {}
 	virtual void visit(CommandHarvestTimeSinceHarvestStep const *) {}

@@ -3,6 +3,7 @@
 
 #include "AttackData.hh"
 #include "command/entity/EntityAttackCommand.hh"
+#include "command/entity/EntityBuffCommand.hh"
 
 namespace octopus
 {
@@ -17,6 +18,10 @@ struct AttackMoveData : public AttackData
 	// used in attackmove
 	bool _hasSubAttackCommand {false};
 	EntityAttackCommand _subAttackCommand;
+	// used for buff command
+	bool _hasSubBuffCommand {false};
+	EntityBuffCommand _subBuffCommand;
+
 	Vector _positionFromAttack;
 };
 

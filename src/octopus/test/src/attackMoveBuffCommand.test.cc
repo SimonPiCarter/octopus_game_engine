@@ -12,9 +12,9 @@
 
 ///
 /// This test suite aims at checking that EntityAttackMoveCommand works properly
+/// when the unit is a buffing unit
 /// - Move an entity along the waypoints
-/// - Attack an entity along the way
-/// - Attack the target then terminate
+/// - Buff an entity along the way
 ///
 
 using namespace octopus;
@@ -25,21 +25,24 @@ using namespace octopus;
 ///  - 11, 3
 /// range is 3 and rays are 1
 /// Entity must move from 3,3 to 6,3 to attack (3 steps) + 1 step to capture the target on 11,3
-/// Entity then requires 3 steps of windup before attacking and then 10 seconds of reload + 3 seconds of windup to attack again
-/// This means first damage should occur on step 7
-/// Second damage should occur on step 20
+/// Entity then requires 1 step to apply the buff which then should take 1 more step to be applied
 ///
-///
-TEST(attackMoveCommandTest, simple)
+TEST(attackMoveBuffCommandTest, simple)
 {
-	octopus::UnitModel unitModel_l { false, 1., 1., 10. };
+	octopus::UnitModel unit1Model_l { false, 1., 1., 10. };
 
-	Unit ent_l { { 11, 3.5 }, false, unitModel_l};
-	ent_l._player = 1;
+	octopus::UnitModel unit2Model_l { false, 1., 1., 10. };
+	unit2Model_l._buffer._active = true;
+	unit2Model_l._buffer._reload = 10;
+	unit2Model_l._buffer._range = 5;
+	unit2Model_l._buffer._buff._duration = 2;
+	unit2Model_l._buffer._buff._id = "speed";
+	unit2Model_l._buffer._buff._coef = 1.;
+
+	Unit ent_l { { 11, 3.5 }, false, unit1Model_l};
 	ent_l._aggroDistance = 5.;
 
-	Unit ent2_l { { 3, 3.5 }, false, unitModel_l};
-	ent2_l._player = 0;
+	Unit ent2_l { { 3, 3.5 }, false, unit2Model_l};
 	ent2_l._aggroDistance = 5.;
 
 	UnitSpawnStep * spawn0_l = new UnitSpawnStep(0, ent2_l);
@@ -49,82 +52,70 @@ TEST(attackMoveCommandTest, simple)
 	EntityAttackMoveCommand * command_l = new EntityAttackMoveCommand(0, 0, {9, 3.5}, 0, {{9, 3.5}});
 	CommandSpawnStep * commandSpawn_l = new CommandSpawnStep(command_l);
 
-	Controller controller_l({new PlayerSpawnStep(0, 0), new PlayerSpawnStep(1, 1), spawn0_l, spawn1_l, commandSpawn_l}, 1.);
+	Controller controller_l({new PlayerSpawnStep(0, 0), spawn0_l, spawn1_l, commandSpawn_l}, 1.);
 
-	State const *a = controller_l.getBackState();
-	State const *b = controller_l.getBufferState();
-	State const *c = controller_l.getFrontState();
-
-	// query state
 	State const * state_l = controller_l.queryState();
 
 	EXPECT_NEAR(3., to_double(state_l->getEntity(0)->_pos.x), 1e-5);
 	EXPECT_NEAR(3.5, to_double(state_l->getEntity(0)->_pos.y), 1e-5);
 
-	// update time to 1second (1)
-	controller_l.update(1.);
+	controller_l.update(1.);	// (1)
 
-	// updated until synced up
 	while(!controller_l.loop_body()) {}
-
 	state_l = controller_l.queryState();
 
+	// unit is moving
 	EXPECT_NEAR(4., to_double(state_l->getEntity(0)->_pos.x), 1e-5);
 	EXPECT_NEAR(3.5, to_double(state_l->getEntity(0)->_pos.y), 1e-5);
 
-	// update time to 2 seconds (3)
-	controller_l.update(2.);
+	controller_l.update(2.);	// (3)
 
-	// updated until synced up
 	while(!controller_l.loop_body()) {}
-
 	state_l = controller_l.queryState();
 
+	// unit is moving
 	EXPECT_NEAR(6., to_double(state_l->getEntity(0)->_pos.x), 1e-5);
 	EXPECT_NEAR(3.5, to_double(state_l->getEntity(0)->_pos.y), 1e-5);
-	EXPECT_NEAR(10., to_double(state_l->getEntity(1)->_hp), 1e-5);
 
-	// update time to 3 seconds (6)
-	controller_l.update(3.);
-	// updated until synced up
+	controller_l.update(2.);	// (5)
 	while(!controller_l.loop_body()) {}
-
 	state_l = controller_l.queryState();
 
-	// wind up should just be over but no damage still
-	EXPECT_NEAR(10., to_double(state_l->getEntity(1)->_hp), 1e-5);
+	// buff has not been applied yet
+	EXPECT_NEAR(1., to_double(state_l->getEntity(1)->getStepSpeed()), 1e-5);
 
-
-	// update time to 1 second (7)
-	controller_l.update(1.);
-	// updated until synced up
+	controller_l.update(1.);	// (6)
 	while(!controller_l.loop_body()) {}
-
 	state_l = controller_l.queryState();
 
-	// damage has been done
-	EXPECT_NEAR(7., to_double(state_l->getEntity(1)->_hp), 1e-5);
+	// buff has been applied
+	EXPECT_NEAR(2., to_double(state_l->getEntity(1)->getStepSpeed()), 1e-5);
 
-	// Next damage should be -> reload time + windup
-	// 10 + 3 (13)
-
-	// update time to 12 seconds (19)
-	controller_l.update(12.);
-	// updated until synced up
+	controller_l.update(1.);	// (7)
 	while(!controller_l.loop_body()) {}
-
 	state_l = controller_l.queryState();
 
-	// damage has been done
-	EXPECT_NEAR(7., to_double(state_l->getEntity(1)->_hp), 1e-5);
+	// buff has been applied and is still up
+	EXPECT_NEAR(2., to_double(state_l->getEntity(1)->getStepSpeed()), 1e-5);
 
-	// update time to 1 second (20)
-	controller_l.update(1.);
-	// updated until synced up
+	controller_l.update(1.);	// (8)
 	while(!controller_l.loop_body()) {}
-
 	state_l = controller_l.queryState();
 
-	// damage has been done twice
-	EXPECT_NEAR(4., to_double(state_l->getEntity(1)->_hp), 1e-5);
+	// buff has been applied and is not up anymore
+	EXPECT_NEAR(1., to_double(state_l->getEntity(1)->getStepSpeed()), 1e-5);
+
+	controller_l.update(7.);	// (15)
+	while(!controller_l.loop_body()) {}
+	state_l = controller_l.queryState();
+
+	// buff has not been applied again
+	EXPECT_NEAR(1., to_double(state_l->getEntity(1)->getStepSpeed()), 1e-5);
+
+	controller_l.update(1.);	// (16)
+	while(!controller_l.loop_body()) {}
+	state_l = controller_l.queryState();
+
+	// buff has NOW been applied again
+	EXPECT_NEAR(2., to_double(state_l->getEntity(1)->getStepSpeed()), 1e-5);
 }

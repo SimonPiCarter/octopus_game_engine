@@ -20,42 +20,58 @@ UnitModel::UnitModel(bool isStatic_p, Fixed ray_p, Fixed stepSpeed_p, Fixed hpMa
 	_isUnit = true;
 }
 
-void unitIdleFunction(Entity const &ent_p, Step & step_p, State const &state_p)
+Command * commandFromIdle(Entity const &ent_p, State const &state_p, unsigned long waitingTimeForAttackScan_p)
 {
-	Unit const &unit_l = static_cast<Unit const &>(ent_p);
 	// if no command and buff we check for target
-	if(unit_l._unitModel._buffer._active )
+	if(ent_p._model._isUnit)
 	{
-		Logger::getDebug() << " Unit::runCommands :: no command (buff)"<< std::endl;
-		if(unit_l._waiting+1 >= unit_l._unitModel._buffer._reload)
+		Unit const &unit_l = static_cast<Unit const &>(ent_p);
+		if(unit_l._unitModel._buffer._active)
 		{
-			// reset waiting time
-			step_p.addSteppable(new EntityUpdateWaitingStep(unit_l._handle, unit_l._waiting, 0));
-			// check for target
-			Entity const * target_l = lookUpNewBuffTarget(state_p, unit_l._handle, unit_l._unitModel._buffer._range, unit_l._unitModel._buffer._buff);
-			if(target_l)
+			Logger::getDebug() << " Unit::runCommands :: no command (buff)"<< std::endl;
+
+			if(unit_l._waiting+1 >= unit_l._unitModel._buffer._reload)
 			{
-				// buff
-				Logger::getDebug() << " Unit::runCommands :: add buff command" << unit_l._handle << " -> " << target_l->_handle <<"("<<unit_l._unitModel._buffer._buff._id<<")"<< std::endl;
-				step_p.addSteppable(new CommandSpawnStep(new EntityBuffCommand(unit_l._commandableHandle, target_l->_handle, unit_l._unitModel._buffer._buff)));
+				// check for target
+				Entity const * target_l = lookUpNewBuffTarget(state_p, unit_l._handle, unit_l._unitModel._buffer._range, unit_l._unitModel._buffer._buff);
+				if(target_l)
+				{
+					// buff
+					Logger::getDebug() << " Unit::runCommands :: add buff command" << unit_l._handle << " -> " << target_l->_handle <<"("<<unit_l._unitModel._buffer._buff._id<<")"<< std::endl;
+					return new EntityBuffCommand(unit_l._commandableHandle, target_l->_handle, unit_l._unitModel._buffer._buff);
+				}
 			}
 		}
 	}
+
 	// If no command we check for target if we have damage
-	else if(unit_l._model._damage > 1e-3)
+	if(ent_p._model._damage > 1e-3)
 	{
 		Logger::getDebug() << " Unit::runCommands :: no command (attack)"<< std::endl;
-		if(unit_l._waiting >= 50)
+		if(ent_p._waiting >= waitingTimeForAttackScan_p)
 		{
-			// reset waiting time
-			step_p.addSteppable(new EntityUpdateWaitingStep(unit_l._handle, unit_l._waiting, 0));
-			Entity const * target_l = lookUpNewTarget(state_p, unit_l._handle, unit_l._aggroDistance);
+			Entity const * target_l = lookUpNewTarget(state_p, ent_p._handle, ent_p._aggroDistance);
 			if(target_l)
 			{
-				Logger::getDebug() << " Unit::runCommands :: add attack command" << unit_l._handle << " -> " << target_l->_handle << std::endl;
-				step_p.addSteppable(new CommandSpawnStep(new EntityAttackCommand(unit_l._commandableHandle, unit_l._handle, target_l->_handle, false)));
+				Logger::getDebug() << " Unit::runCommands :: add attack command" << ent_p._handle << " -> " << target_l->_handle << std::endl;
+				return new EntityAttackCommand(ent_p._commandableHandle, ent_p._handle, target_l->_handle, false);
 			}
 		}
+	}
+
+	return nullptr;
+}
+
+void unitIdleFunction(Entity const &ent_p, Step & step_p, State const &state_p)
+{
+	// check for attack every 50 steps
+	Command * cmd_l = commandFromIdle(ent_p, state_p, 50);
+
+	if(cmd_l)
+	{
+		// reset waiting time
+		step_p.addSteppable(new EntityUpdateWaitingStep(ent_p._handle, ent_p._waiting, 0));
+		step_p.addSteppable(new CommandSpawnStep(cmd_l));
 	}
 }
 

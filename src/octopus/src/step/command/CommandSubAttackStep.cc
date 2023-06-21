@@ -9,59 +9,77 @@
 
 namespace octopus
 {
-void CommandAddSubAttackStep::apply(State &state_p) const
+void CommandAddSubCommandStep::apply(State &state_p) const
 {
 	Commandable * ent_l = state_p.getCommandable(this->_handle);
-	Logger::getDebug() << "CommandAddSubAttackStep :: apply " << this->_handle <<std::endl;
+	Logger::getDebug() << "CommandAddSubCommandStep :: apply " << this->_handle <<std::endl;
 	AttackMoveData *data_l = dynamic_cast<AttackMoveData *>(getData(ent_l->getFrontQueue()._var));
 
-	if(data_l->_hasSubAttackCommand)
+	if(data_l->_hasSubAttackCommand || data_l->_hasSubBuffCommand)
 	{
-		throw std::logic_error("Cannot add a sub attack command when one is already set up");
+		throw std::logic_error("Cannot add a sub command when one is already set up");
 	}
-	data_l->_hasSubAttackCommand = true;
-	data_l->_subAttackCommand = EntityAttackCommand(_handle, _source, _target, false);
+	if(std::holds_alternative<EntityAttackCommand>(_var))
+	{
+		data_l->_subAttackCommand = std::get<EntityAttackCommand>(_var);
+		data_l->_hasSubAttackCommand = true;
+	}
+	if(std::holds_alternative<EntityBuffCommand>(_var))
+	{
+		data_l->_subBuffCommand = std::get<EntityBuffCommand>(_var);
+		data_l->_hasSubBuffCommand = true;
+	}
 }
 
-void CommandAddSubAttackStep::revert(State &state_p, SteppableData const *) const
+void CommandAddSubCommandStep::revert(State &state_p, SteppableData const *) const
 {
 	Commandable * ent_l = state_p.getCommandable(this->_handle);
-	Logger::getDebug() << "CommandAddSubAttackStep :: revert " << this->_handle <<std::endl;
+	Logger::getDebug() << "CommandAddSubCommandStep :: revert " << this->_handle <<std::endl;
 	AttackMoveData *data_l = dynamic_cast<AttackMoveData *>(getData(ent_l->getFrontQueue()._var));
-	if(!data_l->_hasSubAttackCommand)
+	if(!data_l->_hasSubAttackCommand && !data_l->_hasSubBuffCommand)
 	{
-		throw std::logic_error("Cannot remove a sub attack command when the one set up is not coherent with this step");
+		throw std::logic_error("Cannot remove a sub command when the one set up is not coherent with this step");
 	}
 	data_l->_hasSubAttackCommand = false;
+	data_l->_hasSubBuffCommand = false;
 }
 
-bool CommandAddSubAttackStep::isNoOp() const
+bool CommandAddSubCommandStep::isNoOp() const
 {
 	return false;
 }
 
-void CommandDelSubAttackStep::apply(State &state_p) const
+void CommandDelSubCommandStep::apply(State &state_p) const
 {
 	Commandable * ent_l = state_p.getCommandable(this->_handle);
-	Logger::getDebug() << "CommandDelSubAttackStep :: apply " << this->_handle <<std::endl;
+	Logger::getDebug() << "CommandDelSubCommandStep :: apply " << this->_handle <<std::endl;
 	AttackMoveData *data_l = dynamic_cast<AttackMoveData *>(getData(ent_l->getFrontQueue()._var));
 	data_l->_hasSubAttackCommand = false;
+	data_l->_hasSubBuffCommand = false;
 }
 
-void CommandDelSubAttackStep::revert(State &state_p, SteppableData const *) const
+void CommandDelSubCommandStep::revert(State &state_p, SteppableData const *) const
 {
 	Commandable * ent_l = state_p.getCommandable(this->_handle);
-	Logger::getDebug() << "CommandDelSubAttackStep :: revert " << this->_handle <<std::endl;
+	Logger::getDebug() << "CommandDelSubCommandStep :: revert " << this->_handle <<std::endl;
 	AttackMoveData *data_l = dynamic_cast<AttackMoveData *>(getData(ent_l->getFrontQueue()._var));
-	if(data_l->_hasSubAttackCommand)
+	if(data_l->_hasSubAttackCommand || data_l->_hasSubBuffCommand)
 	{
-		throw std::logic_error("Cannot add a sub attack command when one is already set up");
+		throw std::logic_error("Cannot add a sub command when one is already set up");
 	}
-	data_l->_subAttackCommand = EntityAttackCommand(_handle, _source, _target, false);
-	data_l->_hasSubAttackCommand = true;
+	if(std::holds_alternative<EntityAttackCommand>(_var))
+	{
+		data_l->_subAttackCommand = std::get<EntityAttackCommand>(_var);
+		data_l->_hasSubAttackCommand = true;
+	}
+	if(std::holds_alternative<EntityBuffCommand>(_var))
+	{
+		data_l->_subBuffCommand = std::get<EntityBuffCommand>(_var);
+		data_l->_hasSubBuffCommand = true;
+	}
 }
 
-bool CommandDelSubAttackStep::isNoOp() const
+bool CommandDelSubCommandStep::isNoOp() const
 {
 	return false;
 }

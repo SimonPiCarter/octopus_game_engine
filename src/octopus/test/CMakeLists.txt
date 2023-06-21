@@ -25,6 +25,7 @@ target_sources (unit_tests
 	src/abilityEntity.test.cc
 	src/areaSpawnerCommand.test.cc
 	src/attackCommand.test.cc
+	src/attackMoveBuffCommand.test.cc
 	src/attackMoveCommand.test.cc
 	src/autoAttackCommand.test.cc
 	src/autoBuffCommand.test.cc

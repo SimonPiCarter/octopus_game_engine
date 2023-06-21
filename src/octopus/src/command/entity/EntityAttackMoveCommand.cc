@@ -44,12 +44,13 @@ bool EntityAttackMoveCommand::applyCommand(Step & step_p, State const &state_p, 
 {
 	Logger::getDebug() << "EntityAttackMoveCommand:: apply Command "<<_source <<std::endl;
 	AttackMoveData const &attackMoveData_l = *static_cast<AttackMoveData const *>(data_p);
-	EntityAttackCommand const * subAttackCommand_l = &attackMoveData_l._subAttackCommand;
+	EntityAttackCommand const & subAttackCommand_l = attackMoveData_l._subAttackCommand;
+	EntityBuffCommand const & subBuffCommand_l = attackMoveData_l._subBuffCommand;
 	Entity const * ent_l = state_p.getEntity(_source);
 
 	if(attackMoveData_l._hasSubAttackCommand)
 	{
-		if(!subAttackCommand_l->applyCommand(step_p, state_p, data_p, pathManager_p))
+		if(!subAttackCommand_l.applyCommand(step_p, state_p, data_p, pathManager_p))
 		{
 			if(!shouldStopAttacking(attackMoveData_l, ent_l))
 			{
@@ -57,23 +58,53 @@ bool EntityAttackMoveCommand::applyCommand(Step & step_p, State const &state_p, 
 			}
 		}
 		/// clean up attack command
-		attackMoveData_l._subAttackCommand.cleanUp(step_p, state_p, data_p);
+		subAttackCommand_l.cleanUp(step_p, state_p, data_p);
 		// get non const pointer here (required by the step)
-		step_p.addSteppable(new CommandDelSubAttackStep(_handleCommand, attackMoveData_l._subAttackCommand.getSource(), attackMoveData_l._subAttackCommand.getTarget()));
+		step_p.addSteppable(new CommandDelSubCommandStep(_handleCommand, subAttackCommand_l));
+		// return false is necessary here to avoid Fixed move step
+		return false;
+	}
+	else if(attackMoveData_l._hasSubBuffCommand)
+	{
+		if(!subBuffCommand_l.applyCommand(step_p, state_p, data_p, pathManager_p))
+		{
+			return false;
+		}
+		/// clean up buff command
+		subBuffCommand_l.cleanUp(step_p, state_p, data_p);
+		// get non const pointer here (required by the step)
+		step_p.addSteppable(new CommandDelSubCommandStep(_handleCommand, subBuffCommand_l));
 		// return false is necessary here to avoid Fixed move step
 		return false;
 	}
 	else
 	{
-		Entity const * target_l = lookUpNewTarget(state_p, _source);
-		if(target_l)
+		// create command from idle
+		Command * cmd_l = commandFromIdle(*ent_l, state_p, 0);
+		if(cmd_l)
 		{
-			step_p.addSteppable(new CommandSetPositionFromStep(_handleCommand, ent_l->_pos, attackMoveData_l._positionFromAttack));
-			/// steppable to update target
-			step_p.addSteppable(new CommandNewTargetStep(_handleCommand, target_l->_handle, attackMoveData_l._target));
-			step_p.addSteppable(new CommandAddSubAttackStep(_handleCommand, _source, target_l->_handle));
-			return false;
+			CommandVar var_l = getVarFromCommand(cmd_l);
+			if(std::holds_alternative<EntityAttackCommand>(var_l))
+			{
+				EntityAttackCommand const &attackCmd_l = std::get<EntityAttackCommand>(var_l);
+				step_p.addSteppable(new CommandSetPositionFromStep(_handleCommand, ent_l->_pos, attackMoveData_l._positionFromAttack));
+				/// steppable to update target
+				step_p.addSteppable(new CommandNewTargetStep(_handleCommand, attackCmd_l.getTarget(), attackMoveData_l._target));
+				step_p.addSteppable(new CommandAddSubCommandStep(_handleCommand, var_l));
+
+				delete cmd_l;
+				return false;
+			}
+			if(std::holds_alternative<EntityBuffCommand>(var_l))
+			{
+				EntityBuffCommand const &buffCmd_l = std::get<EntityBuffCommand>(var_l);
+				step_p.addSteppable(new CommandAddSubCommandStep(_handleCommand, var_l));
+
+				delete cmd_l;
+				return false;
+			}
 		}
+		delete cmd_l;
 	}
 
 	// run move command

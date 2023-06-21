@@ -17,8 +17,6 @@ class Unit : public Entity
 		Fixed _quantityOfResource { 0. };
 
 		UnitModel const &_unitModel;
-
-		Fixed _aggroDistance = 8;
 };
 
 }

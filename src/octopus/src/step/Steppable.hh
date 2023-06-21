@@ -46,11 +46,11 @@ namespace octopus
 	class BuildingSpawnStep;
 	class BuildingStep;
 	class CancelUnitProductionStep;
-	class CommandAddSubAttackStep;
+	class CommandAddSubCommandStep;
 	class CommandDataWaypointAddStep;
 	class CommandDataWaypointRemoveStep;
 	class CommandDataWaypointSetStep;
-	class CommandDelSubAttackStep;
+	class CommandDelSubCommandStep;
 	class CommandDepositChangeStep;
 	class CommandHarvestingChangeStep;
 	class CommandHarvestTimeSinceHarvestStep;
@@ -139,11 +139,11 @@ namespace octopus
 			virtual void visit(BuildingSpawnStep const *) = 0;
 			virtual void visit(BuildingStep const *) = 0;
     		virtual void visit(CancelUnitProductionStep const *) = 0;
-			virtual void visit(CommandAddSubAttackStep const *) = 0;
+			virtual void visit(CommandAddSubCommandStep const *) = 0;
 			virtual void visit(CommandDataWaypointAddStep const *) = 0;
 			virtual void visit(CommandDataWaypointRemoveStep const *) = 0;
 			virtual void visit(CommandDataWaypointSetStep const *) = 0;
-			virtual void visit(CommandDelSubAttackStep const *) = 0;
+			virtual void visit(CommandDelSubCommandStep const *) = 0;
 			virtual void visit(CommandDepositChangeStep const *) = 0;
 			virtual void visit(CommandHarvestingChangeStep const *) = 0;
 			virtual void visit(CommandHarvestTimeSinceHarvestStep const *) = 0;

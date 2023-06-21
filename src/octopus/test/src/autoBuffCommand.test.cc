@@ -112,7 +112,7 @@ TEST(autoBuffCommandTest, simple)
 	EXPECT_NEAR(1., to_double(state_l->getEntity(4)->getStepSpeed()), 1e-5);
 
 	// update time to 2 second (5)
-	// 3 steps to relaod buff
+	// 3 steps to reload buff
 	// 1 step buff the entity (auto buff)
 	// 1 step to register the buff in the entity
 	controller_l.update(2.);

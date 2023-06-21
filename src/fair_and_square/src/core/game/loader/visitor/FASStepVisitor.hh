@@ -42,11 +42,11 @@ public:
 	virtual void visit(octopus::BuildingSpawnStep const *) override {}
 	virtual void visit(octopus::BuildingStep const *) override {}
 	virtual void visit(octopus::CancelUnitProductionStep const *) override {}
-	virtual void visit(octopus::CommandAddSubAttackStep const *) override {}
+	virtual void visit(octopus::CommandAddSubCommandStep const *) override {}
 	virtual void visit(octopus::CommandDataWaypointAddStep const *) override {}
 	virtual void visit(octopus::CommandDataWaypointRemoveStep const *) override {}
 	virtual void visit(octopus::CommandDataWaypointSetStep const *) override {}
-	virtual void visit(octopus::CommandDelSubAttackStep const *) override {}
+	virtual void visit(octopus::CommandDelSubCommandStep const *) override {}
 	virtual void visit(octopus::CommandDepositChangeStep const *) override {}
 	virtual void visit(octopus::CommandHarvestingChangeStep const *) override {}
 	virtual void visit(octopus::CommandHarvestTimeSinceHarvestStep const *) override {}

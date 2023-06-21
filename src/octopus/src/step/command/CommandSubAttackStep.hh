@@ -4,17 +4,18 @@
 #include "state/Handle.hh"
 #include "step/Steppable.hh"
 #include "command/entity/EntityAttackCommand.hh"
+#include "command/CommandVar.hh"
 
 namespace octopus
 {
 class EntityAttackCommand;
 
-class CommandAddSubAttackStep : public Steppable
+class CommandAddSubCommandStep : public Steppable
 {
 public:
 	/// @brief take subCommand_p ownership
-	CommandAddSubAttackStep(Handle const &handle_p, Handle const &source_p, Handle const &target_p)
-		: _handle(handle_p) , _source(source_p) , _target(target_p){}
+	CommandAddSubCommandStep(Handle const &handle_p, CommandVar const &var_p)
+		: _handle(handle_p) , _var(var_p) {}
 
 	virtual void apply(State &state_p) const override;
 	virtual void revert(State &state_p, SteppableData const *) const override;
@@ -26,15 +27,14 @@ public:
 	}
 
 	Handle const _handle {0};
-	Handle const _source {0};
-	Handle const _target {0};
+	CommandVar const _var;
 };
 
-class CommandDelSubAttackStep : public Steppable
+class CommandDelSubCommandStep : public Steppable
 {
 public:
-	CommandDelSubAttackStep(Handle const &handle_p, Handle const &source_p, Handle const &target_p)
-		: _handle(handle_p) , _source(source_p), _target(target_p) {}
+	CommandDelSubCommandStep(Handle const &handle_p, CommandVar const &var_p)
+		: _handle(handle_p) , _var(var_p) {}
 
 	virtual void apply(State &state_p) const override;
 	virtual void revert(State &state_p, SteppableData const *) const override;
@@ -46,8 +46,7 @@ public:
 	}
 
 	Handle const _handle {0};
-	Handle const _source {0};
-	Handle const _target {0};
+	CommandVar const _var;
 };
 
 }

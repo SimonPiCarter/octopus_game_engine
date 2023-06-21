@@ -20,6 +20,7 @@ public:
 	/// @brief
 	virtual bool applyCommand(Step & step_p, State const &state_p, CommandData const *data_p, PathManager &pathManager_p) const override;
 
+	TimedBuff const &getBuff() const { return _buff; }
 private:
 	Handle _target {0};
 
