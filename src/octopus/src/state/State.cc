@@ -353,7 +353,7 @@ TargetPanel lookUpNewTargets(State const &state_p, Handle const &sourceHandle_p,
 	return panel_l;
 }
 
-Entity const * lookUpNewTarget(State const &state_p, Handle const &sourceHandle_p, Fixed matchDistance_p)
+Entity const * lookUpNewTarget(State const &state_p, Handle const &sourceHandle_p, Fixed matchDistance_p, bool healing_p)
 {
 	Fixed sqDis_l = 0.;
 	Entity const * closest_l = nullptr;
@@ -388,14 +388,17 @@ Entity const * lookUpNewTarget(State const &state_p, Handle const &sourceHandle_
 		}
 		bitset_l[handle_p] = true;
 		Entity const * ent_l = state_p.getEntity(handle_p);
+		bool teamCheck_l = (healing_p && team_l == state_p.getPlayer(ent_l->_player)->_team)
+						|| (!healing_p && team_l != state_p.getPlayer(ent_l->_player)->_team);
 		if(ent_l == source_l
 		|| !ent_l->_alive
 		|| ent_l->_model._invulnerable
-		|| team_l == state_p.getPlayer(ent_l->_player)->_team)
+		|| !teamCheck_l
+		|| (healing_p && ent_l->_hp == ent_l->getHpMax()))
 		{
 			// NA
 		}
-		else if(ent_l->_model._isBuilding)
+		else if(ent_l->_model._isBuilding && !healing_p)
 		{
 			Fixed curSqDis_l = square_length(ent_l->_pos - source_l->_pos);
 			if(closestBuilding_l == nullptr

@@ -39,6 +39,7 @@ namespace octopus
 		////////////////////
 		Fixed _hpMax { 10. };
 		Fixed _damage { 4. };
+		Fixed _heal { 0. };
 		Fixed _armor { 1. };
 		Fixed _range { 3. };
 		/// @brief hp regeneration every 100 steps

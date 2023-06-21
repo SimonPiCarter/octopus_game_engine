@@ -15,6 +15,7 @@
 #include "step/entity/EntityAttackStep.hh"
 #include "step/entity/EntityMoveStep.hh"
 #include "step/entity/EntityFrozenStep.hh"
+#include "step/entity/EntityHitPointChangeStep.hh"
 #include "step/entity/EntityUpdateWaitingStep.hh"
 #include "utils/Fixed.hh"
 
@@ -36,6 +37,7 @@ bool EntityAttackCommand::applyCommand(Step & step_p, State const &state_p, Comm
 	AttackMoveData const &data_l = *static_cast<AttackMoveData const *>(data_p);
 	long windup_l = data_l._windup;
 	Handle const &curTarget_l = data_l._target;
+	Entity const * entSource_l = state_p.getEntity(_source);
 
 	Logger::getDebug() << "EntityAttackCommand:: apply Command "<<_source << " -> " <<curTarget_l<<std::endl;
 
@@ -46,7 +48,7 @@ bool EntityAttackCommand::applyCommand(Step & step_p, State const &state_p, Comm
 		// reset wind up
 		step_p.addSteppable(new CommandWindUpDiffStep(_handleCommand, - windup_l));
 		// If target is dead we look for another target in range
-		Entity const * newTarget_l = lookUpNewTarget(state_p, _source);
+		Entity const * newTarget_l = lookUpNewTarget(state_p, _source, entSource_l->_aggroDistance, entSource_l->_model._heal > 1e-3);
 
 		// If no target we release
 		if(!newTarget_l)
@@ -63,7 +65,6 @@ bool EntityAttackCommand::applyCommand(Step & step_p, State const &state_p, Comm
 		}
 	}
 
-	Entity const * entSource_l = state_p.getEntity(_source);
 	Entity const * entTarget_l = state_p.getEntity(curTarget_l);
 	Logger::getDebug() << "reload" <<entSource_l->_reload<<" / "<<entSource_l->getFullReload().data() << std::endl;
 	// If not in range we move to the target
@@ -90,7 +91,7 @@ bool EntityAttackCommand::applyCommand(Step & step_p, State const &state_p, Comm
 			// reset waiting
 			step_p.addSteppable(new EntityUpdateWaitingStep(entSource_l->_handle, entSource_l->_waiting, 0));
 			// If target is dead we look for another target in range
-			Entity const * newTarget_l = lookUpNewTarget(state_p, _source);
+			Entity const * newTarget_l = lookUpNewTarget(state_p, _source, entSource_l->_aggroDistance, entSource_l->_model._heal > 1e-3);
 
 			// If target we update
 			if(newTarget_l && newTarget_l->_handle != curTarget_l)
@@ -119,12 +120,21 @@ bool EntityAttackCommand::applyCommand(Step & step_p, State const &state_p, Comm
 			// reset wind up (remove value + 1 because step +1 will be applied before resetting)
 			step_p.addSteppable(new CommandWindUpDiffStep(_handleCommand, - windup_l - 1));
 
-			std::vector<Steppable *> vec_l;
-			newAttackSteppable(vec_l, *entSource_l, *entTarget_l, state_p, step_p);
-			// add damage (with current hp from state and step until now)
-			for(Steppable * steppable_l : vec_l)
+			if(entSource_l->_model._heal > 1e-3)
 			{
-				step_p.addSteppable(steppable_l);
+				Fixed curHp_l = entTarget_l->_hp + step_p.getHpChange(curTarget_l);
+				Fixed maxHp_l = entTarget_l->getHpMax();
+				step_p.addSteppable(new EntityHitPointChangeStep(curTarget_l, entSource_l->_model._heal, curHp_l, maxHp_l));
+			}
+			else
+			{
+				std::vector<Steppable *> vec_l;
+				newAttackSteppable(vec_l, *entSource_l, *entTarget_l, state_p, step_p);
+				// add damage (with current hp from state and step until now)
+				for(Steppable * steppable_l : vec_l)
+				{
+					step_p.addSteppable(steppable_l);
+				}
 			}
 			// reset reload time
 			step_p.addSteppable(new EntityAttackStep(_source, entSource_l->_reload));
@@ -133,7 +143,7 @@ bool EntityAttackCommand::applyCommand(Step & step_p, State const &state_p, Comm
 			if(entTarget_l->_model._isBuilding)
 			{
 				// If target is dead we look for another target in range
-				Entity const * newTarget_l = lookUpNewTarget(state_p, _source);
+				Entity const * newTarget_l = lookUpNewTarget(state_p, _source, entSource_l->_aggroDistance, entSource_l->_model._heal > 1e-3);
 				if(newTarget_l && newTarget_l->_model._isUnit)
 				{
 					Logger::getDebug() << "EntityAttackCommand:: new target found (out of range) "<<newTarget_l->_handle<<std::endl;

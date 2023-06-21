@@ -44,13 +44,13 @@ Command * commandFromIdle(Entity const &ent_p, State const &state_p, unsigned lo
 		}
 	}
 
-	// If no command we check for target if we have damage
-	if(ent_p._model._damage > 1e-3)
+	// If no command we check for target if we have damage or heal
+	if(ent_p._model._damage > 1e-3 || ent_p._model._heal > 1e-3)
 	{
 		Logger::getDebug() << " Unit::runCommands :: no command (attack)"<< std::endl;
 		if(ent_p._waiting >= waitingTimeForAttackScan_p)
 		{
-			Entity const * target_l = lookUpNewTarget(state_p, ent_p._handle, ent_p._aggroDistance);
+			Entity const * target_l = lookUpNewTarget(state_p, ent_p._handle, ent_p._aggroDistance, ent_p._model._heal > 1e-3);
 			if(target_l)
 			{
 				Logger::getDebug() << " Unit::runCommands :: add attack command" << ent_p._handle << " -> " << target_l->_handle << std::endl;
