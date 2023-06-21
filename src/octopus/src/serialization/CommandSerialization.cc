@@ -56,12 +56,13 @@ struct TextWriter
     {
         file_p<<data_p<<std::endl;
     }
-    template<>
-    void operator()(std::ofstream &file_p, Fixed const &data_p)
-    {
-        file_p<<data_p.data()<<std::endl;
-    }
 };
+
+template<>
+void TextWriter::operator()(std::ofstream &file_p, Fixed const &data_p)
+{
+    file_p<<data_p.data()<<std::endl;
+}
 
 template<typename T>
 void read(std::ifstream &file_p, T *data_p)

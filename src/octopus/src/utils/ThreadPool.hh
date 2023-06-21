@@ -1,10 +1,12 @@
 #ifndef __THREAD_POOL__
 #define __THREAD_POOL__
 
-#include <thread>
+#include <atomic>
+#include <condition_variable>
+#include <functional>
 #include <mutex>
 #include <queue>
-#include <functional>
+#include <thread>
 
 class ThreadPool {
 public:
