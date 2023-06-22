@@ -63,6 +63,7 @@ namespace octopus
 			Buff _buffSpeed;
 			Buff _buffFullReload;
 			Buff _buffDamage;
+			Buff _buffHeal;
 			Buff _buffArmor;
 			Buff _buffHpMax;
 			Buff _buffHpRegeneration;
@@ -75,6 +76,7 @@ namespace octopus
 			std::vector<ConditionalBuff> _condBuffSpeed;
 			std::vector<ConditionalBuff> _condBuffFullReload;
 			std::vector<ConditionalBuff> _condBuffDamage;
+			std::vector<ConditionalBuff> _condBuffHeal;
 			std::vector<ConditionalBuff> _condBuffArmor;
 			std::vector<ConditionalBuff> _condBuffHpMax;
 			std::vector<ConditionalBuff> _condBuffHpRegeneration;
@@ -97,6 +99,8 @@ namespace octopus
 			Fixed getDamage(EntityModel const &target_p) const;
 			/// @brief get damage updated using buffing info but not bonus from type
 			Fixed getDamageNoBonus() const;
+			/// @brief get heal using buff info
+			Fixed getHeal() const;
 			/// @brief get armor updated using buffing info
 			Fixed getArmor() const;
 			/// @brief get hp max updated using buffing info

@@ -65,6 +65,11 @@ Fixed Entity::getDamageNoBonus() const
 {
 	return applyBuff( *this, _model._damage, _buffDamage, _condBuffDamage);
 }
+Fixed Entity::getHeal() const
+{
+	return applyBuff( *this, _model._heal, _buffHeal, _condBuffHeal);
+}
+
 Fixed Entity::getArmor() const
 {
 	return applyBuff( *this, _model._armor, _buffArmor, _condBuffArmor);
