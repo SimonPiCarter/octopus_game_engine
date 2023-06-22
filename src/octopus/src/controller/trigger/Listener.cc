@@ -59,7 +59,7 @@ void ListenerEntityModelDied::compile(EventCollection const &controller_p, Step 
 	for(EventEntityModelDied const *event_l : controller_p._listEventEntityModelDied)
 	{
 		// pointer comparison
-		if(&event_l->_model == _model && event_l->_player == _player)
+		if((_model == nullptr || &event_l->_model == _model) && event_l->_player == _player)
 		{
 			step_p.addSteppable(new TriggerEntityAddStep(data_p._triggerHandle, data_p._listenerHandle, &event_l->_entity));
 			++count_l;
