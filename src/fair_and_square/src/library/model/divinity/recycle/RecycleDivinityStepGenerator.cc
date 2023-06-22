@@ -103,12 +103,12 @@ std::vector<Steppable *> recycleTierThreeGenertor(unsigned long player_p)
 class RecycleHarvestUpgrade : StepUpgradeGenerator
 {
 public:
-    virtual RecycleHarvestUpgrade* newCopy() const
+	virtual RecycleHarvestUpgrade* newCopy() const
 	{
 		return new RecycleHarvestUpgrade();
 	}
 
-    virtual std::vector<Steppable *> getSteppables(unsigned long player_p) const
+	virtual std::vector<Steppable *> getSteppables(unsigned long player_p) const
 	{
 		std::vector<Steppable *> steps_l;
 
@@ -121,12 +121,12 @@ public:
 class RecycleDeathResUpgrade : StepUpgradeGenerator
 {
 public:
-    virtual RecycleDeathResUpgrade* newCopy() const
+	virtual RecycleDeathResUpgrade* newCopy() const
 	{
 		return new RecycleDeathResUpgrade();
 	}
 
-    virtual std::vector<Steppable *> getSteppables(unsigned long player_p) const
+	virtual std::vector<Steppable *> getSteppables(unsigned long player_p) const
 	{
 		std::vector<Steppable *> steps_l;
 

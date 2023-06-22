@@ -5,7 +5,7 @@
 
 namespace octopus
 {
-    class Steppable;
+	class Steppable;
 } // namespace octopus
 
 std::vector<octopus::Steppable *> recycleTierOneGenertor(unsigned long player_p);
