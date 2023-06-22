@@ -19,9 +19,13 @@ std::string to_string(TyppedBuff::Type type_p)
 			return "FullReload";
 		case TyppedBuff::Type::Damage:
 			return "Damage";
+		case TyppedBuff::Type::Heal:
+			return "Heal";
 		case TyppedBuff::Type::Armor:
 			return "Armor";
 		case TyppedBuff::Type::HpMax:
+			return "HpMax";
+		case TyppedBuff::Type::HpRegeneration:
 			return "HpMax";
 		case TyppedBuff::Type::Production:
 			return "Production";

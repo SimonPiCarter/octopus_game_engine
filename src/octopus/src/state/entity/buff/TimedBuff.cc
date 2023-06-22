@@ -14,8 +14,10 @@ bool TimedBuff::isApplying(State const &state_p, Entity const &ent_p) const
 	if(_type == Type::Speed
 	|| _type == Type::FullReload
 	|| _type == Type::Damage
+	|| _type == Type::Heal
 	|| _type == Type::Armor
-	|| _type == Type::HpMax)
+	|| _type == Type::HpMax
+	|| _type == Type::HpRegeneration)
 	{
 		return ent_p._model._isUnit;
 	}
@@ -63,6 +65,10 @@ void TimedBuff::apply(Entity &ent_p) const
 			ent_p._buffDamage._offset += _offset;
 			ent_p._buffDamage._coef += _coef;
 			break;
+		case Type::Heal:
+			ent_p._buffHeal._offset += _offset;
+			ent_p._buffHeal._coef += _coef;
+			break;
 		case Type::Armor:
 			ent_p._buffArmor._offset += _offset;
 			ent_p._buffArmor._coef += _coef;
@@ -76,6 +82,10 @@ void TimedBuff::apply(Entity &ent_p) const
 			ent_p._hp += newHpMax_l - hpMax_l;
 			break;
 		}
+		case Type::HpRegeneration:
+			ent_p._buffHpRegeneration._offset += _offset;
+			ent_p._buffHpRegeneration._coef += _coef;
+			break;
 		case Type::Production:
 			ent_p._buffProduction._offset += _offset;
 			ent_p._buffProduction._coef += _coef;
@@ -103,6 +113,10 @@ void TimedBuff::revert(Entity &ent_p) const
 			ent_p._buffDamage._offset -= _offset;
 			ent_p._buffDamage._coef -= _coef;
 			break;
+		case Type::Heal:
+			ent_p._buffHeal._offset -= _offset;
+			ent_p._buffHeal._coef -= _coef;
+			break;
 		case Type::Armor:
 			ent_p._buffArmor._offset -= _offset;
 			ent_p._buffArmor._coef -= _coef;
@@ -116,6 +130,10 @@ void TimedBuff::revert(Entity &ent_p) const
 			ent_p._hp += newHpMax_l - hpMax_l;
 			break;
 		}
+		case Type::HpRegeneration:
+			ent_p._buffHpRegeneration._offset -= _offset;
+			ent_p._buffHpRegeneration._coef -= _coef;
+			break;
 		case Type::Production:
 			ent_p._buffProduction._offset -= _offset;
 			ent_p._buffProduction._coef -= _coef;

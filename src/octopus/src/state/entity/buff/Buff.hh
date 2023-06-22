@@ -22,8 +22,10 @@ struct TyppedBuff : public Buff
 		Speed,
 		FullReload,
 		Damage,
+		Heal,
 		Armor,
 		HpMax,
+		HpRegeneration,
 		Production,
 		Harvest
 	};
