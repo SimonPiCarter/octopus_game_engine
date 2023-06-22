@@ -5,6 +5,8 @@ namespace octopus
 
 void idleFunctioNoOp(Entity const &, Step &, State const &) {}
 
+bool alwaysOkChecker(Step const &, State const &, Handle const &, Vector const &) { return true; }
+
 std::map<std::string, Fixed> getReverseCostMap(std::map<std::string, Fixed> const &cost_p)
 {
 	std::map<std::string, Fixed> reversedCost_l;

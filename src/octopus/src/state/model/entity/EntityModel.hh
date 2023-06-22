@@ -16,11 +16,14 @@ namespace octopus
 	class State;
 	void idleFunctioNoOp(Entity const &, Step &, State const &);
 
+	bool alwaysOkChecker(Step const &, State const &, Handle const &, Vector const &);
+
 	struct Ability
 	{
 		std::string _id;
 		std::string _reloadKey;
 		std::function<void(Step &, State const &, Handle const &, Vector const &)> _runnable;
+		std::function<bool(Step const &, State const &, Handle const &, Vector const &)> _checker = alwaysOkChecker;
 	};
 
 	struct EntityModel

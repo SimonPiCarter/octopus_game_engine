@@ -25,7 +25,9 @@ void EntityAbilityCommand::registerCommand(Step & step_p, State const &state_p)
     Ability const & ability_l = getAbility(ent_l->_model, _id);
     // check reload time
     unsigned long reload_l = getReloadAbilityTime(*ent_l, ability_l._reloadKey, getMinReloadTime(ent_l->_model, ability_l._reloadKey));
-    if(reload_l >= getMinReloadTime(ent_l->_model, ability_l._reloadKey) && step_p.checkAbilityNotAlreadyRegistered(_handleCommand, ability_l._reloadKey))
+    if(reload_l >= getMinReloadTime(ent_l->_model, ability_l._reloadKey)
+    && ability_l._checker(step_p, state_p, _target, _pointTarget)
+    && step_p.checkAbilityNotAlreadyRegistered(_handleCommand, ability_l._reloadKey))
     {
         // reset reload time
         step_p.addSteppable(new EntityUpdateReloadAbilityStep(_handleCommand, ability_l._reloadKey, reload_l, 0));
