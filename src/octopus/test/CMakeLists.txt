@@ -31,6 +31,7 @@ target_sources (unit_tests
 	src/attackMoveHealCommand.test.cc
 	src/autoAttackCommand.test.cc
 	src/autoBuffCommand.test.cc
+	src/autoHealCommand.test.cc
 	src/benchmark.test.cc
 	src/bitset.test.cc
 	src/buffCommand.test.cc
