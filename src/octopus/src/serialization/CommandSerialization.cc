@@ -353,9 +353,9 @@ void writeCommand(std::ofstream &file_p, Command const *cmd_p, Writer_t writer_p
         writer_p(file_p, 16ul);
         EntityAbilityCommand const *typped_l = dynamic_cast<EntityAbilityCommand const *>(cmd_p);
         writer_p(file_p, typped_l->getHandleCommand());
+        writer_p(file_p, typped_l->_target);
         writer_p(file_p, typped_l->_pointTarget);
         writer_p(file_p, typped_l->_id);
-        writer_p(file_p, typped_l->_reloadKey);
     }
     else
     {
@@ -642,15 +642,13 @@ Command * readCommand(std::ifstream &file_p, Library const &lib_p)
         Handle target_l;
         Vector pointTarget_l;
         std::string id_l;
-        std::string reloadKey_l;
 
         read(file_p, &handle_l);
         read(file_p, &target_l);
         read(file_p, &pointTarget_l);
         read(file_p, &id_l);
-        read(file_p, &reloadKey_l);
 
-        cmd_l = new EntityAbilityCommand(handle_l, target_l, pointTarget_l, id_l, reloadKey_l);
+        cmd_l = new EntityAbilityCommand(handle_l, target_l, pointTarget_l, id_l);
     }
     if(!cmd_l)
     {

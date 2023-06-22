@@ -16,6 +16,13 @@ namespace octopus
 	class State;
 	void idleFunctioNoOp(Entity const &, Step &, State const &);
 
+	struct Ability
+	{
+		std::string _id;
+		std::string _reloadKey;
+		std::function<void(Step &, State const &, Handle const &, Vector const &)> _runnable;
+	};
+
 	struct EntityModel
 	{
 		EntityModel(bool isStatic_p, Fixed ray_p, Fixed stepSpeed_p, Fixed hpMax_p)
@@ -49,7 +56,9 @@ namespace octopus
 
 		std::unordered_map<std::string, Fixed> _bonusDamage;
 
-		std::unordered_map<std::string, std::function<void(Step &, State const &, Handle const &, Vector const &)> > _abilities;
+		/// @brief map of abilities indexed on unique id of abilities
+		std::unordered_map<std::string, Ability > _abilities;
+		/// @brief map indexed on the reload times
 		std::unordered_map<std::string, unsigned long > _abilityReloadTime;
 
 		/// @brief time to wind up an attack
@@ -84,7 +93,7 @@ namespace octopus
 
 	Fixed getBonus(std::string const &id_p, EntityModel const &model_p);
 
-	std::function<void(Step &, State const &, Handle const &, Vector const &)> getAbility(EntityModel const &model_p, std::string const &id_p);
+	Ability const & getAbility(EntityModel const &model_p, std::string const &id_p);
 
 	unsigned long getMinReloadTime(EntityModel const &model_p, std::string const &key_p);
 } // namespace octopus

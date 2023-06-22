@@ -17,8 +17,7 @@ namespace octopus
 class EntityAbilityCommand : public Command
 {
 public:
-	EntityAbilityCommand(Handle const &commandHandle_p, Handle const &target_p, Vector const &pointTarget_p, std::string const &id_p
-        , std::string const &reloadKey_p);
+	EntityAbilityCommand(Handle const &commandHandle_p, Handle const &target_p, Vector const &pointTarget_p, std::string const &id_p);
 
 	/// @brief register the command into the step
 	/// This method is responsible for
@@ -33,7 +32,6 @@ public:
 	Handle _target {0};
 	Vector _pointTarget;
 	std::string _id;
-	std::string _reloadKey;
 };
 
 } // namespace octopus

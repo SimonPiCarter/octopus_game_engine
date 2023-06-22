@@ -28,7 +28,7 @@ void customAbility(Step &step_p, State const &, Handle const &, Vector const &)
 TEST(abilityEntityTest, simple)
 {
 	EntityModel model_l { false, 1., 1., 10. };
-	model_l._abilities["spawn_res"] = customAbility;
+	model_l._abilities["spawn_res"] = {"spawn_res", "spawn_res", customAbility};
 	model_l._abilityReloadTime["spawn_res"] = 5;
 
 	Entity ent_l { { 3, 3. }, false, model_l};
@@ -43,7 +43,7 @@ TEST(abilityEntityTest, simple)
 
 	EXPECT_NEAR(0., to_double(getResource(*state_l->getPlayer(0), "bloc")), 1e-5);
 
-	controller_l.commitCommand(new EntityAbilityCommand(0, 0, Vector(), "spawn_res", "spawn_res"));
+	controller_l.commitCommand(new EntityAbilityCommand(0, 0, Vector(), "spawn_res"));
 	// update time to 1 seconds (1)
 	controller_l.update(1.);
 
@@ -64,7 +64,7 @@ TEST(abilityEntityTest, simple)
 
 	EXPECT_NEAR(10., to_double(getResource(*state_l->getPlayer(0), "bloc")), 1e-5);
 
-	controller_l.commitCommand(new EntityAbilityCommand(0, 0, Vector(), "spawn_res", "spawn_res"));
+	controller_l.commitCommand(new EntityAbilityCommand(0, 0, Vector(), "spawn_res"));
 
 	// update time to 5 second (7)
 	controller_l.update(5.);
@@ -78,8 +78,8 @@ TEST(abilityEntityTest, simple)
 	EXPECT_NEAR(10., to_double(getResource(*state_l->getPlayer(0), "bloc")), 1e-5);
 
 	// only one should work
-	controller_l.commitCommand(new EntityAbilityCommand(0, 0, Vector(), "spawn_res", "spawn_res"));
-	controller_l.commitCommand(new EntityAbilityCommand(0, 0, Vector(), "spawn_res", "spawn_res"));
+	controller_l.commitCommand(new EntityAbilityCommand(0, 0, Vector(), "spawn_res"));
+	controller_l.commitCommand(new EntityAbilityCommand(0, 0, Vector(), "spawn_res"));
 
 	// update time to 2 seconds (9)
 	controller_l.update(2.);

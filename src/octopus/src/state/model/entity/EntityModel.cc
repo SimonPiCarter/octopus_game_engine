@@ -27,12 +27,13 @@ Fixed getBonus(std::string const &id_p, EntityModel const &model_p)
 
 void abilityNoOp(Step &, State const &, Handle const &, Vector const &) {}
 
-std::function<void(Step &, State const &, Handle const &, Vector const &)> getAbility(EntityModel const &model_p, std::string const &id_p)
+Ability const & getAbility(EntityModel const &model_p, std::string const &id_p)
 {
+	static Ability noAbility_s {"noOp", "noOp", abilityNoOp};
 	auto &&it_l = model_p._abilities.find(id_p);
 	if(it_l == model_p._abilities.end())
 	{
-		return abilityNoOp;
+		return noAbility_s;
 	}
 	return it_l->second;
 }
