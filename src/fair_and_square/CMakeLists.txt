@@ -13,6 +13,7 @@ add_library(fair_and_square_lib
 	${CMAKE_CURRENT_SOURCE_DIR}/src/library/model/ModelLoader.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/library/model/TimerDamage.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/library/model/bonus/BuffGenerators.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/src/library/model/divinity/recycle/RecycleDivinityStepGenerator.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/library/levels/ArenaLevel.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/library/levels/LevelId.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/library/levels/MazeLevel.cc
