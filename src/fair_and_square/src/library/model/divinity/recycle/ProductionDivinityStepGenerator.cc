@@ -6,6 +6,7 @@
 #include "state/State.hh"
 #include "state/entity/Entity.hh"
 #include "state/entity/Unit.hh"
+#include "state/model/entity/UnitModel.hh"
 #include "state/player/upgrade/StepUpgradeGenerator.hh"
 #include "step/Step.hh"
 #include "step/entity/spawn/UnitSpawnStep.hh"
@@ -81,7 +82,7 @@ std::vector<Steppable *> productionTierTwoGenertor(ProductionDivinityParams cons
 	map_l[param_p._productionBufferResourceId] = -param_p._numberOfProductionBufferTierTwo;
 	steps_l.push_back(new PlayerSpendResourceStep(player_p, map_l));
 	// regain resource on death
-	steps_l.push_back(new TriggerSpawn(new ProductionDeathResTrigger(&lib_p.getUnitModel(param_p._productionBufferModel->_id),
+	steps_l.push_back(new TriggerSpawn(new ProductionDeathResTrigger(&lib_p.getUnitModel(param_p._productionBufferModelId),
 		player_p, param_p._productionBufferResourceId, 1)));
 
 	return steps_l;
@@ -91,8 +92,8 @@ std::vector<Steppable *> productionTierThreeGenertor(ProductionDivinityParams co
 {
 	std::vector<Steppable *> steps_l;
 
-	steps_l.push_back(new TriggerSpawn(new ProductionDeathRespawnTrigger(&lib_p.getUnitModel(param_p._tierOneUnitModel->_id),
-		lib_p.getUnitModel(param_p._tierOneUnitRespawnModel->_id), player_p)));
+	steps_l.push_back(new TriggerSpawn(new ProductionDeathRespawnTrigger(&lib_p.getUnitModel(param_p._tierOneUnitModelId),
+		lib_p.getUnitModel(param_p._tierOneUnitRespawnModelId), player_p)));
 
 	return steps_l;
 }
@@ -178,7 +179,7 @@ private:
 	long const _increase;
 };
 
-ProductionDivinityParams createDefaultParams(Library &lib_p)
+ProductionDivinityParams createDefaultParams()
 {
 	ProductionDivinityParams params_l;
 	/// @brief constraint for the number of buff production unit
@@ -193,6 +194,15 @@ ProductionDivinityParams createDefaultParams(Library &lib_p)
 	params_l._prodTierOneUnitCostReductionCoef["bloc"] = 0.2;
 	params_l._prodTierOneUnitCostReductionCoef["ether"] = 0.2;
 
+	params_l._tierOneUnitModelId = "ProductionUnitOne";
+	params_l._tierOneUnitRespawnModelId = "ProductionUnitOneRespawn";
+	params_l._productionBufferModelId = "ProductionUnitTwo";
+
+	return params_l;
+}
+
+void fillLibrary(ProductionDivinityParams const &params_p, octopus::Library &lib_p)
+{
 	/// @brief tier one unit model (cheap unit)
 	UnitModel tieroneunitmodel_l { false, 0.5, 0.05, 35 };
 	tieroneunitmodel_l._isUnit = true;
@@ -206,12 +216,9 @@ ProductionDivinityParams createDefaultParams(Library &lib_p)
 	tieroneunitmodel_l._fullReload = 125;
 	tieroneunitmodel_l._windup = 20;
 	tieroneunitmodel_l._requirements._upgradeLvl["ProductionDivinity"] = 1;
-	lib_p.registerUnitModel("ProductionUnitOne", tieroneunitmodel_l);
-	params_l._tierOneUnitModel = &lib_p.getUnitModel("ProductionUnitOne");
 
 	/// @brief tier one unit model respawn after t3 upgrade (same unit just different id to avoid infinite respawn)
-	lib_p.registerUnitModel("ProductionUnitOneRespawn", tieroneunitmodel_l);
-	params_l._tierOneUnitRespawnModel = &lib_p.getUnitModel("ProductionUnitOneRespawn");
+	lib_p.registerUnitModel(params_p._tierOneUnitRespawnModelId, tieroneunitmodel_l);
 
 	/// @brief tier two unit model that buff production buildings
 	UnitModel tiertwounitmodel_l { false, 0.5, 0.05, 35 };
@@ -219,7 +226,7 @@ ProductionDivinityParams createDefaultParams(Library &lib_p)
 	tiertwounitmodel_l._productionTime = 1500;
 	tiertwounitmodel_l._cost["bloc"] = 50;
 	tiertwounitmodel_l._cost["irium"] = 100;
-	tiertwounitmodel_l._cost[params_l._productionBufferResourceId] = 1;
+	tiertwounitmodel_l._cost[params_p._productionBufferResourceId] = 1;
 	tiertwounitmodel_l._damage = 0;
 	tiertwounitmodel_l._armor = 0;
 	tiertwounitmodel_l._range = 0.5;
@@ -238,30 +245,27 @@ ProductionDivinityParams createDefaultParams(Library &lib_p)
 	tiertwounitmodel_l._buffer._active = true;
 
 	tiertwounitmodel_l._requirements._upgradeLvl["ProductionDivinity"] = 2;
-	lib_p.registerUnitModel("ProductionUnitTwo", tiertwounitmodel_l);
-	params_l._tierOneUnitModel = &lib_p.getUnitModel("ProductionUnitTwo");
+	lib_p.registerUnitModel(params_p._productionBufferModelId, tiertwounitmodel_l);
 
 	// declare upgrades
 
 	// T1 production buff
-	Upgrade * upProductionTime_l = new Upgrade("ProductionUpgrade_BuffProduction", new ProductionBuffUpgrade({}, params_l._productionTimeUpgradeCoef));
+	Upgrade * upProductionTime_l = new Upgrade("ProductionUpgrade_BuffProduction", new ProductionBuffUpgrade({}, params_p._productionTimeUpgradeCoef));
 	upProductionTime_l->_productionTime = 60000;
 	upProductionTime_l->_requirements._upgradeLvl["ProductionDivinity"] = 1;
 	lib_p.registerUpgrade(upProductionTime_l->_id, upProductionTime_l);
 
 	// T2 cost reduction for unit 1
 	Upgrade * upProductionCost_l = new Upgrade("ProductionUpgrade_BuffResourceProduction",
-		new ProductionResourceBuffUpgrade(params_l._tierOneUnitModel->_id, params_l._prodTierOneUnitCostReductionCoef));
+		new ProductionResourceBuffUpgrade(params_p._tierOneUnitModelId, params_p._prodTierOneUnitCostReductionCoef));
 	upProductionCost_l->_productionTime = 60000;
 	upProductionCost_l->_requirements._upgradeLvl["ProductionDivinity"] = 2;
 	lib_p.registerUpgrade(upProductionCost_l->_id, upProductionCost_l);
 
 	// T3 increase buffer count
 	Upgrade * upProductionIncreaseBufferCount_l = new Upgrade("ProductionUpgrade_BuffNumberBuffer",
-		new ProductionMoreBufferUpgrade(params_l._productionBufferResourceId, params_l._increaseOfProductionBufferTierTwo));
+		new ProductionMoreBufferUpgrade(params_p._productionBufferResourceId, params_p._increaseOfProductionBufferTierTwo));
 	upProductionIncreaseBufferCount_l->_productionTime = 60000;
 	upProductionIncreaseBufferCount_l->_requirements._upgradeLvl["ProductionDivinity"] = 3;
 	lib_p.registerUpgrade(upProductionIncreaseBufferCount_l->_id, upProductionIncreaseBufferCount_l);
-
-	return params_l;
 }

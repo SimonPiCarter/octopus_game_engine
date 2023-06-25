@@ -1,9 +1,10 @@
 #ifndef __ProductionDivinityStepGenerator__
 #define __ProductionDivinityStepGenerator__
 
-#include "state/model/entity/UnitModel.hh"
-
+#include <map>
 #include <vector>
+#include <string>
+#include "utils/Fixed.hh"
 
 namespace octopus
 {
@@ -25,17 +26,18 @@ struct ProductionDivinityParams
 	/// @brief percent reduction for resource cost production for tier one unit model (positive)
 	std::map<std::string, octopus::Fixed> _prodTierOneUnitCostReductionCoef;
 	/// @brief tier one unit model (cheap unit)
-	octopus::UnitModel const * _tierOneUnitModel = nullptr;
+	std::string _tierOneUnitModelId;
 	/// @brief tier one unit model respawn after t3 upgrade (same unit just different id to avoid infinite respawn)
-	octopus::UnitModel const * _tierOneUnitRespawnModel = nullptr;
+	std::string _tierOneUnitRespawnModelId;
 	/// @brief tier two unit model that buff production buildings
-	octopus::UnitModel const * _productionBufferModel = nullptr;
+	std::string _productionBufferModelId;
 };
 
 std::vector<octopus::Steppable *> productionTierOneGenertor(ProductionDivinityParams const &param_p, unsigned long player_p);
 std::vector<octopus::Steppable *> productionTierTwoGenertor(ProductionDivinityParams const &param_p, octopus::Library const &lib_p, unsigned long player_p);
 std::vector<octopus::Steppable *> productionTierThreeGenertor(ProductionDivinityParams const &param_p, octopus::Library const &lib_p, unsigned long player_p);
 
-ProductionDivinityParams createDefaultParams(octopus::Library const &lib_p);
+ProductionDivinityParams createDefaultParams();
+void fillLibrary(ProductionDivinityParams const &params_p, octopus::Library &lib_p);
 
 #endif
