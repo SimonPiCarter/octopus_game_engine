@@ -30,7 +30,9 @@ std::list<octopus::Command *> LevelCommands(octopus::Library &lib_p, octopus::Ra
 struct DuelLevelHeader
 {
 	// seed for random generation
-	int seed;
+	int seed = 0;
+	// step count to end
+	int step_count = 0;
 };
 
 /// @brief write header for classic arena level

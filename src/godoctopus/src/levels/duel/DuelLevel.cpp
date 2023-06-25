@@ -194,6 +194,7 @@ std::list<Command *> LevelCommands(Library &lib_p, RandomGenerator &rand_p)
 void writeLevelHeader(std::ofstream &file_p, DuelLevelHeader const &header_p)
 {
     file_p.write((char*)&header_p.seed, sizeof(header_p.seed));
+    file_p.write((char*)&header_p.step_count, sizeof(header_p.step_count));
 }
 
 /// @brief read header for classic duel level and return a pair of steppable and command
@@ -201,12 +202,13 @@ std::pair<std::list<octopus::Steppable *>, std::list<octopus::Command *> > readL
 	octopus::RandomGenerator * &rand_p, DuelLevelHeader &header_r)
 {
     file_p.read((char*)&header_r.seed, sizeof(header_r.seed));
+    file_p.read((char*)&header_r.step_count, sizeof(header_r.step_count));
 
 	delete rand_p;
 	rand_p = new octopus::RandomGenerator(header_r.seed);
 
 	std::pair<std::list<octopus::Steppable *>, std::list<octopus::Command *> > pair_l;
-	pair_l.first = LevelSteps(lib_p, *rand_p, 0);
+	pair_l.first = LevelSteps(lib_p, *rand_p, header_r.step_count);
 	pair_l.second = LevelCommands(lib_p, *rand_p);
 	return pair_l;
 }

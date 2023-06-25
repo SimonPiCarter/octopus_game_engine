@@ -263,7 +263,7 @@ void Controller::load_duel_level(int seed_p)
     newAutoSaveFile();
     writeLevelId(*_autoSaveFile, LEVEL_ID_DUEL, LEVEL_DUEL_SIZE/5);
     _currentLevel = LEVEL_ID_DUEL;
-    _headerWriter = std::bind(duellevel::writeLevelHeader, std::placeholders::_1, duellevel::DuelLevelHeader {seed_p});
+    _headerWriter = std::bind(duellevel::writeLevelHeader, std::placeholders::_1, duellevel::DuelLevelHeader {seed_p, 0});
     _headerWriter(*_autoSaveFile);
     init(commands_l, spawners_l, LEVEL_DUEL_SIZE/5, _autoSaveFile);
 }
@@ -282,7 +282,7 @@ void Controller::load_multi_test_level(int seed_p, int step_cout_p)
     newAutoSaveFile();
     writeLevelId(*_autoSaveFile, LEVEL_ID_DUEL, LEVEL_DUEL_SIZE/5);
     _currentLevel = LEVEL_ID_DUEL;
-    _headerWriter = std::bind(duellevel::writeLevelHeader, std::placeholders::_1, duellevel::DuelLevelHeader {seed_p});
+    _headerWriter = std::bind(duellevel::writeLevelHeader, std::placeholders::_1, duellevel::DuelLevelHeader {seed_p, step_cout_p});
     _headerWriter(*_autoSaveFile);
     init(commands_l, spawners_l, LEVEL_DUEL_SIZE/5, _autoSaveFile);
 }
