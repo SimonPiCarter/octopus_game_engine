@@ -18,6 +18,9 @@
 
 using namespace octopus;
 
+namespace production_divinity
+{
+
 class ProductionDeathResTrigger : public OnEachTrigger
 {
 public:
@@ -217,6 +220,8 @@ void fillLibrary(ProductionDivinityParams const &params_p, octopus::Library &lib
 	tieroneunitmodel_l._windup = 20;
 	tieroneunitmodel_l._requirements._upgradeLvl["ProductionDivinity"] = 1;
 
+	lib_p.registerUnitModel(params_p._tierOneUnitModelId, tieroneunitmodel_l);
+
 	/// @brief tier one unit model respawn after t3 upgrade (same unit just different id to avoid infinite respawn)
 	lib_p.registerUnitModel(params_p._tierOneUnitRespawnModelId, tieroneunitmodel_l);
 
@@ -251,13 +256,17 @@ void fillLibrary(ProductionDivinityParams const &params_p, octopus::Library &lib
 
 	// T1 production buff
 	Upgrade * upProductionTime_l = new Upgrade("ProductionUpgrade_BuffProduction", new ProductionBuffUpgrade({}, params_p._productionTimeUpgradeCoef));
-	upProductionTime_l->_productionTime = 60000;
+	upProductionTime_l->_cost["bloc"] = 125;
+	upProductionTime_l->_cost["ether"] = 75;
+	upProductionTime_l->_productionTime = 40000;
 	upProductionTime_l->_requirements._upgradeLvl["ProductionDivinity"] = 1;
 	lib_p.registerUpgrade(upProductionTime_l->_id, upProductionTime_l);
 
 	// T2 cost reduction for unit 1
 	Upgrade * upProductionCost_l = new Upgrade("ProductionUpgrade_BuffResourceProduction",
 		new ProductionResourceBuffUpgrade(params_p._tierOneUnitModelId, params_p._prodTierOneUnitCostReductionCoef));
+	upProductionCost_l->_cost["bloc"] = 100;
+	upProductionCost_l->_cost["ether"] = 200;
 	upProductionCost_l->_productionTime = 60000;
 	upProductionCost_l->_requirements._upgradeLvl["ProductionDivinity"] = 2;
 	lib_p.registerUpgrade(upProductionCost_l->_id, upProductionCost_l);
@@ -265,7 +274,11 @@ void fillLibrary(ProductionDivinityParams const &params_p, octopus::Library &lib
 	// T3 increase buffer count
 	Upgrade * upProductionIncreaseBufferCount_l = new Upgrade("ProductionUpgrade_BuffNumberBuffer",
 		new ProductionMoreBufferUpgrade(params_p._productionBufferResourceId, params_p._increaseOfProductionBufferTierTwo));
+	upProductionIncreaseBufferCount_l->_cost["bloc"] = 125;
+	upProductionIncreaseBufferCount_l->_cost["ether"] = 250;
 	upProductionIncreaseBufferCount_l->_productionTime = 60000;
 	upProductionIncreaseBufferCount_l->_requirements._upgradeLvl["ProductionDivinity"] = 3;
 	lib_p.registerUpgrade(upProductionIncreaseBufferCount_l->_id, upProductionIncreaseBufferCount_l);
+}
+
 }

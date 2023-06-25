@@ -12,6 +12,9 @@ namespace octopus
 	class Library;
 } // namespace octopus
 
+namespace production_divinity
+{
+
 /// @brief contains all param for this divinity
 struct ProductionDivinityParams
 {
@@ -39,5 +42,8 @@ std::vector<octopus::Steppable *> productionTierThreeGenertor(ProductionDivinity
 
 ProductionDivinityParams createDefaultParams();
 void fillLibrary(ProductionDivinityParams const &params_p, octopus::Library &lib_p);
+
+} // namespace production_divinity
+
 
 #endif
