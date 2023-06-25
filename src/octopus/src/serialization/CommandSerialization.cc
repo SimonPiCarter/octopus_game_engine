@@ -123,6 +123,8 @@ void writeListOfCommand(std::ofstream &file_p, std::list<Command *> const * list
     {
         writeCommand(file_p, cmd_l, BinaryWriter());
     }
+
+    file_p.flush();
 }
 
 void writeDebugListOfCommand(std::ofstream &file_p, std::list<Command *> const * list_p, size_t step_p)
@@ -136,6 +138,8 @@ void writeDebugListOfCommand(std::ofstream &file_p, std::list<Command *> const *
     {
         writeCommand(file_p, cmd_l, TextWriter());
     }
+
+    file_p.flush();
 }
 
 void readCommands(std::ifstream &file_p, Controller &controller_p, Library const &lib_p)
