@@ -38,6 +38,7 @@ void ThreadPool::queueJob(const std::function<void()>& job) {
 }
 
 bool ThreadPool::busy() {
+    std::unique_lock<std::mutex> lock(queue_mutex);
     return working > 0 || !jobs.empty();
 }
 
