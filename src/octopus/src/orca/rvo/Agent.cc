@@ -357,9 +357,12 @@ namespace RVO {
 				}
 				else
 				{
-					/// @todo make this consistent with fixed computation
-					const Vector2 unitW = Vector2(std::cos(2.0 * 3.14 * double(id_) / double(sim_->getNumAgents())),
-											std::sin(2.0 * 3.14 * double(id_) / double(sim_->getNumAgents())));
+					octopus::Fixed angle_l = octopus::Fixed(id_) / octopus::Fixed(sim_->getNumAgents()) * 6.28;
+					octopus::Fixed angle2_l = angle_l*angle_l;
+					octopus::Fixed angle3_l = angle_l*angle_l*angle_l;
+					octopus::Fixed sin_l = angle_l - angle3_l/6 + angle3_l*angle2_l/120;
+					octopus::Fixed cos_l = 1 - angle2_l/2 + angle2_l*angle2_l/24; - angle3_l*angle3_l/720;
+					const Vector2 unitW = Vector2(cos_l, sin_l);
 
 					line.direction = Vector2(unitW.y(), -unitW.x());
 					u = (combinedRadius * invTimeStep - wLength) * unitW;
