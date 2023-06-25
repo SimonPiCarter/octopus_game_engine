@@ -21,9 +21,9 @@ void ThreadPool::ThreadLoop() {
                 return;
             }
             job = jobs.front();
+		    ++working;
             jobs.pop();
         }
-		++working;
         job();
 		--working;
     }
