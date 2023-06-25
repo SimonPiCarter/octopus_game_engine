@@ -388,6 +388,8 @@ namespace RVO {
 			}
 		}
 
+		octopus::Logger::getDebug() << "id = " << id_ << " linear"<< std::endl;
+
 		size_t lineFail = linearProgram2(orcaLines_, maxSpeed_, prefVelocity_, false, newVelocity_);
 
 		if (lineFail < orcaLines_.size()) {
@@ -501,10 +503,12 @@ namespace RVO {
 			if (optVelocity * lines[lineNo].direction > 0.0f) {
 				/* Take right extreme. */
 				result = lines[lineNo].point + tRight * lines[lineNo].direction;
+				octopus::Logger::getDebug() << " result (8) " << result << std::endl;
 			}
 			else {
 				/* Take left extreme. */
 				result = lines[lineNo].point + tLeft * lines[lineNo].direction;
+				octopus::Logger::getDebug() << " result (9) " << result << std::endl;
 			}
 		}
 		else {
@@ -513,12 +517,15 @@ namespace RVO {
 
 			if (t < tLeft) {
 				result = lines[lineNo].point + tLeft * lines[lineNo].direction;
+				octopus::Logger::getDebug() << " result (10) " << result << std::endl;
 			}
 			else if (t > tRight) {
 				result = lines[lineNo].point + tRight * lines[lineNo].direction;
+				octopus::Logger::getDebug() << " result (11) " << result << std::endl;
 			}
 			else {
 				result = lines[lineNo].point + t * lines[lineNo].direction;
+				octopus::Logger::getDebug() << " result (12) " << result << std::endl;
 			}
 		}
 
@@ -533,23 +540,28 @@ namespace RVO {
 			 * length in this case.
 			 */
 			result = optVelocity * radius;
+			octopus::Logger::getDebug() << " result (1) " << result << std::endl;
+
 		}
 		else if (absSq(optVelocity) > sqr(radius)) {
 			/* Optimize closest point and outside circle. */
 			result = normalize(optVelocity) * radius;
+			octopus::Logger::getDebug() << " result (2) " << result << std::endl;
 		}
 		else {
 			/* Optimize closest point and inside circle. */
 			result = optVelocity;
+			octopus::Logger::getDebug() << " result (3) " << result << std::endl;
 		}
 
 		for (size_t i = 0; i < lines.size(); ++i) {
-			if (det(lines[i].direction, lines[i].point - result) > 0.0f) {
+			if (det(lines[i].direction, lines[i].point - result) > 0) {
 				/* Result does not satisfy constraint i. Compute new optimal result. */
 				const Vector2 tempResult = result;
 
 				if (!linearProgram1(lines, i, radius, optVelocity, directionOpt, result)) {
 					result = tempResult;
+					octopus::Logger::getDebug() << " result (4) " << result << std::endl;
 					return i;
 				}
 			}
@@ -600,7 +612,9 @@ namespace RVO {
 					 * kept.
 					 */
 					result = tempResult;
+					octopus::Logger::getDebug() << " result (6) " << result << std::endl;
 				}
+				octopus::Logger::getDebug() << " result (7) " << result << std::endl;
 
 				distance = det(lines[i].direction, lines[i].point - result);
 			}
