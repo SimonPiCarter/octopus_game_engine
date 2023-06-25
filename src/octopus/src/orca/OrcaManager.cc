@@ -1,5 +1,6 @@
 #include "OrcaManager.hh"
 
+#include "logger/Logger.hh"
 #include "step/Step.hh"
 #include "step/entity/EntityMoveStep.hh"
 #include "state/State.hh"
@@ -182,6 +183,9 @@ void OrcaManager::commitStep(State const &state_p, Step &step_p)
         size_t idx_l = _mapHandleIdx[moveStep_l->_handle];
         moveStep_l->_move.x = _sim->getAgentVelocity(idx_l).x();
         moveStep_l->_move.y = _sim->getAgentVelocity(idx_l).y();
+
+        octopus::Logger::getDebug() << idx_l << ", x = "<< moveStep_l->_move.x.data()<<", y = "<<moveStep_l->_move.y.data() << std::endl;
+
     }
 }
 

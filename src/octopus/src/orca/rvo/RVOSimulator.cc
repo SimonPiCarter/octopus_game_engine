@@ -161,7 +161,7 @@ namespace RVO {
 	{
 		kdTree_->buildAgentTree();
 
-		int nbThreads_l = 12;
+		int nbThreads_l = 1;
 		std::vector<int> indexes_l;
 
 		for(int i = 0 ; i < nbThreads_l ; ++ i)

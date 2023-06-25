@@ -364,6 +364,10 @@ namespace RVO {
 					octopus::Fixed cos_l = 1 - angle2_l/2 + angle2_l*angle2_l/24; - angle3_l*angle3_l/720;
 					const Vector2 unitW = Vector2(cos_l, sin_l);
 
+					octopus::Logger::getDebug() << angle_l.data() << std::endl;
+					octopus::Logger::getDebug() << sin_l.data() << std::endl;
+					octopus::Logger::getDebug() << cos_l.data() << std::endl;
+
 					line.direction = Vector2(unitW.y(), -unitW.x());
 					u = (combinedRadius * invTimeStep - wLength) * unitW;
 				}
