@@ -174,7 +174,7 @@ namespace RVO {
 		{
 			int start_l = indexes_l.at(n);
 			int end_l = indexes_l.at(n+1);
-			pool.queueJob([start_l, end_l, this](){
+			//pool.queueJob([start_l, end_l, this](){
 				for (int i = start_l; i < end_l; ++i)
 				{
 					if(agents_[i].active())
@@ -183,10 +183,10 @@ namespace RVO {
 						agents_[i].computeNewVelocity();
 					}
 				}
-			});
+			//});
 		}
 
-		while(pool.busy()) {}
+		//while(pool.busy()) {}
 
 		for (int i = 0; i < static_cast<int>(agents_.size()); ++i)
 		{
