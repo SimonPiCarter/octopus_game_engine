@@ -172,8 +172,10 @@ namespace RVO {
 
 		for(int n = 0 ; n < nbThreads_l ; ++ n)
 		{
-			pool.queueJob([n, &indexes_l, this](){
-				for (int i = indexes_l.at(n); i < indexes_l.at(n+1); ++i)
+			int start_l = indexes_l.at(n);
+			int end_l = indexes_l.at(n+1);
+			pool.queueJob([start_l, end_l, this](){
+				for (int i = start_l; i < end_l; ++i)
 				{
 					if(agents_[i].active())
 					{
