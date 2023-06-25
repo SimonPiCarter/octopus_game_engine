@@ -30,10 +30,10 @@ namespace octopus
 	};
 
 	/// @brief use this if you want to be able to switch from debug to normal without rebuilding (slower at execution)
-	//typedef LoggerHandler DebugLoggerHandler;
+	typedef LoggerHandler DebugLoggerHandler;
 
 	/// @brief use this if you want fastest execution (but debug log wont be possible)
-	typedef LoggerVoider DebugLoggerHandler;
+	//typedef LoggerVoider DebugLoggerHandler;
 
 	class Logger
 	{
