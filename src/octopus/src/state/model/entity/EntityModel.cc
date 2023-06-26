@@ -5,7 +5,7 @@ namespace octopus
 
 void idleFunctioNoOp(Entity const &, Step &, State const &) {}
 
-bool alwaysOkChecker(Step const &, State const &, Handle const &, Vector const &) { return true; }
+bool alwaysOkChecker(Step const &, State const &, Handle const &, Handle const &, Vector const &) { return true; }
 
 std::map<std::string, Fixed> getReverseCostMap(std::map<std::string, Fixed> const &cost_p)
 {
@@ -27,7 +27,7 @@ Fixed getBonus(std::string const &id_p, EntityModel const &model_p)
 	return 0.;
 }
 
-void abilityNoOp(Step &, State const &, Handle const &, Vector const &) {}
+void abilityNoOp(Step &, State const &, Handle const &, Handle const &, Vector const &) {}
 
 Ability const & getAbility(EntityModel const &model_p, std::string const &id_p)
 {

@@ -17,7 +17,7 @@
 using namespace octopus;
 
 // spawn 10 bloc
-void customAbility(Step &step_p, State const &, Handle const &, Vector const &)
+void customAbility(Step &step_p, State const &, Handle const &, Handle const &, Vector const &)
 {
 	std::map<std::string, Fixed> map_l;
 	map_l["bloc"] = -10.;

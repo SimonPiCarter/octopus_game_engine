@@ -26,7 +26,7 @@ void EntityAbilityCommand::registerCommand(Step & step_p, State const &state_p)
     // check reload time
     unsigned long reload_l = getReloadAbilityTime(*ent_l, ability_l._reloadKey, getMinReloadTime(ent_l->_model, ability_l._reloadKey));
     if(reload_l >= getMinReloadTime(ent_l->_model, ability_l._reloadKey)
-    && ability_l._checker(step_p, state_p, _target, _pointTarget)
+    && ability_l._checker(step_p, state_p, _handleCommand, _target, _pointTarget)
     && step_p.checkAbilityNotAlreadyRegistered(_handleCommand, ability_l._reloadKey))
     {
         // reset reload time
@@ -41,7 +41,7 @@ bool EntityAbilityCommand::applyCommand(Step & step_p, State const &state_p, Com
 	Logger::getDebug() << "EntityAbilityCommand:: apply Command "<<_target <<std::endl;
 
 	Entity const * ent_l = state_p.getEntity(_handleCommand);
-    getAbility(ent_l->_model, _id)._runnable(step_p, state_p, _target, _pointTarget);
+    getAbility(ent_l->_model, _id)._runnable(step_p, state_p, _handleCommand, _target, _pointTarget);
 
     return true;
 }
