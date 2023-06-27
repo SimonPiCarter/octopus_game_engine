@@ -31,7 +31,7 @@ void PlayerBuffAllStep::apply(State &state_p) const
     {
         // skip if wrong player or model
         if(ent_l->_player != _player
-        || ent_l->_model._id != _model)
+        || (ent_l->_model._id != _model && !_model.empty()))
         {
             continue;
         }
