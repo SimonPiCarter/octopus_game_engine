@@ -16,6 +16,7 @@ class StepUpgradeTyppedBuffGenerator : public StepUpgradeGenerator
 {
 public:
     StepUpgradeTyppedBuffGenerator(TimedBuff const &buff_p, std::vector<std::string> const &models_p);
+    StepUpgradeTyppedBuffGenerator(std::vector<TimedBuff> const &buffs_p, std::vector<std::string> const &models_p);
     ~StepUpgradeTyppedBuffGenerator();
 
     /// @brief Create a new copy of this generator
@@ -29,7 +30,7 @@ public:
     virtual std::vector<Steppable *> getSteppables(unsigned long player_p) const override;
 
 protected:
-    TimedBuff _buff;
+    std::vector<TimedBuff> _buffs;
     std::vector<std::string> _models;
 };
 
