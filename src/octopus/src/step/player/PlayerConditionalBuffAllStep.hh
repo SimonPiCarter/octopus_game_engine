@@ -1,5 +1,5 @@
-#ifndef __PlayerBuffAllStep__
-#define __PlayerBuffAllStep__
+#ifndef __PlayerConditionalBuffAllStep__
+#define __PlayerConditionalBuffAllStep__
 
 #include <vector>
 #include <string>
