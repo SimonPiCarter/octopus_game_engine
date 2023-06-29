@@ -14,6 +14,8 @@
 #include "step/player/PlayerSpendResourceStep.hh"
 #include "step/trigger/TriggerSpawn.hh"
 
+#include "UnitModelIds.hh"
+
 using namespace octopus;
 
 namespace heal_divinity
@@ -111,7 +113,7 @@ HealDivinityParams createDefaultParams()
 	params_l._buffHealTierThree = 45;
 
 	/// @brief tier one unit model (heal unit)
-	params_l._tierOneUnitModelId = "HealUnitTierOne";
+	params_l._tierOneUnitModelId = models::HealUnitModelTierOneId;
 
 	return params_l;
 }

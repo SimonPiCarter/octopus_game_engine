@@ -19,6 +19,8 @@
 #include "step/player/bonus/PlayerAddCostBonusStep.hh"
 #include "step/trigger/TriggerSpawn.hh"
 
+#include "UnitModelIds.hh"
+
 using namespace octopus;
 
 namespace lifesteal_divinity
@@ -76,6 +78,8 @@ LifestealDivinityParams createDefaultParams()
 {
 	LifestealDivinityParams params_l;
 
+	params_l._modelsGeneralLifeSteal = models::BasicModels;
+
 	/// @brief tier one upgrade of life steal
 	params_l._improvedLifeStealTierOne = 0.25;
 	/// @brief tier two upgrade of life steal for all units
@@ -83,7 +87,7 @@ LifestealDivinityParams createDefaultParams()
 	/// @brief tier three upgrade of life steal for all units
 	params_l._lifeStealTierThree = 0.15;
 	/// @brief tier one unit model (lifesteal unit)
-	params_l._tierOneUnitModelId = "LifeStealUnitTierOne";
+	params_l._tierOneUnitModelId = models::LifestealUnitModelTierOneId;
 
 	TimedBuff buff_l;
 	buff_l._coef = -0.5;

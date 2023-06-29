@@ -10,6 +10,8 @@
 #include "step/player/PlayerBuffAllStep.hh"
 #include "step/trigger/TriggerSpawn.hh"
 
+#include "UnitModelIds.hh"
+
 using namespace octopus;
 
 namespace recycle_divinity
@@ -167,7 +169,7 @@ RecycleDivinityParams createDefaultParams()
 		{0,0.5,TyppedBuff::Type::Damage,0,false,"RecycleTier3Dmg"},
 	};
 	/// @brief tier one unit model (unit with a buff when several units die)
-	params_l._tierOneUnitModelId = "RecycleUnitTierOne";
+	params_l._tierOneUnitModelId = models::RecycleUnitModelTierOneId;
 	/// @brief resource cash back on tier two
 	params_l._resourceReturnedTierTwo["bloc"] = 5;
 	params_l._resourceReturnedTierTwo["ehter"] = 2;

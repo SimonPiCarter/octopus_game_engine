@@ -15,6 +15,8 @@
 #include "step/player/PlayerSpendResourceStep.hh"
 #include "step/trigger/TriggerSpawn.hh"
 
+#include "UnitModelIds.hh"
+
 using namespace octopus;
 
 namespace economic_divinity
@@ -43,15 +45,7 @@ std::vector<Steppable *> economicTierThreeGenertor(EconomicDivinityParams const 
 {
 	std::vector<Steppable *> steps_l;
 
-	std::vector<std::string> models_l = {
-		"square",
-		"double_square",
-		"circle",
-		"triangle",
-		"reversed_triangle",
-	};
-
-	for(std::string const &model_l : models_l)
+	for(std::string const &model_l : models::BasicModels)
 	{
 		steps_l.push_back(new PlayerAddCostBonusStep(player_p, model_l, "bloc", {0, params_p._costDebuffTierThree}));
 		steps_l.push_back(new PlayerAddCostBonusStep(player_p, model_l, "ether", {0, params_p._costDebuffTierThree}));

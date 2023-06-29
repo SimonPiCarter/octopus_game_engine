@@ -16,6 +16,8 @@
 #include "step/player/bonus/PlayerAddCostBonusStep.hh"
 #include "step/trigger/TriggerSpawn.hh"
 
+#include "UnitModelIds.hh"
+
 using namespace octopus;
 
 namespace production_divinity
@@ -197,9 +199,9 @@ ProductionDivinityParams createDefaultParams()
 	params_l._prodTierOneUnitCostReductionCoef["bloc"] = 0.2;
 	params_l._prodTierOneUnitCostReductionCoef["ether"] = 0.2;
 
-	params_l._tierOneUnitModelId = "ProductionUnitOne";
-	params_l._tierOneUnitRespawnModelId = "ProductionUnitOneRespawn";
-	params_l._productionBufferModelId = "ProductionUnitTwo";
+	params_l._tierOneUnitModelId = models::ProductionUnitModelTierOneId;
+	params_l._tierOneUnitRespawnModelId = models::ProductionUnitModelTierOneRespawnId;
+	params_l._productionBufferModelId = models::ProductionUnitModelTierTwoId;
 
 	return params_l;
 }
