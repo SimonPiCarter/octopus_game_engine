@@ -6,6 +6,7 @@
 #include "state/State.hh"
 #include "state/entity/Entity.hh"
 #include "state/entity/Unit.hh"
+#include "state/model/entity/BuildingModel.hh"
 #include "state/model/entity/UnitModel.hh"
 #include "state/player/upgrade/StepUpgradeTyppedBuffGenerator.hh"
 #include "step/Step.hh"
@@ -181,6 +182,18 @@ void fillLibrary(HealDivinityParams const &params_p, octopus::Library &lib_p)
 	healUpHealHpTierThree_l->_productionTime = 60000;
 	healUpHealHpTierThree_l->_requirements._upgradeLvl["HealDivinity"] = 3;
 	lib_p.registerUpgrade(healUpHealHpTierThree_l->_id, healUpHealHpTierThree_l);
+
+	/// @brief temple
+	BuildingModel buildingModel_l { true, 0.9, 1500 };
+	buildingModel_l._buildingTime = 2500;
+	buildingModel_l._unitModels.push_back(&lib_p.getUnitModel(params_p._tierOneUnitModelId));
+	buildingModel_l._cost["bloc"] = 75;
+	buildingModel_l._cost["ether"] = 100;
+	buildingModel_l._upgrades.push_back(&lib_p.getUpgrade(healUpHpTierOne_l->_id));
+	buildingModel_l._upgrades.push_back(&lib_p.getUpgrade(healUpHealTierTwo_l->_id));
+	buildingModel_l._upgrades.push_back(&lib_p.getUpgrade(healUpHealHpTierThree_l->_id));
+
+	lib_p.registerBuildingModel(models::HealBuildingId, buildingModel_l);
 }
 
 }

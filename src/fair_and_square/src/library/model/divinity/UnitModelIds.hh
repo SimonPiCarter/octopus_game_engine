@@ -14,7 +14,15 @@ namespace models
     const std::string ProductionUnitModelTierTwoId = "ProductionUnitModelTierTwoId";
     const std::string RecycleUnitModelTierOneId = "RecycleUnitModelTierOneId";
 
-    const std::vector<std::string> BasicModels = {"square", "double_square", "circle", "triangle", "reverse_triangle",
+    const std::string AttackSpeedBuildingId = "AttackSpeedBuildingId";
+    const std::string EconomicBuildingId = "EconomicBuildingId";
+    const std::string EconomicBuildingResourceProducerId = "EconomicBuildingResourceProducer";
+    const std::string HealBuildingId = "HealBuildingId";
+    const std::string LifestealBuildingId = "LifestealBuildingId";
+    const std::string ProductionBuildingId = "ProductionBuildingId";
+    const std::string RecycleBuildingId = "RecycleBuildingId";
+
+    const std::vector<std::string> BasicUnitModels = {"square", "double_square", "circle", "triangle", "reverse_triangle",
         AttackSpeedUnitModelTierOneId,
         HealUnitModelTierOneId,
         LifestealUnitModelTierOneId,
@@ -22,6 +30,18 @@ namespace models
         ProductionUnitModelTierOneRespawnId,
         ProductionUnitModelTierTwoId,
         RecycleUnitModelTierOneId
+    };
+
+    const std::vector<std::string> BasicBuildingProducingModels = {"barrack_square", "barrack_triangle", "barrack_circle",
+        AttackSpeedBuildingId,
+        HealBuildingId,
+        LifestealBuildingId,
+        EconomicBuildingId,
+        ProductionBuildingId,
+        RecycleBuildingId
+    };
+
+    const std::vector<std::string> BasicBuildingDepositModels = {
     };
 }
 

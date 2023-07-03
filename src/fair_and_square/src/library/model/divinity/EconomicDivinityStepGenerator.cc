@@ -45,7 +45,7 @@ std::vector<Steppable *> economicTierThreeGenertor(EconomicDivinityParams const 
 {
 	std::vector<Steppable *> steps_l;
 
-	for(std::string const &model_l : models::BasicModels)
+	for(std::string const &model_l : models::BasicUnitModels)
 	{
 		steps_l.push_back(new PlayerAddCostBonusStep(player_p, model_l, "bloc", {0, params_p._costDebuffTierThree}));
 		steps_l.push_back(new PlayerAddCostBonusStep(player_p, model_l, "ether", {0, params_p._costDebuffTierThree}));
@@ -63,7 +63,7 @@ EconomicDivinityParams createDefaultParams()
 	params_l._workerReducedTime = 500;
 
 	/// @brief tier two building model (resource production)
-	params_l._tierTwoBuildingModelId = "EconomicDivinity_BuildingResourceProducer";
+	params_l._tierTwoBuildingModelId = models::EconomicBuildingResourceProducerId;
 
 	/// @brief hp buff for every unit
 	params_l._hpBuffTierThree = 1;
@@ -120,6 +120,14 @@ void fillLibrary(EconomicDivinityParams const &params_p, octopus::Library &lib_p
 
 	lib_p.registerUpgrade(resUpTierThree_l->_id, resUpTierThree_l);
 
+	/// @brief temple
+	BuildingModel buildingModel_l { true, 0.9, 1500 };
+	buildingModel_l._buildingTime = 2500;
+	buildingModel_l._cost["bloc"] = 75;
+	buildingModel_l._cost["ether"] = 100;
+	buildingModel_l._upgrades.push_back(&lib_p.getUpgrade(resUpTierThree_l->_id));
+
+	lib_p.registerBuildingModel(models::EconomicBuildingId, buildingModel_l);
 }
 
 }

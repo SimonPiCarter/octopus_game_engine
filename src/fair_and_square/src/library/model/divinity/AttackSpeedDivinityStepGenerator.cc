@@ -7,6 +7,7 @@
 #include "state/entity/buff/ConditionalBuff.hh"
 #include "state/entity/Entity.hh"
 #include "state/entity/Unit.hh"
+#include "state/model/entity/BuildingModel.hh"
 #include "state/model/entity/UnitModel.hh"
 #include "state/player/upgrade/StepUpgradeGenerator.hh"
 #include "step/Step.hh"
@@ -100,7 +101,7 @@ AttackSpeedDivinityParams createDefaultParams()
 	/// @brief tier two upgrade of damage
 	params_l._tierTwoDamageIncrease = 2;
 	/// @brief models affected by general attack damage upgrade (t2)
-	params_l._modelsGeneralDamage = models::BasicModels;
+	params_l._modelsGeneralDamage = models::BasicUnitModels;
 
 	/// @brief tier three attack speed buff when full life
 	params_l._tierThreeAttackSpeedIfFullLife = 0.5;
@@ -141,6 +142,16 @@ void fillLibrary(AttackSpeedDivinityParams const &params_p, octopus::Library &li
 	attackspeedBuffTierThree_l->_productionTime = 60000;
 	attackspeedBuffTierThree_l->_requirements._upgradeLvl["AttackspeedDivinity"] = 3;
 	lib_p.registerUpgrade(attackspeedBuffTierThree_l->_id, attackspeedBuffTierThree_l);
+
+	/// @brief temple
+	BuildingModel buildingModel_l { true, 0.9, 1500 };
+	buildingModel_l._unitModels.push_back(&lib_p.getUnitModel(params_p._tierOneUnitModelId));
+	buildingModel_l._buildingTime = 2500;
+	buildingModel_l._cost["bloc"] = 75;
+	buildingModel_l._cost["ether"] = 100;
+	buildingModel_l._upgrades.push_back(&lib_p.getUpgrade(attackspeedBuffTierThree_l->_id));
+
+	lib_p.registerBuildingModel(models::AttackSpeedBuildingId, buildingModel_l);
 }
 
 }

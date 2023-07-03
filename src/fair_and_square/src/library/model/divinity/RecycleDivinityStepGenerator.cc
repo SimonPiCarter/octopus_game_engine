@@ -4,6 +4,7 @@
 #include "controller/trigger/Trigger.hh"
 #include "library/Library.hh"
 #include "state/State.hh"
+#include "state/model/entity/BuildingModel.hh"
 #include "state/player/upgrade/StepUpgradeGenerator.hh"
 #include "step/Step.hh"
 #include "step/player/PlayerSpendResourceStep.hh"
@@ -218,6 +219,17 @@ void fillLibrary(RecycleDivinityParams const &params_p, octopus::Library &lib_p)
 	upBuffDeathRes_l->_productionTime = 60000;
 	upBuffDeathRes_l->_requirements._upgradeLvl["RecycleDivinity"] = 3;
 	lib_p.registerUpgrade(upBuffDeathRes_l->_id, upBuffDeathRes_l);
+
+	/// @brief temple
+	BuildingModel buildingModel_l { true, 0.9, 1500 };
+	buildingModel_l._buildingTime = 2500;
+	buildingModel_l._unitModels.push_back(&lib_p.getUnitModel(params_p._tierOneUnitModelId));
+	buildingModel_l._cost["bloc"] = 75;
+	buildingModel_l._cost["ether"] = 100;
+	buildingModel_l._upgrades.push_back(&lib_p.getUpgrade(upHarvest_l->_id));
+	buildingModel_l._upgrades.push_back(&lib_p.getUpgrade(upBuffDeathRes_l->_id));
+
+	lib_p.registerBuildingModel(models::RecycleBuildingId, buildingModel_l);
 }
 
 }
