@@ -9,11 +9,14 @@ cmake_minimum_required (VERSION 3.14.0)
 # ============================================================================
 
 add_library(fair_and_square_lib
+	${CMAKE_CURRENT_SOURCE_DIR}/src/library/model/AnchorDivinityTrigger.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/library/model/AnchorTrigger.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/library/model/ModelLoader.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/library/model/TimerDamage.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/library/model/bonus/BuffGenerators.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/library/model/divinity/AttackSpeedDivinityStepGenerator.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/src/library/model/divinity/DivinityGenerator.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/src/library/model/divinity/DivinityModelLoader.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/library/model/divinity/EconomicDivinityStepGenerator.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/library/model/divinity/HealDivinityStepGenerator.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/library/model/divinity/LifestealDivinityStepGenerator.cc

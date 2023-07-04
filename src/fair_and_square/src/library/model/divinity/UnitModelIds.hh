@@ -16,11 +16,18 @@ namespace models
 
     const std::string AttackSpeedBuildingId = "AttackSpeedBuildingId";
     const std::string EconomicBuildingId = "EconomicBuildingId";
-    const std::string EconomicBuildingResourceProducerId = "EconomicBuildingResourceProducer";
+    const std::string EconomicBuildingResourceProducerId = "EconomicBuildingResourceProducerId";
     const std::string HealBuildingId = "HealBuildingId";
     const std::string LifestealBuildingId = "LifestealBuildingId";
     const std::string ProductionBuildingId = "ProductionBuildingId";
     const std::string RecycleBuildingId = "RecycleBuildingId";
+
+    const std::string AttackSpeedDivId = "AttackSpeedDivId";
+    const std::string EconomicDivId = "EconomicDivId";
+    const std::string HealDivId = "HealDivId";
+    const std::string LifestealDivId = "LifestealDivId";
+    const std::string ProductionDivId = "ProductionDivId";
+    const std::string RecycleDivId = "RecycleDivId";
 
     const std::vector<std::string> BasicUnitModels = {"square", "double_square", "circle", "triangle", "reverse_triangle",
         AttackSpeedUnitModelTierOneId,

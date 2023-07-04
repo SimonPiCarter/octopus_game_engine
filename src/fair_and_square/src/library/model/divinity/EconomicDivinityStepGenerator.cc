@@ -82,7 +82,7 @@ void customIdleResource(Entity const &ent_p, Step &step_p, State const &)
 	if(ent_p._waiting >= ent_p.getFullReload())
 	{
 		std::map<std::string, Fixed> map_l;
-		map_l["bloc"] = ent_p.getDamageNoBonus();
+		map_l["bloc"] = Fixed(-1) * ent_p.getDamageNoBonus();
 
 		step_p.addSteppable(new PlayerSpendResourceStep(0, map_l));
 		step_p.addSteppable(new EntityUpdateWaitingStep(ent_p._handle, ent_p._waiting, 0));
@@ -101,7 +101,7 @@ void fillLibrary(EconomicDivinityParams const &params_p, octopus::Library &lib_p
 	tiertwounitmodel_l._armor = 0;
 	tiertwounitmodel_l._lineOfSight = 6;
 	tiertwounitmodel_l._fullReload = 2000;
-	tiertwounitmodel_l._requirements._upgradeLvl["EconomicDivinity"] = 2;
+	tiertwounitmodel_l._requirements._upgradeLvl[models::EconomicDivId] = 2;
 	tiertwounitmodel_l._idleFunc = customIdleResource;
 
 	lib_p.registerBuildingModel(params_p._tierTwoBuildingModelId, tiertwounitmodel_l);
@@ -115,8 +115,9 @@ void fillLibrary(EconomicDivinityParams const &params_p, octopus::Library &lib_p
 	Upgrade * resUpTierThree_l = new Upgrade("EconomicUpgrade_BuffResProdTierThree", new StepUpgradeTyppedBuffGenerator(resBuffTierThree_l, {params_p._tierTwoBuildingModelId}));
 	resUpTierThree_l->_cost["bloc"] = 250;
 	resUpTierThree_l->_cost["ether"] = 450;
-	resUpTierThree_l->_productionTime = 60000;
-	resUpTierThree_l->_requirements._upgradeLvl["EconomicDivinity"] = 3;
+	resUpTierThree_l->_cost["irium"] = 450;
+	resUpTierThree_l->_productionTime = 30000;
+	resUpTierThree_l->_requirements._upgradeLvl[models::EconomicDivId] = 3;
 
 	lib_p.registerUpgrade(resUpTierThree_l->_id, resUpTierThree_l);
 
@@ -126,6 +127,7 @@ void fillLibrary(EconomicDivinityParams const &params_p, octopus::Library &lib_p
 	buildingModel_l._cost["bloc"] = 75;
 	buildingModel_l._cost["ether"] = 100;
 	buildingModel_l._upgrades.push_back(&lib_p.getUpgrade(resUpTierThree_l->_id));
+	buildingModel_l._requirements._upgradeLvl[models::EconomicDivId] = 1;
 
 	lib_p.registerBuildingModel(models::EconomicBuildingId, buildingModel_l);
 }

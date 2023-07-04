@@ -129,7 +129,7 @@ void fillLibrary(AttackSpeedDivinityParams const &params_p, octopus::Library &li
 	tieroneunitmodel_l._lineOfSight = 10;
 	tieroneunitmodel_l._fullReload = 30;
 	tieroneunitmodel_l._windup = 20;
-	tieroneunitmodel_l._requirements._upgradeLvl["AttackspeedDivinity"] = 1;
+	tieroneunitmodel_l._requirements._upgradeLvl[models::AttackSpeedDivId] = 1;
 
 	lib_p.registerUnitModel(params_p._tierOneUnitModelId, tieroneunitmodel_l);
 
@@ -139,8 +139,9 @@ void fillLibrary(AttackSpeedDivinityParams const &params_p, octopus::Library &li
 	Upgrade * attackspeedBuffTierThree_l = new Upgrade("AttackspeedUpgrade_BuffTierThreeDamage", new AttackSpeedUpgrade({params_p._tierOneUnitModelId}, params_p._damageUpgradeForTierOneUnit));
 	attackspeedBuffTierThree_l->_cost["bloc"] = 250;
 	attackspeedBuffTierThree_l->_cost["ether"] = 350;
-	attackspeedBuffTierThree_l->_productionTime = 60000;
-	attackspeedBuffTierThree_l->_requirements._upgradeLvl["AttackspeedDivinity"] = 3;
+	attackspeedBuffTierThree_l->_cost["irium"] = 450;
+	attackspeedBuffTierThree_l->_productionTime = 30000;
+	attackspeedBuffTierThree_l->_requirements._upgradeLvl[models::AttackSpeedDivId] = 3;
 	lib_p.registerUpgrade(attackspeedBuffTierThree_l->_id, attackspeedBuffTierThree_l);
 
 	/// @brief temple
@@ -150,6 +151,7 @@ void fillLibrary(AttackSpeedDivinityParams const &params_p, octopus::Library &li
 	buildingModel_l._cost["bloc"] = 75;
 	buildingModel_l._cost["ether"] = 100;
 	buildingModel_l._upgrades.push_back(&lib_p.getUpgrade(attackspeedBuffTierThree_l->_id));
+	buildingModel_l._requirements._upgradeLvl[models::AttackSpeedDivId] = 1;
 
 	lib_p.registerBuildingModel(models::AttackSpeedBuildingId, buildingModel_l);
 }

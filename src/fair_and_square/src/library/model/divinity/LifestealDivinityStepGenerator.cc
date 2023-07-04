@@ -117,7 +117,7 @@ namespace stimpack
 	bool checker(Step const &, State const &state_p, Handle const &source_p, Handle const &, Vector const &)
 	{
 		Requirements req_l;
-		req_l._upgradeLvl["LifestealDivinity"] = 3;
+		req_l._upgradeLvl[models::LifestealDivId] = 3;
 		return meetRequirements(req_l, *state_p.getPlayer(state_p.getEntity(source_p)->_player));
 	}
 
@@ -139,7 +139,7 @@ void fillLibrary(LifestealDivinityParams const &params_p, octopus::Library &lib_
 	tieroneunitmodel_l._fullReload = 200;
 	tieroneunitmodel_l._windup = 20;
 	tieroneunitmodel_l._defaultAttackMod = LifeStealModifier(0.10);
-	tieroneunitmodel_l._requirements._upgradeLvl["LifestealDivinity"] = 1;
+	tieroneunitmodel_l._requirements._upgradeLvl[models::LifestealDivId] = 1;
 
 	tieroneunitmodel_l._abilities["LifeStealDivinity_Stimpack"]._id = "LifeStealDivinity_Stimpack";
 	tieroneunitmodel_l._abilities["LifeStealDivinity_Stimpack"]._reloadKey = "LifeStealDivinity_Stimpack";
@@ -155,16 +155,18 @@ void fillLibrary(LifestealDivinityParams const &params_p, octopus::Library &lib_
 	Upgrade * lifestealBuffTierOne_l = new Upgrade("LifestealUpgrade_BuffTierOneLifesteal", new LifestealUpgrade({params_p._tierOneUnitModelId}, params_p._improvedLifeStealTierOne));
 	lifestealBuffTierOne_l->_cost["bloc"] = 125;
 	lifestealBuffTierOne_l->_cost["ether"] = 125;
-	lifestealBuffTierOne_l->_productionTime = 40000;
-	lifestealBuffTierOne_l->_requirements._upgradeLvl["LifestealDivinity"] = 1;
+	lifestealBuffTierOne_l->_cost["irrium"] = 125;
+	lifestealBuffTierOne_l->_productionTime = 20000;
+	lifestealBuffTierOne_l->_requirements._upgradeLvl[models::LifestealDivId] = 1;
 	lib_p.registerUpgrade(lifestealBuffTierOne_l->_id, lifestealBuffTierOne_l);
 
 	// T3 lifesteal buff
 	Upgrade * lifestealBuffTierThree_l = new Upgrade("LifestealUpgrade_BuffTierThreeLifesteal", new LifestealUpgrade(params_p._modelsGeneralLifeSteal, params_p._lifeStealTierThree));
 	lifestealBuffTierThree_l->_cost["bloc"] = 250;
 	lifestealBuffTierThree_l->_cost["ether"] = 250;
-	lifestealBuffTierThree_l->_productionTime = 60000;
-	lifestealBuffTierThree_l->_requirements._upgradeLvl["LifestealDivinity"] = 3;
+	lifestealBuffTierThree_l->_cost["irrium"] = 450;
+	lifestealBuffTierThree_l->_productionTime = 30000;
+	lifestealBuffTierThree_l->_requirements._upgradeLvl[models::LifestealDivId] = 3;
 	lib_p.registerUpgrade(lifestealBuffTierThree_l->_id, lifestealBuffTierThree_l);
 
 	/// @brief temple
@@ -175,6 +177,7 @@ void fillLibrary(LifestealDivinityParams const &params_p, octopus::Library &lib_
 	buildingModel_l._cost["ether"] = 100;
 	buildingModel_l._upgrades.push_back(&lib_p.getUpgrade(lifestealBuffTierOne_l->_id));
 	buildingModel_l._upgrades.push_back(&lib_p.getUpgrade(lifestealBuffTierThree_l->_id));
+	buildingModel_l._requirements._upgradeLvl[models::LifestealDivId] = 1;
 
 	lib_p.registerBuildingModel(models::LifestealBuildingId, buildingModel_l);
 }
