@@ -1,4 +1,4 @@
-#include "AttackspeedDivinityStepGenerator.hh"
+#include "AttackSpeedDivinityStepGenerator.hh"
 
 #include "controller/trigger/Listener.hh"
 #include "controller/trigger/Trigger.hh"
