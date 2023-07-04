@@ -187,6 +187,14 @@ void fillLibrary(HealDivinityParams const &params_p, octopus::Library &lib_p)
 
 	/// @brief temple
 	BuildingModel buildingModel_l { true, 0.9, 1500 };
+
+	models::fillTierUpgrade<HealDivinityParams>(lib_p, params_p, models::HealDivId,
+		healTierOneGenertor,
+		std::bind(healTierTwoGenertor, std::placeholders::_1, std::ref(lib_p), std::placeholders::_2),
+		std::bind(healTierThreeGenertor, std::placeholders::_1, std::ref(lib_p), std::placeholders::_2),
+		buildingModel_l
+	);
+
 	buildingModel_l._buildingTime = 2500;
 	buildingModel_l._unitModels.push_back(&lib_p.getUnitModel(params_p._tierOneUnitModelId));
 	buildingModel_l._cost["bloc"] = 75;

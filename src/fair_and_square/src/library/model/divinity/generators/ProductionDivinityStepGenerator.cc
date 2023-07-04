@@ -287,6 +287,14 @@ void fillLibrary(ProductionDivinityParams const &params_p, octopus::Library &lib
 
 	/// @brief temple
 	BuildingModel buildingModel_l { true, 0.9, 1500 };
+
+	models::fillTierUpgrade<ProductionDivinityParams>(lib_p, params_p, models::ProductionDivId,
+		productionTierOneGenertor,
+		std::bind(productionTierTwoGenertor, std::placeholders::_1, std::ref(lib_p), std::placeholders::_2),
+		std::bind(productionTierThreeGenertor, std::placeholders::_1, std::ref(lib_p), std::placeholders::_2),
+		buildingModel_l
+	);
+
 	buildingModel_l._buildingTime = 2500;
 	buildingModel_l._unitModels.push_back(&lib_p.getUnitModel(params_p._tierOneUnitModelId));
 	buildingModel_l._unitModels.push_back(&lib_p.getUnitModel(params_p._productionBufferModelId));

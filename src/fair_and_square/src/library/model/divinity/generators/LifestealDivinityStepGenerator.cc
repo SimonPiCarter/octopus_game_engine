@@ -171,6 +171,14 @@ void fillLibrary(LifestealDivinityParams const &params_p, octopus::Library &lib_
 
 	/// @brief temple
 	BuildingModel buildingModel_l { true, 0.9, 1500 };
+
+	models::fillTierUpgrade<LifestealDivinityParams>(lib_p, params_p, models::LifestealDivId,
+		lifestealTierOneGenertor,
+		std::bind(lifestealTierTwoGenertor, std::placeholders::_1, std::ref(lib_p), std::placeholders::_2),
+		std::bind(lifestealTierThreeGenertor, std::placeholders::_1, std::ref(lib_p), std::placeholders::_2),
+		buildingModel_l
+	);
+
 	buildingModel_l._buildingTime = 2500;
 	buildingModel_l._unitModels.push_back(&lib_p.getUnitModel(params_p._tierOneUnitModelId));
 	buildingModel_l._cost["bloc"] = 75;

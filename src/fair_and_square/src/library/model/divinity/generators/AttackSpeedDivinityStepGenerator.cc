@@ -146,12 +146,21 @@ void fillLibrary(AttackSpeedDivinityParams const &params_p, octopus::Library &li
 
 	/// @brief temple
 	BuildingModel buildingModel_l { true, 0.9, 1500 };
+
+	models::fillTierUpgrade<AttackSpeedDivinityParams>(lib_p, params_p, models::AttackSpeedDivId,
+		attackspeedTierOneGenertor,
+		std::bind(attackspeedTierTwoGenertor, std::placeholders::_1, std::ref(lib_p), std::placeholders::_2),
+		std::bind(attackspeedTierThreeGenertor, std::placeholders::_1, std::ref(lib_p), std::placeholders::_2),
+		buildingModel_l
+	);
+
 	buildingModel_l._unitModels.push_back(&lib_p.getUnitModel(params_p._tierOneUnitModelId));
 	buildingModel_l._buildingTime = 2500;
 	buildingModel_l._cost["bloc"] = 75;
 	buildingModel_l._cost["ether"] = 100;
 	buildingModel_l._upgrades.push_back(&lib_p.getUpgrade(attackspeedBuffTierThree_l->_id));
 	buildingModel_l._requirements._upgradeLvl[models::AttackSpeedDivId] = 1;
+
 
 	lib_p.registerBuildingModel(models::AttackSpeedBuildingId, buildingModel_l);
 }

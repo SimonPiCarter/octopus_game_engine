@@ -123,6 +123,14 @@ void fillLibrary(EconomicDivinityParams const &params_p, octopus::Library &lib_p
 
 	/// @brief temple
 	BuildingModel buildingModel_l { true, 0.9, 1500 };
+
+	models::fillTierUpgrade<EconomicDivinityParams>(lib_p, params_p, models::EconomicDivId,
+		economicTierOneGenertor,
+		economicTierTwoGenertor,
+		economicTierThreeGenertor,
+		buildingModel_l
+	);
+
 	buildingModel_l._buildingTime = 2500;
 	buildingModel_l._cost["bloc"] = 75;
 	buildingModel_l._cost["ether"] = 100;
