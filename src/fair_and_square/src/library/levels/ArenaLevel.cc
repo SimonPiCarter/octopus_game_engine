@@ -68,7 +68,6 @@ std::list<Steppable *> ArenaLevelSteps(Library &lib_p, size_t number_p)
 std::list<octopus::Steppable *> ArenaLevelSteps(octopus::Library &lib_p, std::vector<ArenaInfo> const &you_p, std::vector<ArenaInfo> const &them_p)
 {
 	loadModels(lib_p);
-	PatternHandler patternHandler_l;
 
     octopus::PatternHandler handler_l;
 	octopus::VisionPattern pattern_l = handler_l.getPattern(50);
@@ -118,8 +117,6 @@ std::list<octopus::Steppable *> ArenaLevelSteps(octopus::Library &lib_p, std::ve
 
 std::list<octopus::Steppable *> ArenaKamikazeSteps(octopus::Library &lib_p, size_t numberYou_p, size_t numberThem_p, bool fast_p)
 {
-	PatternHandler patternHandler_l;
-
     octopus::PatternHandler handler_l;
 	octopus::VisionPattern pattern_l = handler_l.getPattern(50);
 	for(std::pair<long, long> &pair_l : pattern_l)
