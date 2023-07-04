@@ -1,16 +1,16 @@
 #include "DivinityModelLoader.hh"
-#include "UnitModelIds.hh"
 
 #include "library/Library.hh"
 #include "step/player/PlayerSpawnStep.hh"
 
 // fas
-#include "library/model/divinity/AttackSpeedDivinityStepGenerator.hh"
-#include "library/model/divinity/EconomicDivinityStepGenerator.hh"
-#include "library/model/divinity/HealDivinityStepGenerator.hh"
-#include "library/model/divinity/LifestealDivinityStepGenerator.hh"
-#include "library/model/divinity/ProductionDivinityStepGenerator.hh"
-#include "library/model/divinity/RecycleDivinityStepGenerator.hh"
+#include "library/model/divinity/generators/AttackSpeedDivinityStepGenerator.hh"
+#include "library/model/divinity/generators/EconomicDivinityStepGenerator.hh"
+#include "library/model/divinity/generators/HealDivinityStepGenerator.hh"
+#include "library/model/divinity/generators/LifestealDivinityStepGenerator.hh"
+#include "library/model/divinity/generators/ProductionDivinityStepGenerator.hh"
+#include "library/model/divinity/generators/RecycleDivinityStepGenerator.hh"
+#include "library/model/divinity/generators/UnitModelIds.hh"
 
 namespace fas
 {

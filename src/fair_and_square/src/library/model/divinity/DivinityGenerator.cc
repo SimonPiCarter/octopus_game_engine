@@ -1,6 +1,6 @@
 #include "DivinityGenerator.hh"
 
-#include "UnitModelIds.hh"
+#include "generators/UnitModelIds.hh"
 
 #include "state/State.hh"
 #include "state/player/Player.hh"
