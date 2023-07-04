@@ -28,6 +28,8 @@ public:
 	{
 		visitor_p->visit(this);
 	}
+
+	unsigned long getPlayerIdx() const { return _playerIdx; }
 protected:
 	unsigned long _playerIdx;
 	unsigned long _playerTeam;

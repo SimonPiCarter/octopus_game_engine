@@ -88,12 +88,12 @@ std::map<std::string, Fixed> getCost(UnitModel const &model_p, Player const & pl
 	return cost_l;
 }
 
-std::list<BuildingModel const *> getAvailableBuildingModels(Player const &player_p)
+std::list<BuildingModel const *> getAvailableBuildingModels(Player const &player_p, bool checkRequirements_p)
 {
 	std::list<BuildingModel const *> availables_l;
 	for(BuildingModel const * model_l : player_p._buildingModels)
 	{
-		if(meetRequirements(model_l->_requirements, player_p))
+		if(meetRequirements(model_l->_requirements, player_p) || !checkRequirements_p)
 		{
 			availables_l.push_back(model_l);
 		}
@@ -101,12 +101,12 @@ std::list<BuildingModel const *> getAvailableBuildingModels(Player const &player
 	return availables_l;
 }
 
-std::list<UnitModel const *> getAvailableUnitModels(BuildingModel const &building_p, Player const &player_p)
+std::list<UnitModel const *> getAvailableUnitModels(BuildingModel const &building_p, Player const &player_p, bool checkRequirements_p)
 {
 	std::list<UnitModel const *> availables_l;
 	for(UnitModel const * model_l : building_p._unitModels)
 	{
-		if(meetRequirements(model_l->_requirements, player_p))
+		if(meetRequirements(model_l->_requirements, player_p) || !checkRequirements_p)
 		{
 			availables_l.push_back(model_l);
 		}
@@ -114,13 +114,13 @@ std::list<UnitModel const *> getAvailableUnitModels(BuildingModel const &buildin
 	return availables_l;
 }
 
-std::list<Upgrade const *> getAvailableUpgrades(BuildingModel const &building_p, Player const &player_p)
+std::list<Upgrade const *> getAvailableUpgrades(BuildingModel const &building_p, Player const &player_p, bool checkRequirements_p)
 {
 	std::list<Upgrade const *> availables_l;
 	for(Upgrade const * upgrade_l : building_p._upgrades)
 	{
 		// meet requirement and avoid repeat upgrade
-		if(meetRequirements(upgrade_l->_requirements, player_p)
+		if(meetRequirements(upgrade_l->_requirements, player_p) || !checkRequirements_p
 		&& (upgrade_l->_repeatable || player_p._producedUpgrade.find(upgrade_l->_id) == player_p._producedUpgrade.end()))
 		{
 			availables_l.push_back(upgrade_l);

@@ -76,11 +76,11 @@ namespace octopus
 	std::map<std::string, Fixed> getCost(UnitModel const &model_p, Player const & player_p);
 
 	/// @brief return availables building models from building
-	std::list<BuildingModel const *> getAvailableBuildingModels(Player const &player_p);
+	std::list<BuildingModel const *> getAvailableBuildingModels(Player const &player_p, bool checkRequirements_p=true);
 	/// @brief return availables unit models from building and player
-	std::list<UnitModel const *> getAvailableUnitModels(BuildingModel const &building_p, Player const &player_p);
+	std::list<UnitModel const *> getAvailableUnitModels(BuildingModel const &building_p, Player const &player_p, bool checkRequirements_p=true);
 	/// @brief return availables upgrades from building and player
-	std::list<Upgrade const *> getAvailableUpgrades(BuildingModel const &building_p, Player const &player_p);
+	std::list<Upgrade const *> getAvailableUpgrades(BuildingModel const &building_p, Player const &player_p, bool checkRequirements_p=true);
 }
 
 #endif
