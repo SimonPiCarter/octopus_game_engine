@@ -128,18 +128,13 @@ void ControllerStepVisitor::visit(octopus::BuildingStep const *steppable_p)
 
 void ControllerStepVisitor::visit(octopus::PlayerAddOptionStep const *steppable_p)
 {
-	std::map<unsigned long, OptionManager> & map_l = _controller.getOptionManagers();
-	if(map_l.find(steppable_p->_player) == map_l.end())
-	{
-		map_l.emplace(std::make_pair(steppable_p->_player, OptionManager(steppable_p->_player)));
-	}
-	map_l.at(steppable_p->_player).addOptionLayer(steppable_p);
+	_controller.getOptionManagers().at(steppable_p->_player)->addOptionLayer(steppable_p);
 	_controller.emit_signal("option_update");
 }
 
 void ControllerStepVisitor::visit(octopus::PlayerPopOptionStep const *steppable_p)
 {
-	_controller.getOptionManagers().at(steppable_p->_player).popOptionLayer(steppable_p);
+	_controller.getOptionManagers().at(steppable_p->_player)->popOptionLayer(steppable_p);
 	_controller.emit_signal("option_update");
 	_controller.emit_signal("pop_option");
 }

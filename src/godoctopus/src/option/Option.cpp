@@ -164,6 +164,41 @@ void Option::set_option(SingleOption const &option_p)
     std::visit([&](auto && arg) { update(arg); }, option_p);
 }
 
+void Option::set_option(unsigned long player_p, fas::DivinityType const &option_p)
+{
+    _params.clear();
+    _desc.clear();
+    _stats_name.clear();
+
+    _modifier_name = "";
+    _model_name = "long_square";
+    _player = player_p;
+    _stats_name.push_back("");
+    _params.push_back(TypedArray<String>());
+
+    switch(option_p)
+    {
+        case fas::DivinityType::AttackSpeed:
+            _desc.push_back("anchor AttackSpeed Divinity");
+            break;
+        case fas::DivinityType::Economic:
+            _desc.push_back("anchor Economic Divinity");
+            break;
+        case fas::DivinityType::Heal:
+            _desc.push_back("anchor Heal Divinity");
+            break;
+        case fas::DivinityType::Lifesteal:
+            _desc.push_back("anchor Lifesteal Divinity");
+            break;
+        case fas::DivinityType::Production:
+            _desc.push_back("anchor Production Divinity");
+            break;
+        case fas::DivinityType::Recycle:
+            _desc.push_back("anchor Recycle Divinity");
+            break;
+    }
+}
+
 int Option::get_nb_desc() const
 {
     return _desc.size();

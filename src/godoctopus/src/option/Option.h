@@ -7,6 +7,7 @@
 #include <godot_cpp/classes/node2d.hpp>
 
 #include "library/model/bonus/BuffGenerators.hh"
+#include "library/model/divinity/DivinityModelLoader.hh"
 
 namespace godot {
 
@@ -33,6 +34,7 @@ public:
     void updateFromModifier(octopus::SelfDamageModifier const &mod_p);
 
     void set_option(SingleOption const &option_p);
+    void set_option(unsigned long player_p, fas::DivinityType const &option_p);
 
     // Will be called by Godot when the class is registered
     // Use this to add properties to your class

@@ -5,7 +5,7 @@
 #include <random>
 
 // fas
-#include "library/model/AnchorTrigger.hh"
+#include "library/model/AnchorDivinityTrigger.hh"
 #include "library/model/ModelLoader.hh"
 #include "library/model/TimerDamage.hh"
 
@@ -57,9 +57,30 @@ public:
     }
 };
 
-std::list<Steppable *> LevelSteps(Library &lib_p, RandomGenerator &rand_p, int stepCount_p)
+void addBuildingPlayer(std::list<Steppable *> &spawners_p, unsigned long player_p, std::vector<fas::DivinityType> const &divinities_p, Library &lib_p)
+{
+	spawners_p.push_back(new PlayerAddBuildingModel(player_p, lib_p.getBuildingModel("barrack_square")));
+	spawners_p.push_back(new PlayerAddBuildingModel(player_p, lib_p.getBuildingModel("barrack_circle")));
+	spawners_p.push_back(new PlayerAddBuildingModel(player_p, lib_p.getBuildingModel("barrack_triangle")));
+	spawners_p.push_back(new PlayerAddBuildingModel(player_p, lib_p.getBuildingModel("deposit")));
+	spawners_p.push_back(new PlayerAddBuildingModel(player_p, lib_p.getBuildingModel("anchor")));
+
+	for(fas::DivinityType div_l : divinities_p)
+	{
+		std::vector<Steppable *> steps_l = newPlayerBuilding(player_p, div_l, lib_p);
+		for(Steppable * step_l : steps_l)
+		{
+			spawners_p.push_back(step_l);
+		}
+	}
+}
+
+std::list<Steppable *> LevelSteps(Library &lib_p, RandomGenerator &rand_p, int stepCount_p, std::vector<fas::DivinityType> const &divinitiesPlayer1_p, std::vector<fas::DivinityType> const &divinitiesPlayer2_p)
 {
 	loadMinimalModels(lib_p);
+
+	// load divinity library
+	fas::loadLibrary(lib_p);
 
 	Building buildingP0_l({20, 10}, true, lib_p.getBuildingModel("command_center"));
 	Unit unitP0_l({ 17, 10 }, false, lib_p.getUnitModel("worker"));
@@ -87,26 +108,36 @@ std::list<Steppable *> LevelSteps(Library &lib_p, RandomGenerator &rand_p, int s
 	Trigger * triggerLoseP0_l = new LoseTrigger(new ListenerEntityModelDied(&lib_p.getBuildingModel("command_center"), 0), 1);
 	Trigger * triggerLoseP1_l = new LoseTrigger(new ListenerEntityModelDied(&lib_p.getBuildingModel("command_center"), 1), 0);
 
+    octopus::PatternHandler handler_l;
+	octopus::VisionPattern pattern_l = handler_l.getPattern(250);
+	for(std::pair<long, long> &pair_l : pattern_l)
+	{
+		pair_l.first += 100;
+		pair_l.second += 100;
+	}
+
 	Handle handle_l = 0;
 	std::list<Steppable *> spawners_l =
 	{
 		new PlayerSpawnStep(0, 0),
 		new PlayerSpawnStep(1, 1),
 		new PlayerSpawnStep(2, 2),
-		new PlayerAddBuildingModel(0, lib_p.getBuildingModel("barrack_square")),
-		new PlayerAddBuildingModel(0, lib_p.getBuildingModel("barrack_circle")),
-		new PlayerAddBuildingModel(0, lib_p.getBuildingModel("barrack_triangle")),
-		new PlayerAddBuildingModel(0, lib_p.getBuildingModel("deposit")),
-		new PlayerAddBuildingModel(0, lib_p.getBuildingModel("anchor")),
 		new PlayerSpendResourceStep(0, mapRes_l),
 		new PlayerSpendResourceStep(1, mapRes_l),
 		new BuildingSpawnStep(handle_l++, buildingP0_l, true),
 		new BuildingSpawnStep(handle_l++, buildingP1_l, true),
 		new TriggerSpawn(triggerLoseP1_l),
 		new TriggerSpawn(triggerLoseP0_l),
-		new TriggerSpawn(new AnchorTrigger(lib_p, rand_p, 180)),
+		new TriggerSpawn(new AnchorDivinityTrigger(lib_p, rand_p, 0, divinitiesPlayer1_p, 180)),
+		new TriggerSpawn(new AnchorDivinityTrigger(lib_p, rand_p, 1, divinitiesPlayer2_p, 180)),
 		new FlyingCommandSpawnStep(new TimerDamage(0, 100, 0, 0, "Anchor", 0)),
+		new FlyingCommandSpawnStep(new TimerDamage(1, 100, 0, 0, "Anchor", 0)),
+		new TeamVisionStep(0, pattern_l, true, false),
+		new TeamVisionStep(0, pattern_l, true, true),
 	};
+
+	addBuildingPlayer(spawners_l, 0, divinitiesPlayer1_p, lib_p);
+	addBuildingPlayer(spawners_l, 1, divinitiesPlayer2_p, lib_p);
 
     for(size_t i = 0 ; i < 10 ; ++i)
     {
@@ -190,11 +221,48 @@ std::list<Command *> LevelCommands(Library &lib_p, RandomGenerator &rand_p)
 	return commands_l;
 }
 
+namespace
+{
+
+void writeDivList(std::ofstream &file_p, std::vector<fas::DivinityType> const &types_p)
+{
+	size_t size_l = types_p.size();
+	file_p.write((char*)&size_l, sizeof(size_l));
+
+	for(size_t i = 0 ; i < size_l ; ++i)
+	{
+		file_p.write((char*)&types_p.at(i), sizeof(types_p.at(i)));
+	}
+}
+
+std::vector<fas::DivinityType> readDivList(std::ifstream &file_p)
+{
+	size_t size_l = 0;
+	file_p.read((char*)&size_l, sizeof(size_l));
+
+	std::vector<fas::DivinityType> types_l;
+
+	for(size_t i = 0 ; i < size_l ; ++i)
+	{
+		fas::DivinityType type_l;
+		file_p.read((char*)&type_l, sizeof(type_l));
+		types_l.push_back(type_l);
+	}
+
+	return types_l;
+}
+
+} // namespace
+
+
 /// @brief write header for classic duel level
 void writeLevelHeader(std::ofstream &file_p, DuelLevelHeader const &header_p)
 {
     file_p.write((char*)&header_p.seed, sizeof(header_p.seed));
     file_p.write((char*)&header_p.step_count, sizeof(header_p.step_count));
+
+	writeDivList(file_p, header_p.div_player_1);
+	writeDivList(file_p, header_p.div_player_2);
 }
 
 /// @brief read header for classic duel level and return a pair of steppable and command
@@ -204,11 +272,14 @@ std::pair<std::list<octopus::Steppable *>, std::list<octopus::Command *> > readL
     file_p.read((char*)&header_r.seed, sizeof(header_r.seed));
     file_p.read((char*)&header_r.step_count, sizeof(header_r.step_count));
 
+	header_r.div_player_1 = readDivList(file_p);
+	header_r.div_player_2 = readDivList(file_p);
+
 	delete rand_p;
 	rand_p = new octopus::RandomGenerator(header_r.seed);
 
 	std::pair<std::list<octopus::Steppable *>, std::list<octopus::Command *> > pair_l;
-	pair_l.first = LevelSteps(lib_p, *rand_p, header_r.step_count);
+	pair_l.first = LevelSteps(lib_p, *rand_p, header_r.step_count, header_r.div_player_1, header_r.div_player_2);
 	pair_l.second = LevelCommands(lib_p, *rand_p);
 	return pair_l;
 }

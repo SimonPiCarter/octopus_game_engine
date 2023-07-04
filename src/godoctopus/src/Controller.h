@@ -55,7 +55,7 @@ public:
     void load_level2(int seed_p);
     void load_level_test_anchor(int seed_p);
     void load_level_test_model_reading(int seed_p, godot::LevelModel *level_model_p);
-    void load_duel_level(int seed_p);
+    void load_duel_level(int seed_p, TypedArray<int> const &div_player_1_p, TypedArray<int> const &div_player_2_p);
     void load_multi_test_level(int seed_p, int step_cout_p);
 
     // replay
@@ -66,7 +66,7 @@ public:
     void replay_level(String const &filename_p, bool replay_mode_p, godot::LevelModel *level_model_p);
 
     // start engine with given level
-    void init(std::list<octopus::Command *> const &commands_p, std::list<octopus::Steppable *> const &spawners_p, size_t size_p=50, std::ofstream *file_p=nullptr);
+    void init(std::list<octopus::Command *> const &commands_p, std::list<octopus::Steppable *> const &spawners_p, bool divOptionManager_p=false, size_t size_p=50, std::ofstream *file_p=nullptr);
     void init_replay(std::list<octopus::Command *> const &commands_p, std::list<octopus::Steppable *> const &spawners_p, size_t size_p, std::ifstream &file_p);
     void init_loading(std::list<octopus::Command *> const &commands_p, std::list<octopus::Steppable *> const &spawners_p, size_t size_p, std::ifstream &file_p);
     void loading_loop();
@@ -90,7 +90,7 @@ public:
     void set_pause(bool paused_p);
     void set_over(bool over_p);
     // getters
-    TypedArray<String> get_models(int handle_p, int player_p) const;
+    TypedArray<String> get_models(int handle_p, int player_p, bool checkRequirements_p) const;
     bool is_building(String const &model_p) const;
     int get_world_size() const;
     int get_steps() const;
@@ -169,8 +169,8 @@ public:
     //// Non godot methods
     ////////////////////////////
 
-    std::map<unsigned long, OptionManager> &getOptionManagers();
-    std::map<unsigned long, OptionManager> const &getOptionManagers() const;
+    std::map<unsigned long, AbstractOptionManager *> &getOptionManagers();
+    std::map<unsigned long, AbstractOptionManager *> const &getOptionManagers() const;
 
     octopus::Library &getLib();
 private:
@@ -205,7 +205,7 @@ private:
     std::vector<bool> _visibleLastCall;
 
     /// @brief manager for each player
-    std::map<unsigned long, OptionManager> _optionManagers;
+    std::map<unsigned long, AbstractOptionManager *> _optionManagers;
 
     /// @brief if set to true controller loop will be capped by _stepDone
     bool _stepControl = true;

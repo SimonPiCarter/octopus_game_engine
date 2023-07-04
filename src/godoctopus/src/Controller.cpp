@@ -26,6 +26,7 @@
 #include "state/player/Player.hh"
 #include "state/player/upgrade/Upgrade.hh"
 #include "state/State.hh"
+#include "step/player/PlayerSpawnStep.hh"
 #include "utils/Binary.hh"
 
 // godot
@@ -40,6 +41,19 @@
 
 namespace godot {
 
+template<typename T>
+std::vector<T> toVector(TypedArray<T> const &array_p)
+{
+    std::vector<T> vec_l;
+
+    for(size_t i = 0 ; i < array_p.size() ; ++ i)
+    {
+        vec_l.push_back(array_p[i]);
+    }
+
+    return vec_l;
+}
+
 Controller::~Controller()
 {
     if(_controllerThread)
@@ -51,6 +65,10 @@ Controller::~Controller()
     delete _controllerThread;
     delete _controller;
     delete _rand;
+    for(auto &&pair_l : _optionManagers)
+    {
+        delete pair_l.second;
+    }
 }
 
 void Controller::_process(double delta)
@@ -118,7 +136,7 @@ void Controller::load_arena_level(TypedArray<int> const &size_you_p, TypedArray<
     _headerWriter(*_autoSaveFile);
     // writeArenaLevelHeader(*_autoSaveFile, you_l, them_l);
     // init with autosave
-    init(commands_l, spawners_l, 10, _autoSaveFile);
+    init(commands_l, spawners_l, false, 10, _autoSaveFile);
 }
 
 void Controller::load_kamikaze_level(int you_p, int them_p, bool fast_p)
@@ -133,7 +151,7 @@ void Controller::load_kamikaze_level(int you_p, int them_p, bool fast_p)
     _headerWriter(*_autoSaveFile);
     // writeArenaKamikazeHeader(*_autoSaveFile, you_p, them_p, fast_p);
     // init with autosave
-    init(commands_l, spawners_l, 10, _autoSaveFile);
+    init(commands_l, spawners_l, false, 10, _autoSaveFile);
 }
 
 void Controller::load_maze_level(int size_p)
@@ -147,7 +165,7 @@ void Controller::load_maze_level(int size_p)
     _headerWriter = std::bind(writeMazeLevelHeader, std::placeholders::_1, size_p);
     _headerWriter(*_autoSaveFile);
     // writeMazeLevelHeader(*_autoSaveFile, size_p);
-    init(commands_l, spawners_l, 50, _autoSaveFile);
+    init(commands_l, spawners_l, false, 50, _autoSaveFile);
 }
 
 void Controller::load_aoe_level(int size_p)
@@ -190,8 +208,7 @@ void Controller::load_level1(int seed_p, int nb_wave_p)
     _currentLevel = LEVEL_ID_LEVEL_1;
     _headerWriter = std::bind(level1::writeWaveLevelHeader, std::placeholders::_1, level1::WaveLevelHeader {seed_p, (unsigned long)nb_wave_p, 3*60*100, 150});
     _headerWriter(*_autoSaveFile);
-    // level1::writeWaveLevelHeader(*_autoSaveFile, seed_p, nb_wave_p, 3*60*100, 150);
-    init(commands_l, spawners_l, 50, _autoSaveFile);
+    init(commands_l, spawners_l, false, 50, _autoSaveFile);
 }
 
 void Controller::load_level2(int seed_p)
@@ -206,8 +223,7 @@ void Controller::load_level2(int seed_p)
     _currentLevel = LEVEL_ID_LEVEL_2;
     _headerWriter = std::bind(level2::writeWaveLevelHeader, std::placeholders::_1, level2::WaveLevelHeader{seed_p});
     _headerWriter(*_autoSaveFile);
-    // level2::writeWaveLevelHeader(*_autoSaveFile, seed_p);
-    init(commands_l, spawners_l, 50, _autoSaveFile);
+    init(commands_l, spawners_l, false, 50, _autoSaveFile);
 }
 
 void Controller::load_level_test_anchor(int seed_p)
@@ -222,8 +238,7 @@ void Controller::load_level_test_anchor(int seed_p)
     _currentLevel = LEVEL_ID_LEVEL_TEST_ANCHOR;
     _headerWriter = std::bind(level_test_anchor::writeLevelHeader, std::placeholders::_1, level_test_anchor::TestAnchorHeader {seed_p});
     _headerWriter(*_autoSaveFile);
-    // level_test_anchor::writeLevelHeader(*_autoSaveFile, seed_p);
-    init(commands_l, spawners_l, 50, _autoSaveFile);
+    init(commands_l, spawners_l, false, 50, _autoSaveFile);
 }
 
 void Controller::load_level_test_model_reading(int seed_p, godot::LevelModel *level_model_p)
@@ -245,17 +260,17 @@ void Controller::load_level_test_model_reading(int seed_p, godot::LevelModel *le
     _currentLevel = LEVEL_ID_LEVEL_TEST_MODEL;
     _headerWriter = std::bind(level_test_model::writeLevelHeader, std::placeholders::_1, level_test_model::ModelLoaderHeader {seed_p});
     _headerWriter(*_autoSaveFile);
-    // level_test_model::writeLevelHeader(*_autoSaveFile, seed_p);
-    init(commands_l, spawners_l, 50, _autoSaveFile);
+    init(commands_l, spawners_l, false, 50, _autoSaveFile);
 }
 
-void Controller::load_duel_level(int seed_p)
+void Controller::load_duel_level(int seed_p, TypedArray<int> const &div_player_1_p, TypedArray<int> const &div_player_2_p)
 {
     UtilityFunctions::print("loading duel level with seed ",seed_p);
     delete _rand;
     _rand = new octopus::RandomGenerator(seed_p);
     std::list<octopus::Steppable *> spawners_l = {};
-    std::list<octopus::Steppable *> levelsteps_l = duellevel::LevelSteps(_lib, *_rand, 0);
+    std::list<octopus::Steppable *> levelsteps_l = duellevel::LevelSteps(_lib, *_rand, 0,
+            fas::intToDivinityType(toVector(div_player_1_p)), fas::intToDivinityType(toVector(div_player_1_p)));
     spawners_l.splice(spawners_l.end(), levelsteps_l);
 
     std::list<octopus::Command *> commands_l = duellevel::LevelCommands(_lib, *_rand);
@@ -265,7 +280,7 @@ void Controller::load_duel_level(int seed_p)
     _currentLevel = LEVEL_ID_DUEL;
     _headerWriter = std::bind(duellevel::writeLevelHeader, std::placeholders::_1, duellevel::DuelLevelHeader {seed_p, 0});
     _headerWriter(*_autoSaveFile);
-    init(commands_l, spawners_l, LEVEL_DUEL_SIZE/5, _autoSaveFile);
+    init(commands_l, spawners_l, true, LEVEL_DUEL_SIZE/5, _autoSaveFile);
 }
 
 void Controller::load_multi_test_level(int seed_p, int step_cout_p)
@@ -274,7 +289,7 @@ void Controller::load_multi_test_level(int seed_p, int step_cout_p)
     delete _rand;
     _rand = new octopus::RandomGenerator(seed_p);
     std::list<octopus::Steppable *> spawners_l = {};
-    std::list<octopus::Steppable *> levelsteps_l = duellevel::LevelSteps(_lib, *_rand, step_cout_p);
+    std::list<octopus::Steppable *> levelsteps_l = duellevel::LevelSteps(_lib, *_rand, step_cout_p, {}, {});
     spawners_l.splice(spawners_l.end(), levelsteps_l);
 
     std::list<octopus::Command *> commands_l = duellevel::LevelCommands(_lib, *_rand);
@@ -284,7 +299,7 @@ void Controller::load_multi_test_level(int seed_p, int step_cout_p)
     _currentLevel = LEVEL_ID_DUEL;
     _headerWriter = std::bind(duellevel::writeLevelHeader, std::placeholders::_1, duellevel::DuelLevelHeader {seed_p, step_cout_p});
     _headerWriter(*_autoSaveFile);
-    init(commands_l, spawners_l, LEVEL_DUEL_SIZE/5, _autoSaveFile);
+    init(commands_l, spawners_l, true, LEVEL_DUEL_SIZE/5, _autoSaveFile);
 }
 
 
@@ -408,9 +423,26 @@ void Controller::replay_level(String const &filename_p, bool replay_mode_p, godo
     }
 }
 
-void Controller::init(std::list<octopus::Command *> const &commands_p, std::list<octopus::Steppable *> const &spawners_p, size_t size_p, std::ofstream *file_p)
+void Controller::init(std::list<octopus::Command *> const &commands_p, std::list<octopus::Steppable *> const &spawners_p,  bool divOptionManager_p, size_t size_p, std::ofstream *file_p)
 {
     UtilityFunctions::print("init controller...");
+
+    for(octopus::Steppable *step_l : spawners_p)
+    {
+        octopus::PlayerSpawnStep const * player_l = dynamic_cast<octopus::PlayerSpawnStep const *>(step_l);
+        if(player_l)
+        {
+            if(divOptionManager_p)
+            {
+                _optionManagers[player_l->getPlayerIdx()] = new DivinityOptionManager(player_l->getPlayerIdx());
+            }
+            else
+            {
+                _optionManagers[player_l->getPlayerIdx()] = new OptionManager(player_l->getPlayerIdx());
+            }
+        }
+    }
+
     _initDone = false;
     delete _controller;
 	_controller = new octopus::Controller(spawners_p, 0.01, commands_p, 5, size_p);
@@ -664,29 +696,28 @@ void Controller::dump_state_as_text(String const &path_p)
     }
 }
 
-TypedArray<String> Controller::get_models(int handle_p, int player_p) const
+TypedArray<String> Controller::get_models(int handle_p, int player_p, bool checkRequirements_p) const
 {
     TypedArray<String> models_l;
     octopus::Entity const *ent_l = _state->getEntity(handle_p);
 	// update
 	if(ent_l->_model._isBuilder)
 	{
-		std::list<octopus::BuildingModel const *> buildingGrid_l = octopus::getAvailableBuildingModels(*_state->getPlayer(player_p));
+		std::list<octopus::BuildingModel const *> buildingGrid_l = octopus::getAvailableBuildingModels(*_state->getPlayer(player_p), checkRequirements_p);
 		for(octopus::BuildingModel const * model_l : buildingGrid_l)
 		{
             models_l.push_back(model_l->_id.c_str());
 		}
-
 	} else if(ent_l->_model._isBuilding)
 	{
 		std::list<octopus::UnitModel const *> unitGrid_l = octopus::getAvailableUnitModels(
-			static_cast<octopus::BuildingModel const &>(ent_l->_model), *_state->getPlayer(player_p));
+			static_cast<octopus::BuildingModel const &>(ent_l->_model), *_state->getPlayer(player_p), checkRequirements_p);
 		for(octopus::UnitModel const * model_l : unitGrid_l)
 		{
             models_l.push_back(model_l->_id.c_str());
 		}
 		std::list<octopus::Upgrade const *> updates_l = octopus::getAvailableUpgrades(
-			static_cast<octopus::BuildingModel const &>(ent_l->_model), *_state->getPlayer(player_p));
+			static_cast<octopus::BuildingModel const &>(ent_l->_model), *_state->getPlayer(player_p), checkRequirements_p);
 		for(octopus::Upgrade const * update_l : updates_l)
 		{
             models_l.push_back(update_l->_id.c_str());
@@ -775,11 +806,11 @@ PackedByteArray Controller::getVisibility(int player_p) const
 int Controller::get_nb_options_available(int player_p) const
 {
     auto it_l = _optionManagers.find(player_p);
-	if(it_l == _optionManagers.end() || it_l->second.getQueuedOptionsSize() == 0)
+	if(it_l == _optionManagers.end() || it_l->second->getQueuedOptionsSize() == 0)
     {
         return 0;
     }
-    return it_l->second.getCurrentOptionSize();
+    return it_l->second->getCurrentOptionSize();
 }
 
 int Controller::get_nb_options_chosen(int player_p) const
@@ -789,35 +820,27 @@ int Controller::get_nb_options_chosen(int player_p) const
     {
         return 0;
     }
-    return it_l->second.getChosenOptionsSize();
+    return it_l->second->getChosenOptionsSize();
 }
 
 godot::Option *Controller::get_available_option_you(int idx_p, int player_p) const
 {
-    godot::Option * opt_l = memnew(Option);
-    opt_l->set_option(_optionManagers.at(player_p).getOption(idx_p)._playerOption);
-    return opt_l;
+    return _optionManagers.at(player_p)->getPrimaryOption(idx_p);
 }
 
 godot::Option *Controller::get_available_option_them(int idx_p, int player_p) const
 {
-    godot::Option * opt_l = memnew(Option);
-    opt_l->set_option(_optionManagers.at(player_p).getOption(idx_p)._enemyOption);
-    return opt_l;
+    return _optionManagers.at(player_p)->getSecondaryOption(idx_p);
 }
 
 godot::Option *Controller::get_chosen_option_you(int idx_p, int player_p) const
 {
-    godot::Option * opt_l = memnew(Option);
-    opt_l->set_option(_optionManagers.at(player_p).getChosenOption(idx_p)._playerOption);
-    return opt_l;
+    return _optionManagers.at(player_p)->getChosenPrimaryOption(idx_p);
 }
 
 godot::Option *Controller::get_chosen_option_them(int idx_p, int player_p) const
 {
-    godot::Option * opt_l = memnew(Option);
-    opt_l->set_option(_optionManagers.at(player_p).getChosenOption(idx_p)._enemyOption);
-    return opt_l;
+    return _optionManagers.at(player_p)->getChosenSecondaryOption(idx_p);
 }
 
 void Controller::get_productions(TypedArray<int> const &handles_p, int max_p)
@@ -952,7 +975,7 @@ void Controller::add_chose_option_command(int peer_p, int option_p, int player_p
 {
     if(!_paused)
     {
-        _queuedCommandsPerPeer.at(peer_p).back().push_back(getOptionManagers().at(player_p).newCommandFromOption(option_p));
+        _queuedCommandsPerPeer.at(peer_p).back().push_back(_optionManagers.at(player_p)->newCommandFromOption(option_p));
     }
 }
 
@@ -1016,7 +1039,7 @@ void Controller::_bind_methods()
     ClassDB::bind_method(D_METHOD("load_level2", "seed"), &Controller::load_level2);
     ClassDB::bind_method(D_METHOD("load_level_test_anchor", "seed"), &Controller::load_level_test_anchor);
     ClassDB::bind_method(D_METHOD("load_level_test_model_reading", "seed", "level_model"), &Controller::load_level_test_model_reading);
-    ClassDB::bind_method(D_METHOD("load_duel_level", "seed"), &Controller::load_duel_level);
+    ClassDB::bind_method(D_METHOD("load_duel_level", "seed", "div_player_1_p", "div_player_2_p"), &Controller::load_duel_level);
     ClassDB::bind_method(D_METHOD("load_multi_test_level", "seed", "step_count"), &Controller::load_multi_test_level);
 
     ClassDB::bind_method(D_METHOD("set_model_filename", "filename"), &Controller::set_model_filename);
@@ -1032,7 +1055,7 @@ void Controller::_bind_methods()
     ClassDB::bind_method(D_METHOD("set_auto_file_path", "path"), &Controller::set_auto_file_path);
     ClassDB::bind_method(D_METHOD("set_auto_file_debug", "debug"), &Controller::set_auto_file_debug);
     ClassDB::bind_method(D_METHOD("dump_state_as_text", "path"), &Controller::dump_state_as_text);
-    ClassDB::bind_method(D_METHOD("get_models", "handle", "player"), &Controller::get_models);
+    ClassDB::bind_method(D_METHOD("get_models", "handle", "player", "check_requirements"), &Controller::get_models);
     ClassDB::bind_method(D_METHOD("is_building", "handle"), &Controller::is_building);
     ClassDB::bind_method(D_METHOD("get_world_size"), &Controller::get_world_size);
     ClassDB::bind_method(D_METHOD("get_steps"), &Controller::get_steps);
@@ -1101,11 +1124,11 @@ void Controller::_bind_methods()
     ADD_SIGNAL(MethodInfo("loading_done"));
 }
 
-std::map<unsigned long, OptionManager> &Controller::getOptionManagers()
+std::map<unsigned long, AbstractOptionManager *> &Controller::getOptionManagers()
 {
     return _optionManagers;
 }
-std::map<unsigned long, OptionManager> const &Controller::getOptionManagers() const
+std::map<unsigned long, AbstractOptionManager *> const &Controller::getOptionManagers() const
 {
     return _optionManagers;
 }
