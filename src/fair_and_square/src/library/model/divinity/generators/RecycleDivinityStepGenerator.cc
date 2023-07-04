@@ -201,12 +201,6 @@ void fillLibrary(RecycleDivinityParams const &params_p, octopus::Library &lib_p)
 
 	lib_p.registerUnitModel(params_p._tierOneUnitModelId, tieroneunitmodel_l);
 
-	std::vector<std::string> tierUpgrades_l = models::fillTierUpgrade<RecycleDivinityParams>(lib_p, params_p, models::RecycleDivId,
-		recycleTierOneGenertor,
-		recycleTierTwoGenertor,
-		recycleTierThreeGenertor
-	);
-
 	// T2 cost reduction for unit 1
 	Upgrade * upHarvest_l = new Upgrade("RecycleUpgrade_BuffHarvest",
 		new RecycleHarvestUpgrade(params_p._resourceHarvestUpgrade));
@@ -235,8 +229,14 @@ void fillLibrary(RecycleDivinityParams const &params_p, octopus::Library &lib_p)
 	buildingModel_l._cost["ether"] = 100;
 	buildingModel_l._upgrades.push_back(&lib_p.getUpgrade(upHarvest_l->_id));
 	buildingModel_l._upgrades.push_back(&lib_p.getUpgrade(upBuffDeathRes_l->_id));
-	buildingModel_l._upgrades.insert(buildingModel_l._upgrades.end(), tierUpgrades_l.begin(), tierUpgrades_l.end());
 	buildingModel_l._requirements._upgradeLvl[models::RecycleDivId] = 1;
+
+	models::fillTierUpgrade<RecycleDivinityParams>(lib_p, params_p, models::RecycleDivId,
+		recycleTierOneGenertor,
+		recycleTierTwoGenertor,
+		recycleTierThreeGenertor,
+		buildingModel_l
+	);
 
 	lib_p.registerBuildingModel(models::RecycleBuildingId, buildingModel_l);
 }
