@@ -131,7 +131,7 @@ std::list<Steppable *> LevelSteps(Library &lib_p, RandomGenerator &rand_p, int s
 		new TriggerSpawn(new AnchorDivinityTrigger(lib_p, rand_p, 0, divinitiesPlayer1_p, 180)),
 		new TriggerSpawn(new AnchorDivinityTrigger(lib_p, rand_p, 1, divinitiesPlayer2_p, 180)),
 		new FlyingCommandSpawnStep(new TimerDamage(0, 100, 0, 0, "Anchor", 0)),
-		new FlyingCommandSpawnStep(new TimerDamage(1, 100, 0, 0, "Anchor", 0)),
+		new FlyingCommandSpawnStep(new TimerDamage(1, 100, 0, 1, "Anchor", 1)),
 		new TeamVisionStep(0, pattern_l, true, false),
 		new TeamVisionStep(0, pattern_l, true, true),
 	};
