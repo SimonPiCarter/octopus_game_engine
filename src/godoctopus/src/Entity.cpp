@@ -186,6 +186,46 @@ float Entity::get_resource_quantity(Controller const *controller_p) const
     return octopus::to_double(res_l->_resource);
 }
 
+TypedArray<godot::Buff> Entity::get_buffs(Controller const *controller_p) const
+{
+    TypedArray<godot::Buff> buffs_l;
+    octopus::Entity const *ent_l = controller_p->getEntity(_handle);
+    for(auto &&pair_l : ent_l->_registeredBuff)
+    {
+        std::string const &name_l = pair_l.first;
+        if(ent_l->_timeSinceBuff.at(name_l) < ent_l->_registeredBuff.at(name_l)._duration
+        || ent_l->_registeredBuff.at(name_l)._duration == 0)
+        {
+            godot::Buff * buff_l = memnew(godot::Buff);
+            buff_l->setName(name_l.c_str());
+            buff_l->setTimeElapsed(ent_l->_timeSinceBuff.at(name_l));
+            buff_l->setDuration(ent_l->_registeredBuff.at(name_l)._duration);
+
+            buffs_l.push_back(buff_l);
+        }
+    }
+    return buffs_l;
+}
+
+void Buff::_bind_methods()
+{
+    UtilityFunctions::print("Binding Buff methods");
+
+    ClassDB::bind_method(D_METHOD("setTimeElapsed", "time_elapsed"), &Buff::setTimeElapsed);
+    ClassDB::bind_method(D_METHOD("getTimeElapsed"), &Buff::getTimeElapsed);
+
+    ClassDB::bind_method(D_METHOD("setDuration", "duration"), &Buff::setDuration);
+    ClassDB::bind_method(D_METHOD("getDuration"), &Buff::getDuration);
+
+    ClassDB::bind_method(D_METHOD("setName", "name"), &Buff::setName);
+    ClassDB::bind_method(D_METHOD("getName"), &Buff::getName);
+
+    ADD_GROUP("Buff", "Buff_");
+    ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "time_elpased"), "setTimeElapsed", "getTimeElapsed");
+    ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "duration"), "setDuration", "getDuration");
+    ADD_PROPERTY(PropertyInfo(Variant::STRING, "name"), "setName", "getName");
+}
+
 void Entity::_bind_methods()
 {
     UtilityFunctions::print("Binding Entity methods");
@@ -213,6 +253,7 @@ void Entity::_bind_methods()
     ClassDB::bind_method(D_METHOD("get_rally_point", "controller"), &Entity::get_rally_point);
     ClassDB::bind_method(D_METHOD("get_resource_type", "controller"), &Entity::get_resource_type);
     ClassDB::bind_method(D_METHOD("get_resource_quantity", "controller"), &Entity::get_resource_quantity);
+    ClassDB::bind_method(D_METHOD("get_buffs", "controller"), &Entity::get_buffs);
 
     ADD_GROUP("Entity", "Entity_");
     ADD_PROPERTY(PropertyInfo(Variant::INT, "entity_handle"), "set_handle", "get_handle");

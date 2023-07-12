@@ -12,6 +12,28 @@ namespace godot {
 
 class Controller;
 
+class Buff : public Node {
+    GDCLASS(Buff, Node)
+
+    // Will be called by Godot when the class is registered
+    // Use this to add properties to your class
+    static void _bind_methods();
+
+    void setTimeElapsed(float const &timeElapsed_p) { _timeElapsed = timeElapsed_p; }
+    float getTimeElapsed() const { return _timeElapsed; }
+
+    void setDuration(float const &duration_p) { _duration = duration_p; }
+    float getDuration() const { return _duration; }
+
+    void setName(String const &name_p) { _name = name_p; }
+    String getName() const { return _name; }
+
+private:
+    float _timeElapsed = 0;
+    float _duration = 0;
+    String _name;
+};
+
 class Entity : public Node {
     GDCLASS(Entity, Node)
 
@@ -52,6 +74,9 @@ public:
     // resource getter
     String get_resource_type(Controller const *controller_p) const;
     float get_resource_quantity(Controller const *controller_p) const;
+
+    // buff getter
+    TypedArray<godot::Buff> get_buffs(Controller const *controller_p) const;
 
 private:
     int _handle;

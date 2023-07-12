@@ -18,6 +18,7 @@ void initialize_godoctopus_module(godot::ModuleInitializationLevel p_level) {
 
   // REGISTER CLASSES HERE LATER
     godot::ClassDB::register_class<godot::Controller>();
+    godot::ClassDB::register_class<godot::Buff>();
     godot::ClassDB::register_class<godot::Entity>();
     godot::ClassDB::register_class<godot::Option>();
     godot::ClassDB::register_class<godot::Model>();
