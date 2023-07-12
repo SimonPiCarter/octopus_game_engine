@@ -129,7 +129,7 @@ void fillLibrary(AttackSpeedDivinityParams const &params_p, octopus::Library &li
 	tieroneunitmodel_l._lineOfSight = 10;
 	tieroneunitmodel_l._fullReload = 30;
 	tieroneunitmodel_l._windup = 20;
-	tieroneunitmodel_l._requirements._upgradeLvl[models::AttackSpeedDivId] = 1;
+	tieroneunitmodel_l._requirements._upgradeLvl[models::AttackSpeedDivId+models::tierOneSuffix] = 1;
 
 	lib_p.registerUnitModel(params_p._tierOneUnitModelId, tieroneunitmodel_l);
 
@@ -141,7 +141,7 @@ void fillLibrary(AttackSpeedDivinityParams const &params_p, octopus::Library &li
 	attackspeedBuffTierThree_l->_cost["ether"] = 350;
 	attackspeedBuffTierThree_l->_cost["irium"] = 450;
 	attackspeedBuffTierThree_l->_productionTime = 30000;
-	attackspeedBuffTierThree_l->_requirements._upgradeLvl[models::AttackSpeedDivId] = 3;
+	attackspeedBuffTierThree_l->_requirements._upgradeLvl[models::AttackSpeedDivId+models::tierThreeSuffix] = 1;
 	lib_p.registerUpgrade(attackspeedBuffTierThree_l->_id, attackspeedBuffTierThree_l);
 
 	/// @brief temple

@@ -35,6 +35,10 @@ namespace models
     const std::string ProductionDivId = "ProductionDivId";
     const std::string RecycleDivId = "RecycleDivId";
 
+    const std::string tierOneSuffix = "_UpgradeTierOne";
+    const std::string tierTwoSuffix = "_UpgradeTierTwo";
+    const std::string tierThreeSuffix = "_UpgradeTierThree";
+
     const std::vector<std::string> BasicUnitModels = {"square", "double_square", "circle", "triangle", "reverse_triangle",
         AttackSpeedUnitModelTierOneId,
         HealUnitModelTierOneId,
@@ -84,21 +88,21 @@ namespace models
         std::function<std::vector<octopus::Steppable *>(param_t, unsigned long)> const &t3_p,
         octopus::BuildingModel &model_p)
     {
-        octopus::Upgrade * upT1_l = new octopus::Upgrade(id_p+"_UpgradeTierOne", new models::TierUpgrade<param_t>(params_p, t1_p));
+        octopus::Upgrade * upT1_l = new octopus::Upgrade(id_p+models::tierOneSuffix, new models::TierUpgrade<param_t>(params_p, t1_p));
         upT1_l->_cost["bloc"] = 200;
         upT1_l->_cost["ether"] = 100;
         upT1_l->_productionTime = 6000;
         upT1_l->_requirements._upgradeLvl[id_p] = 1;
         lib_p.registerUpgrade(upT1_l->_id, upT1_l);
 
-        octopus::Upgrade * upT2_l = new octopus::Upgrade(id_p+"_UpgradeTierTwo", new models::TierUpgrade<param_t>(params_p, t2_p));
+        octopus::Upgrade * upT2_l = new octopus::Upgrade(id_p+models::tierTwoSuffix, new models::TierUpgrade<param_t>(params_p, t2_p));
         upT2_l->_cost["bloc"] = 600;
         upT2_l->_cost["ether"] = 300;
         upT2_l->_productionTime = 12000;
         upT2_l->_requirements._upgradeLvl[id_p] = 2;
         lib_p.registerUpgrade(upT2_l->_id, upT2_l);
 
-        octopus::Upgrade * upT3_l = new octopus::Upgrade(id_p+"_UpgradeTierThree", new models::TierUpgrade<param_t>(params_p, t2_p));
+        octopus::Upgrade * upT3_l = new octopus::Upgrade(id_p+models::tierThreeSuffix, new models::TierUpgrade<param_t>(params_p, t2_p));
         upT3_l->_cost["bloc"] = 1200;
         upT3_l->_cost["ether"] = 600;
         upT3_l->_productionTime = 12000;

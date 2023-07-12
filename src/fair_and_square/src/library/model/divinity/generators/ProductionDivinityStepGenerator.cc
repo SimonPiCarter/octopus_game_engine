@@ -221,7 +221,7 @@ void fillLibrary(ProductionDivinityParams const &params_p, octopus::Library &lib
 	tieroneunitmodel_l._lineOfSight = 10;
 	tieroneunitmodel_l._fullReload = 125;
 	tieroneunitmodel_l._windup = 20;
-	tieroneunitmodel_l._requirements._upgradeLvl[models::ProductionDivId] = 1;
+	tieroneunitmodel_l._requirements._upgradeLvl[models::ProductionDivId+models::tierOneSuffix] = 1;
 
 	lib_p.registerUnitModel(params_p._tierOneUnitModelId, tieroneunitmodel_l);
 
@@ -252,7 +252,7 @@ void fillLibrary(ProductionDivinityParams const &params_p, octopus::Library &lib
 	tiertwounitmodel_l._buffer._reload = 3000;
 	tiertwounitmodel_l._buffer._active = true;
 
-	tiertwounitmodel_l._requirements._upgradeLvl[models::ProductionDivId] = 2;
+	tiertwounitmodel_l._requirements._upgradeLvl[models::ProductionDivId+models::tierTwoSuffix] = 1;
 	lib_p.registerUnitModel(params_p._productionBufferModelId, tiertwounitmodel_l);
 
 	// declare upgrades
@@ -262,7 +262,7 @@ void fillLibrary(ProductionDivinityParams const &params_p, octopus::Library &lib
 	upProductionTime_l->_cost["bloc"] = 125;
 	upProductionTime_l->_cost["ether"] = 75;
 	upProductionTime_l->_productionTime = 6000;
-	upProductionTime_l->_requirements._upgradeLvl[models::ProductionDivId] = 1;
+	upProductionTime_l->_requirements._upgradeLvl[models::ProductionDivId+models::tierOneSuffix] = 1;
 	lib_p.registerUpgrade(upProductionTime_l->_id, upProductionTime_l);
 
 	// T2 cost reduction for unit 1
@@ -272,7 +272,7 @@ void fillLibrary(ProductionDivinityParams const &params_p, octopus::Library &lib
 	upProductionCost_l->_cost["ether"] = 200;
 	upProductionCost_l->_cost["irium"] = 200;
 	upProductionCost_l->_productionTime = 15000;
-	upProductionCost_l->_requirements._upgradeLvl[models::ProductionDivId] = 2;
+	upProductionCost_l->_requirements._upgradeLvl[models::ProductionDivId+models::tierTwoSuffix] = 1;
 	lib_p.registerUpgrade(upProductionCost_l->_id, upProductionCost_l);
 
 	// T3 increase buffer count
@@ -282,7 +282,7 @@ void fillLibrary(ProductionDivinityParams const &params_p, octopus::Library &lib
 	upProductionIncreaseBufferCount_l->_cost["ether"] = 250;
 	upProductionIncreaseBufferCount_l->_cost["irium"] = 350;
 	upProductionIncreaseBufferCount_l->_productionTime = 30000;
-	upProductionIncreaseBufferCount_l->_requirements._upgradeLvl[models::ProductionDivId] = 3;
+	upProductionIncreaseBufferCount_l->_requirements._upgradeLvl[models::ProductionDivId+models::tierThreeSuffix] = 1;
 	lib_p.registerUpgrade(upProductionIncreaseBufferCount_l->_id, upProductionIncreaseBufferCount_l);
 
 	/// @brief temple

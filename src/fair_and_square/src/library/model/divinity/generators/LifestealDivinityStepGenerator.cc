@@ -139,7 +139,7 @@ void fillLibrary(LifestealDivinityParams const &params_p, octopus::Library &lib_
 	tieroneunitmodel_l._fullReload = 200;
 	tieroneunitmodel_l._windup = 20;
 	tieroneunitmodel_l._defaultAttackMod = LifeStealModifier(0.10);
-	tieroneunitmodel_l._requirements._upgradeLvl[models::LifestealDivId] = 1;
+	tieroneunitmodel_l._requirements._upgradeLvl[models::LifestealDivId+models::tierOneSuffix] = 1;
 
 	tieroneunitmodel_l._abilities["LifeStealDivinity_Stimpack"]._id = "LifeStealDivinity_Stimpack";
 	tieroneunitmodel_l._abilities["LifeStealDivinity_Stimpack"]._reloadKey = "LifeStealDivinity_Stimpack";
@@ -157,7 +157,7 @@ void fillLibrary(LifestealDivinityParams const &params_p, octopus::Library &lib_
 	lifestealBuffTierOne_l->_cost["ether"] = 125;
 	lifestealBuffTierOne_l->_cost["irrium"] = 125;
 	lifestealBuffTierOne_l->_productionTime = 20000;
-	lifestealBuffTierOne_l->_requirements._upgradeLvl[models::LifestealDivId] = 1;
+	lifestealBuffTierOne_l->_requirements._upgradeLvl[models::LifestealDivId+models::tierOneSuffix] = 1;
 	lib_p.registerUpgrade(lifestealBuffTierOne_l->_id, lifestealBuffTierOne_l);
 
 	// T3 lifesteal buff
@@ -166,7 +166,7 @@ void fillLibrary(LifestealDivinityParams const &params_p, octopus::Library &lib_
 	lifestealBuffTierThree_l->_cost["ether"] = 250;
 	lifestealBuffTierThree_l->_cost["irrium"] = 450;
 	lifestealBuffTierThree_l->_productionTime = 30000;
-	lifestealBuffTierThree_l->_requirements._upgradeLvl[models::LifestealDivId] = 3;
+	lifestealBuffTierThree_l->_requirements._upgradeLvl[models::LifestealDivId+models::tierThreeSuffix] = 1;
 	lib_p.registerUpgrade(lifestealBuffTierThree_l->_id, lifestealBuffTierThree_l);
 
 	/// @brief temple

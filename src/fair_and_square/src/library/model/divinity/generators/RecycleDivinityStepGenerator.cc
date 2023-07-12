@@ -197,7 +197,7 @@ void fillLibrary(RecycleDivinityParams const &params_p, octopus::Library &lib_p)
 	tieroneunitmodel_l._lineOfSight = 10;
 	tieroneunitmodel_l._fullReload = 125;
 	tieroneunitmodel_l._windup = 20;
-	tieroneunitmodel_l._requirements._upgradeLvl[models::RecycleDivId] = 1;
+	tieroneunitmodel_l._requirements._upgradeLvl[models::RecycleDivId+models::tierOneSuffix] = 1;
 
 	lib_p.registerUnitModel(params_p._tierOneUnitModelId, tieroneunitmodel_l);
 
@@ -207,7 +207,7 @@ void fillLibrary(RecycleDivinityParams const &params_p, octopus::Library &lib_p)
 	upHarvest_l->_cost["bloc"] = 150;
 	upHarvest_l->_cost["ether"] = 150;
 	upHarvest_l->_productionTime = 9000;
-	upHarvest_l->_requirements._upgradeLvl[models::RecycleDivId] = 2;
+	upHarvest_l->_requirements._upgradeLvl[models::RecycleDivId+models::tierTwoSuffix] = 1;
 	lib_p.registerUpgrade(upHarvest_l->_id, upHarvest_l);
 
 
@@ -218,7 +218,7 @@ void fillLibrary(RecycleDivinityParams const &params_p, octopus::Library &lib_p)
 	upBuffDeathRes_l->_cost["ether"] = 450;
 	upBuffDeathRes_l->_cost["irium"] = 450;
 	upBuffDeathRes_l->_productionTime = 30000;
-	upBuffDeathRes_l->_requirements._upgradeLvl[models::RecycleDivId] = 3;
+	upBuffDeathRes_l->_requirements._upgradeLvl[models::RecycleDivId+models::tierThreeSuffix] = 1;
 	lib_p.registerUpgrade(upBuffDeathRes_l->_id, upBuffDeathRes_l);
 
 	/// @brief temple
