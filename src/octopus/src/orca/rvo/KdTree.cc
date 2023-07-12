@@ -246,9 +246,9 @@ namespace RVO {
 		}
 	}
 
-	void KdTree::computeAgentNeighbors(Agent *agent, octopus::Fixed  &rangeSq) const
+	void KdTree::computeAgentNeighbors(Agent *agent, octopus::Fixed  &rangeSq, std::function<void(Agent *, Agent const *, octopus::Fixed)> const &fn_p) const
 	{
-		queryAgentTreeRecursive(agent, rangeSq, 0);
+		queryAgentTreeRecursive(agent, rangeSq, 0, fn_p);
 	}
 
 	void KdTree::computeObstacleNeighbors(Agent *agent, octopus::Fixed rangeSq) const
@@ -265,11 +265,12 @@ namespace RVO {
 		}
 	}
 
-	void KdTree::queryAgentTreeRecursive(Agent *agent, octopus::Fixed  &rangeSq, size_t node) const
+	void KdTree::queryAgentTreeRecursive(Agent *agent, octopus::Fixed  &rangeSq, size_t node, std::function<void(Agent *, Agent const *, octopus::Fixed)> const &fn_p) const
 	{
 		if (agentTree_[node].end - agentTree_[node].begin <= MAX_LEAF_SIZE) {
 			for (size_t i = agentTree_[node].begin; i < agentTree_[node].end; ++i) {
-				agent->insertAgentNeighbor(agents_[i], rangeSq);
+				// storage function
+				fn_p(agent, agents_[i], rangeSq);
 			}
 		}
 		else {
@@ -279,19 +280,19 @@ namespace RVO {
 
 			if (distSqLeft < distSqRight) {
 				if (distSqLeft < rangeSq) {
-					queryAgentTreeRecursive(agent, rangeSq, agentTree_[node].left);
+					queryAgentTreeRecursive(agent, rangeSq, agentTree_[node].left, fn_p);
 
 					if (distSqRight < rangeSq) {
-						queryAgentTreeRecursive(agent, rangeSq, agentTree_[node].right);
+						queryAgentTreeRecursive(agent, rangeSq, agentTree_[node].right, fn_p);
 					}
 				}
 			}
 			else {
 				if (distSqRight < rangeSq) {
-					queryAgentTreeRecursive(agent, rangeSq, agentTree_[node].right);
+					queryAgentTreeRecursive(agent, rangeSq, agentTree_[node].right, fn_p);
 
 					if (distSqLeft < rangeSq) {
-						queryAgentTreeRecursive(agent, rangeSq, agentTree_[node].left);
+						queryAgentTreeRecursive(agent, rangeSq, agentTree_[node].left, fn_p);
 					}
 				}
 			}

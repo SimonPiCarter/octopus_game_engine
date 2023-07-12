@@ -51,7 +51,7 @@ namespace RVO {
 
 		if (maxNeighbors_ > 0) {
 			rangeSq = sqr(neighborDist_);
-			sim_->kdTree_->computeAgentNeighbors(this, rangeSq);
+			sim_->kdTree_->computeAgentNeighbors(this, rangeSq, &Agent::insertAgentNeighbor);
 		}
 	}
 
