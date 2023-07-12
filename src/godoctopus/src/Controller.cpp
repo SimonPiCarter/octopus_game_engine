@@ -710,17 +710,17 @@ TypedArray<String> Controller::get_models(int handle_p, int player_p, bool check
 		}
 	} else if(ent_l->_model._isBuilding)
 	{
-		std::list<octopus::UnitModel const *> unitGrid_l = octopus::getAvailableUnitModels(
-			static_cast<octopus::BuildingModel const &>(ent_l->_model), *_state->getPlayer(player_p), checkRequirements_p);
-		for(octopus::UnitModel const * model_l : unitGrid_l)
-		{
-            models_l.push_back(model_l->_id.c_str());
-		}
 		std::list<octopus::Upgrade const *> updates_l = octopus::getAvailableUpgrades(
 			static_cast<octopus::BuildingModel const &>(ent_l->_model), *_state->getPlayer(player_p), checkRequirements_p);
 		for(octopus::Upgrade const * update_l : updates_l)
 		{
             models_l.push_back(update_l->_id.c_str());
+		}
+		std::list<octopus::UnitModel const *> unitGrid_l = octopus::getAvailableUnitModels(
+			static_cast<octopus::BuildingModel const &>(ent_l->_model), *_state->getPlayer(player_p), checkRequirements_p);
+		for(octopus::UnitModel const * model_l : unitGrid_l)
+		{
+            models_l.push_back(model_l->_id.c_str());
 		}
 	}
     return models_l;
