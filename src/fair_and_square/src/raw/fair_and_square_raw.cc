@@ -14,10 +14,19 @@ int main()
 {
 	octopus::RandomGenerator rand_l(42);
 	octopus::Library lib_l;
-	std::list<octopus::Steppable *> spawners_l = WaveLevelSteps(lib_l, rand_l, 15, 0.1*60*100, 0, 250);
-	std::list<octopus::Command *> commands_l = WaveLevelCommands(lib_l, rand_l, 250);
-	// std::list<octopus::Steppable *> spawners_l = ArenaLevelSteps(lib_l, 500);
-	// std::list<octopus::Command *> commands_l = ArenaLevelCommands(lib_l);
+	// std::list<octopus::Steppable *> spawners_l = WaveLevelSteps(lib_l, rand_l, 15, 0.1*60*100, 0, 250);
+	// std::list<octopus::Command *> commands_l = WaveLevelCommands(lib_l, rand_l, 250);
+
+    std::vector<ArenaInfo> you_l;
+	you_l.push_back({500, "square"});
+	you_l.push_back({500, "circle"});
+	you_l.push_back({500, "triangle"});
+    std::vector<ArenaInfo> them_l;
+	them_l.push_back({500, "square"});
+	them_l.push_back({500, "circle"});
+	them_l.push_back({500, "triangle"});
+	std::list<octopus::Steppable *> spawners_l = ArenaLevelSteps(lib_l, you_l, them_l);
+	std::list<octopus::Command *> commands_l = ArenaLevelCommands(lib_l);
 
 	octopus::Controller controller_l(spawners_l, 0.01, commands_l, 5, 50);
 	controller_l.enableORCA();
@@ -30,7 +39,7 @@ int main()
 
 	octopus::Logger::getNormal()<<"Playing"<<std::endl;
 
-	while(!over_l && controller_l.getMetrics()._nbStepsCompiled < 1000)
+	while(!over_l && controller_l.getMetrics()._nbStepsCompiled < 6000)
 	{
         // update controller
         controller_l.update(elapsed_l);
