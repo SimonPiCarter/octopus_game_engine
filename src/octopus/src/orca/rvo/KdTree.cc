@@ -246,7 +246,7 @@ namespace RVO {
 		}
 	}
 
-	void KdTree::computeAgentNeighbors(Agent *agent, octopus::Fixed  &rangeSq, std::function<void(Agent *, Agent const *, octopus::Fixed)> const &fn_p) const
+	void KdTree::computeAgentNeighbors(Agent *agent, octopus::Fixed  &rangeSq, std::function<void(Agent *, Agent const *, octopus::Fixed &)> const &fn_p) const
 	{
 		queryAgentTreeRecursive(agent, rangeSq, 0, fn_p);
 	}
@@ -265,7 +265,7 @@ namespace RVO {
 		}
 	}
 
-	void KdTree::queryAgentTreeRecursive(Agent *agent, octopus::Fixed  &rangeSq, size_t node, std::function<void(Agent *, Agent const *, octopus::Fixed)> const &fn_p) const
+	void KdTree::queryAgentTreeRecursive(Agent *agent, octopus::Fixed  &rangeSq, size_t node, std::function<void(Agent *, Agent const *, octopus::Fixed &)> const &fn_p) const
 	{
 		if (agentTree_[node].end - agentTree_[node].begin <= MAX_LEAF_SIZE) {
 			for (size_t i = agentTree_[node].begin; i < agentTree_[node].end; ++i) {
