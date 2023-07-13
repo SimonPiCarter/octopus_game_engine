@@ -221,7 +221,7 @@ void Buff::_bind_methods()
     ClassDB::bind_method(D_METHOD("getName"), &Buff::getName);
 
     ADD_GROUP("Buff", "Buff_");
-    ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "time_elpased"), "setTimeElapsed", "getTimeElapsed");
+    ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "time_elapsed"), "setTimeElapsed", "getTimeElapsed");
     ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "duration"), "setDuration", "getDuration");
     ADD_PROPERTY(PropertyInfo(Variant::STRING, "name"), "setName", "getName");
 }
