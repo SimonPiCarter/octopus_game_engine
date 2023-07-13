@@ -9,6 +9,7 @@
 namespace RVO
 {
     class RVOSimulator;
+    class KdTree;
 }
 
 namespace octopus
@@ -52,6 +53,8 @@ public:
     /// @param step_p
     /// @return
     static bool ShouldReset(OrcaManager const *manager_p, State const &state_p, Step const &step_p);
+
+    RVO::KdTree const * getKdTree() const;
 
 private:
     Fixed const _timeStep;

@@ -202,4 +202,7 @@ bool OrcaManager::ShouldReset(OrcaManager const *manager_p, State const &state_p
     return false;
 }
 
+RVO::KdTree const * OrcaManager::getKdTree() const { return _sim?_sim->getKdTree():nullptr; }
+
+
 } // namespace octopus

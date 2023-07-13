@@ -8,7 +8,7 @@
 namespace octopus
 {
 
-void DamageOverTime::applyEffect(Step & step_p, State const &state_p, CommandData const *, PathManager &) const
+void DamageOverTime::applyEffect(Step & step_p, State const &state_p, CommandData const *, CommandContext &) const
 {
     Fixed maxHp_l = state_p.getEntity(_ent)->getHpMax();
     Fixed curHp_l = state_p.getEntity(_ent)->_hp + step_p.getHpChange(_ent);

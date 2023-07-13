@@ -20,7 +20,7 @@ UnitModel::UnitModel(bool isStatic_p, Fixed ray_p, Fixed stepSpeed_p, Fixed hpMa
 	_isUnit = true;
 }
 
-Command * commandFromIdle(Entity const &ent_p, State const &state_p, unsigned long waitingTimeForAttackScan_p)
+Command * commandFromIdle(Entity const &ent_p, State const &state_p, unsigned long waitingTimeForAttackScan_p, CommandContext &context_p)
 {
 	// if no command and buff we check for target
 	if(ent_p._model._isUnit)
@@ -62,10 +62,10 @@ Command * commandFromIdle(Entity const &ent_p, State const &state_p, unsigned lo
 	return nullptr;
 }
 
-void unitIdleFunction(Entity const &ent_p, Step & step_p, State const &state_p)
+void unitIdleFunction(Entity const &ent_p, Step & step_p, State const &state_p, CommandContext &context_p)
 {
 	// check for attack every 50 steps
-	Command * cmd_l = commandFromIdle(ent_p, state_p, 50);
+	Command * cmd_l = commandFromIdle(ent_p, state_p, 50, context_p);
 
 	if(cmd_l)
 	{

@@ -66,7 +66,7 @@ bool depostInRange(State const &state_p, Unit const * unit_p, Handle const res_p
 	return false;
 }
 
-bool UnitDropCommand::applyCommand(Step & step_p, State const &state_p, CommandData const *data_p, PathManager &pathManager_p) const
+bool UnitDropCommand::applyCommand(Step & step_p, State const &state_p, CommandData const *data_p, CommandContext &commandContext_p) const
 {
 	Logger::getDebug() << "UnitDropCommand:: apply Command "<<_source <<std::endl;
 	MoveData const &data_l = *static_cast<MoveData const *>(data_p);
@@ -92,7 +92,7 @@ bool UnitDropCommand::applyCommand(Step & step_p, State const &state_p, CommandD
 	{
 		Logger::getDebug() << "UnitDropCommand:: move to deposit"<<std::endl;
 		// apply move
-		_subMoveCommand.applyCommand(step_p, state_p, data_p, pathManager_p);
+		_subMoveCommand.applyCommand(step_p, state_p, data_p, commandContext_p);
 	}
 
 	return false;

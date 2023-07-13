@@ -31,7 +31,7 @@ EntityAttackCommand::EntityAttackCommand(Handle const &commandHandle_p, Handle c
 	, _data(_target, Vector{}, 0, {})
 {}
 
-bool EntityAttackCommand::applyCommand(Step & step_p, State const &state_p, CommandData const *data_p, PathManager &pathManager_p) const
+bool EntityAttackCommand::applyCommand(Step & step_p, State const &state_p, CommandData const *data_p, CommandContext &commandContext_p) const
 {
 	// get data
 	AttackMoveData const &data_l = *static_cast<AttackMoveData const *>(data_p);

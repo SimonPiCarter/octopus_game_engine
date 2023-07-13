@@ -3,7 +3,7 @@
 namespace octopus
 {
 
-void idleFunctioNoOp(Entity const &, Step &, State const &) {}
+void idleFunctioNoOp(Entity const &, Step &, State const &, CommandContext &) {}
 
 bool alwaysOkChecker(Step const &, State const &, Handle const &, Handle const &, Vector const &) { return true; }
 

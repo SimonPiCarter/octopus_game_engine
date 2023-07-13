@@ -197,15 +197,17 @@ bool Controller::loop_body()
 			{
 				if(cmdable_l->isActive())
 				{
-					cmdable_l->runCommands(step_l, *state_l, _pathManager);
+					CommandContext ctxt_l = getCommandContext();
+					cmdable_l->runCommands(step_l, *state_l, ctxt_l);
 				}
 			}
 
 			for(auto &&pair_l : state_l->getFlyingCommands())
 			{
 				FlyingCommandBundle const & cmd_l = pair_l.second;
+				CommandContext ctxt_l = getCommandContext();
 				// if over remove it
-				if(cmd_l._cmd->applyCommand(step_l, *state_l, cmd_l._data, _pathManager))
+				if(cmd_l._cmd->applyCommand(step_l, *state_l, cmd_l._data, ctxt_l))
 				{
 					step_l.addSteppable(new FlyingCommandPopStep(cmd_l._cmd));
 				}
@@ -711,6 +713,15 @@ Step const & Controller::getStepBeforeLastCompiledStep() const
 	auto &&rit_l = _stepBundles.rbegin();
 	++rit_l;
 	return *rit_l->_step;
+}
+
+CommandContext Controller::getCommandContext()
+{
+	if(_orcaManager)
+	{
+		return CommandContext{_pathManager, _orcaManager->getKdTree()};
+	}
+	return CommandContext{_pathManager, nullptr};
 }
 
 } // namespace octopus

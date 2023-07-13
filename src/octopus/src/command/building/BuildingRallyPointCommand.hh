@@ -23,7 +23,7 @@ public:
 	/// @brief we need to use register to register the step because otherwise it will override production
 	virtual void registerCommand(Step & step_p, State const &state_p) override;
 
-	virtual bool applyCommand(Step &, State const &, CommandData const *, PathManager &) const override { return true; }
+	virtual bool applyCommand(Step &, State const &, CommandData const *, CommandContext &) const override { return true; }
 
 	bool _reset {false};
 	Vector _rallyPoint {0,0};

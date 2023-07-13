@@ -48,7 +48,8 @@ TEST(moveCommandTest, simple)
 	Step step_l(nullptr);
 	StepData stepData_l;
 
-	bool terminated_l = command_l.applyCommand(step_l, state_l, data_l, pathManager_l);
+	CommandContext context_l { pathManager_l, nullptr };
+	bool terminated_l = command_l.applyCommand(step_l, state_l, data_l, context_l);
 	EXPECT_FALSE(terminated_l);
 
 	ASSERT_EQ(1u, step_l.getEntityMoveStep().size());
@@ -71,7 +72,7 @@ TEST(moveCommandTest, simple)
 	Step step2_l(nullptr);
 	StepData stepData2_l;
 
-	terminated_l = command_l.applyCommand(step2_l, state_l, data_l, pathManager_l);
+	terminated_l = command_l.applyCommand(step2_l, state_l, data_l, context_l);
 	EXPECT_TRUE(terminated_l);
 
 	ASSERT_EQ(0u, step2_l.getEntityMoveStep().size());
@@ -88,7 +89,7 @@ TEST(moveCommandTest, simple)
 	///
 	Step step3_l(nullptr);
 
-	terminated_l = command_l.applyCommand(step3_l, state_l, data_l, pathManager_l);
+	terminated_l = command_l.applyCommand(step3_l, state_l, data_l, context_l);
 	EXPECT_TRUE(terminated_l);
 
 	ASSERT_EQ(0u, step3_l.getEntityMoveStep().size());

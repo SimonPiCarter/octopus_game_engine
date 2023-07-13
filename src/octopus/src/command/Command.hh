@@ -4,11 +4,23 @@
 #include "CommandData.hh"
 #include "state/Handle.hh"
 
+namespace RVO
+{
+	class KdTree;
+}
+
 namespace octopus
 {
 class PathManager;
 class Step;
 class State;
+class PathManager;
+
+struct CommandContext
+{
+	PathManager &pathManager;
+	RVO::KdTree const *kdTree;
+};
 
 /// @brief represent a command that can be registered in a step and
 /// applied to the state
@@ -27,7 +39,7 @@ public:
 
 	/// @brief compile command or info into the step
 	/// @return true if command is over
-	virtual bool applyCommand(Step & step_p, State const &state_p, CommandData const * data_p, PathManager &pathManager_p) const = 0;
+	virtual bool applyCommand(Step & step_p, State const &state_p, CommandData const * data_p, CommandContext &commandContext_p) const = 0;
 
 	/// @brief create data supporting the command actions
 	virtual CommandData * newData() const { return nullptr; }

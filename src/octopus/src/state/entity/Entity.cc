@@ -109,7 +109,7 @@ unsigned long Entity::getTimeSinceBuff(std::string const &idBuff_p) const
 	return it_l->second;
 }
 
-void Entity::runCommands(Step & step_p, State const &state_p, PathManager &pathManager_p)
+void Entity::runCommands(Step & step_p, State const &state_p, CommandContext &commandContext_p)
 {
 	if(_waiting < 100000)
 	{
@@ -117,9 +117,9 @@ void Entity::runCommands(Step & step_p, State const &state_p, PathManager &pathM
 	}
 	if(!getQueue().hasCommand())
 	{
-		_model._idleFunc(*this, step_p, state_p);
+		_model._idleFunc(*this, step_p, state_p, commandContext_p);
 	}
-	Commandable::runCommands(step_p, state_p, pathManager_p);
+	Commandable::runCommands(step_p, state_p, commandContext_p);
 }
 
 unsigned long getReloadAbilityTime(Entity const &ent_p, std::string const &key_p, unsigned long const &default_p)

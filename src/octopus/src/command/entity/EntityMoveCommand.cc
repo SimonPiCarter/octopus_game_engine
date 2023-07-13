@@ -104,7 +104,7 @@ bool losCheck(Grid const &grid_p, Vector const &pos1_p, Vector const &pos2_p)
 	return true;
 }
 
-bool EntityMoveCommand::applyCommand(Step & step_p, State const &state_p, CommandData const *data_p, PathManager &pathManager_p) const
+bool EntityMoveCommand::applyCommand(Step & step_p, State const &state_p, CommandData const *data_p, CommandContext &commandContext_p) const
 {
 	MoveData const *data_l = dynamic_cast<MoveData const *>(data_p);
 	std::list<Vector> const &waypoints_l =  data_l->_waypoints;
@@ -140,8 +140,8 @@ bool EntityMoveCommand::applyCommand(Step & step_p, State const &state_p, Comman
 	// query field if no los
 	if(!los_l)
 	{
-		pathManager_p.queryFlowField(to_int(data_l->_finalPoint.x), to_int(data_l->_finalPoint.y));
-		FlowField const * field_l = pathManager_p.getFlowField(to_int(data_l->_finalPoint.x), to_int(data_l->_finalPoint.y));
+		commandContext_p.pathManager.queryFlowField(to_int(data_l->_finalPoint.x), to_int(data_l->_finalPoint.y));
+		FlowField const * field_l = commandContext_p.pathManager.getFlowField(to_int(data_l->_finalPoint.x), to_int(data_l->_finalPoint.y));
 		if(field_l )
 		{
 			// direction directly on the square

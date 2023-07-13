@@ -27,7 +27,7 @@ public:
 	void setFlockInformation(FlockInformation * flockInfo_p);
 
 	/// @brief
-	virtual bool applyCommand(Step & step_p, State const &state_p, CommandData const *data_p, PathManager &pathManager_p) const override;
+	virtual bool applyCommand(Step & step_p, State const &state_p, CommandData const *data_p, CommandContext &commandContext_p) const override;
 
 	virtual CommandData * getData() override { return &_data; }
 	virtual CommandData const * getData() const override { return &_data; }

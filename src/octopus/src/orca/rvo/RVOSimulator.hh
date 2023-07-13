@@ -94,6 +94,8 @@ namespace RVO {
 
 		ThreadPool pool;
 
+		KdTree const * getKdTree() const { return kdTree_; }
+
 		/**
 		 * \brief      Constructs a simulator instance and sets the default
 		 *             properties for any new agent that is added.

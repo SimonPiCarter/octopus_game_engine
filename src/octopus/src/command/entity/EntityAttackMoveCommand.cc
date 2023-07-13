@@ -40,7 +40,7 @@ bool shouldStopAttacking(AttackMoveData const &attackMoveData_p, Entity const *e
 	return square_length(diff_l) > maxSqDistance_l;
 }
 
-bool EntityAttackMoveCommand::applyCommand(Step & step_p, State const &state_p, CommandData const *data_p, PathManager &pathManager_p) const
+bool EntityAttackMoveCommand::applyCommand(Step & step_p, State const &state_p, CommandData const *data_p, CommandContext &commandContext_p) const
 {
 	Logger::getDebug() << "EntityAttackMoveCommand:: apply Command "<<_source <<std::endl;
 	AttackMoveData const &attackMoveData_l = *static_cast<AttackMoveData const *>(data_p);
@@ -50,7 +50,7 @@ bool EntityAttackMoveCommand::applyCommand(Step & step_p, State const &state_p, 
 
 	if(attackMoveData_l._hasSubAttackCommand)
 	{
-		if(!subAttackCommand_l.applyCommand(step_p, state_p, data_p, pathManager_p))
+		if(!subAttackCommand_l.applyCommand(step_p, state_p, data_p, commandContext_p))
 		{
 			if(!shouldStopAttacking(attackMoveData_l, ent_l))
 			{
@@ -66,7 +66,7 @@ bool EntityAttackMoveCommand::applyCommand(Step & step_p, State const &state_p, 
 	}
 	else if(attackMoveData_l._hasSubBuffCommand)
 	{
-		if(!subBuffCommand_l.applyCommand(step_p, state_p, data_p, pathManager_p))
+		if(!subBuffCommand_l.applyCommand(step_p, state_p, data_p, commandContext_p))
 		{
 			return false;
 		}
@@ -80,7 +80,7 @@ bool EntityAttackMoveCommand::applyCommand(Step & step_p, State const &state_p, 
 	else
 	{
 		// create command from idle
-		Command * cmd_l = commandFromIdle(*ent_l, state_p, 0);
+		Command * cmd_l = commandFromIdle(*ent_l, state_p, 0, commandContext_p);
 		if(cmd_l)
 		{
 			CommandVar var_l = getVarFromCommand(cmd_l);
@@ -108,7 +108,7 @@ bool EntityAttackMoveCommand::applyCommand(Step & step_p, State const &state_p, 
 	}
 
 	// run move command
-	return _subMoveCommand.applyCommand(step_p, state_p, data_p, pathManager_p);
+	return _subMoveCommand.applyCommand(step_p, state_p, data_p, commandContext_p);
 }
 
 void EntityAttackMoveCommand::cleanUp(Step & step_p, State const &state_p, CommandData const *data_p) const

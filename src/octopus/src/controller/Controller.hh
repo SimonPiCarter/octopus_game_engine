@@ -19,6 +19,7 @@ class Command;
 class OrcaManager;
 class Steppable;
 class State;
+struct CommandContext;
 
 /// @brief This struct bundles a pointer to the step
 /// and a pointer to the associated StepData (contains date per state)
@@ -212,6 +213,7 @@ private:
 	Step const &getStepBeforeLastCompiledStep() const;
 
 	OrcaManager *_orcaManager {nullptr};
+	CommandContext getCommandContext();
 
 	/// @brief in replay mode all commuited command wont affect the controller
 	bool _replayMode {false};

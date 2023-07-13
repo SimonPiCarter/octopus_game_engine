@@ -17,7 +17,7 @@ public:
 	EntityRallyPointCommand(Handle const &source_p, Handle const &target_p, Vector const &pos_p, bool targetNotSet_p);
 
 	/// @brief
-	virtual bool applyCommand(Step & step_p, State const &state_p, CommandData const *, PathManager &) const override;
+	virtual bool applyCommand(Step & step_p, State const &state_p, CommandData const *, CommandContext &) const override;
 
 private:
     Handle _target {0};

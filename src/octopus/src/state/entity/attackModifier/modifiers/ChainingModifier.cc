@@ -31,7 +31,7 @@ public:
         , _oldTargets(oldTargets_p)
     {}
 
-	virtual void applyEffect(Step & step_p, State const &state_p, CommandData const * , PathManager &) const override;
+	virtual void applyEffect(Step & step_p, State const &state_p, CommandData const * , CommandContext &) const override;
 protected:
     /// @brief damage per tick
     Fixed const _dmg;
@@ -46,7 +46,7 @@ protected:
     std::list<Handle> _oldTargets;
 };
 
-void ChainingOverTime::applyEffect(Step & step_p, State const &state_p, CommandData const *, PathManager &) const
+void ChainingOverTime::applyEffect(Step & step_p, State const &state_p, CommandData const *, CommandContext &) const
 {
     // find new target
     Entity const *target_l = nullptr;

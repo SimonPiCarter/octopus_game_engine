@@ -33,7 +33,7 @@ void PlayerChoseOptionCommand::registerCommand(Step & step_p, State const &state
 	}
 }
 
-bool PlayerChoseOptionCommand::applyCommand(Step &, State const &, CommandData const *, PathManager &) const
+bool PlayerChoseOptionCommand::applyCommand(Step &, State const &, CommandData const *, CommandContext &) const
 {
 	return true;
 }

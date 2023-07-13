@@ -30,7 +30,7 @@ public:
 		: CommandEffectOverTime(handle_p, tickRate_p, nbOfTicks_p) {}
 
 
-	virtual void applyEffect(Step & step_p, State const &, CommandData const *, PathManager &) const
+	virtual void applyEffect(Step & step_p, State const &, CommandData const *, CommandContext &) const
 	{
 		std::map<std::string, Fixed> map_l;
 		map_l["bloc"] = -10.;

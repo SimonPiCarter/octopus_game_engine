@@ -22,7 +22,7 @@ public:
 	virtual void registerCommand(Step & step_p, State const &state_p) override;
 
 	/// @brief
-	virtual bool applyCommand(Step & , State const &, CommandData const *, PathManager &) const override { return true; }
+	virtual bool applyCommand(Step & , State const &, CommandData const *, CommandContext &) const override { return true; }
 };
 
 } // namespace octopus

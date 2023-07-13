@@ -6,7 +6,7 @@
 #include "step/player/PlayerSpendResourceStep.hh"
 #include "step/Step.hh"
 
-void TimerDamage::applyEffect(octopus::Step & step_p, octopus::State const &state_p, octopus::CommandData const *, octopus::PathManager &) const
+void TimerDamage::applyEffect(octopus::Step & step_p, octopus::State const &state_p, octopus::CommandData const *, octopus::CommandContext &) const
 {
     const octopus::Player *player_l = state_p.getPlayer(_player);
     octopus::Fixed res_l = octopus::getResource(*player_l, _res);

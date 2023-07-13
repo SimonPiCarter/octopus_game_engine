@@ -11,10 +11,11 @@
 
 namespace octopus
 {
+	struct CommandContext;
 	class Entity;
 	class Step;
 	class State;
-	void idleFunctioNoOp(Entity const &, Step &, State const &);
+	void idleFunctioNoOp(Entity const &, Step &, State const &, CommandContext&);
 
 	bool alwaysOkChecker(Step const &, State const &, Handle const &, Handle const &, Vector const &);
 
@@ -89,7 +90,7 @@ namespace octopus
 		/// @brief id to be set up when library loads a model
 		std::string _id;
 
-		std::function<void(Entity const &, Step &, State const &)> _idleFunc = idleFunctioNoOp;
+		std::function<void(Entity const &, Step &, State const &, CommandContext &)> _idleFunc = idleFunctioNoOp;
 	};
 
 	std::map<std::string, Fixed> getReverseCostMap(std::map<std::string, Fixed> const &cost_p);

@@ -9,9 +9,9 @@ namespace octopus
 	class Command;
 	/// @brief create command when idle or attack moving
 	/// @param waitingTimeForAttackScan_p number of waiting step before looking for a target to attack (should be 0 when auto attacking)
-	Command * commandFromIdle(Entity const &ent_p, State const &state_p, unsigned long waitingTimeForAttackScan_p);
+	Command * commandFromIdle(Entity const &ent_p, State const &state_p, unsigned long waitingTimeForAttackScan_p, CommandContext &context_p);
 
-	void unitIdleFunction(Entity const &ent_p, Step & step_p, State const &state_p);
+	void unitIdleFunction(Entity const &ent_p, Step & step_p, State const &state_p, CommandContext &context_p);
 
 	struct UnitModel : public EntityModel
 	{

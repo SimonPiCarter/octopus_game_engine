@@ -36,7 +36,7 @@ void EntityAbilityCommand::registerCommand(Step & step_p, State const &state_p)
     }
 }
 
-bool EntityAbilityCommand::applyCommand(Step & step_p, State const &state_p, CommandData const *, PathManager &) const
+bool EntityAbilityCommand::applyCommand(Step & step_p, State const &state_p, CommandData const *, CommandContext &) const
 {
 	Logger::getDebug() << "EntityAbilityCommand:: apply Command "<<_target <<std::endl;
 

@@ -29,7 +29,7 @@ bool Commandable::isActive() const
 	return true;
 }
 
-void Commandable::runCommands(Step & step_p, State const &state_p, PathManager &pathManager_p)
+void Commandable::runCommands(Step & step_p, State const &state_p, CommandContext &commandContext_p)
 {
 	if(!_queue.hasCommand())
 	{
@@ -43,7 +43,7 @@ void Commandable::runCommands(Step & step_p, State const &state_p, PathManager &
 	}
 	// while we have commands and the front one is over go on
 	while(it_l != _queue.getList().cend()
-	   && applyCommand(it_l->_var, step_p, state_p, getData(it_l->_var), pathManager_p))
+	   && applyCommand(it_l->_var, step_p, state_p, getData(it_l->_var), commandContext_p))
 	{
 		// clean up
 		cleanUp(it_l->_var, step_p, state_p, getData(it_l->_var));

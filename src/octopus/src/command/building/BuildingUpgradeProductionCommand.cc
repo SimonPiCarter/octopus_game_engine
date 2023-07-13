@@ -60,7 +60,7 @@ void BuildingUpgradeProductionCommand::registerCommand(Step & step_p, State cons
 	}
 }
 
-bool BuildingUpgradeProductionCommand::applyCommand(Step & step_p, State const &state_p, CommandData const *, PathManager &) const
+bool BuildingUpgradeProductionCommand::applyCommand(Step & step_p, State const &state_p, CommandData const *, CommandContext &) const
 {
 	Logger::getDebug() << "BuildingUpgradeProductionCommand:: apply Command "<<_source <<std::endl;
 	Building const * building_l = dynamic_cast<Building const *>(state_p.getEntity(_source));

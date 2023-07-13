@@ -64,7 +64,7 @@ void BuildingBlueprintCommand::registerCommand(Step & step_p, State const &state
 	step_p.addSteppable(new CommandStorageStep(this));
 }
 
-bool BuildingBlueprintCommand::applyCommand(Step &, State const &, CommandData const *, PathManager &) const
+bool BuildingBlueprintCommand::applyCommand(Step &, State const &, CommandData const *, CommandContext &) const
 {
 	// NA
 	return true;

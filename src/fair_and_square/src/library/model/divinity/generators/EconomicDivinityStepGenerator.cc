@@ -77,7 +77,7 @@ EconomicDivinityParams createDefaultParams()
 }
 
 // spawn blocs every n steps
-void customIdleResource(Entity const &ent_p, Step &step_p, State const &)
+void customIdleResource(Entity const &ent_p, Step &step_p, State const &, CommandContext &)
 {
 	if(ent_p._waiting >= ent_p.getFullReload())
 	{

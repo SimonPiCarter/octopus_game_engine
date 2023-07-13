@@ -24,7 +24,7 @@ public:
 	virtual void registerCommand(Step & step_p, State const &state_p) override;
 
 	/// @brief NA (should never be called)
-	virtual bool applyCommand(Step &, State const &, CommandData const *, PathManager &) const override { return true; }
+	virtual bool applyCommand(Step &, State const &, CommandData const *, CommandContext &) const override { return true; }
 
 	std::list<Handle>  const &getHandles() const { return _handles; }
 	Vector const &getFinalPoint() const { return _finalPoint; }

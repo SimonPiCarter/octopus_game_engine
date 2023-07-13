@@ -44,7 +44,7 @@ bool isInRange(State const &state_p, Entity const * ent_p, Building const * buil
 	return false;
 }
 
-bool EntityBuildingCommand::applyCommand(Step & step_p, State const &state_p, CommandData const *data_p, PathManager &pathManager_p) const
+bool EntityBuildingCommand::applyCommand(Step & step_p, State const &state_p, CommandData const *data_p, CommandContext &commandContext_p) const
 {
 	Logger::getDebug() << "EntityBuildingCommand:: apply Command "<<_source <<std::endl;
 	MoveData const &moveData_l = *static_cast<MoveData const *>(data_p);
@@ -102,7 +102,7 @@ bool EntityBuildingCommand::applyCommand(Step & step_p, State const &state_p, Co
 	{
 		Logger::getDebug() << "EntityBuildingCommand:: moving"<<std::endl;
 		// run move command
-		_subMoveCommand.applyCommand(step_p, state_p, data_p, pathManager_p);
+		_subMoveCommand.applyCommand(step_p, state_p, data_p, commandContext_p);
 	}
 	// If in range build after grid check
 	else

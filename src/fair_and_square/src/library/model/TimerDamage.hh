@@ -15,7 +15,7 @@ public:
 
 	/// @brief virtual pure method to apply the effect
 	/// @note add steppables here
-	virtual void applyEffect(octopus::Step & step_p, octopus::State const &state_p, octopus::CommandData const * , octopus::PathManager &) const override;
+	virtual void applyEffect(octopus::Step & step_p, octopus::State const &state_p, octopus::CommandData const * , octopus::CommandContext &) const override;
 protected:
     /// @brief the handle of entity to deal damage to
     unsigned long const _player;

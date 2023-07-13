@@ -17,7 +17,7 @@
 using namespace octopus;
 
 // spawn 10 bloc every 5 steps
-void customIdle(Entity const &ent_p, Step &step_p, State const &)
+void customIdle(Entity const &ent_p, Step &step_p, State const &, CommandContext &)
 {
 	if(ent_p._waiting >= 5)
 	{
