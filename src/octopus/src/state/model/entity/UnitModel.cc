@@ -83,42 +83,43 @@ Command * commandFromIdle(Entity const &ent_p, State const &state_p, unsigned lo
 	}
 
 	// If no command we check for target if we have damage or heal
-	if(ent_p._model._damage > 1e-3 || ent_p._model._heal > 1e-3)
+	if(context_p.kdTree)
 	{
-		Logger::getDebug() << " Unit::runCommands :: no command (attack)"<< std::endl;
-		if(ent_p._waiting >= waitingTimeForAttackScan_p && context_p.kdTree)
+		if(ent_p._model._damage > 1e-3 || ent_p._model._heal > 1e-3)
 		{
-			std::vector<std::pair<octopus::Fixed , const Entity *> > neighbors_l;
-			Fixed matchDistance_p = ent_p._aggroDistance;
-			context_p.kdTree->computeEntityNeighbors(ent_p._handle, matchDistance_p,
-				std::bind(registerUnit, std::ref(neighbors_l), ent_p._model._heal > 1e-3, 1, std::ref(state_p),
-				std::placeholders::_1, std::placeholders::_2, std::placeholders::_3));
-			if(!neighbors_l.empty())
+			Logger::getDebug() << " Unit::runCommands :: no command (attack)"<< std::endl;
+			if(ent_p._waiting >= waitingTimeForAttackScan_p)
 			{
-				Entity const * target_l = neighbors_l.begin()->second;
-				if(target_l)
+				std::vector<std::pair<octopus::Fixed , const Entity *> > neighbors_l;
+				Fixed matchDistance_p = ent_p._aggroDistance;
+				context_p.kdTree->computeEntityNeighbors(ent_p._handle, matchDistance_p,
+					std::bind(registerUnit, std::ref(neighbors_l), ent_p._model._heal > 1e-3, 1, std::ref(state_p),
+					std::placeholders::_1, std::placeholders::_2, std::placeholders::_3));
+				if(!neighbors_l.empty())
 				{
-					Logger::getDebug() << " Unit::runCommands :: add attack command" << ent_p._handle << " -> " << target_l->_handle << std::endl;
-					return new EntityAttackCommand(ent_p._commandableHandle, ent_p._handle, target_l->_handle, false);
+					Entity const * target_l = neighbors_l.begin()->second;
+					if(target_l)
+					{
+						Logger::getDebug() << " Unit::runCommands :: add attack command" << ent_p._handle << " -> " << target_l->_handle << std::endl;
+						return new EntityAttackCommand(ent_p._commandableHandle, ent_p._handle, target_l->_handle, false);
+					}
 				}
 			}
 		}
 	}
-
-	// If no command we check for target if we have damage or heal
-	// if(ent_p._model._damage > 1e-3 || ent_p._model._heal > 1e-3)
-	// {
-	// 	Logger::getDebug() << " Unit::runCommands :: no command (attack)"<< std::endl;
-	// 	if(ent_p._waiting >= waitingTimeForAttackScan_p)
-	// 	{
-	// 		Entity const * target_l = lookUpNewTarget(state_p, ent_p._handle, ent_p._aggroDistance, ent_p._model._heal > 1e-3);
-	// 		if(target_l)
-	// 		{
-	// 			Logger::getDebug() << " Unit::runCommands :: add attack command" << ent_p._handle << " -> " << target_l->_handle << std::endl;
-	// 			return new EntityAttackCommand(ent_p._commandableHandle, ent_p._handle, target_l->_handle, false);
-	// 		}
-	// 	}
-	// }
+	else if(ent_p._model._damage > 1e-3 || ent_p._model._heal > 1e-3)
+	{
+		Logger::getDebug() << " Unit::runCommands :: no command (attack)"<< std::endl;
+		if(ent_p._waiting >= waitingTimeForAttackScan_p)
+		{
+			Entity const * target_l = lookUpNewTarget(state_p, ent_p._handle, ent_p._aggroDistance, ent_p._model._heal > 1e-3);
+			if(target_l)
+			{
+				Logger::getDebug() << " Unit::runCommands :: add attack command" << ent_p._handle << " -> " << target_l->_handle << std::endl;
+				return new EntityAttackCommand(ent_p._commandableHandle, ent_p._handle, target_l->_handle, false);
+			}
+		}
+	}
 
 	return nullptr;
 }
