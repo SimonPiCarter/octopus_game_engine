@@ -11,16 +11,21 @@ namespace octopus
 class RandomGenerator
 {
 public:
-	RandomGenerator(unsigned long seed_p) : _gen(seed_p) {}
+	RandomGenerator(unsigned long seed_p, bool alwaysMin_p=false) : _gen(seed_p), _alwaysMin(alwaysMin_p) {}
 
 	int roll(int min_p, int max_p)
 	{
+		if(_alwaysMin)
+		{
+			return min_p;
+		}
 		boost::random::uniform_int_distribution<> distModel_l(min_p, max_p);
 		return distModel_l(_gen);
 	}
 
 private:
 	boost::random::mt19937 _gen;
+	bool const _alwaysMin;
 };
 
 
