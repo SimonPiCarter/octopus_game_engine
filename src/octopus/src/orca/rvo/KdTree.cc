@@ -36,6 +36,8 @@
 #include "RVOSimulator.hh"
 #include "Obstacle.hh"
 
+#include "state/entity/Entity.hh"
+
 namespace RVO {
 	KdTree::KdTree(RVOSimulator *sim) : obstacleTree_(NULL), sim_(sim) { }
 
@@ -47,11 +49,17 @@ namespace RVO {
 	void KdTree::buildAgentTree()
 	{
 		agents_.clear();
+		agentIndexPerHandle_.clear();
 		for (size_t i = agents_.size(); i < sim_->agents_.size(); ++i)
 		{
 			if(sim_->agents_[i].active())
 			{
 				agents_.push_back(&sim_->agents_[i]);
+				if(agentIndexPerHandle_.size() <= sim_->agents_[i].getEntity()->_handle)
+				{
+					agentIndexPerHandle_.resize(sim_->agents_[i].getEntity()->_handle+1, -1);
+				}
+				agentIndexPerHandle_[sim_->agents_[i].getEntity()->_handle] = agents_.size()-1;
 			}
 		}
 
@@ -243,6 +251,15 @@ namespace RVO {
 			node->left = buildObstacleTreeRecursive(leftObstacles);
 			node->right = buildObstacleTreeRecursive(rightObstacles);
 			return node;
+		}
+	}
+
+	void KdTree::computeEntityNeighbors(unsigned long ent, octopus::Fixed  &rangeSq, std::function<void(Agent *, Agent const *, octopus::Fixed &)> const &fn_p) const
+	{
+		if(ent < agentIndexPerHandle_.size())
+		{
+			Agent * agent_l = agents_[agentIndexPerHandle_[ent]];
+			computeAgentNeighbors(agent_l, rangeSq, fn_p);
 		}
 	}
 

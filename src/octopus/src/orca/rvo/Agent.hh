@@ -60,6 +60,10 @@ namespace RVO {
 		 * \param      sim             The simulator instance.
 		 */
 		explicit Agent(RVOSimulator *sim);
+
+		octopus::Entity const * getEntity() const;
+
+		Vector2 getPosition() const;
 	private:
 
 		/**

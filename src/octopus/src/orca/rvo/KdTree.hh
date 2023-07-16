@@ -117,6 +117,7 @@ namespace RVO {
 			 */
 			ObstacleTreeNode *right;
 		};
+		public:
 
 		/**
 		 * \brief      Constructs a <i>k</i>d-tree instance.
@@ -144,6 +145,7 @@ namespace RVO {
 		ObstacleTreeNode *buildObstacleTreeRecursive(const std::vector<Obstacle *> &
 													 obstacles);
 
+		void computeEntityNeighbors(unsigned long ent, octopus::Fixed  &rangeSq, std::function<void(Agent *, Agent const *, octopus::Fixed &)> const &fn_p) const;
 		/**
 		 * \brief      Computes the agent neighbors of the specified agent.
 		 * \param      agent           A pointer to the agent for which agent
@@ -191,9 +193,11 @@ namespace RVO {
 		bool queryVisibilityRecursive(const Vector2 &q1, const Vector2 &q2,
 									  octopus::Fixed radius,
 									  const ObstacleTreeNode *node) const;
+		private:
 
 		std::vector<Agent *> agents_;
 		std::vector<AgentTreeNode> agentTree_;
+		std::vector<long long> agentIndexPerHandle_;
 		ObstacleTreeNode *obstacleTree_;
 		RVOSimulator *sim_;
 

@@ -55,6 +55,16 @@ namespace RVO {
 		}
 	}
 
+	octopus::Entity const * Agent::getEntity() const
+	{
+		return ent_;
+	}
+
+	Vector2 Agent::getPosition() const
+	{
+		return position_;
+	}
+
 	/* Search for the best new velocity. */
 	void Agent::computeNewVelocity()
 	{
