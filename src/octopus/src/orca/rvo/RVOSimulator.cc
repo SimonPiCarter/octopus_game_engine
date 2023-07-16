@@ -40,6 +40,7 @@
 #include <omp.h>
 #endif
 #include <thread>
+#include <condition_variable>
 
 namespace RVO {
 	RVOSimulator::RVOSimulator() : defaultAgent_(NULL), globalTime_(0.0f), kdTree_(NULL), timeStep_(0.0f), pool(12)
@@ -171,12 +172,14 @@ namespace RVO {
 		indexes_l.push_back(static_cast<int>(agents_.size()));
 
 		std::atomic_int finished_l = 0;
+		std::mutex terminationMutex_l;
+		std::condition_variable termination_l;
 
 		for(int n = 0 ; n < nbThreads_l ; ++ n)
 		{
 			int start_l = indexes_l.at(n);
 			int end_l = indexes_l.at(n+1);
-			pool.queueJob([&finished_l, start_l, end_l, this](){
+			pool.queueJob([&finished_l, &termination_l, &terminationMutex_l, start_l, end_l, this](){
 				for (int i = start_l; i < end_l; ++i)
 				{
 					if(agents_[i].active())
@@ -185,11 +188,19 @@ namespace RVO {
 						agents_[i].computeNewVelocity();
 					}
 				}
-				finished_l++;
+				{
+					std::unique_lock<std::mutex> lock_l(terminationMutex_l);
+					finished_l++;
+				}
+				termination_l.notify_all();
 			});
 		}
 
-		while(finished_l < nbThreads_l) {}
+		std::unique_lock<std::mutex> lock_l(terminationMutex_l);
+		if(finished_l < nbThreads_l)
+		{
+			termination_l.wait(lock_l, [&]{ return finished_l >= nbThreads_l ; });
+		}
 
 		for (int i = 0; i < static_cast<int>(agents_.size()); ++i)
 		{
