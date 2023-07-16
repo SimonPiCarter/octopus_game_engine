@@ -87,7 +87,7 @@ void AreaSpawnerCommand::registerCommand(Step & step_p, State const &state_p)
 	SpawningGrid grid_l(state_p.getPathGrid().getSizeX());
 	initGrid(0, 0, grid_l, state_p.getPathGrid());
 
-	/// @todo maybe update from step?
+	/// @todo update from step
 
 	/// iterate on avery area spawn to spawn static first
 	for(AreaSpawn const &spawn_l : _spawns)
