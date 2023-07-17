@@ -41,7 +41,10 @@ public:
 		}
 		if(ent_l->_alive)
 		{
-			updateGrid(state_p, ent_l, true);
+			if(ent_l->_model._isStatic)
+			{
+				updateGrid(state_p, ent_l, true);
+			}
 			updateVisionGrid(state_p, ent_l, true);
 			updateExplorationGrid(state_p, ent_l, true);
 		}
@@ -75,7 +78,6 @@ public:
 		{
 			throw std::logic_error("Spawn Step revert is incoherrent (steps seem to be reverted in the wrong order)");
 		}
-		// unspawn but do not delete
 		Entity * ent_l = state_p.getEntity(this->_handle);
 		state_p.getEntities().pop_back();
 		delete ent_l;

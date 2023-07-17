@@ -28,7 +28,7 @@ void updateFromHp(State &state_p, Entity *ent_p)
 {
 	if(ent_p->_hp < 1e-3)
 	{
-		if(ent_p->_alive)
+		if(ent_p->_alive && ent_p->_model._isStatic)
 		{
 			updateGrid(state_p, ent_p, false);
 		}
@@ -36,7 +36,7 @@ void updateFromHp(State &state_p, Entity *ent_p)
 	}
 	else
 	{
-		if(!ent_p->_alive)
+		if(!ent_p->_alive && ent_p->_model._isStatic)
 		{
 			updateGrid(state_p, ent_p, true);
 		}

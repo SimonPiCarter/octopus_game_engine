@@ -13,9 +13,7 @@ void EntityMoveStep::apply(State &state_p) const
 
 	if(ent_l->_alive)
 	{
-		updateGrid(state_p, ent_l, false);
 		ent_l->_pos += this->_move;
-		updateGrid(state_p, ent_l, true);
 	}
 	else
 	{
@@ -30,9 +28,7 @@ void EntityMoveStep::revert(State &state_p, SteppableData const *) const
 
 	if(ent_l->_alive)
 	{
-		updateGrid(state_p, ent_l, false);
 		ent_l->_pos -= this->_move;
-		updateGrid(state_p, ent_l, true);
 	}
 	else
 	{
