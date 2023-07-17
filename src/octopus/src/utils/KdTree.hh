@@ -61,7 +61,7 @@ namespace octopus {
 		/// @brief Builds an entity <i>k</i>d-tree.
 		void buildAgentTree(std::function<bool(Entity const *)> const &fn_p = [](Entity const *) { return true; });
 
-		std::vector<std::pair<Fixed , const Entity *> > computeEntityNeighbors(Handle const & ent_p, Fixed const &rangeSq_p, size_t max_p,
+		std::vector<std::pair<Fixed , const Entity *> > computeEntityNeighbors(Handle const & ent_p, Fixed const &range_p, size_t max_p,
 			std::function<bool(Entity const *)> const &fn_p = [](Entity const *) { return true; }) const;
 
 	private:
@@ -118,6 +118,9 @@ namespace octopus {
 	};
 
 	bool teamCheck(unsigned long team_p, bool sameTeam_p, State const &state_p, Entity const *entity_p);
+
+	const Entity * getClosestEntity(KdTree const &tree_p, Handle const & ent_p, Fixed const &range_p,
+		std::function<bool(Entity const *)> const &fn_p = [](Entity const *) { return true; });
 }
 
 #endif

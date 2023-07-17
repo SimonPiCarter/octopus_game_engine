@@ -208,4 +208,14 @@ namespace octopus {
 			|| (!sameTeam_p && team_p != state_p.getPlayer(entity_p->_player)->_team);
 	}
 
+	const Entity * getClosestEntity(KdTree const &tree_p, Handle const & ent_p, Fixed const &range_p, std::function<bool(Entity const *)> const &fn_p)
+	{
+		std::vector<std::pair<Fixed , const Entity *> > result_l = tree_p.computeEntityNeighbors(ent_p, range_p, 1, fn_p);
+		if(result_l.empty())
+		{
+			return nullptr;
+		}
+		return result_l[0].second;
+	}
+
 } // octopus
