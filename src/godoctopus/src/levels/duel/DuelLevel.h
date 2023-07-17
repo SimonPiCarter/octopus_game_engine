@@ -56,7 +56,7 @@ class LoseTrigger : public octopus::OneShotTrigger
 public:
 	LoseTrigger(octopus::Listener * listener_p, unsigned long player_p);
 
-	virtual void trigger(octopus::State const &state_p, octopus::Step &step_p, unsigned long, octopus::TriggerData const &) const override;
+	virtual void trigger(octopus::State const &state_p, CommandContext const &, octopus::Step &step_p, unsigned long, octopus::TriggerData const &) const override;
 private:
     unsigned long const _player;
 };

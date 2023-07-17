@@ -71,7 +71,7 @@ class VisionTrigger : public octopus::OneShotTrigger
 public:
 	VisionTrigger(cuttlefish::Window &window_p, octopus::VisionPattern const &pattern_p) : OneShotTrigger({new octopus::ListenerStepCount(12000)}), _window(window_p), _pattern(pattern_p) {}
 
-	virtual void trigger(State const &state_p, Step &step_p, unsigned long, TriggerData const &) const override
+	virtual void trigger(State const &state_p, CommandContext const &, Step &step_p, unsigned long, TriggerData const &) const override
 	{
 		step_p.addSteppable(new octopus::TeamVisionStep(0, _pattern, true, true));
 		step_p.addSteppable(new octopus::TeamVisionStep(0, _pattern, true, false));
@@ -253,7 +253,7 @@ WaveSpawn::WaveSpawn(Listener * listener_p, Library const &lib_p, RandomGenerato
 		_waveStepGenerator(waveStepGenerator_p)
 {}
 
-void WaveSpawn::trigger(State const &state_p, Step &step_p, unsigned long, octopus::TriggerData const &) const
+void WaveSpawn::trigger(State const &state_p, CommandContext const &, Step &step_p, unsigned long, octopus::TriggerData const &) const
 {
 	for(unsigned long i = 0 ; i < _wave * 10 ; ++ i)
 	{
@@ -281,7 +281,7 @@ void WaveSpawn::trigger(State const &state_p, Step &step_p, unsigned long, octop
 
 LoseTrigger::LoseTrigger(Listener * listener_p) : OneShotTrigger({listener_p}) {}
 
-void LoseTrigger::trigger(State const &state_p, Step &step_p, unsigned long, octopus::TriggerData const &) const
+void LoseTrigger::trigger(State const &state_p, CommandContext const &, Step &step_p, unsigned long, octopus::TriggerData const &) const
 {
 	step_p.addSteppable(new StateWinStep(state_p.isOver(), state_p.hasWinningTeam(), state_p.getWinningTeam(), 1));
 }

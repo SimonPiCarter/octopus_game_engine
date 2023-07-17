@@ -33,7 +33,7 @@ WaveSpawn::WaveSpawn(Listener * listener_p, Library const &lib_p, RandomGenerato
 		_waveStepGenerator(waveStepGenerator_p)
 {}
 
-void WaveSpawn::trigger(State const &state_p, Step &step_p, unsigned long, octopus::TriggerData const &) const
+void WaveSpawn::trigger(State const &state_p, CommandContext const &, Step &step_p, unsigned long, octopus::TriggerData const &) const
 {
 	// handles to be used if last to trigger win condition
 	std::unordered_set<Handle> handles_l;
@@ -73,7 +73,7 @@ WinTrigger::WinTrigger(unsigned long winner_p, std::unordered_set<octopus::Handl
 	, _winner(winner_p)
 {}
 
-void WinTrigger::trigger(octopus::State const &state_p, octopus::Step &step_p, unsigned long, octopus::TriggerData const &) const
+void WinTrigger::trigger(octopus::State const &state_p, CommandContext const &, octopus::Step &step_p, unsigned long, octopus::TriggerData const &) const
 {
 	step_p.addSteppable(new StateWinStep(state_p.isOver(), state_p.hasWinningTeam(), state_p.getWinningTeam(), _winner));
 }

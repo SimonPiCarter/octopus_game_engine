@@ -25,7 +25,7 @@ class AnchorEffectTrigger : public octopus::OnEachTrigger
 {
 public:
 	AnchorEffectTrigger(octopus::Library const &, FASStepVisitor &vis_p);
-	virtual void trigger(octopus::State const &, octopus::Step &step_p, unsigned long, octopus::TriggerData const &data_p) const override;
+	virtual void trigger(octopus::State const &, octopus::CommandContext const &, octopus::Step &step_p, unsigned long, octopus::TriggerData const &data_p) const override;
 
 private:
 	FASStepVisitor &_vis;

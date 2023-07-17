@@ -8,6 +8,7 @@
 
 namespace octopus
 {
+struct CommandContext;
 class EventCollection;
 class Listener;
 struct ListenerData;
@@ -48,7 +49,7 @@ public:
 	/// @brief trigger
 	/// @param step_p the step to fill with steps from the trigger
 	/// @param count_p the current count of the trigger in the same step (this can be used to access data for this occurence of trigger)
-	virtual void trigger(State const &, Step &step_p, unsigned long count_p, TriggerData const &data_p) const = 0;
+	virtual void trigger(State const &, CommandContext const &, Step &step_p, unsigned long count_p, TriggerData const &data_p) const = 0;
 
 	std::list<Listener *> const _listeners;
 

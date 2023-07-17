@@ -34,7 +34,7 @@ public:
 		_qty(qty_p)
 	{}
 
-	virtual void trigger(State const &state_p, Step &step_p, unsigned long, TriggerData const &) const override
+	virtual void trigger(State const &state_p, CommandContext const &, Step &step_p, unsigned long, TriggerData const &) const override
 	{
 		// add resource for the player
 		std::map<std::string, Fixed> map_l;
@@ -57,7 +57,7 @@ public:
 		_modelRespawn(modelRespawn_p)
 	{}
 
-	virtual void trigger(State const &state_p, Step &step_p, unsigned long count_p, TriggerData const &data_p) const override
+	virtual void trigger(State const &state_p, CommandContext const &, Step &step_p, unsigned long count_p, TriggerData const &data_p) const override
 	{
 		ListenerEntityData const * entData_l = dynamic_cast<ListenerEntityData const * >(data_p._listenerData[0]);
 		Entity const * ent_l = entData_l->_entities[count_p];

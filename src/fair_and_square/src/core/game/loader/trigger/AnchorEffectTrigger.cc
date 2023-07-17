@@ -14,7 +14,7 @@ AnchorEffectTrigger::AnchorEffectTrigger(octopus::Library const &lib_p, FASStepV
     _vis(vis_p)
 {}
 
-void AnchorEffectTrigger::trigger(octopus::State const &, octopus::Step &, unsigned long count_p, octopus::TriggerData const &data_p) const
+void AnchorEffectTrigger::trigger(octopus::State const &, CommandContext const &, octopus::Step &, unsigned long count_p, octopus::TriggerData const &data_p) const
 {
     octopus::ListenerEntityData const * entData_l = dynamic_cast<octopus::ListenerEntityData const *>(data_p._listenerData.at(0));
     octopus::Entity const * ent_l = entData_l->_entities.at(count_p);

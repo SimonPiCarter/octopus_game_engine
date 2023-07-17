@@ -289,7 +289,8 @@ bool Controller::loop_body()
 			{
 				step_l.addSteppable(new TriggerSpawn(trigger_l));
 			}
-			handleTriggers(*state_l, step_l, getStepBeforeLastCompiledStep());
+			CommandContext ctxt_l = {_pathManager, &kdTree_l};
+			handleTriggers(*state_l, ctxt_l, step_l, getStepBeforeLastCompiledStep());
 
 			_metrics._timeTrigger += std::chrono::nanoseconds( std::chrono::steady_clock::now() - startTrigger_l ).count();
 
@@ -606,7 +607,7 @@ void Controller::updateCommitedCommand()
 	}
 }
 
-void Controller::handleTriggers(State const &state_p, Step &step_p, Step const &prevStep_p)
+void Controller::handleTriggers(State const &state_p, CommandContext const &context_p, Step &step_p, Step const &prevStep_p)
 {
 	Logger::getDebug() << "handleTriggers :: start "<<std::endl;
 	// compute event and triggers (visit last step)
@@ -678,7 +679,7 @@ void Controller::handleTriggers(State const &state_p, Step &step_p, Step const &
 			for(size_t count_l = 0 ; count_l < trigger_l->getCount(data_l) ; ++count_l)
 			{
 				Logger::getDebug() << "handleTriggers :: trigger on trigger "<<curHandle_l<<std::endl;
-				trigger_l->trigger(state_p, step_p, count_l, data_l);
+				trigger_l->trigger(state_p, context_p, step_p, count_l, data_l);
 			}
 
 			// handle reset or disabling

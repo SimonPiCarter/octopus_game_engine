@@ -116,7 +116,7 @@ class Case4TriggerSpawn : public OneShotTrigger
 public:
 	Case4TriggerSpawn(Listener * listener_p, Library const &lib_p) : OneShotTrigger({listener_p}), _lib(lib_p) {}
 
-	virtual void trigger(State const &state_p, Step &step_p, unsigned long, TriggerData const &) const override
+	virtual void trigger(State const &state_p, CommandContext const &, Step &step_p, unsigned long, TriggerData const &) const override
 	{
 		{
 			Unit unit_l({ 5, 35. }, false, _lib.getUnitModel("soldier"));
@@ -158,7 +158,7 @@ class Case4DivinitiesOptionTrigger : public OnEachTrigger
 public:
 	Case4DivinitiesOptionTrigger(Listener * listener_p, unsigned long player_p) : OnEachTrigger(listener_p), _player(player_p), _gen(42) {}
 
-	virtual void trigger(State const &, Step &step_p, unsigned long, TriggerData const &) const override
+	virtual void trigger(State const &, CommandContext const &, Step &step_p, unsigned long, TriggerData const &) const override
 	{
 		std::vector<std::string> vector_l;
 		vector_l.push_back("Divinity_1");

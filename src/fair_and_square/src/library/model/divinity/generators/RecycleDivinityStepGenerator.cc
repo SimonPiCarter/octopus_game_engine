@@ -28,7 +28,7 @@ public:
 		_qty(qty_p)
 	{}
 
-	virtual void trigger(State const &state_p, Step &step_p, unsigned long, TriggerData const &) const override
+	virtual void trigger(State const &state_p, CommandContext const &, Step &step_p, unsigned long, TriggerData const &) const override
 	{
 		// add resource for the player
 		std::map<std::string, Fixed> map_l;
@@ -53,7 +53,7 @@ public:
 		_buffs(buffs_p)
 	{}
 
-	virtual void trigger(State const &state_p, Step &step_p, unsigned long, TriggerData const &) const override
+	virtual void trigger(State const &state_p, CommandContext const &, Step &step_p, unsigned long, TriggerData const &) const override
 	{
 		// when trigger is exactly reached
 		if(getResource(*state_p.getPlayer(_player), "RecycleDeathBuffTrigger") - step_p.getResourceSpent(_player, "RecycleDeathBuffTrigger") == _trigger)

@@ -29,7 +29,7 @@ class TestTriggerTimeTrigger : public OneShotTrigger
 public:
 	TestTriggerTimeTrigger(std::list<Listener *> const &listeners_p, UnitModel const &model_p) : OneShotTrigger(listeners_p), _model(model_p) {}
 
-	virtual void trigger(State const &state_p, Step &step_p, unsigned long, TriggerData const &) const override
+	virtual void trigger(State const &state_p, CommandContext const &, Step &step_p, unsigned long, TriggerData const &) const override
 	{
 		std::map<std::string, Fixed> map_l;
 		map_l["bloc"] = -10.;
@@ -49,7 +49,7 @@ class TestTriggerTimeSpawnTrigger : public OneShotTrigger
 public:
 	TestTriggerTimeSpawnTrigger(std::list<Listener *> const &listeners_p) : OneShotTrigger(listeners_p) {}
 
-	virtual void trigger(State const &, Step &step_p, unsigned long, TriggerData const &) const override
+	virtual void trigger(State const &, CommandContext const &, Step &step_p, unsigned long, TriggerData const &) const override
 	{
 		std::map<std::string, Fixed> map_l;
 		map_l["bloc"] = -10.;

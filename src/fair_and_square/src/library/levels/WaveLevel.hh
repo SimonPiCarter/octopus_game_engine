@@ -29,7 +29,7 @@ public:
 		unsigned long stepWait_p, unsigned long finalWave_p, unsigned long player_p, unsigned long worldSize_p,
 		std::function<std::vector<octopus::Steppable *>(void)> waveStepGenerator_p);
 
-	virtual void trigger(octopus::State const &state_p, octopus::Step &step_p, unsigned long, octopus::TriggerData const &) const override;
+	virtual void trigger(octopus::State const &state_p, octopus::CommandContext const &, octopus::Step &step_p, unsigned long, octopus::TriggerData const &) const override;
 
 private:
 	octopus::Library const &_lib;
@@ -49,7 +49,7 @@ class LoseTrigger : public octopus::OneShotTrigger
 public:
 	LoseTrigger(octopus::Listener * listener_p);
 
-	virtual void trigger(octopus::State const &state_p, octopus::Step &step_p, unsigned long, octopus::TriggerData const &) const override;
+	virtual void trigger(octopus::State const &state_p, octopus::CommandContext const &, octopus::Step &step_p, unsigned long, octopus::TriggerData const &) const override;
 };
 
 

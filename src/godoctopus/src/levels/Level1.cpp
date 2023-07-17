@@ -274,7 +274,7 @@ WaveSpawn::WaveSpawn(Listener * listener_p, Library const &lib_p, RandomGenerato
 		_waveStepGenerator(waveStepGenerator_p)
 {}
 
-void WaveSpawn::trigger(State const &state_p, Step &step_p, unsigned long, octopus::TriggerData const &) const
+void WaveSpawn::trigger(State const &state_p, CommandContext const &, Step &step_p, unsigned long, octopus::TriggerData const &) const
 {
 	for(unsigned long i = 0 ; i < _wave * 10 ; ++ i)
 	{

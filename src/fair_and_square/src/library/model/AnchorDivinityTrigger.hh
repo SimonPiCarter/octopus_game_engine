@@ -18,7 +18,7 @@ class AnchorDivinityTrigger : public octopus::OnEachTrigger
 public:
 	AnchorDivinityTrigger(octopus::Library const &lib_p, octopus::RandomGenerator &rand_p, unsigned long player_p, std::vector<fas::DivinityType> const &types_p, double bonus_p);
 
-	virtual void trigger(octopus::State const &, octopus::Step &step_p, unsigned long, octopus::TriggerData const &) const override;
+	virtual void trigger(octopus::State const &, octopus::CommandContext const &, octopus::Step &step_p, unsigned long, octopus::TriggerData const &) const override;
 
 private:
 	unsigned long const _player;

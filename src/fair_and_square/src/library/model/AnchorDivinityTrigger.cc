@@ -54,7 +54,7 @@ std::vector<int> roll_with_no_doublon(octopus::RandomGenerator &rand_p, int min_
     return rolls_l;
 }
 
-void AnchorDivinityTrigger::trigger(octopus::State const &state_p, octopus::Step &step_p, unsigned long, octopus::TriggerData const &) const
+void AnchorDivinityTrigger::trigger(octopus::State const &state_p, octopus::CommandContext const &, octopus::Step &step_p, unsigned long, octopus::TriggerData const &) const
 {
     std::map<std::string, octopus::Fixed> map_l;
     map_l["Anchor"] = -_bonus;

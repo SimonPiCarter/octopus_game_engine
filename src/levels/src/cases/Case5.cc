@@ -66,7 +66,7 @@ class Case5DivinitiesOptionTrigger : public OnEachTrigger
 public:
 	Case5DivinitiesOptionTrigger(Listener * listener_p, unsigned long player_p) : OnEachTrigger(listener_p), _player(player_p), _gen(42) {}
 
-	virtual void trigger(State const &, Step &step_p, unsigned long, TriggerData const &) const override
+	virtual void trigger(State const &, CommandContext const &, Step &step_p, unsigned long, TriggerData const &) const override
 	{
 		std::vector<std::string> vector_l;
 		vector_l.push_back("Divinity_1");
@@ -94,7 +94,7 @@ class Case5WinTrigger : public OneShotTrigger
 public:
 	Case5WinTrigger(Listener * listener_p, unsigned long team_p) : OneShotTrigger({listener_p}), _team(team_p) {}
 
-	virtual void trigger(State const &state_p, Step &step_p, unsigned long, TriggerData const &) const override
+	virtual void trigger(State const &state_p, CommandContext const &, Step &step_p, unsigned long, TriggerData const &) const override
 	{
 		step_p.addSteppable(new StateWinStep(state_p.isOver(), state_p.hasWinningTeam(), state_p.getWinningTeam(), _team));
 	}
@@ -107,7 +107,7 @@ class Case5DrawTrigger : public OneShotTrigger
 public:
 	Case5DrawTrigger(Listener * listener_p) : OneShotTrigger({listener_p}) {}
 
-	virtual void trigger(State const &state_p, Step &step_p, unsigned long, TriggerData const &) const override
+	virtual void trigger(State const &state_p, CommandContext const &, Step &step_p, unsigned long, TriggerData const &) const override
 	{
 		step_p.addSteppable(new StateDrawStep(state_p.isOver(), state_p.hasWinningTeam()));
 	}

@@ -292,7 +292,7 @@ std::pair<std::list<octopus::Steppable *>, std::list<octopus::Command *> > readL
 
 LoseTrigger::LoseTrigger(Listener * listener_p, unsigned long player_p) : OneShotTrigger({listener_p}), _player(player_p) {}
 
-void LoseTrigger::trigger(State const &state_p, Step &step_p, unsigned long, octopus::TriggerData const &) const
+void LoseTrigger::trigger(State const &state_p, CommandContext const &, Step &step_p, unsigned long, octopus::TriggerData const &) const
 {
 	step_p.addSteppable(new StateWinStep(state_p.isOver(), state_p.hasWinningTeam(), state_p.getWinningTeam(), _player));
 }

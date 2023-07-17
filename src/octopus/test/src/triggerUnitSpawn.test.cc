@@ -30,7 +30,7 @@ class OnEachTriggerResourceTest : public OnEachTrigger
 public:
 	OnEachTriggerResourceTest(Listener * listener_p) : OnEachTrigger(listener_p) {}
 
-	virtual void trigger(State const &, Step &step_p, unsigned long, TriggerData const &) const override
+	virtual void trigger(State const &, CommandContext const &, Step &step_p, unsigned long, TriggerData const &) const override
 	{
 		std::map<std::string, Fixed> map_l;
 		map_l["bloc"] = -10.;
@@ -43,7 +43,7 @@ class OneShotTriggerResourceTest : public OneShotTrigger
 public:
 	OneShotTriggerResourceTest(Listener * listener_p) : OneShotTrigger({listener_p}) {}
 
-	virtual void trigger(State const &, Step &step_p, unsigned long, TriggerData const &) const override
+	virtual void trigger(State const &, CommandContext const &, Step &step_p, unsigned long, TriggerData const &) const override
 	{
 		std::map<std::string, Fixed> map_l;
 		map_l["bloc"] = -10.;

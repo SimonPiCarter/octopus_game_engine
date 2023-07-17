@@ -16,7 +16,7 @@ AnchorTrigger::AnchorTrigger(octopus::Library const &lib_p, octopus::RandomGener
     _bonus(bonus_p)
 {}
 
-void AnchorTrigger::trigger(octopus::State const &state_p, octopus::Step &step_p, unsigned long, octopus::TriggerData const &) const
+void AnchorTrigger::trigger(octopus::State const &state_p, octopus::CommandContext const &, octopus::Step &step_p, unsigned long, octopus::TriggerData const &) const
 {
     std::map<std::string, octopus::Fixed> map_l;
     map_l["Anchor"] = -_bonus;
