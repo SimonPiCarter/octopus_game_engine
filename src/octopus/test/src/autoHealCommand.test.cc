@@ -90,10 +90,10 @@ TEST(autoHealCommandTest, simple)
 
 	state_l = controller_l.queryState();
 
-	// wind up should just be over but no damage still
+	// wind up should just be over but no heal still
 	EXPECT_NEAR(9., to_double(state_l->getEntity(1)->_hp), 1e-5);
 
-	// Next damage should be -> reload time + windup
+	// Next heal should be -> reload time + windup
 	// 10 + 3 (13)
 
 	// update time to 12 seconds (18)
@@ -103,7 +103,7 @@ TEST(autoHealCommandTest, simple)
 
 	state_l = controller_l.queryState();
 
-	// damage has been done
+	// heal has been done
 	EXPECT_NEAR(9., to_double(state_l->getEntity(1)->_hp), 1e-5);
 
 	// update time to 1 second (19)
@@ -113,7 +113,7 @@ TEST(autoHealCommandTest, simple)
 
 	state_l = controller_l.queryState();
 
-	// damage has been done twice
+	// heal has been done twice
 	EXPECT_NEAR(10., to_double(state_l->getEntity(1)->_hp), 1e-5);
 
 	// update time to 2 second (21)
@@ -136,9 +136,9 @@ TEST(autoHealCommandTest, simple)
 	EXPECT_NEAR(5., to_double(state_l->getEntity(0)->_pos.x), 1e-5);
 	EXPECT_NEAR(5., to_double(state_l->getEntity(0)->_pos.y), 1e-5);
 
-	// Next damage should be -> reload time + windup
+	// Next heal should be -> reload time + windup
 	// 10 + 3 (13) after last attack (happened on time step 19)
-	// next damage should be on time step 32
+	// next heal should be on time step 32
 
 	// update time to 9 second (31)
 	controller_l.update(9.);
@@ -149,7 +149,7 @@ TEST(autoHealCommandTest, simple)
 
 	EXPECT_NEAR(5., to_double(state_l->getEntity(0)->_pos.x), 1e-5);
 	EXPECT_NEAR(5., to_double(state_l->getEntity(0)->_pos.y), 1e-5);
-	// wind up should just be over but no damage still
+	// wind up should just be over but no heal still
 	EXPECT_NEAR(8., to_double(state_l->getEntity(2)->_hp), 1e-5);
 
 	// update time to 1 second (1)
@@ -159,6 +159,6 @@ TEST(autoHealCommandTest, simple)
 
 	state_l = controller_l.queryState();
 
-	// damage should be done
+	// heal should be done
 	EXPECT_NEAR(9., to_double(state_l->getEntity(2)->_hp), 1e-5);
 }

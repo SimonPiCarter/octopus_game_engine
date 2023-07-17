@@ -40,7 +40,7 @@ TEST(attackMoveHealCommandTest, simple)
 	ent_l._hp = 5;
 
 	Unit ent2_l { { 3, 3.5 }, false, unitModel_l};
-	ent2_l._aggroDistance = 5.;
+	ent2_l._aggroDistance = 6.;
 
 	UnitSpawnStep * spawn0_l = new UnitSpawnStep(0, ent2_l);
 	UnitSpawnStep * spawn1_l = new UnitSpawnStep(1, ent_l);

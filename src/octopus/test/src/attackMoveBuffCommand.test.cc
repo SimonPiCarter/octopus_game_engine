@@ -34,7 +34,7 @@ TEST(attackMoveBuffCommandTest, simple)
 	octopus::UnitModel unit2Model_l { false, 1., 1., 10. };
 	unit2Model_l._buffer._active = true;
 	unit2Model_l._buffer._reload = 10;
-	unit2Model_l._buffer._range = 5;
+	unit2Model_l._buffer._range = 6;
 	unit2Model_l._buffer._buff._duration = 2;
 	unit2Model_l._buffer._buff._id = "speed";
 	unit2Model_l._buffer._buff._coef = 1.;
