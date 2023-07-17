@@ -14,6 +14,7 @@
 #include "step/player/PlayerBuffAllStep.hh"
 #include "step/player/PlayerSpendResourceStep.hh"
 #include "step/trigger/TriggerSpawn.hh"
+#include "utils/KdTree.hh"
 
 #include "UnitModelIds.hh"
 
@@ -38,11 +39,13 @@ public:
 		ListenerEntityData const * entData_l = dynamic_cast<ListenerEntityData const * >(data_p._listenerData[0]);
 		Entity const * ent_l = entData_l->_entities[count_p];
 
-		/// @brief get all within range
-		TargetPanel panel_l(lookUpNewTargets(state_p, ent_l->_handle, _aoe, false));
+		std::vector<std::pair<Fixed, Entity const *> > neighbors_l = context_p.kdTree->computeEntityNeighbors(
+			ent_l->_handle, _aoe, 0, std::bind(
+				teamCheck, state_p.getPlayer(ent_l->_player)->_team, true, std::ref(state_p), std::placeholders::_1));
 
-		for(Entity const * subTarget_l : panel_l.units)
+		for(auto && pair_l : neighbors_l)
 		{
+			Entity const * subTarget_l = pair_l.second;
 			// same player and different entity
 			if(subTarget_l->_player == ent_l->_player
 			&& ent_l->_handle != subTarget_l->_handle)
