@@ -18,7 +18,7 @@
 #include "step/entity/EntityHitPointChangeStep.hh"
 #include "step/entity/EntityUpdateWaitingStep.hh"
 #include "utils/Fixed.hh"
-
+#include "utils/KdTree.hh"
 
 namespace octopus
 {
@@ -30,6 +30,19 @@ EntityAttackCommand::EntityAttackCommand(Handle const &commandHandle_p, Handle c
 	, _frozenTarget(frozenTarget_p)
 	, _data(_target, Vector{}, 0, {})
 {}
+
+bool targetCheck(unsigned long team_p, bool healing_p, State const &state_p, Entity const *entity_p)
+{
+	bool valid_l = teamCheck(team_p, healing_p, state_p, entity_p);
+
+	if(healing_p)
+	{
+		valid_l &= entity_p->_hp < entity_p->getHpMax();
+	}
+
+	return valid_l;
+}
+
 
 bool EntityAttackCommand::applyCommand(Step & step_p, State const &state_p, CommandData const *data_p, CommandContext &commandContext_p) const
 {
@@ -43,6 +56,7 @@ bool EntityAttackCommand::applyCommand(Step & step_p, State const &state_p, Comm
 
 	// if the current command is about healing
 	bool heal_l = entSource_l->_model._heal > 1e-3;
+	auto teamCheckFn_l = std::bind(targetCheck, state_p.getPlayer(entSource_l->_player)->_team, heal_l, std::ref(state_p), std::placeholders::_1);
 
 	// target disappeared or is dead (or if healing is full life)
 	bool targetMissing_l = checkTarget(state_p, curTarget_l, heal_l);
@@ -51,7 +65,7 @@ bool EntityAttackCommand::applyCommand(Step & step_p, State const &state_p, Comm
 		// reset wind up
 		step_p.addSteppable(new CommandWindUpDiffStep(_handleCommand, - windup_l));
 		// If target is dead we look for another target in range
-		Entity const * newTarget_l = lookUpNewTarget(state_p, _source, entSource_l->_aggroDistance, heal_l);
+		Entity const * newTarget_l = getClosestEntity(*commandContext_p.kdTree, _source, entSource_l->_aggroDistance, teamCheckFn_l);
 
 		// If no target we release
 		if(!newTarget_l)
@@ -94,7 +108,7 @@ bool EntityAttackCommand::applyCommand(Step & step_p, State const &state_p, Comm
 			// reset waiting
 			step_p.addSteppable(new EntityUpdateWaitingStep(entSource_l->_handle, entSource_l->_waiting, 0));
 			// If target is dead we look for another target in range
-			Entity const * newTarget_l = lookUpNewTarget(state_p, _source, entSource_l->_aggroDistance, heal_l);
+			Entity const * newTarget_l = getClosestEntity(*commandContext_p.kdTree, _source, entSource_l->_aggroDistance, teamCheckFn_l);
 
 			// If target we update
 			if(newTarget_l && newTarget_l->_handle != curTarget_l)
@@ -146,7 +160,7 @@ bool EntityAttackCommand::applyCommand(Step & step_p, State const &state_p, Comm
 			if(entTarget_l->_model._isBuilding)
 			{
 				// If target is dead we look for another target in range
-				Entity const * newTarget_l = lookUpNewTarget(state_p, _source, entSource_l->_aggroDistance, heal_l);
+				Entity const * newTarget_l = getClosestEntity(*commandContext_p.kdTree, _source, entSource_l->_aggroDistance, teamCheckFn_l);
 				if(newTarget_l && newTarget_l->_model._isUnit)
 				{
 					Logger::getDebug() << "EntityAttackCommand:: new target found (out of range) "<<newTarget_l->_handle<<std::endl;
