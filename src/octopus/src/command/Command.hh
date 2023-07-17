@@ -4,13 +4,9 @@
 #include "CommandData.hh"
 #include "state/Handle.hh"
 
-namespace RVO
-{
-	class KdTree;
-}
-
 namespace octopus
 {
+class KdTree;
 class PathManager;
 class Step;
 class State;
@@ -19,7 +15,8 @@ class PathManager;
 struct CommandContext
 {
 	PathManager &pathManager;
-	RVO::KdTree const *kdTree;
+	KdTree const *kdTree;
+	KdTree const *kdTreeStatic;
 };
 
 /// @brief represent a command that can be registered in a step and

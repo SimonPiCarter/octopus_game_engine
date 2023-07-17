@@ -27,6 +27,7 @@
 #include "step/trigger/TriggerEnableChange.hh"
 #include "step/trigger/TriggerSpawn.hh"
 #include "step/vision/VisionChangeStep.hh"
+#include "utils/KdTree.hh"
 
 #include <fstream>
 
@@ -186,6 +187,10 @@ bool Controller::loop_body()
 
 			_pathManager.joinCompute();
 
+			// Compute kd tree
+			KdTree kdTree_l(_backState->_state->getEntities());
+			kdTree_l.buildAgentTree();
+
 			//
 			//
 			// Running commands
@@ -197,7 +202,7 @@ bool Controller::loop_body()
 			{
 				if(cmdable_l->isActive())
 				{
-					CommandContext ctxt_l = getCommandContext();
+					CommandContext ctxt_l = {_pathManager, &kdTree_l};
 					cmdable_l->runCommands(step_l, *state_l, ctxt_l);
 				}
 			}
@@ -205,7 +210,7 @@ bool Controller::loop_body()
 			for(auto &&pair_l : state_l->getFlyingCommands())
 			{
 				FlyingCommandBundle const & cmd_l = pair_l.second;
-				CommandContext ctxt_l = getCommandContext();
+				CommandContext ctxt_l = {_pathManager, &kdTree_l};
 				// if over remove it
 				if(cmd_l._cmd->applyCommand(step_l, *state_l, cmd_l._data, ctxt_l))
 				{

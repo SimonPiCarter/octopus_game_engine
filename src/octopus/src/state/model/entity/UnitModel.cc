@@ -10,8 +10,7 @@
 #include "step/entity/EntityUpdateWaitingStep.hh"
 #include "step/Step.hh"
 
-#include "orca/rvo/KdTree.hh"
-#include "orca/rvo/Agent.hh"
+#include "utils/KdTree.hh"
 
 namespace octopus
 {
@@ -21,41 +20,6 @@ UnitModel::UnitModel(bool isStatic_p, Fixed ray_p, Fixed stepSpeed_p, Fixed hpMa
 {
 	_idleFunc = unitIdleFunction;
 	_isUnit = true;
-}
-
-void registerUnit(std::vector<std::pair<octopus::Fixed , const Entity *> > &neighbors_p, bool sameTeam_p, size_t max_p, State const &state_p,
-	RVO::Agent *agentFrom_p, RVO::Agent const *agentTo_p, octopus::Fixed &distance_p)
-{
-	Entity const * source_l = agentFrom_p->getEntity();
-	Entity const * target_l = agentTo_p->getEntity();
-	unsigned long team_l = state_p.getPlayer(source_l->_player)->_team;
-
-	bool teamCheck_l = (sameTeam_p && team_l == state_p.getPlayer(target_l->_player)->_team)
-					|| (!sameTeam_p && team_l != state_p.getPlayer(target_l->_player)->_team);
-
-	if (agentFrom_p != agentTo_p && teamCheck_l)
-	{
-		const octopus::Fixed distSq_l = absSq(agentFrom_p->getPosition() - agentTo_p->getPosition());
-
-		if (distSq_l < distance_p) {
-			if (neighbors_p.size() < max_p) {
-				neighbors_p.push_back(std::make_pair(distSq_l, agentTo_p->getEntity()));
-			}
-
-			size_t i = neighbors_p.size() - 1;
-
-			while (i != 0 && distSq_l < neighbors_p[i - 1].first) {
-				std::swap(neighbors_p[i], neighbors_p[i - 1]);
-				--i;
-			}
-
-			neighbors_p[i] = std::make_pair(distSq_l, agentTo_p->getEntity());
-
-			if (neighbors_p.size() == max_p) {
-				distance_p = neighbors_p.back().first;
-			}
-		}
-	}
 }
 
 Command * commandFromIdle(Entity const &ent_p, State const &state_p, unsigned long waitingTimeForAttackScan_p, CommandContext &context_p)
@@ -70,8 +34,31 @@ Command * commandFromIdle(Entity const &ent_p, State const &state_p, unsigned lo
 
 			if(unit_l._waiting+1 >= unit_l._unitModel._buffer._reload)
 			{
-				// check for target
-				Entity const * target_l = lookUpNewBuffTarget(state_p, unit_l._handle, unit_l._unitModel._buffer._range, unit_l._unitModel._buffer._buff);
+				std::vector<std::pair<Fixed, Entity const *> > neighbors_l = context_p.kdTree->computeEntityNeighbors(
+					unit_l._handle, unit_l._unitModel._buffer._range, 0, std::bind(
+						teamCheck, state_p.getPlayer(ent_p._player)->_team,
+						!unit_l._unitModel._buffer._buff._debuff, std::ref(state_p), std::placeholders::_1));
+
+
+				Entity const * target_l = nullptr;
+				unsigned long timeSinceBuff_l = 0;
+				for(auto &&pair_l : neighbors_l)
+				{
+					Entity const * ent_l = pair_l.second;
+					if(unit_l._unitModel._buffer._buff.isApplying(state_p, ent_p, *ent_l))
+					{
+						unsigned long curTimeSinceBuff_l = ent_l->getTimeSinceBuff(unit_l._unitModel._buffer._buff._id);
+						// update target if no target yet
+						// if time since buff is longer
+						if(target_l == nullptr
+						|| curTimeSinceBuff_l > timeSinceBuff_l)
+						{
+							target_l = ent_l;
+							timeSinceBuff_l = curTimeSinceBuff_l;
+						}
+					}
+				}
+
 				if(target_l)
 				{
 					// buff
@@ -83,40 +70,24 @@ Command * commandFromIdle(Entity const &ent_p, State const &state_p, unsigned lo
 	}
 
 	// If no command we check for target if we have damage or heal
-	if(context_p.kdTree)
-	{
-		if(ent_p._model._damage > 1e-3 || ent_p._model._heal > 1e-3)
-		{
-			Logger::getDebug() << " Unit::runCommands :: no command (attack)"<< std::endl;
-			if(ent_p._waiting >= waitingTimeForAttackScan_p)
-			{
-				std::vector<std::pair<octopus::Fixed , const Entity *> > neighbors_l;
-				Fixed matchDistance_p = ent_p._aggroDistance;
-				context_p.kdTree->computeEntityNeighbors(ent_p._handle, matchDistance_p,
-					std::bind(registerUnit, std::ref(neighbors_l), ent_p._model._heal > 1e-3, 1, std::ref(state_p),
-					std::placeholders::_1, std::placeholders::_2, std::placeholders::_3));
-				if(!neighbors_l.empty())
-				{
-					Entity const * target_l = neighbors_l.begin()->second;
-					if(target_l)
-					{
-						Logger::getDebug() << " Unit::runCommands :: add attack command" << ent_p._handle << " -> " << target_l->_handle << std::endl;
-						return new EntityAttackCommand(ent_p._commandableHandle, ent_p._handle, target_l->_handle, false);
-					}
-				}
-			}
-		}
-	}
-	else if(ent_p._model._damage > 1e-3 || ent_p._model._heal > 1e-3)
+	if(ent_p._model._damage > 1e-3 || ent_p._model._heal > 1e-3)
 	{
 		Logger::getDebug() << " Unit::runCommands :: no command (attack)"<< std::endl;
 		if(ent_p._waiting >= waitingTimeForAttackScan_p)
 		{
-			Entity const * target_l = lookUpNewTarget(state_p, ent_p._handle, ent_p._aggroDistance, ent_p._model._heal > 1e-3);
-			if(target_l)
+			std::vector<std::pair<Fixed, Entity const *> > neighbors_l = context_p.kdTree->computeEntityNeighbors(
+				ent_p._handle, ent_p._aggroDistance, 1, std::bind(
+					teamCheck, state_p.getPlayer(ent_p._player)->_team,
+					ent_p._model._heal > 1e-3, std::ref(state_p), std::placeholders::_1));
+
+			if(!neighbors_l.empty())
 			{
-				Logger::getDebug() << " Unit::runCommands :: add attack command" << ent_p._handle << " -> " << target_l->_handle << std::endl;
-				return new EntityAttackCommand(ent_p._commandableHandle, ent_p._handle, target_l->_handle, false);
+				Entity const * target_l = neighbors_l.begin()->second;
+				if(target_l)
+				{
+					Logger::getDebug() << " Unit::runCommands :: add attack command" << ent_p._handle << " -> " << target_l->_handle << std::endl;
+					return new EntityAttackCommand(ent_p._commandableHandle, ent_p._handle, target_l->_handle, false);
+				}
 			}
 		}
 	}
