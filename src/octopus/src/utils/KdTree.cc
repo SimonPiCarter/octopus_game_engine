@@ -34,6 +34,7 @@
 
 #include "KdTree.hh"
 
+#include "state/State.hh"
 #include "state/entity/Entity.hh"
 
 namespace octopus {
@@ -153,7 +154,7 @@ namespace octopus {
 		if(ent_p < agentIndexPerHandle_.size())
 		{
 			Fixed rangeSquared_l = range_p*range_p;
-			Entity const * agent_l = agents_[ent_p];
+			Entity const * agent_l = agents_[agentIndexPerHandle_[ent_p]];
 			queryAgentTreeRecursive(result_l, agent_l, rangeSquared_l, max_p, 0, fn_p);
 		}
 		return result_l;
@@ -200,4 +201,11 @@ namespace octopus {
 
 		}
 	}
-}
+
+	bool teamCheck(unsigned long team_p, bool sameTeam_p, State const &state_p, Entity const *entity_p)
+	{
+		return (sameTeam_p && team_p == state_p.getPlayer(entity_p->_player)->_team)
+			|| (!sameTeam_p && team_p != state_p.getPlayer(entity_p->_player)->_team);
+	}
+
+} // octopus
