@@ -18,6 +18,7 @@ struct Metrics
 	double _timeApplyingSteps {0.};
 	/// @brief time in nano seconds
 	double _timeCompilingSteps {0.};
+	double _timeBuildingTree {0.};
 	double _timeRunningCommands {0.};
 	double _timeCollisionHandling {0.};
 	double _timeCollisionConstraint {0.};

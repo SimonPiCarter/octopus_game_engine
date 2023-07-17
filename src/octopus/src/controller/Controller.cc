@@ -191,6 +191,10 @@ bool Controller::loop_body()
 			KdTree kdTree_l(_backState->_state->getEntities());
 			kdTree_l.buildAgentTree([](Entity const *ent_p) { return !ent_p->_model._isStatic; });
 
+			_metrics._timeBuildingTree += std::chrono::nanoseconds( std::chrono::steady_clock::now() - start_l ).count();
+
+			const std::chrono::time_point<std::chrono::steady_clock> startRunCommand_l = std::chrono::steady_clock::now();
+
 			//
 			//
 			// Running commands
@@ -231,7 +235,7 @@ bool Controller::loop_body()
 				cmd_l->registerCommand(step_l, *state_l);
 			}
 
-			_metrics._timeRunningCommands += std::chrono::nanoseconds( std::chrono::steady_clock::now() - start_l ).count();
+			_metrics._timeRunningCommands += std::chrono::nanoseconds( std::chrono::steady_clock::now() - startRunCommand_l ).count();
 
 			Logger::getDebug() << "processing step " << _backState->_stepHandled << " on state "<<state_l->_id<< std::endl;
 

@@ -20,6 +20,7 @@ std::ostream &operator<<(std::ostream &os_p, octopus::Metrics const &metrics_p)
 	os_p<<", nbStepsCompiled = "<<metrics_p._nbStepsCompiled;
 	os_p<<", timeApplyingSteps (ns) = "<<metrics_p._timeApplyingSteps;
 	os_p<<", timeCompilingSteps (ns) = "<<metrics_p._timeCompilingSteps;
+	os_p<<", timeBuildingTree (ns) = "<<metrics_p._timeBuildingTree;
 	os_p<<", timeRunningCommands (ns) = "<<metrics_p._timeRunningCommands;
 	os_p<<", timeCollisionHandling (ns) = "<<metrics_p._timeCollisionHandling;
 	os_p<<", timeCollisionConstraint (ns) = "<<metrics_p._timeCollisionConstraint;
@@ -39,6 +40,7 @@ void streamMetrics(std::ostream &os_p, octopus::Metrics const &metrics_p)
 	// time in micro seconds
 	double timeApplyingPerSteps_l = metrics_p._timeApplyingSteps/metrics_p._nbStepsApplied / 1e6;
 	double timeCompilingPerSteps_l = metrics_p._timeCompilingSteps/metrics_p._nbStepsCompiled / 1e6;
+	double timeBuildingTreePerSteps_l = metrics_p._timeBuildingTree/metrics_p._nbStepsCompiled / 1e6;
 	double timeRunningCommandsPerSteps_l = metrics_p._timeRunningCommands/metrics_p._nbStepsCompiled / 1e6;
 	double timeCollisionHandlingPerSteps_l = metrics_p._timeCollisionHandling/metrics_p._nbStepsCompiled / 1e6;
 	double timeCollisionConstraintPerSteps_l = metrics_p._timeCollisionConstraint/metrics_p._nbStepsCompiled / 1e6;
@@ -54,6 +56,7 @@ void streamMetrics(std::ostream &os_p, octopus::Metrics const &metrics_p)
 	os_p<<"\t- number of steps compiled : "<<metrics_p._nbStepsCompiled<<std::endl;
 	os_p<<"\t- average time to apply a step : "<<timeApplyingPerSteps_l <<"ms"<<std::endl;
 	os_p<<"\t- average time to compile a step : "<<timeCompilingPerSteps_l <<"ms"<<std::endl;
+	os_p<<"\t\t- average time to build tree each step : "<<timeBuildingTreePerSteps_l <<"ms"<<std::endl;
 	os_p<<"\t\t- average time to run command each step : "<<timeRunningCommandsPerSteps_l <<"ms"<<std::endl;
 	os_p<<"\t\t- average time to handle collision each step : "<<timeCollisionHandlingPerSteps_l <<"ms"<<std::endl;
 	os_p<<"\t\t- average time to handle constraint position each step : "<<timeCollisionConstraintPerSteps_l <<"ms"<<std::endl;
