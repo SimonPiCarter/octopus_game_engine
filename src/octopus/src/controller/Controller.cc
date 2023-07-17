@@ -189,7 +189,7 @@ bool Controller::loop_body()
 
 			// Compute kd tree
 			KdTree kdTree_l(_backState->_state->getEntities());
-			kdTree_l.buildAgentTree();
+			kdTree_l.buildAgentTree([](Entity const *ent_p) { return !ent_p->_model._isStatic; });
 
 			//
 			//
