@@ -10,6 +10,7 @@ class Entity;
 class State;
 class Step;
 class Steppable;
+struct CommandContext;
 
 /// @brief this class is aimed at self damaging on attack
 class SelfDamageModifier
@@ -19,7 +20,7 @@ public:
         : _damage(damage_p), _ratioCurHp(ratioCurHp_p), _ratioMaxHp(ratioMaxHp_p) {}
 
 	/// @brief create a new attack steppable
-	void newAttackSteppable(std::vector<Steppable *> &vec_r, const Entity &ent_p, const Entity &target_p, State const &state_p, Step const &step_p, bool disableMainAttack_p=false) const;
+	void newAttackSteppable(std::vector<Steppable *> &vec_r, const Entity &ent_p, const Entity &target_p, State const &state_p, CommandContext const &commandContext_p, Step const &step_p, bool disableMainAttack_p=false) const;
 
     Fixed _damage;
     Fixed _ratioCurHp;

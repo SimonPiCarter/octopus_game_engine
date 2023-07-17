@@ -9,7 +9,8 @@
 namespace octopus
 {
 
-void LifeStealModifier::newAttackSteppable(std::vector<Steppable *> &vec_r, const Entity &ent_p, const Entity &target_p, State const &state_p, Step const &step_p, bool disableMainAttack_p) const
+void LifeStealModifier::newAttackSteppable(std::vector<Steppable *> &vec_r, const Entity &ent_p, const Entity &target_p,
+    State const &state_p, CommandContext const &, Step const &step_p, bool disableMainAttack_p) const
 {
     // damage
 	Fixed dmg_l = std::min(Fixed(-1), target_p.getArmor() - ent_p.getDamage(target_p._model));

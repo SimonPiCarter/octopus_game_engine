@@ -11,7 +11,8 @@
 namespace octopus
 {
 
-void SelfDamageModifier::newAttackSteppable(std::vector<Steppable *> &vec_r, const Entity &ent_p, const Entity &, State const &state_p, Step const &step_p, bool) const
+void SelfDamageModifier::newAttackSteppable(std::vector<Steppable *> &vec_r, const Entity &ent_p, const Entity &,
+    State const &state_p, CommandContext const &, Step const &step_p, bool) const
 {
 	Fixed curHp_l = ent_p._hp + step_p.getHpChange(ent_p._handle);
 	Fixed maxHp_l = ent_p.getHpMax();

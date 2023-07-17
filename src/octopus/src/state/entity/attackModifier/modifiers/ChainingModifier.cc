@@ -7,6 +7,7 @@
 #include "step/command/flying/FlyingCommandSpawnStep.hh"
 #include "step/entity/EntityHitPointChangeStep.hh"
 #include "step/Step.hh"
+#include "utils/KdTree.hh"
 
 namespace octopus
 {
@@ -46,14 +47,16 @@ protected:
     std::list<Handle> _oldTargets;
 };
 
-void ChainingOverTime::applyEffect(Step & step_p, State const &state_p, CommandData const *, CommandContext &) const
+void ChainingOverTime::applyEffect(Step & step_p, State const &state_p, CommandData const *, CommandContext &context_p) const
 {
     // find new target
     Entity const *target_l = nullptr;
 
-    TargetPanel panel_l(lookUpNewTargets(state_p, _ent, _range, false));
-    for(Entity const * subTarget_l : panel_l.units)
+    std::vector<std::pair<Fixed, Entity const *> > neighbors_l = context_p.kdTree->computeEntityNeighbors(_ent, _range, 0);
+
+    for(auto && pair_l : neighbors_l)
     {
+        Entity const * subTarget_l = pair_l.second;
         Player const *otherPlayer_l = state_p.getPlayer(subTarget_l->_player);
         if(otherPlayer_l->_team != _team && std::find(_oldTargets.begin(), _oldTargets.end(), subTarget_l->_handle) == _oldTargets.end())
         {
@@ -81,7 +84,8 @@ void ChainingOverTime::applyEffect(Step & step_p, State const &state_p, CommandD
     }
 }
 
-void ChainingModifier::newAttackSteppable(std::vector<Steppable *> &vec_r, const Entity &ent_p, const Entity &target_p, State const &state_p, Step const &step_p, bool disableMainAttack_p) const
+void ChainingModifier::newAttackSteppable(std::vector<Steppable *> &vec_r, const Entity &ent_p, const Entity &target_p,
+    State const &state_p, CommandContext const &commandContext_p, Step const &step_p, bool disableMainAttack_p) const
 {
     Player const *player_l = state_p.getPlayer(ent_p._player);
     unsigned long team_l = player_l->_team;

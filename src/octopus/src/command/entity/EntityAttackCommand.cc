@@ -132,7 +132,7 @@ bool EntityAttackCommand::applyCommand(Step & step_p, State const &state_p, Comm
 			else
 			{
 				std::vector<Steppable *> vec_l;
-				newAttackSteppable(vec_l, *entSource_l, *entTarget_l, state_p, step_p);
+				newAttackSteppable(vec_l, *entSource_l, *entTarget_l, state_p, commandContext_p, step_p);
 				// add damage (with current hp from state and step until now)
 				for(Steppable * steppable_l : vec_l)
 				{
