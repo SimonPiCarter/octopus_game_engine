@@ -208,12 +208,11 @@ private:
 	/// @brief one shot trigger lists
 	std::unordered_map<unsigned long, std::list<Trigger *> > _queuedTriggers;
 
-	void handleTriggers(State const &state_p, Step &step_p, Step const &prevStep_p);
+	void handleTriggers(State const &state_p, CommandContext const &, Step &step_p, Step const &prevStep_p);
 
 	Step const &getStepBeforeLastCompiledStep() const;
 
 	OrcaManager *_orcaManager {nullptr};
-	CommandContext getCommandContext();
 
 	/// @brief in replay mode all commuited command wont affect the controller
 	bool _replayMode {false};

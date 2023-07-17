@@ -716,13 +716,4 @@ Step const & Controller::getStepBeforeLastCompiledStep() const
 	return *rit_l->_step;
 }
 
-CommandContext Controller::getCommandContext()
-{
-	if(_orcaManager)
-	{
-		return CommandContext{_pathManager, _orcaManager->getKdTree()};
-	}
-	return CommandContext{_pathManager, nullptr};
-}
-
 } // namespace octopus
