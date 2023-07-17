@@ -39,7 +39,12 @@ int main()
 
 	octopus::Logger::getNormal()<<"Playing"<<std::endl;
 
-	while(!over_l && controller_l.getMetrics()._nbStepsCompiled < 6000)
+	// print progress variables
+	size_t const total_l = 6000;
+	size_t lastPrint_l = 0;
+	size_t const stepPrint_l = 100;
+
+	while(!over_l && controller_l.getMetrics()._nbStepsCompiled < total_l)
 	{
         // update controller
         controller_l.update(elapsed_l);
@@ -54,6 +59,11 @@ int main()
 		std::chrono::duration<double> elapsed_seconds_l = cur_l-last_l;
 		elapsed_l = elapsed_seconds_l.count();
 		last_l = cur_l;
+		if(controller_l.getMetrics()._nbStepsCompiled%stepPrint_l == 0 && lastPrint_l != controller_l.getMetrics()._nbStepsCompiled)
+		{
+			lastPrint_l = controller_l.getMetrics()._nbStepsCompiled;
+			octopus::Logger::getNormal()<<lastPrint_l/stepPrint_l<<"/"<<total_l/stepPrint_l<<std::endl;
+		}
 	}
 
 	octopus::Logger::getNormal()<<"Done"<<std::endl;
