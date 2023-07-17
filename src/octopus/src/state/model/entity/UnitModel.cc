@@ -75,19 +75,12 @@ Command * commandFromIdle(Entity const &ent_p, State const &state_p, unsigned lo
 		Logger::getDebug() << " Unit::runCommands :: no command (attack)"<< std::endl;
 		if(ent_p._waiting >= waitingTimeForAttackScan_p)
 		{
-			std::vector<std::pair<Fixed, Entity const *> > neighbors_l = context_p.kdTree->computeEntityNeighbors(
-				ent_p._handle, ent_p._aggroDistance, 1, std::bind(
-					teamCheck, state_p.getPlayer(ent_p._player)->_team,
-					ent_p._model._heal > 1e-3, std::ref(state_p), std::placeholders::_1));
-
-			if(!neighbors_l.empty())
+			Entity const * target_l = getClosestEntity(*context_p.kdTree, ent_p._handle, ent_p._aggroDistance,
+				std::bind(teamCheck, state_p.getPlayer(ent_p._player)->_team, ent_p._model._heal > 1e-3, std::ref(state_p), std::placeholders::_1));
+			if(target_l)
 			{
-				Entity const * target_l = neighbors_l.begin()->second;
-				if(target_l)
-				{
-					Logger::getDebug() << " Unit::runCommands :: add attack command" << ent_p._handle << " -> " << target_l->_handle << std::endl;
-					return new EntityAttackCommand(ent_p._commandableHandle, ent_p._handle, target_l->_handle, false);
-				}
+				Logger::getDebug() << " Unit::runCommands :: add attack command" << ent_p._handle << " -> " << target_l->_handle << std::endl;
+				return new EntityAttackCommand(ent_p._commandableHandle, ent_p._handle, target_l->_handle, false);
 			}
 		}
 	}
