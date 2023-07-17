@@ -179,7 +179,8 @@ namespace RVO {
 		{
 			int start_l = indexes_l.at(n);
 			int end_l = indexes_l.at(n+1);
-			pool.queueJob([&finished_l, &termination_l, &terminationMutex_l, start_l, end_l, this](){
+			pool.queueJob([&finished_l, &termination_l, &terminationMutex_l, start_l, end_l, this]()
+			{
 				for (int i = start_l; i < end_l; ++i)
 				{
 					if(agents_[i].active())
@@ -193,7 +194,8 @@ namespace RVO {
 					finished_l++;
 				}
 				termination_l.notify_all();
-			});
+			}
+			);
 		}
 
 		std::unique_lock<std::mutex> lock_l(terminationMutex_l);
