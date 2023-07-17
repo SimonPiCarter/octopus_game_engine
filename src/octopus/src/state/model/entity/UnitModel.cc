@@ -64,14 +64,19 @@ Command * commandFromIdle(Entity const &ent_p, State const &state_p, unsigned lo
 
 void unitIdleFunction(Entity const &ent_p, Step & step_p, State const &state_p)
 {
+	static unsigned long const waitTime_l = 50;
 	// check for attack every 50 steps
-	Command * cmd_l = commandFromIdle(ent_p, state_p, 50);
+	Command * cmd_l = commandFromIdle(ent_p, state_p, waitTime_l);
 
 	if(cmd_l)
 	{
 		// reset waiting time
 		step_p.addSteppable(new EntityUpdateWaitingStep(ent_p._handle, ent_p._waiting, 0));
 		step_p.addSteppable(new CommandSpawnStep(cmd_l));
+	}
+	else if(ent_p._waiting >= waitTime_l)
+	{
+		step_p.addSteppable(new EntityUpdateWaitingStep(ent_p._handle, ent_p._waiting, 0));
 	}
 }
 
