@@ -38,7 +38,7 @@ public:
 			Handle check_l = state_p.addEntity(new class_t(_model));
 			if(check_l != _handle)
 			{
-				throw std::logic_error("Spawn Step did not have the same handle acress multiple states");
+				throw std::logic_error("Spawn Step did not have the same handle across multiple states");
 			}
 		}
 
