@@ -99,6 +99,7 @@ namespace octopus
 	class ResourceSpawnStep;
 	class StateAddConstraintPositionStep;
 	class StateDrawStep;
+	class StateFreeHandleStep;
 	class StateRemoveConstraintPositionStep;
 	class StateTemplePositionAddStep;
 	class StateTemplePositionRemoveStep;
@@ -192,6 +193,7 @@ namespace octopus
 			virtual void visit(ResourceSpawnStep const *) = 0;
 			virtual void visit(StateAddConstraintPositionStep const *) = 0;
 			virtual void visit(StateDrawStep const *) = 0;
+			virtual void visit(StateFreeHandleStep const *) = 0;
 			virtual void visit(StateRemoveConstraintPositionStep const *) = 0;
 			virtual void visit(StateTemplePositionAddStep const *) = 0;
 			virtual void visit(StateTemplePositionRemoveStep const *) = 0;

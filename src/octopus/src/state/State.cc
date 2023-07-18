@@ -1,5 +1,6 @@
 #include "State.hh"
 
+#include <limits>
 #include "logger/Logger.hh"
 
 #include "controller/trigger/Trigger.hh"
@@ -75,18 +76,42 @@ State::~State()
 		delete pair_l.second._data;
 	}
 }
+
+bool State::isEntityAlive(Handle const &handle_p) const
+{
+	if(!hasEntity(handle_p))
+	{
+		return false;
+	}
+	Entity const * ent_l = _entities[handle_p];
+	return ent_l->_alive;
+}
+
 bool State::hasEntity(Handle const &handle_p) const
 {
-	return _entities.size() > handle_p;
+	if(_entities.size() <= handle_p)
+	{
+		return false;
+	}
+	Entity const * ent_l = _entities[handle_p];
+	return ent_l->_handle.revision == handle_p.revision;
 }
 
 Entity *State::getEntity(Handle const &handle_p)
 {
+	if(_entities[handle_p]->_handle.revision != handle_p.revision)
+	{
+		throw std::logic_error("tried to get an entity with the wrong revision number");
+	}
 	return _entities[handle_p];
 }
 
 Entity const *State::getEntity(Handle const &handle_p) const
 {
+	if(_entities[handle_p]->_handle.revision != handle_p.revision)
+	{
+		throw std::logic_error("tried to get an entity with the wrong revision number");
+	}
 	return _entities[handle_p];
 }
 
@@ -104,13 +129,42 @@ Commandable const *State::getCommandable(Handle const &handle_p) const
 }
 
 /// @brief warning handle will be modified!
-Handle State::addEntity(Entity * ent_p)
+Handle const &State::addEntity(Entity * ent_p)
 {
-	ent_p->_handle = _entities.size();
-	_entities.push_back(ent_p);
-	ent_p->_commandableHandle = _commandables.size();
-	_commandables.push_back(ent_p);
+	/// @todo reuse free handle here if necessary
+	if(!_freeHandles.empty())
+	{
+		Handle reused_l = _freeHandles.front();
+		_freeHandles.pop_front();
+		ent_p->_handle = reused_l;
+		ent_p->_commandableHandle = reused_l;
+		// delete old entity
+		delete _entities[reused_l];
+		_entities[reused_l] = ent_p;
+		_commandables[reused_l] = ent_p;
+	}
+	else
+	{
+		ent_p->_handle = _entities.size();
+		_entities.push_back(ent_p);
+		ent_p->_commandableHandle = _commandables.size();
+		_commandables.push_back(ent_p);
+	}
 	return ent_p->_handle;
+}
+
+void State::addFreeHandle(Handle const &handle_p)
+{
+	if(handle_p.revision < std::numeric_limits<unsigned char>::max())
+	{
+		_freeHandles.push_back(handle_p);
+		++_freeHandles.back().revision;
+	}
+}
+
+void State::popBackFreeHandle()
+{
+	_freeHandles.pop_back();
 }
 
 std::vector<Entity *> &State::getEntities()
