@@ -167,6 +167,11 @@ void State::popBackFreeHandle()
 	_freeHandles.pop_back();
 }
 
+std::list<Handle> const &State::getFreeHandles() const
+{
+	return _freeHandles;
+}
+
 std::vector<Entity *> &State::getEntities()
 {
 	return _entities;

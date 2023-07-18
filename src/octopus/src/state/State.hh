@@ -58,6 +58,8 @@ public:
 	void addFreeHandle(Handle const &handle_p);
 	/// @brief remove the last added free handle
 	void popBackFreeHandle();
+	/// @brief get the list of free handles
+	std::list<Handle> const &getFreeHandles() const;
 
 
 	std::vector<Entity *> &getEntities();

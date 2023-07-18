@@ -262,9 +262,27 @@ void visitAll(Step const &step_p, SteppableVisitor &visitor_p)
 	}
 }
 
+Handle const &getHandle(std::list<Handle> const &freeHandles_p, unsigned long index_p)
+{
+	auto &&it_l = freeHandles_p.begin();
+	for(unsigned long i = 0 ; i < index_p ; ++ i)
+	{
+		++it_l;
+	}
+	return *it_l;
+}
+
 Handle getNextHandle(Step const &step_p, State const &state_p)
 {
-	return step_p.getEntitySpawned() + state_p.getEntities().size();
+	std::list<Handle> const & freeHandles_l = state_p.getFreeHandles();
+
+	if(step_p.getEntitySpawned() < freeHandles_l.size())
+	{
+		return getHandle(freeHandles_l, step_p.getEntitySpawned());
+	}
+
+	Handle newHandle_l = step_p.getEntitySpawned() - freeHandles_l.size() + state_p.getEntities().size();
+	return newHandle_l;
 }
 
 } // namespace octopus
