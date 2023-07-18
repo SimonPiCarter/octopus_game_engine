@@ -2,6 +2,7 @@
 #define __HANDLE__
 
 #include <unordered_set>
+#include <iostream>
 
 namespace octopus
 {
@@ -63,5 +64,7 @@ struct std::hash<octopus::Handle>
 		return handle_p.revision * 10000000 + handle_p.index;
 	}
 };
+
+std::ostream & operator<<(std::ostream & os_p, octopus::Handle const &handle_p);
 
 #endif
