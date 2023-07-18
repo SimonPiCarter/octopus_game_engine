@@ -72,13 +72,14 @@ bool UnitDropCommand::applyCommand(Step & step_p, State const &state_p, CommandD
 	MoveData const &data_l = *static_cast<MoveData const *>(data_p);
 
 	Unit const * unit_l = dynamic_cast<Unit const *>(state_p.getEntity(_source));
-	Building const * deposit_l = dynamic_cast<Building const *>(state_p.getEntity(_deposit));
 
 	// if deposit died stop command
-	if(!deposit_l->_alive)
+	if(!state_p.isEntityAlive(_deposit))
 	{
 		return true;
 	}
+
+	Building const * deposit_l = dynamic_cast<Building const *>(state_p.getEntity(_deposit));
 	// else on the way to deposit
 	if(depostInRange(state_p, unit_l, _deposit))
 	{

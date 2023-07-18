@@ -194,12 +194,16 @@ bool EntityAttackCommand::isFrozenTarget() const
 
 bool EntityAttackCommand::checkTarget(State const &state_p, Handle const & target_p, bool healing_p) const
 {
+	if(!state_p.isEntityAlive(target_p))
+	{
+		return true;
+	}
 	Entity const * entTarget_l = state_p.getEntity(target_p);
 	if(healing_p)
 	{
-		return !entTarget_l->_alive || entTarget_l->getHpMax() == entTarget_l->_hp;
+		return entTarget_l->getHpMax() == entTarget_l->_hp;
 	}
-	return !entTarget_l->_alive || entTarget_l->_model._invulnerable;
+	return entTarget_l->_model._invulnerable;
 }
 
 bool EntityAttackCommand::inRange(State const &state_p, Handle const & target_p) const

@@ -46,6 +46,20 @@ Command * newTargetCommand(State const &state_p, Handle const &handle_p,
 		return nullptr;
 	}
 
+	// if target is not valide anymore
+	if(!state_p.isEntityAlive(target_p))
+	{
+		EntityMoveCommand * command_l = new EntityMoveCommand(
+			handle_p,
+			handle_p,
+			pos_p,
+			0,
+			{pos_p},
+			true
+		);
+		return command_l;
+	}
+
 	const Entity * target_l = state_p.getEntity(target_p);
 	const Building * targetBuilding_l = dynamic_cast<const Building *>(target_l);
 	const Resource * targetRehandle_p = dynamic_cast<const Resource *>(target_l);

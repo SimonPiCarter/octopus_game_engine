@@ -49,6 +49,14 @@ bool EntityBuildingCommand::applyCommand(Step & step_p, State const &state_p, Co
 	Logger::getDebug() << "EntityBuildingCommand:: apply Command "<<_source <<std::endl;
 	MoveData const &moveData_l = *static_cast<MoveData const *>(data_p);
 	Entity const * ent_l = state_p.getEntity(_source);
+
+	// special case where entity died and has been replaced by another
+	if(!state_p.hasEntity(_target))
+	{
+		Logger::getDebug() << "EntityBuildingCommand:: building died and has been replaced"<<std::endl;
+		return true;
+	}
+
 	Building const * building_l = static_cast<Building const *>(state_p.getEntity(_target));
 
 	if(ent_l->_player != building_l->_player)
