@@ -15,17 +15,18 @@
 #include "orca/OrcaManager.hh"
 #include "serialization/CommandSerialization.hh"
 #include "state/State.hh"
+#include "step/ConflictPositionSolver.hh"
+#include "step/TickingStep.hh"
 #include "step/ConstraintPosition.hh"
 #include "step/command/CommandQueueStep.hh"
 #include "step/command/flying/FlyingCommandPopStep.hh"
 #include "step/command/flying/FlyingCommandSpawnStep.hh"
-#include "step/ConflictPositionSolver.hh"
-#include "step/TickingStep.hh"
 #include "step/player/PlayerSpendResourceStep.hh"
 #include "step/player/PlayerProducedUpgradeStep.hh"
 #include "step/player/PlayerUpdateBuildingCountStep.hh"
 #include "step/trigger/TriggerEnableChange.hh"
 #include "step/trigger/TriggerSpawn.hh"
+#include "step/state/StateFreeHandleStep.hh"
 #include "step/vision/VisionChangeStep.hh"
 
 #include <fstream>
@@ -614,6 +615,9 @@ void Controller::handleTriggers(State const &state_p, Step &step_p, Step const &
 	// handle update for every player of building counts using a map of delta (+1 means a new building)
 	std::map<unsigned long, std::map<std::string, long> > mapDeltaBuildingPerPlayer_l;
 
+	// list of freed handles
+	std::list<Handle> freeHandles_l;
+
 	// check every unit destroyed to cancel any command with ProductionData and refund
 	for(EventEntityModelDied const * died_l : visitor_l._listEventEntityModelDied)
 	{
@@ -643,7 +647,12 @@ void Controller::handleTriggers(State const &state_p, Step &step_p, Step const &
 		{
 			mapDeltaBuildingPerPlayer_l[ent_l._player][ent_l._model._id] -= 1;
 		}
+
+		// register entity has free
+		freeHandles_l.push_back(ent_l._handle);
 	}
+
+	step_p.addSteppable(new StateFreeHandleStep(freeHandles_l));
 
 	for(EventEntityModelFinished const * spanwed_l : visitor_l._listEventEntityModelFinished)
 	{

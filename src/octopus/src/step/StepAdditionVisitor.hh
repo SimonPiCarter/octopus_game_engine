@@ -79,6 +79,7 @@ public:
 	virtual void visit(ResourceSpawnStep const *);
 	virtual void visit(StateAddConstraintPositionStep const *) override {}
 	virtual void visit(StateDrawStep const *) override {}
+	virtual void visit(StateFreeHandleStep const *) override {}
 	virtual void visit(StateRemoveConstraintPositionStep const *) override {}
 	virtual void visit(StateTemplePositionAddStep const *) override {}
 	virtual void visit(StateTemplePositionRemoveStep const *) {}

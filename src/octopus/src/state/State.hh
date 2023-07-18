@@ -41,6 +41,7 @@ public:
 	State(unsigned long id_p, unsigned long gridSize_p, unsigned long gridPointSize_p);
 	~State();
 
+	bool isEntityAlive(Handle const &handle_p) const;
 	bool hasEntity(Handle const &handle_p) const;
 	Entity *getEntity(Handle const &handle_p);
 	Entity const *getEntity(Handle const &handle_p) const;
@@ -51,7 +52,13 @@ public:
 
 	/// @brief add entity to state (keep ownership)
 	/// @warning handle will be modified!
-	Handle addEntity(Entity * ent_p);
+	Handle const &addEntity(Entity * ent_p);
+
+	/// @brief register a free handle (entity is not alive anymore)
+	void addFreeHandle(Handle const &handle_p);
+	/// @brief remove the last added free handle
+	void popBackFreeHandle();
+
 
 	std::vector<Entity *> &getEntities();
 	std::vector<Entity *> const &getEntities() const;
@@ -142,6 +149,9 @@ private:
 
 	/// @brief vector of all entities
 	std::vector<Entity *> _entities;
+
+	/// @brief list of free handles
+	std::list<Handle> _freeHandles;
 
 	/// @brief vector of all commandables
 	std::vector<Commandable *> _commandables;

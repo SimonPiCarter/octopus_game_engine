@@ -129,6 +129,7 @@ add_library(octopus
 	${CMAKE_CURRENT_SOURCE_DIR}/src/step/player/bonus/PlayerAddTimeProdBonusStep.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/step/state/StateAddConstraintPositionStep.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/step/state/StateDrawStep.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/src/step/state/StateFreeHandleStep.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/step/state/StateRemoveConstraintPositionStep.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/step/state/StateTemplePositionAddStep.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/step/state/StateTemplePositionRemoveStep.cc
