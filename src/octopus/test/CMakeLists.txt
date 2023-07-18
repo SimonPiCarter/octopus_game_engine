@@ -51,6 +51,7 @@ target_sources (unit_tests
 	src/fixed.test.cc
 	src/flyingCommant.test.cc
 	src/grid.test.cc
+	src/handleUsage.test.cc
 	src/harvestCommand.test
 	src/moveCommand.test.cc
 	src/playerBuffAllStep.test.cc
