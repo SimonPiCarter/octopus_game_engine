@@ -1,13 +1,16 @@
 #include <gtest/gtest.h>
 
 #include <controller/Controller.hh>
-#include <step/entity/buff/EntityBuffStep.hh>
-#include <step/entity/spawn/EntitySpawnStep.hh>
+#include <controller/trigger/Listener.hh>
+#include <controller/trigger/Trigger.hh>
+#include <state/State.hh>
 #include <step/command/CommandQueueStep.hh>
 #include <step/command/flying/FlyingCommandSpawnStep.hh>
-#include <step/player/PlayerSpawnStep.hh>
+#include <step/entity/buff/EntityBuffStep.hh>
 #include <step/entity/EntityHitPointChangeStep.hh>
-#include <state/State.hh>
+#include <step/entity/spawn/EntitySpawnStep.hh>
+#include <step/player/PlayerSpawnStep.hh>
+#include <step/player/PlayerSpendResourceStep.hh>
 
 ///
 /// This test suite aims at checking that Handles are correctly reusable
@@ -273,4 +276,70 @@ TEST(handleUsageTest, attack_move_death_replaced_during_move)
 	EXPECT_NEAR(3., to_double(state_l->getEntity(0)->_pos.y), 1e-5);
 	EXPECT_NEAR(10., to_double(state_l->getEntity(Handle(1,1))->_hp), 1e-5);
 
+}
+
+class OnEachTriggerResourceTest : public OnEachTrigger
+{
+public:
+	OnEachTriggerResourceTest(Listener * listener_p) : OnEachTrigger(listener_p) {}
+
+	virtual void trigger(State const &, Step &step_p, unsigned long, TriggerData const &) const override
+	{
+		std::map<std::string, Fixed> map_l;
+		map_l["bloc"] = -10.;
+		step_p.addSteppable(new PlayerSpendResourceStep(0, map_l));
+	}
+};
+
+
+///
+/// > 1 entities
+/// > trigger on set of one of the unit : add ressource to player to check
+/// > check that trigger does not trigger twice when the unit is replaced
+///
+TEST(handleUsageTest, trigger_unit_died)
+{
+	EntityModel entityModel_l { false, 1., 1., 10. };
+
+	Entity unit_l({1,3}, false, entityModel_l);
+
+	Controller controller_l({
+		new PlayerSpawnStep(0, 0),
+		new EntitySpawnStep(0, unit_l),
+		new FlyingCommandSpawnStep(new HandleUsageTestCommand({new EntityHitPointChangeStep(Handle(0, 0), -10, 10, 10)}, 0, 2)),
+		new FlyingCommandSpawnStep(new HandleUsageTestCommand({new EntitySpawnStep(Handle(0,1), Entity { { 11, 3. }, false, entityModel_l})}, 1, 4)),
+		new FlyingCommandSpawnStep(new HandleUsageTestCommand({new EntityHitPointChangeStep(Handle(0, 1), -10, 10, 10)}, 2, 6)),
+	}, 1.);
+
+	controller_l.commitTrigger(new OnEachTriggerResourceTest(new ListenerEntityDied({0})));
+
+	// query state
+	State const * state_l = controller_l.queryState();
+
+	controller_l.update(3.);	// (3)
+	while(!controller_l.loop_body()) {}
+	state_l = controller_l.queryState();
+
+	// at this point damage should be dealt
+	EXPECT_EQ(1u, state_l->getEntities().size());
+	EXPECT_NEAR(0., to_double(state_l->getEntity(0)->_hp), 1e-3);
+	EXPECT_NEAR(0., to_double(getResource(*state_l->getPlayer(0), "bloc")), 1e-3);
+
+	controller_l.update(2.);	// (5)
+	while(!controller_l.loop_body()) {}
+	state_l = controller_l.queryState();
+
+	// at this point damage should be dealt
+	EXPECT_EQ(1u, state_l->getEntities().size());
+	EXPECT_NEAR(10., to_double(state_l->getEntity({0,1})->_hp), 1e-3);
+	EXPECT_NEAR(10., to_double(getResource(*state_l->getPlayer(0), "bloc")), 1e-3);
+
+	controller_l.update(10.);	// (15)
+	while(!controller_l.loop_body()) {}
+	state_l = controller_l.queryState();
+
+	// at this point damage should be dealt
+	EXPECT_EQ(1u, state_l->getEntities().size());
+	EXPECT_NEAR(0., to_double(state_l->getEntity({0,1})->_hp), 1e-3);
+	EXPECT_NEAR(10., to_double(getResource(*state_l->getPlayer(0), "bloc")), 1e-3);
 }
