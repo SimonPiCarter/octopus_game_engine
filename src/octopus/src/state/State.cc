@@ -150,7 +150,7 @@ Handle State::getFlyingCommandHandle(unsigned long spawning_p) const
 		{
 			++offset_l;
 		}
-		++handle_l;
+		++handle_l.index;
 	}
 	return handle_l-1;
 }

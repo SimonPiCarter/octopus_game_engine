@@ -667,7 +667,7 @@ void Controller::handleTriggers(State const &state_p, Step &step_p, Step const &
 		if(!data_l._isEnabled)
 		{
 			Logger::getDebug() << "handleTriggers :: is disabled "<<curHandle_l<<std::endl;
-			++curHandle_l;
+			++curHandle_l.index;
 			continue;
 		}
 		if(trigger_l->isComplete(data_l))
@@ -697,7 +697,7 @@ void Controller::handleTriggers(State const &state_p, Step &step_p, Step const &
 		trigger_l->compile(visitor_l, step_p, data_l);
 		Logger::getDebug() << "handleTriggers :: compile "<<curHandle_l<<std::endl;
 
-		++curHandle_l;
+		++curHandle_l.index;
 	}
 }
 

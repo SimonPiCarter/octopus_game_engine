@@ -13,7 +13,7 @@ namespace octopus
 {
 
 EntityFlockMoveCommand::EntityFlockMoveCommand(std::list<Handle> const &handles_p, Vector const &finalPoint_p, bool attackMove_p, bool neverStop_p)
-	: Command(handles_p.empty()?0:*handles_p.begin())
+	: Command(handles_p.empty()?Handle():*handles_p.begin())
 	, _handles(handles_p)
 	, _finalPoint(finalPoint_p)
 	, _attackMove(attackMove_p)

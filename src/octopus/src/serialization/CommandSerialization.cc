@@ -39,6 +39,12 @@ void write(std::ofstream &file_p, std::string const &data_p)
     write(file_p, data_p.size());
     file_p.write((char*)data_p.c_str(), data_p.size());
 }
+template<>
+void write(std::ofstream &file_p, Handle const &data_p)
+{
+    write(file_p, data_p.index);
+    write(file_p, data_p.revision);
+}
 
 struct BinaryWriter
 {
@@ -76,6 +82,12 @@ void read(std::ifstream &file_p, std::string *data_p)
     read(file_p, &size_l);
     data_p->resize(size_l);
     file_p.read(&(*data_p)[0], size_l);
+}
+template<>
+void read(std::ifstream &file_p, Handle *data_p)
+{
+    read(file_p, &data_p->index);
+    read(file_p, &data_p->revision);
 }
 
 /// @brief write a command to the file based on the command id
