@@ -46,7 +46,7 @@ void UnitHarvestCommand::registerCommand(Step &step_p, State const &state_p)
 bool resourceExhausted(State const &state_p, Handle const &resource_p)
 {
 	Resource const * res_l = dynamic_cast<Resource const *>(state_p.getEntity(resource_p));
-	return res_l->_resource <= 1e-5;
+	return !state_p.isEntityAlive(resource_p) || res_l->_resource <= 1e-5;
 }
 
 bool hasResourceToDrop(Unit const * unit_p)
@@ -145,7 +145,7 @@ bool UnitHarvestCommand::applyCommand(Step & step_p, State const &state_p, Comma
 	}
 
 	// if still harvesting or deposit is not available
-	if(data_l._harvesting || !state_p.getEntity(data_l._deposit)->_alive)
+	if(data_l._harvesting || !state_p.isEntityAlive(data_l._deposit))
 	{
 		Logger::getDebug() << "UnitHarvestCommand:: look for deposit"<<std::endl;
 		Entity const * deposit_l = lookUpDeposit(state_p, _source, data_l._resource);
