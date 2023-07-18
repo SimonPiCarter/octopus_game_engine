@@ -72,7 +72,7 @@ void TickingStep::revert(State &state_p, SteppableData const *data_p) const
 		}
 
 		// reset hp
-		if(data_l && ent_l->_handle < data_l->_oldHp.size())
+		if(data_l && ent_l->_handle.index < data_l->_oldHp.size())
 		{
 			ent_l->_hp = data_l->_oldHp[ent_l->_handle];
 		}

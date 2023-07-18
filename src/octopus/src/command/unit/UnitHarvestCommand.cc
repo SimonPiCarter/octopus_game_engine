@@ -123,7 +123,7 @@ bool UnitHarvestCommand::applyCommand(Step & step_p, State const &state_p, Comma
 			// If != type of resource we reset the unit resource gather info
 			if (unit_l->_typeOfResource != res_l->_type)
 			{
-				step_p.addSteppable(new UnitHarvestTypeStep(_source, data_l._resource, unit_l->_typeOfResource, res_l->_type));
+				step_p.addSteppable(new UnitHarvestTypeStep(_source, unit_l->_quantityOfResource, unit_l->_typeOfResource, res_l->_type));
 			}
 			if(data_l._timeSinceHarvest + 1.00001 >= unit_l->_unitModel._timeToHarvest)
 			{
