@@ -19,38 +19,47 @@ void Entity::set_handle(int handle_p) {
     _handle = handle_p;
 }
 
+void Entity::set_revision(int revision_p) {
+    _revision = revision_p;
+}
+
 int Entity::get_handle() const
 {
     return _handle;
 }
 
+int Entity::get_revision() const
+{
+    return _revision;
+}
+
 float Entity::get_hp(Controller const *controller_p) const
 {
-    octopus::Entity const *ent_l = controller_p->getEntity(_handle);
+    octopus::Entity const *ent_l = controller_p->getEntity(Handle(_handle, _revision));
     return octopus::to_double(ent_l->_hp);
 }
 
 float Entity::get_hp_max(Controller const *controller_p) const
 {
-    octopus::Entity const *ent_l = controller_p->getEntity(_handle);
+    octopus::Entity const *ent_l = controller_p->getEntity(Handle(_handle, _revision));
     return octopus::to_double(ent_l->getHpMax());
 }
 
 Vector2 Entity::get_pos(Controller const *controller_p) const
 {
-    octopus::Entity const *ent_l = controller_p->getEntity(_handle);
+    octopus::Entity const *ent_l = controller_p->getEntity(Handle(_handle, _revision));
     return Vector2(octopus::to_double(ent_l->_pos.x), octopus::to_double(ent_l->_pos.y));
 }
 
 bool Entity::is_alive(Controller const *controller_p) const
 {
-    octopus::Entity const *ent_l = controller_p->getEntity(_handle);
+    octopus::Entity const *ent_l = controller_p->getEntity(Handle(_handle, _revision));
     return ent_l->_alive;
 }
 
 bool Entity::is_blueprint(Controller const *controller_p) const
 {
-    octopus::Entity const *ent_l = controller_p->getEntity(_handle);
+    octopus::Entity const *ent_l = controller_p->getEntity(Handle(_handle, _revision));
     if(!ent_l->_model._isBuilding)
     {
         return false;
@@ -62,13 +71,13 @@ bool Entity::is_blueprint(Controller const *controller_p) const
 
 bool Entity::is_building(Controller const *controller_p) const
 {
-    octopus::Entity const *ent_l = controller_p->getEntity(_handle);
+    octopus::Entity const *ent_l = controller_p->getEntity(Handle(_handle, _revision));
     return ent_l->_model._isBuilding;
 }
 
 bool Entity::is_built(Controller const *controller_p) const
 {
-    octopus::Entity const *ent_l = controller_p->getEntity(_handle);
+    octopus::Entity const *ent_l = controller_p->getEntity(Handle(_handle, _revision));
     if(!ent_l->_model._isBuilding)
     {
         return true;
@@ -80,68 +89,68 @@ bool Entity::is_built(Controller const *controller_p) const
 
 bool Entity::is_resource(Controller const *controller_p) const
 {
-    octopus::Entity const *ent_l = controller_p->getEntity(_handle);
+    octopus::Entity const *ent_l = controller_p->getEntity(Handle(_handle, _revision));
     return ent_l->_model._isResource;
 }
 
 bool Entity::is_unit(Controller const *controller_p) const
 {
-    octopus::Entity const *ent_l = controller_p->getEntity(_handle);
+    octopus::Entity const *ent_l = controller_p->getEntity(Handle(_handle, _revision));
     return ent_l->_model._isUnit;
 }
 
 bool Entity::is_idle(Controller const *controller_p) const
 {
-    octopus::Entity const *ent_l = controller_p->getEntity(_handle);
+    octopus::Entity const *ent_l = controller_p->getEntity(Handle(_handle, _revision));
     return !ent_l->getQueue().hasCommand();
 }
 
 int Entity::get_player(Controller const *controller_p) const
 {
-    octopus::Entity const *ent_l = controller_p->getEntity(_handle);
+    octopus::Entity const *ent_l = controller_p->getEntity(Handle(_handle, _revision));
     return ent_l->_player;
 }
 
 int Entity::get_team(Controller const *controller_p) const
 {
-    octopus::Entity const *ent_l = controller_p->getEntity(_handle);
+    octopus::Entity const *ent_l = controller_p->getEntity(Handle(_handle, _revision));
     octopus::Player const *player_l = controller_p->getPlayer(ent_l->_player);
     return player_l->_team;
 }
 
 String Entity::get_model(Controller const *controller_p) const
 {
-    octopus::Entity const *ent_l = controller_p->getEntity(_handle);
+    octopus::Entity const *ent_l = controller_p->getEntity(Handle(_handle, _revision));
     return ent_l->_model._id.c_str();
 }
 
 float Entity::get_damage(Controller const *controller_p) const
 {
-    octopus::Entity const *ent_l = controller_p->getEntity(_handle);
+    octopus::Entity const *ent_l = controller_p->getEntity(Handle(_handle, _revision));
     return octopus::to_double(ent_l->getDamageNoBonus());
 }
 
 float Entity::get_armor(Controller const *controller_p) const
 {
-    octopus::Entity const *ent_l = controller_p->getEntity(_handle);
+    octopus::Entity const *ent_l = controller_p->getEntity(Handle(_handle, _revision));
     return octopus::to_double(ent_l->getArmor());
 }
 
 float Entity::get_speed(Controller const *controller_p) const
 {
-    octopus::Entity const *ent_l = controller_p->getEntity(_handle);
+    octopus::Entity const *ent_l = controller_p->getEntity(Handle(_handle, _revision));
     return octopus::to_double(ent_l->getStepSpeed()*100);
 }
 
 float Entity::get_reload(Controller const *controller_p) const
 {
-    octopus::Entity const *ent_l = controller_p->getEntity(_handle);
+    octopus::Entity const *ent_l = controller_p->getEntity(Handle(_handle, _revision));
     return octopus::to_double(100./ent_l->getFullReload());
 }
 
 bool Entity::has_rally_point(Controller const *controller_p) const
 {
-    octopus::Entity const *ent_l = controller_p->getEntity(_handle);
+    octopus::Entity const *ent_l = controller_p->getEntity(Handle(_handle, _revision));
     if(!ent_l->_model._isBuilding)
     {
         return false;
@@ -154,7 +163,7 @@ bool Entity::has_rally_point(Controller const *controller_p) const
 
 Vector2 Entity::get_rally_point(Controller const *controller_p) const
 {
-    octopus::Entity const *ent_l = controller_p->getEntity(_handle);
+    octopus::Entity const *ent_l = controller_p->getEntity(Handle(_handle, _revision));
     if(!ent_l->_model._isBuilding)
     {
         return Vector2(0,0);
@@ -166,7 +175,7 @@ Vector2 Entity::get_rally_point(Controller const *controller_p) const
 
 String Entity::get_resource_type(Controller const *controller_p) const
 {
-    octopus::Entity const *ent_l = controller_p->getEntity(_handle);
+    octopus::Entity const *ent_l = controller_p->getEntity(Handle(_handle, _revision));
     if(!ent_l->_model._isResource)
     {
         return "";
@@ -177,7 +186,7 @@ String Entity::get_resource_type(Controller const *controller_p) const
 
 float Entity::get_resource_quantity(Controller const *controller_p) const
 {
-    octopus::Entity const *ent_l = controller_p->getEntity(_handle);
+    octopus::Entity const *ent_l = controller_p->getEntity(Handle(_handle, _revision));
     if(!ent_l->_model._isResource)
     {
         return 0.;
@@ -189,7 +198,7 @@ float Entity::get_resource_quantity(Controller const *controller_p) const
 TypedArray<godot::Buff> Entity::get_buffs(Controller const *controller_p) const
 {
     TypedArray<godot::Buff> buffs_l;
-    octopus::Entity const *ent_l = controller_p->getEntity(_handle);
+    octopus::Entity const *ent_l = controller_p->getEntity(Handle(_handle, _revision));
     for(auto &&pair_l : ent_l->_registeredBuff)
     {
         std::string const &name_l = pair_l.first;
@@ -231,7 +240,9 @@ void Entity::_bind_methods()
     UtilityFunctions::print("Binding Entity methods");
 
     ClassDB::bind_method(D_METHOD("set_handle", "handle"), &Entity::set_handle);
+    ClassDB::bind_method(D_METHOD("set_revision", "revision"), &Entity::set_revision);
     ClassDB::bind_method(D_METHOD("get_handle"), &Entity::get_handle);
+    ClassDB::bind_method(D_METHOD("get_revision"), &Entity::get_revision);
     ClassDB::bind_method(D_METHOD("get_hp", "controller"), &Entity::get_hp);
     ClassDB::bind_method(D_METHOD("get_hp_max", "controller"), &Entity::get_hp_max);
     ClassDB::bind_method(D_METHOD("get_pos", "controller"), &Entity::get_pos);
@@ -257,6 +268,7 @@ void Entity::_bind_methods()
 
     ADD_GROUP("Entity", "Entity_");
     ADD_PROPERTY(PropertyInfo(Variant::INT, "entity_handle"), "set_handle", "get_handle");
+    ADD_PROPERTY(PropertyInfo(Variant::INT, "entity_revision"), "set_revision", "get_revision");
 }
 
 }

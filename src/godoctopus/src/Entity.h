@@ -46,9 +46,11 @@ public:
 
     // property setter
     void set_handle(int handle_p);
+    void set_revision(int revision_p);
 
     // property getter
     int get_handle() const;
+    int get_revision() const;
     float get_hp(Controller const *controller_p) const;
     float get_hp_max(Controller const *controller_p) const;
     Vector2 get_pos(Controller const *controller_p) const;
@@ -79,7 +81,8 @@ public:
     TypedArray<godot::Buff> get_buffs(Controller const *controller_p) const;
 
 private:
-    int _handle;
+    int _handle = 0;
+    int _revision = 0;
 };
 
 }
