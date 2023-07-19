@@ -12,11 +12,24 @@
 
 namespace octopus
 {
-template<typename class_t>
-class SpawnModelStep : public Steppable
+
+class AbstractSpawnModelStep : public Steppable
 {
 public:
-	SpawnModelStep(Handle const &handle_p, class_t const &model_p, bool forceAlive_p=false) : _handle(handle_p), _model(model_p), _forceAlive(forceAlive_p) {}
+	Entity const * getEntityTemplate() const { return _template; }
+
+protected:
+	Entity const * _template { nullptr };
+};
+
+template<typename class_t>
+class SpawnModelStep : public AbstractSpawnModelStep
+{
+public:
+	SpawnModelStep(Handle const &handle_p, class_t const &model_p, bool forceAlive_p=false) : _handle(handle_p), _model(model_p), _forceAlive(forceAlive_p)
+	{
+		_template = &_model;
+	}
 
 	virtual void apply(State &state_p) const override
 	{
