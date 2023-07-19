@@ -74,3 +74,25 @@ TEST(fixedPointTest, small)
 	EXPECT_TRUE(235614 == numeric::square_root(square_a32).data());
 	EXPECT_TRUE(75810 == numeric::square_root(square_b32).data());
 }
+
+TEST(fixedPointTest, ceil)
+{
+	fixed_octopus test_l(1234, true);
+
+	EXPECT_EQ(100000000, numeric::ceil(test_l).data());
+
+	fixed_octopus test2_l(100001234, true);
+
+	EXPECT_EQ(200000000, numeric::ceil(test2_l).data());
+}
+
+TEST(fixedPointTest, floor)
+{
+	fixed_octopus test_l(1234, true);
+
+	EXPECT_EQ(0, numeric::floor(test_l).data());
+
+	fixed_octopus test2_l(100001234, true);
+
+	EXPECT_EQ(100000000, numeric::floor(test2_l).data());
+}
