@@ -318,6 +318,12 @@ octopus::FixedPoint<e> ceil(octopus::FixedPoint<e> const &f)
 	return octopus::FixedPoint<e>((data_l/e)*e, true);
 }
 
+template <long long e>
+octopus::FixedPoint<e> floor(octopus::FixedPoint<e> const &f)
+{
+	return octopus::FixedPoint<e>((f.data()/e)*e, true);
+}
+
 template<class Number, class = typename std::enable_if<std::is_arithmetic<Number>::value>::type>
 Number infinity()
 {
