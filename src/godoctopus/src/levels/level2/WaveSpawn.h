@@ -26,9 +26,13 @@ std::vector<octopus::Steppable*> defaultGenerator();
 
 struct WaveParam
 {
+	/// @brief point where the unit will spawn
 	octopus::Vector spawnPoint;
+	/// @brief number of step to wait unit wave spawn
 	unsigned long stepWait;
+	/// @brief number of unit spawning
 	unsigned long number;
+	/// @brief limits to remove
 	unsigned long limitX;
 	unsigned long limitY;
 };

@@ -51,20 +51,12 @@ namespace level2
 class VisionTrigger : public octopus::OneShotTrigger
 {
 public:
-	VisionTrigger(unsigned long timer_p, int x, int y, octopus::VisionPattern const &pattern_p) : OneShotTrigger({new octopus::ListenerStepCount(timer_p)}), _x(x), _y(y), _pattern(pattern_p) {}
+	VisionTrigger(unsigned long timer_p) : OneShotTrigger({new octopus::ListenerStepCount(timer_p)}) {}
 
 	virtual void trigger(State const &state_p, Step &step_p, unsigned long, TriggerData const &) const override
 	{
-		step_p.addSteppable(new octopus::TeamVisionStep(0, _pattern, true, true));
-		step_p.addSteppable(new octopus::TeamVisionStep(0, _pattern, true, false));
-
-		step_p.addSteppable(new godot::CameraStep(_x, _y));
 		step_p.addSteppable(new godot::DialogStep("show anchor"));
 	}
-private:
-	octopus::VisionPattern const _pattern;
-	int const _x;
-	int const _y;
 };
 
 std::list<Steppable *> WaveLevelSteps(Library &lib_p, RandomGenerator &rand_p)
@@ -74,42 +66,24 @@ std::list<Steppable *> WaveLevelSteps(Library &lib_p, RandomGenerator &rand_p)
 	Building building_l({20, 10}, true, lib_p.getBuildingModel("command_center"));
 	Unit unit_l({ 17, 10 }, false, lib_p.getUnitModel("worker"));
 
-	Resource res1_l({15,12}, true, lib_p.getEntityModel("resource_food"));
-	res1_l._type = "bloc";
-	res1_l._resource = 2000.;
-	res1_l._player = 2;
-
-	Resource res3_l({15,8}, true, lib_p.getEntityModel("resource_steel"));
-	res3_l._type = "ether";
-	res3_l._resource = 2000.;
-	res3_l._player = 2;
-
 	long anchor_l = 420;
 	std::map<std::string, Fixed> mapRes_l;
 	mapRes_l["bloc"] = -200;
 	mapRes_l["ether"] = -200;
 	mapRes_l["Anchor"] = -anchor_l;
-	unsigned long visionTrigger_l = (anchor_l-60)*100;
+	unsigned long timeTriggerAnchor_l = (anchor_l-60)*100;
 
 	std::list<WaveParam> params_l;
-	params_l.push_back({octopus::Vector(60,10), 3*60*100, 10, 45, 30});
-	params_l.push_back({octopus::Vector(90,45), 5*60*100, 50, 75, 60});
-	params_l.push_back({octopus::Vector(120,75), 5*60*100, 100, 105, 90});
-	params_l.push_back({octopus::Vector(150,105), 5*60*100, 200, 105, 90});
-	params_l.push_back({octopus::Vector(150,105), 5*60*100, 300, 105, 90});
+	params_l.push_back({octopus::Vector(60,30), 6*60*100, 10, 40, 0});
+	params_l.push_back({octopus::Vector(100,30), 6*60*100, 50, 80, 0});
+	params_l.push_back({octopus::Vector(140,30), 6*60*100, 100, 120, 0});
+	params_l.push_back({octopus::Vector(180,30), 6*60*100, 200, 160, 0});
+	params_l.push_back({octopus::Vector(220,30), 6*60*100, 300, 160, 0});
+	params_l.push_back({octopus::Vector(220,30), 6*60*100, 1000, 160, 0});
 
 	Trigger * triggerWave_l = new WaveSpawn(new ListenerStepCount(params_l.front().stepWait), lib_p, rand_p, params_l, defaultGenerator);
 	Trigger * triggerLose_l = new LoseTrigger(new ListenerEntityModelDied(&lib_p.getBuildingModel("command_center"), 0));
 
-	Building anchorSpot_l({60,10}, true, lib_p.getBuildingModel("anchor_spot"));
-	anchorSpot_l._player = 2;
-    octopus::PatternHandler handler_l;
-	octopus::VisionPattern pattern_l = handler_l.getPattern(10);
-	for(std::pair<long, long> &pair_l : pattern_l)
-	{
-		pair_l.first += to_int(anchorSpot_l._pos.x);
-		pair_l.second += to_int(anchorSpot_l._pos.y);
-	}
 	Handle handle_l = 0;
 	std::list<Steppable *> spawners_l =
 	{
@@ -123,10 +97,6 @@ std::list<Steppable *> WaveLevelSteps(Library &lib_p, RandomGenerator &rand_p)
 		new PlayerAddBuildingModel(0, lib_p.getBuildingModel("anchor")),
 		new PlayerSpendResourceStep(0, mapRes_l),
 		new BuildingSpawnStep(handle_l++, building_l, true),
-		new ResourceSpawnStep(handle_l++, res1_l),
-		new ResourceSpawnStep(handle_l++, res3_l),
-		new BuildingSpawnStep(handle_l++, anchorSpot_l, true),
-		new StateTemplePositionAddStep(anchorSpot_l._pos),
 		new UnitSpawnStep(handle_l++, unit_l),
 		new UnitSpawnStep(handle_l++, unit_l),
 		new UnitSpawnStep(handle_l++, unit_l),
@@ -139,27 +109,31 @@ std::list<Steppable *> WaveLevelSteps(Library &lib_p, RandomGenerator &rand_p)
 		new UnitSpawnStep(handle_l++, unit_l),
 		new TriggerSpawn(triggerWave_l),
 		new TriggerSpawn(triggerLose_l),
-		new TriggerSpawn(new AnchorTrigger(lib_p, rand_p, 60)),
-		new TriggerSpawn(new VisionTrigger(visionTrigger_l, to_int(anchorSpot_l._pos.x), to_int(anchorSpot_l._pos.y), pattern_l)),
+		new TriggerSpawn(new AnchorTrigger(lib_p, rand_p, 150)),
+		new TriggerSpawn(new VisionTrigger(timeTriggerAnchor_l)),
 		new FlyingCommandSpawnStep(new TimerDamage(0, 100, 0, 0, "Anchor", 0)),
 		new godot::CameraStep(to_int(building_l._pos.x), to_int(building_l._pos.y)),
 		new godot::DialogStep("leve1_intro"),
 	};
 
 	// zone 1
-	std::list<Steppable *> zone_l = createWallSpawners(lib_p, 45, 30, 4, 14, handle_l);
+	std::list<Steppable *> zone_l = createWallSpawners(lib_p, 40, 100, 20, 40, handle_l);
 	spawners_l.insert(spawners_l.end(), zone_l.begin(), zone_l.end());
 
 	// zone 2
-	zone_l = createWallSpawners(lib_p, 75, 60, 40, 50, handle_l);
+	zone_l = createWallSpawners(lib_p, 80, 100, 20, 40, handle_l);
 	spawners_l.insert(spawners_l.end(), zone_l.begin(), zone_l.end());
 
 	// zone 3
-	zone_l = createWallSpawners(lib_p, 105, 90, 70, 80, handle_l);
+	zone_l = createWallSpawners(lib_p, 120, 100, 20, 40, handle_l);
 	spawners_l.insert(spawners_l.end(), zone_l.begin(), zone_l.end());
 
 	// zone 4
-	zone_l = createWallSpawners(lib_p, 135, 120, 100, 110, handle_l);
+	zone_l = createWallSpawners(lib_p, 160, 100, 20, 40, handle_l);
+	spawners_l.insert(spawners_l.end(), zone_l.begin(), zone_l.end());
+
+	// zone 5
+	zone_l = createWallSpawners(lib_p, 200, 100, 20, 40, handle_l);
 	spawners_l.insert(spawners_l.end(), zone_l.begin(), zone_l.end());
 
 	return spawners_l;
@@ -196,7 +170,10 @@ AreaSpawnerCommand * createArenaSpawnCommmand(Library &lib_p, RandomGenerator &r
 		area_l.y = y;
 		area_l.entities.emplace_back(new Resource(res3_l), nbRes_p);
 		area_l.entities.emplace_back(new Resource(res2_l), nbRes_p);
-		area_l.entities.emplace_back(new Resource(res4_l), 1);
+		if(qtyIrium_p>0)
+		{
+			area_l.entities.emplace_back(new Resource(res4_l), 1);
+		}
 		if(nbAnchorSpot_p>0)
 		{
 			area_l.entities.emplace_back(new Building(anchorSpot_l), nbAnchorSpot_p);
@@ -223,19 +200,28 @@ AreaSpawnerCommand * createArenaSpawnCommmand(Library &lib_p, RandomGenerator &r
 
 std::list<Command *> WaveLevelCommands(Library &lib_p, RandomGenerator &rand_p)
 {
+	// createArenaSpawnCommmand(lib, rand, x, y, size, nb res, nb anchor, nb units, qty irium)
 	std::list<Command *> commands_l {
+		// zone 0
+		createArenaSpawnCommmand(lib_p, rand_p, 10, 10, 20, 1, 1, 10, 0),
+		createArenaSpawnCommmand(lib_p, rand_p, 10, 70, 20, 1, 0, 0, 0),
+		createArenaSpawnCommmand(lib_p, rand_p, 10, 70, 20, 1, 1, 10, 0),
 		// zone 1
-		createArenaSpawnCommmand(lib_p, rand_p, 50, 0, 20, 1, 0, 10, 500),
-		createArenaSpawnCommmand(lib_p, rand_p, 50, 35, 20, 1, 1, 10, 500),
-		createArenaSpawnCommmand(lib_p, rand_p, 15, 35, 20, 1, 1, 20, 500),
+		createArenaSpawnCommmand(lib_p, rand_p, 50, 10, 20, 1, 1, 20, 500),
+		createArenaSpawnCommmand(lib_p, rand_p, 50, 40, 20, 1, 1, 10, 500),
+		createArenaSpawnCommmand(lib_p, rand_p, 50, 70, 20, 1, 1, 20, 500),
 		// zone 2
-		createArenaSpawnCommmand(lib_p, rand_p, 80, 30, 20, 1, 1, 10, 1000),
-		createArenaSpawnCommmand(lib_p, rand_p, 80, 65, 20, 1, 1, 20, 1000),
-		createArenaSpawnCommmand(lib_p, rand_p, 45, 65, 20, 1, 1, 30, 1000),
+		createArenaSpawnCommmand(lib_p, rand_p, 90, 10, 20, 1, 1, 30, 1000),
+		createArenaSpawnCommmand(lib_p, rand_p, 90, 40, 20, 1, 1, 20, 1000),
+		createArenaSpawnCommmand(lib_p, rand_p, 90, 70, 20, 1, 1, 30, 1000),
 		// zone 3
-		createArenaSpawnCommmand(lib_p, rand_p, 110, 30, 20, 1, 1, 20, 2000),
-		createArenaSpawnCommmand(lib_p, rand_p, 110, 95, 20, 1, 1, 30, 2000),
-		createArenaSpawnCommmand(lib_p, rand_p, 75, 95, 20, 1, 1, 40, 2000),
+		createArenaSpawnCommmand(lib_p, rand_p, 130, 10, 20, 1, 2, 40, 2000),
+		createArenaSpawnCommmand(lib_p, rand_p, 130, 40, 20, 1, 2, 30, 2000),
+		createArenaSpawnCommmand(lib_p, rand_p, 130, 70, 20, 1, 2, 40, 2000),
+		// zone 4
+		createArenaSpawnCommmand(lib_p, rand_p, 170, 10, 20, 1, 2, 50, 2000),
+		createArenaSpawnCommmand(lib_p, rand_p, 170, 40, 20, 1, 2, 40, 2000),
+		createArenaSpawnCommmand(lib_p, rand_p, 170, 70, 20, 1, 2, 50, 2000),
 	};
 
 	return commands_l;
