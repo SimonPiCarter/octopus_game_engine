@@ -87,7 +87,27 @@ void AreaSpawnerCommand::registerCommand(Step & step_p, State const &state_p)
 	SpawningGrid grid_l(state_p.getPathGrid().getSizeX());
 	initGrid(0, 0, grid_l, state_p.getPathGrid());
 
-	/// @todo maybe update from step?
+	/// update from step
+	for(Steppable const *steppable_l : step_p.getSteppable())
+	{
+		AbstractSpawnModelStep const * spawner_l = dynamic_cast<AbstractSpawnModelStep const *>(steppable_l);
+
+		if(!spawner_l)
+		{
+			continue;
+		}
+
+		Entity const *ent_l = spawner_l->getEntityTemplate();
+
+		// if static
+		if(ent_l->_model._isStatic)
+		{
+			grid_l.fillGrid(
+				numeric::floor(ent_l->_pos.x-ent_l->_model._ray).to_uint(),
+				numeric::floor(ent_l->_pos.y-ent_l->_model._ray).to_uint(),
+				numeric::ceil(2.*ent_l->_model._ray).to_uint());
+		}
+	}
 
 	/// iterate on avery area spawn to spawn static first
 	for(AreaSpawn const &spawn_l : _spawns)
