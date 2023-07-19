@@ -67,9 +67,7 @@ void ChainingOverTime::applyEffect(Step & step_p, State const &state_p, CommandD
         return;
     }
 
-    Fixed maxHp_l = target_l->getHpMax();
-    Fixed curHp_l = target_l->_hp + step_p.getHpChange(_ent);
-    step_p.addSteppable(new EntityHitPointChangeStep(target_l->_handle, -_dmg, curHp_l, maxHp_l));
+    step_p.addSteppable(new EntityHitPointChangeStep(target_l->_handle, -_dmg));
 
     if(_nbOfOccurence > 1)
     {
@@ -93,9 +91,7 @@ void ChainingModifier::newAttackSteppable(std::vector<Steppable *> &vec_r, const
     if(!disableMainAttack_p)
     {
         Fixed dmg_l = std::min(Fixed(-1), target_p.getArmor() - ent_p.getDamage(target_p._model));
-        Fixed curHp_l = target_p._hp + step_p.getHpChange(target_p._handle);
-        Fixed maxHp_l = target_p.getHpMax();
-        vec_r.push_back(new EntityHitPointChangeStep(target_p._handle, dmg_l, curHp_l, maxHp_l));
+        vec_r.push_back(new EntityHitPointChangeStep(target_p._handle, dmg_l));
     }
 }
 

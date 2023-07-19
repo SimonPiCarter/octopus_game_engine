@@ -47,9 +47,7 @@ public:
 			if(subTarget_l->_player == ent_l->_player
 			&& ent_l->_handle != subTarget_l->_handle)
 			{
-				Fixed curHp_l = subTarget_l->_hp + step_p.getHpChange(subTarget_l->_handle);
-				Fixed maxHp_l = subTarget_l->getHpMax();
-				step_p.addSteppable(new EntityHitPointChangeStep(subTarget_l->_handle, _qty, curHp_l, maxHp_l));
+				step_p.addSteppable(new EntityHitPointChangeStep(subTarget_l->_handle, _qty));
 			}
 		}
 	}

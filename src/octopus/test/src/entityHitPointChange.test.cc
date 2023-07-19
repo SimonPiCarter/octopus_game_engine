@@ -21,15 +21,17 @@ TEST(entityHitPointChangeTest, simple_overheal)
 	octopus::EntityModel unitModel_l { false, 1., 1., 10. };
 	state_l.addEntity(new Entity { { 3, 3. }, false, unitModel_l});
 
-	EntityHitPointChangeStep step_l(0, 10., 10., 10.);
+	EntityHitPointChangeStep step_l(0, 10.);
 
 	EXPECT_NEAR(10., to_double(state_l.getEntity(0)->_hp), 1e-5);
 
+	SteppableData const * data_l = step_l.newData(state_l);
 	step_l.apply(state_l);
 
 	EXPECT_NEAR(10., to_double(state_l.getEntity(0)->_hp), 1e-5);
 
-	step_l.revert(state_l, nullptr);
+	step_l.revert(state_l, data_l);
+	delete data_l;
 
 	EXPECT_NEAR(10., to_double(state_l.getEntity(0)->_hp), 1e-5);
 }
@@ -42,15 +44,17 @@ TEST(entityHitPointChangeTest, simple_overkill)
 	octopus::EntityModel unitModel_l { false, 1., 1., 10. };
 	state_l.addEntity(new Entity { { 3, 3. }, false, unitModel_l});
 
-	EntityHitPointChangeStep step_l(0, -100., 10., 10.);
+	EntityHitPointChangeStep step_l(0, -100.);
 
 	EXPECT_NEAR(10., to_double(state_l.getEntity(0)->_hp), 1e-5);
 
+	SteppableData const * data_l = step_l.newData(state_l);
 	step_l.apply(state_l);
 
 	EXPECT_NEAR(0., to_double(state_l.getEntity(0)->_hp), 1e-5);
 
-	step_l.revert(state_l, nullptr);
+	step_l.revert(state_l, data_l);
+	delete data_l;
 
 	EXPECT_NEAR(10., to_double(state_l.getEntity(0)->_hp), 1e-5);
 }
@@ -64,15 +68,17 @@ TEST(entityHitPointChangeTest, simple_buff_heal)
 	state_l.addEntity(new Entity { { 3, 3. }, false, unitModel_l});
 
 
-	EntityHitPointChangeStep step_l(0, 5, 10., 10.);
+	EntityHitPointChangeStep step_l(0, 5);
 
 	EXPECT_NEAR(10., to_double(state_l.getEntity(0)->_hp), 1e-5);
 
+	SteppableData const * data_l = step_l.newData(state_l);
 	step_l.apply(state_l);
 
 	EXPECT_NEAR(10., to_double(state_l.getEntity(0)->_hp), 1e-5);
 
-	step_l.revert(state_l, nullptr);
+	step_l.revert(state_l, data_l);
+	delete data_l;
 
 	EXPECT_NEAR(10., to_double(state_l.getEntity(0)->_hp), 1e-5);
 }

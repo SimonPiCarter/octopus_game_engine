@@ -8,6 +8,13 @@
 
 namespace octopus
 {
+
+	struct HitPointChangeData : public SteppableData
+	{
+		HitPointChangeData(const Fixed &fixed_p) : _delta(fixed_p) {}
+		Fixed _delta;
+	};
+
 	/// @brief this is aimed at changing hp
 	class EntityHitPointChangeStep : public Steppable
 	{
@@ -15,10 +22,8 @@ namespace octopus
 			/// @brief
 			/// @param handle_p
 			/// @param delta_p
-			/// @param anticipatedHp_p this is the hp of the entity based on the current state and step this steppable is added
-			/// using getHpChange from step would be required here
-			/// @param hpMax_p max hop of the target to clamp delta if necessary
-			EntityHitPointChangeStep(Handle const &handle_p, Fixed delta_p, Fixed anticipatedHp_p, Fixed hpMax_p);
+			/// @param lethal_p if set to false this step will not kill the entity (it will let it at 1hp)
+			EntityHitPointChangeStep(Handle const &handle_p, Fixed delta_p, bool lethal_p=true);
 
 			virtual void apply(State &state_p) const override;
 			virtual void revert(State &state_p, SteppableData const *) const override;
@@ -29,8 +34,13 @@ namespace octopus
 				visitor_p->visit(this);
 			}
 
+			/// @brief create data to know how much of the delta was applied regarding
+			/// current state of application
+			virtual SteppableData * newData(State const &state_p) const override;
+
 			Handle _handle {0};
 			Fixed _delta;
+			bool _lethal;
 	};
 }
 

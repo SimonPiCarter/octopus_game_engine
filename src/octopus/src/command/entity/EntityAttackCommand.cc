@@ -125,9 +125,7 @@ bool EntityAttackCommand::applyCommand(Step & step_p, State const &state_p, Comm
 
 			if(heal_l)
 			{
-				Fixed curHp_l = entTarget_l->_hp + step_p.getHpChange(curTarget_l);
-				Fixed maxHp_l = entTarget_l->getHpMax();
-				step_p.addSteppable(new EntityHitPointChangeStep(curTarget_l, entSource_l->getHeal(), curHp_l, maxHp_l));
+				step_p.addSteppable(new EntityHitPointChangeStep(curTarget_l, entSource_l->getHeal()));
 			}
 			else
 			{

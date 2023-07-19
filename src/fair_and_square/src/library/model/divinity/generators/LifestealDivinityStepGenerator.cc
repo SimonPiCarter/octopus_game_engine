@@ -109,9 +109,7 @@ namespace stimpack
 		step_p.addSteppable(new EntityBuffStep(source_p, buff_p));
 
 		Entity const *ent_l = state_p.getEntity(source_p);
-		Fixed curHp_l = ent_l->_hp + step_p.getHpChange(source_p);
-		Fixed maxHp_l = ent_l->getHpMax();
-		step_p.addSteppable(new EntityHitPointChangeStep(source_p, Fixed(-1) * hpCost_p, curHp_l, maxHp_l));
+		step_p.addSteppable(new EntityHitPointChangeStep(source_p, Fixed(-1) * hpCost_p));
 	}
 
 	bool checker(Step const &, State const &state_p, Handle const &source_p, Handle const &, Vector const &)

@@ -40,7 +40,7 @@ TEST(VisionGridOnStep, move_then_test)
 	StepData secondData_l;
 
 	second_l.addEntityMoveStep(new EntityMoveStep(0, Vector {2., 2.}));
-	second_l.addSteppable(new EntityHitPointChangeStep(0, -10., 10., 10.));
+	second_l.addSteppable(new EntityHitPointChangeStep(0, -10.));
 
 	std::list<VisionChangeStep *> list_l = newVisionChangeStep(state_l, second_l, state_l.getWorldSize(), handler_l.getPatternHandler());
 	std::for_each(list_l.begin(), list_l.end(), std::bind(&Step::addSteppable, &second_l, std::placeholders::_1));
@@ -79,7 +79,7 @@ TEST(VisionGridOnStep, death_then_move)
 	Step second_l(&initial_l);
 	StepData secondData_l;
 
-	second_l.addSteppable(new EntityHitPointChangeStep(0, -10., 10., 10.));
+	second_l.addSteppable(new EntityHitPointChangeStep(0, -10.));
 	second_l.addEntityMoveStep(new EntityMoveStep(0, Vector {2., 2.}));
 
 	std::list<VisionChangeStep *> list_l = newVisionChangeStep(state_l, second_l, state_l.getWorldSize(), handler_l.getPatternHandler());

@@ -31,13 +31,16 @@ TEST(condBuffStepTest, simple_speed_min_hp)
 
 	EXPECT_NEAR(2., to_double(state_l.getEntity(0)->getStepSpeed()), 1e-5);
 
-	EntityHitPointChangeStep stepHp_l(0, -1, 10, 10);
+	EntityHitPointChangeStep stepHp_l(0, -1);
+	SteppableData const * data_l = stepHp_l.newData(state_l);
 	stepHp_l.apply(state_l);
 
 	EXPECT_NEAR(1., to_double(state_l.getEntity(0)->getStepSpeed()), 1e-5);
 
-	stepHp_l.revert(state_l, nullptr);
+	stepHp_l.revert(state_l, data_l);
 	EXPECT_NEAR(2., to_double(state_l.getEntity(0)->getStepSpeed()), 1e-5);
+
+	delete data_l;
 }
 
 // test that conditional buff correctly apply when maximum hp is required
@@ -58,11 +61,14 @@ TEST(condBuffStepTest, simple_speed_max_hp)
 
 	EXPECT_NEAR(1., to_double(state_l.getEntity(0)->getStepSpeed()), 1e-5);
 
-	EntityHitPointChangeStep stepHp_l(0, -1, 10, 10);
+	EntityHitPointChangeStep stepHp_l(0, -1);
+	SteppableData const * data_l = stepHp_l.newData(state_l);
 	stepHp_l.apply(state_l);
 
 	EXPECT_NEAR(2., to_double(state_l.getEntity(0)->getStepSpeed()), 1e-5);
 
-	stepHp_l.revert(state_l, nullptr);
+	stepHp_l.revert(state_l, data_l);
 	EXPECT_NEAR(1., to_double(state_l.getEntity(0)->getStepSpeed()), 1e-5);
+
+	delete data_l;
 }

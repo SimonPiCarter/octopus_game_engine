@@ -22,9 +22,7 @@ void AoEModifier::newAttackSteppable(std::vector<Steppable *> &vec_r, const Enti
         Player const *otherPlayer_l = state_p.getPlayer(subTarget_l->_player);
         if(otherPlayer_l->_team != team_l || _friendlyFire)
         {
-            Fixed curHp_l = subTarget_l->_hp + step_p.getHpChange(subTarget_l->_handle);
-            Fixed maxHp_l = subTarget_l->getHpMax();
-            vec_r.push_back(new EntityHitPointChangeStep(subTarget_l->_handle, - _ratio * ent_p.getDamageNoBonus(), curHp_l, maxHp_l));
+            vec_r.push_back(new EntityHitPointChangeStep(subTarget_l->_handle, - _ratio * ent_p.getDamageNoBonus()));
         }
     }
     for(Entity const * subTarget_l : panel_l.buildings)
@@ -32,18 +30,14 @@ void AoEModifier::newAttackSteppable(std::vector<Steppable *> &vec_r, const Enti
         Player const *otherPlayer_l = state_p.getPlayer(subTarget_l->_player);
         if(otherPlayer_l->_team != team_l || _friendlyFire)
         {
-            Fixed curHp_l = subTarget_l->_hp + step_p.getHpChange(subTarget_l->_handle);
-            Fixed maxHp_l = subTarget_l->getHpMax();
-            vec_r.push_back(new EntityHitPointChangeStep(subTarget_l->_handle, - _ratio * ent_p.getDamageNoBonus(), curHp_l, maxHp_l));
+            vec_r.push_back(new EntityHitPointChangeStep(subTarget_l->_handle, - _ratio * ent_p.getDamageNoBonus()));
         }
     }
 
     if(!disableMainAttack_p)
     {
-        Fixed curHp_l = target_p._hp + step_p.getHpChange(target_p._handle);
-        Fixed maxHp_l = target_p.getHpMax();
         Fixed dmg_l = std::min(Fixed(-1), target_p.getArmor() - ent_p.getDamage(target_p._model));
-        vec_r.push_back(new EntityHitPointChangeStep(target_p._handle, dmg_l, curHp_l, maxHp_l));
+        vec_r.push_back(new EntityHitPointChangeStep(target_p._handle, dmg_l));
     }
 }
 
