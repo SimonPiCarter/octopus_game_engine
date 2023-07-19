@@ -23,7 +23,9 @@ namespace octopus
 			/// @param handle_p
 			/// @param delta_p
 			/// @param lethal_p if set to false this step will not kill the entity (it will let it at 1hp)
-			EntityHitPointChangeStep(Handle const &handle_p, Fixed delta_p, bool lethal_p=true);
+			/// @param forced_p should only be used in testing, will force healing even when entity is dead
+			/// as it may result in failure in real run circumstance
+			EntityHitPointChangeStep(Handle const &handle_p, Fixed delta_p, bool lethal_p=true, bool forced_p=false);
 
 			virtual void apply(State &state_p) const override;
 			virtual void revert(State &state_p, SteppableData const *) const override;
@@ -41,6 +43,7 @@ namespace octopus
 			Handle _handle {0};
 			Fixed _delta;
 			bool _lethal;
+			bool _forced;
 	};
 }
 

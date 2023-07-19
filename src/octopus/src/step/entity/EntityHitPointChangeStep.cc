@@ -52,17 +52,20 @@ void updateFromHp(State &state_p, Entity *ent_p)
 	}
 }
 
-EntityHitPointChangeStep::EntityHitPointChangeStep(Handle const &handle_p, Fixed delta_p, bool lethal_p)
-	: _handle(handle_p), _delta(delta_p), _lethal(lethal_p)
+EntityHitPointChangeStep::EntityHitPointChangeStep(Handle const &handle_p, Fixed delta_p, bool lethal_p, bool forced_p)
+	: _handle(handle_p), _delta(delta_p), _lethal(lethal_p), _forced(forced_p)
 {}
 
 void EntityHitPointChangeStep::apply(State &state_p) const
 {
-	Entity * ent_l = state_p.getEntity(this->_handle);
-	Logger::getDebug() << "EntityHitPointChangeStep :: " << ent_l->_hp << " + "<<this->_delta<<std::endl;
-	ent_l->_hp += getDelta(ent_l->_hp, _delta, ent_l->getHpMax(), _lethal);
+	if(state_p.isEntityAlive(_handle) || _forced)
+	{
+		Entity * ent_l = state_p.getEntity(this->_handle);
+		Logger::getDebug() << "EntityHitPointChangeStep :: " << ent_l->_hp << " + "<<this->_delta<<std::endl;
+		ent_l->_hp += getDelta(ent_l->_hp, _delta, ent_l->getHpMax(), _lethal);
 
-	updateFromHp(state_p, ent_l);
+		updateFromHp(state_p, ent_l);
+	}
 }
 
 void EntityHitPointChangeStep::revert(State &state_p, SteppableData const *data_p) const
@@ -83,7 +86,7 @@ bool EntityHitPointChangeStep::isNoOp() const
 
 SteppableData * EntityHitPointChangeStep::newData(State const &state_p) const
 {
-	if(!state_p.isEntityAlive(_handle))
+	if(!state_p.isEntityAlive(_handle) && !_forced)
 	{
 		return new HitPointChangeData { 0 };
 	}

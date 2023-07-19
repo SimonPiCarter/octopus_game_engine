@@ -45,10 +45,10 @@ TEST(handleUsageTest, reusage)
 	Controller controller_l({
 		new PlayerSpawnStep(0, 0),
 		new EntitySpawnStep(0, Entity { { 3, 3. }, false, unitModel_l}),
-		new FlyingCommandSpawnStep(new HandleUsageTestCommand({new EntityHitPointChangeStep(Handle(0, 0), -10)}, 0, 2)),
+		new FlyingCommandSpawnStep(new HandleUsageTestCommand({new EntityHitPointChangeStep(Handle(0, 0), -10, true, true)}, 0, 2)),
 		new FlyingCommandSpawnStep(new HandleUsageTestCommand({new EntitySpawnStep(Handle(0, 1), Entity { { 3, 3. }, false, unitModel_l})}, 1, 4)),
-		new FlyingCommandSpawnStep(new HandleUsageTestCommand({new EntityHitPointChangeStep(Handle(0, 1), -10)}, 2, 6)),
-		new FlyingCommandSpawnStep(new HandleUsageTestCommand({new EntityHitPointChangeStep(Handle(0, 1), 10)}, 3, 8))
+		new FlyingCommandSpawnStep(new HandleUsageTestCommand({new EntityHitPointChangeStep(Handle(0, 1), -10, true, true)}, 2, 6)),
+		new FlyingCommandSpawnStep(new HandleUsageTestCommand({new EntityHitPointChangeStep(Handle(0, 1), 10, true, true)}, 3, 8))
 	}, 1.);
 
 	// query state
@@ -100,9 +100,9 @@ TEST(handleUsageTest, reusage_throw_wrong_handle)
 	Controller controller_l({
 		new PlayerSpawnStep(0, 0),
 		new EntitySpawnStep(0, Entity { { 3, 3. }, false, unitModel_l}),
-		new FlyingCommandSpawnStep(new HandleUsageTestCommand({new EntityHitPointChangeStep(Handle(0, 0), -10)}, 0, 2)),
+		new FlyingCommandSpawnStep(new HandleUsageTestCommand({new EntityHitPointChangeStep(Handle(0, 0), -10, true, true)}, 0, 2)),
 		new FlyingCommandSpawnStep(new HandleUsageTestCommand({new EntitySpawnStep(Handle(0, 1), Entity { { 3, 3. }, false, unitModel_l})}, 1, 4)),
-		new FlyingCommandSpawnStep(new HandleUsageTestCommand({new EntityHitPointChangeStep(Handle(0, 0), 10)}, 3, 6))
+		new FlyingCommandSpawnStep(new HandleUsageTestCommand({new EntityHitPointChangeStep(Handle(0, 0), 10, true, true)}, 3, 6))
 	}, 1.);
 
 	// query state
@@ -157,7 +157,7 @@ TEST(handleUsageTest, attack_move_death_replaced_during_attack)
 		new EntitySpawnStep(1, Entity { { 11, 3. }, false, unitModel_l}),
 		// entity 0 attack entity 1
 		new CommandSpawnStep(new EntityAttackCommand(0, 0, 1, true)),
-		new FlyingCommandSpawnStep(new HandleUsageTestCommand({new EntityHitPointChangeStep(Handle(1, 0), -10)}, 0, 4)),
+		new FlyingCommandSpawnStep(new HandleUsageTestCommand({new EntityHitPointChangeStep(Handle(1, 0), -10, true, true)}, 0, 4)),
 		new FlyingCommandSpawnStep(new HandleUsageTestCommand({new EntitySpawnStep(Handle(1,1), Entity { { 11, 3. }, false, unitModel_l})}, 1, 6)),
 	}, 1);
 
@@ -231,7 +231,7 @@ TEST(handleUsageTest, attack_move_death_replaced_during_move)
 		new EntitySpawnStep(1, Entity { { 11, 3. }, false, unitModel_l}),
 		// entity 0 attack entity 1
 		new CommandSpawnStep(new EntityAttackCommand(0, 0, 1, true)),
-		new FlyingCommandSpawnStep(new HandleUsageTestCommand({new EntityHitPointChangeStep(Handle(1, 0), -10)}, 0, 1)),
+		new FlyingCommandSpawnStep(new HandleUsageTestCommand({new EntityHitPointChangeStep(Handle(1, 0), -10, true, true)}, 0, 1)),
 		new FlyingCommandSpawnStep(new HandleUsageTestCommand({new EntitySpawnStep(Handle(1,1), Entity { { 11, 3. }, false, unitModel_l})}, 1, 4)),
 	}, 1);
 
@@ -306,9 +306,9 @@ TEST(handleUsageTest, trigger_unit_died)
 	Controller controller_l({
 		new PlayerSpawnStep(0, 0),
 		new EntitySpawnStep(0, unit_l),
-		new FlyingCommandSpawnStep(new HandleUsageTestCommand({new EntityHitPointChangeStep(Handle(0, 0), -10)}, 0, 2)),
+		new FlyingCommandSpawnStep(new HandleUsageTestCommand({new EntityHitPointChangeStep(Handle(0, 0), -10, true, true)}, 0, 2)),
 		new FlyingCommandSpawnStep(new HandleUsageTestCommand({new EntitySpawnStep(Handle(0,1), Entity { { 11, 3. }, false, entityModel_l})}, 1, 4)),
-		new FlyingCommandSpawnStep(new HandleUsageTestCommand({new EntityHitPointChangeStep(Handle(0, 1), -10)}, 2, 6)),
+		new FlyingCommandSpawnStep(new HandleUsageTestCommand({new EntityHitPointChangeStep(Handle(0, 1), -10, true, true)}, 2, 6)),
 	}, 1.);
 
 	controller_l.commitTrigger(new OnEachTriggerResourceTest(new ListenerEntityDied({0})));
