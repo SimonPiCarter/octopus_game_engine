@@ -8,6 +8,7 @@
 #include "library/model/AnchorTrigger.hh"
 #include "library/model/ModelLoader.hh"
 #include "library/model/TimerDamage.hh"
+#include "library/model/divinity/DivinityModelLoader.hh"
 
 // octopus
 #include "controller/trigger/Listener.hh"
@@ -63,8 +64,11 @@ std::list<Steppable *> WaveLevelSteps(Library &lib_p, RandomGenerator &rand_p)
 {
 	loadMinimalModels(lib_p);
 
-	Building building_l({20, 10}, true, lib_p.getBuildingModel("command_center"));
-	Unit unit_l({ 17, 10 }, false, lib_p.getUnitModel("worker"));
+	// load divinity library
+	fas::loadLibrary(lib_p);
+
+	Building building_l({20, 50}, true, lib_p.getBuildingModel("command_center"));
+	Unit unit_l({ 17, 50 }, false, lib_p.getUnitModel("worker"));
 
 	long anchor_l = 420;
 	std::map<std::string, Fixed> mapRes_l;
@@ -74,12 +78,12 @@ std::list<Steppable *> WaveLevelSteps(Library &lib_p, RandomGenerator &rand_p)
 	unsigned long timeTriggerAnchor_l = (anchor_l-60)*100;
 
 	std::list<WaveParam> params_l;
-	params_l.push_back({octopus::Vector(60,30), 6*60*100, 10, 40, 0});
-	params_l.push_back({octopus::Vector(100,30), 6*60*100, 50, 80, 0});
-	params_l.push_back({octopus::Vector(140,30), 6*60*100, 100, 120, 0});
-	params_l.push_back({octopus::Vector(180,30), 6*60*100, 200, 160, 0});
-	params_l.push_back({octopus::Vector(220,30), 6*60*100, 300, 160, 0});
-	params_l.push_back({octopus::Vector(220,30), 6*60*100, 1000, 160, 0});
+	params_l.push_back({octopus::Vector(60,50), octopus::Vector(20,50), 6*60*100, 10, 40, 100});
+	params_l.push_back({octopus::Vector(100,50), octopus::Vector(20,50), 6*60*100, 50, 80, 100});
+	params_l.push_back({octopus::Vector(140,50), octopus::Vector(20,50), 6*60*100, 100, 120, 100});
+	params_l.push_back({octopus::Vector(180,50), octopus::Vector(20,50), 6*60*100, 200, 160, 100});
+	params_l.push_back({octopus::Vector(220,50), octopus::Vector(20,50), 6*60*100, 300, 160, 100});
+	params_l.push_back({octopus::Vector(220,50), octopus::Vector(20,50), 6*60*100, 1000, 160, 100});
 
 	Trigger * triggerWave_l = new WaveSpawn(new ListenerStepCount(params_l.front().stepWait), lib_p, rand_p, params_l, defaultGenerator);
 	Trigger * triggerLose_l = new LoseTrigger(new ListenerEntityModelDied(&lib_p.getBuildingModel("command_center"), 0));
@@ -117,23 +121,23 @@ std::list<Steppable *> WaveLevelSteps(Library &lib_p, RandomGenerator &rand_p)
 	};
 
 	// zone 1
-	std::list<Steppable *> zone_l = createWallSpawners(lib_p, 40, 100, 20, 40, handle_l);
+	std::list<Steppable *> zone_l = createWallSpawners(lib_p, 40, 100, 40, 60, handle_l);
 	spawners_l.insert(spawners_l.end(), zone_l.begin(), zone_l.end());
 
 	// zone 2
-	zone_l = createWallSpawners(lib_p, 80, 100, 20, 40, handle_l);
+	zone_l = createWallSpawners(lib_p, 80, 100, 40, 60, handle_l);
 	spawners_l.insert(spawners_l.end(), zone_l.begin(), zone_l.end());
 
 	// zone 3
-	zone_l = createWallSpawners(lib_p, 120, 100, 20, 40, handle_l);
+	zone_l = createWallSpawners(lib_p, 120, 100, 40, 60, handle_l);
 	spawners_l.insert(spawners_l.end(), zone_l.begin(), zone_l.end());
 
 	// zone 4
-	zone_l = createWallSpawners(lib_p, 160, 100, 20, 40, handle_l);
+	zone_l = createWallSpawners(lib_p, 160, 100, 40, 60, handle_l);
 	spawners_l.insert(spawners_l.end(), zone_l.begin(), zone_l.end());
 
 	// zone 5
-	zone_l = createWallSpawners(lib_p, 200, 100, 20, 40, handle_l);
+	zone_l = createWallSpawners(lib_p, 200, 100, 40, 60, handle_l);
 	spawners_l.insert(spawners_l.end(), zone_l.begin(), zone_l.end());
 
 	return spawners_l;
@@ -204,7 +208,7 @@ std::list<Command *> WaveLevelCommands(Library &lib_p, RandomGenerator &rand_p)
 	std::list<Command *> commands_l {
 		// zone 0
 		createArenaSpawnCommmand(lib_p, rand_p, 10, 10, 20, 1, 1, 10, 0),
-		createArenaSpawnCommmand(lib_p, rand_p, 10, 70, 20, 1, 0, 0, 0),
+		createArenaSpawnCommmand(lib_p, rand_p, 10, 40, 20, 1, 0, 0, 0),
 		createArenaSpawnCommmand(lib_p, rand_p, 10, 70, 20, 1, 1, 10, 0),
 		// zone 1
 		createArenaSpawnCommmand(lib_p, rand_p, 50, 10, 20, 1, 1, 20, 500),

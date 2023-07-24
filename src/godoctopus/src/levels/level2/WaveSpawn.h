@@ -28,6 +28,8 @@ struct WaveParam
 {
 	/// @brief point where the unit will spawn
 	octopus::Vector spawnPoint;
+	/// @brief point where the unit will attack
+	octopus::Vector targetPoint;
 	/// @brief number of step to wait unit wave spawn
 	unsigned long stepWait;
 	/// @brief number of unit spawning

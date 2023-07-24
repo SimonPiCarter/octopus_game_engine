@@ -7,6 +7,7 @@
 #include "controller/trigger/Trigger.hh"
 #include "utils/RandomGenerator.hh"
 
+// THIS IS THE DEMO LEVEL
 #define LEVEL_ID_LEVEL_2 1001
 
 namespace octopus
