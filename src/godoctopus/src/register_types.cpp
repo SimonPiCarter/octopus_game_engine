@@ -4,6 +4,7 @@
 #include "Model.h"
 #include "ModelUpgrade.h"
 #include "LevelModel.h"
+#include "levels/level2/wave/Wave.h"
 
 #include <gdextension_interface.h>
 #include <godot_cpp/core/defs.hpp>
@@ -24,6 +25,9 @@ void initialize_godoctopus_module(godot::ModuleInitializationLevel p_level) {
     godot::ClassDB::register_class<godot::Model>();
     godot::ClassDB::register_class<godot::LevelModel>();
     godot::ClassDB::register_class<godot::ModelUpgrade>();
+    godot::ClassDB::register_class<godot::WaveContent>();
+    godot::ClassDB::register_class<godot::Wave>();
+    godot::ClassDB::register_class<godot::WavePool>();
 }
 
 void uninitialize_godoctopus_module(godot::ModuleInitializationLevel p_level) {
