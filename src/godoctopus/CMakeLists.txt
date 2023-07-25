@@ -17,10 +17,15 @@ file(GLOB_RECURSE SOURCES CONFIGURE_DEPENDS
         "${CMAKE_CURRENT_SOURCE_DIR}/src/*.hpp"
         "${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp")
 
-# Add a dynamic library called gameplay - this builds gameplay.dll
-add_library(godoctopus SHARED ${SOURCES})
+add_library(godoctopus_static ${SOURCES})
 
-target_include_directories(godoctopus PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/src")
-target_link_libraries(godoctopus PUBLIC godot::cpp fair_and_square_lib)
+target_include_directories(godoctopus_static PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/src")
+target_link_libraries(godoctopus_static PUBLIC godot::cpp fair_and_square_lib)
 
 source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}/src" PREFIX src FILES ${SOURCES})
+
+add_subdirectory(test)
+
+# Add a dynamic library called godoctopus - this builds godoctopus.dll
+add_library(godoctopus SHARED ${SOURCES})
+target_link_libraries(godoctopus PUBLIC godoctopus_static)
