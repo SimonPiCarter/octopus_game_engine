@@ -34,6 +34,7 @@
 #include "step/state/StateWinStep.hh"
 #include "step/team/TeamVisionStep.hh"
 #include "step/trigger/TriggerSpawn.hh"
+#include "utils/Binary.hh"
 
 // godot
 #include "controller/step/CameraStep.h"
@@ -60,7 +61,7 @@ public:
 	}
 };
 
-std::list<Steppable *> WaveLevelSteps(Library &lib_p, RandomGenerator &rand_p)
+std::list<Steppable *> WaveLevelSteps(Library &lib_p, RandomGenerator &rand_p, std::vector<WavePoolInfo> const &waveInfo_p)
 {
 	loadMinimalModels(lib_p);
 
@@ -231,23 +232,117 @@ std::list<Command *> WaveLevelCommands(Library &lib_p, RandomGenerator &rand_p)
 	return commands_l;
 }
 
+void writeWaveContentInfo(std::ofstream &file_p, WaveContentInfo const &info_p)
+{
+	file_p.write((char*)&info_p.steps, sizeof(info_p.steps));
+	size_t size_l = info_p.units.size();
+	file_p.write((char*)&size_l, sizeof(size_l));
+	for(WaveUnitCount const &unitCount_l : info_p.units)
+	{
+		writeString(file_p, unitCount_l.model);
+		file_p.write((char*)&unitCount_l.count, sizeof(unitCount_l.count));
+	}
+}
+
+void writeWavePoolInfo(std::ofstream &file_p, WavePoolInfo const &info_p)
+{
+	// write wave info
+	size_t size_l = info_p.infos.size();
+	file_p.write((char*)&size_l, sizeof(size_l));
+	for(WaveInfo const &waveInfo_l : info_p.infos)
+	{
+		// write ugprades
+		size_l = waveInfo_l.upgrades.size();
+		file_p.write((char*)&size_l, sizeof(size_l));
+		for(std::string const &up_l : waveInfo_l.upgrades)
+		{
+			writeString(file_p, up_l);
+		}
+		// write waves info
+		writeWaveContentInfo(file_p, waveInfo_l.mainWave);
+		writeWaveContentInfo(file_p, waveInfo_l.earlyWave);
+		// write drop coef
+		file_p.write((char*)&waveInfo_l.dropCoef, sizeof(waveInfo_l.dropCoef));
+	}
+}
+
 /// @brief write header for classic arena level
 void writeWaveLevelHeader(std::ofstream &file_p, WaveLevelHeader const &header_p)
 {
-    file_p.write((char*)&header_p.seed, sizeof(header_p.seed));
+	file_p.write((char*)&header_p.seed, sizeof(header_p.seed));
+
+	size_t size_l = header_p.tierWaveInfo.size();
+	file_p.write((char*)&size_l, sizeof(size_l));
+
+	for(WavePoolInfo const &info_l : header_p.tierWaveInfo)
+	{
+		writeWavePoolInfo(file_p, info_l);
+	}
 }
 
-/// @brief read header for classic arena level and return a pair of steppable and command
+void readWaveContentInfo(std::ifstream &file_p, WaveContentInfo &info_p)
+{
+	file_p.read((char*)&info_p.steps, sizeof(info_p.steps));
+	size_t size_l = 0;
+	file_p.read((char*)&size_l, sizeof(size_l));
+	for(size_t i = 0 ; i < size_l ; ++ i)
+	{
+		info_p.units.push_back(WaveUnitCount());
+		info_p.units.back().model = readString(file_p);
+		file_p.read((char*)&info_p.units.back().count, sizeof(info_p.units.back().count));
+	}
+}
+
+void readWavePoolInfo(std::ifstream &file_p, WavePoolInfo &info_p)
+{
+	// read wave info
+	size_t size_l = 0;
+	file_p.read((char*)&size_l, sizeof(size_l));
+	for(size_t i = 0 ; i < size_l ; ++ i)
+	{
+		WaveInfo waveInfo_l;
+		// read upgrades
+		size_t sizeUpgrades_l = 0;
+		file_p.read((char*)&sizeUpgrades_l, sizeof(sizeUpgrades_l));
+		for(size_t j = 0 ; j < sizeUpgrades_l ; ++ j)
+		{
+			std::string up_l = readString(file_p);
+			waveInfo_l.upgrades.push_back(up_l);
+		}
+		// read waves info
+		readWaveContentInfo(file_p, waveInfo_l.mainWave);
+		readWaveContentInfo(file_p, waveInfo_l.earlyWave);
+		// read drop coef
+		file_p.read((char*)&waveInfo_l.dropCoef, sizeof(waveInfo_l.dropCoef));
+		info_p.infos.push_back(waveInfo_l);
+	}
+}
+
+void readWaveLevelHeader(std::ifstream &file_p, WaveLevelHeader &header_r)
+{
+	file_p.read((char*)&header_r.seed, sizeof(header_r.seed));
+
+	size_t size_l = 0;
+	file_p.read((char*)&size_l, sizeof(size_l));
+
+	for(size_t i = 0 ; i < size_l ; ++ i)
+	{
+		WavePoolInfo info_l;
+		readWavePoolInfo(file_p, info_l);
+		header_r.tierWaveInfo.push_back(info_l);
+	}
+}
+
 std::pair<std::list<octopus::Steppable *>, std::list<octopus::Command *> > readWaveLevelHeader(octopus::Library &lib_p, std::ifstream &file_p,
 	octopus::RandomGenerator * &rand_p, WaveLevelHeader &header_r)
 {
-    file_p.read((char*)&header_r.seed, sizeof(header_r.seed));
+	readWaveLevelHeader(file_p, header_r);
 
 	delete rand_p;
 	rand_p = new octopus::RandomGenerator(header_r.seed);
 
 	std::pair<std::list<octopus::Steppable *>, std::list<octopus::Command *> > pair_l;
-	pair_l.first = WaveLevelSteps(lib_p, *rand_p);
+	pair_l.first = WaveLevelSteps(lib_p, *rand_p, header_r.tierWaveInfo);
 	pair_l.second = WaveLevelCommands(lib_p, *rand_p);
 	return pair_l;
 }

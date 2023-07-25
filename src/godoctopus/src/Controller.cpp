@@ -211,17 +211,23 @@ void Controller::load_level1(int seed_p, int nb_wave_p)
     init(commands_l, spawners_l, false, 50, _autoSaveFile);
 }
 
-void Controller::load_level2(int seed_p)
+void Controller::load_level2(int seed_p, WavePool const * waveTier1_p, WavePool const * waveTier2_p, WavePool const * waveTier3_p)
 {
     delete _rand;
     _rand = new octopus::RandomGenerator(seed_p);
-    std::list<octopus::Steppable *> spawners_l = level2::WaveLevelSteps(_lib, *_rand);
+    std::vector<WavePoolInfo> wavesInfo_l = {
+        convertToInfo(waveTier1_p),
+        convertToInfo(waveTier2_p),
+        convertToInfo(waveTier3_p),
+    };
+
+    std::list<octopus::Steppable *> spawners_l = level2::WaveLevelSteps(_lib, *_rand, wavesInfo_l);
     std::list<octopus::Command *> commands_l = level2::WaveLevelCommands(_lib, *_rand);
     // enable auto save
     newAutoSaveFile();
     writeLevelId(*_autoSaveFile, LEVEL_ID_LEVEL_2, 50);
     _currentLevel = LEVEL_ID_LEVEL_2;
-    _headerWriter = std::bind(level2::writeWaveLevelHeader, std::placeholders::_1, level2::WaveLevelHeader{seed_p});
+    _headerWriter = std::bind(level2::writeWaveLevelHeader, std::placeholders::_1, level2::WaveLevelHeader{seed_p, wavesInfo_l});
     _headerWriter(*_autoSaveFile);
     init(commands_l, spawners_l, false, 50, _autoSaveFile);
 }
@@ -1036,7 +1042,7 @@ void Controller::_bind_methods()
     ClassDB::bind_method(D_METHOD("load_dot_level", "size"), &Controller::load_dot_level);
     ClassDB::bind_method(D_METHOD("load_lifesteal_level", "size"), &Controller::load_lifesteal_level);
     ClassDB::bind_method(D_METHOD("load_level1", "seed", "nb_wave"), &Controller::load_level1);
-    ClassDB::bind_method(D_METHOD("load_level2", "seed"), &Controller::load_level2);
+    ClassDB::bind_method(D_METHOD("load_level2", "seed", "wavePoolTier1", "wavePoolTier2", "wavePoolTier3"), &Controller::load_level2);
     ClassDB::bind_method(D_METHOD("load_level_test_anchor", "seed"), &Controller::load_level_test_anchor);
     ClassDB::bind_method(D_METHOD("load_level_test_model_reading", "seed", "level_model"), &Controller::load_level_test_model_reading);
     ClassDB::bind_method(D_METHOD("load_duel_level", "seed", "div_player_1_p", "div_player_2_p"), &Controller::load_duel_level);

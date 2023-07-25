@@ -7,6 +7,8 @@
 #include "controller/trigger/Trigger.hh"
 #include "utils/RandomGenerator.hh"
 
+#include "level2/wave/WaveUnitCount.h"
+
 // THIS IS THE DEMO LEVEL
 #define LEVEL_ID_LEVEL_2 1001
 
@@ -24,18 +26,23 @@ namespace godot
 namespace level2
 {
 
-std::list<octopus::Steppable *> WaveLevelSteps(octopus::Library &lib_p, octopus::RandomGenerator &rand_p);
+std::list<octopus::Steppable *> WaveLevelSteps(octopus::Library &lib_p, octopus::RandomGenerator &rand_p, std::vector<WavePoolInfo> const &waveInfo_p);
 std::list<octopus::Command *> WaveLevelCommands(octopus::Library &lib_p, octopus::RandomGenerator &rand_p);
 
 struct WaveLevelHeader
 {
 	// seed for random generation
 	int seed;
+
+	/// @brief store every tier wave info
+	std::vector<WavePoolInfo> tierWaveInfo;
 };
 
-/// @brief write header for classic arena level
+/// @brief write header for classic wave level
 void writeWaveLevelHeader(std::ofstream &file_p, WaveLevelHeader const &header_p);
-/// @brief read header for classic arena level and return a pair of steppable and command (warning delete and reset rand_p using the written seed)
+/// @brief read header for classic wave level
+void readWaveLevelHeader(std::ifstream &file_p, WaveLevelHeader &header_r);
+/// @brief read header for classic wave level and return a pair of steppable and command (warning delete and reset rand_p using the written seed)
 std::pair<std::list<octopus::Steppable *>, std::list<octopus::Command *> > readWaveLevelHeader(octopus::Library &lib_p, std::ifstream &file_p,
 	octopus::RandomGenerator * &rand_p, WaveLevelHeader &header_r);
 
