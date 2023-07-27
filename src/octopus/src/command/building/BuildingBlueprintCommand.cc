@@ -50,9 +50,9 @@ void BuildingBlueprintCommand::registerCommand(Step & step_p, State const &state
 		building_l._player = _player;
 		if(_model->checkLegality(building_l, state_p))
 		{
-			Logger::getDebug() << "BuildingBlueprintCommand:: spawn building "<<_player <<std::endl;
-			step_p.addSteppable(new PlayerSpendResourceStep(_player, _model->_cost));
 			Handle buildingHandle_l = getNextHandle(step_p, state_p);
+			Logger::getDebug() << "BuildingBlueprintCommand:: spawn building "<<buildingHandle_l<<" for player "<<_player <<std::endl;
+			step_p.addSteppable(new PlayerSpendResourceStep(_player, _model->_cost));
 			step_p.addSteppable(new BuildingSpawnStep(buildingHandle_l, building_l, false));
 			for(Handle const &handle_l : _builders)
 			{
