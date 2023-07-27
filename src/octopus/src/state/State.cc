@@ -587,11 +587,15 @@ void updateGrid(State &state_p, Entity const *ent_p, bool set_p)
 								   to_int(std::max(Fixed(0.), ent_p->_pos.y-ent_p->_model._ray)),
 								   to_int(std::max(Fixed(0.), ent_p->_pos.y+ent_p->_model._ray+0.999))
 						};
-		for(long long x = boxNode_l._lowerX ; x < boxNode_l._upperX && x < state_p.getWorldSize() ; ++x)
+		Grid &pathGrid_l = state_p.getPathGrid();
+		long long sizeX_l = pathGrid_l.getSizeX();
+		long long sizeY_l = pathGrid_l.getSizeY();
+
+		for(long long x = boxNode_l._lowerX ; x < boxNode_l._upperX && x < sizeX_l ; ++x)
 		{
-			for(long long y = boxNode_l._lowerY ; y < boxNode_l._upperY && y < state_p.getWorldSize() ; ++y)
+			for(long long y = boxNode_l._lowerY ; y < boxNode_l._upperY && y < sizeY_l ; ++y)
 			{
-				GridNode *node_l = state_p.getPathGrid().getNode(x, y);
+				GridNode *node_l = pathGrid_l.getNode(x, y);
 				if(set_p)
 				{
 					node_l->setContent(ent_p);
@@ -632,12 +636,14 @@ VisionGrid * getVisionGrid(State &state_p, unsigned long team_p)
 
 bool checkGrid(State const &state_p, Entity const *ent_p, bool ignoreAbandonedTemples_p)
 {
-	long long size_l = state_p.getGridSize();
+	Grid const &pathGrid_l = state_p.getPathGrid();
+	long long sizeX_l = pathGrid_l.getSizeX();
+	long long sizeY_l = pathGrid_l.getSizeY();
 	// fill positional grid
-	Box<long long> box_l { std::min(std::max(0ll, to_int((ent_p->_pos.x-ent_p->_model._ray))), size_l),
-					  	   std::min(std::max(0ll, to_int((ent_p->_pos.x+ent_p->_model._ray+0.999))), size_l),
-					  	   std::min(std::max(0ll, to_int((ent_p->_pos.y-ent_p->_model._ray))), size_l),
-					  	   std::min(std::max(0ll, to_int((ent_p->_pos.y+ent_p->_model._ray+0.999))), size_l)
+	Box<long long> box_l { std::min(std::max(0ll, to_int((ent_p->_pos.x-ent_p->_model._ray))), sizeX_l),
+						   std::min(std::max(0ll, to_int((ent_p->_pos.x+ent_p->_model._ray+0.999))), sizeX_l),
+						   std::min(std::max(0ll, to_int((ent_p->_pos.y-ent_p->_model._ray))), sizeY_l),
+						   std::min(std::max(0ll, to_int((ent_p->_pos.y+ent_p->_model._ray+0.999))), sizeY_l)
 					};
 
 	// only chekc grid if static
@@ -647,7 +653,7 @@ bool checkGrid(State const &state_p, Entity const *ent_p, bool ignoreAbandonedTe
 		{
 			for(long long y = box_l._lowerY ; y < box_l._upperY; ++y)
 			{
-				GridNode const *node_l = state_p.getPathGrid().getNode(x, y);
+				GridNode const *node_l = pathGrid_l.getNode(x, y);
 				// only check free if we do not check abandonned temples
 				if(!node_l->isFree() && !ignoreAbandonedTemples_p)
 				{
