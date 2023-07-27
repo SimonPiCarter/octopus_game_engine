@@ -28,6 +28,7 @@ void initialize_godoctopus_module(godot::ModuleInitializationLevel p_level) {
     godot::ClassDB::register_class<godot::WaveContent>();
     godot::ClassDB::register_class<godot::Wave>();
     godot::ClassDB::register_class<godot::WavePool>();
+    godot::ClassDB::register_class<godot::WavePattern>();
 }
 
 void uninitialize_godoctopus_module(godot::ModuleInitializationLevel p_level) {

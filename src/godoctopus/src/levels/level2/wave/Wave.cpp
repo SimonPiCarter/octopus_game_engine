@@ -122,11 +122,45 @@ std::vector<Wave *> const &WavePool::getWaves() const
 
 void WavePool::_bind_methods()
 {
-    UtilityFunctions::print("Binding Wave methods");
+    UtilityFunctions::print("Binding WavePool methods");
 
     ClassDB::bind_method(D_METHOD("addWave", "wave"), &WavePool::addWave);
 
     ADD_GROUP("WavePool", "WavePool_");
+}
+
+/////////////////
+// WavePattern methods
+/////////////////
+
+void WavePattern::addWavePool(WavePool * wavePool_p)
+{
+    _wavePools.push_back(wavePool_p);
+}
+
+void WavePattern::setPlayer(int player_p)
+{
+    _player = player_p;
+}
+
+std::vector<WavePool *> const &WavePattern::getWavePools() const
+{
+    return _wavePools;
+}
+
+int WavePattern::getPlayer() const
+{
+    return _player;
+}
+
+void WavePattern::_bind_methods()
+{
+    UtilityFunctions::print("Binding WavePattern methods");
+
+    ClassDB::bind_method(D_METHOD("addWavePool", "wave_pool"), &WavePattern::addWavePool);
+    ClassDB::bind_method(D_METHOD("setPlayer", "player"), &WavePattern::setPlayer);
+
+    ADD_GROUP("WavePattern", "WavePattern_");
 }
 
 WavePoolInfo convertToInfo(WavePool const *pool_p)

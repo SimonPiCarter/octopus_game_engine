@@ -100,7 +100,7 @@ public:
     // Godot methods
     /////////////////
 
-    /// @brief set the main wave content
+    /// @brief add a wave to the pool
     void addWave(Wave * wave_p);
 
     /////////////////
@@ -114,6 +114,40 @@ public:
     static void _bind_methods();
 private:
     std::vector<Wave *> _waves;
+};
+
+/// @brief This class regroup list of waves
+/// a wave can be randomly pooled from the ones given
+class WavePattern : public Node {
+    GDCLASS(WavePattern, Node)
+
+public:
+
+    /////////////////
+    // Godot methods
+    /////////////////
+
+    /// @brief add a wave pool to this pattern
+    void addWavePool(WavePool * wavePool_p);
+
+    void setPlayer(int player_p);
+
+    /////////////////
+    // CPP only methods
+    /////////////////
+
+    std::vector<WavePool *> const &getWavePools() const;
+
+    int getPlayer() const;
+
+    // Will be called by Godot when the class is registered
+    // Use this to add properties to your class
+    static void _bind_methods();
+private:
+    std::vector<WavePool *> _wavePools;
+
+    /// @brief the player handle to be used to spawn the waves
+    int _player;
 };
 
 WavePoolInfo convertToInfo(WavePool const *pool_p);
