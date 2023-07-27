@@ -46,8 +46,6 @@ class cfllpspConan(ConanFile):
     def config_options(self):
         if self.settings.os == "Windows":
             del self.options.fPIC
-            self.options.with_graphic = True
-            self.options.with_godot = True
 
     # CMake configuration wrapper
     def configure_cmake(self):
