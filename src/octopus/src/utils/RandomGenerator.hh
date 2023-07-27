@@ -3,6 +3,7 @@
 
 #include <boost/random/mersenne_twister.hpp>
 #include <boost/random/uniform_int_distribution.hpp>
+#include <boost/random/uniform_real_distribution.hpp>
 
 namespace octopus
 {
@@ -16,6 +17,12 @@ public:
 	int roll(int min_p, int max_p)
 	{
 		boost::random::uniform_int_distribution<> distModel_l(min_p, max_p);
+		return distModel_l(_gen);
+	}
+
+	double roll_double(double min_p, double max_p)
+	{
+		boost::random::uniform_real_distribution<> distModel_l(min_p, max_p);
 		return distModel_l(_gen);
 	}
 
