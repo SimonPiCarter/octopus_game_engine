@@ -9,6 +9,8 @@
 #include "utils/RandomGenerator.hh"
 #include "utils/Vector.hh"
 
+#include "wave/WaveUnitCount.h"
+
 namespace octopus
 {
 	class Library;
@@ -30,24 +32,27 @@ struct WaveParam
 	octopus::Vector spawnPoint;
 	/// @brief point where the unit will attack
 	octopus::Vector targetPoint;
-	/// @brief number of step to wait unit wave spawn
-	unsigned long stepWait;
-	/// @brief number of unit spawning
-	unsigned long number;
 	/// @brief limits to remove
 	unsigned long limitX;
 	unsigned long limitY;
+	/// @brief wave pool info used to generate the wave
+	WavePoolInfo wavePool;
 };
 
 class WaveSpawn : public octopus::OneShotTrigger
 {
 public:
-	WaveSpawn(octopus::Listener * listener_p, octopus::Library const &lib_p, octopus::RandomGenerator &rand_p, std::list<WaveParam> const &param_p,
+	WaveSpawn(octopus::Listener * listener_p, WaveInfo const &currentWave_p, bool earlyWave_p,
+		octopus::Library const &lib_p, octopus::RandomGenerator &rand_p, std::list<WaveParam> const &param_p,
 		std::function<std::vector<octopus::Steppable *>(void)> waveStepGenerator_p);
 
 	virtual void trigger(octopus::State const &state_p, octopus::Step &step_p, unsigned long, octopus::TriggerData const &) const override;
 
 private:
+	/// @brief required because wave has already been picked from the current pool
+	WaveInfo const _currentWave;
+	/// @brief true if the ealy wave the the current wave is supposed to spawn
+	bool const _earlyWave;
 	octopus::Library const &_lib;
 	octopus::RandomGenerator &_rand;
 

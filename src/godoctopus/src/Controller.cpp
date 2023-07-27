@@ -215,11 +215,10 @@ void Controller::load_level2(int seed_p, WavePool const * waveTier1_p, WavePool 
 {
     delete _rand;
     _rand = new octopus::RandomGenerator(seed_p);
-    std::vector<WavePoolInfo> wavesInfo_l = {
-        convertToInfo(waveTier1_p),
-        convertToInfo(waveTier2_p),
-        convertToInfo(waveTier3_p),
-    };
+    std::vector<WavePoolInfo> wavesInfo_l;
+    if(waveTier1_p) { wavesInfo_l.push_back(convertToInfo(waveTier1_p)); }
+    if(waveTier2_p) { wavesInfo_l.push_back(convertToInfo(waveTier2_p)); }
+    if(waveTier3_p) { wavesInfo_l.push_back(convertToInfo(waveTier3_p)); }
 
     std::list<octopus::Steppable *> spawners_l = level2::WaveLevelSteps(_lib, *_rand, wavesInfo_l);
     std::list<octopus::Command *> commands_l = level2::WaveLevelCommands(_lib, *_rand);

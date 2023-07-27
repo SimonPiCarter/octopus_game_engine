@@ -1,6 +1,14 @@
 #ifndef __Godoctopus_WaveUnitCount__
 #define __Godoctopus_WaveUnitCount__
 
+#include <string>
+#include <vector>
+
+namespace octopus
+{
+	class RandomGenerator;
+} // namespace octopus
+
 namespace godot
 {
 
@@ -23,7 +31,7 @@ struct WaveInfo
 	std::vector<std::string> upgrades;
 	WaveContentInfo mainWave;
 	WaveContentInfo earlyWave;
-	double dropCoef = 0.;
+	int dropCoef = 0;
 };
 
 /// @brief store all possible waves for this pool
@@ -31,6 +39,9 @@ struct WavePoolInfo
 {
 	std::vector<WaveInfo> infos;
 };
+
+/// @brief chose a random wave from the given pool
+WaveInfo rollWave(octopus::RandomGenerator &rand_p, WavePoolInfo const &wavePool_p);
 
 } //godot
 

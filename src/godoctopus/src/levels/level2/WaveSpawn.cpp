@@ -24,9 +24,12 @@ namespace level2
 
 std::vector<octopus::Steppable*> defaultGenerator() { return {new WaveStep()}; }
 
-WaveSpawn::WaveSpawn(Listener * listener_p, Library const &lib_p, RandomGenerator &rand_p, std::list<WaveParam> const &param_p,
+WaveSpawn::WaveSpawn(Listener * listener_p, WaveInfo const &currentWave_p, bool earlyWave_p,
+	Library const &lib_p, RandomGenerator &rand_p, std::list<WaveParam> const &param_p,
     std::function<std::vector<octopus::Steppable *>(void)> waveStepGenerator_p) :
 		OneShotTrigger({listener_p}),
+		_currentWave(currentWave_p),
+		_earlyWave(earlyWave_p),
 		_lib(lib_p),
 		_rand(rand_p),
 		_params(param_p),
@@ -35,37 +38,57 @@ WaveSpawn::WaveSpawn(Listener * listener_p, Library const &lib_p, RandomGenerato
 
 void WaveSpawn::trigger(State const &state_p, Step &step_p, unsigned long, octopus::TriggerData const &) const
 {
+	WaveParam const & currentParams_l = _params.front();
+	// load content based on early wave boolean
+	WaveContentInfo const &content_l = _earlyWave?_currentWave.earlyWave:_currentWave.mainWave;
 	// handles to be used if last to trigger win condition
 	std::unordered_set<Handle> handles_l;
-	for(unsigned long i = 0 ; i < _params.front().number ; ++ i)
+	for(WaveUnitCount const &unitCount_l : content_l.units)
 	{
-		std::string modelName_l = genModelName(_rand);
-		Unit unit_l({ _params.front().spawnPoint.x+_rand.roll(-5,5), _params.front().spawnPoint.y-_rand.roll(-5,5) }, false, _lib.getUnitModel(modelName_l));
-		unit_l._player = 1;
-		Handle handle_l = getNextHandle(step_p, state_p);
-		step_p.addSteppable(new UnitSpawnStep(handle_l, unit_l));
-		step_p.addSteppable(new CommandSpawnStep(new EntityAttackMoveCommand(handle_l, handle_l, _params.front().targetPoint, 0, {_params.front().targetPoint}, true, true )));
-		handles_l.insert(handle_l);
+		std::string modelName_l = unitCount_l.model;
+
+		// spawn the given unit count
+		for(int i = 0 ; i < unitCount_l.count ; ++ i)
+		{
+			Unit unit_l({ currentParams_l.spawnPoint.x+_rand.roll(-5,5), currentParams_l.spawnPoint.y-_rand.roll(-5,5) }, false, _lib.getUnitModel(modelName_l));
+			unit_l._player = 1;
+			Handle handle_l = getNextHandle(step_p, state_p);
+			step_p.addSteppable(new UnitSpawnStep(handle_l, unit_l));
+			step_p.addSteppable(new CommandSpawnStep(new EntityAttackMoveCommand(handle_l, handle_l, currentParams_l.targetPoint, 0, {currentParams_l.targetPoint}, true, true )));
+			handles_l.insert(handle_l);
+		}
 	}
-	step_p.addSteppable(new StateRemoveConstraintPositionStep(0, _params.front().limitX, 0, _params.front().limitY, true, true));
-	step_p.addSteppable(new StateRemoveConstraintPositionStep(0, _params.front().limitY, 0, _params.front().limitX, true, false));
+	step_p.addSteppable(new StateRemoveConstraintPositionStep(0, currentParams_l.limitX, 0, currentParams_l.limitY, true, true));
+	step_p.addSteppable(new StateRemoveConstraintPositionStep(0, currentParams_l.limitY, 0, currentParams_l.limitX, true, false));
 
 	std::vector<octopus::Steppable *> stepsGenerated_l = _waveStepGenerator();
 	for(octopus::Steppable *step_l : stepsGenerated_l)
 	{
 		step_p.addSteppable(step_l);
 	}
-	std::list<WaveParam> nextParams_l = _params;
-    nextParams_l.pop_front();
 
-    if(nextParams_l.empty())
-    {
-        step_p.addSteppable(new TriggerSpawn(new WinTrigger(0, handles_l)));
-    }
-    else
-    {
-	    step_p.addSteppable(new TriggerSpawn(new WaveSpawn(new ListenerStepCount(nextParams_l.front().stepWait), _lib, _rand, nextParams_l, _waveStepGenerator)));
-    }
+	if(!_earlyWave)
+	{
+		// prepare next wave
+		std::list<WaveParam> nextParams_l = _params;
+		nextParams_l.pop_front();
+
+		if(nextParams_l.empty())
+		{
+			step_p.addSteppable(new TriggerSpawn(new WinTrigger(0, handles_l)));
+		}
+		else
+		{
+			WaveInfo nextWave_l = rollWave(_rand, nextParams_l.front().wavePool);
+
+			step_p.addSteppable(new TriggerSpawn(new WaveSpawn(new ListenerStepCount(nextWave_l.earlyWave.steps), nextWave_l, true, _lib, _rand, nextParams_l, _waveStepGenerator)));
+		}
+	}
+	else
+	{
+		// prepare main wave
+		step_p.addSteppable(new TriggerSpawn(new WaveSpawn(new ListenerStepCount(_currentWave.mainWave.steps), _currentWave, false, _lib, _rand, _params, _waveStepGenerator)));
+	}
 }
 
 WinTrigger::WinTrigger(unsigned long winner_p, std::unordered_set<octopus::Handle> const &handles_p)

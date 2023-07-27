@@ -78,15 +78,63 @@ std::list<Steppable *> WaveLevelSteps(Library &lib_p, RandomGenerator &rand_p, s
 	mapRes_l["Anchor"] = -anchor_l;
 	unsigned long timeTriggerAnchor_l = (anchor_l-60)*100;
 
-	std::list<WaveParam> params_l;
-	params_l.push_back({octopus::Vector(60,50), octopus::Vector(20,50), 6*60*100, 10, 40, 100});
-	params_l.push_back({octopus::Vector(100,50), octopus::Vector(20,50), 6*60*100, 50, 80, 100});
-	params_l.push_back({octopus::Vector(140,50), octopus::Vector(20,50), 6*60*100, 100, 120, 100});
-	params_l.push_back({octopus::Vector(180,50), octopus::Vector(20,50), 6*60*100, 200, 160, 100});
-	params_l.push_back({octopus::Vector(220,50), octopus::Vector(20,50), 6*60*100, 300, 160, 100});
-	params_l.push_back({octopus::Vector(220,50), octopus::Vector(20,50), 6*60*100, 1000, 160, 100});
+	std::vector<WavePoolInfo> waves_l = waveInfo_p;
+	if(waves_l.empty())
+	{
+		WavePoolInfo pool_l;
 
-	Trigger * triggerWave_l = new WaveSpawn(new ListenerStepCount(params_l.front().stepWait), lib_p, rand_p, params_l, defaultGenerator);
+		WaveInfo info_l;
+		info_l.mainWave.steps = 6*60*100;
+		info_l.mainWave.units = {{"square", 10}};
+		pool_l.infos = {info_l};
+		waves_l.push_back(pool_l);
+
+		info_l.mainWave.steps = 6*60*100;
+		info_l.mainWave.units = {{"triangle", 50}};
+		pool_l.infos = {info_l};
+		waves_l.push_back(pool_l);
+
+		info_l.mainWave.steps = 6*60*100;
+		info_l.mainWave.units = {{"circle", 100}};
+		pool_l.infos = {info_l};
+		waves_l.push_back(pool_l);
+
+		info_l.mainWave.steps = 6*60*100;
+		info_l.mainWave.units = {{"square", 200}};
+		pool_l.infos = {info_l};
+		waves_l.push_back(pool_l);
+
+		info_l.mainWave.steps = 6*60*100;
+		info_l.mainWave.units = {{"triangle", 300}};
+		pool_l.infos = {info_l};
+		waves_l.push_back(pool_l);
+
+		info_l.mainWave.steps = 6*60*100;
+		info_l.mainWave.units = {{"circle", 1000}};
+		pool_l.infos = {info_l};
+		waves_l.push_back(pool_l);
+	}
+
+	std::list<WaveParam> params_l;
+	for(size_t i = 0 ; i < waves_l.size() ; ++ i)
+	{
+		if(i == 0)
+			params_l.push_back({octopus::Vector(60,50), octopus::Vector(20,50), 40, 100, waves_l[i]});
+		else if(i==1)
+			params_l.push_back({octopus::Vector(100,50), octopus::Vector(20,50), 80, 100, waves_l[i]});
+		else if(i==2)
+			params_l.push_back({octopus::Vector(140,50), octopus::Vector(20,50), 120, 100, waves_l[i]});
+		else if(i==3)
+			params_l.push_back({octopus::Vector(180,50), octopus::Vector(20,50), 160, 100, waves_l[i]});
+		else
+			params_l.push_back({octopus::Vector(220,50), octopus::Vector(20,50), 160, 100, waves_l[i]});
+	}
+
+	WaveInfo firstWave_l = rollWave(rand_p, waves_l[0]);
+
+	Trigger * triggerWave_l = new WaveSpawn(new ListenerStepCount(firstWave_l.earlyWave.steps), firstWave_l, true,
+			lib_p, rand_p, params_l, defaultGenerator);
+
 	Trigger * triggerLose_l = new LoseTrigger(new ListenerEntityModelDied(&lib_p.getBuildingModel("command_center"), 0));
 
 	Handle handle_l = 0;
@@ -287,7 +335,7 @@ void readWaveContentInfo(std::ifstream &file_p, WaveContentInfo &info_p)
 	file_p.read((char*)&size_l, sizeof(size_l));
 	for(size_t i = 0 ; i < size_l ; ++ i)
 	{
-		info_p.units.push_back(WaveUnitCount());
+		info_p.units = {WaveUnitCount()};
 		info_p.units.back().model = readString(file_p);
 		file_p.read((char*)&info_p.units.back().count, sizeof(info_p.units.back().count));
 	}

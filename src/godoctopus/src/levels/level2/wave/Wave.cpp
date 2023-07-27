@@ -148,6 +148,7 @@ WavePoolInfo convertToInfo(WavePool const *pool_p)
         waveInfo_l.mainWave.steps = wave_l->getMainWave()->getStepsBeforeSpawn();
         waveInfo_l.earlyWave.units = wave_l->getEarlyWave()->getContent();
         waveInfo_l.earlyWave.steps = wave_l->getEarlyWave()->getStepsBeforeSpawn();
+        info_l.infos.push_back(waveInfo_l);
     }
 
     return info_l;
