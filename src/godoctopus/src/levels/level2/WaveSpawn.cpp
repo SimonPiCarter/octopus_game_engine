@@ -25,7 +25,7 @@ namespace level2
 std::vector<octopus::Steppable*> defaultGenerator() { return {new WaveStep()}; }
 
 WaveSpawn::WaveSpawn(Listener * listener_p, WaveInfo const &currentWave_p, bool earlyWave_p,
-	Library const &lib_p, RandomGenerator &rand_p, std::list<WaveParam> const &param_p,
+	Library const &lib_p, RandomGenerator &rand_p, std::list<WaveParam> const &param_p, unsigned long player_p,
     std::function<std::vector<octopus::Steppable *>(void)> waveStepGenerator_p) :
 		OneShotTrigger({listener_p}),
 		_currentWave(currentWave_p),
@@ -33,6 +33,7 @@ WaveSpawn::WaveSpawn(Listener * listener_p, WaveInfo const &currentWave_p, bool 
 		_lib(lib_p),
 		_rand(rand_p),
 		_params(param_p),
+		_player(player_p),
 		_waveStepGenerator(waveStepGenerator_p)
 {}
 
@@ -51,15 +52,18 @@ void WaveSpawn::trigger(State const &state_p, Step &step_p, unsigned long, octop
 		for(int i = 0 ; i < unitCount_l.count ; ++ i)
 		{
 			Unit unit_l({ currentParams_l.spawnPoint.x+_rand.roll(-5,5), currentParams_l.spawnPoint.y-_rand.roll(-5,5) }, false, _lib.getUnitModel(modelName_l));
-			unit_l._player = 1;
+			unit_l._player = _player;
 			Handle handle_l = getNextHandle(step_p, state_p);
 			step_p.addSteppable(new UnitSpawnStep(handle_l, unit_l));
 			step_p.addSteppable(new CommandSpawnStep(new EntityAttackMoveCommand(handle_l, handle_l, currentParams_l.targetPoint, 0, {currentParams_l.targetPoint}, true, true )));
 			handles_l.insert(handle_l);
 		}
 	}
-	step_p.addSteppable(new StateRemoveConstraintPositionStep(0, currentParams_l.limitX, 0, currentParams_l.limitY, true, true));
-	step_p.addSteppable(new StateRemoveConstraintPositionStep(0, currentParams_l.limitY, 0, currentParams_l.limitX, true, false));
+	if(!_earlyWave)
+	{
+		step_p.addSteppable(new StateRemoveConstraintPositionStep(0, currentParams_l.limitX, 0, currentParams_l.limitY, true, true));
+		step_p.addSteppable(new StateRemoveConstraintPositionStep(0, currentParams_l.limitY, 0, currentParams_l.limitX, true, false));
+	}
 
 	std::vector<octopus::Steppable *> stepsGenerated_l = _waveStepGenerator();
 	for(octopus::Steppable *step_l : stepsGenerated_l)
@@ -81,13 +85,15 @@ void WaveSpawn::trigger(State const &state_p, Step &step_p, unsigned long, octop
 		{
 			WaveInfo nextWave_l = rollWave(_rand, nextParams_l.front().wavePool);
 
-			step_p.addSteppable(new TriggerSpawn(new WaveSpawn(new ListenerStepCount(nextWave_l.earlyWave.steps), nextWave_l, true, _lib, _rand, nextParams_l, _waveStepGenerator)));
+			step_p.addSteppable(new TriggerSpawn(new WaveSpawn(new ListenerStepCount(nextWave_l.earlyWave.steps), nextWave_l, true,
+				_lib, _rand, nextParams_l, _player, _waveStepGenerator)));
 		}
 	}
 	else
 	{
 		// prepare main wave
-		step_p.addSteppable(new TriggerSpawn(new WaveSpawn(new ListenerStepCount(_currentWave.mainWave.steps), _currentWave, false, _lib, _rand, _params, _waveStepGenerator)));
+		step_p.addSteppable(new TriggerSpawn(new WaveSpawn(new ListenerStepCount(_currentWave.mainWave.steps), _currentWave, false,
+			_lib, _rand, _params, _player, _waveStepGenerator)));
 	}
 }
 

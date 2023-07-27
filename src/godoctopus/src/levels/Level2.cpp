@@ -61,7 +61,7 @@ public:
 	}
 };
 
-std::list<Steppable *> WaveLevelSteps(Library &lib_p, RandomGenerator &rand_p, std::vector<WavePoolInfo> const &waveInfo_p)
+std::list<Steppable *> WaveLevelSteps(Library &lib_p, RandomGenerator &rand_p, std::vector<WavePoolInfo> const &waveInfo_p, unsigned long player_p)
 {
 	loadMinimalModels(lib_p);
 
@@ -133,7 +133,7 @@ std::list<Steppable *> WaveLevelSteps(Library &lib_p, RandomGenerator &rand_p, s
 	WaveInfo firstWave_l = rollWave(rand_p, waves_l[0]);
 
 	Trigger * triggerWave_l = new WaveSpawn(new ListenerStepCount(firstWave_l.earlyWave.steps), firstWave_l, true,
-			lib_p, rand_p, params_l, defaultGenerator);
+			lib_p, rand_p, params_l, player_p, defaultGenerator);
 
 	Trigger * triggerLose_l = new LoseTrigger(new ListenerEntityModelDied(&lib_p.getBuildingModel("command_center"), 0));
 
@@ -318,6 +318,7 @@ void writeWavePoolInfo(std::ofstream &file_p, WavePoolInfo const &info_p)
 void writeWaveLevelHeader(std::ofstream &file_p, WaveLevelHeader const &header_p)
 {
 	file_p.write((char*)&header_p.seed, sizeof(header_p.seed));
+	file_p.write((char*)&header_p.player, sizeof(header_p.player));
 
 	size_t size_l = header_p.tierWaveInfo.size();
 	file_p.write((char*)&size_l, sizeof(size_l));
@@ -369,6 +370,7 @@ void readWavePoolInfo(std::ifstream &file_p, WavePoolInfo &info_p)
 void readWaveLevelHeader(std::ifstream &file_p, WaveLevelHeader &header_r)
 {
 	file_p.read((char*)&header_r.seed, sizeof(header_r.seed));
+	file_p.read((char*)&header_r.player, sizeof(header_r.player));
 
 	size_t size_l = 0;
 	file_p.read((char*)&size_l, sizeof(size_l));
@@ -390,7 +392,7 @@ std::pair<std::list<octopus::Steppable *>, std::list<octopus::Command *> > readW
 	rand_p = new octopus::RandomGenerator(header_r.seed);
 
 	std::pair<std::list<octopus::Steppable *>, std::list<octopus::Command *> > pair_l;
-	pair_l.first = WaveLevelSteps(lib_p, *rand_p, header_r.tierWaveInfo);
+	pair_l.first = WaveLevelSteps(lib_p, *rand_p, header_r.tierWaveInfo, header_r.player);
 	pair_l.second = WaveLevelCommands(lib_p, *rand_p);
 	return pair_l;
 }

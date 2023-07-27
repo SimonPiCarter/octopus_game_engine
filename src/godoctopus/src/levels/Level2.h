@@ -26,13 +26,16 @@ namespace godot
 namespace level2
 {
 
-std::list<octopus::Steppable *> WaveLevelSteps(octopus::Library &lib_p, octopus::RandomGenerator &rand_p, std::vector<WavePoolInfo> const &waveInfo_p);
+std::list<octopus::Steppable *> WaveLevelSteps(octopus::Library &lib_p, octopus::RandomGenerator &rand_p, std::vector<WavePoolInfo> const &waveInfo_p, unsigned long player_p);
 std::list<octopus::Command *> WaveLevelCommands(octopus::Library &lib_p, octopus::RandomGenerator &rand_p);
 
 struct WaveLevelHeader
 {
 	// seed for random generation
 	int seed;
+
+	/// @brief player to spawn waves
+	unsigned long player;
 
 	/// @brief store every tier wave info
 	std::vector<WavePoolInfo> tierWaveInfo;

@@ -43,7 +43,7 @@ class WaveSpawn : public octopus::OneShotTrigger
 {
 public:
 	WaveSpawn(octopus::Listener * listener_p, WaveInfo const &currentWave_p, bool earlyWave_p,
-		octopus::Library const &lib_p, octopus::RandomGenerator &rand_p, std::list<WaveParam> const &param_p,
+		octopus::Library const &lib_p, octopus::RandomGenerator &rand_p, std::list<WaveParam> const &param_p, unsigned long player_p,
 		std::function<std::vector<octopus::Steppable *>(void)> waveStepGenerator_p);
 
 	virtual void trigger(octopus::State const &state_p, octopus::Step &step_p, unsigned long, octopus::TriggerData const &) const override;
@@ -57,6 +57,7 @@ private:
 	octopus::RandomGenerator &_rand;
 
 	std::list<WaveParam> _params;
+	unsigned long _player;
 
 	std::function<std::vector<octopus::Steppable *>(void)> _waveStepGenerator;
 };

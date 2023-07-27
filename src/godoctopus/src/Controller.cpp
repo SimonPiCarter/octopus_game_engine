@@ -211,26 +211,31 @@ void Controller::load_level1(int seed_p, int nb_wave_p)
     init(commands_l, spawners_l, false, 50, _autoSaveFile);
 }
 
-void Controller::load_level2(int seed_p, WavePool const * waveTier1_p, WavePool const * waveTier2_p, WavePool const * waveTier3_p)
+void Controller::load_level2(int seed_p, WavePattern const * wavePattern_p)
 {
     delete _rand;
     _rand = new octopus::RandomGenerator(seed_p);
     std::vector<WavePoolInfo> wavesInfo_l;
-    // add twice each wave
-    if(waveTier1_p) { wavesInfo_l.push_back(convertToInfo(waveTier1_p)); }
-    if(waveTier1_p) { wavesInfo_l.push_back(convertToInfo(waveTier1_p)); }
-    if(waveTier2_p) { wavesInfo_l.push_back(convertToInfo(waveTier2_p)); }
-    if(waveTier2_p) { wavesInfo_l.push_back(convertToInfo(waveTier2_p)); }
-    if(waveTier3_p) { wavesInfo_l.push_back(convertToInfo(waveTier3_p)); }
-    if(waveTier3_p) { wavesInfo_l.push_back(convertToInfo(waveTier3_p)); }
+    // add all patterns
+    for(WavePool const * pool_l : wavePattern_p->getWavePools())
+    {
+        wavesInfo_l.push_back(convertToInfo(pool_l));
+    }
 
-    std::list<octopus::Steppable *> spawners_l = level2::WaveLevelSteps(_lib, *_rand, wavesInfo_l);
+    if(wavePattern_p->getPlayer() < 0)
+    {
+        UtilityFunctions::push_error("Cannot load level 2 because player index < 0");
+        return;
+    }
+    unsigned long player_l = wavePattern_p->getPlayer();
+
+    std::list<octopus::Steppable *> spawners_l = level2::WaveLevelSteps(_lib, *_rand, wavesInfo_l, player_l);
     std::list<octopus::Command *> commands_l = level2::WaveLevelCommands(_lib, *_rand);
     // enable auto save
     newAutoSaveFile();
     writeLevelId(*_autoSaveFile, LEVEL_ID_LEVEL_2, 50);
     _currentLevel = LEVEL_ID_LEVEL_2;
-    _headerWriter = std::bind(level2::writeWaveLevelHeader, std::placeholders::_1, level2::WaveLevelHeader{seed_p, wavesInfo_l});
+    _headerWriter = std::bind(level2::writeWaveLevelHeader, std::placeholders::_1, level2::WaveLevelHeader{seed_p, player_l, wavesInfo_l});
     _headerWriter(*_autoSaveFile);
     init(commands_l, spawners_l, false, 50, _autoSaveFile);
 }
@@ -1045,7 +1050,7 @@ void Controller::_bind_methods()
     ClassDB::bind_method(D_METHOD("load_dot_level", "size"), &Controller::load_dot_level);
     ClassDB::bind_method(D_METHOD("load_lifesteal_level", "size"), &Controller::load_lifesteal_level);
     ClassDB::bind_method(D_METHOD("load_level1", "seed", "nb_wave"), &Controller::load_level1);
-    ClassDB::bind_method(D_METHOD("load_level2", "seed", "wavePoolTier1", "wavePoolTier2", "wavePoolTier3"), &Controller::load_level2);
+    ClassDB::bind_method(D_METHOD("load_level2", "seed", "wave_pattern"), &Controller::load_level2);
     ClassDB::bind_method(D_METHOD("load_level_test_anchor", "seed"), &Controller::load_level_test_anchor);
     ClassDB::bind_method(D_METHOD("load_level_test_model_reading", "seed", "level_model"), &Controller::load_level_test_model_reading);
     ClassDB::bind_method(D_METHOD("load_duel_level", "seed", "div_player_1_p", "div_player_2_p"), &Controller::load_duel_level);

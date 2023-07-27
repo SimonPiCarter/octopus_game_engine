@@ -147,7 +147,7 @@ private:
     std::vector<WavePool *> _wavePools;
 
     /// @brief the player handle to be used to spawn the waves
-    int _player;
+    int _player = 0;
 };
 
 WavePoolInfo convertToInfo(WavePool const *pool_p);
