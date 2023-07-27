@@ -4,10 +4,11 @@ namespace octopus
 {
 bool Logger::_debug = false;
 std::mutex Logger::_mutex;
+std::ofstream Logger::_logFile = std::ofstream("octopus.log");
 
 
-LoggerHandler::LoggerHandler(std::mutex &mutex_p, bool shouldLog_p) : _mutex(mutex_p), _shouldLog(shouldLog_p) {}
-LoggerHandler::LoggerHandler(LoggerHandler const &other_p) : _mutex(other_p._mutex), _shouldLog(other_p._shouldLog) {}
+LoggerHandler::LoggerHandler(std::mutex &mutex_p, std::ofstream &logFile_p, bool shouldLog_p) : _mutex(mutex_p), _logFile(logFile_p), _shouldLog(shouldLog_p) {}
+LoggerHandler::LoggerHandler(LoggerHandler const &other_p) : _mutex(other_p._mutex), _logFile(other_p._logFile), _shouldLog(other_p._shouldLog) {}
 
 LoggerHandler::~LoggerHandler()
 {
@@ -15,17 +16,18 @@ LoggerHandler::~LoggerHandler()
 	{
 		std::lock_guard<std::mutex> lock_l(_mutex);
 		std::cout<<this->str();
+		_logFile<<this->str();
 	}
 }
 
 LoggerHandler Logger::getNormal()
 {
-	return LoggerHandler(_mutex, true);
+	return LoggerHandler(_mutex, _logFile, true);
 }
 
 DebugLoggerHandler Logger::getDebug()
 {
-	return DebugLoggerHandler(_mutex, _debug);
+	return DebugLoggerHandler(_mutex, _logFile, _debug);
 }
 
 }

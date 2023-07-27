@@ -4,6 +4,7 @@
 #include <mutex>
 #include <sstream>
 #include <iostream>
+#include <fstream>
 
 namespace octopus
 {
@@ -13,7 +14,7 @@ namespace octopus
 	class LoggerHandler : public std::ostringstream
 	{
 	public:
-		explicit LoggerHandler(std::mutex &mutex_p, bool shouldLog_p);
+		explicit LoggerHandler(std::mutex &mutex_p, std::ofstream &logFile_p, bool shouldLog_p);
 		LoggerHandler(LoggerHandler const &other_p);
 
 		~LoggerHandler();
@@ -21,11 +22,12 @@ namespace octopus
 	private:
 		std::mutex &_mutex;
 		bool _shouldLog;
+		std::ofstream &_logFile;
 	};
 
 	class LoggerVoider {
 	public:
-		explicit LoggerVoider(std::mutex &, bool) {}
+		explicit LoggerVoider(std::mutex &, std::ofstream &, bool) {}
 		LoggerVoider(LoggerVoider const &) {}
 	};
 
@@ -47,6 +49,7 @@ namespace octopus
 	private:
 		static bool _debug;
 		static std::mutex _mutex;
+		static std::ofstream _logFile;
 	};
 }
 
