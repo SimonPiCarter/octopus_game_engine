@@ -281,4 +281,99 @@ void Model::_bind_methods()
     ADD_GROUP("Model", "Model_");
 }
 
+void ModelView::init(Controller const *controller_p, String const &name_p)
+{
+	_model = &controller_p->getLib().getEntityModel(name_p.utf8().get_data());
+}
+
+TypedArray<String> ModelView::get_cost_resources_names() const
+{
+    TypedArray<String> resourcesNames_l;
+    for(auto &&pair_l : _model->_cost)
+    {
+        resourcesNames_l.push_back(pair_l.first.c_str());
+    }
+    return resourcesNames_l;
+}
+
+float ModelView::get_cost_resource_quantity(String const &res_p) const
+{
+    std::string resType_l(res_p.utf8().get_data());
+    return octopus::to_double(_model->_cost.at(resType_l));
+}
+
+TypedArray<String> ModelView::get_no_building_requirements() const
+{
+    TypedArray<String> req_l;
+    for(std::string const &build_l : _model->_requirements._noBuildings)
+    {
+        req_l.push_back(build_l.c_str());
+    }
+    return req_l;
+}
+
+TypedArray<String> ModelView::get_building_requirements() const
+{
+    TypedArray<String> req_l;
+    for(std::string const &build_l : _model->_requirements._buildings)
+    {
+        req_l.push_back(build_l.c_str());
+    }
+    return req_l;
+}
+
+TypedArray<String> ModelView::get_upgrade_requirements_min() const
+{
+    TypedArray<String> req_l;
+    for(auto &&pair_l : _model->_requirements._upgradeLvl)
+    {
+        req_l.push_back(pair_l.first.c_str());
+    }
+    return req_l;
+}
+
+int ModelView::get_upgrade_requirements_min_lvl(String const &up_p) const
+{
+    std::string up_l(up_p.utf8().get_data());
+    return _model->_requirements._upgradeLvl.at(up_l);
+}
+
+TypedArray<String> ModelView::get_upgrade_requirements_max() const
+{
+    TypedArray<String> req_l;
+    for(auto &&pair_l : _model->_requirements._upgradeLvlMax)
+    {
+        req_l.push_back(pair_l.first.c_str());
+    }
+    return req_l;
+}
+
+int ModelView::get_upgrade_requirements_max_lvl(String const &up_p) const
+{
+    std::string up_l(up_p.utf8().get_data());
+    return _model->_requirements._upgradeLvlMax.at(up_l);
+}
+
+void ModelView::_bind_methods()
+{
+    UtilityFunctions::print("Binding ModelView methods");
+
+    // general
+    ClassDB::bind_method(D_METHOD("init", "controller", "name"), &ModelView::init);
+
+    //cost
+    ClassDB::bind_method(D_METHOD("get_cost_resources_names"), &ModelView::get_cost_resources_names);
+    ClassDB::bind_method(D_METHOD("get_cost_resource_quantity", "res"), &ModelView::get_cost_resource_quantity);
+
+    // req
+    ClassDB::bind_method(D_METHOD("get_no_building_requirements"), &ModelView::get_no_building_requirements);
+    ClassDB::bind_method(D_METHOD("get_building_requirements"), &ModelView::get_building_requirements);
+    ClassDB::bind_method(D_METHOD("get_upgrade_requirements_min"), &ModelView::get_upgrade_requirements_min);
+    ClassDB::bind_method(D_METHOD("get_upgrade_requirements_min_lvl", "up"), &ModelView::get_upgrade_requirements_min_lvl);
+    ClassDB::bind_method(D_METHOD("get_upgrade_requirements_max"), &ModelView::get_upgrade_requirements_max);
+    ClassDB::bind_method(D_METHOD("get_upgrade_requirements_max_lvl", "up"), &ModelView::get_upgrade_requirements_max_lvl);
+
+    ADD_GROUP("ModelView", "ModelView_");
+}
+
 }

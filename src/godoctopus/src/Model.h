@@ -48,7 +48,9 @@ public:
     /////////////////
     //    Entity   //
     /////////////////
+    // cost
     void add_cost(String const &res_p, int qty_p);
+    // damage
     void set_attack_info(int damage_p, int armor_p, float range_p, int windup_p, int fullReload_p);
     void add_bonus_damage(String const &model_p, int bonus_p);
     // attack_modifiers
@@ -62,6 +64,7 @@ public:
     void add_building_requirements(String const &name_p);
     void add_upgrade_lvl_requirements_min(String const &name_p, int level_p);
     void add_upgrade_lvl_requirements_max(String const &name_p, int level_p);
+
 
     /////////////////
     //   Building  //
@@ -82,6 +85,36 @@ private:
     octopus::EntityModel *_model { nullptr };
     octopus::BuildingModel *_buildingModel { nullptr };
     octopus::UnitModel *_unitModel { nullptr };
+};
+
+
+class ModelView : public Node {
+    GDCLASS(ModelView, Node)
+
+public:
+    // Will be called by Godot when the class is registered
+    // Use this to add properties to your class
+    static void _bind_methods();
+
+    /// @brief Initialize ModelView with the given model
+    /// @param controller_p
+    /// @param name_p
+    void init(Controller const *controller_p, String const &name_p);
+
+    // cost
+    TypedArray<String> get_cost_resources_names() const;
+    float get_cost_resource_quantity(String const &res_p) const;
+
+    // requirements
+    TypedArray<String> get_no_building_requirements() const;
+    TypedArray<String> get_building_requirements() const;
+    TypedArray<String> get_upgrade_requirements_min() const;
+    int get_upgrade_requirements_min_lvl(String const &up_p) const;
+    TypedArray<String> get_upgrade_requirements_max() const;
+    int get_upgrade_requirements_max_lvl(String const &up_p) const;
+
+private:
+    octopus::EntityModel const *_model { nullptr };
 };
 
 }

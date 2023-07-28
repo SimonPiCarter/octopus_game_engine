@@ -23,6 +23,7 @@ void initialize_godoctopus_module(godot::ModuleInitializationLevel p_level) {
     godot::ClassDB::register_class<godot::Entity>();
     godot::ClassDB::register_class<godot::Option>();
     godot::ClassDB::register_class<godot::Model>();
+    godot::ClassDB::register_class<godot::ModelView>();
     godot::ClassDB::register_class<godot::LevelModel>();
     godot::ClassDB::register_class<godot::ModelUpgrade>();
     godot::ClassDB::register_class<godot::WaveContent>();
