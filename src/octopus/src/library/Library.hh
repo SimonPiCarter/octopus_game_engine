@@ -38,6 +38,8 @@ public:
 	bool hasUpgrade(std::string const &id_p) const;
 private:
 	std::unordered_map<std::string, EntityModel *> _mapEntityModel;
+	/// @brief store the entity really stored as entity to clean memory
+	std::unordered_map<std::string, EntityModel *> _mapEntityModelRegisteredAsEntity;
 	std::unordered_map<std::string, BuildingModel *> _mapBuildingModel;
 	std::unordered_map<std::string, UnitModel *> _mapUnitModel;
 	std::unordered_map<std::string, Upgrade *> _mapUpgrade;
