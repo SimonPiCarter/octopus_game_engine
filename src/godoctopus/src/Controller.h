@@ -174,6 +174,7 @@ public:
     std::map<unsigned long, AbstractOptionManager *> const &getOptionManagers() const;
 
     octopus::Library &getLib();
+    octopus::Library const &getLib() const;
 private:
     void newAutoSaveFile();
     octopus::Controller * _controller = nullptr;

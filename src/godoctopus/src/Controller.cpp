@@ -1152,6 +1152,11 @@ octopus::Library &Controller::getLib()
     return _lib;
 }
 
+octopus::Library const &Controller::getLib() const
+{
+    return _lib;
+}
+
 void Controller::newAutoSaveFile()
 {
     delete _autoSaveFile;
