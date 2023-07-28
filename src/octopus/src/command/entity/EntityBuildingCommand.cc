@@ -108,7 +108,7 @@ bool EntityBuildingCommand::applyCommand(Step & step_p, State const &state_p, Co
 	else
 	{
 		Logger::getDebug() << "EntityBuildingCommand:: building"<<std::endl;
-		step_p.addSteppable(new BuildingStep(_target, 1.));
+		step_p.addSteppable(new BuildingStep(_target, ent_l->getProduction()));
 	}
 
 	// not over

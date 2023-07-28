@@ -27,7 +27,7 @@ struct Upgrade
     std::map<std::string, Fixed> _cost;
 
     /// @brief time required to produce the upgrade
-    Fixed _productionTime;
+    int _productionTime;
 
     /// @brief id of the upgrade
     std::string _id;
