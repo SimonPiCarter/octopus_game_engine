@@ -171,7 +171,7 @@ namespace RVO {
 		}
 		indexes_l.push_back(static_cast<int>(agents_.size()));
 
-		std::atomic_int finished_l = 0;
+		int finished_l = 0;
 		std::mutex terminationMutex_l;
 		std::condition_variable termination_l;
 
@@ -189,10 +189,8 @@ namespace RVO {
 						agents_[i].computeNewVelocity();
 					}
 				}
-				{
-					std::unique_lock<std::mutex> lock_l(terminationMutex_l);
-					finished_l++;
-				}
+				std::unique_lock<std::mutex> lock_l(terminationMutex_l);
+				finished_l++;
 				termination_l.notify_all();
 			}
 			);
