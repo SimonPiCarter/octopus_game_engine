@@ -21,7 +21,8 @@ struct ArenaInfo
 };
 
 std::list<octopus::Steppable *> ArenaLevelSteps(octopus::Library &lib_p, size_t number_p);
-std::list<octopus::Steppable *> ArenaLevelSteps(octopus::Library &lib_p, std::vector<ArenaInfo> const &you_p, std::vector<ArenaInfo> const &them_p);
+std::list<octopus::Steppable *> ArenaLevelSteps(octopus::Library &lib_p, std::vector<ArenaInfo> const &you_p,
+											std::vector<ArenaInfo> const &them_p, bool loadMinimalModel_p=false);
 
 /// @brief Create a steps to setup a level where you need to dodge kamikaze units
 /// @param numberYou_p number of unit to dodge

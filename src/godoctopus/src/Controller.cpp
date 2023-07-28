@@ -126,7 +126,7 @@ void Controller::load_arena_level(TypedArray<int> const &size_you_p, TypedArray<
         String str_l = model_them_p[i];
         them_l.push_back({size_them_p[i], std::string(str_l.utf8().get_data())});
     }
-    std::list<octopus::Steppable *> spawners_l = ArenaLevelSteps(_lib, you_l, them_l);
+    std::list<octopus::Steppable *> spawners_l = ArenaLevelSteps(_lib, you_l, them_l, true);
     std::list<octopus::Command *> commands_l = ArenaLevelCommands(_lib);
     // enable auto save
     newAutoSaveFile();

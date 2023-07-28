@@ -65,9 +65,16 @@ std::list<Steppable *> ArenaLevelSteps(Library &lib_p, size_t number_p)
 	return spawners_l;
 }
 
-std::list<octopus::Steppable *> ArenaLevelSteps(octopus::Library &lib_p, std::vector<ArenaInfo> const &you_p, std::vector<ArenaInfo> const &them_p)
+std::list<octopus::Steppable *> ArenaLevelSteps(octopus::Library &lib_p, std::vector<ArenaInfo> const &you_p, std::vector<ArenaInfo> const &them_p, bool loadMinimalModel_p)
 {
-	loadModels(lib_p);
+	if(loadMinimalModel_p)
+	{
+		loadMinimalModels(lib_p);
+	}
+	else
+	{
+		loadModels(lib_p);
+	}
 
     octopus::PatternHandler handler_l;
 	octopus::VisionPattern pattern_l = handler_l.getPattern(50);
