@@ -638,7 +638,7 @@ Command * readCommand(std::ifstream &file_p, Library const &lib_p)
         read(file_p, &attackMove_l);
         read(file_p, &neverStop_l);
 
-        cmd_l = new EntityFlockMoveCommand(handles_l, point_l, neverStop_l);
+        cmd_l = new EntityFlockMoveCommand(handles_l, point_l, attackMove_l, neverStop_l);
     }
     else if(cmdId_p == 16)
     {
