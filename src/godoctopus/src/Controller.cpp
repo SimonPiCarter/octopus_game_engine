@@ -134,7 +134,6 @@ void Controller::load_arena_level(TypedArray<int> const &size_you_p, TypedArray<
     _currentLevel = LEVEL_ID_ARENA;
     _headerWriter = std::bind(writeArenaLevelHeader, std::placeholders::_1, ArenaLevelHeader {you_l, them_l});
     _headerWriter(*_autoSaveFile);
-    // writeArenaLevelHeader(*_autoSaveFile, you_l, them_l);
     // init with autosave
     init(commands_l, spawners_l, false, 10, _autoSaveFile);
 }
@@ -149,7 +148,6 @@ void Controller::load_kamikaze_level(int you_p, int them_p, bool fast_p)
     _currentLevel = LEVEL_ID_ARENA_KAMIKAZE;
     _headerWriter = std::bind(writeArenaKamikazeHeader, std::placeholders::_1, KamikazeHeader {size_t(you_p), size_t(them_p), fast_p});
     _headerWriter(*_autoSaveFile);
-    // writeArenaKamikazeHeader(*_autoSaveFile, you_p, them_p, fast_p);
     // init with autosave
     init(commands_l, spawners_l, false, 10, _autoSaveFile);
 }
@@ -164,7 +162,6 @@ void Controller::load_maze_level(int size_p)
     _currentLevel = LEVEL_ID_MAZE;
     _headerWriter = std::bind(writeMazeLevelHeader, std::placeholders::_1, size_p);
     _headerWriter(*_autoSaveFile);
-    // writeMazeLevelHeader(*_autoSaveFile, size_p);
     init(commands_l, spawners_l, false, 50, _autoSaveFile);
 }
 
