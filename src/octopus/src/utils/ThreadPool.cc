@@ -41,9 +41,11 @@ bool ThreadPool::busy() {
 }
 
 void ThreadPool::stop() {
-    std::unique_lock<std::mutex> lock(queue_mutex);
-    should_terminate = true;
-    mutex_condition.notify_all();
+    {
+        std::unique_lock<std::mutex> lock(queue_mutex);
+        should_terminate = true;
+        mutex_condition.notify_all();
+    }
     for (std::thread& active_thread : threads) {
         active_thread.join();
     }
