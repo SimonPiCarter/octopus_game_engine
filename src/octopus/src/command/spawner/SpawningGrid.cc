@@ -17,9 +17,9 @@ SpawningGrid::SpawningGrid(unsigned long size_p)
 /// @brief updated internal grid
 void SpawningGrid::fillGrid(unsigned long x, unsigned long y, unsigned long size_p)
 {
-	for(unsigned long i = x ; i < x + size_p ; ++ i)
+	for(unsigned long i = x ; i < x + size_p && i < _grid.size() ; ++ i)
 	{
-		for(unsigned long j = y ; j < y + size_p ; ++ j)
+		for(unsigned long j = y ; j < y + size_p && j < _grid[i].size() ; ++ j)
 		{
 			_grid[i][j] = true;
 		}
@@ -29,9 +29,9 @@ void SpawningGrid::fillGrid(unsigned long x, unsigned long y, unsigned long size
 /// @brief check if grid is free
 bool SpawningGrid::isFree(unsigned long x, unsigned long y, unsigned long size_p) const
 {
-	for(unsigned long i = x ; i < x + size_p ; ++ i)
+	for(unsigned long i = x ; i < x + size_p && i < _grid.size() ; ++ i)
 	{
-		for(unsigned long j = y ; j < y + size_p ; ++ j)
+		for(unsigned long j = y ; j < y + size_p && j < _grid[i].size() ; ++ j)
 		{
 			if(_grid[i][j])
 			{
