@@ -1,12 +1,15 @@
 #ifndef __Godoctopus_Model__
 #define __Godoctopus_Model__
 
+#include <map>
 #include <string>
 #include <cstdint>
 #include <godot_cpp/godot.hpp>
 #include <godot_cpp/classes/node2d.hpp>
 
 #include "state/Handle.hh"
+#include "state/model/requirements/Requirements.hh"
+#include "utils/Fixed.hh"
 
 namespace octopus
 {
@@ -87,7 +90,7 @@ private:
     octopus::UnitModel *_unitModel { nullptr };
 };
 
-
+/// @brief object that can be loaded from either entity or upgrades
 class ModelView : public Node {
     GDCLASS(ModelView, Node)
 
@@ -99,7 +102,7 @@ public:
     /// @brief Initialize ModelView with the given model
     /// @param controller_p
     /// @param name_p
-    void init(Controller const *controller_p, String const &name_p);
+    void init(Controller const *controller_p, int producer_p, String const &name_p);
 
     // cost
     TypedArray<String> get_cost_resources_names() const;
@@ -113,8 +116,17 @@ public:
     TypedArray<String> get_upgrade_requirements_max() const;
     int get_upgrade_requirements_max_lvl(String const &up_p) const;
 
+    // time
+    float get_production_time() const;
+
 private:
-    octopus::EntityModel const *_model { nullptr };
+    /// @brief requirements
+    octopus::Requirements _requirements;
+
+    /// @brief cost
+    std::map<std::string, octopus::Fixed> _cost;
+
+    float _productionTime = 0;
 };
 
 }
