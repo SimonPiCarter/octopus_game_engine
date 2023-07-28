@@ -174,6 +174,7 @@ namespace RVO {
 		int finished_l = 0;
 		std::mutex terminationMutex_l;
 		std::condition_variable termination_l;
+		std::unique_lock<std::mutex> lock_l(terminationMutex_l);
 
 		for(int n = 0 ; n < nbThreads_l ; ++ n)
 		{
@@ -196,7 +197,6 @@ namespace RVO {
 			);
 		}
 
-		std::unique_lock<std::mutex> lock_l(terminationMutex_l);
 		if(finished_l < nbThreads_l)
 		{
 			termination_l.wait(lock_l, [&]{ return finished_l >= nbThreads_l ; });
