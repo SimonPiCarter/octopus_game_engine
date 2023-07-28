@@ -109,6 +109,12 @@ int Entity::get_team(Controller const *controller_p) const
     return player_l->_team;
 }
 
+float Entity::get_ray(Controller const *controller_p) const
+{
+    octopus::Entity const *ent_l = controller_p->getEntity(_handle);
+    return octopus::to_double(ent_l->_model._ray);
+}
+
 String Entity::get_model(Controller const *controller_p) const
 {
     octopus::Entity const *ent_l = controller_p->getEntity(_handle);
@@ -242,6 +248,7 @@ void Entity::_bind_methods()
     ClassDB::bind_method(D_METHOD("is_resource", "controller"), &Entity::is_resource);
     ClassDB::bind_method(D_METHOD("is_unit", "controller"), &Entity::is_unit);
     ClassDB::bind_method(D_METHOD("is_idle", "controller"), &Entity::is_idle);
+    ClassDB::bind_method(D_METHOD("get_ray", "controller"), &Entity::get_ray);
     ClassDB::bind_method(D_METHOD("get_model", "controller"), &Entity::get_model);
     ClassDB::bind_method(D_METHOD("get_player", "controller"), &Entity::get_player);
     ClassDB::bind_method(D_METHOD("get_team", "controller"), &Entity::get_team);

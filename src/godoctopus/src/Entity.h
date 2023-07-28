@@ -61,6 +61,7 @@ public:
     bool is_idle(Controller const *controller_p) const;
     int get_player(Controller const *controller_p) const;
     int get_team(Controller const *controller_p) const;
+    float get_ray(Controller const *controller_p) const;
     String get_model(Controller const *controller_p) const;
     float get_damage(Controller const *controller_p) const;
     float get_armor(Controller const *controller_p) const;
