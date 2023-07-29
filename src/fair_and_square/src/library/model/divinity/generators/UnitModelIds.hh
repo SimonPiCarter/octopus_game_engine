@@ -12,6 +12,7 @@
 
 namespace models
 {
+    // units
     const std::string AttackSpeedUnitModelTierOneId = "AttackSpeedUnitModelTierOneId";
     const std::string HealUnitModelTierOneId = "HealUnitModelTierOneId";
     const std::string LifestealUnitModelTierOneId = "LifestealUnitModelTierOneId";
@@ -20,6 +21,7 @@ namespace models
     const std::string ProductionUnitModelTierTwoId = "ProductionUnitModelTierTwoId";
     const std::string RecycleUnitModelTierOneId = "RecycleUnitModelTierOneId";
 
+    // buildings
     const std::string AttackSpeedBuildingId = "AttackSpeedBuildingId";
     const std::string EconomicBuildingId = "EconomicBuildingId";
     const std::string EconomicBuildingResourceProducerId = "EconomicBuildingResourceProducerId";
