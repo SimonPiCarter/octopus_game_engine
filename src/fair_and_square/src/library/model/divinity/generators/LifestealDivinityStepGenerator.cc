@@ -155,7 +155,7 @@ void fillLibrary(LifestealDivinityParams const &params_p, octopus::Library &lib_
 	Upgrade * lifestealBuffTierOne_l = new Upgrade("LifestealUpgrade_BuffTierOneLifesteal", new LifestealUpgrade({params_p._tierOneUnitModelId}, params_p._improvedLifeStealTierOne));
 	lifestealBuffTierOne_l->_cost["bloc"] = 125;
 	lifestealBuffTierOne_l->_cost["ether"] = 125;
-	lifestealBuffTierOne_l->_cost["irrium"] = 125;
+	lifestealBuffTierOne_l->_cost["irium"] = 125;
 	lifestealBuffTierOne_l->_productionTime = 20000;
 	lifestealBuffTierOne_l->_requirements._upgradeLvl[models::LifestealDivId+models::tierOneSuffix] = 1;
 	lib_p.registerUpgrade(lifestealBuffTierOne_l->_id, lifestealBuffTierOne_l);
@@ -164,7 +164,7 @@ void fillLibrary(LifestealDivinityParams const &params_p, octopus::Library &lib_
 	Upgrade * lifestealBuffTierThree_l = new Upgrade("LifestealUpgrade_BuffTierThreeLifesteal", new LifestealUpgrade(params_p._modelsGeneralLifeSteal, params_p._lifeStealTierThree));
 	lifestealBuffTierThree_l->_cost["bloc"] = 250;
 	lifestealBuffTierThree_l->_cost["ether"] = 250;
-	lifestealBuffTierThree_l->_cost["irrium"] = 450;
+	lifestealBuffTierThree_l->_cost["irium"] = 450;
 	lifestealBuffTierThree_l->_productionTime = 30000;
 	lifestealBuffTierThree_l->_requirements._upgradeLvl[models::LifestealDivId+models::tierThreeSuffix] = 1;
 	lib_p.registerUpgrade(lifestealBuffTierThree_l->_id, lifestealBuffTierThree_l);
