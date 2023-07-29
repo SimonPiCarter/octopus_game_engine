@@ -607,7 +607,7 @@ bool Controller::has_state() const
     return _state != nullptr;
 }
 
-octopus::Entity const * Controller::getEntity(int handle_p) const
+octopus::Entity const * Controller::getEntity(octopus::Handle const &handle_p) const
 {
     if(!_state)
     {
@@ -627,16 +627,16 @@ octopus::Player const * Controller::getPlayer(int player_p) const
     return _state->getPlayer(player_p);
 }
 
-void Controller::spawn(int handle_p)
+void Controller::spawn(octopus::Handle const & handle_p)
 {
 	octopus::Entity const &entity_l = *_state->getEntity(handle_p);
-    emit_signal("spawn_unit", handle_p, entity_l._model._id.c_str(), Vector2(octopus::to_double(entity_l._pos.x), octopus::to_double(entity_l._pos.y)), octopus::to_double(entity_l._model._ray));
+    emit_signal("spawn_unit", int(handle_p.index), int(handle_p.revision), entity_l._model._id.c_str(), Vector2(octopus::to_double(entity_l._pos.x), octopus::to_double(entity_l._pos.y)), octopus::to_double(entity_l._model._ray));
 }
 
-void Controller::move(int handle_p)
+void Controller::move(octopus::Handle const & handle_p)
 {
 	octopus::Entity const &entity_l = *_state->getEntity(handle_p);
-    emit_signal("move_unit", handle_p, Vector2(octopus::to_double(entity_l._pos.x), octopus::to_double(entity_l._pos.y)));
+    emit_signal("move_unit", int(handle_p.index), Vector2(octopus::to_double(entity_l._pos.x), octopus::to_double(entity_l._pos.y)));
 }
 
 void Controller::windup(int handle_p)
@@ -644,16 +644,16 @@ void Controller::windup(int handle_p)
     emit_signal("windup_unit", handle_p);
 }
 
-void Controller::kill(int handle_p)
+void Controller::kill(octopus::Handle const & handle_p)
 {
 	octopus::Entity const &entity_l = *_state->getEntity(handle_p);
     if(entity_l._model._isUnit)
     {
-        emit_signal("kill_unit", handle_p);
+        emit_signal("kill_unit", int(handle_p.index));
     }
     else
     {
-        emit_signal("clear_entity", handle_p);
+        emit_signal("clear_entity", int(handle_p.index));
     }
 }
 
@@ -707,10 +707,10 @@ void Controller::dump_state_as_text(String const &path_p)
     }
 }
 
-TypedArray<String> Controller::get_models(int handle_p, int player_p, bool checkRequirements_p) const
+TypedArray<String> Controller::get_models(EntityHandle const * handle_p, int player_p, bool checkRequirements_p) const
 {
     TypedArray<String> models_l;
-    octopus::Entity const *ent_l = _state->getEntity(handle_p);
+    octopus::Entity const *ent_l = _state->getEntity(castHandle(handle_p));
 	// update
 	if(ent_l->_model._isBuilder)
 	{
@@ -775,10 +775,10 @@ bool Controller::is_visible(int x, int y, int player_p) const
     return _state->getVisionHandler().isVisible(player_l->_team, x, y);
 }
 
-bool Controller::is_unit_visible(int handle_p, int player_p) const
+bool Controller::is_unit_visible(EntityHandle const * handle_p, int player_p) const
 {
     octopus::Player const *player_l = _state->getPlayer(player_p);
-	octopus::Entity const &entity_l = *_state->getEntity(handle_p);
+	octopus::Entity const &entity_l = *_state->getEntity(castHandle(handle_p));
     return _state->getVisionHandler().isVisible(player_l->_team, entity_l);
 }
 
@@ -788,10 +788,10 @@ bool Controller::is_explored(int x, int y, int player_p) const
     return _state->getVisionHandler().isExplored(player_l->_team, x, y);
 }
 
-bool Controller::is_entity_explored(int handle_p, int player_p) const
+bool Controller::is_entity_explored(EntityHandle const * handle_p, int player_p) const
 {
     octopus::Player const *player_l = _state->getPlayer(player_p);
-	octopus::Entity const &entity_l = *_state->getEntity(handle_p);
+	octopus::Entity const &entity_l = *_state->getEntity(castHandle(handle_p));
     return _state->getVisionHandler().isExplored(player_l->_team, entity_l);
 }
 
@@ -854,14 +854,13 @@ godot::Option *Controller::get_chosen_option_them(int idx_p, int player_p) const
     return _optionManagers.at(player_p)->getChosenSecondaryOption(idx_p);
 }
 
-void Controller::get_productions(TypedArray<int> const &handles_p, int max_p)
+void Controller::get_productions(TypedArray<EntityHandle> const &handles_p, int max_p)
 {
     std::vector<CommandInfo> vecCommands_l;
 
     for(size_t i = 0 ; i < handles_p.size() ; ++ i)
     {
-        int idx_l = handles_p[i];
-		octopus::Entity const * ent_l = _state->getEntity(idx_l);
+		octopus::Entity const * ent_l = _state->getEntity(castHandle(handles_p[i]));
 		size_t posInQueue_l = 0;
 	    for(octopus::CommandBundle const &bundle_l : ent_l->getQueue().getList())
 		{
@@ -918,7 +917,9 @@ void Controller::get_visible_units(int player_p, int ent_registered_p)
     }
 }
 
-void Controller::add_move_commands(int peer_p, TypedArray<int> const &handles_p, Vector2 const &target_p, int player_p, bool queued_p)
+// commands
+
+void Controller::add_move_commands(int peer_p, TypedArray<EntityHandle> const &handles_p, Vector2 const &target_p, int player_p, bool queued_p)
 {
     if(!_paused)
     {
@@ -926,7 +927,7 @@ void Controller::add_move_commands(int peer_p, TypedArray<int> const &handles_p,
     }
 }
 
-void Controller::add_move_target_commands(int peer_p, TypedArray<int> const &handles_p, Vector2 const &target_p, int handleTarget_p, int player_p, bool queued_p)
+void Controller::add_move_target_commands(int peer_p, TypedArray<EntityHandle> const &handles_p, Vector2 const &target_p, EntityHandle const * handleTarget_p, int player_p, bool queued_p)
 {
     if(!_paused)
     {
@@ -934,7 +935,7 @@ void Controller::add_move_target_commands(int peer_p, TypedArray<int> const &han
     }
 }
 
-void Controller::add_attack_move_commands(int peer_p, TypedArray<int> const &handles_p, Vector2 const &target_p, int player_p, bool queued_p)
+void Controller::add_attack_move_commands(int peer_p, TypedArray<EntityHandle> const &handles_p, Vector2 const &target_p, int player_p, bool queued_p)
 {
     if(!_paused)
     {
@@ -942,7 +943,7 @@ void Controller::add_attack_move_commands(int peer_p, TypedArray<int> const &han
     }
 }
 
-void Controller::add_stop_commands(int peer_p, TypedArray<int> const &handles_p, int player_p, bool queued_p)
+void Controller::add_stop_commands(int peer_p, TypedArray<EntityHandle> const &handles_p, int player_p, bool queued_p)
 {
     if(!_paused)
     {
@@ -950,7 +951,7 @@ void Controller::add_stop_commands(int peer_p, TypedArray<int> const &handles_p,
     }
 }
 
-void Controller::add_unit_build_command(int peer_p, TypedArray<int> const &handles_p, String const &model_p, int player_p)
+void Controller::add_unit_build_command(int peer_p, TypedArray<EntityHandle> const &handles_p, String const &model_p, int player_p)
 {
     if(!_paused)
     {
@@ -958,7 +959,7 @@ void Controller::add_unit_build_command(int peer_p, TypedArray<int> const &handl
     }
 }
 
-void Controller::add_unit_build_cancel_command(int peer_p, int handle_p, int index_p, int player_p)
+void Controller::add_unit_build_cancel_command(int peer_p, EntityHandle const * handle_p, int index_p, int player_p)
 {
     if(!_paused)
     {
@@ -966,7 +967,7 @@ void Controller::add_unit_build_cancel_command(int peer_p, int handle_p, int ind
     }
 }
 
-void Controller::add_blueprint_command(int peer_p, Vector2 const &target_p, String const &model_p, int player_p, TypedArray<int> const &builders_p)
+void Controller::add_blueprint_command(int peer_p, Vector2 const &target_p, String const &model_p, int player_p, TypedArray<EntityHandle> const &builders_p)
 {
     if(!_paused)
     {
@@ -974,11 +975,12 @@ void Controller::add_blueprint_command(int peer_p, Vector2 const &target_p, Stri
     }
 }
 
-void Controller::add_building_cancel_command(int peer_p, int handle_p, int player_p)
+void Controller::add_building_cancel_command(int peer_p, EntityHandle const * handle_p, int player_p)
 {
-    if(!_paused && _state->getEntity(handle_p)->_model._isBuilding)
+    octopus::Handle entHandle_l = castHandle(handle_p);
+    if(!_paused && _state->getEntity(entHandle_l)->_model._isBuilding)
     {
-        _queuedCommandsPerPeer.at(peer_p).back().push_back(new octopus::BuildingCancelCommand(handle_p));
+        _queuedCommandsPerPeer.at(peer_p).back().push_back(new octopus::BuildingCancelCommand(entHandle_l));
     }
 }
 
@@ -1106,7 +1108,7 @@ void Controller::_bind_methods()
 
     ADD_GROUP("Controller", "Controller_");
 
-    ADD_SIGNAL(MethodInfo("spawn_unit", PropertyInfo(Variant::INT, "handle"), PropertyInfo(Variant::STRING, "model"), PropertyInfo(Variant::VECTOR2, "pos"), PropertyInfo(Variant::FLOAT, "ray")));
+    ADD_SIGNAL(MethodInfo("spawn_unit", PropertyInfo(Variant::INT, "handle"), PropertyInfo(Variant::INT, "revision"), PropertyInfo(Variant::STRING, "model"), PropertyInfo(Variant::VECTOR2, "pos"), PropertyInfo(Variant::FLOAT, "ray")));
     ADD_SIGNAL(MethodInfo("move_unit", PropertyInfo(Variant::INT, "handle"), PropertyInfo(Variant::VECTOR2, "pos")));
     ADD_SIGNAL(MethodInfo("windup_unit", PropertyInfo(Variant::INT, "handle")));
     ADD_SIGNAL(MethodInfo("kill_unit", PropertyInfo(Variant::INT, "handle")));

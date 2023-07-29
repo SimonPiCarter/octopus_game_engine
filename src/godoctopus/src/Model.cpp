@@ -283,10 +283,10 @@ void Model::_bind_methods()
     ADD_GROUP("Model", "Model_");
 }
 
-void ModelView::init(Controller const *controller_p, int producer_p, String const &name_p)
+void ModelView::init(Controller const *controller_p, EntityHandle const * producer_p, String const &name_p)
 {
     std::string name_l = name_p.utf8().get_data();
-    octopus::Entity const * entProducer_l = controller_p->getEntity(producer_p);
+    octopus::Entity const * entProducer_l = controller_p->getEntity(castHandle(producer_p));
     float productionSpeed_l = entProducer_l->getProduction().to_double();
     float productionTime_l = 0;
     if(controller_p->getLib().hasEntityModel(name_l))

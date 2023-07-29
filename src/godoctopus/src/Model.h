@@ -6,6 +6,7 @@
 #include <cstdint>
 #include <godot_cpp/godot.hpp>
 #include <godot_cpp/classes/node2d.hpp>
+#include "Entity.h"
 
 #include "state/Handle.hh"
 #include "state/model/requirements/Requirements.hh"
@@ -102,7 +103,7 @@ public:
     /// @brief Initialize ModelView with the given model
     /// @param controller_p
     /// @param name_p
-    void init(Controller const *controller_p, int producer_p, String const &name_p);
+    void init(Controller const *controller_p, EntityHandle const * producer_p, String const &name_p);
 
     // cost
     TypedArray<String> get_cost_resources_names() const;

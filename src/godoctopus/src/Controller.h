@@ -17,6 +17,7 @@
 #include "option/OptionManager.h"
 #include "LevelModel.h"
 #include "levels/level2/wave/Wave.h"
+#include "Entity.h"
 
 namespace octopus
 {
@@ -77,13 +78,13 @@ public:
 
     void _process(double delta) override;
 
-    octopus::Entity const * getEntity(int handle_p) const;
+    octopus::Entity const * getEntity(octopus::Handle const &handle_p) const;
     octopus::Player const * getPlayer(int player_p) const;
 
     // signals
-	void spawn(int handle_p);
-	void kill(int handle_p);
-	void move(int handle_p);
+	void spawn(octopus::Handle const & handle_p);
+	void kill(octopus::Handle const & handle_p);
+	void move(octopus::Handle const & handle_p);
 	void windup(int handle_p);
 	void hp_change(int handle_p, float ratio_p);
 
@@ -91,7 +92,7 @@ public:
     void set_pause(bool paused_p);
     void set_over(bool over_p);
     // getters
-    TypedArray<String> get_models(int handle_p, int player_p, bool checkRequirements_p) const;
+    TypedArray<String> get_models(EntityHandle const * handle_p, int player_p, bool checkRequirements_p) const;
     bool is_building(String const &model_p) const;
     int get_world_size() const;
     int get_steps() const;
@@ -102,9 +103,9 @@ public:
 
     // vision getter
     bool is_visible(int x, int y, int player_p) const;
-    bool is_unit_visible(int handle_p, int player_p) const;
+    bool is_unit_visible(EntityHandle const * handle_p, int player_p) const;
     bool is_explored(int x, int y, int player_p) const;
-    bool is_entity_explored(int explored_p, int player_p) const;
+    bool is_entity_explored(EntityHandle const * handle_p, int player_p) const;
     PackedByteArray getVisibility(int player_p) const;
 
     // option getter
@@ -118,23 +119,23 @@ public:
     // signal emmiter
 
     /// @brief will emit one signal per production to create
-    void get_productions(TypedArray<int> const &handles_p, int max_p);
+    void get_productions(TypedArray<EntityHandle> const &handles_p, int max_p);
 
     /// @brief will emit one signal per unit to be shown or hidden
     void get_visible_units(int player_p, int ent_registered_p);
 
     // commands
     // move & attack
-    void add_move_commands(int peer, TypedArray<int> const &handles_p, Vector2 const &target_p, int player_p, bool queued_p);
-    void add_move_target_commands(int peer, TypedArray<int> const &handles_p, Vector2 const &target_p, int handleTarget_p, int player_p, bool queued_p);
-    void add_attack_move_commands(int peer, TypedArray<int> const &handles_p, Vector2 const &target_p, int player_p, bool queued_p);
-    void add_stop_commands(int peer, TypedArray<int> const &handles_p, int player_p, bool queued_p);
+    void add_move_commands(int peer, TypedArray<EntityHandle> const &handles_p, Vector2 const &target_p, int player_p, bool queued_p);
+    void add_move_target_commands(int peer, TypedArray<EntityHandle> const &handles_p, Vector2 const &target_p, EntityHandle const * handleTarget_p, int player_p, bool queued_p);
+    void add_attack_move_commands(int peer, TypedArray<EntityHandle> const &handles_p, Vector2 const &target_p, int player_p, bool queued_p);
+    void add_stop_commands(int peer, TypedArray<EntityHandle> const &handles_p, int player_p, bool queued_p);
     // production
-    void add_unit_build_command(int peer, TypedArray<int> const &handles_p, String const &model_p, int player_p);
-    void add_unit_build_cancel_command(int peer, int handle_p, int index_p, int player_p);
+    void add_unit_build_command(int peer, TypedArray<EntityHandle> const &handles_p, String const &model_p, int player_p);
+    void add_unit_build_cancel_command(int peer, EntityHandle const * handle_p, int index_p, int player_p);
     // building
-    void add_blueprint_command(int peer_p, Vector2 const &target_p, String const &model_p, int player_p, TypedArray<int> const &builders_p);
-    void add_building_cancel_command(int peer_p, int handle_p, int player_p);
+    void add_blueprint_command(int peer_p, Vector2 const &target_p, String const &model_p, int player_p, TypedArray<EntityHandle> const &builders_p);
+    void add_building_cancel_command(int peer_p, EntityHandle const * handle_p, int player_p);
     // option
     void add_chose_option_command(int peer_p, int option_p, int player_p);
 

@@ -12,6 +12,26 @@ namespace godot {
 
 class Controller;
 
+class EntityHandle : public Node {
+    GDCLASS(EntityHandle, Node)
+
+    void set_index(int index_p) { index = index_p; }
+    int get_index() const { return index; }
+
+    void set_revision(int revision_p) { revision = revision_p; }
+    int get_revision() const { return revision; }
+
+    // Will be called by Godot when the class is registered
+    // Use this to add properties to your class
+    static void _bind_methods();
+private:
+    int index = 0;
+    int revision = 0;
+};
+
+octopus::Handle castHandle(godot::EntityHandle const *handle_p);
+octopus::Handle castHandle(godot::Variant const &var_p);
+
 class Buff : public Node {
     GDCLASS(Buff, Node)
 
@@ -45,11 +65,12 @@ public:
     static void _bind_methods();
 
     // property setter
-    void set_handle(int handle_p);
+    void set_index(int index_p);
     void set_revision(int revision_p);
 
     // property getter
-    int get_handle() const;
+    EntityHandle * get_handle() const;
+    int get_index() const;
     int get_revision() const;
     float get_hp(Controller const *controller_p) const;
     float get_hp_max(Controller const *controller_p) const;
@@ -82,7 +103,7 @@ public:
     TypedArray<godot::Buff> get_buffs(Controller const *controller_p) const;
 
 private:
-    int _handle = 0;
+    int _index = 0;
     int _revision = 0;
 };
 
