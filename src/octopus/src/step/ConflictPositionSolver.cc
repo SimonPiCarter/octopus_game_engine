@@ -160,7 +160,7 @@ bool updateStepFromConflictPosition(Step &step_p, State const &state_p)
 				return false;
 			}
 			bitset_l[handle_p] = 1;
-			Entity const * entB_l = state_p.getEntity(handle_p);
+			Entity const * entB_l = state_p.getLoseEntity(handle_p);
 
 			if(entB_l->isIgnoringCollision() || !entB_l->isActive())
 			{
@@ -316,7 +316,7 @@ bool updateStepFromConflictPosition(Step &step_p, State const &state_p)
 				return false;
 			}
 			bitset_l[handle_p] = 1;
-			Entity const * entB_l = state_p.getEntity(handle_p);
+			Entity const * entB_l = state_p.getLoseEntity(handle_p);
 
 			if(entB_l->isIgnoringCollision())
 			{

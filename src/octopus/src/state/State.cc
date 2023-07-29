@@ -112,7 +112,12 @@ Entity const *State::getEntity(Handle const &handle_p) const
 	{
 		throw std::logic_error("tried to get an entity with the wrong revision number");
 	}
-	return _entities[handle_p];
+	return _entities[handle_p.index];
+}
+
+Entity const *State::getLoseEntity(Handle const &handle_p) const
+{
+	return _entities[handle_p.index];
 }
 
 bool State::hasCommandable(Handle const &handle_p) const
@@ -321,7 +326,7 @@ Entity const * lookUpNewBuffTarget(State const &state_p, Handle const &sourceHan
 					return false;
 				}
 				bitset_l[handle_p] = true;
-				Entity const * ent_l = state_p.getEntity(handle_p);
+				Entity const * ent_l = state_p.getLoseEntity(handle_p);
 				Fixed curSqDis_l = square_length(ent_l->_pos - source_l->_pos);
 				if(ent_l != source_l
 				&& ent_l->_alive
@@ -379,7 +384,7 @@ TargetPanel lookUpNewTargets(State const &state_p, Handle const &sourceHandle_p,
 			return false;
 		}
 		bitset_l[handle_p] = true;
-		Entity const * ent_l = state_p.getEntity(handle_p);
+		Entity const * ent_l = state_p.getLoseEntity(handle_p);
 		if(ent_l == source_l
 		|| !ent_l->_alive
 		|| ent_l->_model._invulnerable
@@ -446,7 +451,7 @@ Entity const * lookUpNewTarget(State const &state_p, Handle const &sourceHandle_
 			return false;
 		}
 		bitset_l[handle_p] = true;
-		Entity const * ent_l = state_p.getEntity(handle_p);
+		Entity const * ent_l = state_p.getLoseEntity(handle_p);
 		bool teamCheck_l = (healing_p && team_l == state_p.getPlayer(ent_l->_player)->_team)
 						|| (!healing_p && team_l != state_p.getPlayer(ent_l->_player)->_team);
 		if(ent_l == source_l
