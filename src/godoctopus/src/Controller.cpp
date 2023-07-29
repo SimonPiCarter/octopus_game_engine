@@ -881,7 +881,7 @@ void Controller::get_productions(TypedArray<EntityHandle> const &handles_p, int 
         CommandInfo const &info_l = vecCommands_l[i];
         String model_l(info_l.data->getIdModel().c_str());
         float progress_l = octopus::to_double(info_l.data->_progression/info_l.data->_completeTime*100.);
-        emit_signal("production_command", int(info_l.handle), int(info_l.idx), model_l, progress_l);
+        emit_signal("production_command", int(info_l.handle.index), int(info_l.handle.revision), int(info_l.idx), model_l, progress_l);
 	}
 }
 
@@ -1132,7 +1132,7 @@ void Controller::_bind_methods()
 
     ADD_SIGNAL(MethodInfo("over", PropertyInfo(Variant::INT, "winning_team")));
 
-    ADD_SIGNAL(MethodInfo("production_command", PropertyInfo(Variant::INT, "handle"), PropertyInfo(Variant::INT, "index"), PropertyInfo(Variant::STRING, "model"), PropertyInfo(Variant::FLOAT, "progress")));
+    ADD_SIGNAL(MethodInfo("production_command", PropertyInfo(Variant::INT, "handle"), PropertyInfo(Variant::INT, "revision"), PropertyInfo(Variant::INT, "index"), PropertyInfo(Variant::STRING, "model"), PropertyInfo(Variant::FLOAT, "progress")));
 
     ADD_SIGNAL(MethodInfo("loading_state", PropertyInfo(Variant::FLOAT, "loading")));
     ADD_SIGNAL(MethodInfo("loading_done"));
