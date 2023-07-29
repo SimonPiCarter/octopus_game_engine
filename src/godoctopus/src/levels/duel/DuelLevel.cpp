@@ -136,8 +136,8 @@ std::list<Steppable *> LevelSteps(Library &lib_p, RandomGenerator &rand_p, int s
 		new TeamVisionStep(0, pattern_l, true, true),
 	};
 
-	addBuildingPlayer(spawners_l, 0, divinitiesPlayer1_p, lib_p);
-	addBuildingPlayer(spawners_l, 1, divinitiesPlayer2_p, lib_p);
+	fas::addBuildingPlayer(spawners_l, 0, divinitiesPlayer1_p, lib_p);
+	fas::addBuildingPlayer(spawners_l, 1, divinitiesPlayer2_p, lib_p);
 
     for(size_t i = 0 ; i < 10 ; ++i)
     {

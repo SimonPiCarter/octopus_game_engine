@@ -1,6 +1,7 @@
 #ifndef __DivinityModelLoader__
 #define __DivinityModelLoader__
 
+#include <list>
 #include <vector>
 #include <string>
 
@@ -36,6 +37,10 @@ std::vector<octopus::Steppable *> newPlayerBuilding(unsigned long player_p, Divi
 std::string divinityUpgradeName(DivinityType type_p);
 
 DivinityType rollOneRandomDivinity(octopus::RandomGenerator &rand_p);
+
+std::vector<DivinityType> allDivinities();
+
+void addBuildingPlayer(std::list<octopus::Steppable *> &spawners_p, unsigned long player_p, std::vector<DivinityType> const &divinities_p, octopus::Library &lib_p);
 
 } // namespace fas
 

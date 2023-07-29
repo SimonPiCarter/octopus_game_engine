@@ -91,7 +91,16 @@ std::string divinityUpgradeName(DivinityType type_p)
 
 DivinityType rollOneRandomDivinity(octopus::RandomGenerator &rand_p)
 {
-    static std::vector<DivinityType> options_l = {
+    static std::vector<DivinityType> options_l = allDivinities();
+
+    int roll_l = rand_p.roll(0, options_l.size()-1);
+
+    return options_l[roll_l];
+}
+
+std::vector<DivinityType> allDivinities()
+{
+    return {
         DivinityType::AttackSpeed,
         DivinityType::Economic,
         DivinityType::Heal,
@@ -99,10 +108,24 @@ DivinityType rollOneRandomDivinity(octopus::RandomGenerator &rand_p)
         DivinityType::Production,
         DivinityType::Recycle
     };
+}
 
-    int roll_l = rand_p.roll(0, options_l.size()-1);
+void addBuildingPlayer(std::list<octopus::Steppable *> &spawners_p, unsigned long player_p, std::vector<DivinityType> const &divinities_p, octopus::Library &lib_p)
+{
+	spawners_p.push_back(new octopus::PlayerAddBuildingModel(player_p, lib_p.getBuildingModel("barrack_square")));
+	spawners_p.push_back(new octopus::PlayerAddBuildingModel(player_p, lib_p.getBuildingModel("barrack_circle")));
+	spawners_p.push_back(new octopus::PlayerAddBuildingModel(player_p, lib_p.getBuildingModel("barrack_triangle")));
+	spawners_p.push_back(new octopus::PlayerAddBuildingModel(player_p, lib_p.getBuildingModel("deposit")));
+	spawners_p.push_back(new octopus::PlayerAddBuildingModel(player_p, lib_p.getBuildingModel("anchor")));
 
-    return options_l[roll_l];
+	for(fas::DivinityType div_l : divinities_p)
+	{
+		std::vector<octopus::Steppable *> steps_l = newPlayerBuilding(player_p, div_l, lib_p);
+		for(octopus::Steppable * step_l : steps_l)
+		{
+			spawners_p.push_back(step_l);
+		}
+	}
 }
 
 } // namespace fas
