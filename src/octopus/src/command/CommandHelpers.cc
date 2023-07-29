@@ -47,7 +47,7 @@ Command * newTargetCommand(State const &state_p, Handle const &handle_p,
 	}
 
 	// if target is not valide anymore
-	if(!state_p.isEntityAlive(target_p))
+	if(!state_p.hasEntity(target_p))
 	{
 		EntityMoveCommand * command_l = new EntityMoveCommand(
 			handle_p,
