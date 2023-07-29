@@ -15,14 +15,14 @@ namespace octopus
 {
 
 BuildingBlueprintCommand::BuildingBlueprintCommand()
-	: Command(0)
+	: Command(Handle(0))
 	, _pos(0,0)
 	, _player(0)
 	, _model(nullptr)
 {}
 
 BuildingBlueprintCommand::BuildingBlueprintCommand(Vector const &pos_p, unsigned long player_p, BuildingModel const &model_p, std::vector<Handle> const &builders_p)
-	: Command(0)
+	: Command(Handle(0))
 	, _pos(pos_p)
 	, _player(player_p)
 	, _model(&model_p)

@@ -58,21 +58,21 @@ std::list<Steppable *> chainingShowcaseSteps(Library &lib_p)
 	};
 
 	unsigned long id_l = 0;
-    spawners_l.push_back(new UnitSpawnStep(id_l++, square1_l));
+    spawners_l.push_back(new UnitSpawnStep(Handle(id_l++), square1_l));
 
-	spawners_l.push_back(new UnitSpawnStep(id_l++, triangle2_l));
+	spawners_l.push_back(new UnitSpawnStep(Handle(id_l++), triangle2_l));
     triangle2_l._pos.x = 37;
-	spawners_l.push_back(new UnitSpawnStep(id_l++, triangle2_l));
+	spawners_l.push_back(new UnitSpawnStep(Handle(id_l++), triangle2_l));
     triangle2_l._pos.y = 18;
-	spawners_l.push_back(new UnitSpawnStep(id_l++, triangle2_l));
+	spawners_l.push_back(new UnitSpawnStep(Handle(id_l++), triangle2_l));
     triangle2_l._pos.x = 39;
-	spawners_l.push_back(new UnitSpawnStep(id_l++, triangle2_l));
+	spawners_l.push_back(new UnitSpawnStep(Handle(id_l++), triangle2_l));
     triangle2_l._pos.y = 16;
-	spawners_l.push_back(new UnitSpawnStep(id_l++, triangle2_l));
+	spawners_l.push_back(new UnitSpawnStep(Handle(id_l++), triangle2_l));
     triangle2_l._pos.x = 41;
-	spawners_l.push_back(new UnitSpawnStep(id_l++, triangle2_l));
+	spawners_l.push_back(new UnitSpawnStep(Handle(id_l++), triangle2_l));
     triangle2_l._pos.y = 14;
-	spawners_l.push_back(new UnitSpawnStep(id_l++, triangle2_l));
+	spawners_l.push_back(new UnitSpawnStep(Handle(id_l++), triangle2_l));
 
 	return spawners_l;
 }

@@ -41,10 +41,10 @@ TEST(unitProductionBonusTest, simple)
 
 	Building production_l({1,3}, true, buildingModel_l);
 
-	BuildingSpawnStep * spawn0_l = new BuildingSpawnStep(0, production_l, true);
+	BuildingSpawnStep * spawn0_l = new BuildingSpawnStep(Handle(0), production_l, true);
 
 	// unit production
-	BuildingUnitProductionCommand * command_l = new BuildingUnitProductionCommand(0, 0, unitModel_l);
+	BuildingUnitProductionCommand * command_l = new BuildingUnitProductionCommand(Handle(0), Handle(0), unitModel_l);
 	CommandSpawnStep * commandSpawn_l = new CommandSpawnStep(command_l);
 
 	Controller controller_l({new PlayerSpawnStep(0, 0), spawn0_l, commandSpawn_l}, 1.);
@@ -94,10 +94,10 @@ TEST(unitProductionBonusTest, simple_time_flat)
 
 	Building production_l({1,3}, true, buildingModel_l);
 
-	BuildingSpawnStep * spawn0_l = new BuildingSpawnStep(0, production_l, true);
+	BuildingSpawnStep * spawn0_l = new BuildingSpawnStep(Handle(0), production_l, true);
 
 	// unit production
-	BuildingUnitProductionCommand * command_l = new BuildingUnitProductionCommand(0, 0, unitModel_l);
+	BuildingUnitProductionCommand * command_l = new BuildingUnitProductionCommand(Handle(0), Handle(0), unitModel_l);
 	CommandSpawnStep * commandSpawn_l = new CommandSpawnStep(command_l);
 
 	Steppable * bonus_l = new PlayerAddTimeProdBonusStep(0, "model", Buff{-2, 0.});
@@ -148,10 +148,10 @@ TEST(unitProductionBonusTest, simple_time_coef)
 
 	Building production_l({1,3}, true, buildingModel_l);
 
-	BuildingSpawnStep * spawn0_l = new BuildingSpawnStep(0, production_l, true);
+	BuildingSpawnStep * spawn0_l = new BuildingSpawnStep(Handle(0), production_l, true);
 
 	// unit production
-	BuildingUnitProductionCommand * command_l = new BuildingUnitProductionCommand(0, 0, unitModel_l);
+	BuildingUnitProductionCommand * command_l = new BuildingUnitProductionCommand(Handle(0), Handle(0), unitModel_l);
 	CommandSpawnStep * commandSpawn_l = new CommandSpawnStep(command_l);
 
 	Steppable * bonus_l = new PlayerAddTimeProdBonusStep(0, "model", Buff{0, 0.4});
@@ -204,13 +204,13 @@ TEST(unitProductionBonusTest, simple_cost_flat)
 
 	Building production_l({1,3}, true, buildingModel_l);
 
-	BuildingSpawnStep * spawn0_l = new BuildingSpawnStep(0, production_l, true);
+	BuildingSpawnStep * spawn0_l = new BuildingSpawnStep(Handle(0), production_l, true);
 
 	std::map<std::string, Fixed> mapRes_l;
 	mapRes_l["bloc"] = -100;
 
 	// unit production
-	BuildingUnitProductionCommand * command_l = new BuildingUnitProductionCommand(0, 0, unitModel_l);
+	BuildingUnitProductionCommand * command_l = new BuildingUnitProductionCommand(Handle(0), Handle(0), unitModel_l);
 
 	Steppable * bonus_l = new PlayerAddCostBonusStep(0, "model", "bloc", Buff{-20, 0.});
 
@@ -254,13 +254,13 @@ TEST(unitProductionBonusTest, simple_cost_coef)
 
 	Building production_l({1,3}, true, buildingModel_l);
 
-	BuildingSpawnStep * spawn0_l = new BuildingSpawnStep(0, production_l, true);
+	BuildingSpawnStep * spawn0_l = new BuildingSpawnStep(Handle(0), production_l, true);
 
 	std::map<std::string, Fixed> mapRes_l;
 	mapRes_l["bloc"] = -100;
 
 	// unit production
-	BuildingUnitProductionCommand * command_l = new BuildingUnitProductionCommand(0, 0, unitModel_l);
+	BuildingUnitProductionCommand * command_l = new BuildingUnitProductionCommand(Handle(0), Handle(0), unitModel_l);
 
 	Steppable * bonus_l = new PlayerAddCostBonusStep(0, "model", "bloc", Buff{0., -0.2});
 

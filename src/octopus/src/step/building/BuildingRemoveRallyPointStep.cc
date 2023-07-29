@@ -16,7 +16,7 @@ void BuildingRemoveRallyPointStep::apply(State &state_p) const
 	ent_l->_rallyPointActive = false;
 	ent_l->_rallyPoint = {0,0};
 	ent_l->_rallyPointEntityActive = false;
-	ent_l->_rallyPointEntity = 0;
+	ent_l->_rallyPointEntity = Handle();
 }
 
 void BuildingRemoveRallyPointStep::revert(State &state_p, SteppableData const *data_p) const

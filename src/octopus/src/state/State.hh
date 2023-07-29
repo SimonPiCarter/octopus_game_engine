@@ -47,7 +47,7 @@ public:
 	Entity const *getEntity(Handle const &handle_p) const;
 	/// @brief Get entity without checking revision
 	/// @remark this should only be called in very internal calls!
-	Entity const *getLoseEntity(Handle const &handle_p) const;
+	Entity const *getLoseEntity(unsigned long handle_p) const;
 
 	bool hasCommandable(Handle const &handle_p) const;
 	Commandable *getCommandable(Handle const &handle_p);

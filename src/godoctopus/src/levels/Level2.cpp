@@ -137,7 +137,7 @@ std::list<Steppable *> WaveLevelSteps(Library &lib_p, RandomGenerator &rand_p, s
 
 	Trigger * triggerLose_l = new LoseTrigger(new ListenerEntityModelDied(&lib_p.getBuildingModel("command_center"), 0));
 
-	Handle handle_l = 0;
+	Handle handle_l(0);
 	std::list<Steppable *> spawners_l =
 	{
 		new PlayerSpawnStep(0, 0),
@@ -164,7 +164,7 @@ std::list<Steppable *> WaveLevelSteps(Library &lib_p, RandomGenerator &rand_p, s
 		new TriggerSpawn(triggerLose_l),
 		new TriggerSpawn(new AnchorTrigger(lib_p, rand_p, 150)),
 		new TriggerSpawn(new VisionTrigger(timeTriggerAnchor_l)),
-		new FlyingCommandSpawnStep(new TimerDamage(0, 100, 0, 0, "Anchor", 0)),
+		new FlyingCommandSpawnStep(new TimerDamage(Handle(0), 100, 0, 0, "Anchor", Handle(0))),
 		new godot::CameraStep(to_int(building_l._pos.x), to_int(building_l._pos.y)),
 		new godot::DialogStep("leve1_intro"),
 	};

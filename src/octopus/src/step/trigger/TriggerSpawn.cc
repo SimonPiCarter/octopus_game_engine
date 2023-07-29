@@ -17,7 +17,7 @@ void TriggerSpawn::apply(State &state_p) const
 
 	// Create trigger data and register trigger
 	triggers_l.push_back(_trigger);
-	triggersData_l.push_back(_trigger->newTriggerData(triggers_l.size()-1));
+	triggersData_l.push_back(_trigger->newTriggerData(Handle(triggers_l.size()-1)));
 }
 
 void TriggerSpawn::revert(State &state_p, SteppableData const *) const

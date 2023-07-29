@@ -45,7 +45,7 @@ TEST(VisionGridMoveStep, move_simple)
 	StepData initialData_l;
 
 	initial_l.addSteppable(new PlayerSpawnStep(0, 0));
-	initial_l.addSteppable(new EntitySpawnStep(0, Entity { { 3., 3. }, false, unitModel_l}));
+	initial_l.addSteppable(new EntitySpawnStep(Handle(0), Entity { { 3., 3. }, false, unitModel_l}));
 
 	apply(initial_l, state_l, initialData_l);
 
@@ -79,7 +79,7 @@ TEST(VisionGridMoveStep, move_simple)
 	///
 	Step second_l(&initial_l);
 	StepData secondData_l;
-	second_l.addEntityMoveStep(new EntityMoveStep(0, Vector {0.5, 0.}));
+	second_l.addEntityMoveStep(new EntityMoveStep(Handle(0), Vector {0.5, 0.}));
 
 	std::list<VisionChangeStep *> list_l = newVisionChangeStep(state_l, second_l, state_l.getWorldSize(), handler_l.getPatternHandler());
 	std::for_each(list_l.begin(), list_l.end(), std::bind(&Step::addSteppable, &second_l, std::placeholders::_1));
@@ -114,7 +114,7 @@ TEST(VisionGridMoveStep, move_simple)
 	///
 	Step third_l(&initial_l);
 	StepData thirdData_l;
-	third_l.addEntityMoveStep(new EntityMoveStep(0, Vector {0.5, 0.}));
+	third_l.addEntityMoveStep(new EntityMoveStep(Handle(0), Vector {0.5, 0.}));
 
 	list_l = newVisionChangeStep(state_l, third_l, state_l.getWorldSize(), handler_l.getPatternHandler());
 	std::for_each(list_l.begin(), list_l.end(), std::bind(&Step::addSteppable, &third_l, std::placeholders::_1));
@@ -162,8 +162,8 @@ TEST(VisionGridMoveStep, move_two)
 	StepData initialData_l;
 
 	initial_l.addSteppable(new PlayerSpawnStep(0, 0));
-	initial_l.addSteppable(new EntitySpawnStep(0, Entity { { 3., 3. }, false, unitModel_l}));
-	initial_l.addSteppable(new EntitySpawnStep(1, Entity { { 4., 3. }, false, unitModel_l}));
+	initial_l.addSteppable(new EntitySpawnStep(Handle(0), Entity { { 3., 3. }, false, unitModel_l}));
+	initial_l.addSteppable(new EntitySpawnStep(Handle(1), Entity { { 4., 3. }, false, unitModel_l}));
 
 	apply(initial_l, state_l, initialData_l);
 
@@ -197,8 +197,8 @@ TEST(VisionGridMoveStep, move_two)
 	///
 	Step second_l(&initial_l);
 	StepData secondData_l;
-	second_l.addEntityMoveStep(new EntityMoveStep(0, Vector {0.5, 0.}));
-	second_l.addEntityMoveStep(new EntityMoveStep(1, Vector {0.5, 0.}));
+	second_l.addEntityMoveStep(new EntityMoveStep(Handle(0), Vector {0.5, 0.}));
+	second_l.addEntityMoveStep(new EntityMoveStep(Handle(1), Vector {0.5, 0.}));
 
 	std::list<VisionChangeStep *> list_l = newVisionChangeStep(state_l, second_l, state_l.getWorldSize(), handler_l.getPatternHandler());
 	std::for_each(list_l.begin(), list_l.end(), std::bind(&Step::addSteppable, &second_l, std::placeholders::_1));
@@ -233,8 +233,8 @@ TEST(VisionGridMoveStep, move_two)
 	///
 	Step third_l(&initial_l);
 	StepData thirdData_l;
-	third_l.addEntityMoveStep(new EntityMoveStep(0, Vector {0.5, 0.}));
-	third_l.addEntityMoveStep(new EntityMoveStep(1, Vector {0.5, 0.}));
+	third_l.addEntityMoveStep(new EntityMoveStep(Handle(0), Vector {0.5, 0.}));
+	third_l.addEntityMoveStep(new EntityMoveStep(Handle(1), Vector {0.5, 0.}));
 
 	list_l = newVisionChangeStep(state_l, third_l, state_l.getWorldSize(), handler_l.getPatternHandler());
 	std::for_each(list_l.begin(), list_l.end(), std::bind(&Step::addSteppable, &third_l, std::placeholders::_1));

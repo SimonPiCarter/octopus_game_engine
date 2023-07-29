@@ -1008,7 +1008,8 @@ void Controller::next_step()
         std::list<octopus::Command*> const &cmds_l = pair_l.second.front();
         for(octopus::Command * cmd_l : cmds_l)
         {
-            _controller->queueCommandAsPlayer(cmd_l, _playerPerPeer.at(peer_l));
+            /// @todo refactor
+            _controller->queueCommand(cmd_l);
         }
         pair_l.second.pop_front();
     }

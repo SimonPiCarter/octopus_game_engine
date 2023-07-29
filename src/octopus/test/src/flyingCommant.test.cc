@@ -47,7 +47,7 @@ TEST(flyingCommantTest, simple)
 {
 	Controller controller_l({
 		new PlayerSpawnStep(0, 0),
-		new FlyingCommandSpawnStep(new TestResourceOverTime(0, 10, 2)),
+		new FlyingCommandSpawnStep(new TestResourceOverTime(Handle(0), 10, 2)),
 	}, 1.);
 
 

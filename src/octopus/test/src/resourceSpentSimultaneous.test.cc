@@ -49,12 +49,12 @@ TEST(resourceSpentSimultaneousTest, simple_ok)
 	Controller controller_l({
             new PlayerSpawnStep(0, 0),
 			new PlayerSpendResourceStep(0, mapRes_l),
-            new BuildingSpawnStep(0, production1_l, true),
-            new BuildingSpawnStep(1, production2_l, true),
+            new BuildingSpawnStep(Handle(0), production1_l, true),
+            new BuildingSpawnStep(Handle(1), production2_l, true),
         }, 1.);
 
-	controller_l.commitCommand(new BuildingUnitProductionCommand(1, 1, unitModel_l));
-	controller_l.commitCommand(new BuildingUnitProductionCommand(0, 0, unitModel_l));
+	controller_l.commitCommand(new BuildingUnitProductionCommand(Handle(1), Handle(1), unitModel_l));
+	controller_l.commitCommand(new BuildingUnitProductionCommand(Handle(0), Handle(0), unitModel_l));
 
 	// query state
 	State const * state_l = controller_l.queryState();
@@ -108,12 +108,12 @@ TEST(resourceSpentSimultaneousTest, simple_ko)
 	Controller controller_l({
             new PlayerSpawnStep(0, 0),
 			new PlayerSpendResourceStep(0, mapRes_l),
-            new BuildingSpawnStep(0, production1_l, true),
-            new BuildingSpawnStep(1, production2_l, true)
+            new BuildingSpawnStep(Handle(0), production1_l, true),
+            new BuildingSpawnStep(Handle(1), production2_l, true)
         }, 1.);
 
-	controller_l.commitCommand(new BuildingUnitProductionCommand(1, 1, unitModel_l));
-	controller_l.commitCommand(new BuildingUnitProductionCommand(0, 0, unitModel_l));
+	controller_l.commitCommand(new BuildingUnitProductionCommand(Handle(1), Handle(1), unitModel_l));
+	controller_l.commitCommand(new BuildingUnitProductionCommand(Handle(0), Handle(0), unitModel_l));
 
 	// query state
 	State const * state_l = controller_l.queryState();

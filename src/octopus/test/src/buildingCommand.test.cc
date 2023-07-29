@@ -40,11 +40,11 @@ TEST(buildingCommandTest, simple)
 	Building building_l({1,3}, true, depositModel_l);
 	building_l._alive = false;
 
-	UnitSpawnStep * spawn0_l = new UnitSpawnStep(0, unit_l);
-	BuildingSpawnStep * spawn1_l = new BuildingSpawnStep(1, building_l, false);
+	UnitSpawnStep * spawn0_l = new UnitSpawnStep(Handle(0), unit_l);
+	BuildingSpawnStep * spawn1_l = new BuildingSpawnStep(Handle(1), building_l, false);
 
 	// unit harvest
-	EntityBuildingCommand * command_l = new EntityBuildingCommand(0, 0, 1, {1, 3.5}, 0, {{1, 3.5}});
+	EntityBuildingCommand * command_l = new EntityBuildingCommand(Handle(0), Handle(0), Handle(1), {1, 3.5}, 0, {{1, 3.5}});
 	CommandSpawnStep * commandSpawn_l = new CommandSpawnStep(command_l);
 
 	Controller controller_l({new PlayerSpawnStep(0, 0), spawn0_l, spawn1_l, commandSpawn_l}, 1.);
@@ -52,8 +52,8 @@ TEST(buildingCommandTest, simple)
 	// query state
 	State const * state_l = controller_l.queryState();
 
-	EXPECT_NEAR(5., to_double(state_l->getEntity(0)->_pos.x), 1e-5);
-	EXPECT_NEAR(3.5, to_double(state_l->getEntity(0)->_pos.y), 1e-5);
+	EXPECT_NEAR(5., to_double(state_l->getEntity(Handle(0))->_pos.x), 1e-5);
+	EXPECT_NEAR(3.5, to_double(state_l->getEntity(Handle(0))->_pos.y), 1e-5);
 
 	// update time to 2 seconds (2)
 	controller_l.update(2.);
@@ -63,9 +63,9 @@ TEST(buildingCommandTest, simple)
 
 	state_l = controller_l.queryState();
 
-	EXPECT_NEAR(3., to_double(state_l->getEntity(0)->_pos.x), 1e-5);
-	EXPECT_NEAR(3.5, to_double(state_l->getEntity(0)->_pos.y), 1e-5);
-	Building const * build_l = static_cast<Building const *>(state_l->getEntity(1));
+	EXPECT_NEAR(3., to_double(state_l->getEntity(Handle(0))->_pos.x), 1e-5);
+	EXPECT_NEAR(3.5, to_double(state_l->getEntity(Handle(0))->_pos.y), 1e-5);
+	Building const * build_l = static_cast<Building const *>(state_l->getEntity(Handle(1)));
 	EXPECT_FALSE(build_l->_alive);
 
 	// update time to 2 seconds (4)
@@ -76,9 +76,9 @@ TEST(buildingCommandTest, simple)
 
 	state_l = controller_l.queryState();
 
-	EXPECT_NEAR(3., to_double(state_l->getEntity(0)->_pos.x), 1e-5);
-	EXPECT_NEAR(3.5, to_double(state_l->getEntity(0)->_pos.y), 1e-5);
-	build_l = static_cast<Building const *>(state_l->getEntity(1));
+	EXPECT_NEAR(3., to_double(state_l->getEntity(Handle(0))->_pos.x), 1e-5);
+	EXPECT_NEAR(3.5, to_double(state_l->getEntity(Handle(0))->_pos.y), 1e-5);
+	build_l = static_cast<Building const *>(state_l->getEntity(Handle(1)));
 	EXPECT_NEAR(2., to_double(build_l->_buildingProgress), 1e-5);
 	EXPECT_TRUE(build_l->_alive);
 }
@@ -106,8 +106,8 @@ TEST(buildingCommandTest, cancelled)
 
 	Controller controller_l({
 		new PlayerSpawnStep(0, 0),
-		new UnitSpawnStep(0, unit1_l),
-		new UnitSpawnStep(1, unit2_l)
+		new UnitSpawnStep(Handle(0), unit1_l),
+		new UnitSpawnStep(Handle(1), unit2_l)
 	}, 1.);
 
 	// loop to spawn everything
@@ -120,14 +120,14 @@ TEST(buildingCommandTest, cancelled)
 
 	controller_l.commitCommand(new BuildingBlueprintCommand({1, 3}, 0, depositModel_l));
 	controller_l.commitCommand(new BuildingBlueprintCommand({1, 3}, 0, depositModel_l));
-	controller_l.commitCommand(new EntityBuildingCommand(0, 0, 2, {1, 3.5}, 0, {{1, 3.5}}));
-	controller_l.commitCommand(new EntityBuildingCommand(1, 1, 3, {1, 3.5}, 0, {{1, 3.5}}));
+	controller_l.commitCommand(new EntityBuildingCommand(Handle(0), Handle(0), Handle(2), {1, 3.5}, 0, {{1, 3.5}}));
+	controller_l.commitCommand(new EntityBuildingCommand(Handle(1), Handle(1), Handle(3), {1, 3.5}, 0, {{1, 3.5}}));
 
 	// query state
 	State const * state_l = controller_l.queryState();
 
-	EXPECT_NEAR(5., to_double(state_l->getEntity(0)->_pos.x), 1e-5);
-	EXPECT_NEAR(3.5, to_double(state_l->getEntity(0)->_pos.y), 1e-5);
+	EXPECT_NEAR(5., to_double(state_l->getEntity(Handle(0))->_pos.x), 1e-5);
+	EXPECT_NEAR(3.5, to_double(state_l->getEntity(Handle(0))->_pos.y), 1e-5);
 
 	// update time to 3 seconds (4)
 	controller_l.update(3.);
@@ -137,11 +137,11 @@ TEST(buildingCommandTest, cancelled)
 
 	state_l = controller_l.queryState();
 
-	EXPECT_NEAR(3., to_double(state_l->getEntity(0)->_pos.x), 1e-5);
-	EXPECT_NEAR(3.5, to_double(state_l->getEntity(0)->_pos.y), 1e-5);
-	EXPECT_NEAR(6., to_double(state_l->getEntity(1)->_pos.x), 1e-5);
-	EXPECT_NEAR(3.5, to_double(state_l->getEntity(1)->_pos.y), 1e-5);
-	Building const * build_l = static_cast<Building const *>(state_l->getEntity(2));
+	EXPECT_NEAR(3., to_double(state_l->getEntity(Handle(0))->_pos.x), 1e-5);
+	EXPECT_NEAR(3.5, to_double(state_l->getEntity(Handle(0))->_pos.y), 1e-5);
+	EXPECT_NEAR(6., to_double(state_l->getEntity(Handle(1))->_pos.x), 1e-5);
+	EXPECT_NEAR(3.5, to_double(state_l->getEntity(Handle(1))->_pos.y), 1e-5);
+	Building const * build_l = static_cast<Building const *>(state_l->getEntity(Handle(2)));
 	EXPECT_FALSE(build_l->_alive);
 
 	// update time to 2 seconds (6)
@@ -152,12 +152,12 @@ TEST(buildingCommandTest, cancelled)
 
 	state_l = controller_l.queryState();
 
-	EXPECT_NEAR(3., to_double(state_l->getEntity(0)->_pos.x), 1e-5);
-	EXPECT_NEAR(3.5, to_double(state_l->getEntity(0)->_pos.y), 1e-5);
+	EXPECT_NEAR(3., to_double(state_l->getEntity(Handle(0))->_pos.x), 1e-5);
+	EXPECT_NEAR(3.5, to_double(state_l->getEntity(Handle(0))->_pos.y), 1e-5);
 	// entity 1 stopped because blueprint got cancelled
-	EXPECT_NEAR(5., to_double(state_l->getEntity(1)->_pos.x), 1e-5);
-	EXPECT_NEAR(3.5, to_double(state_l->getEntity(1)->_pos.y), 1e-5);
-	build_l = static_cast<Building const *>(state_l->getEntity(2));
+	EXPECT_NEAR(5., to_double(state_l->getEntity(Handle(1))->_pos.x), 1e-5);
+	EXPECT_NEAR(3.5, to_double(state_l->getEntity(Handle(1))->_pos.y), 1e-5);
+	build_l = static_cast<Building const *>(state_l->getEntity(Handle(2)));
 	EXPECT_NEAR(2., to_double(build_l->_buildingProgress), 1e-5);
 	EXPECT_TRUE(build_l->_alive);
 }

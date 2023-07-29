@@ -41,10 +41,10 @@ TEST(rallyPointProductionCommandTest, simple)
 	production_l._rallyPointActive = true;
 	production_l._rallyPoint = {5,3};
 
-	BuildingSpawnStep * spawn0_l = new BuildingSpawnStep(0, production_l, true);
+	BuildingSpawnStep * spawn0_l = new BuildingSpawnStep(Handle(0), production_l, true);
 
 	// unit production
-	BuildingUnitProductionCommand * command_l = new BuildingUnitProductionCommand(0, 0, unitModel_l);
+	BuildingUnitProductionCommand * command_l = new BuildingUnitProductionCommand(Handle(0), Handle(0), unitModel_l);
 	CommandSpawnStep * commandSpawn_l = new CommandSpawnStep(command_l);
 
 	Controller controller_l({new PlayerSpawnStep(0, 0), spawn0_l, commandSpawn_l}, 1.);
@@ -84,5 +84,5 @@ TEST(rallyPointProductionCommandTest, simple)
 	state_l = controller_l.queryState();
 
 	ASSERT_EQ(2u, state_l->getEntities().size());
-	EXPECT_FALSE(is_zero(state_l->getEntity(1)->_pos - Vector(2,3)));
+	EXPECT_FALSE(is_zero(state_l->getEntity(Handle(1))->_pos - Vector(2,3)));
 }

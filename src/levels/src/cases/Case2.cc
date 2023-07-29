@@ -49,19 +49,19 @@ std::list<Steppable *> Case2(Library &lib_p)
 	std::list<Steppable *> spawners_l =
 	{
 		new PlayerSpawnStep(0, 0),
-		new UnitSpawnStep(0, unit_l),
-		new UnitSpawnStep(1, unit_l),
-		new UnitSpawnStep(2, unit_l),
-		new UnitSpawnStep(3, unit_l),
-		new UnitSpawnStep(4, unit_l),
-		new ResourceSpawnStep(5, res_l),
-		new ResourceSpawnStep(6, res2_l),
-		new BuildingSpawnStep(7, deposit_l, true),
-		new CommandSpawnStep(new UnitHarvestCommand(0, 0, 5, {20, 20}, 0, {{20, 20}})),
-		new CommandSpawnStep(new UnitHarvestCommand(1, 1, 5, {20, 20}, 0, {{20, 20}})),
-		new CommandSpawnStep(new UnitHarvestCommand(2, 2, 5, {20, 20}, 0, {{20, 20}})),
-		new CommandSpawnStep(new UnitHarvestCommand(3, 3, 5, {20, 20}, 0, {{20, 20}})),
-		new CommandSpawnStep(new UnitHarvestCommand(4, 4, 5, {20, 20}, 0, {{20, 20}}))
+		new UnitSpawnStep(Handle(0), unit_l),
+		new UnitSpawnStep(Handle(1), unit_l),
+		new UnitSpawnStep(Handle(2), unit_l),
+		new UnitSpawnStep(Handle(3), unit_l),
+		new UnitSpawnStep(Handle(4), unit_l),
+		new ResourceSpawnStep(Handle(5), res_l),
+		new ResourceSpawnStep(Handle(6), res2_l),
+		new BuildingSpawnStep(Handle(7), deposit_l, true),
+		new CommandSpawnStep(new UnitHarvestCommand(Handle(0), Handle(0), Handle(5), {20, 20}, 0, {{20, 20}})),
+		new CommandSpawnStep(new UnitHarvestCommand(Handle(1), Handle(1), Handle(5), {20, 20}, 0, {{20, 20}})),
+		new CommandSpawnStep(new UnitHarvestCommand(Handle(2), Handle(2), Handle(5), {20, 20}, 0, {{20, 20}})),
+		new CommandSpawnStep(new UnitHarvestCommand(Handle(3), Handle(3), Handle(5), {20, 20}, 0, {{20, 20}})),
+		new CommandSpawnStep(new UnitHarvestCommand(Handle(4), Handle(4), Handle(5), {20, 20}, 0, {{20, 20}}))
 	};
 
 	return spawners_l;

@@ -32,8 +32,7 @@ void add_move_commands(std::list<octopus::Command*> &list_r, octopus::State cons
     octopus::Vector worldPos_l(target_p.x, target_p.y);
     for(size_t i = 0 ; i < handles_p.size() ; ++ i)
     {
-        int handle_l = handles_p[i];
-        octopus::Command *cmd_l = octopus::newTargetCommand(state_p, handle_l, 0, worldPos_l, true);
+        octopus::Command *cmd_l = octopus::newTargetCommand(state_p, castHandle(handles_p[i]), octopus::Handle(0), worldPos_l, true);
         if(dynamic_cast<octopus::EntityMoveCommand*>(cmd_l))
         {
             isFlocking_l = true;
@@ -184,9 +183,9 @@ void add_unit_build_command(std::list<octopus::Command*> &list_r, octopus::State
     else if(lib_p.hasUpgrade(modelId_l))
     {
         octopus::Upgrade const &upgrade_l = lib_p.getUpgrade(modelId_l);
-        int best_l = getBestProductionBuilding(handles_p, state_p, upgrade_l);
+        octopus::Handle best_l = getBestProductionBuilding(handles_p, state_p, upgrade_l);
 
-        if(best_l >= 0)
+        if(best_l.index >= 0)
         {
             octopus::BuildingUpgradeProductionCommand *cmd_l = new octopus::BuildingUpgradeProductionCommand(best_l, best_l, upgrade_l);
             cmd_l->setQueued(true);

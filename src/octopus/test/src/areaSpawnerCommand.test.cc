@@ -60,26 +60,26 @@ TEST(areaSpawnerCommandTest, simple)
 
 	ASSERT_EQ(9u, state_l->getEntities().size());
 	/// buildings
-	EXPECT_NEAR(3., to_double(state_l->getEntity(0)->_pos.x), 1e-5);
-	EXPECT_NEAR(6., to_double(state_l->getEntity(0)->_pos.y), 1e-5);
-	EXPECT_NEAR(3., to_double(state_l->getEntity(1)->_pos.x), 1e-5);
-	EXPECT_NEAR(8., to_double(state_l->getEntity(1)->_pos.y), 1e-5);
-	EXPECT_NEAR(3. , to_double(state_l->getEntity(2)->_pos.x), 1e-5);
-	EXPECT_NEAR(10., to_double(state_l->getEntity(2)->_pos.y), 1e-5);
-	EXPECT_NEAR(3. , to_double(state_l->getEntity(3)->_pos.x), 1e-5);
-	EXPECT_NEAR(12., to_double(state_l->getEntity(3)->_pos.y), 1e-5);
+	EXPECT_NEAR(3., to_double(state_l->getEntity(Handle(0))->_pos.x), 1e-5);
+	EXPECT_NEAR(6., to_double(state_l->getEntity(Handle(0))->_pos.y), 1e-5);
+	EXPECT_NEAR(3., to_double(state_l->getEntity(Handle(1))->_pos.x), 1e-5);
+	EXPECT_NEAR(8., to_double(state_l->getEntity(Handle(1))->_pos.y), 1e-5);
+	EXPECT_NEAR(3. , to_double(state_l->getEntity(Handle(2))->_pos.x), 1e-5);
+	EXPECT_NEAR(10., to_double(state_l->getEntity(Handle(2))->_pos.y), 1e-5);
+	EXPECT_NEAR(3. , to_double(state_l->getEntity(Handle(3))->_pos.x), 1e-5);
+	EXPECT_NEAR(12., to_double(state_l->getEntity(Handle(3))->_pos.y), 1e-5);
 
 	/// units
-	EXPECT_NEAR(2.5 , to_double(state_l->getEntity(4)->_pos.x), 1e-5);
-	EXPECT_NEAR(13.5, to_double(state_l->getEntity(4)->_pos.y), 1e-5);
-	EXPECT_NEAR(2.5 , to_double(state_l->getEntity(5)->_pos.x), 1e-5);
-	EXPECT_NEAR(13.5, to_double(state_l->getEntity(5)->_pos.y), 1e-5);
-	EXPECT_NEAR(2.5 , to_double(state_l->getEntity(6)->_pos.x), 1e-5);
-	EXPECT_NEAR(13.5, to_double(state_l->getEntity(6)->_pos.y), 1e-5);
-	EXPECT_NEAR(2.5 , to_double(state_l->getEntity(7)->_pos.x), 1e-5);
-	EXPECT_NEAR(13.5, to_double(state_l->getEntity(7)->_pos.y), 1e-5);
-	EXPECT_NEAR(2.5 , to_double(state_l->getEntity(8)->_pos.x), 1e-5);
-	EXPECT_NEAR(13.5, to_double(state_l->getEntity(8)->_pos.y), 1e-5);
+	EXPECT_NEAR(2.5 , to_double(state_l->getEntity(Handle(4))->_pos.x), 1e-5);
+	EXPECT_NEAR(13.5, to_double(state_l->getEntity(Handle(4))->_pos.y), 1e-5);
+	EXPECT_NEAR(2.5 , to_double(state_l->getEntity(Handle(5))->_pos.x), 1e-5);
+	EXPECT_NEAR(13.5, to_double(state_l->getEntity(Handle(5))->_pos.y), 1e-5);
+	EXPECT_NEAR(2.5 , to_double(state_l->getEntity(Handle(6))->_pos.x), 1e-5);
+	EXPECT_NEAR(13.5, to_double(state_l->getEntity(Handle(6))->_pos.y), 1e-5);
+	EXPECT_NEAR(2.5 , to_double(state_l->getEntity(Handle(7))->_pos.x), 1e-5);
+	EXPECT_NEAR(13.5, to_double(state_l->getEntity(Handle(7))->_pos.y), 1e-5);
+	EXPECT_NEAR(2.5 , to_double(state_l->getEntity(Handle(8))->_pos.x), 1e-5);
+	EXPECT_NEAR(13.5, to_double(state_l->getEntity(Handle(8))->_pos.y), 1e-5);
 }
 
 Option additionPosition(Option const &option_p)
@@ -121,14 +121,14 @@ TEST(areaSpawnerCommandTest, simple_mirror)
 
 	ASSERT_EQ(4u, state_l->getEntities().size());
 	/// buildings
-	EXPECT_NEAR(3., to_double(state_l->getEntity(0)->_pos.x), 1e-5);
-	EXPECT_NEAR(6., to_double(state_l->getEntity(0)->_pos.y), 1e-5);
-	EXPECT_NEAR(23., to_double(state_l->getEntity(1)->_pos.x), 1e-5);
-	EXPECT_NEAR(26., to_double(state_l->getEntity(1)->_pos.y), 1e-5);
+	EXPECT_NEAR(3., to_double(state_l->getEntity(Handle(0))->_pos.x), 1e-5);
+	EXPECT_NEAR(6., to_double(state_l->getEntity(Handle(0))->_pos.y), 1e-5);
+	EXPECT_NEAR(23., to_double(state_l->getEntity(Handle(1))->_pos.x), 1e-5);
+	EXPECT_NEAR(26., to_double(state_l->getEntity(Handle(1))->_pos.y), 1e-5);
 
 	/// units
-	EXPECT_NEAR(2.5 , to_double(state_l->getEntity(2)->_pos.x), 1e-5);
-	EXPECT_NEAR(7.5, to_double(state_l->getEntity(2)->_pos.y), 1e-5);
-	EXPECT_NEAR(22.5 , to_double(state_l->getEntity(3)->_pos.x), 1e-5);
-	EXPECT_NEAR(27.5, to_double(state_l->getEntity(3)->_pos.y), 1e-5);
+	EXPECT_NEAR(2.5 , to_double(state_l->getEntity(Handle(2))->_pos.x), 1e-5);
+	EXPECT_NEAR(7.5, to_double(state_l->getEntity(Handle(2))->_pos.y), 1e-5);
+	EXPECT_NEAR(22.5 , to_double(state_l->getEntity(Handle(3))->_pos.x), 1e-5);
+	EXPECT_NEAR(27.5, to_double(state_l->getEntity(Handle(3))->_pos.y), 1e-5);
 }

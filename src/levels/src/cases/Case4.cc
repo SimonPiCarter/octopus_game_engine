@@ -238,12 +238,12 @@ std::list<Steppable *> Case4(Library &lib_p)
 		new PlayerAddBuildingModel(0, lib_p.getBuildingModel("div_raid_well")),
 		new PlayerAddBuildingModel(0, lib_p.getBuildingModel("div_swarm_well")),
 		new PlayerSpendResourceStep(0, mapRes_l),
-		new BuildingSpawnStep(0, building_l, true),
-		new ResourceSpawnStep(1, res1_l),
-		new ResourceSpawnStep(2, res2_l),
-		new ResourceSpawnStep(3, res3_l),
-		new ResourceSpawnStep(4, res4_l),
-		new UnitSpawnStep(5, unit_l),
+		new BuildingSpawnStep(Handle(0), building_l, true),
+		new ResourceSpawnStep(Handle(1), res1_l),
+		new ResourceSpawnStep(Handle(2), res2_l),
+		new ResourceSpawnStep(Handle(3), res3_l),
+		new ResourceSpawnStep(Handle(4), res4_l),
+		new UnitSpawnStep(Handle(5), unit_l),
 		new TriggerSpawn(trigger_l),
 		new TriggerSpawn(divTrigger_l)
 	};

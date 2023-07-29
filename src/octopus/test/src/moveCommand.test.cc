@@ -36,10 +36,10 @@ TEST(moveCommandTest, simple)
 	octopus::EntityModel unitModel_l { false, 0.9, 1., 10. };
 	state_l.addEntity(new Entity { { 3, 3. }, false, unitModel_l});
 
-	EntityMoveCommand command_l(0, 0, {4, 3}, 0, { {4, 3}});
+	EntityMoveCommand command_l(Handle(0), Handle(0), {4, 3}, 0, { {4, 3}});
 
-	state_l.getEntity(0)->enqueue(&command_l, false);
-	MoveData *data_l = dynamic_cast<MoveData *>(getData(state_l.getEntity(0)->getFrontQueue()._var));
+	state_l.getEntity(Handle(0))->enqueue(&command_l, false);
+	MoveData *data_l = dynamic_cast<MoveData *>(getData(state_l.getEntity(Handle(0))->getFrontQueue()._var));
 	EXPECT_NE(nullptr, data_l);
 
 	///
@@ -62,8 +62,8 @@ TEST(moveCommandTest, simple)
 
 	// Now on 4,3
 
-	EXPECT_NEAR(4., to_double(state_l.getEntity(0)->_pos.x), 1e-5);
-	EXPECT_NEAR(3., to_double(state_l.getEntity(0)->_pos.y), 1e-5);
+	EXPECT_NEAR(4., to_double(state_l.getEntity(Handle(0))->_pos.x), 1e-5);
+	EXPECT_NEAR(3., to_double(state_l.getEntity(Handle(0))->_pos.y), 1e-5);
 
 	///
 	/// Step 2
@@ -80,8 +80,8 @@ TEST(moveCommandTest, simple)
 
 	// Still on 4,3
 
-	EXPECT_NEAR(4., to_double(state_l.getEntity(0)->_pos.x), 1e-5);
-	EXPECT_NEAR(3., to_double(state_l.getEntity(0)->_pos.y), 1e-5);
+	EXPECT_NEAR(4., to_double(state_l.getEntity(Handle(0))->_pos.x), 1e-5);
+	EXPECT_NEAR(3., to_double(state_l.getEntity(Handle(0))->_pos.y), 1e-5);
 
 	///
 	/// Step 3

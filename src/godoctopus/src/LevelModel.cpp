@@ -70,7 +70,7 @@ std::list<octopus::Steppable *> LevelModel::generateLevelSteps(octopus::Library 
     for(unsigned long idx_l = 0 ; idx_l < _players.size() ; ++idx_l)
     {
         GodotPlayer const &player_l = _players.at(idx_l);
-        steps_l.push_back(new octopus::PlayerSpawnStep(idx_l, player_l.team));
+        steps_l.push_back(new octopus::PlayerSpawnStep(octopus::Handle(idx_l), player_l.team));
 
         // create resource spawn (need negative)
 		steps_l.push_back(new octopus::PlayerSpendResourceStep(0, octopus::getReverseCostMap(player_l.resources)));
@@ -88,13 +88,13 @@ std::list<octopus::Steppable *> LevelModel::generateLevelSteps(octopus::Library 
         {
 	        octopus::Unit unit_l({ ent_l.x, ent_l.y }, false, lib_p.getUnitModel(ent_l.model));
             unit_l._player = ent_l.player;
-            steps_l.push_back(new octopus::UnitSpawnStep(idx_l, unit_l));
+            steps_l.push_back(new octopus::UnitSpawnStep(octopus::Handle(idx_l), unit_l));
         }
         else if(ent_l.type == "Building")
         {
 	        octopus::Building building_l({ ent_l.x, ent_l.y }, true, lib_p.getBuildingModel(ent_l.model));
             building_l._player = ent_l.player;
-            steps_l.push_back(new octopus::BuildingSpawnStep(idx_l, building_l, true));
+            steps_l.push_back(new octopus::BuildingSpawnStep(octopus::Handle(idx_l), building_l, true));
         }
         else
         {

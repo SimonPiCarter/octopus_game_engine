@@ -24,7 +24,7 @@ EntityAttackMoveCommand::EntityAttackMoveCommand(Handle const &commandHandle_p, 
 	: Command(commandHandle_p)
 	, _source(source_p)
 	, _subMoveCommand(commandHandle_p, source_p, finalPoint_p, gridStatus_p, waypoints_p, init_p, neverStop_p)
-	, _data(0, _subMoveCommand.getFinalPoint(), _subMoveCommand.getGridStatus(), _subMoveCommand.getWaypoints())
+	, _data(Handle(0), _subMoveCommand.getFinalPoint(), _subMoveCommand.getGridStatus(), _subMoveCommand.getWaypoints())
 {}
 
 void EntityAttackMoveCommand::setFlockInformation(FlockInformation * flockInfo_p)

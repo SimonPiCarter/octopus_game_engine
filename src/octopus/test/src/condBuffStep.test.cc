@@ -26,18 +26,18 @@ TEST(condBuffStepTest, simple_speed_min_hp)
 	buff_l._coef = 1.;
 	buff_l._conditions.push_back(ConditionMinLife{1.});
 
-	EntityConditionalBuffStep step_l(0, buff_l);
+	EntityConditionalBuffStep step_l(Handle(0), buff_l);
 	step_l.apply(state_l);
 
-	EXPECT_NEAR(2., to_double(state_l.getEntity(0)->getStepSpeed()), 1e-5);
+	EXPECT_NEAR(2., to_double(state_l.getEntity(Handle(0))->getStepSpeed()), 1e-5);
 
-	EntityHitPointChangeStep stepHp_l(0, -1, 10, 10);
+	EntityHitPointChangeStep stepHp_l(Handle(0), -1, 10, 10);
 	stepHp_l.apply(state_l);
 
-	EXPECT_NEAR(1., to_double(state_l.getEntity(0)->getStepSpeed()), 1e-5);
+	EXPECT_NEAR(1., to_double(state_l.getEntity(Handle(0))->getStepSpeed()), 1e-5);
 
 	stepHp_l.revert(state_l, nullptr);
-	EXPECT_NEAR(2., to_double(state_l.getEntity(0)->getStepSpeed()), 1e-5);
+	EXPECT_NEAR(2., to_double(state_l.getEntity(Handle(0))->getStepSpeed()), 1e-5);
 }
 
 // test that conditional buff correctly apply when maximum hp is required
@@ -53,16 +53,16 @@ TEST(condBuffStepTest, simple_speed_max_hp)
 	buff_l._coef = 1.;
 	buff_l._conditions.push_back(ConditionMaxLife{0.9});
 
-	EntityConditionalBuffStep step_l(0, buff_l);
+	EntityConditionalBuffStep step_l(Handle(0), buff_l);
 	step_l.apply(state_l);
 
-	EXPECT_NEAR(1., to_double(state_l.getEntity(0)->getStepSpeed()), 1e-5);
+	EXPECT_NEAR(1., to_double(state_l.getEntity(Handle(0))->getStepSpeed()), 1e-5);
 
-	EntityHitPointChangeStep stepHp_l(0, -1, 10, 10);
+	EntityHitPointChangeStep stepHp_l(Handle(0), -1, 10, 10);
 	stepHp_l.apply(state_l);
 
-	EXPECT_NEAR(2., to_double(state_l.getEntity(0)->getStepSpeed()), 1e-5);
+	EXPECT_NEAR(2., to_double(state_l.getEntity(Handle(0))->getStepSpeed()), 1e-5);
 
 	stepHp_l.revert(state_l, nullptr);
-	EXPECT_NEAR(1., to_double(state_l.getEntity(0)->getStepSpeed()), 1e-5);
+	EXPECT_NEAR(1., to_double(state_l.getEntity(Handle(0))->getStepSpeed()), 1e-5);
 }

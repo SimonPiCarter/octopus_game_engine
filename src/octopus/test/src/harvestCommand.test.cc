@@ -47,12 +47,12 @@ TEST(harvestCommandTest, simple)
 
 	Building deposit_l({1,3}, true, depositModel_l);
 
-	UnitSpawnStep * spawn0_l = new UnitSpawnStep(0, unit_l);
-	ResourceSpawnStep * spawn1_l = new ResourceSpawnStep(1, res_l);
-	BuildingSpawnStep * spawn2_l = new BuildingSpawnStep(2, deposit_l, true);
+	UnitSpawnStep * spawn0_l = new UnitSpawnStep(Handle(0), unit_l);
+	ResourceSpawnStep * spawn1_l = new ResourceSpawnStep(Handle(1), res_l);
+	BuildingSpawnStep * spawn2_l = new BuildingSpawnStep(Handle(2), deposit_l, true);
 
 	// unit harvest
-	UnitHarvestCommand * command_l = new UnitHarvestCommand(0, 0, 1, {9, 3}, 0, {{9, 3}});
+	UnitHarvestCommand * command_l = new UnitHarvestCommand(Handle(0), Handle(0), Handle(1), {9, 3}, 0, {{9, 3}});
 	CommandSpawnStep * commandSpawn_l = new CommandSpawnStep(command_l);
 
 	Controller controller_l({new PlayerSpawnStep(0, 0), spawn0_l, spawn1_l, spawn2_l, commandSpawn_l}, 1.);
@@ -60,8 +60,8 @@ TEST(harvestCommandTest, simple)
 	// query state
 	State const * state_l = controller_l.queryState();
 
-	EXPECT_NEAR(5, to_double(state_l->getEntity(0)->_pos.x), 1e-5);
-	EXPECT_NEAR(3, to_double(state_l->getEntity(0)->_pos.y), 1e-5);
+	EXPECT_NEAR(5, to_double(state_l->getEntity(Handle(0))->_pos.x), 1e-5);
+	EXPECT_NEAR(3, to_double(state_l->getEntity(Handle(0))->_pos.y), 1e-5);
 
 	// update time to 1second (1)
 	controller_l.update(1.);
@@ -71,8 +71,8 @@ TEST(harvestCommandTest, simple)
 
 	state_l = controller_l.queryState();
 
-	EXPECT_NEAR(6, to_double(state_l->getEntity(0)->_pos.x), 1e-5);
-	EXPECT_NEAR(3, to_double(state_l->getEntity(0)->_pos.y), 1e-5);
+	EXPECT_NEAR(6, to_double(state_l->getEntity(Handle(0))->_pos.x), 1e-5);
+	EXPECT_NEAR(3, to_double(state_l->getEntity(Handle(0))->_pos.y), 1e-5);
 
 	// update time to 1 seconds (2)
 	controller_l.update(1.);
@@ -82,8 +82,8 @@ TEST(harvestCommandTest, simple)
 
 	state_l = controller_l.queryState();
 
-	EXPECT_NEAR(7, to_double(state_l->getEntity(0)->_pos.x), 1e-5);
-	EXPECT_NEAR(3, to_double(state_l->getEntity(0)->_pos.y), 1e-5);
+	EXPECT_NEAR(7, to_double(state_l->getEntity(Handle(0))->_pos.x), 1e-5);
+	EXPECT_NEAR(3, to_double(state_l->getEntity(Handle(0))->_pos.y), 1e-5);
 
 	// update time to 1 seconds (3)
 	controller_l.update(1.);
@@ -92,10 +92,10 @@ TEST(harvestCommandTest, simple)
 	while(!controller_l.loop_body()) {}
 
 	state_l = controller_l.queryState();
-	Unit const * stateUnit_l = static_cast<Unit const *>(state_l->getEntity(0));
+	Unit const * stateUnit_l = static_cast<Unit const *>(state_l->getEntity(Handle(0)));
 
-	EXPECT_NEAR(7, to_double(state_l->getEntity(0)->_pos.x), 1e-5);
-	EXPECT_NEAR(3, to_double(state_l->getEntity(0)->_pos.y), 1e-5);
+	EXPECT_NEAR(7, to_double(state_l->getEntity(Handle(0))->_pos.x), 1e-5);
+	EXPECT_NEAR(3, to_double(state_l->getEntity(Handle(0))->_pos.y), 1e-5);
 	EXPECT_EQ("bloc", stateUnit_l->_typeOfResource);
 	EXPECT_NEAR(1., to_double(stateUnit_l->_quantityOfResource), 1e-5);
 
@@ -106,10 +106,10 @@ TEST(harvestCommandTest, simple)
 	while(!controller_l.loop_body()) {}
 
 	state_l = controller_l.queryState();
-	stateUnit_l = static_cast<Unit const *>(state_l->getEntity(0));
+	stateUnit_l = static_cast<Unit const *>(state_l->getEntity(Handle(0)));
 
-	EXPECT_NEAR(7, to_double(state_l->getEntity(0)->_pos.x), 1e-5);
-	EXPECT_NEAR(3, to_double(state_l->getEntity(0)->_pos.y), 1e-5);
+	EXPECT_NEAR(7, to_double(state_l->getEntity(Handle(0))->_pos.x), 1e-5);
+	EXPECT_NEAR(3, to_double(state_l->getEntity(Handle(0))->_pos.y), 1e-5);
 	EXPECT_EQ("bloc", stateUnit_l->_typeOfResource);
 	EXPECT_NEAR(10., to_double(stateUnit_l->_quantityOfResource), 1e-5);
 
@@ -120,10 +120,10 @@ TEST(harvestCommandTest, simple)
 	while(!controller_l.loop_body()) {}
 
 	state_l = controller_l.queryState();
-	stateUnit_l = static_cast<Unit const *>(state_l->getEntity(0));
+	stateUnit_l = static_cast<Unit const *>(state_l->getEntity(Handle(0)));
 
-	EXPECT_NEAR(6, to_double(state_l->getEntity(0)->_pos.x), 1e-5);
-	EXPECT_NEAR(3, to_double(state_l->getEntity(0)->_pos.y), 1e-5);
+	EXPECT_NEAR(6, to_double(state_l->getEntity(Handle(0))->_pos.x), 1e-5);
+	EXPECT_NEAR(3, to_double(state_l->getEntity(Handle(0))->_pos.y), 1e-5);
 	EXPECT_EQ("bloc", stateUnit_l->_typeOfResource);
 	EXPECT_NEAR(10., to_double(stateUnit_l->_quantityOfResource), 1e-5);
 
@@ -134,10 +134,10 @@ TEST(harvestCommandTest, simple)
 	while(!controller_l.loop_body()) {}
 
 	state_l = controller_l.queryState();
-	stateUnit_l = static_cast<Unit const *>(state_l->getEntity(0));
+	stateUnit_l = static_cast<Unit const *>(state_l->getEntity(Handle(0)));
 
-	EXPECT_NEAR(3, to_double(state_l->getEntity(0)->_pos.x), 1e-5);
-	EXPECT_NEAR(3, to_double(state_l->getEntity(0)->_pos.y), 1e-5);
+	EXPECT_NEAR(3, to_double(state_l->getEntity(Handle(0))->_pos.x), 1e-5);
+	EXPECT_NEAR(3, to_double(state_l->getEntity(Handle(0))->_pos.y), 1e-5);
 	EXPECT_EQ("bloc", stateUnit_l->_typeOfResource);
 	EXPECT_NEAR(10., to_double(stateUnit_l->_quantityOfResource), 1e-5);
 
@@ -148,11 +148,11 @@ TEST(harvestCommandTest, simple)
 	while(!controller_l.loop_body()) {}
 
 	state_l = controller_l.queryState();
-	stateUnit_l = static_cast<Unit const *>(state_l->getEntity(0));
+	stateUnit_l = static_cast<Unit const *>(state_l->getEntity(Handle(0)));
 	Player const * player_l = state_l->getPlayer(0);
 
-	EXPECT_NEAR(3, to_double(state_l->getEntity(0)->_pos.x), 1e-5);
-	EXPECT_NEAR(3, to_double(state_l->getEntity(0)->_pos.y), 1e-5);
+	EXPECT_NEAR(3, to_double(state_l->getEntity(Handle(0))->_pos.x), 1e-5);
+	EXPECT_NEAR(3, to_double(state_l->getEntity(Handle(0))->_pos.y), 1e-5);
 	EXPECT_EQ("bloc", stateUnit_l->_typeOfResource);
 	EXPECT_NEAR(0., to_double(stateUnit_l->_quantityOfResource), 1e-5);
 	EXPECT_NEAR(10., to_double(getResource(*player_l, "bloc")), 1e-5);
@@ -168,11 +168,11 @@ TEST(harvestCommandTest, simple)
 	while(!controller_l.loop_body()) {}
 
 	state_l = controller_l.queryState();
-	stateUnit_l = static_cast<Unit const *>(state_l->getEntity(0));
+	stateUnit_l = static_cast<Unit const *>(state_l->getEntity(Handle(0)));
 	player_l = state_l->getPlayer(0);
 
-	EXPECT_NEAR(3, to_double(state_l->getEntity(0)->_pos.x), 1e-5);
-	EXPECT_NEAR(3, to_double(state_l->getEntity(0)->_pos.y), 1e-5);
+	EXPECT_NEAR(3, to_double(state_l->getEntity(Handle(0))->_pos.x), 1e-5);
+	EXPECT_NEAR(3, to_double(state_l->getEntity(Handle(0))->_pos.y), 1e-5);
 	EXPECT_EQ("bloc", stateUnit_l->_typeOfResource);
 	EXPECT_NEAR(10., to_double(stateUnit_l->_quantityOfResource), 1e-5);
 	EXPECT_NEAR(10., to_double(getResource(*player_l, "bloc")), 1e-5);
@@ -184,11 +184,11 @@ TEST(harvestCommandTest, simple)
 	while(!controller_l.loop_body()) {}
 
 	state_l = controller_l.queryState();
-	stateUnit_l = static_cast<Unit const *>(state_l->getEntity(0));
+	stateUnit_l = static_cast<Unit const *>(state_l->getEntity(Handle(0)));
 	player_l = state_l->getPlayer(0);
 
-	EXPECT_NEAR(3, to_double(state_l->getEntity(0)->_pos.x), 1e-5);
-	EXPECT_NEAR(3, to_double(state_l->getEntity(0)->_pos.y), 1e-5);
+	EXPECT_NEAR(3, to_double(state_l->getEntity(Handle(0))->_pos.x), 1e-5);
+	EXPECT_NEAR(3, to_double(state_l->getEntity(Handle(0))->_pos.y), 1e-5);
 	EXPECT_EQ("bloc", stateUnit_l->_typeOfResource);
 	EXPECT_NEAR(0., to_double(stateUnit_l->_quantityOfResource), 1e-5);
 	EXPECT_NEAR(20., to_double(getResource(*player_l, "bloc")), 1e-5);
@@ -202,11 +202,11 @@ TEST(harvestCommandTest, simple)
 	while(!controller_l.loop_body()) {}
 
 	state_l = controller_l.queryState();
-	stateUnit_l = static_cast<Unit const *>(state_l->getEntity(0));
+	stateUnit_l = static_cast<Unit const *>(state_l->getEntity(Handle(0)));
 	player_l = state_l->getPlayer(0);
 
-	EXPECT_NEAR(3, to_double(state_l->getEntity(0)->_pos.x), 1e-5);
-	EXPECT_NEAR(3, to_double(state_l->getEntity(0)->_pos.y), 1e-5);
+	EXPECT_NEAR(3, to_double(state_l->getEntity(Handle(0))->_pos.x), 1e-5);
+	EXPECT_NEAR(3, to_double(state_l->getEntity(Handle(0))->_pos.y), 1e-5);
 	EXPECT_EQ("bloc", stateUnit_l->_typeOfResource);
 	EXPECT_NEAR(0., to_double(stateUnit_l->_quantityOfResource), 1e-5);
 	EXPECT_NEAR(20., to_double(getResource(*player_l, "bloc")), 1e-5);
@@ -241,13 +241,13 @@ TEST(harvestCommandTest, simple_new_res)
 
 	std::list<Steppable *> spawners_l;
 	spawners_l.push_back(new PlayerSpawnStep(0, 0));
-	spawners_l.push_back(new UnitSpawnStep(0, unit_l));
-	spawners_l.push_back(new ResourceSpawnStep(1, res_l));
-	spawners_l.push_back(new ResourceSpawnStep(2, res2_l));
-	spawners_l.push_back(new BuildingSpawnStep(3, deposit_l, true));
+	spawners_l.push_back(new UnitSpawnStep(Handle(0), unit_l));
+	spawners_l.push_back(new ResourceSpawnStep(Handle(1), res_l));
+	spawners_l.push_back(new ResourceSpawnStep(Handle(2), res2_l));
+	spawners_l.push_back(new BuildingSpawnStep(Handle(3), deposit_l, true));
 
 	// unit harvest
-	UnitHarvestCommand * command_l = new UnitHarvestCommand(0, 0, 1, {9, 3}, 0, {{9, 3}});
+	UnitHarvestCommand * command_l = new UnitHarvestCommand(Handle(0), Handle(0), Handle(1), {9, 3}, 0, {{9, 3}});
 	spawners_l.push_back(new CommandSpawnStep(command_l));
 
 	Controller controller_l(spawners_l, 1.);
@@ -262,11 +262,11 @@ TEST(harvestCommandTest, simple_new_res)
 	while(!controller_l.loop_body()) {}
 
 	state_l = controller_l.queryState();
-	Unit const * stateUnit_l = static_cast<Unit const *>(state_l->getEntity(0));
+	Unit const * stateUnit_l = static_cast<Unit const *>(state_l->getEntity(Handle(0)));
 	Player const * player_l = state_l->getPlayer(0);
 
-	EXPECT_NEAR(3, to_double(state_l->getEntity(0)->_pos.x), 1e-5);
-	EXPECT_NEAR(3, to_double(state_l->getEntity(0)->_pos.y), 1e-5);
+	EXPECT_NEAR(3, to_double(state_l->getEntity(Handle(0))->_pos.x), 1e-5);
+	EXPECT_NEAR(3, to_double(state_l->getEntity(Handle(0))->_pos.y), 1e-5);
 	EXPECT_EQ("bloc", stateUnit_l->_typeOfResource);
 	EXPECT_NEAR(0., to_double(stateUnit_l->_quantityOfResource), 1e-5);
 	EXPECT_NEAR(10., to_double(getResource(*player_l, "bloc")), 1e-5);
@@ -283,11 +283,11 @@ TEST(harvestCommandTest, simple_new_res)
 	while(!controller_l.loop_body()) {}
 
 	state_l = controller_l.queryState();
-	stateUnit_l = static_cast<Unit const *>(state_l->getEntity(0));
+	stateUnit_l = static_cast<Unit const *>(state_l->getEntity(Handle(0)));
 	player_l = state_l->getPlayer(0);
 
-	EXPECT_NEAR(3, to_double(state_l->getEntity(0)->_pos.x), 1e-5);
-	EXPECT_NEAR(3, to_double(state_l->getEntity(0)->_pos.y), 1e-5);
+	EXPECT_NEAR(3, to_double(state_l->getEntity(Handle(0))->_pos.x), 1e-5);
+	EXPECT_NEAR(3, to_double(state_l->getEntity(Handle(0))->_pos.y), 1e-5);
 	EXPECT_EQ("bloc", stateUnit_l->_typeOfResource);
 	EXPECT_NEAR(10., to_double(stateUnit_l->_quantityOfResource), 1e-5);
 	EXPECT_NEAR(10., to_double(getResource(*player_l, "bloc")), 1e-5);
@@ -299,11 +299,11 @@ TEST(harvestCommandTest, simple_new_res)
 	while(!controller_l.loop_body()) {}
 
 	state_l = controller_l.queryState();
-	stateUnit_l = static_cast<Unit const *>(state_l->getEntity(0));
+	stateUnit_l = static_cast<Unit const *>(state_l->getEntity(Handle(0)));
 	player_l = state_l->getPlayer(0);
 
-	EXPECT_NEAR(3, to_double(state_l->getEntity(0)->_pos.x), 1e-5);
-	EXPECT_NEAR(3, to_double(state_l->getEntity(0)->_pos.y), 1e-5);
+	EXPECT_NEAR(3, to_double(state_l->getEntity(Handle(0))->_pos.x), 1e-5);
+	EXPECT_NEAR(3, to_double(state_l->getEntity(Handle(0))->_pos.y), 1e-5);
 	EXPECT_EQ("bloc", stateUnit_l->_typeOfResource);
 	EXPECT_NEAR(0., to_double(stateUnit_l->_quantityOfResource), 1e-5);
 	EXPECT_NEAR(20., to_double(getResource(*player_l, "bloc")), 1e-5);
@@ -317,11 +317,11 @@ TEST(harvestCommandTest, simple_new_res)
 	while(!controller_l.loop_body()) {}
 
 	state_l = controller_l.queryState();
-	stateUnit_l = static_cast<Unit const *>(state_l->getEntity(0));
+	stateUnit_l = static_cast<Unit const *>(state_l->getEntity(Handle(0)));
 	player_l = state_l->getPlayer(0);
 
-	EXPECT_NEAR(3, to_double(state_l->getEntity(0)->_pos.x), 1e-5);
-	EXPECT_NEAR(3, to_double(state_l->getEntity(0)->_pos.y), 1e-5);
+	EXPECT_NEAR(3, to_double(state_l->getEntity(Handle(0))->_pos.x), 1e-5);
+	EXPECT_NEAR(3, to_double(state_l->getEntity(Handle(0))->_pos.y), 1e-5);
 	EXPECT_EQ("bloc", stateUnit_l->_typeOfResource);
 	EXPECT_NEAR(0., to_double(stateUnit_l->_quantityOfResource), 1e-5);
 	EXPECT_NEAR(20., to_double(getResource(*player_l, "bloc")), 1e-5);

@@ -15,7 +15,7 @@ namespace octopus
 {
 
 AreaSpawnerCommand::AreaSpawnerCommand(RandomGenerator &rand_p, std::list<AreaSpawn> const &spawns_p)
-	: Command(0)
+	: Command(Handle(0))
 	, _spawns(spawns_p)
 	, _rand(&rand_p)
 {}

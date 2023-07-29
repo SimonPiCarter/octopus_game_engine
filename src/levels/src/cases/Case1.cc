@@ -29,17 +29,17 @@ std::list<Steppable *> Case1(Library &lib_p)
 	std::list<Steppable *> spawners_l =
 	{
 		new PlayerSpawnStep(0, 0),
-		new EntitySpawnStep(0, Entity { { 23.6, 3. }, false, lib_p.getEntityModel("unit")}),
-		new EntitySpawnStep(1, Entity { { 25.1, 3.1 }, false, lib_p.getEntityModel("unit")}),
-		new EntitySpawnStep(2, Entity { { 26.5, 3. }, false, lib_p.getEntityModel("unit")}),
-		new EntitySpawnStep(3, Entity { { 23.5, 3.6 }, false, lib_p.getEntityModel("unit")}),
-		new EntitySpawnStep(4, Entity { { 25., 3.4 }, false, lib_p.getEntityModel("unit")}),
-		new EntitySpawnStep(5, Entity { { 26.4, 3.5 }, false, lib_p.getEntityModel("unit")}),
-		new EntitySpawnStep(6, Entity { { 23.2, 2.4 }, false, lib_p.getEntityModel("unit")}),
-		new EntitySpawnStep(7, Entity { { 25.1, 2.5 }, false, lib_p.getEntityModel("unit")}),
-		new EntitySpawnStep(8, Entity { { 26.5, 2.6 }, false, lib_p.getEntityModel("unit")}),
-		new EntitySpawnStep(9, target_l),
-		new EntitySpawnStep(10, building_l)
+		new EntitySpawnStep(Handle(0), Entity { { 23.6, 3. }, false, lib_p.getEntityModel("unit")}),
+		new EntitySpawnStep(Handle(1), Entity { { 25.1, 3.1 }, false, lib_p.getEntityModel("unit")}),
+		new EntitySpawnStep(Handle(2), Entity { { 26.5, 3. }, false, lib_p.getEntityModel("unit")}),
+		new EntitySpawnStep(Handle(3), Entity { { 23.5, 3.6 }, false, lib_p.getEntityModel("unit")}),
+		new EntitySpawnStep(Handle(4), Entity { { 25., 3.4 }, false, lib_p.getEntityModel("unit")}),
+		new EntitySpawnStep(Handle(5), Entity { { 26.4, 3.5 }, false, lib_p.getEntityModel("unit")}),
+		new EntitySpawnStep(Handle(6), Entity { { 23.2, 2.4 }, false, lib_p.getEntityModel("unit")}),
+		new EntitySpawnStep(Handle(7), Entity { { 25.1, 2.5 }, false, lib_p.getEntityModel("unit")}),
+		new EntitySpawnStep(Handle(8), Entity { { 26.5, 2.6 }, false, lib_p.getEntityModel("unit")}),
+		new EntitySpawnStep(Handle(9), target_l),
+		new EntitySpawnStep(Handle(10) building_l)
 	};
 
 	/// add a ton of entities

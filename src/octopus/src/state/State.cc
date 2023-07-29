@@ -115,9 +115,9 @@ Entity const *State::getEntity(Handle const &handle_p) const
 	return _entities[handle_p.index];
 }
 
-Entity const *State::getLoseEntity(Handle const &handle_p) const
+Entity const *State::getLoseEntity(unsigned long handle_p) const
 {
-	return _entities[handle_p.index];
+	return _entities[handle_p];
 }
 
 bool State::hasCommandable(Handle const &handle_p) const
@@ -136,7 +136,6 @@ Commandable const *State::getCommandable(Handle const &handle_p) const
 /// @brief warning handle will be modified!
 Handle const &State::addEntity(Entity * ent_p)
 {
-	/// @todo reuse free handle here if necessary
 	if(!_freeHandles.empty())
 	{
 		Handle reused_l = _freeHandles.front();
@@ -150,9 +149,9 @@ Handle const &State::addEntity(Entity * ent_p)
 	}
 	else
 	{
-		ent_p->_handle = _entities.size();
+		ent_p->_handle = Handle(_entities.size());
 		_entities.push_back(ent_p);
-		ent_p->_commandableHandle = _commandables.size();
+		ent_p->_commandableHandle = Handle(_commandables.size());
 		_commandables.push_back(ent_p);
 	}
 	return ent_p->_handle;
@@ -206,7 +205,7 @@ Handle State::getFlyingCommandHandle(unsigned long spawning_p) const
 {
 	// number of available handle found
 	unsigned long offset_l = 0;
-	Handle handle_l = 0;
+	Handle handle_l;
 	while(offset_l<=spawning_p)
 	{
 		auto &&it_l = _flyingCommands.find(handle_l);
@@ -216,7 +215,8 @@ Handle State::getFlyingCommandHandle(unsigned long spawning_p) const
 		}
 		++handle_l.index;
 	}
-	return handle_l-1;
+	--handle_l.index;
+	return handle_l;
 }
 
 std::vector<Player *> &State::getPlayers()

@@ -12,7 +12,7 @@ namespace octopus
 {
 
 PlayerChoseOptionCommand::PlayerChoseOptionCommand(unsigned long player_p, std::string const &key_p, unsigned long option_p)
-	: Command(0)
+	: Command(Handle(0))
 	, _player(player_p)
 	, _key(key_p)
 	, _option(option_p)

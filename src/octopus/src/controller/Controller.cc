@@ -508,6 +508,20 @@ void Controller::queueCommandAsPlayer(Command * cmd_p, unsigned long player_p)
 	}
 }
 
+void Controller::queueCommand(Command * cmd_p)
+{
+	if(_replayMode)
+	{
+		return;
+	}
+	// lock to avoid multi swap
+	std::lock_guard<std::mutex> lock_l(_mutex);
+	if(!_queuedCommands.empty())
+	{
+		_queuedCommands.back()->push_back(cmd_p);
+	}
+}
+
 void Controller::addQueuedLayer()
 {
 	if(_replayMode)
@@ -669,7 +683,7 @@ void Controller::handleTriggers(State const &state_p, Step &step_p, Step const &
 		step_p.addSteppable(new PlayerUpdateBuildingCountStep(pair_l.first, pair_l.second));
 	}
 
-	Handle curHandle_l = 0;
+	Handle curHandle_l(0);
 	for(Trigger const * trigger_l : state_p.getTriggers())
 	{
 		TriggerData const &data_l = *state_p.getTriggerData(curHandle_l);

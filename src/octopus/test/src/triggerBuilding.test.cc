@@ -57,12 +57,12 @@ TEST(triggerBuildingTest, simple)
 	building_l._alive = false;
 
 	// unit building command
-	EntityBuildingCommand * command_l = new EntityBuildingCommand(0, 0, 1, {1, 3.5}, 0, {{1, 3.5}});
+	EntityBuildingCommand * command_l = new EntityBuildingCommand(Handle(0), Handle(0), Handle(1), {1, 3.5}, 0, {{1, 3.5}});
 
 	Controller controller_l({
 		new PlayerSpawnStep(0, 0),
-		new UnitSpawnStep(0, unit_l),
-		new BuildingSpawnStep(1, building_l, false),
+		new UnitSpawnStep(Handle(0), unit_l),
+		new BuildingSpawnStep(Handle(1), building_l, false),
 		new CommandSpawnStep(command_l)
 	}, 1.);
 

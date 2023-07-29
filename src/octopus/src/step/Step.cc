@@ -281,8 +281,7 @@ Handle getNextHandle(Step const &step_p, State const &state_p)
 		return getHandle(freeHandles_l, step_p.getEntitySpawned());
 	}
 
-	Handle newHandle_l = step_p.getEntitySpawned() - freeHandles_l.size() + state_p.getEntities().size();
-	return newHandle_l;
+	return Handle(step_p.getEntitySpawned() - freeHandles_l.size() + state_p.getEntities().size());
 }
 
 } // namespace octopus

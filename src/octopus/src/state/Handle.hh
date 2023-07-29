@@ -13,7 +13,7 @@ struct Handle
 {
 	Handle() {}
 	Handle(unsigned long idx_p, unsigned char rev_p) : index(idx_p), revision(rev_p) {}
-	Handle(unsigned long idx_p) : index(idx_p) {}
+	explicit Handle(unsigned long idx_p) : index(idx_p) {}
 
 	unsigned long index {0};
 	unsigned char revision {0};

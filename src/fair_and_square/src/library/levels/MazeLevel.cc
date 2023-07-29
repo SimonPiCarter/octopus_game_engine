@@ -44,7 +44,7 @@ std::list<Steppable *> MazeLevelSteps(Library &lib_p, size_t number_p)
 	unsigned long id_l = 0;
 	for(size_t i = 0; i < number_p ; ++ i)
 	{
-		spawners_l.push_back(new UnitSpawnStep(id_l++, square1_l));
+		spawners_l.push_back(new UnitSpawnStep(Handle(id_l++), square1_l));
 	}
 
 	Resource res_l({20,20}, true, lib_p.getEntityModel("resource_food"));
@@ -82,7 +82,7 @@ std::list<Steppable *> MazeLevelSteps(Library &lib_p, size_t number_p)
 			if(maze_l.at(i).at(j) == 1)
 			{
 				res_l._pos = Vector(20+2*i, 20+2*j);
-				spawners_l.push_back(new ResourceSpawnStep(id_l++, res_l));
+				spawners_l.push_back(new ResourceSpawnStep(Handle(id_l++), res_l));
 			}
 		}
 	}

@@ -39,10 +39,10 @@ TEST(unitProductionCommandTest, simple)
 
 	Building production_l({1,3}, true, buildingModel_l);
 
-	BuildingSpawnStep * spawn0_l = new BuildingSpawnStep(0, production_l, true);
+	BuildingSpawnStep * spawn0_l = new BuildingSpawnStep(Handle(0), production_l, true);
 
 	// unit production
-	BuildingUnitProductionCommand * command_l = new BuildingUnitProductionCommand(0, 0, unitModel_l);
+	BuildingUnitProductionCommand * command_l = new BuildingUnitProductionCommand(Handle(0), Handle(0), unitModel_l);
 	CommandSpawnStep * commandSpawn_l = new CommandSpawnStep(command_l);
 
 	Controller controller_l({new PlayerSpawnStep(0, 0), spawn0_l, commandSpawn_l}, 1.);
@@ -91,10 +91,10 @@ TEST(unitProductionCommandTest, cancel_one)
 
 	Building production_l({1,3}, true, buildingModel_l);
 
-	BuildingSpawnStep * spawn0_l = new BuildingSpawnStep(0, production_l, true);
+	BuildingSpawnStep * spawn0_l = new BuildingSpawnStep(Handle(0), production_l, true);
 
 	// unit production
-	BuildingUnitProductionCommand * command_l = new BuildingUnitProductionCommand(0, 0, unitModel_l);
+	BuildingUnitProductionCommand * command_l = new BuildingUnitProductionCommand(Handle(0), Handle(0), unitModel_l);
 	CommandSpawnStep * commandSpawn_l = new CommandSpawnStep(command_l);
 
 	Controller controller_l({new PlayerSpawnStep(0, 0), spawn0_l, commandSpawn_l}, 1.);
@@ -115,7 +115,7 @@ TEST(unitProductionCommandTest, cancel_one)
 
 	EXPECT_EQ(1u, state_l->getEntities().size());
 
-	controller_l.commitCommand(new BuildingUnitCancelCommand(0, 0));
+	controller_l.commitCommand(new BuildingUnitCancelCommand(Handle(0), Handle(0)));
 
 	// update time to 10second (13)
 	controller_l.update(10.);
@@ -146,12 +146,12 @@ TEST(unitProductionCommandTest, cancel_two)
 
 	Building production_l({1,3}, true, buildingModel_l);
 
-	BuildingSpawnStep * spawn0_l = new BuildingSpawnStep(0, production_l, true);
+	BuildingSpawnStep * spawn0_l = new BuildingSpawnStep(Handle(0), production_l, true);
 
 	// unit production
-	BuildingUnitProductionCommand * command1_l = new BuildingUnitProductionCommand(0, 0, unitModel_l);
+	BuildingUnitProductionCommand * command1_l = new BuildingUnitProductionCommand(Handle(0), Handle(0), unitModel_l);
 	command1_l->setQueued(true);
-	BuildingUnitProductionCommand * command2_l = new BuildingUnitProductionCommand(0, 0, unitModel_l);
+	BuildingUnitProductionCommand * command2_l = new BuildingUnitProductionCommand(Handle(0), Handle(0), unitModel_l);
 	command2_l->setQueued(true);
 	CommandSpawnStep * commandSpawn1_l = new CommandSpawnStep(command1_l);
 	CommandSpawnStep * commandSpawn2_l = new CommandSpawnStep(command2_l);
@@ -174,7 +174,7 @@ TEST(unitProductionCommandTest, cancel_two)
 
 	EXPECT_EQ(1u, state_l->getEntities().size());
 
-	controller_l.commitCommand(new BuildingUnitCancelCommand(0, 0));
+	controller_l.commitCommand(new BuildingUnitCancelCommand(Handle(0), Handle(0)));
 
 	// update time to 6seconds (9)
 	// 1step for cancel to occur
@@ -218,12 +218,12 @@ TEST(unitProductionCommandTest, cancel_last)
 
 	Building production_l({1,3}, true, buildingModel_l);
 
-	BuildingSpawnStep * spawn0_l = new BuildingSpawnStep(0, production_l, true);
+	BuildingSpawnStep * spawn0_l = new BuildingSpawnStep(Handle(0), production_l, true);
 
 	// unit production
-	BuildingUnitProductionCommand * command1_l = new BuildingUnitProductionCommand(0, 0, unitModel_l);
+	BuildingUnitProductionCommand * command1_l = new BuildingUnitProductionCommand(Handle(0), Handle(0), unitModel_l);
 	command1_l->setQueued(true);
-	BuildingUnitProductionCommand * command2_l = new BuildingUnitProductionCommand(0, 0, unitModel_l);
+	BuildingUnitProductionCommand * command2_l = new BuildingUnitProductionCommand(Handle(0), Handle(0), unitModel_l);
 	command2_l->setQueued(true);
 	CommandSpawnStep * commandSpawn1_l = new CommandSpawnStep(command1_l);
 	CommandSpawnStep * commandSpawn2_l = new CommandSpawnStep(command2_l);
@@ -246,7 +246,7 @@ TEST(unitProductionCommandTest, cancel_last)
 
 	EXPECT_EQ(1u, state_l->getEntities().size());
 
-	controller_l.commitCommand(new BuildingUnitCancelCommand(0, 1));
+	controller_l.commitCommand(new BuildingUnitCancelCommand(Handle(0), Handle(1)));
 
 	// update time to 2second (5)
 	// at this point production time is over but no spawn yet
@@ -289,13 +289,13 @@ TEST(unitProductionCommandTest, destroy_building_one_step_before_production)
 
 	Building production_l({1,3}, true, buildingModel_l);
 
-	BuildingSpawnStep * spawn0_l = new BuildingSpawnStep(0, production_l, true);
+	BuildingSpawnStep * spawn0_l = new BuildingSpawnStep(Handle(0), production_l, true);
 
 	// unit production
-	BuildingUnitProductionCommand * command_l = new BuildingUnitProductionCommand(0, 0, unitModel_l);
+	BuildingUnitProductionCommand * command_l = new BuildingUnitProductionCommand(Handle(0), Handle(0), unitModel_l);
 	CommandSpawnStep * commandSpawn_l = new CommandSpawnStep(command_l);
 
-	FlyingCommandSpawnStep * flySpawn_l = new FlyingCommandSpawnStep(new DamageOverTime(0, 4, 1, 10., 0));
+	FlyingCommandSpawnStep * flySpawn_l = new FlyingCommandSpawnStep(new DamageOverTime(Handle(0), 4, 1, 10., Handle(0)));
 
 	// no need for initial spawn of resource since build production is queued up directly through initial step
 	Controller controller_l({
@@ -353,13 +353,13 @@ TEST(unitProductionCommandTest, destroy_building_when_production_is_over)
 
 	Building production_l({1,3}, true, buildingModel_l);
 
-	BuildingSpawnStep * spawn0_l = new BuildingSpawnStep(0, production_l, true);
+	BuildingSpawnStep * spawn0_l = new BuildingSpawnStep(Handle(0), production_l, true);
 
 	// unit production
-	BuildingUnitProductionCommand * command_l = new BuildingUnitProductionCommand(0, 0, unitModel_l);
+	BuildingUnitProductionCommand * command_l = new BuildingUnitProductionCommand(Handle(0), Handle(0), unitModel_l);
 	CommandSpawnStep * commandSpawn_l = new CommandSpawnStep(command_l);
 
-	FlyingCommandSpawnStep * flySpawn_l = new FlyingCommandSpawnStep(new DamageOverTime(0, 5, 1, 10., 0));
+	FlyingCommandSpawnStep * flySpawn_l = new FlyingCommandSpawnStep(new DamageOverTime(Handle(0), 5, 1, 10., Handle(0)));
 
 	// no need for initial spawn of resource since build production is queued up directly through initial step
 	Controller controller_l({

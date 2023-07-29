@@ -58,8 +58,8 @@ std::list<Steppable *> ArenaLevelSteps(Library &lib_p, size_t number_p)
 	unsigned long id_l = 0;
 	for(size_t i = 0; i < number_p ; ++ i)
 	{
-		spawners_l.push_back(new UnitSpawnStep(id_l++, square1_l));
-		spawners_l.push_back(new UnitSpawnStep(id_l++, circle2_l));
+		spawners_l.push_back(new UnitSpawnStep(Handle(id_l++), square1_l));
+		spawners_l.push_back(new UnitSpawnStep(Handle(id_l++), circle2_l));
 	}
 
 	return spawners_l;
@@ -104,7 +104,7 @@ std::list<octopus::Steppable *> ArenaLevelSteps(octopus::Library &lib_p, std::ve
 
 		for(size_t j = 0; j < you_p.at(i).nb ; ++ j)
 		{
-			spawners_l.push_back(new UnitSpawnStep(id_l++, unit_l));
+			spawners_l.push_back(new UnitSpawnStep(Handle(id_l++), unit_l));
 		}
 	}
 
@@ -115,7 +115,7 @@ std::list<octopus::Steppable *> ArenaLevelSteps(octopus::Library &lib_p, std::ve
 
 		for(size_t j = 0; j < them_p.at(i).nb ; ++ j)
 		{
-			spawners_l.push_back(new UnitSpawnStep(id_l++, unit_l));
+			spawners_l.push_back(new UnitSpawnStep(Handle(id_l++), unit_l));
 		}
 	}
 
@@ -186,11 +186,11 @@ std::list<octopus::Steppable *> ArenaKamikazeSteps(octopus::Library &lib_p, size
 	unsigned long id_l = 0;
 	for(size_t i = 0; i < numberYou_p ; ++ i)
 	{
-		spawners_l.push_back(new UnitSpawnStep(id_l++, triangle_l));
+		spawners_l.push_back(new UnitSpawnStep(Handle(id_l++), triangle_l));
 	}
 	for(size_t i = 0; i < numberThem_p ; ++ i)
 	{
-		spawners_l.push_back(new UnitSpawnStep(id_l, square_l));
+		spawners_l.push_back(new UnitSpawnStep(Handle(id_l), square_l));
 		++id_l;
 	}
 	return spawners_l;

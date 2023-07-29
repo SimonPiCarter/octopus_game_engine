@@ -33,14 +33,14 @@ TEST(tickingRegenTest, simple)
 	Unit unit_l({ 5, 3 }, false, unitModel_l);
 	unit_l._hp = 5;
 
-	UnitSpawnStep * spawn0_l = new UnitSpawnStep(0, unit_l);
+	UnitSpawnStep * spawn0_l = new UnitSpawnStep(Handle(0), unit_l);
 
 	Controller controller_l({new PlayerSpawnStep(0, 0), spawn0_l}, 1.);
 
 	// query state
 	State const * state_l = controller_l.queryState();
 
-	EXPECT_NEAR(5., to_double(state_l->getEntity(0)->_hp), 1e-5);
+	EXPECT_NEAR(5., to_double(state_l->getEntity(Handle(0))->_hp), 1e-5);
 
 	// update time to 100 seconds (100)
 	controller_l.update(100.);
@@ -50,5 +50,5 @@ TEST(tickingRegenTest, simple)
 
 	state_l = controller_l.queryState();
 
-	EXPECT_NEAR(6., to_double(state_l->getEntity(0)->_hp), 1e-5);
+	EXPECT_NEAR(6., to_double(state_l->getEntity(Handle(0))->_hp), 1e-5);
 }

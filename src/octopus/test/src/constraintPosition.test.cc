@@ -24,7 +24,7 @@ TEST(constraintPositionTest, no_constraint)
 
 	state_l.addEntity(ent_l);
 
-	EntityMoveStep * moveStep_l = new EntityMoveStep(0, Vector { -1, -1} );
+	EntityMoveStep * moveStep_l = new EntityMoveStep(Handle(0), Vector { -1, -1} );
 	step_l.addEntityMoveStep(moveStep_l);
 
 	ConstraintPositionLibrary constraintLib_l;
@@ -52,7 +52,7 @@ TEST(constraintPositionTest, constraint_x_less)
 
 	state_l.addEntity(ent_l);
 
-	EntityMoveStep * moveStep_l = new EntityMoveStep(0, Vector { -1, -1} );
+	EntityMoveStep * moveStep_l = new EntityMoveStep(Handle(0), Vector { -1, -1} );
 	step_l.addEntityMoveStep(moveStep_l);
 
 	ConstraintPositionLibrary constraintLib_l;
@@ -78,7 +78,7 @@ TEST(constraintPositionTest, constraint_x_more)
 
 	state_l.addEntity(ent_l);
 
-	EntityMoveStep * moveStep_l = new EntityMoveStep(0, Vector { -1, -1} );
+	EntityMoveStep * moveStep_l = new EntityMoveStep(Handle(0), Vector { -1, -1} );
 	step_l.addEntityMoveStep(moveStep_l);
 
 	ConstraintPositionLibrary constraintLib_l;
@@ -104,7 +104,7 @@ TEST(constraintPositionTest, constraint_x_more_not_applying)
 
 	state_l.addEntity(ent_l);
 
-	EntityMoveStep * moveStep_l = new EntityMoveStep(0, Vector { -1, -1} );
+	EntityMoveStep * moveStep_l = new EntityMoveStep(Handle(0), Vector { -1, -1} );
 	step_l.addEntityMoveStep(moveStep_l);
 
 	ConstraintPositionLibrary constraintLib_l;
@@ -134,7 +134,7 @@ TEST(constraintPositionTest, constraint_y_less)
 
 	state_l.addEntity(ent_l);
 
-	EntityMoveStep * moveStep_l = new EntityMoveStep(0, Vector { -1, -1} );
+	EntityMoveStep * moveStep_l = new EntityMoveStep(Handle(0), Vector { -1, -1} );
 	step_l.addEntityMoveStep(moveStep_l);
 
 	ConstraintPositionLibrary constraintLib_l;
@@ -160,7 +160,7 @@ TEST(constraintPositionTest, constraint_y_more)
 
 	state_l.addEntity(ent_l);
 
-	EntityMoveStep * moveStep_l = new EntityMoveStep(0, Vector { -1, -1} );
+	EntityMoveStep * moveStep_l = new EntityMoveStep(Handle(0), Vector { -1, -1} );
 	step_l.addEntityMoveStep(moveStep_l);
 
 	ConstraintPositionLibrary constraintLib_l;
@@ -186,7 +186,7 @@ TEST(constraintPositionTest, constraint_y_more_not_applying)
 
 	state_l.addEntity(ent_l);
 
-	EntityMoveStep * moveStep_l = new EntityMoveStep(0, Vector { -1, -1} );
+	EntityMoveStep * moveStep_l = new EntityMoveStep(Handle(0), Vector { -1, -1} );
 	step_l.addEntityMoveStep(moveStep_l);
 
 	ConstraintPositionLibrary constraintLib_l;
@@ -216,7 +216,7 @@ TEST(constraintPositionTest, constraint_step)
 
 	state_l.addEntity(ent_l);
 
-	EntityMoveStep * moveStep_l = new EntityMoveStep(0, Vector { -1, -1} );
+	EntityMoveStep * moveStep_l = new EntityMoveStep(Handle(0), Vector { -1, -1} );
 	step_l.addEntityMoveStep(moveStep_l);
 
 	ConstraintPositionLibrary constraintLib_l;
@@ -245,7 +245,7 @@ TEST(constraintPositionTest, constraint_step_revert)
 
 	state_l.addEntity(ent_l);
 
-	EntityMoveStep * moveStep_l = new EntityMoveStep(0, Vector { -1, -1} );
+	EntityMoveStep * moveStep_l = new EntityMoveStep(Handle(0), Vector { -1, -1} );
 	step_l.addEntityMoveStep(moveStep_l);
 
 	StateAddConstraintPositionStep ctrStep_l(0, -2., -5.,5.,true, true);
@@ -272,7 +272,7 @@ TEST(constraintPositionTest, constraint_step_remove)
 
 	state_l.addEntity(ent_l);
 
-	EntityMoveStep * moveStep_l = new EntityMoveStep(0, Vector { -1, -1} );
+	EntityMoveStep * moveStep_l = new EntityMoveStep(Handle(0), Vector { -1, -1} );
 	step_l.addEntityMoveStep(moveStep_l);
 
 	StateAddConstraintPositionStep ctrStep_l(0, -2., -5.,5.,true, true);
@@ -300,7 +300,7 @@ TEST(constraintPositionTest, constraint_step_remove_revert)
 
 	state_l.addEntity(ent_l);
 
-	EntityMoveStep * moveStep_l = new EntityMoveStep(0, Vector { -1, -1} );
+	EntityMoveStep * moveStep_l = new EntityMoveStep(Handle(0), Vector { -1, -1} );
 	step_l.addEntityMoveStep(moveStep_l);
 
 	StateAddConstraintPositionStep ctrStep_l(0, -2., -5.,5.,true, true);

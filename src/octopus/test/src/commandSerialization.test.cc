@@ -28,8 +28,8 @@ TEST(commandSerializationTest, simple_no_step_attackCommand)
         // write controller
         Controller controller_l({}, 1.);
 
-        controller_l.commitCommand(new EntityAttackCommand(0,0,1,true));
-        controller_l.commitCommand(new EntityAttackCommand(1,1,0,false));
+        controller_l.commitCommand(new EntityAttackCommand(Handle(0), Handle(0), Handle(1),true));
+        controller_l.commitCommand(new EntityAttackCommand(Handle(1), Handle(1), Handle(0),false));
 
 
         std::ofstream file_l(fileName_l, std::ios::out | std::ios::binary);
@@ -77,8 +77,8 @@ TEST(commandSerializationTest, simple_no_step_moveCommand)
         // write controller
         Controller controller_l({}, 1.);
 
-        controller_l.commitCommand(new EntityMoveCommand(0,0,{12,3},0,{{12,3}}, false));
-        controller_l.commitCommand(new EntityMoveCommand(1,1,{15,2},1,{{7,8}, {15,2}}, true));
+        controller_l.commitCommand(new EntityMoveCommand(Handle(0), Handle(0),{12,3},0,{{12,3}}, false));
+        controller_l.commitCommand(new EntityMoveCommand(Handle(1), Handle(1),{15,2},1,{{7,8}, {15,2}}, true));
 
         std::ofstream file_l(fileName_l, std::ios::out | std::ios::binary);
         writeCommands(file_l, controller_l);

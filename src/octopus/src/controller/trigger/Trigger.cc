@@ -30,7 +30,7 @@ Trigger::~Trigger()
 
 void Trigger::compile(EventCollection const &collection_p, Step &step_p, TriggerData const &data_p) const
 {
-	Handle listenerHandle_l = 0;
+	Handle listenerHandle_l;
 	for(Listener const * listener_l : _listeners)
 	{
 		ListenerData const * listData_l = data_p._listenerData[listenerHandle_l];
@@ -56,7 +56,7 @@ bool Trigger::isComplete(TriggerData const &data_p) const
 
 void Trigger::reset(Step &step_p, TriggerData const &data_p) const
 {
-	Handle listenerHandle_l = 0;
+	Handle listenerHandle_l;
 	for(Listener const * listener_l : _listeners)
 	{
 		ListenerData const * listData_l = data_p._listenerData[listenerHandle_l];
@@ -86,7 +86,7 @@ TriggerData * Trigger::newTriggerData(Handle const &triggerHandle_p) const
 	TriggerData * data_l = new TriggerData();
 	for(Listener * listener_l : _listeners)
 	{
-		data_l->_listenerData.push_back(listener_l->newData(triggerHandle_p, data_l->_listenerData.size()));
+		data_l->_listenerData.push_back(listener_l->newData(triggerHandle_p, Handle(data_l->_listenerData.size())));
 	}
 	return data_l;
 }

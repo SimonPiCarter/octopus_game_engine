@@ -49,13 +49,13 @@ TEST(triggerUnitDiedTest, one_unit)
 
 	Controller controller_l({
 		new PlayerSpawnStep(0, 0),
-		new UnitSpawnStep(0, unit_l),
-		new UnitSpawnStep(1, unit_l),
-		new FlyingCommandSpawnStep(new DamageOverTime(0, 5, 2, 5, 0)),
-		new FlyingCommandSpawnStep(new DamageOverTime(1, 10, 2, 5, 1)),
+		new UnitSpawnStep(Handle(0), unit_l),
+		new UnitSpawnStep(Handle(1), unit_l),
+		new FlyingCommandSpawnStep(new DamageOverTime(Handle(0), 5, 2, 5, Handle(0))),
+		new FlyingCommandSpawnStep(new DamageOverTime(Handle(1), 10, 2, 5, Handle(1))),
 	}, 1.);
 
-	controller_l.commitTrigger(new OneShotTriggerResourceTest(new ListenerEntityDied({0})));
+	controller_l.commitTrigger(new OneShotTriggerResourceTest(new ListenerEntityDied({Handle(0)})));
 
 	// query state
 	State const * state_l = controller_l.queryState();
@@ -71,7 +71,7 @@ TEST(triggerUnitDiedTest, one_unit)
 
 	state_l = controller_l.queryState();
 
-	EXPECT_NEAR(5., to_double(state_l->getEntity(0)->_hp), 1e-3);
+	EXPECT_NEAR(5., to_double(state_l->getEntity(Handle(0))->_hp), 1e-3);
 	EXPECT_NEAR(0., to_double(getResource(*state_l->getPlayer(0), "bloc")), 1e-3);
 
 	// update time to 1second (11)
@@ -83,7 +83,7 @@ TEST(triggerUnitDiedTest, one_unit)
 
 	state_l = controller_l.queryState();
 
-	EXPECT_NEAR(0., to_double(state_l->getEntity(0)->_hp), 1e-3);
+	EXPECT_NEAR(0., to_double(state_l->getEntity(Handle(0))->_hp), 1e-3);
 	EXPECT_NEAR(0., to_double(getResource(*state_l->getPlayer(0), "bloc")), 1e-3);
 
 	// update time to 2second (13)
@@ -97,7 +97,7 @@ TEST(triggerUnitDiedTest, one_unit)
 
 	state_l = controller_l.queryState();
 
-	EXPECT_NEAR(0., to_double(state_l->getEntity(0)->_hp), 1e-3);
+	EXPECT_NEAR(0., to_double(state_l->getEntity(Handle(0))->_hp), 1e-3);
 	EXPECT_NEAR(10., to_double(getResource(*state_l->getPlayer(0), "bloc")), 1e-3);
 }
 
@@ -115,13 +115,13 @@ TEST(triggerUnitDiedTest, two_units)
 
 	Controller controller_l({
 		new PlayerSpawnStep(0, 0),
-		new UnitSpawnStep(0, unit_l),
-		new UnitSpawnStep(1, unit_l),
-		new FlyingCommandSpawnStep(new DamageOverTime(0, 5, 2, 5, 0)),
-		new FlyingCommandSpawnStep(new DamageOverTime(1, 10, 2, 5, 1)),
+		new UnitSpawnStep(Handle(0), unit_l),
+		new UnitSpawnStep(Handle(1), unit_l),
+		new FlyingCommandSpawnStep(new DamageOverTime(Handle(0), 5, 2, 5, Handle(0))),
+		new FlyingCommandSpawnStep(new DamageOverTime(Handle(1), 10, 2, 5, Handle(1))),
 	}, 1.);
 
-	controller_l.commitTrigger(new OneShotTriggerResourceTest(new ListenerEntityDied({0,1})));
+	controller_l.commitTrigger(new OneShotTriggerResourceTest(new ListenerEntityDied({Handle(0),Handle(1)})));
 
 	// query state
 	State const * state_l = controller_l.queryState();
@@ -137,7 +137,7 @@ TEST(triggerUnitDiedTest, two_units)
 
 	state_l = controller_l.queryState();
 
-	EXPECT_NEAR(5., to_double(state_l->getEntity(0)->_hp), 1e-3);
+	EXPECT_NEAR(5., to_double(state_l->getEntity(Handle(0))->_hp), 1e-3);
 	EXPECT_NEAR(0., to_double(getResource(*state_l->getPlayer(0), "bloc")), 1e-3);
 
 	// update time to 1second (11)
@@ -149,7 +149,7 @@ TEST(triggerUnitDiedTest, two_units)
 
 	state_l = controller_l.queryState();
 
-	EXPECT_NEAR(0., to_double(state_l->getEntity(0)->_hp), 1e-3);
+	EXPECT_NEAR(0., to_double(state_l->getEntity(Handle(0))->_hp), 1e-3);
 	EXPECT_NEAR(0., to_double(getResource(*state_l->getPlayer(0), "bloc")), 1e-3);
 
 	// update time to 2second (13)
@@ -163,8 +163,8 @@ TEST(triggerUnitDiedTest, two_units)
 
 	state_l = controller_l.queryState();
 
-	EXPECT_NEAR(0., to_double(state_l->getEntity(0)->_hp), 1e-3);
-	EXPECT_NEAR(5., to_double(state_l->getEntity(1)->_hp), 1e-3);
+	EXPECT_NEAR(0., to_double(state_l->getEntity(Handle(0))->_hp), 1e-3);
+	EXPECT_NEAR(5., to_double(state_l->getEntity(Handle(1))->_hp), 1e-3);
 	EXPECT_NEAR(0., to_double(getResource(*state_l->getPlayer(0), "bloc")), 1e-3);
 
 	// update time to 8second (21)
@@ -175,8 +175,8 @@ TEST(triggerUnitDiedTest, two_units)
 
 	state_l = controller_l.queryState();
 
-	EXPECT_NEAR(0., to_double(state_l->getEntity(0)->_hp), 1e-3);
-	EXPECT_NEAR(0., to_double(state_l->getEntity(1)->_hp), 1e-3);
+	EXPECT_NEAR(0., to_double(state_l->getEntity(Handle(0))->_hp), 1e-3);
+	EXPECT_NEAR(0., to_double(state_l->getEntity(Handle(1))->_hp), 1e-3);
 	EXPECT_NEAR(0., to_double(getResource(*state_l->getPlayer(0), "bloc")), 1e-3);
 
 	// update time to 2second (23)
@@ -190,7 +190,7 @@ TEST(triggerUnitDiedTest, two_units)
 
 	state_l = controller_l.queryState();
 
-	EXPECT_NEAR(0., to_double(state_l->getEntity(0)->_hp), 1e-3);
-	EXPECT_NEAR(0., to_double(state_l->getEntity(1)->_hp), 1e-3);
+	EXPECT_NEAR(0., to_double(state_l->getEntity(Handle(0))->_hp), 1e-3);
+	EXPECT_NEAR(0., to_double(state_l->getEntity(Handle(1))->_hp), 1e-3);
 	EXPECT_NEAR(10., to_double(getResource(*state_l->getPlayer(0), "bloc")), 1e-3);
 }

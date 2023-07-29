@@ -21,17 +21,17 @@ TEST(entityHitPointChangeTest, simple_overheal)
 	octopus::EntityModel unitModel_l { false, 1., 1., 10. };
 	state_l.addEntity(new Entity { { 3, 3. }, false, unitModel_l});
 
-	EntityHitPointChangeStep step_l(0, 10., 10., 10.);
+	EntityHitPointChangeStep step_l(Handle(0), 10., 10., 10.);
 
-	EXPECT_NEAR(10., to_double(state_l.getEntity(0)->_hp), 1e-5);
+	EXPECT_NEAR(10., to_double(state_l.getEntity(Handle(0))->_hp), 1e-5);
 
 	step_l.apply(state_l);
 
-	EXPECT_NEAR(10., to_double(state_l.getEntity(0)->_hp), 1e-5);
+	EXPECT_NEAR(10., to_double(state_l.getEntity(Handle(0))->_hp), 1e-5);
 
 	step_l.revert(state_l, nullptr);
 
-	EXPECT_NEAR(10., to_double(state_l.getEntity(0)->_hp), 1e-5);
+	EXPECT_NEAR(10., to_double(state_l.getEntity(Handle(0))->_hp), 1e-5);
 }
 
 TEST(entityHitPointChangeTest, simple_overkill)
@@ -42,17 +42,17 @@ TEST(entityHitPointChangeTest, simple_overkill)
 	octopus::EntityModel unitModel_l { false, 1., 1., 10. };
 	state_l.addEntity(new Entity { { 3, 3. }, false, unitModel_l});
 
-	EntityHitPointChangeStep step_l(0, -100., 10., 10.);
+	EntityHitPointChangeStep step_l(Handle(0), -100., 10., 10.);
 
-	EXPECT_NEAR(10., to_double(state_l.getEntity(0)->_hp), 1e-5);
+	EXPECT_NEAR(10., to_double(state_l.getEntity(Handle(0))->_hp), 1e-5);
 
 	step_l.apply(state_l);
 
-	EXPECT_NEAR(0., to_double(state_l.getEntity(0)->_hp), 1e-5);
+	EXPECT_NEAR(0., to_double(state_l.getEntity(Handle(0))->_hp), 1e-5);
 
 	step_l.revert(state_l, nullptr);
 
-	EXPECT_NEAR(10., to_double(state_l.getEntity(0)->_hp), 1e-5);
+	EXPECT_NEAR(10., to_double(state_l.getEntity(Handle(0))->_hp), 1e-5);
 }
 
 TEST(entityHitPointChangeTest, simple_buff_heal)
@@ -64,15 +64,15 @@ TEST(entityHitPointChangeTest, simple_buff_heal)
 	state_l.addEntity(new Entity { { 3, 3. }, false, unitModel_l});
 
 
-	EntityHitPointChangeStep step_l(0, 5, 10., 10.);
+	EntityHitPointChangeStep step_l(Handle(0), 5, 10., 10.);
 
-	EXPECT_NEAR(10., to_double(state_l.getEntity(0)->_hp), 1e-5);
+	EXPECT_NEAR(10., to_double(state_l.getEntity(Handle(0))->_hp), 1e-5);
 
 	step_l.apply(state_l);
 
-	EXPECT_NEAR(10., to_double(state_l.getEntity(0)->_hp), 1e-5);
+	EXPECT_NEAR(10., to_double(state_l.getEntity(Handle(0))->_hp), 1e-5);
 
 	step_l.revert(state_l, nullptr);
 
-	EXPECT_NEAR(10., to_double(state_l.getEntity(0)->_hp), 1e-5);
+	EXPECT_NEAR(10., to_double(state_l.getEntity(Handle(0))->_hp), 1e-5);
 }

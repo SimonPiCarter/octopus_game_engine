@@ -58,10 +58,10 @@ std::list<Steppable *> lifestealShowcaseSteps(Library &lib_p, size_t number_p)
 	};
 
 	unsigned long id_l = 0;
-    spawners_l.push_back(new UnitSpawnStep(id_l++, square1_l));
+    spawners_l.push_back(new UnitSpawnStep(Handle(id_l++), square1_l));
 	for(size_t i = 0; i < number_p ; ++ i)
 	{
-		spawners_l.push_back(new UnitSpawnStep(id_l++, triangle2_l));
+		spawners_l.push_back(new UnitSpawnStep(Handle(id_l++), triangle2_l));
 	}
 
 	return spawners_l;

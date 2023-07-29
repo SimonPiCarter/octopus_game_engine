@@ -34,7 +34,7 @@ TEST(upgradeProductionCommandTest, simple)
 
 	Building production_l({1,3}, true, buildingModel_l);
 
-	BuildingSpawnStep * spawn0_l = new BuildingSpawnStep(0, production_l, true);
+	BuildingSpawnStep * spawn0_l = new BuildingSpawnStep(Handle(0), production_l, true);
 
 	TimedBuff buff_l;
 	buff_l._type = TyppedBuff::Type::Production;
@@ -43,7 +43,7 @@ TEST(upgradeProductionCommandTest, simple)
 	up_l._productionTime = 5;
 
 	// up production
-	BuildingUpgradeProductionCommand * command_l = new BuildingUpgradeProductionCommand(0, 0, up_l);
+	BuildingUpgradeProductionCommand * command_l = new BuildingUpgradeProductionCommand(Handle(0),Handle(0), up_l);
 	CommandSpawnStep * commandSpawn_l = new CommandSpawnStep(command_l);
 
 	Controller controller_l({new PlayerSpawnStep(0, 0), spawn0_l, commandSpawn_l}, 1.);
@@ -75,7 +75,7 @@ TEST(upgradeProductionCommandTest, simple)
 	state_l = controller_l.queryState();
 
 	ASSERT_EQ(1u, state_l->getEntities().size());
-	Entity const &ent_l  = *state_l->getEntity(0);
+	Entity const &ent_l  = *state_l->getEntity(Handle(0));
 	EXPECT_NEAR(0.1, ent_l._buffProduction._coef.to_double(), 1e-5);
 }
 
@@ -92,7 +92,7 @@ TEST(upgradeProductionCommandTest, simple_non_repeatable)
 
 	Building production_l({1,3}, true, buildingModel_l);
 
-	BuildingSpawnStep * spawn0_l = new BuildingSpawnStep(0, production_l, true);
+	BuildingSpawnStep * spawn0_l = new BuildingSpawnStep(Handle(0), production_l, true);
 
 	std::map<std::string, Fixed> mapRes_l;
 	mapRes_l["bloc"] = -100;
@@ -105,7 +105,7 @@ TEST(upgradeProductionCommandTest, simple_non_repeatable)
 	up_l._productionTime = 5;
 
 	// up production
-	BuildingUpgradeProductionCommand * command_l = new BuildingUpgradeProductionCommand(0, 0, up_l);
+	BuildingUpgradeProductionCommand * command_l = new BuildingUpgradeProductionCommand(Handle(0),Handle(0), up_l);
 	CommandSpawnStep * commandSpawn_l = new CommandSpawnStep(command_l);
 
 	Controller controller_l({
@@ -142,7 +142,7 @@ TEST(upgradeProductionCommandTest, simple_non_repeatable)
 	state_l = controller_l.queryState();
 
 	ASSERT_EQ(1u, state_l->getEntities().size());
-	Entity const *ent_l  = state_l->getEntity(0);
+	Entity const *ent_l  = state_l->getEntity(Handle(0));
 	EXPECT_NEAR(0.1, ent_l->_buffProduction._coef.to_double(), 1e-5);
 	Player const * player_l = state_l->getPlayer(0);
 	EXPECT_NEAR(100., to_double(getResource(*player_l, "bloc")), 1e-5);
@@ -150,7 +150,7 @@ TEST(upgradeProductionCommandTest, simple_non_repeatable)
 	///
 	/// Now upgrade should be done and applied
 	///
-	controller_l.commitCommand(new BuildingUpgradeProductionCommand(0, 0, up_l));
+	controller_l.commitCommand(new BuildingUpgradeProductionCommand(Handle(0),Handle(0), up_l));
 
 	controller_l.update(50.);
 
@@ -160,7 +160,7 @@ TEST(upgradeProductionCommandTest, simple_non_repeatable)
 	state_l = controller_l.queryState();
 
 	ASSERT_EQ(1u, state_l->getEntities().size());
-	ent_l  = state_l->getEntity(0);
+	ent_l  = state_l->getEntity(Handle(0));
 	EXPECT_NEAR(0.1, ent_l->_buffProduction._coef.to_double(), 1e-5);
 	player_l = state_l->getPlayer(0);
 	EXPECT_NEAR(100., to_double(getResource(*player_l, "bloc")), 1e-5);

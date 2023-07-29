@@ -31,21 +31,21 @@ std::list<Steppable *> Case3(Library &lib_p)
 	Unit unit_l({ 15, 20. }, false, lib_p.getUnitModel("unit"));
 
 	// building
-	BuildingUnitProductionCommand * command0_l = new BuildingUnitProductionCommand(0, 0, lib_p.getUnitModel("unit"));
-	BuildingUnitProductionCommand * command1_l = new BuildingUnitProductionCommand(0, 0, lib_p.getUnitModel("unit"));
+	BuildingUnitProductionCommand * command0_l = new BuildingUnitProductionCommand(Handle(0), Handle(0), lib_p.getUnitModel("unit"));
+	BuildingUnitProductionCommand * command1_l = new BuildingUnitProductionCommand(Handle(0), Handle(0), lib_p.getUnitModel("unit"));
 	command1_l->setQueued(true);
-	BuildingUnitProductionCommand * command2_l = new BuildingUnitProductionCommand(0, 0, lib_p.getUnitModel("unit"));
+	BuildingUnitProductionCommand * command2_l = new BuildingUnitProductionCommand(Handle(0), Handle(0), lib_p.getUnitModel("unit"));
 	command2_l->setQueued(true);
-	BuildingUnitProductionCommand * command3_l = new BuildingUnitProductionCommand(0, 0, lib_p.getUnitModel("unit"));
+	BuildingUnitProductionCommand * command3_l = new BuildingUnitProductionCommand(Handle(0), Handle(0), lib_p.getUnitModel("unit"));
 	command3_l->setQueued(true);
-	BuildingUnitProductionCommand * command4_l = new BuildingUnitProductionCommand(0, 0, lib_p.getUnitModel("unit"));
+	BuildingUnitProductionCommand * command4_l = new BuildingUnitProductionCommand(Handle(0), Handle(0), lib_p.getUnitModel("unit"));
 	command4_l->setQueued(true);
 
 	std::list<Steppable *> spawners_l =
 	{
 		new PlayerSpawnStep(0, 0),
-		new BuildingSpawnStep(0, building_l, true),
-		new UnitSpawnStep(1, unit_l),
+		new BuildingSpawnStep(Handle(0), building_l, true),
+		new UnitSpawnStep(Handle(1), unit_l),
 		new CommandSpawnStep(command0_l),
 		new CommandSpawnStep(command1_l),
 		new CommandSpawnStep(command2_l),

@@ -111,6 +111,9 @@ public:
 	/// @note only accepts command matching the player (entity needs to match player)
 	void queueCommandAsPlayer(Command * cmd_p, unsigned long player_p);
 
+	/// @brief add a Command to the queued step
+	void queueCommand(Command * cmd_p);
+
 	/// @brief add a queued step layer
 	void addQueuedLayer();
 

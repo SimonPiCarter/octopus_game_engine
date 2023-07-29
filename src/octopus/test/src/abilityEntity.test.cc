@@ -35,7 +35,7 @@ TEST(abilityEntityTest, simple)
 
 	Controller controller_l({
 		new PlayerSpawnStep(0, 0),
-		new EntitySpawnStep(0, ent_l)
+		new EntitySpawnStep(Handle(0), ent_l)
 	}, 1.);
 
 	// query state
@@ -43,7 +43,7 @@ TEST(abilityEntityTest, simple)
 
 	EXPECT_NEAR(0., to_double(getResource(*state_l->getPlayer(0), "bloc")), 1e-5);
 
-	controller_l.commitCommand(new EntityAbilityCommand(0, 0, Vector(), "spawn_res"));
+	controller_l.commitCommand(new EntityAbilityCommand(Handle(0), Handle(0), Vector(), "spawn_res"));
 	// update time to 1 seconds (1)
 	controller_l.update(1.);
 
@@ -64,7 +64,7 @@ TEST(abilityEntityTest, simple)
 
 	EXPECT_NEAR(10., to_double(getResource(*state_l->getPlayer(0), "bloc")), 1e-5);
 
-	controller_l.commitCommand(new EntityAbilityCommand(0, 0, Vector(), "spawn_res"));
+	controller_l.commitCommand(new EntityAbilityCommand(Handle(0), Handle(0), Vector(), "spawn_res"));
 
 	// update time to 5 second (7)
 	controller_l.update(5.);
@@ -78,8 +78,8 @@ TEST(abilityEntityTest, simple)
 	EXPECT_NEAR(10., to_double(getResource(*state_l->getPlayer(0), "bloc")), 1e-5);
 
 	// only one should work
-	controller_l.commitCommand(new EntityAbilityCommand(0, 0, Vector(), "spawn_res"));
-	controller_l.commitCommand(new EntityAbilityCommand(0, 0, Vector(), "spawn_res"));
+	controller_l.commitCommand(new EntityAbilityCommand(Handle(0), Handle(0), Vector(), "spawn_res"));
+	controller_l.commitCommand(new EntityAbilityCommand(Handle(0), Handle(0), Vector(), "spawn_res"));
 
 	// update time to 2 seconds (9)
 	controller_l.update(2.);

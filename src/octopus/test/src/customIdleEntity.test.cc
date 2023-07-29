@@ -38,7 +38,7 @@ TEST(customIdleEntityTest, simple)
 
 	Controller controller_l({
 		new PlayerSpawnStep(0, 0),
-		new EntitySpawnStep(0, ent1_l)
+		new EntitySpawnStep(Handle(0), ent1_l)
 	}, 1.);
 
 	// query state

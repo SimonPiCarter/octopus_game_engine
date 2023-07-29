@@ -57,7 +57,7 @@ std::list<Steppable *> LevelSteps(Library &lib_p, RandomGenerator &rand_p)
 	mapRes_l["bloc"] = -2000;
 	mapRes_l["ether"] = -2000;
 
-	Handle handle_l = 0;
+	Handle handle_l(0);
 	std::list<Steppable *> spawners_l =
 	{
 		new PlayerSpawnStep(0, 0),
