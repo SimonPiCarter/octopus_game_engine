@@ -34,6 +34,19 @@ struct Handle
 	{
 		return !(*this == other_p);
 	}
+
+	Handle const & operator++()
+	{
+		++index;
+		return *this;
+	}
+
+	Handle operator++(int)
+	{
+		Handle old_l(*this);
+		++index;
+		return old_l;
+	}
 };
 
 template<typename T>
@@ -66,5 +79,6 @@ struct std::hash<octopus::Handle>
 };
 
 std::ostream & operator<<(std::ostream & os_p, octopus::Handle const &handle_p);
+
 
 #endif
