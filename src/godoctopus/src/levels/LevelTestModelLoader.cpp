@@ -4,6 +4,11 @@
 #include <fstream>
 #include <random>
 
+// fas
+#include "library/model/divinity/DivinityModelLoader.hh"
+#include "library/model/divinity/generators/UnitModelIds.hh"
+#include "library/model/ModelLoader.hh"
+
 // octopus
 #include "controller/trigger/Listener.hh"
 #include "command/entity/EntityAttackMoveCommand.hh"
@@ -24,6 +29,7 @@
 #include "step/entity/spawn/BuildingSpawnStep.hh"
 #include "step/player/PlayerSpawnStep.hh"
 #include "step/player/PlayerSpendResourceStep.hh"
+#include "step/player/PlayerLevelUpUpgradeStep.hh"
 #include "step/state/StateTemplePositionAddStep.hh"
 #include "step/state/StateWinStep.hh"
 #include "step/team/TeamVisionStep.hh"
@@ -42,10 +48,35 @@ namespace level_test_model
 
 std::list<Steppable *> LevelSteps(Library &lib_p, RandomGenerator &rand_p)
 {
+	loadMinimalModels(lib_p);
+
+	// load divinity library
+	fas::loadLibrary(lib_p);
+
 	std::list<Steppable *> spawners_l =
 	{
 		new godot::CameraStep(20, 10),
+		new PlayerLevelUpUpgradeStep(0, models::AttackSpeedDivId),
+		new PlayerLevelUpUpgradeStep(0, models::AttackSpeedDivId),
+		new PlayerLevelUpUpgradeStep(0, models::AttackSpeedDivId),
+		new PlayerLevelUpUpgradeStep(0, models::EconomicDivId),
+		new PlayerLevelUpUpgradeStep(0, models::EconomicDivId),
+		new PlayerLevelUpUpgradeStep(0, models::EconomicDivId),
+		new PlayerLevelUpUpgradeStep(0, models::HealDivId),
+		new PlayerLevelUpUpgradeStep(0, models::HealDivId),
+		new PlayerLevelUpUpgradeStep(0, models::HealDivId),
+		new PlayerLevelUpUpgradeStep(0, models::LifestealDivId),
+		new PlayerLevelUpUpgradeStep(0, models::LifestealDivId),
+		new PlayerLevelUpUpgradeStep(0, models::LifestealDivId),
+		new PlayerLevelUpUpgradeStep(0, models::ProductionDivId),
+		new PlayerLevelUpUpgradeStep(0, models::ProductionDivId),
+		new PlayerLevelUpUpgradeStep(0, models::ProductionDivId),
+		new PlayerLevelUpUpgradeStep(0, models::RecycleDivId),
+		new PlayerLevelUpUpgradeStep(0, models::RecycleDivId),
+		new PlayerLevelUpUpgradeStep(0, models::RecycleDivId),
 	};
+
+	fas::addBuildingPlayer(spawners_l, 0, fas::allDivinities(), lib_p);
 
 	return spawners_l;
 }
