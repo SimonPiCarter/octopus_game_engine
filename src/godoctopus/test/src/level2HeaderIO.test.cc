@@ -38,12 +38,12 @@ TEST(level2HeaderIOTest, simple)
             poolInfos_l.infos.push_back(createWaveInfo({"test1", "test2", "test3"},
                     {{"unit1", 12}, {"unit2", 5}}, 54,
                     {{"unit4", 3}, {"unit5", 52}}, 7,
-                    1254.15));
+                    1254));
 
             poolInfos_l.infos.push_back(createWaveInfo({"test4", "test5", "test6"},
                     {{"unit1", 2}, {"unit2", 7}}, 12,
                     {{"unit4", 12}, {"unit5", 5}}, 35,
-                    0.17));
+                    0));
 
             header_l.tierWaveInfo.push_back(poolInfos_l);
         }
@@ -53,12 +53,12 @@ TEST(level2HeaderIOTest, simple)
             poolInfos_l.infos.push_back(createWaveInfo({"test7", "test8", "test9"},
                     {{"unitA", 7}}, 10,
                     {{"unitC", 1}}, 3,
-                    0.25));
+                    25));
 
             poolInfos_l.infos.push_back(createWaveInfo({"test10", "test11", "test12"},
                     {{"unit1", 6}, {"unit2", 3}}, 1,
                     {{"unit4", 7}, {"unit5", 5}}, 2,
-                    0.786));
+                    786));
 
             header_l.tierWaveInfo.push_back(poolInfos_l);
         }
@@ -92,7 +92,7 @@ TEST(level2HeaderIOTest, simple)
                 EXPECT_EQ(3, header_l.tierWaveInfo.at(0).infos.at(0).earlyWave.units.at(0).count);
                 EXPECT_EQ("unit5", header_l.tierWaveInfo.at(0).infos.at(0).earlyWave.units.at(1).model);
                 EXPECT_EQ(52, header_l.tierWaveInfo.at(0).infos.at(0).earlyWave.units.at(1).count);
-            EXPECT_NEAR(1254.15, header_l.tierWaveInfo.at(0).infos.at(0).dropCoef, 1e-5);
+            EXPECT_EQ(1254, header_l.tierWaveInfo.at(0).infos.at(0).dropCoef);
 
             ASSERT_EQ(3u, header_l.tierWaveInfo.at(0).infos.at(1).upgrades.size());
                 EXPECT_EQ("test4", header_l.tierWaveInfo.at(0).infos.at(1).upgrades.at(0));
@@ -110,7 +110,7 @@ TEST(level2HeaderIOTest, simple)
                 EXPECT_EQ(12, header_l.tierWaveInfo.at(0).infos.at(1).earlyWave.units.at(0).count);
                 EXPECT_EQ("unit5", header_l.tierWaveInfo.at(0).infos.at(1).earlyWave.units.at(1).model);
                 EXPECT_EQ(5, header_l.tierWaveInfo.at(0).infos.at(1).earlyWave.units.at(1).count);
-            EXPECT_NEAR(0.17, header_l.tierWaveInfo.at(0).infos.at(1).dropCoef, 1e-5);
+            EXPECT_EQ(0, header_l.tierWaveInfo.at(0).infos.at(1).dropCoef);
 
         ASSERT_EQ(2u, header_l.tierWaveInfo.at(1).infos.size());
             ASSERT_EQ(3u, header_l.tierWaveInfo.at(1).infos.at(0).upgrades.size());
@@ -125,7 +125,7 @@ TEST(level2HeaderIOTest, simple)
             ASSERT_EQ(1u, header_l.tierWaveInfo.at(1).infos.at(0).earlyWave.units.size());
                 EXPECT_EQ("unitC", header_l.tierWaveInfo.at(1).infos.at(0).earlyWave.units.at(0).model);
                 EXPECT_EQ(1, header_l.tierWaveInfo.at(1).infos.at(0).earlyWave.units.at(0).count);
-            EXPECT_NEAR(0.25, header_l.tierWaveInfo.at(1).infos.at(0).dropCoef, 1e-5);
+            EXPECT_EQ(25, header_l.tierWaveInfo.at(1).infos.at(0).dropCoef);
 
             ASSERT_EQ(3u, header_l.tierWaveInfo.at(1).infos.at(1).upgrades.size());
                 EXPECT_EQ("test10", header_l.tierWaveInfo.at(1).infos.at(1).upgrades.at(0));
@@ -143,7 +143,7 @@ TEST(level2HeaderIOTest, simple)
                 EXPECT_EQ(7, header_l.tierWaveInfo.at(1).infos.at(1).earlyWave.units.at(0).count);
                 EXPECT_EQ("unit5", header_l.tierWaveInfo.at(1).infos.at(1).earlyWave.units.at(1).model);
                 EXPECT_EQ(5, header_l.tierWaveInfo.at(1).infos.at(1).earlyWave.units.at(1).count);
-            EXPECT_NEAR(0.786, header_l.tierWaveInfo.at(1).infos.at(1).dropCoef, 1e-5);
+            EXPECT_EQ(786, header_l.tierWaveInfo.at(1).infos.at(1).dropCoef);
 
     }
 

@@ -292,6 +292,19 @@ void writeWaveContentInfo(std::ofstream &file_p, WaveContentInfo const &info_p)
 	}
 }
 
+void readWaveContentInfo(std::ifstream &file_p, WaveContentInfo &info_p)
+{
+	file_p.read((char*)&info_p.steps, sizeof(info_p.steps));
+	size_t size_l = 0;
+	file_p.read((char*)&size_l, sizeof(size_l));
+	for(size_t i = 0 ; i < size_l ; ++ i)
+	{
+		info_p.units.push_back(WaveUnitCount());
+		info_p.units.back().model = readString(file_p);
+		file_p.read((char*)&info_p.units.back().count, sizeof(info_p.units.back().count));
+	}
+}
+
 void writeWavePoolInfo(std::ofstream &file_p, WavePoolInfo const &info_p)
 {
 	// write wave info
@@ -311,34 +324,6 @@ void writeWavePoolInfo(std::ofstream &file_p, WavePoolInfo const &info_p)
 		writeWaveContentInfo(file_p, waveInfo_l.earlyWave);
 		// write drop coef
 		file_p.write((char*)&waveInfo_l.dropCoef, sizeof(waveInfo_l.dropCoef));
-	}
-}
-
-/// @brief write header for classic arena level
-void writeWaveLevelHeader(std::ofstream &file_p, WaveLevelHeader const &header_p)
-{
-	file_p.write((char*)&header_p.seed, sizeof(header_p.seed));
-	file_p.write((char*)&header_p.player, sizeof(header_p.player));
-
-	size_t size_l = header_p.tierWaveInfo.size();
-	file_p.write((char*)&size_l, sizeof(size_l));
-
-	for(WavePoolInfo const &info_l : header_p.tierWaveInfo)
-	{
-		writeWavePoolInfo(file_p, info_l);
-	}
-}
-
-void readWaveContentInfo(std::ifstream &file_p, WaveContentInfo &info_p)
-{
-	file_p.read((char*)&info_p.steps, sizeof(info_p.steps));
-	size_t size_l = 0;
-	file_p.read((char*)&size_l, sizeof(size_l));
-	for(size_t i = 0 ; i < size_l ; ++ i)
-	{
-		info_p.units = {WaveUnitCount()};
-		info_p.units.back().model = readString(file_p);
-		file_p.read((char*)&info_p.units.back().count, sizeof(info_p.units.back().count));
 	}
 }
 
@@ -364,6 +349,21 @@ void readWavePoolInfo(std::ifstream &file_p, WavePoolInfo &info_p)
 		// read drop coef
 		file_p.read((char*)&waveInfo_l.dropCoef, sizeof(waveInfo_l.dropCoef));
 		info_p.infos.push_back(waveInfo_l);
+	}
+}
+
+/// @brief write header for classic arena level
+void writeWaveLevelHeader(std::ofstream &file_p, WaveLevelHeader const &header_p)
+{
+	file_p.write((char*)&header_p.seed, sizeof(header_p.seed));
+	file_p.write((char*)&header_p.player, sizeof(header_p.player));
+
+	size_t size_l = header_p.tierWaveInfo.size();
+	file_p.write((char*)&size_l, sizeof(size_l));
+
+	for(WavePoolInfo const &info_l : header_p.tierWaveInfo)
+	{
+		writeWavePoolInfo(file_p, info_l);
 	}
 }
 
