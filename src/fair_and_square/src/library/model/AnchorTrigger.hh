@@ -19,6 +19,7 @@ public:
 
 private:
 	unsigned long const _player;
+	octopus::Library const &_lib;
 
 	octopus::RandomGenerator & _rand;
 

@@ -1,6 +1,8 @@
 #ifndef __AnchorDivinityTrigger__
 #define __AnchorDivinityTrigger__
 
+#include <vector>
+
 #include "controller/trigger/Trigger.hh"
 #include "controller/trigger/Listener.hh"
 #include "utils/RandomGenerator.hh"
@@ -12,6 +14,7 @@ namespace octopus
 class Library;
 } // namespace octopus
 
+std::vector<int> roll_with_no_doublon(octopus::RandomGenerator &rand_p, int min_p, int max_p, int number_p);
 
 class AnchorDivinityTrigger : public octopus::OnEachTrigger
 {

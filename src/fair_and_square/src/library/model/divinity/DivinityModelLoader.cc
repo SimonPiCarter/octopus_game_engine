@@ -69,5 +69,41 @@ std::vector<octopus::Steppable *> newPlayerBuilding(unsigned long player_p, Divi
     return {};
 }
 
+std::string divinityUpgradeName(DivinityType type_p)
+{
+    switch(type_p)
+    {
+        case fas::DivinityType::AttackSpeed:
+            return models::AttackSpeedDivId;
+        case fas::DivinityType::Economic:
+            return models::EconomicDivId;
+        case fas::DivinityType::Heal:
+            return models::HealDivId;
+        case fas::DivinityType::Lifesteal:
+            return models::LifestealDivId;
+        case fas::DivinityType::Production:
+            return models::ProductionDivId;
+        case fas::DivinityType::Recycle:
+            return models::RecycleDivId;
+    }
+    return "";
+}
+
+DivinityType rollOneRandomDivinity(octopus::RandomGenerator &rand_p)
+{
+    static std::vector<DivinityType> options_l = {
+        DivinityType::AttackSpeed,
+        DivinityType::Economic,
+        DivinityType::Heal,
+        DivinityType::Lifesteal,
+        DivinityType::Production,
+        DivinityType::Recycle
+    };
+
+    int roll_l = rand_p.roll(0, options_l.size()-1);
+
+    return options_l[roll_l];
+}
+
 } // namespace fas
 

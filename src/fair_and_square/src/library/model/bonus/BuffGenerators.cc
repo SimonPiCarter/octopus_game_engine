@@ -9,7 +9,7 @@
 
 using namespace octopus;
 
-void genStep(std::vector<Steppable *> &steppables_p, BuffOption const &option_p)
+void genStep(Library const &lib_p, std::vector<Steppable *> &steppables_p, BuffOption const &option_p)
 {
     steppables_p.push_back(new PlayerBuffAllStep(option_p._player, option_p._buff, option_p._model));
     if(option_p._div != "")
@@ -18,27 +18,32 @@ void genStep(std::vector<Steppable *> &steppables_p, BuffOption const &option_p)
     }
 }
 
-void genStep(std::vector<Steppable *> &steppables_p, DoubleBuffOption const &option_p)
+void genStep(Library const &lib_p, std::vector<Steppable *> &steppables_p, DoubleBuffOption const &option_p)
 {
     steppables_p.push_back(new PlayerBuffAllStep(option_p._player, option_p._buff1, option_p._model));
     steppables_p.push_back(new PlayerBuffAllStep(option_p._player, option_p._buff2, option_p._model));
 }
 
-void genStep(std::vector<Steppable *> &steppables_p, ModifierOption const &option_p)
+void genStep(Library const &lib_p, std::vector<Steppable *> &steppables_p, ModifierOption const &option_p)
 {
     steppables_p.push_back(new PlayerAttackModAllStep(option_p._player, option_p._mod, option_p._model));
 }
 
-void genStep(std::vector<Steppable *> &steppables_p, ::DivinityOption const &option_p)
+void genStep(Library const &lib_p, std::vector<Steppable *> &steppables_p, ::DivinityOption const &option_p)
 {
-    steppables_p.push_back(new PlayerLevelUpUpgradeStep(option_p._player, option_p._div));
+    std::vector<Steppable *> playerBuilding_l = newPlayerBuilding(option_p._player, option_p._div, lib_p);
+    for(Steppable * steppable_l : playerBuilding_l)
+    {
+        steppables_p.push_back(steppable_l);
+    }
+    steppables_p.push_back(new PlayerLevelUpUpgradeStep(option_p._player, fas::divinityUpgradeName(option_p._div)));
 }
 
 std::vector<Steppable *> BuffGenerator::getSteppables(unsigned long options_p) const
 {
     std::vector<Steppable *> steps_l;
-    std::visit([&steps_l](auto &&arg) { genStep(steps_l, arg); }, _options.at(options_p)._playerOption);
-    std::visit([&steps_l](auto &&arg) { genStep(steps_l, arg); }, _options.at(options_p)._enemyOption);
+    std::visit([this, &steps_l](auto &&arg) { genStep(_lib, steps_l, arg); }, _options.at(options_p)._playerOption);
+    std::visit([this, &steps_l](auto &&arg) { genStep(_lib, steps_l, arg); }, _options.at(options_p)._enemyOption);
     return steps_l;
 }
 
@@ -212,29 +217,6 @@ std::vector<SingleOption> getEpicOptions(octopus::Player const &player_p, std::s
             option_l._buff._id = id_p;
             option_l._model = model_l;
             option_l._div = levelName_p;
-            options_l.push_back(option_l);
-        }
-    }
-
-    // buffer (model = upgrade level)
-    models_l = {"buff_harvest", "buff_production", "buff_damage", "buff_reload", "buff_armor"};
-    bool bufferUnlocked_l = false;
-    for(std::string const &model_l : models_l)
-    {
-        if(octopus::getUpgradeLvl(player_p, model_l) > 0)
-        {
-            bufferUnlocked_l = true;
-        }
-    }
-
-    // none chosen yet and not disabled
-    if(!bufferUnlocked_l && !disabledBuffer_p)
-    {
-        for(std::string const &model_l : models_l)
-        {
-            ::DivinityOption option_l;
-            option_l._player = player_p._id;
-            option_l._div = model_l;
             options_l.push_back(option_l);
         }
     }
