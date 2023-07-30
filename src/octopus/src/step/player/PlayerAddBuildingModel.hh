@@ -1,5 +1,5 @@
-#ifndef __SPAWN_PLAYER_STEP__
-#define __SPAWN_PLAYER_STEP__
+#ifndef __PlayerAddBuildingModel__
+#define __PlayerAddBuildingModel__
 
 #include "state/entity/Entity.hh"
 #include "state/State.hh"
@@ -10,10 +10,17 @@
 namespace octopus
 {
 
-class PlayerSpawnStep : public Steppable
+struct BuildingModel;
+
+struct PlayerAddBuildingModelData : public SteppableData
+{
+    bool skipped = false;
+};
+
+class PlayerAddBuildingModel : public Steppable
 {
 public:
-	PlayerSpawnStep(unsigned long idx_p, unsigned long team_p) : _playerIdx(idx_p), _playerTeam(team_p) {}
+	PlayerAddBuildingModel(unsigned long idx_p, BuildingModel const &model_p) : _playerIdx(idx_p), _model(model_p) {}
 
 	virtual void apply(State &state_p) const override;
 	virtual void revert(State &state_p, SteppableData const *) const override;
@@ -26,11 +33,11 @@ public:
 	{
 		visitor_p->visit(this);
 	}
+    virtual SteppableData * newData(State const &state_p) const;
 
-	unsigned long getPlayerIdx() const { return _playerIdx; }
 protected:
 	unsigned long _playerIdx;
-	unsigned long _playerTeam;
+	BuildingModel const & _model;
 };
 
 }

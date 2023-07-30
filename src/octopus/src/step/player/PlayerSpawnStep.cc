@@ -2,7 +2,6 @@
 
 #include "state/State.hh"
 #include "state/player/Player.hh"
-#include "state/model/entity/BuildingModel.hh"
 #include "logger/Logger.hh"
 
 namespace octopus
@@ -33,28 +32,6 @@ void PlayerSpawnStep::revert(State &state_p, SteppableData const *) const
 		throw std::logic_error("Cannot create player with discontinious id and in the wrong order");
 	}
 	delete player_l;
-}
-
-void PlayerAddBuildingModel::apply(State &state_p) const
-{
-	Logger::getDebug() << "PlayerAddBuildingModel :: apply id = " << this->_playerIdx << " model = " <<this->_model._id<<std::endl;
-
-	Player * player_l = state_p.getPlayer(this->_playerIdx);
-
-	player_l->_buildingModels.push_back(&this->_model);
-}
-void PlayerAddBuildingModel::revert(State &state_p, SteppableData const *) const
-{
-	Logger::getDebug() << "PlayerAddBuildingModel :: revert id = " << this->_playerIdx << " model = " <<this->_model._id<<std::endl;
-
-	Player * player_l = state_p.getPlayer(this->_playerIdx);
-
-	if(&this->_model != player_l->_buildingModels.back())
-	{
-		throw std::logic_error("PlayerAddBuildingModel revert were not called in a correct order");
-	}
-	player_l->_buildingModels.pop_back();
-
 }
 
 
