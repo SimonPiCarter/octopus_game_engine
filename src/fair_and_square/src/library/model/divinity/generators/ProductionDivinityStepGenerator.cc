@@ -258,7 +258,7 @@ void fillLibrary(ProductionDivinityParams const &params_p, octopus::Library &lib
 	// declare upgrades
 
 	// T1 production buff
-	Upgrade * upProductionTime_l = new Upgrade("ProductionUpgrade_BuffProduction", new ProductionBuffUpgrade({}, params_p._productionTimeUpgradeCoef));
+	Upgrade * upProductionTime_l = new Upgrade("ProductionUpgrade_BuffProduction", new ProductionBuffUpgrade(models::BasicUnitModels, params_p._productionTimeUpgradeCoef));
 	upProductionTime_l->_cost["bloc"] = 125;
 	upProductionTime_l->_cost["ether"] = 75;
 	upProductionTime_l->_productionTime = 6000;

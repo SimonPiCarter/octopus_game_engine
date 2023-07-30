@@ -106,7 +106,7 @@ namespace models
         upT2_l->_requirements._upgradeLvlMax[id_p+models::tierTwoSuffix] = 0;
         lib_p.registerUpgrade(upT2_l->_id, upT2_l);
 
-        octopus::Upgrade * upT3_l = new octopus::Upgrade(id_p+models::tierThreeSuffix, new models::TierUpgrade<param_t>(params_p, t2_p));
+        octopus::Upgrade * upT3_l = new octopus::Upgrade(id_p+models::tierThreeSuffix, new models::TierUpgrade<param_t>(params_p, t3_p));
         upT3_l->_cost["bloc"] = 1200;
         upT3_l->_cost["ether"] = 600;
         upT3_l->_productionTime = 12000;
