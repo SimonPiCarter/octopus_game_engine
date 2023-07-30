@@ -1,6 +1,7 @@
 #include "DivinityModelLoader.hh"
 
 #include "library/Library.hh"
+#include "step/player/PlayerAddBuildingModel.hh"
 #include "step/player/PlayerSpawnStep.hh"
 
 // fas

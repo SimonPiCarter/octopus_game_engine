@@ -28,6 +28,7 @@
 #include "step/entity/spawn/UnitSpawnStep.hh"
 #include "step/entity/spawn/ResourceSpawnStep.hh"
 #include "step/entity/spawn/BuildingSpawnStep.hh"
+#include "step/player/PlayerAddBuildingModel.hh"
 #include "step/player/PlayerSpawnStep.hh"
 #include "step/player/PlayerSpendResourceStep.hh"
 #include "step/state/StateTemplePositionAddStep.hh"
@@ -256,9 +257,9 @@ std::list<Command *> WaveLevelCommands(Library &lib_p, RandomGenerator &rand_p)
 	// createArenaSpawnCommmand(lib, rand, x, y, size, nb res, nb anchor, nb units, qty irium)
 	std::list<Command *> commands_l {
 		// zone 0
-		createArenaSpawnCommmand(lib_p, rand_p, 10, 10, 20, 1, 1, 10, 0),
+		createArenaSpawnCommmand(lib_p, rand_p, 10, 10, 20, 1, 1, 0, 0),
 		createArenaSpawnCommmand(lib_p, rand_p, 10, 40, 20, 1, 0, 0, 0),
-		createArenaSpawnCommmand(lib_p, rand_p, 10, 70, 20, 1, 1, 10, 0),
+		createArenaSpawnCommmand(lib_p, rand_p, 10, 70, 20, 1, 1, 0, 0),
 		// zone 1
 		createArenaSpawnCommmand(lib_p, rand_p, 50, 10, 20, 1, 1, 20, 500),
 		createArenaSpawnCommmand(lib_p, rand_p, 50, 40, 20, 1, 1, 10, 500),
@@ -279,6 +280,12 @@ std::list<Command *> WaveLevelCommands(Library &lib_p, RandomGenerator &rand_p)
 
 	return commands_l;
 }
+
+/////////////////////////////////////////////
+/////////////////////////////////////////////
+/// 		read/write for Header		  ///
+/////////////////////////////////////////////
+/////////////////////////////////////////////
 
 void writeWaveContentInfo(std::ofstream &file_p, WaveContentInfo const &info_p)
 {

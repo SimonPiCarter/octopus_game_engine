@@ -27,6 +27,7 @@
 #include "step/entity/spawn/UnitSpawnStep.hh"
 #include "step/entity/spawn/ResourceSpawnStep.hh"
 #include "step/entity/spawn/BuildingSpawnStep.hh"
+#include "step/player/PlayerAddBuildingModel.hh"
 #include "step/player/PlayerSpawnStep.hh"
 #include "step/player/PlayerSpendResourceStep.hh"
 #include "step/state/StateTemplePositionAddStep.hh"
