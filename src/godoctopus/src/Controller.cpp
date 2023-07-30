@@ -1008,8 +1008,8 @@ void Controller::next_step()
         std::list<octopus::Command*> const &cmds_l = pair_l.second.front();
         for(octopus::Command * cmd_l : cmds_l)
         {
-            /// @todo refactor
-            _controller->queueCommand(cmd_l);
+            /// @todo refactor to allow control over multiple player ?
+            _controller->queueCommandAsPlayer(cmd_l, _playerPerPeer.at(peer_l));
         }
         pair_l.second.pop_front();
     }
