@@ -95,7 +95,6 @@ namespace models
         upT1_l->_cost["ether"] = 100;
         upT1_l->_productionTime = 6000;
         upT1_l->_requirements._upgradeLvl[id_p] = 1;
-        upT1_l->_requirements._upgradeLvlMax[id_p+models::tierOneSuffix] = 0;
         lib_p.registerUpgrade(upT1_l->_id, upT1_l);
 
         octopus::Upgrade * upT2_l = new octopus::Upgrade(id_p+models::tierTwoSuffix, new models::TierUpgrade<param_t>(params_p, t2_p));
@@ -103,7 +102,6 @@ namespace models
         upT2_l->_cost["ether"] = 300;
         upT2_l->_productionTime = 12000;
         upT2_l->_requirements._upgradeLvl[id_p] = 2;
-        upT2_l->_requirements._upgradeLvlMax[id_p+models::tierTwoSuffix] = 0;
         lib_p.registerUpgrade(upT2_l->_id, upT2_l);
 
         octopus::Upgrade * upT3_l = new octopus::Upgrade(id_p+models::tierThreeSuffix, new models::TierUpgrade<param_t>(params_p, t3_p));
@@ -111,7 +109,6 @@ namespace models
         upT3_l->_cost["ether"] = 600;
         upT3_l->_productionTime = 12000;
         upT3_l->_requirements._upgradeLvl[id_p] = 3;
-        upT3_l->_requirements._upgradeLvlMax[id_p+models::tierThreeSuffix] = 0;
         lib_p.registerUpgrade(upT3_l->_id, upT3_l);
 
         model_p._upgrades.push_back(upT1_l);
