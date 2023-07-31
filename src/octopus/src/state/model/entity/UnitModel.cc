@@ -31,7 +31,8 @@ Command * commandFromIdle(Entity const &ent_p, State const &state_p, unsigned lo
 			Logger::getDebug() << " Unit::runCommands :: no command (buff)"<< std::endl;
 			unsigned long const reloadRequired_l = unit_l._unitModel._buffer._reload;
 			unsigned long const reloadTime_l = getReloadAbilityTime(unit_l, unit_l._unitModel._buffer._buff._id, reloadRequired_l);
-			if(reloadTime_l+1 >= reloadRequired_l)
+			// We add +2 because the reset of the reload time is done two steps after this target is aquired
+			if(reloadTime_l+2 >= reloadRequired_l)
 			{
 				// check for target
 				Entity const * target_l = lookUpNewBuffTarget(state_p, unit_l._handle, unit_l._unitModel._buffer._range, unit_l._unitModel._buffer._buff);
