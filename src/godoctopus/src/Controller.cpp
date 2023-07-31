@@ -737,6 +737,18 @@ TypedArray<String> Controller::get_models(EntityHandle const * handle_p, int pla
     return models_l;
 }
 
+bool Controller::is_done_and_non_repeatable(String const &upgrade_p, int player_p) const
+{
+    std::string const &upgradeId_l(upgrade_p.utf8().get_data());
+    return getUpgradeLvl(*getPlayer(player_p), upgradeId_l) && !_lib.getUpgrade(upgradeId_l)._repeatable;
+}
+
+bool Controller::is_upgrade(String const &upgrade_p) const
+{
+    std::string const &upgradeId_l(upgrade_p.utf8().get_data());
+    return _lib.hasUpgrade(upgradeId_l);
+}
+
 bool Controller::is_building(String const &model_p) const
 {
     std::string modelId_l(model_p.utf8().get_data());
@@ -1070,6 +1082,9 @@ void Controller::_bind_methods()
     ClassDB::bind_method(D_METHOD("set_auto_file_debug", "debug"), &Controller::set_auto_file_debug);
     ClassDB::bind_method(D_METHOD("dump_state_as_text", "path"), &Controller::dump_state_as_text);
     ClassDB::bind_method(D_METHOD("get_models", "handle", "player", "check_requirements"), &Controller::get_models);
+
+    ClassDB::bind_method(D_METHOD("is_done_and_non_repeatable", "upgrade", "player"), &Controller::is_done_and_non_repeatable);
+    ClassDB::bind_method(D_METHOD("is_upgrade", "upgrade"), &Controller::is_upgrade);
     ClassDB::bind_method(D_METHOD("is_building", "handle"), &Controller::is_building);
     ClassDB::bind_method(D_METHOD("get_world_size"), &Controller::get_world_size);
     ClassDB::bind_method(D_METHOD("get_steps"), &Controller::get_steps);
