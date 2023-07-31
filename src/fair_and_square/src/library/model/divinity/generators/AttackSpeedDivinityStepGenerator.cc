@@ -145,7 +145,7 @@ void fillLibrary(AttackSpeedDivinityParams const &params_p, octopus::Library &li
 	lib_p.registerUpgrade(attackspeedBuffTierThree_l->_id, attackspeedBuffTierThree_l);
 
 	/// @brief temple
-	BuildingModel buildingModel_l { true, 0.9, 1500 };
+	BuildingModel buildingModel_l { true, 1.8, 1500 };
 
 	models::fillTierUpgrade<AttackSpeedDivinityParams>(lib_p, params_p, models::AttackSpeedDivId,
 		attackspeedTierOneGenertor,

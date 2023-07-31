@@ -222,7 +222,7 @@ void fillLibrary(RecycleDivinityParams const &params_p, octopus::Library &lib_p)
 	lib_p.registerUpgrade(upBuffDeathRes_l->_id, upBuffDeathRes_l);
 
 	/// @brief temple
-	BuildingModel buildingModel_l { true, 0.9, 1500 };
+	BuildingModel buildingModel_l { true, 1.8, 1500 };
 
 	models::fillTierUpgrade<RecycleDivinityParams>(lib_p, params_p, models::RecycleDivId,
 		recycleTierOneGenertor,

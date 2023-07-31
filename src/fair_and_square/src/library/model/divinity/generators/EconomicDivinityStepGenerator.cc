@@ -122,7 +122,7 @@ void fillLibrary(EconomicDivinityParams const &params_p, octopus::Library &lib_p
 	lib_p.registerUpgrade(resUpTierThree_l->_id, resUpTierThree_l);
 
 	/// @brief temple
-	BuildingModel buildingModel_l { true, 0.9, 1500 };
+	BuildingModel buildingModel_l { true, 1.8, 1500 };
 
 	models::fillTierUpgrade<EconomicDivinityParams>(lib_p, params_p, models::EconomicDivId,
 		economicTierOneGenertor,

@@ -286,7 +286,7 @@ void fillLibrary(ProductionDivinityParams const &params_p, octopus::Library &lib
 	lib_p.registerUpgrade(upProductionIncreaseBufferCount_l->_id, upProductionIncreaseBufferCount_l);
 
 	/// @brief temple
-	BuildingModel buildingModel_l { true, 0.9, 1500 };
+	BuildingModel buildingModel_l { true, 1.8, 1500 };
 
 	models::fillTierUpgrade<ProductionDivinityParams>(lib_p, params_p, models::ProductionDivId,
 		productionTierOneGenertor,

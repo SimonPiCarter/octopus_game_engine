@@ -186,7 +186,7 @@ void fillLibrary(HealDivinityParams const &params_p, octopus::Library &lib_p)
 	lib_p.registerUpgrade(healUpHealHpTierThree_l->_id, healUpHealHpTierThree_l);
 
 	/// @brief temple
-	BuildingModel buildingModel_l { true, 0.9, 1500 };
+	BuildingModel buildingModel_l { true, 1.8, 1500 };
 
 	models::fillTierUpgrade<HealDivinityParams>(lib_p, params_p, models::HealDivId,
 		healTierOneGenertor,
