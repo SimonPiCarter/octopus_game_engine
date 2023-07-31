@@ -15,6 +15,7 @@ class Controller;
 class EntityHandle : public Node {
     GDCLASS(EntityHandle, Node)
 
+public:
     void set_index(int index_p) { index = index_p; }
     int get_index() const { return index; }
 
@@ -35,6 +36,7 @@ octopus::Handle castHandle(godot::Variant const &var_p);
 class Buff : public Node {
     GDCLASS(Buff, Node)
 
+public:
     // Will be called by Godot when the class is registered
     // Use this to add properties to your class
     static void _bind_methods();
@@ -58,6 +60,7 @@ class Entity : public Node {
     GDCLASS(Entity, Node)
 
 public:
+    Entity();
     ~Entity();
 
     // Will be called by Godot when the class is registered
@@ -105,6 +108,7 @@ public:
 private:
     int _index = 0;
     int _revision = 0;
+    EntityHandle * _handle = nullptr;
 };
 
 }

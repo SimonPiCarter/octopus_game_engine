@@ -33,23 +33,25 @@ octopus::Handle castHandle(godot::Variant const &var_p)
     return castHandle(handleEntity_l);
 }
 
+Entity::Entity() : _handle(memnew(EntityHandle))
+{}
+
 Entity::~Entity()
 {}
 
 void Entity::set_index(int index_p) {
     _index = index_p;
+    _handle->set_index(index_p);
 }
 
 void Entity::set_revision(int revision_p) {
     _revision = revision_p;
+    _handle->set_revision(revision_p);
 }
 
 EntityHandle * Entity::get_handle() const
 {
-    EntityHandle *handle_l = memnew(EntityHandle);
-    handle_l->set_index(_index);
-    handle_l->set_revision(_revision);
-    return handle_l;
+    return _handle;
 }
 
 int Entity::get_index() const
