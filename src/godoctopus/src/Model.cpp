@@ -286,8 +286,9 @@ void Model::_bind_methods()
 void ModelView::init(Controller const *controller_p, EntityHandle const * producer_p, String const &name_p)
 {
     std::string name_l = name_p.utf8().get_data();
-    octopus::Entity const * entProducer_l = controller_p->getEntity(castHandle(producer_p));
-    float productionSpeed_l = entProducer_l->getProduction().to_double();
+    octopus::Entity const & entProducer_l = *controller_p->getEntity(castHandle(producer_p));
+    octopus::Player const & player_l = *controller_p->getPlayer(entProducer_l._player);
+    float productionSpeed_l = entProducer_l.getProduction().to_double();
     float productionTime_l = 0;
     if(controller_p->getLib().hasEntityModel(name_l))
     {
@@ -296,7 +297,8 @@ void ModelView::init(Controller const *controller_p, EntityHandle const * produc
 
         if(controller_p->getLib().hasUnitModel(name_l))
         {
-            productionTime_l = controller_p->getLib().getUnitModel(name_l)._productionTime;
+            productionTime_l = octopus::to_double(getProductionTime(controller_p->getLib().getUnitModel(name_l), player_l));
+            _cost = getCost(controller_p->getLib().getUnitModel(name_l), player_l);
         }
 
         if(controller_p->getLib().hasBuildingModel(name_l))
