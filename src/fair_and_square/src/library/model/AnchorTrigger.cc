@@ -35,7 +35,12 @@ void AnchorTrigger::trigger(octopus::State const &state_p, octopus::Step &step_p
 
     options_l.push_back(divOption_l);
 
-    for(size_t i = 0 ; i < 2 ; ++ i )
+    divOption_l._playerOption = DivinityOption {_player, fas::rollOneRandomDivinity(_rand)};
+    divOption_l._enemyOption = generateEnemyOption((_player+1)%2, _rand, id_l);
+
+    options_l.push_back(divOption_l);
+
+    for(size_t i = 0 ; i < 1 ; ++ i )
     {
         Option option_l;
 
