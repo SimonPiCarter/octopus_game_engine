@@ -5,6 +5,7 @@
 #include <godot_cpp/classes/input.hpp>
 
 // octopus
+#include "state/State.hh"
 #include "state/player/Player.hh"
 #include "state/entity/Entity.hh"
 #include "state/entity/Building.hh"
@@ -81,8 +82,7 @@ Vector2 Entity::get_pos(Controller const *controller_p) const
 
 bool Entity::is_alive(Controller const *controller_p) const
 {
-    octopus::Entity const *ent_l = controller_p->getEntity(octopus::Handle(_index, _revision));
-    return ent_l->_alive;
+    return controller_p->getState()->isEntityAlive(octopus::Handle(_index, _revision));
 }
 
 bool Entity::is_blueprint(Controller const *controller_p) const

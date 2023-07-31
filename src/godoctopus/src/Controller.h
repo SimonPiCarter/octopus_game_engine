@@ -176,6 +176,8 @@ public:
 
     octopus::Library &getLib();
     octopus::Library const &getLib() const;
+
+    octopus::State const * getState() const;
 private:
     void newAutoSaveFile();
     octopus::Controller * _controller = nullptr;
