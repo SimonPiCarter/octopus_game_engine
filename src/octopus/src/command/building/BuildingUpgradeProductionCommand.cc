@@ -40,13 +40,13 @@ void BuildingUpgradeProductionCommand::registerCommand(Step & step_p, State cons
 	}
 
 	Player const &player_l = *state_p.getPlayer(building_l->_player);
+	bool canPay_l = checkResource(state_p, building_l->_player, _upgrade->_cost, step_p.getResourceSpent(building_l->_player));
+	bool canProduce_l = building_l->_buildingModel.canProduce(_upgrade);
+	bool inStep = step_p.isUpgradeProduced(building_l->_player, _upgrade->_id);
 	// check if we can pay for it and if building can produce it
-	if(checkResource(state_p, building_l->_player, _upgrade->_cost, step_p.getResourceSpent(building_l->_player))
-	&& building_l->_buildingModel.canProduce(_upgrade)
-	&& meetRequirements(_upgrade->_requirements, player_l)
-	&& (_upgrade->_repeatable ||
-		(player_l._producedUpgrade.find(_upgrade->_id) == player_l._producedUpgrade.end()
-		&& !step_p.isUpgradeProduced(building_l->_player, _upgrade->_id))))
+	if(canPay_l && canProduce_l
+	&& checkUpgradeRequirements(player_l, *_upgrade)
+	&& (_upgrade->_repeatable || !inStep))
 	{
 		step_p.addSteppable(new PlayerSpendResourceStep(building_l->_player, _upgrade->_cost));
 		step_p.addSteppable(new CommandSpawnStep(this));

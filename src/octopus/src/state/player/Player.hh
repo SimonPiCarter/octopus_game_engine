@@ -79,6 +79,8 @@ namespace octopus
 	std::list<BuildingModel const *> getAvailableBuildingModels(Player const &player_p, bool checkRequirements_p=true);
 	/// @brief return availables unit models from building and player
 	std::list<UnitModel const *> getAvailableUnitModels(BuildingModel const &building_p, Player const &player_p, bool checkRequirements_p=true);
+	/// @brief Check if the player meet upgrade requirements
+	bool checkUpgradeRequirements(Player const &player_p, Upgrade const &upgrade_p);
 	/// @brief return availables upgrades from building and player
 	std::list<Upgrade const *> getAvailableUpgrades(BuildingModel const &building_p, Player const &player_p, bool checkRequirements_p=true);
 }

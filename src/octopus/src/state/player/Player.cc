@@ -114,15 +114,21 @@ std::list<UnitModel const *> getAvailableUnitModels(BuildingModel const &buildin
 	return availables_l;
 }
 
+bool checkUpgradeRequirements(Player const &player_p, Upgrade const &upgrade_p)
+{
+	bool metRequirement_l = meetRequirements(upgrade_p._requirements, player_p);
+	bool alreadyProduced = getUpgradeLvl(player_p, upgrade_p._id) > 0;
+	bool beingProduced = player_p._producedUpgrade.find(upgrade_p._id) != player_p._producedUpgrade.end();
+	return metRequirement_l && (upgrade_p._repeatable || (!alreadyProduced && !beingProduced));
+}
+
 std::list<Upgrade const *> getAvailableUpgrades(BuildingModel const &building_p, Player const &player_p, bool checkRequirements_p)
 {
 	std::list<Upgrade const *> availables_l;
 	for(Upgrade const * upgrade_l : building_p._upgrades)
 	{
 		// meet requirement and avoid repeat upgrade
-		if((meetRequirements(upgrade_l->_requirements, player_p)
-		&& (upgrade_l->_repeatable || player_p._producedUpgrade.find(upgrade_l->_id) == player_p._producedUpgrade.end()))
-		|| !checkRequirements_p)
+		if(!checkRequirements_p || checkUpgradeRequirements(player_p, *upgrade_l))
 		{
 			availables_l.push_back(upgrade_l);
 		}
