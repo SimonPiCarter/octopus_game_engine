@@ -979,11 +979,11 @@ void Controller::add_unit_build_cancel_command(int peer_p, EntityHandle const * 
     }
 }
 
-void Controller::add_blueprint_command(int peer_p, Vector2 const &target_p, String const &model_p, int player_p, TypedArray<EntityHandle> const &builders_p)
+void Controller::add_blueprint_command(int peer_p, Vector2 const &target_p, String const &model_p, int player_p, TypedArray<EntityHandle> const &builders_p, bool queued_p)
 {
     if(!_paused)
     {
-        godot::add_blueprint_command(_queuedCommandsPerPeer.at(peer_p).back(), *_state, _lib, target_p, model_p, player_p, builders_p);
+        godot::add_blueprint_command(_queuedCommandsPerPeer.at(peer_p).back(), *_state, _lib, target_p, model_p, player_p, builders_p, queued_p);
     }
 }
 
@@ -1112,7 +1112,7 @@ void Controller::_bind_methods()
     ClassDB::bind_method(D_METHOD("add_stop_commands", "peer", "handles", "player", "queued"), &Controller::add_stop_commands);
     ClassDB::bind_method(D_METHOD("add_unit_build_command", "peer", "handle", "model", "player"), &Controller::add_unit_build_command);
     ClassDB::bind_method(D_METHOD("add_unit_build_cancel_command", "peer", "handle", "index", "player"), &Controller::add_unit_build_cancel_command);
-    ClassDB::bind_method(D_METHOD("add_blueprint_command", "peer", "target", "model", "player", "builders"), &Controller::add_blueprint_command);
+    ClassDB::bind_method(D_METHOD("add_blueprint_command", "peer", "target", "model", "player", "builders", "queued"), &Controller::add_blueprint_command);
     ClassDB::bind_method(D_METHOD("add_building_cancel_command", "peer", "handle", "player"), &Controller::add_building_cancel_command);
     ClassDB::bind_method(D_METHOD("add_chose_option_command", "peer", "option_p", "player"), &Controller::add_chose_option_command);
 

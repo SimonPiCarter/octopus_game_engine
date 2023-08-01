@@ -199,7 +199,8 @@ void add_unit_build_cancel_command(std::list<octopus::Command*> &list_r, octopus
     list_r.push_back(new octopus::BuildingUnitCancelCommand(castHandle(handle_p), index_p));
 }
 
-void add_blueprint_command(std::list<octopus::Command*> &list_r, octopus::State const &state_p, octopus::Library const &lib_p, Vector2 const &target_p, String const &model_p, int player_p, TypedArray<EntityHandle> const &builders_p)
+void add_blueprint_command(std::list<octopus::Command*> &list_r, octopus::State const &state_p, octopus::Library const &lib_p, Vector2 const &target_p,
+    String const &model_p, int player_p, TypedArray<EntityHandle> const &builders_p, bool queued_p)
 {
     std::string modelId_l(model_p.utf8().get_data());
     std::vector<octopus::Handle> builders_l;
@@ -210,7 +211,9 @@ void add_blueprint_command(std::list<octopus::Command*> &list_r, octopus::State 
 
     if(lib_p.hasBuildingModel(modelId_l))
     {
-        list_r.push_back(new octopus::BuildingBlueprintCommand(octopus::Vector(target_p.x, target_p.y), player_p, lib_p.getBuildingModel(modelId_l), builders_l));
+        octopus::Command * cmd_l = new octopus::BuildingBlueprintCommand(octopus::Vector(target_p.x, target_p.y), player_p, lib_p.getBuildingModel(modelId_l), builders_l);
+        cmd_l->setQueued(queued_p);
+        list_r.push_back(cmd_l);
     }
 }
 
