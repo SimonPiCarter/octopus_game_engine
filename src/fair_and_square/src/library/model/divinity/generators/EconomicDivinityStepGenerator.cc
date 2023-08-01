@@ -45,11 +45,17 @@ std::vector<Steppable *> economicTierThreeGenertor(EconomicDivinityParams const 
 {
 	std::vector<Steppable *> steps_l;
 
+	octopus::TimedBuff hitPointBuff_l;
+	hitPointBuff_l._id = "EconomicDivinity_BuffHPTierThree";
+	hitPointBuff_l._coef = params_p._hpBuffTierThree;
+	hitPointBuff_l._type = octopus::TyppedBuff::Type::HpMax;
+
 	for(std::string const &model_l : models::BasicUnitModels)
 	{
 		steps_l.push_back(new PlayerAddCostBonusStep(player_p, model_l, "bloc", {0, params_p._costDebuffTierThree}));
 		steps_l.push_back(new PlayerAddCostBonusStep(player_p, model_l, "ether", {0, params_p._costDebuffTierThree}));
-		steps_l.push_back(new PlayerBuffAllStep(player_p, {0, params_p._hpBuffTierThree}, model_l));
+
+		steps_l.push_back(new PlayerBuffAllStep(player_p, hitPointBuff_l, model_l));
 	}
 
 	return steps_l;
@@ -100,15 +106,15 @@ void fillLibrary(EconomicDivinityParams const &params_p, octopus::Library &lib_p
 	tiertwounitmodel_l._damage = 7;
 	tiertwounitmodel_l._armor = 0;
 	tiertwounitmodel_l._lineOfSight = 6;
-	tiertwounitmodel_l._fullReload = 2000;
+	tiertwounitmodel_l._fullReload = 10000;
 	tiertwounitmodel_l._requirements._upgradeLvl[models::EconomicDivId] = 2;
 	tiertwounitmodel_l._idleFunc = customIdleResource;
 
 	lib_p.registerBuildingModel(params_p._tierTwoBuildingModelId, tiertwounitmodel_l);
 
-	// T3 resource production buff
+	// T3 resource production building buff
 	TimedBuff resBuffTierThree_l;
-	resBuffTierThree_l._coef = params_p._resourceProductionBuffTierThree;
+	resBuffTierThree_l._offset = params_p._resourceProductionBuffTierThree;
 	resBuffTierThree_l._type = TyppedBuff::Type::Damage;
 	resBuffTierThree_l._id = "EconomicDivinity_BuffResProdTierThree";
 
