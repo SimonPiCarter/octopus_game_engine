@@ -91,23 +91,23 @@ namespace models
         octopus::BuildingModel &model_p)
     {
         octopus::Upgrade * upT1_l = new octopus::Upgrade(id_p+models::tierOneSuffix, new models::TierUpgrade<param_t>(params_p, t1_p));
-        upT1_l->_cost["bloc"] = 200;
-        upT1_l->_cost["ether"] = 100;
-        upT1_l->_productionTime = 6000;
+        upT1_l->_cost["ether"] = 200;
+        upT1_l->_cost["bloc"] = 100;
+        upT1_l->_productionTime = 1500;
         upT1_l->_requirements._upgradeLvl[id_p] = 1;
         lib_p.registerUpgrade(upT1_l->_id, upT1_l);
 
         octopus::Upgrade * upT2_l = new octopus::Upgrade(id_p+models::tierTwoSuffix, new models::TierUpgrade<param_t>(params_p, t2_p));
-        upT2_l->_cost["bloc"] = 600;
-        upT2_l->_cost["ether"] = 300;
-        upT2_l->_productionTime = 12000;
+        upT2_l->_cost["ether"] = 600;
+        upT2_l->_cost["irium"] = 300;
+        upT2_l->_productionTime = 3000;
         upT2_l->_requirements._upgradeLvl[id_p] = 2;
         lib_p.registerUpgrade(upT2_l->_id, upT2_l);
 
         octopus::Upgrade * upT3_l = new octopus::Upgrade(id_p+models::tierThreeSuffix, new models::TierUpgrade<param_t>(params_p, t3_p));
         upT3_l->_cost["bloc"] = 1200;
-        upT3_l->_cost["ether"] = 600;
-        upT3_l->_productionTime = 12000;
+        upT3_l->_cost["irium"] = 600;
+        upT3_l->_productionTime = 6000;
         upT3_l->_requirements._upgradeLvl[id_p] = 3;
         lib_p.registerUpgrade(upT3_l->_id, upT3_l);
 
