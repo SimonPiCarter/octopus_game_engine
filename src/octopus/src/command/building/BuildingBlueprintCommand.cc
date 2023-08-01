@@ -56,7 +56,9 @@ void BuildingBlueprintCommand::registerCommand(Step & step_p, State const &state
 			step_p.addSteppable(new BuildingSpawnStep(buildingHandle_l, building_l, false));
 			for(Handle const &handle_l : _builders)
 			{
-				step_p.addSteppable(new CommandSpawnStep(new EntityBuildingCommand(handle_l, handle_l, buildingHandle_l, _pos, 0, {_pos}, true)));
+				Command * cmd_l = new EntityBuildingCommand(handle_l, handle_l, buildingHandle_l, _pos, 0, {_pos}, true);
+				cmd_l->setQueued(_queued);
+				step_p.addSteppable(new CommandSpawnStep(cmd_l));
 			}
 		}
 	}
