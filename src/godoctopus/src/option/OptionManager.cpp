@@ -59,28 +59,28 @@ void OptionManager::unregisterOption(octopus::PlayerPopOptionStep const *options
 
 godot::Option *OptionManager::getPrimaryOption(size_t idx_p) const
 {
-    godot::Option * opt_l = memnew(Option);
+    godot::Option * opt_l = memnew(Option());
     opt_l->set_option(_queuedOptions.front().at(idx_p)._playerOption);
     return opt_l;
 }
 
 godot::Option *OptionManager::getSecondaryOption(size_t idx_p) const
 {
-    godot::Option * opt_l = memnew(Option);
+    godot::Option * opt_l = memnew(Option());
     opt_l->set_option(_queuedOptions.front().at(idx_p)._enemyOption);
     return opt_l;
 }
 
 godot::Option *OptionManager::getChosenPrimaryOption(size_t idx_p) const
 {
-    godot::Option * opt_l = memnew(Option);
+    godot::Option * opt_l = memnew(Option());
     opt_l->set_option(_chosenOptions.at(idx_p)._playerOption);
     return opt_l;
 }
 
 godot::Option *OptionManager::getChosenSecondaryOption(size_t idx_p) const
 {
-    godot::Option * opt_l = memnew(Option);
+    godot::Option * opt_l = memnew(Option());
     opt_l->set_option(_chosenOptions.at(idx_p)._enemyOption);
     return opt_l;
 }
@@ -118,7 +118,7 @@ void DivinityOptionManager::unregisterOption(octopus::PlayerPopOptionStep const 
 
 godot::Option *DivinityOptionManager::getPrimaryOption(size_t idx_p) const
 {
-    godot::Option * opt_l = memnew(Option);
+    godot::Option * opt_l = memnew(Option());
     opt_l->set_option(_player, _queuedOptions.front().at(idx_p));
     return opt_l;
 }
@@ -130,7 +130,7 @@ godot::Option *DivinityOptionManager::getSecondaryOption(size_t idx_p) const
 
 godot::Option *DivinityOptionManager::getChosenPrimaryOption(size_t idx_p) const
 {
-    godot::Option * opt_l = memnew(Option);
+    godot::Option * opt_l = memnew(Option());
     opt_l->set_option(_player, _chosenOptions.at(idx_p));
     return opt_l;
 }

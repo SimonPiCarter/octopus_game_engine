@@ -33,7 +33,7 @@ octopus::Handle castHandle(godot::Variant const &var_p)
     return castHandle(handleEntity_l);
 }
 
-Entity::Entity() : _handle(memnew(EntityHandle))
+Entity::Entity() : _handle(memnew(EntityHandle()))
 {}
 
 Entity::~Entity()
@@ -241,7 +241,7 @@ TypedArray<godot::Buff> Entity::get_buffs(Controller const *controller_p) const
         if(ent_l->_timeSinceBuff.at(name_l) < ent_l->_registeredBuff.at(name_l)._duration
         || ent_l->_registeredBuff.at(name_l)._duration == 0)
         {
-            godot::Buff * buff_l = memnew(godot::Buff);
+            godot::Buff * buff_l = memnew(godot::Buff());
             buff_l->setName(name_l.c_str());
             buff_l->setTimeElapsed(ent_l->_timeSinceBuff.at(name_l));
             buff_l->setDuration(ent_l->_registeredBuff.at(name_l)._duration);
