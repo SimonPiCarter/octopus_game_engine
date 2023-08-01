@@ -269,13 +269,13 @@ std::list<Command *> WaveLevelCommands(Library &lib_p, RandomGenerator &rand_p)
 		createArenaSpawnCommmand(lib_p, rand_p, 90, 40, 20, 1, 1, 20, 1000),
 		createArenaSpawnCommmand(lib_p, rand_p, 90, 70, 20, 1, 1, 30, 1000),
 		// zone 3
-		createArenaSpawnCommmand(lib_p, rand_p, 130, 10, 20, 1, 2, 40, 2000),
-		createArenaSpawnCommmand(lib_p, rand_p, 130, 40, 20, 1, 2, 30, 2000),
-		createArenaSpawnCommmand(lib_p, rand_p, 130, 70, 20, 1, 2, 40, 2000),
+		createArenaSpawnCommmand(lib_p, rand_p, 130, 10, 20, 2, 1, 40, 2000),
+		createArenaSpawnCommmand(lib_p, rand_p, 130, 40, 20, 2, 1, 30, 2000),
+		createArenaSpawnCommmand(lib_p, rand_p, 130, 70, 20, 2, 1, 40, 2000),
 		// zone 4
-		createArenaSpawnCommmand(lib_p, rand_p, 170, 10, 20, 1, 2, 50, 2000),
-		createArenaSpawnCommmand(lib_p, rand_p, 170, 40, 20, 1, 2, 40, 2000),
-		createArenaSpawnCommmand(lib_p, rand_p, 170, 70, 20, 1, 2, 50, 2000),
+		createArenaSpawnCommmand(lib_p, rand_p, 170, 10, 20, 2, 1, 50, 2000),
+		createArenaSpawnCommmand(lib_p, rand_p, 170, 40, 20, 2, 1, 40, 2000),
+		createArenaSpawnCommmand(lib_p, rand_p, 170, 70, 20, 2, 1, 50, 2000),
 	};
 
 	return commands_l;
