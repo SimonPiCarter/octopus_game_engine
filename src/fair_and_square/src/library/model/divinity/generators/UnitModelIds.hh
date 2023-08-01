@@ -51,6 +51,16 @@ namespace models
         RecycleUnitModelTierOneId
     };
 
+    const std::vector<std::string> AllUnitModels = {"square", "double_square", "circle", "triangle", "reverse_triangle", "long_square", "long_triangle",
+        AttackSpeedUnitModelTierOneId,
+        HealUnitModelTierOneId,
+        LifestealUnitModelTierOneId,
+        ProductionUnitModelTierOneId,
+        ProductionUnitModelTierOneRespawnId,
+        ProductionUnitModelTierTwoId,
+        RecycleUnitModelTierOneId
+    };
+
     const std::vector<std::string> BasicBuildingProducingModels = {"barrack_square", "barrack_triangle", "barrack_circle",
         AttackSpeedBuildingId,
         HealBuildingId,

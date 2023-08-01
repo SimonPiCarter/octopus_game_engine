@@ -78,7 +78,10 @@ std::vector<Steppable *> healTierTwoGenertor(HealDivinityParams const &param_p, 
 	regenBuff_l._type = TyppedBuff::Type::HpRegeneration;
 	regenBuff_l._id = "HealDivinity_RegenBuffTierTwo";
 
-	steps_l.push_back(new PlayerBuffAllStep(player_p, regenBuff_l, ""));
+	for(std::string const &id_l : models::AllUnitModels)
+	{
+		steps_l.push_back(new PlayerBuffAllStep(player_p, regenBuff_l, id_l));
+	}
 
 	return steps_l;
 }
