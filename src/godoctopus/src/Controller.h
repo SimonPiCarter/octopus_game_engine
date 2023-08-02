@@ -210,6 +210,8 @@ private:
 
     /// @brief vector storing last visible units when call of get_visible_units
     std::vector<bool> _visibleLastCall;
+	/// @brief vector storing the revision last call of get_visible_units to avoid keeping units visible
+	std::vector<char> _visibleRevisionLastCall;
 
     /// @brief manager for each player
     std::map<unsigned long, AbstractOptionManager *> _optionManagers;
