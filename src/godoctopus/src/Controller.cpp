@@ -257,11 +257,11 @@ void Controller::load_level_test_model_reading(int seed_p, godot::LevelModel *le
     delete _rand;
     _rand = new octopus::RandomGenerator(seed_p);
     std::list<octopus::Steppable *> spawners_l = {};
+    std::list<octopus::Steppable *> levelsteps_l = level_test_model::LevelSteps(_lib, *_rand);
     if(level_model_p)
     {
         spawners_l = level_model_p->generateLevelSteps(_lib);
     }
-    std::list<octopus::Steppable *> levelsteps_l = level_test_model::LevelSteps(_lib, *_rand);
     spawners_l.splice(spawners_l.end(), levelsteps_l);
 
     std::list<octopus::Command *> commands_l = level_test_model::LevelCommands(_lib, *_rand);
