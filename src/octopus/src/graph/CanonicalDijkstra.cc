@@ -346,8 +346,8 @@ FlowField flow_field(ValueGrid const &grid_p)
 
 Vector unitary_direction(Fixed x, Fixed y, FlowField const &field_p)
 {
-	long long floorX_l = std::min<long long>(field_p.size(), to_int(x));
-	long long floorY_l = std::min<long long>(field_p[floorX_l].size(), to_int(y));
+	long long floorX_l = std::max<long long>(0ll, std::min<long long>(field_p.size()-1, to_int(x)));
+	long long floorY_l = std::max<long long>(0ll, std::min<long long>(field_p[floorX_l].size()-1, to_int(y)));
 
 	return field_p[floorX_l][floorY_l] ;
 }
