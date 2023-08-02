@@ -97,6 +97,13 @@ std::list<octopus::Steppable *> LevelModel::generateLevelSteps(octopus::Library 
             building_l._player = ent_l.player;
             steps_l.push_back(new octopus::BuildingSpawnStep(octopus::Handle(idx_l), building_l, true));
         }
+        else if(ent_l.type == "Resource")
+        {
+	        octopus::Resource resource_l({ ent_l.x, ent_l.y }, true, lib_p.getEntityModel(ent_l.model));
+			resource_l._resource = 20;
+            resource_l._player = ent_l.player;
+            steps_l.push_back(new octopus::ResourceSpawnStep(octopus::Handle(idx_l), resource_l));
+        }
         else
         {
             throw std::logic_error("Unkown type found in entities when generating level model");
