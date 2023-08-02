@@ -128,16 +128,16 @@ public:
 
     // commands
     // move & attack
-    void add_move_commands(int peer, TypedArray<EntityHandle> const &handles_p, Vector2 const &target_p, int player_p, bool queued_p);
-    void add_move_target_commands(int peer, TypedArray<EntityHandle> const &handles_p, Vector2 const &target_p, EntityHandle const * handleTarget_p, int player_p, bool queued_p);
-    void add_attack_move_commands(int peer, TypedArray<EntityHandle> const &handles_p, Vector2 const &target_p, int player_p, bool queued_p);
-    void add_stop_commands(int peer, TypedArray<EntityHandle> const &handles_p, int player_p, bool queued_p);
+    void add_move_commands(int peer, PackedInt32Array const &handles_p, Vector2 const &target_p, int player_p, bool queued_p);
+    void add_move_target_commands(int peer, PackedInt32Array const &handles_p, Vector2 const &target_p, PackedInt32Array const &handleTarget_p, int player_p, bool queued_p);
+    void add_attack_move_commands(int peer, PackedInt32Array const &handles_p, Vector2 const &target_p, int player_p, bool queued_p);
+    void add_stop_commands(int peer, PackedInt32Array const &handles_p, int player_p, bool queued_p);
     // production
-    void add_unit_build_command(int peer, TypedArray<EntityHandle> const &handles_p, String const &model_p, int player_p);
-    void add_unit_build_cancel_command(int peer, EntityHandle const * handle_p, int index_p, int player_p);
+    void add_unit_build_command(int peer, PackedInt32Array const &handles_p, String const &model_p, int player_p);
+    void add_unit_build_cancel_command(int peer, PackedInt32Array const & handle_p, int index_p, int player_p);
     // building
-    void add_blueprint_command(int peer_p, Vector2 const &target_p, String const &model_p, int player_p, TypedArray<EntityHandle> const &builders_p, bool queued_p);
-    void add_building_cancel_command(int peer_p, EntityHandle const * handle_p, int player_p);
+    void add_blueprint_command(int peer_p, Vector2 const &target_p, String const &model_p, int player_p, PackedInt32Array const &builders_p, bool queued_p);
+    void add_building_cancel_command(int peer_p, PackedInt32Array const & handle_p, int player_p);
     // option
     void add_chose_option_command(int peer_p, int option_p, int player_p);
 

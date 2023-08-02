@@ -26,20 +26,20 @@
 namespace godot
 {
 
-void add_move_commands(std::list<octopus::Command*> &list_r, octopus::State const &state_p, TypedArray<EntityHandle> const &handles_p, Vector2 const &target_p, int , bool queued_p)
+void add_move_commands(std::list<octopus::Command*> &list_r, octopus::State const &state_p, PackedInt32Array const &handles_p, Vector2 const &target_p, int , bool queued_p)
 {
     bool isFlocking_l = false;
     octopus::Vector worldPos_l(target_p.x, target_p.y);
-    for(size_t i = 0 ; i < handles_p.size() ; ++ i)
+    for(size_t i = 0 ; i < handles_p.size()/2 ; ++ i)
     {
-        octopus::Command *cmd_l = octopus::newTargetCommand(state_p, castHandle(handles_p[i]), octopus::Handle(0), worldPos_l, true);
+        octopus::Command *cmd_l = octopus::newTargetCommand(state_p, castHandle(handles_p[i*2],handles_p[i*2+1]), octopus::Handle(0), worldPos_l, true);
         if(dynamic_cast<octopus::EntityMoveCommand*>(cmd_l))
         {
             isFlocking_l = true;
             delete cmd_l;
             break;
         }
-        if(cmd_l)
+        else if(cmd_l)
         {
             cmd_l->setQueued(queued_p);
             list_r.push_back(cmd_l);
@@ -48,9 +48,9 @@ void add_move_commands(std::list<octopus::Command*> &list_r, octopus::State cons
     if(isFlocking_l)
     {
         std::list<octopus::Handle> handles_l;
-        for(size_t i = 0 ; i < handles_p.size() ; ++ i)
+        for(size_t i = 0 ; i < handles_p.size()/2 ; ++ i)
         {
-            handles_l.push_back(castHandle(handles_p[i]));
+            handles_l.push_back(castHandle(handles_p[i*2],handles_p[i*2+1]));
         }
         octopus::Command * cmd_l = new octopus::EntityFlockMoveCommand(handles_l, worldPos_l, false);
 
@@ -59,12 +59,12 @@ void add_move_commands(std::list<octopus::Command*> &list_r, octopus::State cons
     }
 }
 
-void add_move_target_commands(std::list<octopus::Command*> &list_r, octopus::State const &state_p, TypedArray<EntityHandle> const &handles_p, Vector2 const &target_p, EntityHandle const * handleTarget_p, int , bool queued_p)
+void add_move_target_commands(std::list<octopus::Command*> &list_r, octopus::State const &state_p, PackedInt32Array const &handles_p, Vector2 const &target_p, PackedInt32Array const & handleTarget_p, int , bool queued_p)
 {
-    for(size_t i = 0 ; i < handles_p.size() ; ++ i)
+    for(size_t i = 0 ; i < handles_p.size()/2 ; ++ i)
     {
         octopus::Vector worldPos_l(target_p.x, target_p.y);
-        octopus::Command *cmd_l = octopus::newTargetCommand(state_p, castHandle(handles_p[i]), castHandle(handleTarget_p), worldPos_l, false);
+        octopus::Command *cmd_l = octopus::newTargetCommand(state_p, castHandle(handles_p[i*2],handles_p[i*2+1]), castHandle(handleTarget_p[0], handleTarget_p[1]), worldPos_l, false);
         if(cmd_l)
         {
             cmd_l->setQueued(queued_p);
@@ -73,13 +73,13 @@ void add_move_target_commands(std::list<octopus::Command*> &list_r, octopus::Sta
     }
 }
 
-void add_attack_move_commands(std::list<octopus::Command*> &list_r, octopus::State const &state_p, TypedArray<EntityHandle> const &handles_p, Vector2 const &target_p, int, bool queued_p)
+void add_attack_move_commands(std::list<octopus::Command*> &list_r, octopus::State const &state_p, PackedInt32Array const &handles_p, Vector2 const &target_p, int, bool queued_p)
 {
     octopus::Vector worldPos_l(target_p.x, target_p.y);
     std::list<octopus::Handle> handles_l;
-    for(size_t i = 0 ; i < handles_p.size() ; ++ i)
+    for(size_t i = 0 ; i < handles_p.size()/2 ; ++ i)
     {
-        handles_l.push_back(castHandle(handles_p[i]));
+        handles_l.push_back(castHandle(handles_p[i*2],handles_p[i*2+1]));
     }
     octopus::Command * cmd_l = new octopus::EntityFlockMoveCommand(handles_l, worldPos_l, true);
 
@@ -87,11 +87,11 @@ void add_attack_move_commands(std::list<octopus::Command*> &list_r, octopus::Sta
     list_r.push_back(cmd_l);
 }
 
-void add_stop_commands(std::list<octopus::Command*> &list_r, octopus::State const &state_p, TypedArray<EntityHandle> const &handles_p, int, bool queued_p)
+void add_stop_commands(std::list<octopus::Command*> &list_r, octopus::State const &state_p, PackedInt32Array const &handles_p, int, bool queued_p)
 {
-    for(size_t i = 0 ; i < handles_p.size() ; ++ i)
+    for(size_t i = 0 ; i < handles_p.size()/2 ; ++ i)
     {
-        octopus::Handle idx_l = castHandle(handles_p[i]);
+        octopus::Handle idx_l = castHandle(handles_p[i*2],handles_p[i*2+1]);
         const octopus::Entity * cur_l = state_p.getEntity(idx_l);
 		bool isStatic_l = cur_l->_model._isStatic;
 
@@ -126,14 +126,14 @@ unsigned long remainingQueueTime(octopus::Building const &building_p)
 }
 
 template<typename production_t>
-octopus::Handle getBestProductionBuilding(TypedArray<EntityHandle> const &handles_p, octopus::State const &state_p, production_t const &model_p)
+octopus::Handle getBestProductionBuilding(PackedInt32Array const &handles_p, octopus::State const &state_p, production_t const &model_p)
 {
     bool found_l = false;
     octopus::Handle best_l;
     unsigned long lowestQueue_l = 0;
-    for(size_t i = 0 ; i < handles_p.size() ; ++ i)
+    for(size_t i = 0 ; i < handles_p.size()/2 ; ++ i)
     {
-        octopus::Handle idx_l = castHandle(handles_p[i]);
+        octopus::Handle idx_l = castHandle(handles_p[i*2],handles_p[i*2+1]);
         // check ent
         octopus::Entity const *ent_l = state_p.getEntity(idx_l);
         // skip non building
@@ -164,7 +164,7 @@ octopus::Handle getBestProductionBuilding(TypedArray<EntityHandle> const &handle
     return best_l;
 }
 
-void add_unit_build_command(std::list<octopus::Command*> &list_r, octopus::State const &state_p, octopus::Library const &lib_p, TypedArray<EntityHandle> const &handles_p, String const &model_p, int)
+void add_unit_build_command(std::list<octopus::Command*> &list_r, octopus::State const &state_p, octopus::Library const &lib_p, PackedInt32Array const &handles_p, String const &model_p, int)
 {
     std::string modelId_l(model_p.utf8().get_data());
 
@@ -194,19 +194,19 @@ void add_unit_build_command(std::list<octopus::Command*> &list_r, octopus::State
     }
 }
 
-void add_unit_build_cancel_command(std::list<octopus::Command*> &list_r, octopus::State const &state_p, EntityHandle const *handle_p, int index_p, int)
+void add_unit_build_cancel_command(std::list<octopus::Command*> &list_r, octopus::State const &state_p, PackedInt32Array const &handle_p, int index_p, int)
 {
-    list_r.push_back(new octopus::BuildingUnitCancelCommand(castHandle(handle_p), index_p));
+    list_r.push_back(new octopus::BuildingUnitCancelCommand(castHandle(handle_p[0], handle_p[1]), index_p));
 }
 
 void add_blueprint_command(std::list<octopus::Command*> &list_r, octopus::State const &state_p, octopus::Library const &lib_p, Vector2 const &target_p,
-    String const &model_p, int player_p, TypedArray<EntityHandle> const &builders_p, bool queued_p)
+    String const &model_p, int player_p, PackedInt32Array const &builders_p, bool queued_p)
 {
     std::string modelId_l(model_p.utf8().get_data());
     std::vector<octopus::Handle> builders_l;
-    for(size_t i = 0 ; i < builders_p.size() ; ++ i)
+    for(size_t i = 0 ; i < builders_p.size()/2 ; ++ i)
     {
-        builders_l.push_back(castHandle(builders_p[i]));
+        builders_l.push_back(castHandle(builders_p[2*i], builders_p[2*i+1]));
     }
 
     if(lib_p.hasBuildingModel(modelId_l))

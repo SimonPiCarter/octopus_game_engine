@@ -931,7 +931,7 @@ void Controller::get_visible_units(int player_p, int ent_registered_p)
 
 // commands
 
-void Controller::add_move_commands(int peer_p, TypedArray<EntityHandle> const &handles_p, Vector2 const &target_p, int player_p, bool queued_p)
+void Controller::add_move_commands(int peer_p, PackedInt32Array const &handles_p, Vector2 const &target_p, int player_p, bool queued_p)
 {
     if(!_paused)
     {
@@ -939,7 +939,7 @@ void Controller::add_move_commands(int peer_p, TypedArray<EntityHandle> const &h
     }
 }
 
-void Controller::add_move_target_commands(int peer_p, TypedArray<EntityHandle> const &handles_p, Vector2 const &target_p, EntityHandle const * handleTarget_p, int player_p, bool queued_p)
+void Controller::add_move_target_commands(int peer_p, PackedInt32Array const &handles_p, Vector2 const &target_p, PackedInt32Array const & handleTarget_p, int player_p, bool queued_p)
 {
     if(!_paused)
     {
@@ -947,7 +947,7 @@ void Controller::add_move_target_commands(int peer_p, TypedArray<EntityHandle> c
     }
 }
 
-void Controller::add_attack_move_commands(int peer_p, TypedArray<EntityHandle> const &handles_p, Vector2 const &target_p, int player_p, bool queued_p)
+void Controller::add_attack_move_commands(int peer_p, PackedInt32Array const &handles_p, Vector2 const &target_p, int player_p, bool queued_p)
 {
     if(!_paused)
     {
@@ -955,7 +955,7 @@ void Controller::add_attack_move_commands(int peer_p, TypedArray<EntityHandle> c
     }
 }
 
-void Controller::add_stop_commands(int peer_p, TypedArray<EntityHandle> const &handles_p, int player_p, bool queued_p)
+void Controller::add_stop_commands(int peer_p, PackedInt32Array const &handles_p, int player_p, bool queued_p)
 {
     if(!_paused)
     {
@@ -963,7 +963,7 @@ void Controller::add_stop_commands(int peer_p, TypedArray<EntityHandle> const &h
     }
 }
 
-void Controller::add_unit_build_command(int peer_p, TypedArray<EntityHandle> const &handles_p, String const &model_p, int player_p)
+void Controller::add_unit_build_command(int peer_p, PackedInt32Array const &handles_p, String const &model_p, int player_p)
 {
     if(!_paused)
     {
@@ -971,7 +971,7 @@ void Controller::add_unit_build_command(int peer_p, TypedArray<EntityHandle> con
     }
 }
 
-void Controller::add_unit_build_cancel_command(int peer_p, EntityHandle const * handle_p, int index_p, int player_p)
+void Controller::add_unit_build_cancel_command(int peer_p, PackedInt32Array const & handle_p, int index_p, int player_p)
 {
     if(!_paused)
     {
@@ -979,7 +979,7 @@ void Controller::add_unit_build_cancel_command(int peer_p, EntityHandle const * 
     }
 }
 
-void Controller::add_blueprint_command(int peer_p, Vector2 const &target_p, String const &model_p, int player_p, TypedArray<EntityHandle> const &builders_p, bool queued_p)
+void Controller::add_blueprint_command(int peer_p, Vector2 const &target_p, String const &model_p, int player_p, PackedInt32Array const &builders_p, bool queued_p)
 {
     if(!_paused)
     {
@@ -987,9 +987,9 @@ void Controller::add_blueprint_command(int peer_p, Vector2 const &target_p, Stri
     }
 }
 
-void Controller::add_building_cancel_command(int peer_p, EntityHandle const * handle_p, int player_p)
+void Controller::add_building_cancel_command(int peer_p, PackedInt32Array const & handle_p, int player_p)
 {
-    octopus::Handle entHandle_l = castHandle(handle_p);
+    octopus::Handle entHandle_l = castHandle(handle_p[0], handle_p[1]);
     if(!_paused && _state->getEntity(entHandle_l)->_model._isBuilding)
     {
         _queuedCommandsPerPeer.at(peer_p).back().push_back(new octopus::BuildingCancelCommand(entHandle_l));
@@ -1021,7 +1021,8 @@ void Controller::next_step()
         for(octopus::Command * cmd_l : cmds_l)
         {
             /// @todo refactor to allow control over multiple player ?
-            _controller->queueCommandAsPlayer(cmd_l, _playerPerPeer.at(peer_l));
+            // _controller->queueCommandAsPlayer(cmd_l, _playerPerPeer.at(peer_l));
+			_controller->queueCommand(cmd_l);
         }
         pair_l.second.pop_front();
     }

@@ -33,6 +33,11 @@ octopus::Handle castHandle(godot::Variant const &var_p)
     return castHandle(handleEntity_l);
 }
 
+octopus::Handle castHandle(int const &index_p, int const &revision_p)
+{
+    return octopus::Handle(index_p, revision_p);
+}
+
 Entity::Entity() : _handle(memnew(EntityHandle()))
 {}
 

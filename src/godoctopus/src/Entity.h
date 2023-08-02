@@ -32,6 +32,7 @@ private:
 
 octopus::Handle castHandle(godot::EntityHandle const *handle_p);
 octopus::Handle castHandle(godot::Variant const &var_p);
+octopus::Handle castHandle(int const &index_p, int const &revision_p);
 
 class Buff : public Node {
     GDCLASS(Buff, Node)
