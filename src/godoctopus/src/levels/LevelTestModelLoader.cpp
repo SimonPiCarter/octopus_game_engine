@@ -5,6 +5,7 @@
 #include <random>
 
 // fas
+#include "library/model/AnchorDivinityTrigger.hh"
 #include "library/model/divinity/DivinityModelLoader.hh"
 #include "library/model/divinity/generators/UnitModelIds.hh"
 #include "library/model/ModelLoader.hh"
@@ -74,6 +75,14 @@ std::list<Steppable *> LevelSteps(Library &lib_p, RandomGenerator &rand_p)
 		new PlayerLevelUpUpgradeStep(0, models::RecycleDivId),
 		new PlayerLevelUpUpgradeStep(0, models::RecycleDivId),
 		new PlayerLevelUpUpgradeStep(0, models::RecycleDivId),
+		new TriggerSpawn(new AnchorDivinityTrigger(lib_p, rand_p, 0, {
+			fas::DivinityType::AttackSpeed,
+			fas::DivinityType::Economic,
+			fas::DivinityType::Heal,
+			fas::DivinityType::Lifesteal,
+			fas::DivinityType::Production,
+			fas::DivinityType::Recycle,
+		}, 180)),
 	};
 
 	fas::addBuildingPlayer(spawners_l, 0, fas::allDivinities(), lib_p);

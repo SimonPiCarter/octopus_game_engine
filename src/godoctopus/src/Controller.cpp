@@ -271,7 +271,7 @@ void Controller::load_level_test_model_reading(int seed_p, godot::LevelModel *le
     _currentLevel = LEVEL_ID_LEVEL_TEST_MODEL;
     _headerWriter = std::bind(level_test_model::writeLevelHeader, std::placeholders::_1, level_test_model::ModelLoaderHeader {seed_p});
     _headerWriter(*_autoSaveFile);
-    init(commands_l, spawners_l, false, 50, _autoSaveFile);
+    init(commands_l, spawners_l, true, 50, _autoSaveFile);
 }
 
 void Controller::load_duel_level(int seed_p, TypedArray<int> const &div_player_1_p, TypedArray<int> const &div_player_2_p)
