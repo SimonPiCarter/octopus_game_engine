@@ -103,6 +103,13 @@ CommandVar getVarFromCommand(Command *cmd_p)
         }
     }
     {
+        DebugCommand * typped_l = dynamic_cast<DebugCommand *>(cmd_p);
+        if(typped_l)
+        {
+            return *typped_l;
+        }
+    }
+    {
         EntityAttackCommand * typped_l = dynamic_cast<EntityAttackCommand *>(cmd_p);
         if(typped_l)
         {

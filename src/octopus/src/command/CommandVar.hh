@@ -12,6 +12,7 @@
 #include "command/data/MoveData.hh"
 #include "command/data/ProductionData.hh"
 #include "command/data/TimerData.hh"
+#include "command/debug/DebugCommand.hh"
 #include "command/entity/EntityAbilityCommand.hh"
 #include "command/entity/EntityAttackCommand.hh"
 #include "command/entity/EntityAttackMoveCommand.hh"
@@ -36,6 +37,7 @@ using CommandVar = std::variant<
     BuildingUnitCancelCommand,
     BuildingUnitProductionCommand,
     BuildingUpgradeProductionCommand,
+	DebugCommand,
     EntityAbilityCommand,
     EntityAttackCommand,
     EntityMoveCommand,

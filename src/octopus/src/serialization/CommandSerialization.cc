@@ -8,6 +8,7 @@
 #include "command/building/BuildingRallyPointCommand.hh"
 #include "command/building/BuildingUnitProductionCommand.hh"
 #include "command/building/BuildingUpgradeProductionCommand.hh"
+#include "command/debug/DebugCommand.hh"
 #include "command/entity/EntityAbilityCommand.hh"
 #include "command/entity/EntityAttackCommand.hh"
 #include "command/entity/EntityAttackMoveCommand.hh"
@@ -373,6 +374,10 @@ void writeCommand(std::ofstream &file_p, Command const *cmd_p, Writer_t writer_p
         writer_p(file_p, typped_l->_pointTarget);
         writer_p(file_p, typped_l->_id);
     }
+    else if(dynamic_cast<DebugCommand const *>(cmd_p))
+    {
+		// NA
+	}
     else
     {
         throw std::logic_error("unserializable command thrown in file");
