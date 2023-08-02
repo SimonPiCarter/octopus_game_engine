@@ -698,19 +698,26 @@ VisionGrid * getVisionGrid(State &state_p, unsigned long team_p)
 	return state_p.getVisionHandler().getGridFromTeam(state_p, team_p);
 }
 
+Box<long long> getBox(Entity const &ent_p)
+{
+	return 	Box<long long> { to_int((ent_p._pos.x-ent_p._model._ray)),
+						   to_int((ent_p._pos.x+ent_p._model._ray+0.999)),
+						   to_int((ent_p._pos.y-ent_p._model._ray)),
+						   to_int((ent_p._pos.y+ent_p._model._ray+0.999))
+					};
+}
+
 bool checkGrid(State const &state_p, Entity const *ent_p, bool ignoreAbandonedTemples_p)
 {
+	if(!noOutOfBounds(state_p, *ent_p))
+	{
+		return false;
+	}
 	Grid const &pathGrid_l = state_p.getPathGrid();
-	long long sizeX_l = pathGrid_l.getSizeX();
-	long long sizeY_l = pathGrid_l.getSizeY();
 	// fill positional grid
-	Box<long long> box_l { std::min(std::max(0ll, to_int((ent_p->_pos.x-ent_p->_model._ray))), sizeX_l),
-						   std::min(std::max(0ll, to_int((ent_p->_pos.x+ent_p->_model._ray+0.999))), sizeX_l),
-						   std::min(std::max(0ll, to_int((ent_p->_pos.y-ent_p->_model._ray))), sizeY_l),
-						   std::min(std::max(0ll, to_int((ent_p->_pos.y+ent_p->_model._ray+0.999))), sizeY_l)
-					};
+	Box<long long> box_l = getBox(*ent_p);
 
-	// only chekc grid if static
+	// only check grid if static
 	if(ent_p->_model._isStatic)
 	{
 		for(long long x = box_l._lowerX ; x < box_l._upperX; ++x)
@@ -739,30 +746,22 @@ bool checkGrid(State const &state_p, Entity const *ent_p, bool ignoreAbandonedTe
 	return true;
 }
 
-std::list<Vector> computePath(State const & state_p, Handle const &handle_p, Vector const &target_p, std::list<Entity const *> const& ignored_p)
+bool noOutOfBounds(State const &state_p, Entity const &ent_p)
 {
-	// Find grid node source
-	GridNode const * source_l = state_p.getPathGrid().getNode(state_p.getEntity(handle_p)->_pos);
-	// Find grid node target
-	GridNode const * target_l = state_p.getPathGrid().getNode(target_p);
+	Grid const &pathGrid_l = state_p.getPathGrid();
 
-	// compute path
-	std::list<GridNode const *> path_l = state_p.getPathGrid().getGraph().getPath(source_l, target_l, ignored_p);
-	if(!path_l.empty())
+	Box<long long> box_l = getBox(ent_p);
+	if(ent_p._model._isStatic)
 	{
-		path_l.pop_front();
+		// check that we do not go out of bound
+		return box_l._lowerX >= 0
+			&& box_l._upperX <= pathGrid_l.getSizeX()
+			&& box_l._lowerY >= 0
+			&& box_l._upperY <= pathGrid_l.getSizeY();
 	}
-	trimPath(path_l);
-	// get waypoints
-	std::list<Vector> waypoints_l = toWaypoints(path_l);
-	// update for exact destination
-	if(!waypoints_l.empty())
-	{
-		waypoints_l.pop_back();
-	}
-	waypoints_l.push_back(target_p);
-	return waypoints_l;
+	return true;
 }
+
 
 void State::setIsOver(bool over_p)
 {

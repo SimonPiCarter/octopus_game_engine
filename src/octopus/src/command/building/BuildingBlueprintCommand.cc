@@ -48,7 +48,7 @@ void BuildingBlueprintCommand::registerCommand(Step & step_p, State const &state
 	{
 		Building building_l(_pos, true, *_model);
 		building_l._player = _player;
-		if(_model->checkLegality(building_l, state_p))
+		if(noOutOfBounds(state_p, building_l) && _model->checkLegality(building_l, state_p))
 		{
 			Handle buildingHandle_l = getNextHandle(step_p, state_p);
 			Logger::getDebug() << "BuildingBlueprintCommand:: spawn building "<<buildingHandle_l<<" for player "<<_player <<std::endl;
