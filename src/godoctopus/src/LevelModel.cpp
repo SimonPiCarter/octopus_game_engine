@@ -7,6 +7,7 @@
 // octopus
 #include "state/model/entity/EntityModel.hh"
 #include "step/entity/spawn/BuildingSpawnStep.hh"
+#include "step/state/StateTemplePositionAddStep.hh"
 #include "step/entity/spawn/ResourceSpawnStep.hh"
 #include "step/entity/spawn/UnitSpawnStep.hh"
 #include "step/player/PlayerAddBuildingModel.hh"
@@ -103,6 +104,13 @@ std::list<octopus::Steppable *> LevelModel::generateLevelSteps(octopus::Library 
 			resource_l._resource = 20;
             resource_l._player = ent_l.player;
             steps_l.push_back(new octopus::ResourceSpawnStep(octopus::Handle(idx_l), resource_l));
+        }
+        else if(ent_l.type == "Anchor")
+        {
+	        octopus::Building building_l({ ent_l.x, ent_l.y }, true, lib_p.getBuildingModel(ent_l.model));
+            building_l._player = ent_l.player;
+            steps_l.push_back(new octopus::BuildingSpawnStep(octopus::Handle(idx_l), building_l, true));
+            steps_l.push_back(new octopus::StateTemplePositionAddStep({ ent_l.x, ent_l.y }));
         }
         else
         {
