@@ -18,7 +18,6 @@ std::vector<std::vector<GridNode *> > setUpGrid(size_t sizeX_p, size_t sizeY_p, 
 
 Grid::Grid(size_t sizeX_p, size_t sizeY_p, Fixed stepX_p, Fixed stepY_p, bool noGraph_p) :
 	_internalGrid(setUpGrid(sizeX_p, sizeY_p, stepX_p, stepY_p)),
-	_graph(noGraph_p?std::vector<std::vector<GridNode *> >():_internalGrid),
 	_sizeX(sizeX_p),
 	_sizeY(sizeY_p),
 	_stepX(stepX_p),
@@ -34,16 +33,6 @@ Grid::~Grid()
 			delete node_l;
 		}
 	}
-}
-
-Graph &Grid::getGraph()
-{
-	return _graph;
-}
-
-Graph const &Grid::getGraph() const
-{
-	return _graph;
 }
 
 GridNode const * Grid::getNode(Vector const &vec_p) const

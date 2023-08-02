@@ -100,7 +100,7 @@ bool UnitHarvestCommand::applyCommand(Step & step_p, State const &state_p, Comma
 		{
 			Logger::getDebug() << "UnitHarvestCommand:: new resource "<<newRes_l->_handle <<std::endl;
 			// update move
-			step_p.addSteppable(new CommandDataWaypointSetStep(_handleCommand, data_l._waypoints, computePath(state_p, _source, newRes_l->_pos, {newRes_l})));
+			step_p.addSteppable(new CommandDataWaypointSetStep(_handleCommand, data_l._waypoints, data_l._waypoints));
 			step_p.addSteppable(new CommandMoveUpdateStep(_handleCommand, data_l._stepSinceUpdate, data_l._gridStatus, state_p.getPathGridStatus()));
 			// update resource in steps
 			step_p.addSteppable(new CommandResourceChangeStep(_handleCommand, data_l._resource, newRes_l->_handle));
@@ -153,7 +153,7 @@ bool UnitHarvestCommand::applyCommand(Step & step_p, State const &state_p, Comma
 		{
 			Logger::getDebug() << "UnitHarvestCommand:: deposit found "<<deposit_l->_handle<<std::endl;
 			// update move
-			step_p.addSteppable(new CommandDataWaypointSetStep(_handleCommand, data_l._waypoints, computePath(state_p, _source, deposit_l->_pos, {deposit_l})));
+			step_p.addSteppable(new CommandDataWaypointSetStep(_handleCommand, data_l._waypoints, {deposit_l->_pos}));
 			step_p.addSteppable(new CommandMoveUpdateStep(_handleCommand, data_l._stepSinceUpdate, data_l._gridStatus, state_p.getPathGridStatus()));
 			// update deposit
 			step_p.addSteppable(new CommandDepositChangeStep(_handleCommand, data_l._deposit, deposit_l->_handle));
@@ -176,8 +176,7 @@ bool UnitHarvestCommand::applyCommand(Step & step_p, State const &state_p, Comma
 			step_p.addSteppable(new CommandHarvestingChangeStep(_handleCommand, data_l._harvesting, true));
 
 			// update move back to resource
-			std::list<Vector> path_l = computePath(state_p, _source, res_l->_pos, {res_l});
-			step_p.addSteppable(new CommandDataWaypointSetStep(_handleCommand, data_l._waypoints, path_l));
+			step_p.addSteppable(new CommandDataWaypointSetStep(_handleCommand, data_l._waypoints, {res_l->_pos}));
 			step_p.addSteppable(new CommandMoveUpdateStep(_handleCommand, data_l._stepSinceUpdate, data_l._gridStatus, state_p.getPathGridStatus()));
 		}
 		else

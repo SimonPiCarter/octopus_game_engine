@@ -24,9 +24,6 @@ public:
 
 	~Grid();
 
-	Graph &getGraph();
-	Graph const &getGraph() const;
-
 	GridNode const * getNode(Vector const &vec_p) const;
 
 	GridNode * getNode(size_t x, size_t y);
@@ -42,9 +39,6 @@ public:
 private:
 	/// @brief all grid node storred by indexes
 	std::vector<std::vector<GridNode *> > _internalGrid;
-
-	/// @brief the underlying graph used for shortest paths
-	Graph _graph;
 
 	size_t const _sizeX;
 	size_t const _sizeY;
