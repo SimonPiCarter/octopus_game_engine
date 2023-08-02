@@ -1,11 +1,14 @@
 #include "AnchorTrigger.hh"
 
 #include "library/Library.hh"
+#include "state/entity/Entity.hh"
 #include "state/State.hh"
 #include "step/Step.hh"
 #include "step/player/PlayerAddOptionStep.hh"
 #include "step/player/PlayerSpendResourceStep.hh"
+#include "step/state/StateTemplePositionRemoveStep.hh"
 #include "state/model/entity/BuildingModel.hh"
+#include "controller/trigger/Listener.hh"
 
 #include "library/model/bonus/BuffGenerators.hh"
 #include "library/model/divinity/DivinityModelLoader.hh"
@@ -18,7 +21,7 @@ AnchorTrigger::AnchorTrigger(octopus::Library const &lib_p, octopus::RandomGener
     _bonus(bonus_p)
 {}
 
-void AnchorTrigger::trigger(octopus::State const &state_p, octopus::Step &step_p, unsigned long, octopus::TriggerData const &) const
+void AnchorTrigger::trigger(octopus::State const &state_p, octopus::Step &step_p, unsigned long idx_p, octopus::TriggerData const &data_p) const
 {
     std::map<std::string, octopus::Fixed> map_l;
     map_l["Anchor"] = -_bonus;
@@ -49,6 +52,9 @@ void AnchorTrigger::trigger(octopus::State const &state_p, octopus::Step &step_p
 
         options_l.push_back(option_l);
     }
+
+	octopus::ListenerEntityData const * listenerData_l = dynamic_cast<octopus::ListenerEntityData const *>(data_p._listenerData[0]);
+    step_p.addSteppable(new octopus::StateTemplePositionRemoveStep(listenerData_l->_entities.at(idx_p)->_pos));
 
     step_p.addSteppable(new octopus::PlayerAddOptionStep(_player, id_l, new BuffGenerator(options_l, _lib)));
 }

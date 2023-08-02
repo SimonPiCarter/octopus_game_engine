@@ -1,11 +1,14 @@
 #include "AnchorDivinityTrigger.hh"
 
 #include "library/Library.hh"
+#include "state/entity/Entity.hh"
 #include "state/State.hh"
 #include "step/Step.hh"
 #include "step/player/PlayerAddOptionStep.hh"
 #include "step/player/PlayerSpendResourceStep.hh"
+#include "step/state/StateTemplePositionRemoveStep.hh"
 #include "state/model/entity/BuildingModel.hh"
+#include "controller/trigger/Listener.hh"
 
 #include "library/model/divinity/DivinityGenerator.hh"
 
@@ -54,7 +57,7 @@ std::vector<int> roll_with_no_doublon(octopus::RandomGenerator &rand_p, int min_
     return rolls_l;
 }
 
-void AnchorDivinityTrigger::trigger(octopus::State const &state_p, octopus::Step &step_p, unsigned long, octopus::TriggerData const &) const
+void AnchorDivinityTrigger::trigger(octopus::State const &state_p, octopus::Step &step_p, unsigned long idx_p, octopus::TriggerData const &data_p) const
 {
     std::map<std::string, octopus::Fixed> map_l;
     map_l["Anchor"] = -_bonus;
@@ -66,6 +69,9 @@ void AnchorDivinityTrigger::trigger(octopus::State const &state_p, octopus::Step
     {
         options_l.push_back(_types.at(rolls_l.at(i)));
     }
+
+	octopus::ListenerEntityData const * listenerData_l = dynamic_cast<octopus::ListenerEntityData const *>(data_p._listenerData[0]);
+    step_p.addSteppable(new octopus::StateTemplePositionRemoveStep(listenerData_l->_entities.at(idx_p)->_pos));
 
     std::string id_l = std::to_string(_count++);
     step_p.addSteppable(new octopus::PlayerAddOptionStep(_player, id_l, new DivinityGenerator(_player, options_l)));
