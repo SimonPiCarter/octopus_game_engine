@@ -127,6 +127,7 @@ public:
     void get_visible_units(int player_p, int ent_registered_p);
 
     // commands
+    void add_debug_command(int peer, int param_p);
     // move & attack
     void add_move_commands(int peer, PackedInt32Array const &handles_p, Vector2 const &target_p, int player_p, bool queued_p);
     void add_move_target_commands(int peer, PackedInt32Array const &handles_p, Vector2 const &target_p, PackedInt32Array const &handleTarget_p, int player_p, bool queued_p);

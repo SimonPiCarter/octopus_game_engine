@@ -933,6 +933,10 @@ void Controller::get_visible_units(int player_p, int ent_registered_p)
 }
 
 // commands
+void Controller::add_debug_command(int peer_p, int param_p)
+{
+	_queuedCommandsPerPeer.at(peer_p).back().push_back(new octopus::DebugCommand(_lib));
+}
 
 void Controller::add_move_commands(int peer_p, PackedInt32Array const &handles_p, Vector2 const &target_p, int player_p, bool queued_p)
 {
@@ -1110,6 +1114,8 @@ void Controller::_bind_methods()
     ClassDB::bind_method(D_METHOD("get_productions", "handles", "max"), &Controller::get_productions);
     ClassDB::bind_method(D_METHOD("get_visible_units", "player", "ent_registered_p"), &Controller::get_visible_units);
 
+
+    ClassDB::bind_method(D_METHOD("add_debug_command", "peer", "param"), &Controller::add_debug_command);
     ClassDB::bind_method(D_METHOD("add_move_commands", "peer", "handles", "target", "player", "queued"), &Controller::add_move_commands);
     ClassDB::bind_method(D_METHOD("add_move_target_commands", "peer", "handles", "target", "handle_target", "player", "queued"), &Controller::add_move_target_commands);
     ClassDB::bind_method(D_METHOD("add_attack_move_commands", "peer", "handles", "target", "player", "queued"), &Controller::add_attack_move_commands);
