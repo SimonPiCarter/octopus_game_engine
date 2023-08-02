@@ -49,7 +49,7 @@ void divinitySwarmFiller(Library &lib_p)
         lib_p.registerUnitModel("div_swarm_2", unitModel_l);
     }
     {
-        /// @todo
+
     }
     {
         // well
@@ -58,7 +58,7 @@ void divinitySwarmFiller(Library &lib_p)
         buildingModel_l._isStatic = true;
         buildingModel_l._unitModels.push_back(&lib_p.getUnitModel("div_swarm_1"));
         buildingModel_l._unitModels.push_back(&lib_p.getUnitModel("div_swarm_2"));
-        ///buildingModel_l._unitModels.push_back(&lib_p.getUnitModel("div_swarm_3")); @todo
+        ///buildingModel_l._unitModels.push_back(&lib_p.getUnitModel("div_swarm_3"));
         buildingModel_l._buildingTime = 4500;
         buildingModel_l._cost["ether"] = 100;
         buildingModel_l._cost["idiem"] = 100;

@@ -59,14 +59,12 @@ public:
 };
 
 /// @brief add the list of spriteentity to the current selection
-/// @note remove duplicated if necessary @todo
 void addToSelection(Selection &selection_p, std::list<SpriteEntity *> const &sprites_p, octopus::State const &state_p);
 
 void addToSelection(Selection &selection_p, Selection &other_p);
 
 /// @brief replace the selection with the list of spriteentity
 /// @note update main selected if necessary
-/// @note remove duplicated if any @todo
 void replaceSelection(Selection &selection_p, std::list<SpriteEntity *> const &sprites_p, octopus::State const &state_p);
 
 /// @brief Get the best entity to produce the model, ie the building with the less queued up
