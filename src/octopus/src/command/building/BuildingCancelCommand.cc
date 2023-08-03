@@ -20,6 +20,7 @@ void BuildingCancelCommand::registerCommand(Step & step_p, State const &state_p)
 	Building const * building_l = dynamic_cast<Building const *>(state_p.getEntity(_handleCommand));
 
 	if(!building_l->isBuilt()
+	&& !building_l->_canceled
 	&& !step_p.isCanceled(_handleCommand))
 	{
 		Logger::getDebug() << "BuildingCancelCommand:: canceling "<<_handleCommand<<std::endl;
