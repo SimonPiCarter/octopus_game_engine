@@ -86,7 +86,7 @@ Fixed Entity::getHpRegeneration() const
 
 Fixed Entity::getProduction() const
 {
-	return applyBuff( *this, 10., _buffProduction, _condBuffProduction);
+	return applyBuff( *this, 1., _buffProduction, _condBuffProduction);
 }
 
 Fixed Entity::getHarvest() const
