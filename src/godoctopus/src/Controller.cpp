@@ -919,6 +919,7 @@ void Controller::get_visible_units(int player_p, int ent_registered_p)
         {
             break;
         }
+		octopus::Building const * buildng_l = static_cast<octopus::Building const *>(ent_l);
 		// skip unit out of range
 		if(ent_l->_model._isUnit
 		&& !_state->getVisionHandler().isVisible(player_l->_team, *ent_l))
@@ -931,7 +932,7 @@ void Controller::get_visible_units(int player_p, int ent_registered_p)
             }
 		}
         else if(ent_l->isActive()
-		|| (ent_l->_model._isBuilding && static_cast<octopus::Building const *>(ent_l)->isBlueprint()))
+		|| (ent_l->_model._isBuilding && buildng_l->isBlueprint() && !buildng_l->_canceled))
         {
             if(!_visibleLastCall[ent_l->_handle] || _visibleRevisionLastCall[ent_l->_handle] != ent_l->_handle.revision)
             {
