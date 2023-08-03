@@ -930,7 +930,8 @@ void Controller::get_visible_units(int player_p, int ent_registered_p)
 				_visibleRevisionLastCall[ent_l->_handle] = ent_l->_handle.revision;
             }
 		}
-        else if(ent_l->_alive)
+        else if(ent_l->isActive()
+		|| (ent_l->_model._isBuilding && static_cast<octopus::Building const *>(ent_l)->isBlueprint()))
         {
             if(!_visibleLastCall[ent_l->_handle] || _visibleRevisionLastCall[ent_l->_handle] != ent_l->_handle.revision)
             {
