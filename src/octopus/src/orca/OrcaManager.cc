@@ -51,6 +51,10 @@ void OrcaManager::resetFromState(State const &state_p)
 
     for(octopus::Entity const * ent_l : state_p.getEntities())
     {
+		if(!ent_l->isActive())
+		{
+			continue;
+		}
         if(ent_l->_model._isStatic)
         {
             // load obstacle
@@ -71,7 +75,7 @@ void OrcaManager::resetFromState(State const &state_p)
         }
     }
 
-    // load obstacle
+    // load obstacle out of map
     _sim->addObstacle({
         RVO::Vector2(state_p.getWorldSize(), 0),
         RVO::Vector2(0, 0),
