@@ -826,6 +826,16 @@ PackedByteArray Controller::getVisibility(int player_p) const
     return array_l;
 }
 
+int Controller::get_nb_queued_options(int player_p) const
+{
+    auto it_l = _optionManagers.find(player_p);
+	if(it_l != _optionManagers.end())
+    {
+        return it_l->second->getQueuedOptionsSize();
+    }
+    return 0;
+}
+
 int Controller::get_nb_options_available(int player_p) const
 {
     auto it_l = _optionManagers.find(player_p);
@@ -1104,6 +1114,7 @@ void Controller::_bind_methods()
     ClassDB::bind_method(D_METHOD("is_explored", "x", "y", "player"), &Controller::is_explored);
     ClassDB::bind_method(D_METHOD("is_entity_explored", "handle", "player"), &Controller::is_entity_explored);
     ClassDB::bind_method(D_METHOD("getVisibility", "player"), &Controller::getVisibility);
+    ClassDB::bind_method(D_METHOD("get_nb_queued_options", "player"), &Controller::get_nb_queued_options);
     ClassDB::bind_method(D_METHOD("get_nb_options_available", "player"), &Controller::get_nb_options_available);
     ClassDB::bind_method(D_METHOD("get_nb_options_chosen", "player"), &Controller::get_nb_options_chosen);
     ClassDB::bind_method(D_METHOD("get_available_option_you", "idx", "player"), &Controller::get_available_option_you);

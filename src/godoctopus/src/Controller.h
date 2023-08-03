@@ -111,6 +111,7 @@ public:
     PackedByteArray getVisibility(int player_p) const;
 
     // option getter
+    int get_nb_queued_options(int player_p) const;
     int get_nb_options_available(int player_p) const;
     int get_nb_options_chosen(int player_p) const;
     godot::Option *get_available_option_you(int idx_p, int player_p) const;
