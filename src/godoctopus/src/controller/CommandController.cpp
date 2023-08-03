@@ -1,5 +1,7 @@
 #include "CommandController.h"
 
+#include <limits>
+
 // octopus
 #include "command/CommandHelpers.hh"
 #include "command/CommandQueue.hh"
@@ -129,7 +131,7 @@ template<typename production_t>
 octopus::Handle getBestProductionBuilding(PackedInt32Array const &handles_p, octopus::State const &state_p, production_t const &model_p)
 {
     bool found_l = false;
-    octopus::Handle best_l;
+    octopus::Handle best_l {std::numeric_limits<unsigned long>::max(), 0};
     unsigned long lowestQueue_l = 0;
     for(size_t i = 0 ; i < handles_p.size()/2 ; ++ i)
     {
@@ -173,7 +175,7 @@ void add_unit_build_command(std::list<octopus::Command*> &list_r, octopus::State
         octopus::UnitModel const &unit_l = lib_p.getUnitModel(modelId_l);
         octopus::Handle best_l = getBestProductionBuilding(handles_p, state_p, unit_l);
 
-        if(best_l.index >= 0)
+        if(best_l.index < state_p.getEntities().size())
         {
             octopus::BuildingUnitProductionCommand *cmd_l = new octopus::BuildingUnitProductionCommand(best_l, best_l, unit_l);
             cmd_l->setQueued(true);
@@ -185,7 +187,7 @@ void add_unit_build_command(std::list<octopus::Command*> &list_r, octopus::State
         octopus::Upgrade const &upgrade_l = lib_p.getUpgrade(modelId_l);
         octopus::Handle best_l = getBestProductionBuilding(handles_p, state_p, upgrade_l);
 
-        if(best_l.index >= 0)
+        if(best_l.index < state_p.getEntities().size())
         {
             octopus::BuildingUpgradeProductionCommand *cmd_l = new octopus::BuildingUpgradeProductionCommand(best_l, best_l, upgrade_l);
             cmd_l->setQueued(true);
