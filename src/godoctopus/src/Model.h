@@ -116,6 +116,7 @@ public:
     int get_upgrade_requirements_min_lvl(String const &up_p) const;
     TypedArray<String> get_upgrade_requirements_max() const;
     int get_upgrade_requirements_max_lvl(String const &up_p) const;
+    TypedArray<String> get_tooltip_parameters() const;
 
     // time
     float get_production_time() const;
@@ -128,6 +129,9 @@ private:
     std::map<std::string, octopus::Fixed> _cost;
 
     float _productionTime = 0;
+
+    /// @brief parameters to be used in tooltip
+    std::vector<std::string> _tooltipParameters;
 };
 
 }

@@ -1,5 +1,6 @@
 #include "Model.h"
 #include "Controller.h"
+#include "TooltipLoader.h"
 #include <godot_cpp/core/class_db.hpp>
 #include <godot_cpp/variant/utility_functions.hpp>
 #include <godot_cpp/classes/input.hpp>
@@ -313,6 +314,8 @@ void ModelView::init(Controller const *controller_p, EntityHandle const * produc
         productionTime_l = controller_p->getLib().getUpgrade(name_l)._productionTime;
     }
     _productionTime = productionTime_l / productionSpeed_l;
+    // initialize tool tip parameters
+    _tooltipParameters = loadTooltipParameter(controller_p, name_l);
 }
 
 TypedArray<String> ModelView::get_cost_resources_names() const
@@ -383,6 +386,16 @@ int ModelView::get_upgrade_requirements_max_lvl(String const &up_p) const
     return _requirements._upgradeLvlMax.at(up_l);
 }
 
+TypedArray<String> get_tooltip_parameters() const
+{
+    TypedArray<String> params_l;
+    for(std::string const &str_l : _tooltipParameters)
+    {
+        params_l.push_back(str_l.c_str());
+    }
+    return params_l;
+}
+
 float ModelView::get_production_time() const
 {
     return _productionTime;
@@ -407,6 +420,7 @@ void ModelView::_bind_methods()
     ClassDB::bind_method(D_METHOD("get_upgrade_requirements_min_lvl", "up"), &ModelView::get_upgrade_requirements_min_lvl);
     ClassDB::bind_method(D_METHOD("get_upgrade_requirements_max"), &ModelView::get_upgrade_requirements_max);
     ClassDB::bind_method(D_METHOD("get_upgrade_requirements_max_lvl", "up"), &ModelView::get_upgrade_requirements_max_lvl);
+    ClassDB::bind_method(D_METHOD("get_tooltip_parameters"), &ModelView::get_tooltip_parameters);
 
     // time
     ClassDB::bind_method(D_METHOD("get_production_time"), &ModelView::get_production_time);
