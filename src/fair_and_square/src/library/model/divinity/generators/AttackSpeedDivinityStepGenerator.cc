@@ -39,7 +39,7 @@ public:
 		buff_l._type = TyppedBuff::Type::FullReload;
 		buff_l._coef = _offset;
 		buff_l._conditions.push_back(ConditionMinLife{1});
-		buff_l._id = "AttackSpeedDivintiy_BuffSamageConditionalTierThree";
+		buff_l._id = "AttackSpeedDivintiy_BuffDamageConditionalTierThree";
 
 		for(std::string const &model_l : _models)
 		{
@@ -136,7 +136,7 @@ void fillLibrary(AttackSpeedDivinityParams const &params_p, octopus::Library &li
 	// declare upgrades
 
 	// T3 attackspeed buff
-	Upgrade * attackspeedBuffTierThree_l = new Upgrade("AttackspeedUpgrade_BuffTierThreeDamage", new AttackSpeedUpgrade({params_p._tierOneUnitModelId}, params_p._damageUpgradeForTierOneUnit));
+	Upgrade * attackspeedBuffTierThree_l = new Upgrade("AttackspeedUpgrade_BuffTierThreeConditional", new AttackSpeedUpgrade({params_p._tierOneUnitModelId}, params_p._damageUpgradeForTierOneUnit));
 	attackspeedBuffTierThree_l->_cost["bloc"] = 250;
 	attackspeedBuffTierThree_l->_cost["ether"] = 350;
 	attackspeedBuffTierThree_l->_cost["irium"] = 450;
