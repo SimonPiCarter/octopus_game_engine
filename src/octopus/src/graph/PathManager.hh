@@ -56,6 +56,8 @@ public:
 	unsigned long getGridStatus() const { return _gridStatus; }
 
 	std::vector<std::vector<GridNode *> > const & getInternalGrid() const { return _internalGrid; }
+
+	static bool ForceLoSCheck;
 protected:
 	/// @brief thread for parallel computing
 	std::thread _thread;

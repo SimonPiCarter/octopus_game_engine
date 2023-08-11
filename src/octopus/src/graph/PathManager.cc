@@ -5,6 +5,8 @@
 namespace octopus
 {
 
+bool PathManager::ForceLoSCheck = false;
+
 PathManager::~PathManager()
 {
 	for(std::vector<GridNode *> vect_l : _internalGrid)

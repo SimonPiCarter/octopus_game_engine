@@ -125,7 +125,7 @@ bool EntityMoveCommand::applyCommand(Step & step_p, State const &state_p, Comman
 
 	bool los_l = data_l->_los;
 	// line check every several steps
-	if(data_l->_stepSinceUpdate % 50 == 0)
+	if(data_l->_stepSinceUpdate % 50 == 0 || PathManager::ForceLoSCheck)
 	{
 		// reset step since update count (do not update grid status (not used anyway))
 		step_p.addSteppable(new CommandMoveUpdateStep(_handleCommand, data_l->_stepSinceUpdate, data_l->_gridStatus, data_l->_gridStatus));
