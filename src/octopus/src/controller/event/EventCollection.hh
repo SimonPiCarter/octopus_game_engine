@@ -87,6 +87,7 @@ public:
 	virtual void visit(PlayerUpdateBuildingCountStep const *) override {}
 	virtual void visit(ProductionPaidStep const *) {}
 	virtual void visit(ProductionProgressionStep const *) {}
+	virtual void visit(ResourceSlotStep const *) {}
 	virtual void visit(ResourceSpawnStep const *) {}
 	virtual void visit(StateAddConstraintPositionStep const *) override {}
 	virtual void visit(StateDrawStep const *) override {}

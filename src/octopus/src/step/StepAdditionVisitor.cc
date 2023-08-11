@@ -9,6 +9,7 @@
 #include "step/entity/EntityUpdateReloadAbilityStep.hh"
 #include "step/player/PlayerProducedUpgradeStep.hh"
 #include "step/player/PlayerSpendResourceStep.hh"
+#include "step/resource/ResourceSlotStep.hh"
 
 namespace octopus
 {
@@ -68,6 +69,14 @@ void StepAdditionVisitor::visit(FlyingCommandSpawnStep const *)
 void StepAdditionVisitor::visit(PlayerProducedUpgradeStep const *step_p)
 {
     _step.updateProducedUpgrade(step_p->_player, step_p->_upgrade, step_p->_add);
+}
+
+void StepAdditionVisitor::visit(ResourceSlotStep const *step_p)
+{
+	if(!step_p->_free)
+	{
+		_step.setSlotTaken(step_p->_res, step_p->_idx);
+	}
 }
 
 void StepAdditionVisitor::visit(ResourceSpawnStep const *step_p)

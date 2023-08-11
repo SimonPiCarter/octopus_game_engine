@@ -25,6 +25,7 @@ namespace octopus
 
 		std::vector<Vector> _harvestPoint;
 	};
+
 } // octopus
 
 #endif
