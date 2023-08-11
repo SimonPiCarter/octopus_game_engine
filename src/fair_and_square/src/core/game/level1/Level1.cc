@@ -165,12 +165,10 @@ std::list<Command *> WaveLevelCommands(Library &lib_p, RandomGenerator &rand_p, 
 	std::list<AreaSpawn> spawners_l;
 
 	Resource res2_l({0,0}, true, lib_p.getResourceModel("resource_bloc"));
-	res2_l._type = "bloc";
 	res2_l._resource = 2000.;
 	res2_l._player = 2;
 
-	Resource res3_l({0,0}, true, lib_p.getResourceModel("resource_irium"));
-	res3_l._type = "ether";
+	Resource res3_l({0,0}, true, lib_p.getResourceModel("resource_ether"));
 	res3_l._resource = 2000.;
 	res3_l._player = 2;
 

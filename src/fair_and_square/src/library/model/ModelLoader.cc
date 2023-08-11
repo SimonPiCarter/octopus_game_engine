@@ -279,7 +279,7 @@ void createResourceBloc(Library &lib_p)
 void createResourceEther(Library &lib_p)
 {
 	ResourceModel resModel_l(0.9, "ether", 1000);
-	lib_p.registerResourceModel("resource_irium", resModel_l);
+	lib_p.registerResourceModel("resource_ether", resModel_l);
 }
 
 void createResourceIrium(Library &lib_p)
