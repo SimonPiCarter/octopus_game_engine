@@ -1,5 +1,8 @@
 #include "Resource.hh"
 
+#include "state/State.hh"
+#include "step/Step.hh"
+
 namespace octopus
 {
 
@@ -8,5 +11,43 @@ Resource::Resource(Vector const &pos_p, bool frozen_p, ResourceModel const &mode
 	, _resource(model_p._qty)
 	, _resourceModel(model_p)
 {}
+
+bool hasHarvestPoint(Resource const &resource_p)
+{
+	return !resource_p._harvestPoints.empty();
+}
+
+bool isHarvestPointFree(HarvestPoint const &point_p, State const &state_p)
+{
+	return point_p.free || !state_p.isEntityAlive(point_p.harvester);
+}
+
+int getBestHarvestPoint(State const &state_p, Step const &step_p, Entity const &harvester_p, Resource const &resource_p)
+{
+	int result_l = -1;
+	Fixed best_l;
+
+	for(int i = 0 ; i < resource_p._harvestPoints.size() ; ++i)
+	{
+		HarvestPoint const &point_l = resource_p._harvestPoints[i];
+
+		// skip non free points
+		if(!isHarvestPointFree(point_l, state_p) || step_p.isSlotTaken(resource_p._handle, i))
+		{
+			continue;
+		}
+
+		Fixed manDistance_l = numeric::abs(harvester_p._pos.x - point_l.point.x) + numeric::abs(harvester_p._pos.y - point_l.point.y);
+
+		if(result_l < 0 || best_l > manDistance_l)
+		{
+			result_l = i;
+			best_l = manDistance_l;
+		}
+	}
+
+	return result_l;
+}
+
 
 } // namespace octopus

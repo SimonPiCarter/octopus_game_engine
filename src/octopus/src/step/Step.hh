@@ -73,6 +73,11 @@ namespace octopus
 			/// @brief get the number of flying command spawned in this step
 			unsigned long getFlyingCommandSpawned() const;
 
+			/// @brief set the given slot of the given resource as taken in this step
+			void setSlotTaken(Handle const &handle_p, int idx_p);
+			/// @brief check if the given slot of the given resource is taken in this step
+			bool isSlotTaken(Handle const &handle_p, int idx_p) const;
+
 			/// @brief update produced upgrade
 			void updateProducedUpgrade(unsigned long const &player_p, std::string const &upgrade_p, bool add_p);
 			/// @brief check if the upgrade has been started during this step
@@ -126,6 +131,9 @@ namespace octopus
 
 			/// @brief map of all comand registered for every entity in this step (using reload key in the set)
 			std::unordered_map<Handle, std::unordered_set<std::string> > _commandRegistered;
+
+			/// @brief map of all slots taken for every resources
+			std::unordered_map<Handle, std::unordered_set<int> > _slotTaken;
 
 			/// @brief of commands data canceled in this step (to avoid refunding twice)
 			std::set<CommandIdx> _canceledCmd;

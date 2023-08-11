@@ -103,6 +103,18 @@ unsigned long Step::getFlyingCommandSpawned() const
 	return _flyingCommandSpawned;
 }
 
+void Step::setSlotTaken(Handle const &handle_p, int idx_p)
+{
+	_slotTaken[handle_p].insert(idx_p);
+}
+
+bool Step::isSlotTaken(Handle const &handle_p, int idx_p) const
+{
+	auto &&itSet_l = _slotTaken.find(handle_p);
+	return itSet_l != _slotTaken.cend()
+		&& itSet_l->second.find(idx_p) != itSet_l->second.cend();
+}
+
 void Step::updateProducedUpgrade(unsigned long const &player_p, std::string const &upgrade_p, bool add_p)
 {
 	if(add_p)
