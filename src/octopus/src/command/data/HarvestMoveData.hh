@@ -23,6 +23,8 @@ struct HarvestMoveData : public MoveData
 	}
 
 	Handle _resource {0};
+	/// @brief slot to be used on the resource
+	int _idxSlot {-1};
 	Handle _deposit {0};
 	/// @brief boolean to tell if on the way to deposit or not
 	bool _harvesting { true };

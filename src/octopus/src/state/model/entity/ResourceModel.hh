@@ -23,7 +23,7 @@ namespace octopus
 		Fixed _qty {0.};
 		std::string _type { "bloc" };
 
-		std::vector<Vector> _harvestPoint;
+		std::vector<Vector> _harvestPoints;
 	};
 
 } // octopus

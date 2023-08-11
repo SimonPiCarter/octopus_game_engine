@@ -48,6 +48,7 @@ public:
 	virtual void visit(CommandDepositChangeStep const *) {}
 	virtual void visit(CommandHarvestingChangeStep const *) {}
 	virtual void visit(CommandHarvestTimeSinceHarvestStep const *) {}
+	virtual void visit(CommandHarvestPointChangeStep const *) {}
 	virtual void visit(CommandIncrementNoProgressStep const *) {}
 	virtual void visit(CommandMoveUpdateStep const *) {}
 	virtual void visit(CommandMoveLosStep const *) {}
