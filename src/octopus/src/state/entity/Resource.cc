@@ -10,7 +10,15 @@ Resource::Resource(Vector const &pos_p, bool frozen_p, ResourceModel const &mode
 	: Entity(pos_p, true, model_p)
 	, _resource(model_p._qty)
 	, _resourceModel(model_p)
-{}
+{
+	// initialize harvest points
+	for(Vector const &point_l : _resourceModel._harvestPoints)
+	{
+		HarvestPoint harvestPoint_l;
+		harvestPoint_l.point = pos_p + point_l;
+		_harvestPoints.push_back(harvestPoint_l);
+	}
+}
 
 bool hasHarvestPoint(Resource const &resource_p)
 {
