@@ -29,6 +29,8 @@ class Resource : public Entity
 		std::string const &getType() const { return _resourceModel._type; }
 
 		std::vector<HarvestPoint> _harvestPoints;
+
+		Vector getHarvestPoint(int idx_p) const { return _harvestPoints.at(idx_p).point + _pos; }
 };
 
 class State;

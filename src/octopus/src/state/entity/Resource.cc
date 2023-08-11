@@ -15,7 +15,7 @@ Resource::Resource(Vector const &pos_p, bool frozen_p, ResourceModel const &mode
 	for(Vector const &point_l : _resourceModel._harvestPoints)
 	{
 		HarvestPoint harvestPoint_l;
-		harvestPoint_l.point = pos_p + point_l;
+		harvestPoint_l.point = point_l;
 		_harvestPoints.push_back(harvestPoint_l);
 	}
 }
@@ -45,7 +45,9 @@ int getBestHarvestPoint(State const &state_p, Step const &step_p, Entity const &
 			continue;
 		}
 
-		Fixed manDistance_l = numeric::abs(harvester_p._pos.x - point_l.point.x) + numeric::abs(harvester_p._pos.y - point_l.point.y);
+		// harvest point using position of the resource
+		Vector adjustedPoint_l = resource_p.getHarvestPoint(i);
+		Fixed manDistance_l = numeric::abs(harvester_p._pos.x - adjustedPoint_l.x) + numeric::abs(harvester_p._pos.y - adjustedPoint_l.y);
 
 		if(result_l < 0 || best_l > manDistance_l)
 		{

@@ -85,7 +85,7 @@ bool inRange(State const &state_p, Unit const * unit_p, Handle const res_p)
 
 bool inRange(Unit const &unit_p, Resource const &res_p, int slot_p)
 {
-	Vector point_l = res_p._harvestPoints.at(slot_p).point;
+	Vector point_l = res_p.getHarvestPoint(slot_p);
 	return length(point_l - unit_p._pos) < Fixed(0.1);
 }
 
@@ -141,12 +141,13 @@ bool UnitHarvestCommand::applyCommand(Step & step_p, State const &state_p, Comma
 		// need to set up harvest point
 		if(hasHarvestPoint(*res_l) && data_l._idxSlot < 0)
 		{
-			int harvestPoint_l = getBestHarvestPoint(state_p, step_p, *unit_l, *res_l);
+			// use first point if non available
+			int harvestPoint_l = std::max(0, getBestHarvestPoint(state_p, step_p, *unit_l, *res_l));
 			if(harvestPoint_l >= 0)
 			{
 				step_p.addSteppable(new CommandHarvestPointChangeStep(_handleCommand, data_l._idxSlot, harvestPoint_l));
 
-				Vector target_l = res_l->_harvestPoints.at(harvestPoint_l).point;
+				Vector target_l = res_l->getHarvestPoint(harvestPoint_l);
 				// update move to resource
 				step_p.addSteppable(new CommandDataWaypointSetStep(_handleCommand, data_l._waypoints, {target_l}));
 				step_p.addSteppable(new CommandMoveUpdateStep(_handleCommand, data_l._stepSinceUpdate, data_l._gridStatus, state_p.getPathGridStatus()));
@@ -169,7 +170,7 @@ bool UnitHarvestCommand::applyCommand(Step & step_p, State const &state_p, Comma
 				{
 					step_p.addSteppable(new CommandHarvestPointChangeStep(_handleCommand, data_l._idxSlot, harvestPoint_l));
 
-					Vector target_l = res_l->_harvestPoints.at(harvestPoint_l).point;
+					Vector target_l = res_l->getHarvestPoint(harvestPoint_l);
 					// update move to resource
 					step_p.addSteppable(new CommandDataWaypointSetStep(_handleCommand, data_l._waypoints, {target_l}));
 					step_p.addSteppable(new CommandMoveUpdateStep(_handleCommand, data_l._stepSinceUpdate, data_l._gridStatus, state_p.getPathGridStatus()));
@@ -252,10 +253,10 @@ bool UnitHarvestCommand::applyCommand(Step & step_p, State const &state_p, Comma
 			step_p.addSteppable(new CommandHarvestingChangeStep(_handleCommand, data_l._harvesting, true));
 
 			Vector target_l = res_l->_pos;
-			int harvestPoint_l = getBestHarvestPoint(state_p, step_p, *unit_l, *res_l);
-			if(harvestPoint_l >= 0)
+			int harvestPoint_l = std::max(0, getBestHarvestPoint(state_p, step_p, *unit_l, *res_l));
+			if(harvestPoint_l >= 0 && hasHarvestPoint(*res_l))
 			{
-				target_l = res_l->_harvestPoints.at(harvestPoint_l).point;
+				target_l = res_l->getHarvestPoint(harvestPoint_l);
 				step_p.addSteppable(new CommandHarvestPointChangeStep(_handleCommand, data_l._idxSlot, harvestPoint_l));
 			}
 

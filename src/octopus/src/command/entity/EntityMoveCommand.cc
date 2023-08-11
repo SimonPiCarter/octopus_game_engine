@@ -161,7 +161,7 @@ bool EntityMoveCommand::applyCommand(Step & step_p, State const &state_p, Comman
 		tol_l = std::max(tol_l, newTol_l);
 	}
 	// No more waypoint -> terminate
-	if(square_length(delta_l) < tol_l)
+	if(square_length(delta_l) < tol_l*tol_l)
 	{
 		Logger::getDebug() << "no waypoint" << std::endl;
 		step_p.addSteppable(new CommandUpdateFlockingReached(_handleCommand));
