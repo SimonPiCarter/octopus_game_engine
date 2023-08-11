@@ -12,6 +12,7 @@
 #include "step/command/CommandDataWaypointStep.hh"
 #include "step/command/CommandMoveUpdateStep.hh"
 #include "step/entity/EntityFrozenStep.hh"
+#include "step/resource/ResourceSlotStep.hh"
 #include "step/unit/UnitHarvestStep.hh"
 #include "utils/Box.hh"
 
@@ -82,6 +83,22 @@ bool inRange(State const &state_p, Unit const * unit_p, Handle const res_p)
 	return false;
 }
 
+bool inRange(Unit const &unit_p, Resource const &res_p, int slot_p)
+{
+	Vector point_l = res_p._harvestPoints.at(slot_p).point;
+	return length(point_l - unit_p._pos) < Fixed(0.1);
+}
+
+bool isHarvestPointFree(Resource const &res_p, int idx_p, Step const & step_p)
+{
+	return res_p._harvestPoints.at(idx_p).free && !step_p.isSlotTaken(res_p._handle, idx_p);
+}
+
+bool isLockedAlready(Unit const &unit_p, Resource const &res_p, int idx_p)
+{
+	return !res_p._harvestPoints.at(idx_p).free && res_p._harvestPoints.at(idx_p).harvester == unit_p._handle;
+}
+
 bool UnitHarvestCommand::applyCommand(Step & step_p, State const &state_p, CommandData const *data_p, PathManager &pathManager_p) const
 {
 	Logger::getDebug() << "UnitHarvestCommand:: apply Command "<<_source <<std::endl;
@@ -100,7 +117,7 @@ bool UnitHarvestCommand::applyCommand(Step & step_p, State const &state_p, Comma
 		{
 			Logger::getDebug() << "UnitHarvestCommand:: new resource "<<newRes_l->_handle <<std::endl;
 			// update move
-			step_p.addSteppable(new CommandDataWaypointSetStep(_handleCommand, data_l._waypoints, data_l._waypoints));
+			step_p.addSteppable(new CommandDataWaypointSetStep(_handleCommand, data_l._waypoints, {newRes_l->_pos}));
 			step_p.addSteppable(new CommandMoveUpdateStep(_handleCommand, data_l._stepSinceUpdate, data_l._gridStatus, state_p.getPathGridStatus()));
 			// update resource in steps
 			step_p.addSteppable(new CommandResourceChangeStep(_handleCommand, data_l._resource, newRes_l->_handle));
@@ -117,7 +134,58 @@ bool UnitHarvestCommand::applyCommand(Step & step_p, State const &state_p, Comma
 	else if(notFull_l && data_l._harvesting)
 	{
 		Logger::getDebug() << "UnitHarvestCommand:: is not full"<<std::endl;
-		if(inRange(state_p, unit_l, data_l._resource))
+		// in range if not harvest point and in range of resource
+		bool inRangeNoPoint_l = inRange(state_p, unit_l, data_l._resource) && data_l._idxSlot < 0 && !hasHarvestPoint(*res_l);
+		bool inRangePoint_l = hasHarvestPoint(*res_l) && data_l._idxSlot >= 0 && inRange(*unit_l, *res_l, data_l._idxSlot);
+
+		// need to set up harvest point
+		if(hasHarvestPoint(*res_l) && data_l._idxSlot < 0)
+		{
+			int harvestPoint_l = getBestHarvestPoint(state_p, step_p, *unit_l, *res_l);
+			if(harvestPoint_l >= 0)
+			{
+				step_p.addSteppable(new CommandHarvestPointChangeStep(_handleCommand, data_l._idxSlot, harvestPoint_l));
+
+				Vector target_l = res_l->_harvestPoints.at(harvestPoint_l).point;
+				// update move to resource
+				step_p.addSteppable(new CommandDataWaypointSetStep(_handleCommand, data_l._waypoints, {target_l}));
+				step_p.addSteppable(new CommandMoveUpdateStep(_handleCommand, data_l._stepSinceUpdate, data_l._gridStatus, state_p.getPathGridStatus()));
+			}
+		}
+		bool isHarvestPointFreeOrLocked_l = true;
+		// check if the harvest point is free or locked by this entity
+		if(inRangePoint_l)
+		{
+			bool isHarvestPointFree_l = isHarvestPointFree(*res_l, data_l._idxSlot, step_p);
+			// true if the resource point is locked by this unit already
+			bool lockedByThisAlready_l = isLockedAlready(*unit_l, *res_l, data_l._idxSlot);
+
+			isHarvestPointFreeOrLocked_l = isHarvestPointFree_l || lockedByThisAlready_l;
+			// if not free change harvest point
+			if(!isHarvestPointFreeOrLocked_l)
+			{
+				int harvestPoint_l = getBestHarvestPoint(state_p, step_p, *unit_l, *res_l);
+				if(harvestPoint_l >= 0)
+				{
+					step_p.addSteppable(new CommandHarvestPointChangeStep(_handleCommand, data_l._idxSlot, harvestPoint_l));
+
+					Vector target_l = res_l->_harvestPoints.at(harvestPoint_l).point;
+					// update move to resource
+					step_p.addSteppable(new CommandDataWaypointSetStep(_handleCommand, data_l._waypoints, {target_l}));
+					step_p.addSteppable(new CommandMoveUpdateStep(_handleCommand, data_l._stepSinceUpdate, data_l._gridStatus, state_p.getPathGridStatus()));
+				}
+			}
+			// else lock the point
+			else if(!lockedByThisAlready_l)
+			{
+				step_p.addSteppable(new ResourceSlotStep(data_l._resource, data_l._idxSlot, _source, false));
+			}
+		}
+		Logger::getDebug() << "UnitHarvestCommand:: inRangeNoPoint = "<<inRangeNoPoint_l<<std::endl;
+		Logger::getDebug() << "UnitHarvestCommand:: inRangePoint = "<<inRangePoint_l<<std::endl;
+		Logger::getDebug() << "UnitHarvestCommand:: isHarvestPointFreeOrLocked = "<<isHarvestPointFreeOrLocked_l<<std::endl;
+
+		if(inRangeNoPoint_l || (inRangePoint_l && isHarvestPointFreeOrLocked_l))
 		{
 			Logger::getDebug() << "UnitHarvestCommand:: gather"<<std::endl;
 			// If != type of resource we reset the unit resource gather info
@@ -148,6 +216,15 @@ bool UnitHarvestCommand::applyCommand(Step & step_p, State const &state_p, Comma
 	if(data_l._harvesting || !state_p.isEntityAlive(data_l._deposit))
 	{
 		Logger::getDebug() << "UnitHarvestCommand:: look for deposit"<<std::endl;
+		if(data_l._harvesting)
+		{
+			step_p.addSteppable(new CommandHarvestingChangeStep(_handleCommand, data_l._harvesting, false));
+			if(data_l._idxSlot >= 0)
+			{
+				// unlock resource point
+				step_p.addSteppable(new ResourceSlotStep(data_l._resource, data_l._idxSlot, _source, true));
+			}
+		}
 		Entity const * deposit_l = lookUpDeposit(state_p, _source, data_l._resource);
 		if(deposit_l)
 		{
@@ -157,7 +234,6 @@ bool UnitHarvestCommand::applyCommand(Step & step_p, State const &state_p, Comma
 			step_p.addSteppable(new CommandMoveUpdateStep(_handleCommand, data_l._stepSinceUpdate, data_l._gridStatus, state_p.getPathGridStatus()));
 			// update deposit
 			step_p.addSteppable(new CommandDepositChangeStep(_handleCommand, data_l._deposit, deposit_l->_handle));
-			step_p.addSteppable(new CommandHarvestingChangeStep(_handleCommand, data_l._harvesting, false));
 		}
 		else
 		{
@@ -175,8 +251,16 @@ bool UnitHarvestCommand::applyCommand(Step & step_p, State const &state_p, Comma
 			step_p.addSteppable(new UnitHarvestDropStep(_source, unit_l->_quantityOfResource, unit_l->_quantityOfResource * ent_l->getHarvest()));
 			step_p.addSteppable(new CommandHarvestingChangeStep(_handleCommand, data_l._harvesting, true));
 
+			Vector target_l = res_l->_pos;
+			int harvestPoint_l = getBestHarvestPoint(state_p, step_p, *unit_l, *res_l);
+			if(harvestPoint_l >= 0)
+			{
+				target_l = res_l->_harvestPoints.at(harvestPoint_l).point;
+				step_p.addSteppable(new CommandHarvestPointChangeStep(_handleCommand, data_l._idxSlot, harvestPoint_l));
+			}
+
 			// update move back to resource
-			step_p.addSteppable(new CommandDataWaypointSetStep(_handleCommand, data_l._waypoints, {res_l->_pos}));
+			step_p.addSteppable(new CommandDataWaypointSetStep(_handleCommand, data_l._waypoints, {target_l}));
 			step_p.addSteppable(new CommandMoveUpdateStep(_handleCommand, data_l._stepSinceUpdate, data_l._gridStatus, state_p.getPathGridStatus()));
 		}
 		else
@@ -193,6 +277,16 @@ bool UnitHarvestCommand::applyCommand(Step & step_p, State const &state_p, Comma
 void UnitHarvestCommand::cleanUp(Step & step_p, State const &state_p, CommandData const *data_p) const
 {
 	_subMoveCommand.cleanUp(step_p, state_p, data_p);
+
+	// unlock resource point
+	HarvestMoveData const &data_l = *static_cast<HarvestMoveData const *>(data_p);
+	Unit const * unit_l = dynamic_cast<Unit const *>(state_p.getEntity(_source));
+	Resource const * res_l = dynamic_cast<Resource const *>(state_p.getEntity(data_l._resource));
+
+	if(data_l._idxSlot >= 0 && isLockedAlready(*unit_l, *res_l, data_l._idxSlot))
+	{
+		step_p.addSteppable(new ResourceSlotStep(data_l._resource, data_l._idxSlot, _source, true));
+	}
 }
 
 } // namespace octopus
