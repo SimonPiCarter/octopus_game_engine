@@ -386,7 +386,7 @@ int ModelView::get_upgrade_requirements_max_lvl(String const &up_p) const
     return _requirements._upgradeLvlMax.at(up_l);
 }
 
-TypedArray<String> get_tooltip_parameters() const
+TypedArray<String> ModelView::get_tooltip_parameters() const
 {
     TypedArray<String> params_l;
     for(std::string const &str_l : _tooltipParameters)
