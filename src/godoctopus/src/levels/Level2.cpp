@@ -198,18 +198,15 @@ AreaSpawnerCommand * createArenaSpawnCommmand(Library &lib_p, RandomGenerator &r
 {
 	std::list<AreaSpawn> spawners_l;
 
-	Resource res2_l({0,0}, true, lib_p.getEntityModel("resource_food"));
-	res2_l._type = "bloc";
+	Resource res2_l({0,0}, true, lib_p.getResourceModel("resource_bloc"));
 	res2_l._resource = 2000.;
 	res2_l._player = 2;
 
-	Resource res3_l({0,0}, true, lib_p.getEntityModel("resource_steel"));
-	res3_l._type = "ether";
+	Resource res3_l({0,0}, true, lib_p.getResourceModel("resource_ether"));
 	res3_l._resource = 2000.;
 	res3_l._player = 2;
 
-	Resource res4_l({0,0}, true, lib_p.getEntityModel("resource_irium"));
-	res4_l._type = "irium";
+	Resource res4_l({0,0}, true, lib_p.getResourceModel("resource_irium"));
 	res4_l._resource = qtyIrium_p;
 	res4_l._player = 2;
 

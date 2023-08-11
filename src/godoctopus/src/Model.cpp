@@ -12,6 +12,7 @@
 #include "state/entity/Entity.hh"
 #include "state/model/entity/EntityModel.hh"
 #include "state/model/entity/BuildingModel.hh"
+#include "state/model/entity/ResourceModel.hh"
 #include "state/model/entity/UnitModel.hh"
 
 namespace godot {
@@ -20,6 +21,7 @@ Model::~Model()
 {
     delete _model;
     delete _buildingModel;
+    delete _resourceModel;
     delete _unitModel;
 }
 
@@ -28,9 +30,11 @@ void Model::init(String const &type_p, float radius_p, int los_p, float stepSpee
     // reset internal pointers
     delete _model;
     delete _buildingModel;
+    delete _resourceModel;
     delete _unitModel;
     _model = nullptr;
     _buildingModel = nullptr;
+	_resourceModel = nullptr;
     _unitModel = nullptr;
 
     std::string typeId_l(type_p.utf8().get_data());
@@ -39,20 +43,17 @@ void Model::init(String const &type_p, float radius_p, int los_p, float stepSpee
     {
         _unitModel = new octopus::UnitModel(false, radius_p, stepSpeed_p, hp_p);
         _model = _unitModel;
-        _model->_isUnit = true;
         _model->_isBuilder = "Builder" == typeId_l;
     }
     else if("Building" == typeId_l)
     {
         _buildingModel = new octopus::BuildingModel(true, radius_p, hp_p);
         _model = _buildingModel;
-        _model->_isBuilding = true;
     }
     else if("Resource" == typeId_l)
     {
-        _model = new octopus::EntityModel(true, radius_p, stepSpeed_p, hp_p);
-        _model->_isResource = true;
-        _model->_invulnerable = true;
+        _resourceModel = new octopus::ResourceModel(radius_p, "bloc", hp_p);
+        _model = _resourceModel;
     }
     else
     {
@@ -69,6 +70,10 @@ void Model::save(Controller *controller_p, String const &name_p)
         // add spawn
         _buildingModel->_productionOutput = octopus::Vector(numeric::ceil(_buildingModel->_ray), 0);
 	    controller_p->getLib().registerBuildingModel(name_p.utf8().get_data(), *_buildingModel);
+    }
+    else if(_resourceModel)
+    {
+	    controller_p->getLib().registerResourceModel(name_p.utf8().get_data(), *_resourceModel);
     }
     else if(_unitModel)
     {
@@ -244,6 +249,22 @@ void Model::set_harvest_quantity(String const &res_p, int quantity_p)
     std::string resType_l(res_p.utf8().get_data());
 
     _unitModel->_maxQuantity[resType_l] = quantity_p;
+}
+
+////////////////////
+//     Resource   //
+////////////////////
+void Model::set_type(String const &resType_p)
+{
+    if(!_resourceModel)
+    {
+        UtilityFunctions::print("ignored set_type because not a resource model");
+        return;
+    }
+
+    std::string resType_l(resType_p.utf8().get_data());
+
+    _resourceModel->_type = resType_l;
 }
 
 void Model::_bind_methods()

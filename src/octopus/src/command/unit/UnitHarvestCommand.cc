@@ -33,7 +33,7 @@ void UnitHarvestCommand::registerCommand(Step &step_p, State const &state_p)
 	Unit const * unit_l = dynamic_cast<Unit const *>(state_p.getEntity(_source));
 
 	// check that unit can harvest this resource type
-	if(unit_l->_unitModel._maxQuantity.find(res_l->_type) != unit_l->_unitModel._maxQuantity.end())
+	if(unit_l->_unitModel._maxQuantity.find(res_l->getType()) != unit_l->_unitModel._maxQuantity.end())
 	{
 		step_p.addSteppable(new CommandSpawnStep(this));
 	}
@@ -57,7 +57,7 @@ bool hasResourceToDrop(Unit const * unit_p)
 bool isFull(State const &state_p, Unit const * unit_p, Handle const &res_p)
 {
 	Resource const *res_l = dynamic_cast<Resource const *>(state_p.getEntity(res_p));
-	return unit_p->_quantityOfResource >= unit_p->_unitModel._maxQuantity.at(res_l->_type) - 1e-5;
+	return unit_p->_quantityOfResource >= unit_p->_unitModel._maxQuantity.at(res_l->getType()) - 1e-5;
 }
 
 bool inRange(State const &state_p, Unit const * unit_p, Handle const res_p)
@@ -121,9 +121,9 @@ bool UnitHarvestCommand::applyCommand(Step & step_p, State const &state_p, Comma
 		{
 			Logger::getDebug() << "UnitHarvestCommand:: gather"<<std::endl;
 			// If != type of resource we reset the unit resource gather info
-			if (unit_l->_typeOfResource != res_l->_type)
+			if (unit_l->_typeOfResource != res_l->getType())
 			{
-				step_p.addSteppable(new UnitHarvestTypeStep(_source, unit_l->_quantityOfResource, unit_l->_typeOfResource, res_l->_type));
+				step_p.addSteppable(new UnitHarvestTypeStep(_source, unit_l->_quantityOfResource, unit_l->_typeOfResource, res_l->getType()));
 			}
 			if(data_l._timeSinceHarvest + 1.00001 >= unit_l->_unitModel._timeToHarvest)
 			{

@@ -83,8 +83,8 @@ Command * newTargetCommand(State const &state_p, Handle const &handle_p,
 	}
 	else if(targetRehandle_p
 	&& unit_l
-	&& unit_l->_unitModel._maxQuantity.find(targetRehandle_p->_type) != unit_l->_unitModel._maxQuantity.end()
-	&& unit_l->_unitModel._maxQuantity.at(targetRehandle_p->_type) > 0)
+	&& unit_l->_unitModel._maxQuantity.find(targetRehandle_p->getType()) != unit_l->_unitModel._maxQuantity.end()
+	&& unit_l->_unitModel._maxQuantity.at(targetRehandle_p->getType()) > 0)
 	{
 		UnitHarvestCommand * command_l = new UnitHarvestCommand(
 			handle_p,

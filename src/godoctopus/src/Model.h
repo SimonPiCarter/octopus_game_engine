@@ -16,6 +16,7 @@ namespace octopus
 {
     struct EntityModel;
     struct BuildingModel;
+	struct ResourceModel;
     struct UnitModel;
 } // namespace octopus
 
@@ -85,9 +86,15 @@ public:
     void set_harvest_time(int time_p);
     void set_harvest_quantity(String const &res_p, int quantity_p);
 
+    ////////////////////
+    //     Resource   //
+    ////////////////////
+	void set_type(String const &resType_p);
+
 private:
     octopus::EntityModel *_model { nullptr };
     octopus::BuildingModel *_buildingModel { nullptr };
+    octopus::ResourceModel *_resourceModel { nullptr };
     octopus::UnitModel *_unitModel { nullptr };
 };
 

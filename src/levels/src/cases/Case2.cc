@@ -38,10 +38,10 @@ std::list<Steppable *> Case2(Library &lib_p)
 
 	Unit unit_l({ 15, 20. }, false, lib_p.getUnitModel("unit"));
 
-	Resource res_l({20,20}, true, lib_p.getEntityModel("resource"));
+	Resource res_l({20,20}, true, lib_p.getResourceModel("resource"));
 	res_l._resource = 100.;
 
-	Resource res2_l({21,17}, true, lib_p.getEntityModel("resource"));
+	Resource res2_l({21,17}, true, lib_p.getResourceModel("resource"));
 	res2_l._resource = 100.;
 
 	Building deposit_l({1, 20}, true, lib_p.getBuildingModel("deposit"));

@@ -49,8 +49,8 @@ ResourceLoader::ResourceLoader(cuttlefish::Window &window_p, unsigned long fullW
 	_resourcesPanel.setTimeIcon(0, 2);
 
 	// resources
-	_statsPanel.addSpriteInfo("resource_steel", 2, 4);
-	_statsPanel.addSpriteInfo("resource_food", 2, 4);
+	_statsPanel.addSpriteInfo("resource_irium", 2, 4);
+	_statsPanel.addSpriteInfo("resource_bloc", 2, 4);
 
 	_statsPanel.addSpriteInfo("worker", 2, 1);
 	_statsPanel.addSpriteInfo("command_center", 1, 0);
@@ -73,8 +73,8 @@ ResourceLoader::ResourceLoader(cuttlefish::Window &window_p, unsigned long fullW
 	_spriteLib.registerSpriteTemplate("details", window_p.loadTexture("resources/fair_and_square/details.png"), 0.5, 0, 0, 64, 64, {1}, {2}, 1);
 
 	// resources
-	_spriteLib.registerSpriteTemplate("resource_steel", window_p.loadTexture("resources/fair_and_square/resources_2.png"), 1., 32, 32, 64, 64, {20}, {0.1}, 1);
-	_spriteLib.registerSpriteTemplate("resource_food", window_p.loadTexture("resources/fair_and_square/food_prop2.png"), 1., 32, 32, 64, 64, {14, 1}, {0.1, 1.}, 1);
+	_spriteLib.registerSpriteTemplate("resource_irium", window_p.loadTexture("resources/fair_and_square/resources_2.png"), 1., 32, 32, 64, 64, {20}, {0.1}, 1);
+	_spriteLib.registerSpriteTemplate("resource_bloc", window_p.loadTexture("resources/fair_and_square/food_prop2.png"), 1., 32, 32, 64, 64, {14, 1}, {0.1, 1.}, 1);
 
 	// neutral
 	_spriteLib.registerSpriteTemplate("command_center", window_p.loadTexture("resources/fair_and_square/command_center.png"), 2., 64, 64, 128, 128, {8, 2, 2, 2}, {0.25, 0.5, 0.5, 0.5}, 1);

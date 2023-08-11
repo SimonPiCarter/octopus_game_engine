@@ -222,7 +222,7 @@ String Entity::get_resource_type(Controller const *controller_p) const
         return "";
     }
     octopus::Resource const *res_l = static_cast<octopus::Resource const *>(ent_l);
-    return res_l->_type.c_str();
+    return res_l->getType().c_str();
 }
 
 float Entity::get_resource_quantity(Controller const *controller_p) const

@@ -47,8 +47,7 @@ std::list<Steppable *> MazeLevelSteps(Library &lib_p, size_t number_p)
 		spawners_l.push_back(new UnitSpawnStep(Handle(id_l++), square1_l));
 	}
 
-	Resource res_l({20,20}, true, lib_p.getEntityModel("resource_food"));
-	res_l._type = "bloc";
+	Resource res_l({20,20}, true, lib_p.getResourceModel("resource_bloc"));
 	res_l._resource = 500.;
 	res_l._player = 0;
 

@@ -4,6 +4,7 @@
 #include "state/model/entity/EntityModel.hh"
 #include "state/model/entity/TempleModel.hh"
 #include "state/model/entity/UnitModel.hh"
+#include "state/model/entity/ResourceModel.hh"
 #include "state/player/upgrade/Upgrade.hh"
 
 namespace octopus
@@ -73,6 +74,23 @@ UnitModel const & Library::getUnitModel(std::string const &id_p) const
 bool Library::hasUnitModel(std::string const &id_p) const
 {
 	return _mapUnitModel.find(id_p) != _mapUnitModel.end();
+}
+
+void Library::registerResourceModel(std::string const &id_p, ResourceModel const &model_p)
+{
+	_mapResourceModel[id_p] = new ResourceModel(model_p);
+	_mapResourceModel[id_p]->_id = id_p;
+	_mapEntityModel[id_p] = _mapResourceModel[id_p];
+}
+
+ResourceModel const & Library::getResourceModel(std::string const &id_p) const
+{
+	return *_mapResourceModel.at(id_p);
+}
+
+bool Library::hasResourceModel(std::string const &id_p) const
+{
+	return _mapResourceModel.find(id_p) != _mapResourceModel.end();
 }
 
 void Library::registerUpgrade(std::string const &id_p, Upgrade *upgrade_p)

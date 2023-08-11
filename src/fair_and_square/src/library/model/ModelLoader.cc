@@ -4,6 +4,7 @@
 #include "state/model/entity/UnitModel.hh"
 #include "state/model/entity/BuildingModel.hh"
 #include "state/model/entity/TempleModel.hh"
+#include "state/model/entity/ResourceModel.hh"
 
 using namespace octopus;
 
@@ -271,23 +272,20 @@ void createAnchorSpot(Library &lib_p)
 
 void createResourceBloc(Library &lib_p)
 {
-	EntityModel resModel_l { true, 0.9, 1., 10. };
-	resModel_l._isResource = true;
-	lib_p.registerEntityModel("resource_food", resModel_l);
+	ResourceModel resModel_l(0.9, "bloc", 1000);
+	lib_p.registerResourceModel("resource_bloc", resModel_l);
 }
 
 void createResourceEther(Library &lib_p)
 {
-	EntityModel resModel_l { true, 0.9, 1., 10. };
-	resModel_l._isResource = true;
-	lib_p.registerEntityModel("resource_steel", resModel_l);
+	ResourceModel resModel_l(0.9, "ether", 1000);
+	lib_p.registerResourceModel("resource_irium", resModel_l);
 }
 
 void createResourceIrium(Library &lib_p)
 {
-	EntityModel resModel_l { true, 0.9, 1., 10. };
-	resModel_l._isResource = true;
-	lib_p.registerEntityModel("resource_irium", resModel_l);
+	ResourceModel resModel_l(0.9, "irium", 1000);
+	lib_p.registerResourceModel("resource_irium", resModel_l);
 }
 
 void createWater(Library &lib_p)

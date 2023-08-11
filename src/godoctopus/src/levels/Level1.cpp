@@ -89,13 +89,11 @@ std::list<Steppable *> WaveLevelSteps(Library &lib_p, RandomGenerator &rand_p, u
 	Building building_l({4, 20}, true, lib_p.getBuildingModel("command_center"));
 	Unit unit_l({ 15, 20 }, false, lib_p.getUnitModel("worker"));
 
-	Resource res1_l({20,20}, true, lib_p.getEntityModel("resource_food"));
-	res1_l._type = "bloc";
+	Resource res1_l({20,20}, true, lib_p.getResourceModel("resource_bloc"));
 	res1_l._resource = 2000.;
 	res1_l._player = 2;
 
-	Resource res3_l({15,17}, true, lib_p.getEntityModel("resource_steel"));
-	res3_l._type = "ether";
+	Resource res3_l({15,17}, true, lib_p.getResourceModel("resource_ether"));
 	res3_l._resource = 2000.;
 	res3_l._player = 2;
 
@@ -160,13 +158,11 @@ std::list<Command *> WaveLevelCommands(Library &lib_p, RandomGenerator &rand_p, 
 {
 	std::list<AreaSpawn> spawners_l;
 
-	Resource res2_l({0,0}, true, lib_p.getEntityModel("resource_food"));
-	res2_l._type = "bloc";
+	Resource res2_l({0,0}, true, lib_p.getResourceModel("resource_bloc"));
 	res2_l._resource = 2000.;
 	res2_l._player = 2;
 
-	Resource res3_l({0,0}, true, lib_p.getEntityModel("resource_steel"));
-	res3_l._type = "ether";
+	Resource res3_l({0,0}, true, lib_p.getResourceModel("resource_ether"));
 	res3_l._resource = 2000.;
 	res3_l._player = 2;
 

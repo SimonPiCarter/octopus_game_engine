@@ -36,10 +36,8 @@ TEST(harvestCommandTest, simple)
 	unitModel_l._maxQuantity["bloc"] = 10;
 	Unit unit_l({ 5, 3 }, false, unitModel_l);
 
-	EntityModel resModel_l { true, 1., 1., 10. };
-	resModel_l._isResource = true;
+	ResourceModel resModel_l(1., "bloc", 20);
 	Resource res_l({9,3}, true, resModel_l);
-	res_l._resource = 20.;
 
 	BuildingModel depositModel_l { true, 1., 10. };
 	depositModel_l._isBuilding = true;
@@ -226,8 +224,7 @@ TEST(harvestCommandTest, simple_new_res)
 	unitModel_l._maxQuantity["bloc"] = 10;
 	Unit unit_l({ 5, 3 }, false, unitModel_l);
 
-	EntityModel resModel_l { true, 1., 1., 10. };
-	resModel_l._isResource = true;
+	ResourceModel resModel_l(1., "bloc", 10);
 	Resource res_l({9,3}, true, resModel_l);
 	res_l._resource = 10.;
 	Resource res2_l({10,3}, true, resModel_l);

@@ -10,6 +10,7 @@ namespace octopus
 struct EntityModel;
 struct BuildingModel;
 struct TempleModel;
+struct ResourceModel;
 struct UnitModel;
 struct Upgrade;
 
@@ -33,6 +34,10 @@ public:
 	UnitModel const & getUnitModel(std::string const &id_p) const;
 	bool hasUnitModel(std::string const &id_p) const;
 
+	void registerResourceModel(std::string const &id_p, ResourceModel const &model_p);
+	ResourceModel const & getResourceModel(std::string const &id_p) const;
+	bool hasResourceModel(std::string const &id_p) const;
+
 	void registerUpgrade(std::string const &id_p, Upgrade *upgrade_p);
 	Upgrade const & getUpgrade(std::string const &id_p) const;
 	bool hasUpgrade(std::string const &id_p) const;
@@ -42,6 +47,7 @@ private:
 	std::unordered_map<std::string, EntityModel *> _mapEntityModelRegisteredAsEntity;
 	std::unordered_map<std::string, BuildingModel *> _mapBuildingModel;
 	std::unordered_map<std::string, UnitModel *> _mapUnitModel;
+	std::unordered_map<std::string, ResourceModel *> _mapResourceModel;
 	std::unordered_map<std::string, Upgrade *> _mapUpgrade;
 };
 

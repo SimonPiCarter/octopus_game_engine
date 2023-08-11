@@ -538,7 +538,7 @@ Entity const * lookUpDeposit(State const &state_p, Handle const &sourceHandle_p,
 			continue;
 		}
 		BuildingModel const & model_l = building_l->_buildingModel;
-		if(!model_l.isDeposit(origRes_l->_type))
+		if(!model_l.isDeposit(origRes_l->getType()))
 		{
 			continue;
 		}
@@ -574,7 +574,7 @@ Entity const * lookUpNewResource(State const &state_p, Handle const &sourceHandl
 
 		Resource const * res_l = dynamic_cast<Resource const *>(ent_l);
 		// Skip if not correct resource
-		if(res_l->_type != origRes_l->_type
+		if(res_l->getType() != origRes_l->getType()
 		|| res_l->_resource <= 1e-3)
 		{
 			continue;

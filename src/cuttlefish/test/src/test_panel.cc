@@ -239,7 +239,7 @@ int main( int argc, char* args[] )
 	spriteLib_l.registerSpriteTemplate("tiles", window_l.loadTexture("resources/tiles.png"), 1., 0, 0, 64, 64, {1, 1}, {2,2}, 1);
 	spriteLib_l.registerSpriteTemplate("details", window_l.loadTexture("resources/details.png"), 1., 0, 0, 64, 64, {1}, {2}, 1);
 	spriteLib_l.registerSpriteTemplate("resource", window_l.loadTexture("resources/steel_prop1.png"), 2., 128, 128, 256, 256, {10, 10}, {0.2,0.2}, 1);
-	spriteLib_l.registerSpriteTemplate("resource_food", window_l.loadTexture("resources/food_prop1.png"), 2., 64, 64, 128, 128, {2, 2}, {0.5, 1.}, 1);
+	spriteLib_l.registerSpriteTemplate("resource_bloc", window_l.loadTexture("resources/food_prop1.png"), 2., 64, 64, 128, 128, {2, 2}, {0.5, 1.}, 1);
 	spriteLib_l.registerSpriteTemplate("resource_ether", window_l.loadTexture("resources/ether_prop1.png"), 2., 64, 64, 128, 128, {10, 1}, {0.2, 1.5}, 1);
 	spriteLib_l.registerSpriteTemplate("building", window_l.loadTexture("resources/building.png"), 1., 32, 32, 64, 64, {2, 2, 2, 2}, {0.25, 0.5, 0.5, 0.5}, 1);
 	spriteLib_l.registerSpriteTemplate("barrack", window_l.loadTexture("resources/building.png"), 1., 32, 32, 64, 64, {2, 2, 2, 2}, {0.25, 0.5, 0.5, 0.5}, 1);

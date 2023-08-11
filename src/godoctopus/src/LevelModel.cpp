@@ -100,8 +100,8 @@ std::list<octopus::Steppable *> LevelModel::generateLevelSteps(octopus::Library 
         }
         else if(ent_l.type == "Resource")
         {
-	        octopus::Resource resource_l({ ent_l.x, ent_l.y }, true, lib_p.getEntityModel(ent_l.model));
-			resource_l._resource = 20;
+	        octopus::Resource resource_l({ ent_l.x, ent_l.y }, true, lib_p.getResourceModel(ent_l.model));
+			resource_l._resource = 5;
             resource_l._player = ent_l.player;
             steps_l.push_back(new octopus::ResourceSpawnStep(octopus::Handle(idx_l), resource_l));
         }

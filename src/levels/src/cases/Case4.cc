@@ -12,6 +12,7 @@
 #include "state/entity/Resource.hh"
 #include "state/model/entity/UnitModel.hh"
 #include "state/model/entity/BuildingModel.hh"
+#include "state/model/entity/ResourceModel.hh"
 #include "state/State.hh"
 #include "step/Step.hh"
 #include "step/command/CommandQueueStep.hh"
@@ -90,26 +91,20 @@ void createTemple(Library &lib_p)
 
 void createResource(Library &lib_p)
 {
-	EntityModel resModel_l { true, 1.8, 1., 10. };
-	resModel_l._isResource = true;
-	resModel_l._isStatic = true;
-	lib_p.registerEntityModel("resource", resModel_l);
+	ResourceModel resModel_l(1.8, "ether", 1000);
+	lib_p.registerResourceModel("resource", resModel_l);
 }
 
 void createResourceFood(Library &lib_p)
 {
-	EntityModel resModel_l { true, 1.8, 1., 10. };
-	resModel_l._isResource = true;
-	resModel_l._isStatic = true;
-	lib_p.registerEntityModel("resource_food", resModel_l);
+	ResourceModel resModel_l(1.8, "bloc", 1000);
+	lib_p.registerResourceModel("resource_bloc", resModel_l);
 }
 
 void createResourceEther(Library &lib_p)
 {
-	EntityModel resModel_l { true, 1.8, 1., 10. };
-	resModel_l._isResource = true;
-	resModel_l._isStatic = true;
-	lib_p.registerEntityModel("resource_ether", resModel_l);
+	ResourceModel resModel_l(1.8, "ether", 1000);
+	lib_p.registerResourceModel("resource_ether", resModel_l);
 }
 
 class Case4TriggerSpawn : public OneShotTrigger
@@ -201,20 +196,16 @@ std::list<Steppable *> Case4(Library &lib_p)
 	Building building_l({1, 20}, true, lib_p.getBuildingModel("building"));
 	Unit unit_l({ 15, 20. }, false, lib_p.getUnitModel("unit"));
 
-	Resource res1_l({20,20}, true, lib_p.getEntityModel("resource_food"));
-	res1_l._type = "bloc";
+	Resource res1_l({20,20}, true, lib_p.getResourceModel("resource_bloc"));
 	res1_l._resource = 500.;
 
-	Resource res2_l({21,17}, true, lib_p.getEntityModel("resource_food"));
-	res2_l._type = "bloc";
+	Resource res2_l({21,17}, true, lib_p.getResourceModel("resource_bloc"));
 	res2_l._resource = 500.;
 
-	Resource res3_l({21,13}, true, lib_p.getEntityModel("resource"));
-	res3_l._type = "ether";
+	Resource res3_l({21,13}, true, lib_p.getResourceModel("resource"));
 	res3_l._resource = 500.;
 
-	Resource res4_l({15,17}, true, lib_p.getEntityModel("resource_ether"));
-	res4_l._type = "idiem";
+	Resource res4_l({15,17}, true, lib_p.getResourceModel("resource_ether"));
 	res4_l._resource = 500.;
 
 	std::map<std::string, Fixed> mapRes_l;
