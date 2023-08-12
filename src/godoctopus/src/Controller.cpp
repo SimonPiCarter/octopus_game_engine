@@ -790,6 +790,41 @@ PackedInt32Array Controller::get_idle_workers(int player_p) const
 	return handles_l;
 }
 
+PackedFloat32Array Controller::get_move_targets(PackedInt32Array const &handles_p)
+{
+	std::unordered_map<octopus::Vector, bool> mapPoints_l;
+	// iterate on every entity to store final points
+    for(size_t i = 0 ; i < handles_p.size()/2 ; ++ i)
+    {
+		octopus::Handle handle_l = castHandle(handles_p[i*2],handles_p[i*2+1]);
+		if(_state->hasEntity(handle_l))
+		{
+			octopus::Entity const * ent_l = _state->getEntity(handle_l);
+			if(ent_l->getQueue().hasCommand())
+			{
+				octopus::CommandBundle const &bundle_l = ent_l->getQueue().getFrontCommand();
+				octopus::CommandData const * data_l = getData(bundle_l._var);
+				octopus::MoveData const * moveData_l = dynamic_cast<octopus::MoveData const *>(data_l);
+				if(moveData_l && !dynamic_cast<octopus::HarvestMoveData const *>(data_l))
+				{
+					mapPoints_l[moveData_l->_finalPoint] = dynamic_cast<octopus::AttackMoveData const *>(data_l);
+				}
+			}
+		}
+	}
+	// convert points in packed data
+	PackedFloat32Array array_l;
+	for(auto &&pair_l : mapPoints_l)
+	{
+		octopus::Vector const &vec_l = pair_l.first;
+		array_l.push_back(vec_l.x.to_double());
+		array_l.push_back(vec_l.y.to_double());
+		array_l.push_back(pair_l.second?1.:-1.);
+	}
+	return array_l;
+}
+
+
 float Controller::get_res(String const &res_p, int player_p) const
 {
     std::string resId_l(res_p.utf8().get_data());
@@ -1126,6 +1161,7 @@ void Controller::_bind_methods()
     ClassDB::bind_method(D_METHOD("get_steps"), &Controller::get_steps);
     ClassDB::bind_method(D_METHOD("get_team", "player"), &Controller::get_team);
     ClassDB::bind_method(D_METHOD("get_idle_workers", "player"), &Controller::get_idle_workers);
+    ClassDB::bind_method(D_METHOD("get_move_targets", "handles"), &Controller::get_move_targets);
 
     ClassDB::bind_method(D_METHOD("get_res", "rest", "player"), &Controller::get_res);
     ClassDB::bind_method(D_METHOD("is_visible", "x", "y", "player"), &Controller::is_visible);

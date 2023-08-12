@@ -101,6 +101,10 @@ public:
     int get_team(int player_p) const;
 	/// @brief get all handles for idle worker for the given player in a packed array
 	PackedInt32Array get_idle_workers(int player_p) const;
+	/// @brief decode the given handles and return all move or attack target encoded as a float packed array
+	/// @note encoding is as follow : x, y, type
+	/// where type < 0.1 if move command or > 0.1 if attack command
+	PackedFloat32Array get_move_targets(PackedInt32Array const &handles_p);
 
     // resources getter
 	float get_res(String const &res_p, int player_p) const;
