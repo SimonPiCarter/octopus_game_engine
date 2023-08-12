@@ -273,6 +273,22 @@ void createAnchorSpot(Library &lib_p)
 void createResourceBloc(Library &lib_p)
 {
 	ResourceModel resModel_l(0.9, "bloc", 1000);
+	// resModel_l._harvestPoints.push_back({-1.5, 0});
+	// resModel_l._harvestPoints.push_back({-1.5, 0.75});
+	// resModel_l._harvestPoints.push_back({-1.5, -0.75});
+	// resModel_l._harvestPoints.push_back({-1.5, 1.5});
+	// resModel_l._harvestPoints.push_back({-1.5, -1.5});
+	// resModel_l._harvestPoints.push_back({1.5, 0});
+	// resModel_l._harvestPoints.push_back({1.5, 0.75});
+	// resModel_l._harvestPoints.push_back({1.5, -0.75});
+	// resModel_l._harvestPoints.push_back({1.5, 1.5});
+	// resModel_l._harvestPoints.push_back({1.5, -1.5});
+	// resModel_l._harvestPoints.push_back({0.75, -1.5});
+	// resModel_l._harvestPoints.push_back({0, -1.5});
+	// resModel_l._harvestPoints.push_back({-0.75, -1.5});
+	// resModel_l._harvestPoints.push_back({0.75, 1.5});
+	// resModel_l._harvestPoints.push_back({0, 1.5});
+	// resModel_l._harvestPoints.push_back({-0.75, 1.5});
 	lib_p.registerResourceModel("resource_bloc", resModel_l);
 }
 
