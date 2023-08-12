@@ -42,4 +42,13 @@ octopus::Vector & operator*=(octopus::Vector & a, octopus::Fixed const & b);
 
 std::ostream &operator<<(std::ostream &os_p, octopus::Vector const &vec_p);
 
+template<>
+struct std::hash<octopus::Vector>
+{
+	size_t operator()(octopus::Vector const &vector_p) const
+	{
+		return vector_p.x.data() + vector_p.y.data();
+	}
+};
+
 #endif
