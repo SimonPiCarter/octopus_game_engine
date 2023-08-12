@@ -99,6 +99,8 @@ public:
     int get_world_size() const;
     int get_steps() const;
     int get_team(int player_p) const;
+	/// @brief get all handles for idle worker for the given player in a packed array
+	PackedInt32Array get_idle_workers(int player_p) const;
 
     // resources getter
 	float get_res(String const &res_p, int player_p) const;
@@ -142,6 +144,7 @@ public:
     void add_building_cancel_command(int peer_p, PackedInt32Array const & handle_p, int player_p);
     // option
     void add_chose_option_command(int peer_p, int option_p, int player_p);
+
 
     // step
     /// @brief set the number of queued layer to be setup

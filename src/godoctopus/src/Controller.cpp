@@ -774,6 +774,22 @@ int Controller::get_team(int player_p) const
     return _state->getPlayer(player_p)->_team;
 }
 
+PackedInt32Array Controller::get_idle_workers(int player_p) const
+{
+	PackedInt32Array handles_l;
+	for(octopus::Entity const * ent_l : _state->getEntities())
+	{
+		if(ent_l->_model._id == "worker" && ent_l->_player == player_p
+		&& _state->isEntityAlive(ent_l->_handle)
+		&& !ent_l->getQueue().hasCommand())
+		{
+			handles_l.push_back(ent_l->_handle.index);
+			handles_l.push_back(ent_l->_handle.revision);
+		}
+	}
+	return handles_l;
+}
+
 float Controller::get_res(String const &res_p, int player_p) const
 {
     std::string resId_l(res_p.utf8().get_data());
@@ -1109,6 +1125,7 @@ void Controller::_bind_methods()
     ClassDB::bind_method(D_METHOD("get_world_size"), &Controller::get_world_size);
     ClassDB::bind_method(D_METHOD("get_steps"), &Controller::get_steps);
     ClassDB::bind_method(D_METHOD("get_team", "player"), &Controller::get_team);
+    ClassDB::bind_method(D_METHOD("get_idle_workers", "player"), &Controller::get_idle_workers);
 
     ClassDB::bind_method(D_METHOD("get_res", "rest", "player"), &Controller::get_res);
     ClassDB::bind_method(D_METHOD("is_visible", "x", "y", "player"), &Controller::is_visible);
