@@ -197,8 +197,7 @@ ProductionDivinityParams createDefaultParams()
 	/// @brief percent reduction for time production
 	params_l._productionTimeUpgradeCoef = 0.1;
 	/// @brief percent reduction for resource cost production for tier one unit model
-	params_l._prodTierOneUnitCostReductionCoef["bloc"] = 0.2;
-	params_l._prodTierOneUnitCostReductionCoef["ether"] = 0.2;
+	params_l._prodTierOneUnitCostReductionCoef = 0.2;
 
 	params_l._tierOneUnitModelId = models::ProductionUnitModelTierOneId;
 	params_l._tierOneUnitRespawnModelId = models::ProductionUnitModelTierOneRespawnId;
@@ -265,9 +264,12 @@ void fillLibrary(ProductionDivinityParams const &params_p, octopus::Library &lib
 	upProductionTime_l->_requirements._upgradeLvl[models::ProductionDivId+models::tierOneSuffix] = 1;
 	lib_p.registerUpgrade(upProductionTime_l->_id, upProductionTime_l);
 
+	std::map<std::string, octopus::Fixed> reduction_l;
+	reduction_l["bloc"] = params_p._prodTierOneUnitCostReductionCoef;
+	reduction_l["ether"] = params_p._prodTierOneUnitCostReductionCoef;
 	// T2 cost reduction for unit 1
 	Upgrade * upProductionCost_l = new Upgrade("ProductionUpgrade_BuffResourceProduction",
-		new ProductionResourceBuffUpgrade(params_p._tierOneUnitModelId, params_p._prodTierOneUnitCostReductionCoef));
+		new ProductionResourceBuffUpgrade(params_p._tierOneUnitModelId, reduction_l));
 	upProductionCost_l->_cost["bloc"] = 100;
 	upProductionCost_l->_cost["ether"] = 200;
 	upProductionCost_l->_cost["irium"] = 200;

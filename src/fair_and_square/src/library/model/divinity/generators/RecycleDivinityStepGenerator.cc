@@ -173,10 +173,10 @@ RecycleDivinityParams createDefaultParams()
 	params_l._tierOneUnitModelId = models::RecycleUnitModelTierOneId;
 	/// @brief resource cash back on tier two
 	params_l._resourceReturnedTierTwo["bloc"] = 5;
-	params_l._resourceReturnedTierTwo["ehter"] = 2;
+	params_l._resourceReturnedTierTwo["ether"] = 2;
 	/// @brief resource cash back on tier three (upgrade)
 	params_l._resourceReturnedTierThree["bloc"] = 5;
-	params_l._resourceReturnedTierThree["ehter"] = 3;
+	params_l._resourceReturnedTierThree["ether"] = 3;
 	/// @brief resource harvest upgrade
 	params_l._resourceHarvestUpgrade = {0, 0.1, TyppedBuff::Type::Harvest, 0, false, "RecycleHarvestUpgrade"};
 

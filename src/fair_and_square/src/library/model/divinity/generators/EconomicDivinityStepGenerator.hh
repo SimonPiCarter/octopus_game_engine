@@ -24,6 +24,10 @@ struct EconomicDivinityParams
 
 	/// @brief tier two building model (resource production)
 	std::string _tierTwoBuildingModelId;
+	/// @brief time to produce resource
+	unsigned long _produceTimer;
+	/// @brief resource production
+	octopus::Fixed _resourceProduction;
 
 	/// @brief hp buff for every unit
 	octopus::Fixed _hpBuffTierThree;

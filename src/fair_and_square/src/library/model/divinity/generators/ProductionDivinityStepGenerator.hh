@@ -27,7 +27,7 @@ struct ProductionDivinityParams
 	/// @brief coef reduction for time production (positive)
 	octopus::Fixed _productionTimeUpgradeCoef;
 	/// @brief percent reduction for resource cost production for tier one unit model (positive)
-	std::map<std::string, octopus::Fixed> _prodTierOneUnitCostReductionCoef;
+	octopus::Fixed _prodTierOneUnitCostReductionCoef;
 	/// @brief tier one unit model (cheap unit)
 	std::string _tierOneUnitModelId;
 	/// @brief tier one unit model respawn after t3 upgrade (same unit just different id to avoid infinite respawn)

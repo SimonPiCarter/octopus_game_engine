@@ -112,9 +112,9 @@ HealDivinityParams createDefaultParams()
 	params_l._rangeHealTierThree = 3;
 
 	/// @brief hp buff of tier one unit from upgrage tier three
-	params_l._buffHpTierThree = 5;
+	params_l._buffHpTierThree = 45;
 	/// @brief heal buff of tier one unit from upgrade tier three
-	params_l._buffHealTierThree = 45;
+	params_l._buffHealTierThree = 5;
 
 	/// @brief tier one unit model (heal unit)
 	params_l._tierOneUnitModelId = models::HealUnitModelTierOneId;

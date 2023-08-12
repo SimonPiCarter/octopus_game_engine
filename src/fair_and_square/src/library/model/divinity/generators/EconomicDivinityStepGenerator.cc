@@ -70,6 +70,10 @@ EconomicDivinityParams createDefaultParams()
 
 	/// @brief tier two building model (resource production)
 	params_l._tierTwoBuildingModelId = models::EconomicBuildingResourceProducerId;
+	/// @brief time to produce resource
+	params_l._produceTimer = 10;
+	/// @brief resource production
+	params_l._resourceProduction = 7;
 
 	/// @brief hp buff for every unit
 	params_l._hpBuffTierThree = 1;
@@ -103,10 +107,10 @@ void fillLibrary(EconomicDivinityParams const &params_p, octopus::Library &lib_p
 	tiertwounitmodel_l._buildingTime = 2500;
 	tiertwounitmodel_l._cost["bloc"] = 75;
 	tiertwounitmodel_l._cost["ether"] = 25;
-	tiertwounitmodel_l._damage = 7;
+	tiertwounitmodel_l._damage = params_p._resourceProduction;
 	tiertwounitmodel_l._armor = 0;
 	tiertwounitmodel_l._lineOfSight = 6;
-	tiertwounitmodel_l._fullReload = 10000;
+	tiertwounitmodel_l._fullReload = params_p._produceTimer*100;
 	tiertwounitmodel_l._requirements._upgradeLvl[models::EconomicDivId] = 2;
 	tiertwounitmodel_l._idleFunc = customIdleResource;
 
