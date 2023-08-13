@@ -12,6 +12,7 @@
 #include "step/command/CommandNewTargetStep.hh"
 #include "step/command/CommandIncrementNoProgressStep.hh"
 #include "step/command/CommandUpdateLastPosStep.hh"
+#include "step/custom/implem/ImpactStep.hh"
 #include "step/entity/EntityAttackStep.hh"
 #include "step/entity/EntityMoveStep.hh"
 #include "step/entity/EntityFrozenStep.hh"
@@ -132,6 +133,7 @@ bool EntityAttackCommand::applyCommand(Step & step_p, State const &state_p, Comm
 			else
 			{
 				std::vector<Steppable *> vec_l;
+				step_p.addSteppable(new ImpactStep(entSource_l->_model._id, entTarget_l->_pos));
 				newAttackSteppable(vec_l, *entSource_l, *entTarget_l, state_p, step_p);
 				// add damage (with current hp from state and step until now)
 				for(Steppable * steppable_l : vec_l)
