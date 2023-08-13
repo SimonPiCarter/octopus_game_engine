@@ -13,6 +13,7 @@
 #include "step/command/CommandIncrementNoProgressStep.hh"
 #include "step/command/CommandUpdateLastPosStep.hh"
 #include "step/custom/implem/ImpactStep.hh"
+#include "step/custom/implem/WindUpStartStep.hh"
 #include "step/entity/EntityAttackStep.hh"
 #include "step/entity/EntityMoveStep.hh"
 #include "step/entity/EntityFrozenStep.hh"
@@ -114,6 +115,10 @@ bool EntityAttackCommand::applyCommand(Step & step_p, State const &state_p, Comm
 	}
 	else if(entSource_l->_reload >= entSource_l->getFullReload() )
 	{
+		if(windup_l == 1)
+		{
+			step_p.addSteppable(new WindUpStartStep(_handleCommand));
+		}
 		step_p.addSteppable(new CommandWindUpDiffStep(_handleCommand, 1));
 		Logger::getDebug() << "\tEntityAttackCommand:: in range (winding up)"<<std::endl;
 		// If in range we trigger the attack (delay may be applied for animation)
