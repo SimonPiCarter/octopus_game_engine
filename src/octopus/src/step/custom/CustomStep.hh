@@ -18,14 +18,15 @@ public:
 };
 
 /// @brief this is a place holder step to use a key for step handling
+/// those steps do no action at all on the state
 class CustomKeyStep : public CustomStep
 {
 public:
     CustomKeyStep(std::string const &key_p) : _key(key_p) {}
-    /// @brief apply this Steppable to the given state
-    virtual void apply(State &state_p, SteppableData *) const {}
-    /// @brief revert this Steppable to the given state
-    virtual void revert(State &state_p, SteppableData *) const {}
+	/// @brief apply this Steppable to the given state
+	virtual void apply(State &state_p) const  override final {}
+	/// @brief revert this Steppable to the given state
+	virtual void revert(State &state_p, SteppableData const *) const override final {}
 
     /// @brief return true if this Steppable does no operation on the State it would be applied
     virtual bool isNoOp() const { return false; }
