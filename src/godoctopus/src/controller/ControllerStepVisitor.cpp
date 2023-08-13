@@ -94,7 +94,7 @@ void ControllerStepVisitor::visit(octopus::EntityHitPointChangeStep const *stepp
 	octopus::Entity const * ent_l = _state->getEntity(steppable_p->_handle);
 	double hp_l = octopus::to_double(ent_l->_hp);
 	// warning when we have deleted it already (can happens when multiple change step in one step)
-	_controller.hp_change(steppable_p->_handle, octopus::to_double(ent_l->_hp/ent_l->getHpMax()));
+	_controller.hp_change(steppable_p->_handle, octopus::to_double(ent_l->_hp/ent_l->getHpMax()), octopus::to_double(steppable_p->_delta));
 	if(!ent_l->_alive)
 	{
 		_controller.kill(steppable_p->_handle);

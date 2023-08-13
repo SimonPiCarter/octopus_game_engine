@@ -86,7 +86,7 @@ public:
 	void kill(octopus::Handle const & handle_p);
 	void move(octopus::Handle const & handle_p);
 	void windup(int handle_p);
-	void hp_change(int handle_p, float ratio_p);
+	void hp_change(int handle_p, float ratio_p, float diff_p);
 
     // setters
     void set_pause(bool paused_p);

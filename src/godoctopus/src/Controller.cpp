@@ -657,9 +657,9 @@ void Controller::kill(octopus::Handle const & handle_p)
     }
 }
 
-void Controller::hp_change(int handle_p, float ratio_p)
+void Controller::hp_change(int handle_p, float ratio_p, float diff_p)
 {
-    emit_signal("hp_change", handle_p, ratio_p);
+    emit_signal("hp_change", handle_p, ratio_p, diff_p);
 }
 
 void Controller::set_pause(bool paused_p)
@@ -1205,7 +1205,7 @@ void Controller::_bind_methods()
     ADD_SIGNAL(MethodInfo("windup_unit", PropertyInfo(Variant::INT, "handle")));
     ADD_SIGNAL(MethodInfo("kill_unit", PropertyInfo(Variant::INT, "handle")));
     ADD_SIGNAL(MethodInfo("clear_entity", PropertyInfo(Variant::INT, "handle")));
-    ADD_SIGNAL(MethodInfo("hp_change", PropertyInfo(Variant::INT, "handle"), PropertyInfo(Variant::FLOAT, "ratio")));
+    ADD_SIGNAL(MethodInfo("hp_change", PropertyInfo(Variant::INT, "handle"), PropertyInfo(Variant::FLOAT, "ratio"), PropertyInfo(Variant::FLOAT, "diff")));
     ADD_SIGNAL(MethodInfo("harvest_unit", PropertyInfo(Variant::INT, "handle")));
     ADD_SIGNAL(MethodInfo("hide_unit", PropertyInfo(Variant::INT, "handle")));
     ADD_SIGNAL(MethodInfo("show_unit", PropertyInfo(Variant::INT, "handle")));
