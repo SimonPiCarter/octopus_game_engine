@@ -10,7 +10,7 @@ class CommandWindUpDiffStep : public Steppable
 {
 public:
 	CommandWindUpDiffStep(Handle const &handle_p, long diff_p)
-		: _handle(handle_p) , _diff(diff_p){}
+		: _handle(handle_p) , _diff(diff_p) {}
 
 	virtual void apply(State &state_p) const override;
 	virtual void revert(State &state_p, SteppableData const *) const override;
@@ -21,8 +21,8 @@ public:
 		visitor_p->visit(this);
 	}
 
-	Handle _handle {0};
-	long _diff {0};
+	Handle const _handle {0};
+	long const _diff {0};
 };
 }
 
