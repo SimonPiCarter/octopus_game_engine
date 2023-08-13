@@ -54,7 +54,7 @@ public:
 	virtual void visit(octopus::CommandStorageStep const *) override {}
 	virtual void visit(octopus::CommandUpdateLastIdStep const *) override {}
 	virtual void visit(octopus::CommandUpdateLastPosStep const *) override {}
-	virtual void visit(octopus::CommandWindUpDiffStep const *) override;
+	virtual void visit(octopus::CommandWindUpDiffStep const *) override {}
 	virtual void visit(octopus::CustomStep const *) override;
 	virtual void visit(octopus::EntityAttackStep const *) override {}
 	virtual void visit(octopus::EntityBuffStep const *) override {}

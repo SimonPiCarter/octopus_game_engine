@@ -17,6 +17,8 @@
 #include "step/building/BuildingStep.hh"
 #include "step/command/harvest/CommandHarvestStep.hh"
 #include "step/command/CommandWindUpDiffStep.hh"
+#include "step/custom/implem/ImpactStep.hh"
+#include "step/custom/implem/WindUpStartStep.hh"
 #include "step/entity/EntityHitPointChangeStep.hh"
 #include "step/entity/EntityMoveStep.hh"
 #include "step/entity/spawn/BuildingSpawnStep.hh"
@@ -139,36 +141,31 @@ void ControllerStepVisitor::visit(octopus::PlayerPopOptionStep const *steppable_
 	_controller.emit_signal("pop_option");
 }
 
-void ControllerStepVisitor::visit(octopus::CommandWindUpDiffStep const *steppable_p)
-{
-	octopus::Entity const * ent_l = _state->getEntity(steppable_p->_handle);
-	if (!ent_l->getQueue().hasCommand())
-	{
-		return;
-	}
-	octopus::AttackData const *data_l = dynamic_cast<octopus::AttackData const *>(getData(ent_l->getFrontQueue()._var));
-	// set wind up state
-	if(data_l && data_l->_windup == 1)
-	{
-		_controller.windup(steppable_p->_handle);
-	}
-}
-
 void ControllerStepVisitor::visit(octopus::CustomStep const *steppable_p)
 {
+	octopus::ImpactStep const *impact_l = dynamic_cast<octopus::ImpactStep const *>(steppable_p);
+	octopus::WindUpStartStep const *windupStart_l = dynamic_cast<octopus::WindUpStartStep const *>(steppable_p);
 	DialogStep const *dialog_l = dynamic_cast<DialogStep const *>(steppable_p);
 	CameraStep const *camera_l = dynamic_cast<CameraStep const *>(steppable_p);
 	WaveStep const *wave_l = dynamic_cast<WaveStep const *>(steppable_p);
 
-	if(camera_l)
+	if(impact_l)
+	{
+		_controller.emit_signal("impact", String(impact_l->_model.c_str()), octopus::to_double(impact_l->_pos.x), octopus::to_double(impact_l->_pos.y));
+	}
+	else if(windupStart_l)
+	{
+		_controller.windup(windupStart_l->_handle);
+	}
+	else if(camera_l)
 	{
 		_controller.emit_signal("set_camera", camera_l->_x, camera_l->_y);
 	}
-	if(dialog_l)
+	else if(dialog_l)
 	{
 		_controller.emit_signal("spawn_dialog", String(dialog_l->_dialog.c_str()));
 	}
-	if(wave_l)
+	else if(wave_l)
 	{
 		_controller.emit_signal("wave");
 	}

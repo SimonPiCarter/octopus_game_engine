@@ -1217,6 +1217,7 @@ void Controller::_bind_methods()
 	ADD_SIGNAL(MethodInfo("set_rally_point_target", PropertyInfo(Variant::INT, "handle"), PropertyInfo(Variant::INT, "target")));
     ADD_SIGNAL(MethodInfo("updated_requirements"));
 
+    ADD_SIGNAL(MethodInfo("impact", PropertyInfo(Variant::STRING, "model"), PropertyInfo(Variant::FLOAT, "x"), PropertyInfo(Variant::FLOAT, "y")));
     ADD_SIGNAL(MethodInfo("set_camera", PropertyInfo(Variant::INT, "x"), PropertyInfo(Variant::INT, "y")));
     ADD_SIGNAL(MethodInfo("spawn_dialog", PropertyInfo(Variant::STRING, "model")));
     ADD_SIGNAL(MethodInfo("wave"));
