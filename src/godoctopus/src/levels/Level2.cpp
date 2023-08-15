@@ -116,7 +116,7 @@ std::list<Steppable *> WaveLevelSteps(Library &lib_p, RandomGenerator &rand_p, s
 		else if(i==3)
 			params_l.push_back({octopus::Vector(180,50), octopus::Vector(20,50), 160, 40, 60, waves_l[i]});
 		else
-			params_l.push_back({octopus::Vector(220,50), octopus::Vector(20,50), 160, 40, 60, waves_l[i]});
+			params_l.push_back({octopus::Vector(240,50), octopus::Vector(20,50), 160, 40, 60, waves_l[i]});
 	}
 
 	WaveInfo firstWave_l = rollWave(rand_p, waves_l[0]);
@@ -174,7 +174,7 @@ std::list<Steppable *> WaveLevelSteps(Library &lib_p, RandomGenerator &rand_p, s
 	spawners_l.insert(spawners_l.end(), zone_l.begin(), zone_l.end());
 
 	// zone 5
-	zone_l = createWallSpawners(lib_p, 160, 200, 100, 10, 90, handle_l);
+	zone_l = createWallSpawners(lib_p, 160, 220, 100, 10, 90, handle_l);
 	spawners_l.insert(spawners_l.end(), zone_l.begin(), zone_l.end());
 
 	return spawners_l;
