@@ -61,8 +61,7 @@ void WaveSpawn::trigger(State const &state_p, Step &step_p, unsigned long, octop
 	}
 	if(!_earlyWave)
 	{
-		step_p.addSteppable(new StateRemoveConstraintPositionStep(0, currentParams_l.limitX, 0, currentParams_l.limitY, true, true));
-		step_p.addSteppable(new StateRemoveConstraintPositionStep(0, currentParams_l.limitY, 0, currentParams_l.limitX, true, false));
+		step_p.addSteppable(new StateRemoveConstraintPositionStep(0, currentParams_l.limitX, currentParams_l.limitYStart, currentParams_l.limitYEnd, true, true));
 	}
 
 	std::vector<octopus::Steppable *> stepsGenerated_l = _waveStepGenerator();

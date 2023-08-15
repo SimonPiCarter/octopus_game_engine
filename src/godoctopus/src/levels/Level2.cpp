@@ -120,15 +120,15 @@ std::list<Steppable *> WaveLevelSteps(Library &lib_p, RandomGenerator &rand_p, s
 	for(size_t i = 0 ; i < waves_l.size() ; ++ i)
 	{
 		if(i == 0)
-			params_l.push_back({octopus::Vector(60,50), octopus::Vector(20,50), 40, 100, waves_l[i]});
+			params_l.push_back({octopus::Vector(60,50), octopus::Vector(20,50), 40, 40, 60, waves_l[i]});
 		else if(i==1)
-			params_l.push_back({octopus::Vector(100,50), octopus::Vector(20,50), 80, 100, waves_l[i]});
+			params_l.push_back({octopus::Vector(100,50), octopus::Vector(20,50), 80, 40, 60, waves_l[i]});
 		else if(i==2)
-			params_l.push_back({octopus::Vector(140,50), octopus::Vector(20,50), 120, 100, waves_l[i]});
+			params_l.push_back({octopus::Vector(140,50), octopus::Vector(20,50), 120, 40, 60, waves_l[i]});
 		else if(i==3)
-			params_l.push_back({octopus::Vector(180,50), octopus::Vector(20,50), 160, 100, waves_l[i]});
+			params_l.push_back({octopus::Vector(180,50), octopus::Vector(20,50), 160, 40, 60, waves_l[i]});
 		else
-			params_l.push_back({octopus::Vector(220,50), octopus::Vector(20,50), 160, 100, waves_l[i]});
+			params_l.push_back({octopus::Vector(220,50), octopus::Vector(20,50), 160, 40, 60, waves_l[i]});
 	}
 
 	WaveInfo firstWave_l = rollWave(rand_p, waves_l[0]);
@@ -171,23 +171,23 @@ std::list<Steppable *> WaveLevelSteps(Library &lib_p, RandomGenerator &rand_p, s
 	};
 
 	// zone 1
-	std::list<Steppable *> zone_l = createWallSpawners(lib_p, 40, 100, 40, 60, handle_l);
+	std::list<Steppable *> zone_l = createWallSpawners(lib_p, 0, 40, 100, 40, 60, handle_l);
 	spawners_l.insert(spawners_l.end(), zone_l.begin(), zone_l.end());
 
 	// zone 2
-	zone_l = createWallSpawners(lib_p, 80, 100, 40, 60, handle_l);
+	zone_l = createWallSpawners(lib_p, 40, 80, 100, 40, 60, handle_l);
 	spawners_l.insert(spawners_l.end(), zone_l.begin(), zone_l.end());
 
 	// zone 3
-	zone_l = createWallSpawners(lib_p, 120, 100, 40, 60, handle_l);
+	zone_l = createWallSpawners(lib_p, 80, 120, 100, 40, 60, handle_l);
 	spawners_l.insert(spawners_l.end(), zone_l.begin(), zone_l.end());
 
 	// zone 4
-	zone_l = createWallSpawners(lib_p, 160, 100, 40, 60, handle_l);
+	zone_l = createWallSpawners(lib_p, 120, 160, 100, 40, 60, handle_l);
 	spawners_l.insert(spawners_l.end(), zone_l.begin(), zone_l.end());
 
 	// zone 5
-	zone_l = createWallSpawners(lib_p, 200, 100, 40, 60, handle_l);
+	zone_l = createWallSpawners(lib_p, 160, 200, 100, 10, 90, handle_l);
 	spawners_l.insert(spawners_l.end(), zone_l.begin(), zone_l.end());
 
 	return spawners_l;

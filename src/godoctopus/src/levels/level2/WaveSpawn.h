@@ -34,7 +34,8 @@ struct WaveParam
 	octopus::Vector targetPoint;
 	/// @brief limits to remove
 	unsigned long limitX;
-	unsigned long limitY;
+	unsigned long limitYStart;
+	unsigned long limitYEnd;
 	/// @brief wave pool info used to generate the wave
 	WavePoolInfo wavePool;
 };

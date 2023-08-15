@@ -30,7 +30,7 @@ std::string genModelName(octopus::RandomGenerator &gen_p)
 
 /// spawners for walls/water
 
-std::list<Steppable *> createWallSpawners(Library &lib_p, unsigned long x, unsigned long y, unsigned long startYGate, unsigned long endYGate, Handle &handle_p)
+std::list<Steppable *> createWallSpawners(Library &lib_p, unsigned long xStart, unsigned long x, unsigned long y, unsigned long startYGate, unsigned long endYGate, Handle &handle_p)
 {
 	std::list<Steppable *> spawners_l = {
 		new StateAddConstraintPositionStep(0, x, startYGate, endYGate, true, true),
@@ -68,7 +68,7 @@ std::list<Steppable *> createWallSpawners(Library &lib_p, unsigned long x, unsig
 		building_l._player = 2;
 		spawners_l.push_back(new BuildingSpawnStep(handle_p++, building_l, true));
 	}
-	for(size_t i = 0 ; i < x ; i+=2)
+	for(size_t i = xStart ; i < x ; i+=2)
 	{
 		Building building_l({i, y+1}, true, lib_p.getBuildingModel("water_h"));
 		building_l._player = 2;
