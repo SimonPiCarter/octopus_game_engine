@@ -36,8 +36,8 @@ public:
 		std::vector<Steppable *> steps_l;
 
 		ConditionalBuff buff_l;
-		buff_l._type = TyppedBuff::Type::FullReload;
-		buff_l._coef = _offset;
+		buff_l._type = TyppedBuff::Type::Damage;
+		buff_l._offset = _offset;
 		buff_l._conditions.push_back(ConditionMinLife{1});
 		buff_l._id = "AttackSpeedDivintiy_BuffDamageConditionalTierThree";
 
