@@ -33,8 +33,7 @@ std::string genModelName(octopus::RandomGenerator &gen_p)
 std::list<Steppable *> createWallSpawners(Library &lib_p, unsigned long x, unsigned long y, unsigned long startYGate, unsigned long endYGate, Handle &handle_p)
 {
 	std::list<Steppable *> spawners_l = {
-		new StateAddConstraintPositionStep(0, x, 0, y, true, true),
-		new StateAddConstraintPositionStep(0, y, 0, x, true, false),
+		new StateAddConstraintPositionStep(0, x, startYGate, endYGate, true, true),
 	};
 
 	// create walls for zone 1
