@@ -13,6 +13,7 @@
 
 // godot
 #include "controller/step/WaveStep.h"
+#include "controller/step/DialogStep.h"
 #include "UtilsLevel2.h"
 
 using namespace octopus;
@@ -63,6 +64,8 @@ void WaveSpawn::trigger(State const &state_p, Step &step_p, unsigned long, octop
 	{
 		step_p.addSteppable(new StateRemoveConstraintPositionStep(0, currentParams_l.limitX, currentParams_l.limitYStart, currentParams_l.limitYEnd, true, true));
 	}
+
+	step_p.addSteppable(new godot::DialogStep(_earlyWave?"early_wave":(_params.size()==1?"last_wave":"big_wave")));
 
 	std::vector<octopus::Steppable *> stepsGenerated_l = _waveStepGenerator();
 	for(octopus::Steppable *step_l : stepsGenerated_l)
