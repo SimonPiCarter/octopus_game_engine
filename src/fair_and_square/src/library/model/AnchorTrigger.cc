@@ -33,17 +33,30 @@ void AnchorTrigger::trigger(octopus::State const &state_p, octopus::Step &step_p
     // div option
     Option divOption_l;
 
-    divOption_l._playerOption = DivinityOption {_player, fas::rollOneRandomDivinity(_rand)};
-    divOption_l._enemyOption = generateEnemyOption((_player+1)%2, _rand, id_l);
+	//
+	octopus::Player const &player_l = *state_p.getPlayer(_player);
+	std::vector<fas::DivinityType> exceptions_l = fas::getMaxedOutDivinities(player_l);
 
-    options_l.push_back(divOption_l);
+	fas::DivinityType firstType_l = fas::rollOneRandomDivinity(_rand, exceptions_l);
+	if(firstType_l != fas::DivinityType::None)
+	{
+		divOption_l._playerOption = DivinityOption {_player, firstType_l};
+		divOption_l._enemyOption = generateEnemyOption((_player+1)%2, _rand, id_l);
+		options_l.push_back(divOption_l);
+		// add exception to avoid double roll of the same
+		exceptions_l.push_back(firstType_l);
+	}
 
-    divOption_l._playerOption = DivinityOption {_player, fas::rollOneRandomDivinity(_rand)};
-    divOption_l._enemyOption = generateEnemyOption((_player+1)%2, _rand, id_l);
 
-    options_l.push_back(divOption_l);
+	fas::DivinityType secondType_l = fas::rollOneRandomDivinity(_rand, exceptions_l);
+	if(secondType_l != fas::DivinityType::None)
+	{
+		divOption_l._playerOption = DivinityOption {_player, secondType_l};
+		divOption_l._enemyOption = generateEnemyOption((_player+1)%2, _rand, id_l);
+		options_l.push_back(divOption_l);
+	}
 
-    for(size_t i = 0 ; i < 1 ; ++ i )
+    for(size_t i = 0 ; i < 3-options_l.size() ; ++ i )
     {
         Option option_l;
 

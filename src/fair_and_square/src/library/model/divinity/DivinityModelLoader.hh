@@ -7,9 +7,10 @@
 
 namespace octopus
 {
-    class Steppable;
 	class Library;
+    class Player;
     class RandomGenerator;
+    class Steppable;
 } // namespace octopus
 
 namespace fas
@@ -22,7 +23,8 @@ enum class DivinityType
     Heal,
     Lifesteal,
     Production,
-    Recycle
+    Recycle,
+	None
 };
 
 /// @brief load the library with all divinity models
@@ -36,9 +38,16 @@ std::vector<octopus::Steppable *> newPlayerBuilding(unsigned long player_p, Divi
 
 std::string divinityUpgradeName(DivinityType type_p);
 
-DivinityType rollOneRandomDivinity(octopus::RandomGenerator &rand_p);
+DivinityType rollOneRandomDivinity(octopus::RandomGenerator &rand_p, std::vector<DivinityType> const &exceptions_p);
+DivinityType rollOneRandomDivinityFromList(octopus::RandomGenerator &rand_p, std::vector<DivinityType> const &list_p, std::vector<DivinityType> const &exceptions_p);
 
 std::vector<DivinityType> allDivinities();
+
+/// @brief get all the divinities that are maxed out
+/// @param player_p the player to check from
+/// @param maxLevel_p the level to be considered maxed ou
+/// @return the vector of maxed out divinities
+std::vector<DivinityType> getMaxedOutDivinities(octopus::Player const &player_p, unsigned long maxLevel_p=3);
 
 void addBuildingPlayer(std::list<octopus::Steppable *> &spawners_p, unsigned long player_p, std::vector<DivinityType> const &divinities_p, octopus::Library &lib_p);
 

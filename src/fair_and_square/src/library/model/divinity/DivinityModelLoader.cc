@@ -90,9 +90,28 @@ std::string divinityUpgradeName(DivinityType type_p)
     return "";
 }
 
-DivinityType rollOneRandomDivinity(octopus::RandomGenerator &rand_p)
+DivinityType rollOneRandomDivinity(octopus::RandomGenerator &rand_p, std::vector<DivinityType> const &exceptions_p)
 {
-    static std::vector<DivinityType> options_l = allDivinities();
+    return rollOneRandomDivinityFromList(rand_p, allDivinities(), exceptions_p);
+}
+
+DivinityType rollOneRandomDivinityFromList(octopus::RandomGenerator &rand_p, std::vector<DivinityType> const &list_p, std::vector<DivinityType> const &exceptions_p)
+{
+    std::vector<DivinityType> options_l = list_p;
+
+	for(DivinityType type_l : exceptions_p)
+	{
+		auto &&it_l = std::find(options_l.begin(), options_l.end(), type_l);
+		if(it_l != options_l.cend())
+		{
+			options_l.erase(it_l);
+		}
+	}
+
+	if(options_l.empty())
+	{
+		return DivinityType::None;
+	}
 
     int roll_l = rand_p.roll(0, options_l.size()-1);
 
@@ -110,6 +129,21 @@ std::vector<DivinityType> allDivinities()
         DivinityType::Recycle
     };
 }
+
+std::vector<DivinityType> getMaxedOutDivinities(octopus::Player const &player_p, unsigned long maxLevel_p)
+{
+	std::vector<DivinityType> maxedOut_l;
+	for(DivinityType type_l : allDivinities())
+	{
+		if(getUpgradeLvl(player_p, divinityUpgradeName(type_l)) >= maxLevel_p)
+		{
+			maxedOut_l.push_back(type_l);
+		}
+	}
+
+	return maxedOut_l;
+}
+
 
 void addBuildingPlayer(std::list<octopus::Steppable *> &spawners_p, unsigned long player_p, std::vector<DivinityType> const &divinities_p, octopus::Library &lib_p)
 {
