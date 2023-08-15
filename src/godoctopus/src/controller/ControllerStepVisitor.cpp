@@ -27,6 +27,8 @@
 #include "step/entity/spawn/UnitSpawnStep.hh"
 #include "step/player/PlayerAddOptionStep.hh"
 #include "step/player/PlayerPopOptionStep.hh"
+#include "step/state/StateAddConstraintPositionStep.hh"
+#include "step/state/StateRemoveConstraintPositionStep.hh"
 #include "step/unit/UnitHarvestStep.hh"
 
 
@@ -48,6 +50,28 @@ void ControllerStepVisitor::visit(octopus::BuildingSpawnStep const *steppable_p)
 void ControllerStepVisitor::visit(octopus::ResourceSpawnStep const *steppable_p)
 {
 	_controller.spawn(steppable_p->getHandle());
+}
+
+void ControllerStepVisitor::visit(octopus::StateAddConstraintPositionStep const *steppable_p)
+{
+	_controller.emit_signal("spawn_blockers",
+		octopus::to_double(steppable_p->_val),
+		octopus::to_double(steppable_p->_min),
+		octopus::to_double(steppable_p->_max),
+		steppable_p->_less,
+		steppable_p->_x
+	);
+}
+
+void ControllerStepVisitor::visit(octopus::StateRemoveConstraintPositionStep const *steppable_p)
+{
+	_controller.emit_signal("clear_blockers",
+		octopus::to_double(steppable_p->_val),
+		octopus::to_double(steppable_p->_min),
+		octopus::to_double(steppable_p->_max),
+		steppable_p->_less,
+		steppable_p->_x
+	);
 }
 
 void ControllerStepVisitor::visit(octopus::UnitSpawnStep const *steppable_p)
