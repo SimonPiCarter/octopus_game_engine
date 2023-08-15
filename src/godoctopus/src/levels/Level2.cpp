@@ -51,17 +51,6 @@ namespace godot
 namespace level2
 {
 
-class VisionTrigger : public octopus::OneShotTrigger
-{
-public:
-	VisionTrigger(unsigned long timer_p) : OneShotTrigger({new octopus::ListenerStepCount(timer_p)}) {}
-
-	virtual void trigger(State const &state_p, Step &step_p, unsigned long, TriggerData const &) const override
-	{
-		step_p.addSteppable(new godot::DialogStep("show anchor"));
-	}
-};
-
 std::list<Steppable *> WaveLevelSteps(Library &lib_p, RandomGenerator &rand_p, std::vector<WavePoolInfo> const &waveInfo_p, unsigned long player_p)
 {
 	loadMinimalModels(lib_p);
@@ -77,7 +66,6 @@ std::list<Steppable *> WaveLevelSteps(Library &lib_p, RandomGenerator &rand_p, s
 	mapRes_l["bloc"] = -200;
 	mapRes_l["ether"] = -200;
 	mapRes_l["Anchor"] = -anchor_l;
-	unsigned long timeTriggerAnchor_l = (anchor_l-60)*100;
 
 	std::vector<WavePoolInfo> waves_l = waveInfo_p;
 	if(waves_l.empty())
@@ -164,7 +152,6 @@ std::list<Steppable *> WaveLevelSteps(Library &lib_p, RandomGenerator &rand_p, s
 		new TriggerSpawn(triggerWave_l),
 		new TriggerSpawn(triggerLose_l),
 		new TriggerSpawn(new AnchorTrigger(lib_p, rand_p, 150)),
-		new TriggerSpawn(new VisionTrigger(timeTriggerAnchor_l)),
 		new FlyingCommandSpawnStep(new TimerDamage(Handle(0), 100, 0, 0, "Anchor", Handle(0))),
 		new godot::CameraStep(to_int(building_l._pos.x), to_int(building_l._pos.y)),
 		new godot::DialogStep("leve1_intro"),
