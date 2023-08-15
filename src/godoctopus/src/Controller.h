@@ -69,8 +69,8 @@ public:
 
     // start engine with given level
     void init(std::list<octopus::Command *> const &commands_p, std::list<octopus::Steppable *> const &spawners_p, bool divOptionManager_p=false, size_t size_p=50, std::ofstream *file_p=nullptr);
-    void init_replay(std::list<octopus::Command *> const &commands_p, std::list<octopus::Steppable *> const &spawners_p, size_t size_p, std::ifstream &file_p);
-    void init_loading(std::list<octopus::Command *> const &commands_p, std::list<octopus::Steppable *> const &spawners_p, size_t size_p, std::ifstream &file_p);
+    void init_replay(std::list<octopus::Command *> const &commands_p, std::list<octopus::Steppable *> const &spawners_p, bool divOptionManager_p, size_t size_p, std::ifstream &file_p);
+    void init_loading(std::list<octopus::Command *> const &commands_p, std::list<octopus::Steppable *> const &spawners_p, bool divOptionManager_p, size_t size_p, std::ifstream &file_p);
     void loading_loop();
     void loop();
 

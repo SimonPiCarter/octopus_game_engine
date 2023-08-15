@@ -360,6 +360,7 @@ void Controller::replay_level(String const &filename_p, bool replay_mode_p, godo
     size_t size_l;
     file_l.read((char*)&levelId_l, sizeof(levelId_l));
     file_l.read((char*)&size_l, sizeof(size_l));
+    bool divOptionHandler_l = false;
 
     bool valid_l = true;
     std::pair<std::list<octopus::Steppable *>, std::list<octopus::Command *> > levelInfo_l;
@@ -396,18 +397,21 @@ void Controller::replay_level(String const &filename_p, bool replay_mode_p, godo
         level_test_anchor::TestAnchorHeader header_l;
         levelInfo_l = level_test_anchor::readLevelHeader(_lib, file_l, _rand, header_l);
         _headerWriter = std::bind(level_test_anchor::writeLevelHeader, std::placeholders::_1, header_l);
+        divOptionHandler_l = true;
     }
     else if(levelId_l == LEVEL_ID_LEVEL_TEST_MODEL)
     {
         level_test_model::ModelLoaderHeader header_l;
         levelInfo_l = level_test_model::readLevelHeader(_lib, file_l, _rand, header_l);
         _headerWriter = std::bind(level_test_model::writeLevelHeader, std::placeholders::_1, header_l);
+        divOptionHandler_l = true;
     }
     else if(levelId_l == LEVEL_ID_DUEL)
     {
         duellevel::DuelLevelHeader header_l;
         levelInfo_l = duellevel::readLevelHeader(_lib, file_l, _rand, header_l);
         _headerWriter = std::bind(duellevel::writeLevelHeader, std::placeholders::_1, header_l);
+        divOptionHandler_l = true;
     }
     else
     {
@@ -425,16 +429,16 @@ void Controller::replay_level(String const &filename_p, bool replay_mode_p, godo
         spawners_l.splice(spawners_l.end(), levelInfo_l.first);
         if(replay_mode_p)
         {
-            init_replay(levelInfo_l.second, spawners_l, size_l, file_l);
+            init_replay(levelInfo_l.second, spawners_l, divOptionHandler_l, size_l, file_l);
         }
         else
         {
-            init_loading(levelInfo_l.second, spawners_l, size_l, file_l);
+            init_loading(levelInfo_l.second, spawners_l, divOptionHandler_l, size_l, file_l);
         }
     }
 }
 
-void Controller::init(std::list<octopus::Command *> const &commands_p, std::list<octopus::Steppable *> const &spawners_p,  bool divOptionManager_p, size_t size_p, std::ofstream *file_p)
+void Controller::init(std::list<octopus::Command *> const &commands_p, std::list<octopus::Steppable *> const &spawners_p, bool divOptionManager_p, size_t size_p, std::ofstream *file_p)
 {
     UtilityFunctions::print("init controller...");
 
@@ -488,9 +492,26 @@ void Controller::init(std::list<octopus::Command *> const &commands_p, std::list
 	_controllerThread = new std::thread(&Controller::loop, this);
 }
 
-void Controller::init_replay(std::list<octopus::Command *> const &commands_p, std::list<octopus::Steppable *> const &spawners_p, size_t size_p, std::ifstream &file_p)
+void Controller::init_replay(std::list<octopus::Command *> const &commands_p, std::list<octopus::Steppable *> const &spawners_p, bool divOptionManager_p, size_t size_p, std::ifstream &file_p)
 {
     UtilityFunctions::print("init controller...");
+
+    for(octopus::Steppable *step_l : spawners_p)
+    {
+        octopus::PlayerSpawnStep const * player_l = dynamic_cast<octopus::PlayerSpawnStep const *>(step_l);
+        if(player_l)
+        {
+            if(divOptionManager_p)
+            {
+                _optionManagers[player_l->getPlayerIdx()] = new DivinityOptionManager(player_l->getPlayerIdx());
+            }
+            else
+            {
+                _optionManagers[player_l->getPlayerIdx()] = new OptionManager(player_l->getPlayerIdx());
+            }
+        }
+    }
+
     _initDone = false;
     delete _controller;
 	_controller = new octopus::Controller(spawners_p, 0.01, commands_p, 5, size_p);
@@ -519,9 +540,26 @@ void Controller::init_replay(std::list<octopus::Command *> const &commands_p, st
 	_controllerThread = new std::thread(&Controller::loop, this);
 }
 
-void Controller::init_loading(std::list<octopus::Command *> const &commands_p, std::list<octopus::Steppable *> const &spawners_p, size_t size_p, std::ifstream &file_p)
+void Controller::init_loading(std::list<octopus::Command *> const &commands_p, std::list<octopus::Steppable *> const &spawners_p, bool divOptionManager_p, size_t size_p, std::ifstream &file_p)
 {
     UtilityFunctions::print("init controller...");
+
+    for(octopus::Steppable *step_l : spawners_p)
+    {
+        octopus::PlayerSpawnStep const * player_l = dynamic_cast<octopus::PlayerSpawnStep const *>(step_l);
+        if(player_l)
+        {
+            if(divOptionManager_p)
+            {
+                _optionManagers[player_l->getPlayerIdx()] = new DivinityOptionManager(player_l->getPlayerIdx());
+            }
+            else
+            {
+                _optionManagers[player_l->getPlayerIdx()] = new OptionManager(player_l->getPlayerIdx());
+            }
+        }
+    }
+
     _initDone = false;
     delete _controller;
 	_controller = new octopus::Controller(spawners_p, 0.01, commands_p, 5, size_p);
