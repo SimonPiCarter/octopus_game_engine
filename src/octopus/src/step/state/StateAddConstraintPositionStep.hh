@@ -25,7 +25,7 @@ public:
 	{
 		visitor_p->visit(this);
 	}
-private:
+
 	/// @brief the player to apply the constraint to
 	unsigned long const _player;
 	/// @brief the value of the constraint
