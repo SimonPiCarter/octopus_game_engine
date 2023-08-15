@@ -18,6 +18,7 @@ class State;
 /// @brief store event visiting a step
 /// @warning visitor is not stateless therefore create one
 /// visitor per step visited
+/// @warning calling procedure is to visit the step that has just been applied to the state
 class EventCollection : public SteppableVisitor
 {
 public:

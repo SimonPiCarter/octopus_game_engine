@@ -35,11 +35,14 @@ void EventCollection::visit(BuildingStep const *step_p)
 	Building const * ent_l = static_cast<Building const *>(_state.getEntity(step_p->_handle));
 	Logger::getDebug() << "EventCollection :: visit BuildingStep " << step_p->_handle <<std::endl;
 
+	// track the progresse that have been done just before
 	_buildingProgress[step_p->_handle] += step_p->_delta;
 
 	// if building over and not triggered yet for this building
-	if(ent_l->_buildingProgress < ent_l->_buildingModel._buildingTime
-	&& ent_l->_buildingProgress + _buildingProgress[step_p->_handle] >= ent_l->_buildingModel._buildingTime
+	// check that building is over
+	// and that is was not over before applying the step
+	if(ent_l->_buildingProgress >= ent_l->_buildingModel._buildingTime
+	&& ent_l->_buildingProgress - _buildingProgress[step_p->_handle] < ent_l->_buildingModel._buildingTime
 	&& _finishedHandles.find(step_p->_handle) == _finishedHandles.end())
 	{
 		Logger::getDebug() << "\ttrigger"<<std::endl;
@@ -76,15 +79,16 @@ void EventCollection::visit(EntityHitPointChangeStep const *step_p)
 {
 	Entity const * ent_l = _state.getEntity(step_p->_handle);
 
+	// we rewind the changes
 	Fixed newHp_l = ent_l->_hp - _hpChange[step_p->_handle];
-	Fixed hp_l = newHp_l - step_p->_delta;
+	Fixed oldHp_l = newHp_l - step_p->_delta;
 
 	_hpChange[step_p->_handle] += step_p->_delta;
 
 	Logger::getDebug() << "EventCollection :: visit EntityHitPointChangeStep " << step_p->_handle
-					   << " : "<<hp_l << " => " << newHp_l <<std::endl;
+					   << " : "<<oldHp_l << " => " << newHp_l <<std::endl;
 
-	if(newHp_l <= 0 && hp_l > 0
+	if(newHp_l <= 0 && oldHp_l > 0
 	&& _diedHandles.find(step_p->_handle) == _diedHandles.end())
 	{
 		Logger::getDebug() << "\ttrigger"<<std::endl;
