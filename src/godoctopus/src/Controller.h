@@ -94,6 +94,7 @@ public:
     // getters
     TypedArray<String> get_models(EntityHandle const * handle_p, int player_p, bool checkRequirements_p) const;
     bool is_done_and_non_repeatable(String const &upgrade_p, int player_p) const;
+    int get_level(String const &upgrade_p, int player_p) const;
     bool is_upgrade(String const &model_p) const;
     bool is_building(String const &model_p) const;
     int get_world_size() const;

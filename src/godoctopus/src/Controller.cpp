@@ -743,6 +743,12 @@ bool Controller::is_done_and_non_repeatable(String const &upgrade_p, int player_
     return getUpgradeLvl(*getPlayer(player_p), upgradeId_l) && !_lib.getUpgrade(upgradeId_l)._repeatable;
 }
 
+int Controller::get_level(String const &upgrade_p, int player_p) const
+{
+    std::string const &upgradeId_l(upgrade_p.utf8().get_data());
+	return getUpgradeLvl(*getPlayer(player_p), upgradeId_l);
+}
+
 bool Controller::is_upgrade(String const &upgrade_p) const
 {
     std::string const &upgradeId_l(upgrade_p.utf8().get_data());
@@ -1155,6 +1161,7 @@ void Controller::_bind_methods()
     ClassDB::bind_method(D_METHOD("get_models", "handle", "player", "check_requirements"), &Controller::get_models);
 
     ClassDB::bind_method(D_METHOD("is_done_and_non_repeatable", "upgrade", "player"), &Controller::is_done_and_non_repeatable);
+    ClassDB::bind_method(D_METHOD("get_level", "upgrade", "player"), &Controller::get_level);
     ClassDB::bind_method(D_METHOD("is_upgrade", "upgrade"), &Controller::is_upgrade);
     ClassDB::bind_method(D_METHOD("is_building", "handle"), &Controller::is_building);
     ClassDB::bind_method(D_METHOD("get_world_size"), &Controller::get_world_size);
