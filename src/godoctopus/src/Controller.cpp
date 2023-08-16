@@ -721,6 +721,12 @@ void Controller::save_to_file(String const &path_p)
         writeLevelId(file_l, _currentLevel, get_world_size()/5);
         _headerWriter(file_l);
         writeCommands(file_l, *_controller);
+
+		path_l += ".debug";
+        std::ofstream fileDebug_l(path_l, std::ios::out);
+        fileDebug_l<<_modelFile<<std::endl;
+        fileDebug_l<<_levelFile<<std::endl;
+		writeDebugCommands(fileDebug_l, *_controller);
     }
 }
 
