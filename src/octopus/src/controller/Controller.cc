@@ -363,8 +363,7 @@ bool Controller::loop_body()
 			}
 		}
 
-		Logger::getDebug() << "apply step" << " "<<state_l->_id<< std::endl;
-
+		Logger::getDebug() << "apply step" <<_backState->_stepIt->_step->getId()<< " on state "<<state_l->_id<< std::endl;
 		const std::chrono::time_point<std::chrono::steady_clock> start_l = std::chrono::steady_clock::now();
 
 		// apply step
