@@ -115,7 +115,7 @@ TEST(unitProductionCommandTest, cancel_one)
 
 	EXPECT_EQ(1u, state_l->getEntities().size());
 
-	controller_l.commitCommand(new BuildingUnitCancelCommand(Handle(0), Handle(0)));
+	controller_l.commitCommand(new BuildingUnitCancelCommand(Handle(0), 0));
 
 	// update time to 10second (13)
 	controller_l.update(10.);
@@ -174,7 +174,7 @@ TEST(unitProductionCommandTest, cancel_two)
 
 	EXPECT_EQ(1u, state_l->getEntities().size());
 
-	controller_l.commitCommand(new BuildingUnitCancelCommand(Handle(0), Handle(0)));
+	controller_l.commitCommand(new BuildingUnitCancelCommand(Handle(0), 0));
 
 	// update time to 6seconds (9)
 	// 1step for cancel to occur
@@ -246,7 +246,7 @@ TEST(unitProductionCommandTest, cancel_last)
 
 	EXPECT_EQ(1u, state_l->getEntities().size());
 
-	controller_l.commitCommand(new BuildingUnitCancelCommand(Handle(0), Handle(1)));
+	controller_l.commitCommand(new BuildingUnitCancelCommand(Handle(0), 1));
 
 	// update time to 2second (5)
 	// at this point production time is over but no spawn yet

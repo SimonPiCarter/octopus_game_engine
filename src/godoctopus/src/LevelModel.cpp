@@ -72,7 +72,7 @@ std::list<octopus::Steppable *> LevelModel::generateLevelSteps(octopus::Library 
     for(unsigned long idx_l = 0 ; idx_l < _players.size() ; ++idx_l)
     {
         GodotPlayer const &player_l = _players.at(idx_l);
-        steps_l.push_back(new octopus::PlayerSpawnStep(octopus::Handle(idx_l), player_l.team));
+        steps_l.push_back(new octopus::PlayerSpawnStep(idx_l, player_l.team));
 
         // create resource spawn (need negative)
 		steps_l.push_back(new octopus::PlayerSpendResourceStep(0, octopus::getReverseCostMap(player_l.resources)));

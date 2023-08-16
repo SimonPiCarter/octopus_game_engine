@@ -83,32 +83,32 @@ bool State::isEntityAlive(Handle const &handle_p) const
 	{
 		return false;
 	}
-	Entity const * ent_l = _entities[handle_p];
+	Entity const * ent_l = _entities[handle_p.index];
 	return ent_l->_alive;
 }
 
 bool State::hasEntity(Handle const &handle_p) const
 {
-	if(_entities.size() <= handle_p)
+	if(_entities.size() <= handle_p.index)
 	{
 		return false;
 	}
-	Entity const * ent_l = _entities[handle_p];
+	Entity const * ent_l = _entities[handle_p.index];
 	return ent_l->_handle.revision == handle_p.revision;
 }
 
 Entity *State::getEntity(Handle const &handle_p)
 {
-	if(_entities[handle_p]->_handle.revision != handle_p.revision)
+	if(_entities[handle_p.index]->_handle.revision != handle_p.revision)
 	{
 		throw std::logic_error("tried to get an entity with the wrong revision number");
 	}
-	return _entities[handle_p];
+	return _entities[handle_p.index];
 }
 
 Entity const *State::getEntity(Handle const &handle_p) const
 {
-	if(_entities[handle_p]->_handle.revision != handle_p.revision)
+	if(_entities[handle_p.index]->_handle.revision != handle_p.revision)
 	{
 		throw std::logic_error("tried to get an entity with the wrong revision number");
 	}
@@ -122,15 +122,28 @@ Entity const *State::getLoseEntity(unsigned long handle_p) const
 
 bool State::hasCommandable(Handle const &handle_p) const
 {
-	return _commandables.size() > handle_p;
+	if(_commandables.size() <= handle_p.index)
+	{
+		return false;
+	}
+	Commandable const * cmdable_l = _commandables[handle_p.index];
+	return cmdable_l->_commandableHandle.revision == handle_p.revision;
 }
 Commandable *State::getCommandable(Handle const &handle_p)
 {
-	return _commandables[handle_p];
+	if(_commandables[handle_p.index]->_commandableHandle.revision != handle_p.revision)
+	{
+		throw std::logic_error("tried to get a commandable with the wrong revision number");
+	}
+	return _commandables[handle_p.index];
 }
 Commandable const *State::getCommandable(Handle const &handle_p) const
 {
-	return _commandables[handle_p];
+	if(_commandables[handle_p.index]->_commandableHandle.revision != handle_p.revision)
+	{
+		throw std::logic_error("tried to get a commandable with the wrong revision number");
+	}
+	return _commandables[handle_p.index];
 }
 
 /// @brief warning handle will be modified!
@@ -143,9 +156,9 @@ Handle const &State::addEntity(Entity * ent_p)
 		ent_p->_handle = reused_l;
 		ent_p->_commandableHandle = reused_l;
 		// delete old entity
-		delete _entities[reused_l];
-		_entities[reused_l] = ent_p;
-		_commandables[reused_l] = ent_p;
+		delete _entities[reused_l.index];
+		_entities[reused_l.index] = ent_p;
+		_commandables[reused_l.index] = ent_p;
 	}
 	else
 	{
@@ -243,20 +256,20 @@ std::vector<std::vector<AbstractBitset *> > const & State::getGrid() const
 
 ListenerData * State::getListenerData(Handle const &handleTrigger_p, Handle const &handleListener_p)
 {
-	return getTriggerData(handleTrigger_p)->_listenerData[handleListener_p];
+	return getTriggerData(handleTrigger_p)->_listenerData[handleListener_p.index];
 }
 const ListenerData * State::getListenerData(Handle const &handleTrigger_p, Handle const &handleListener_p) const
 {
-	return getTriggerData(handleTrigger_p)->_listenerData[handleListener_p];
+	return getTriggerData(handleTrigger_p)->_listenerData[handleListener_p.index];
 }
 
 TriggerData * State::getTriggerData(Handle const &handleTrigger_p)
 {
-	return _triggersData[handleTrigger_p];
+	return _triggersData[handleTrigger_p.index];
 }
 const TriggerData * State::getTriggerData(Handle const &handleTrigger_p) const
 {
-	return _triggersData[handleTrigger_p];
+	return _triggersData[handleTrigger_p.index];
 }
 
 std::vector<std::vector<AbstractBitset *> > & State::getGrid()
@@ -636,7 +649,7 @@ void updateGrid(State &state_p, Entity const *ent_p, bool set_p)
 	{
 		for(long y = box_l._lowerY ; y <= box_l._upperY; ++y)
 		{
-			state_p.getGrid()[x][y]->set(ent_p->_handle, set_p);
+			state_p.getGrid()[x][y]->set(ent_p->_handle.index, set_p);
 		}
 	}
 

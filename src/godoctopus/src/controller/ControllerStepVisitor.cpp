@@ -81,32 +81,32 @@ void ControllerStepVisitor::visit(octopus::UnitSpawnStep const *steppable_p)
 
 void ControllerStepVisitor::visit(octopus::BuildingCancelStep const *steppable_p)
 {
-	_controller.emit_signal("clear_entity", int(steppable_p->_handle));
+	_controller.emit_signal("clear_entity", int(steppable_p->_handle.index));
 }
 
 void ControllerStepVisitor::visit(octopus::BuildingRemoveRallyPointStep const *steppable_p)
 {
-	_controller.emit_signal("remove_rally_point", int(steppable_p->_handle));
+	_controller.emit_signal("remove_rally_point", int(steppable_p->_handle.index));
 }
 
 void ControllerStepVisitor::visit(octopus::BuildingSetRallyPointStep const *steppable_p)
 {
 	if(!steppable_p->_rallyPointEntityActive)
 	{
-		_controller.emit_signal("set_rally_point", int(steppable_p->_handle), Vector2(octopus::to_double(steppable_p->_rallyPoint.x), octopus::to_double(steppable_p->_rallyPoint.y)));
+		_controller.emit_signal("set_rally_point", int(steppable_p->_handle.index), Vector2(octopus::to_double(steppable_p->_rallyPoint.x), octopus::to_double(steppable_p->_rallyPoint.y)));
 	}
 	else
 	{
-		_controller.emit_signal("set_rally_point_target", int(steppable_p->_handle), int(steppable_p->_rallyPointEntity));
+		_controller.emit_signal("set_rally_point_target", int(steppable_p->_handle.index), int(steppable_p->_rallyPointEntity.index));
 	}
 }
 
 void ControllerStepVisitor::visit(octopus::UnitHarvestQuantityStep const *steppable_p)
 {
-	_controller.emit_signal("harvest_unit", int(steppable_p->_handle));
+	_controller.emit_signal("harvest_unit", int(steppable_p->_handle.index));
 	if(static_cast<octopus::Resource const *>(_state->getEntity(steppable_p->_res))->_resource <= 0.)
 	{
-		_controller.emit_signal("clear_entity", int(steppable_p->_res));
+		_controller.emit_signal("clear_entity", int(steppable_p->_res.index));
 	}
 }
 
@@ -120,7 +120,7 @@ void ControllerStepVisitor::visit(octopus::EntityHitPointChangeStep const *stepp
 	octopus::Entity const * ent_l = _state->getEntity(steppable_p->_handle);
 	double hp_l = octopus::to_double(ent_l->_hp);
 	// warning when we have deleted it already (can happens when multiple change step in one step)
-	_controller.hp_change(steppable_p->_handle, octopus::to_double(ent_l->_hp/ent_l->getHpMax()), octopus::to_double(steppable_p->_delta));
+	_controller.hp_change(steppable_p->_handle.index, octopus::to_double(ent_l->_hp/ent_l->getHpMax()), octopus::to_double(steppable_p->_delta));
 	if(!ent_l->_alive)
 	{
 		_controller.kill(steppable_p->_handle);
@@ -145,7 +145,7 @@ void ControllerStepVisitor::visit(octopus::BuildingStep const *steppable_p)
 {
 	octopus::Entity const * ent_l = _state->getEntity(steppable_p->_handle);
 	octopus::Building const * building_l = static_cast<octopus::Building const *>(ent_l);
-	_controller.emit_signal("build", int(steppable_p->_handle), octopus::to_double(building_l->_buildingProgress/building_l->_buildingModel._buildingTime));
+	_controller.emit_signal("build", int(steppable_p->_handle.index), octopus::to_double(building_l->_buildingProgress/building_l->_buildingModel._buildingTime));
 	if(building_l->isBuilt())
 	{
 		_controller.emit_signal("updated_requirements");
@@ -179,7 +179,7 @@ void ControllerStepVisitor::visit(octopus::CustomStep const *steppable_p)
 	}
 	else if(windupStart_l)
 	{
-		_controller.windup(windupStart_l->_handle);
+		_controller.windup(windupStart_l->_handle.index);
 	}
 	else if(camera_l)
 	{

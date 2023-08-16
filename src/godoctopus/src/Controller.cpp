@@ -1010,7 +1010,7 @@ void Controller::get_visible_units(int player_p, int ent_registered_p)
 	for(octopus::Entity const *ent_l : _state->getEntities())
 	{
         // stop when entites are not registered yet in godot
-        if(ent_l->_handle >= ent_registered_p)
+        if(ent_l->_handle.index >= ent_registered_p)
         {
             break;
         }
@@ -1019,21 +1019,21 @@ void Controller::get_visible_units(int player_p, int ent_registered_p)
 		if(ent_l->_model._isUnit
 		&& !_state->getVisionHandler().isVisible(player_l->_team, *ent_l))
 		{
-            if(_visibleLastCall[ent_l->_handle] || _visibleRevisionLastCall[ent_l->_handle] != ent_l->_handle.revision)
+            if(_visibleLastCall[ent_l->_handle.index] || _visibleRevisionLastCall[ent_l->_handle.index] != ent_l->_handle.revision)
             {
-			    emit_signal("hide_unit", int(ent_l->_handle));
-                _visibleLastCall[ent_l->_handle] = false;
-				_visibleRevisionLastCall[ent_l->_handle] = ent_l->_handle.revision;
+			    emit_signal("hide_unit", int(ent_l->_handle.index));
+                _visibleLastCall[ent_l->_handle.index] = false;
+				_visibleRevisionLastCall[ent_l->_handle.index] = ent_l->_handle.revision;
             }
 		}
         else if(ent_l->isActive()
 		|| (ent_l->_model._isBuilding && buildng_l->isBlueprint() && !buildng_l->_canceled))
         {
-            if(!_visibleLastCall[ent_l->_handle] || _visibleRevisionLastCall[ent_l->_handle] != ent_l->_handle.revision)
+            if(!_visibleLastCall[ent_l->_handle.index] || _visibleRevisionLastCall[ent_l->_handle.index] != ent_l->_handle.revision)
             {
-                emit_signal("show_unit", int(ent_l->_handle));
-                _visibleLastCall[ent_l->_handle] = true;
-				_visibleRevisionLastCall[ent_l->_handle] = ent_l->_handle.revision;
+                emit_signal("show_unit", int(ent_l->_handle.index));
+                _visibleLastCall[ent_l->_handle.index] = true;
+				_visibleRevisionLastCall[ent_l->_handle.index] = ent_l->_handle.revision;
             }
         }
     }

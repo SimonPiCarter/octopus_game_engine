@@ -74,7 +74,7 @@ void TickingStep::revert(State &state_p, SteppableData const *data_p) const
 		// reset hp
 		if(data_l && ent_l->_handle.index < data_l->_oldHp.size())
 		{
-			ent_l->_hp = data_l->_oldHp[ent_l->_handle];
+			ent_l->_hp = data_l->_oldHp[ent_l->_handle.index];
 		}
 
 		// Handle buffs
@@ -119,7 +119,7 @@ SteppableData * TickingStep::newData(State const &state_p) const
 	data_l->_oldHp.resize(state_p.getEntities().size());
 	for(Entity *ent_l : state_p.getEntities())
 	{
-		data_l->_oldHp[ent_l->_handle] = ent_l->_hp;
+		data_l->_oldHp[ent_l->_handle.index] = ent_l->_hp;
 	}
 	return data_l;
 }

@@ -119,7 +119,7 @@ void OrcaManager::setupStep(State const &state_p, Step &step_p)
         {
             continue;
         }
-        mapMoveStep_l[moveStep_l->_handle] = moveStep_l;
+        mapMoveStep_l[moveStep_l->_handle.index] = moveStep_l;
     }
 
 	// fill up move steps when missing
@@ -130,14 +130,14 @@ void OrcaManager::setupStep(State const &state_p, Step &step_p)
         {
             continue;
         }
-		if(mapMoveStep_l[ent_l->_handle] == nullptr && ent_l->isActive() && !ent_l->isFrozen())
+		if(mapMoveStep_l[ent_l->_handle.index] == nullptr && ent_l->isActive() && !ent_l->isFrozen())
 		{
             size_t idx_l = _mapHandleIdx[ent_l->_handle];
             _sim->setAgentWeight(idx_l, 0.01);
 
 			EntityMoveStep *step_l = new EntityMoveStep(ent_l->_handle, {0, 0});
 			step_p.addEntityMoveStep(step_l);
-			mapMoveStep_l[ent_l->_handle] = step_l;
+			mapMoveStep_l[ent_l->_handle.index] = step_l;
 		}
 	}
 

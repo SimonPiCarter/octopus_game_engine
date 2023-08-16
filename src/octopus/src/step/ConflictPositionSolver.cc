@@ -63,18 +63,18 @@ bool updateStepFromConflictPosition(Step &step_p, State const &state_p)
 	for(EntityMoveStep *step_l: step_p.getEntityMoveStep())
 	{
 		Entity const *ent_l = state_p.getEntity(step_l->_handle);
-		if(mapMoveStep_l[ent_l->_handle] != nullptr)
+		if(mapMoveStep_l[ent_l->_handle.index] != nullptr)
 		{
-			mapMoveStep_l[ent_l->_handle]->_move += step_l->_move;
+			mapMoveStep_l[ent_l->_handle.index]->_move += step_l->_move;
 			step_l->_move = Vector {0,0};
-			newPos_l[ent_l->_handle] = ent_l->_pos + mapMoveStep_l[ent_l->_handle]->_move;
-			Logger::getDebug() << " conflict solver :: added entity move step info [ent "<<ent_l->_handle<<"] to "<<newPos_l[ent_l->_handle]<<std::endl;
+			newPos_l[ent_l->_handle.index] = ent_l->_pos + mapMoveStep_l[ent_l->_handle.index]->_move;
+			Logger::getDebug() << " conflict solver :: added entity move step info [ent "<<ent_l->_handle<<"] to "<<newPos_l[ent_l->_handle.index]<<std::endl;
 		}
 		else
 		{
-			mapMoveStep_l[ent_l->_handle] = step_l;
-			newPos_l[ent_l->_handle] = ent_l->_pos + step_l->_move;
-			Logger::getDebug() << " conflict solver :: update entity move step info [ent "<<ent_l->_handle<<"] to "<<newPos_l[ent_l->_handle]<<std::endl;
+			mapMoveStep_l[ent_l->_handle.index] = step_l;
+			newPos_l[ent_l->_handle.index] = ent_l->_pos + step_l->_move;
+			Logger::getDebug() << " conflict solver :: update entity move step info [ent "<<ent_l->_handle<<"] to "<<newPos_l[ent_l->_handle.index]<<std::endl;
 		}
 	}
 
@@ -84,20 +84,20 @@ bool updateStepFromConflictPosition(Step &step_p, State const &state_p)
 		for(EntityMoveStep *step_l : step_p.getPrev()->getEntityMoveStep())
 		{
 			Logger::getDebug() << " conflict solver :: adding [ent"<<step_l->_handle<<"] with move "<<step_l->_move<<std::endl;
-			prevMove_l[step_l->_handle] = step_l->_move;
+			prevMove_l[step_l->_handle.index] = step_l->_move;
 		}
 	}
 
 	// fill up move steps when missing
 	for(Entity const * ent_l : state_p.getEntities())
 	{
-		if(mapMoveStep_l[ent_l->_handle] == nullptr && ent_l->isActive())
+		if(mapMoveStep_l[ent_l->_handle.index] == nullptr && ent_l->isActive())
 		{
 			Logger::getDebug() << " conflict solver :: add entity move step because none "<<ent_l->_handle<<std::endl;
 			EntityMoveStep *step_l = new EntityMoveStep(ent_l->_handle, {0, 0});
 			step_p.addEntityMoveStep(step_l);
-			mapMoveStep_l[ent_l->_handle] = step_l;
-			newPos_l[ent_l->_handle] = ent_l->_pos;
+			mapMoveStep_l[ent_l->_handle.index] = step_l;
+			newPos_l[ent_l->_handle.index] = ent_l->_pos;
 		}
 	}
 
@@ -135,10 +135,10 @@ bool updateStepFromConflictPosition(Step &step_p, State const &state_p)
 		/// limit the number of collison to avoid huge slow downs at start up
 		size_t maxCol_l = 50;
 		size_t nbCol_l = 0;
-		Box<long> box_l {state_p.getGridIndex(newPos_l[entA_l->_handle].x-entA_l->_model._ray),
-						 state_p.getGridIndex(newPos_l[entA_l->_handle].x+entA_l->_model._ray+0.999),
-						 state_p.getGridIndex(newPos_l[entA_l->_handle].y-entA_l->_model._ray),
-						 state_p.getGridIndex(newPos_l[entA_l->_handle].y+entA_l->_model._ray+0.999)};
+		Box<long> box_l {state_p.getGridIndex(newPos_l[entA_l->_handle.index].x-entA_l->_model._ray),
+						 state_p.getGridIndex(newPos_l[entA_l->_handle.index].x+entA_l->_model._ray+0.999),
+						 state_p.getGridIndex(newPos_l[entA_l->_handle.index].y-entA_l->_model._ray),
+						 state_p.getGridIndex(newPos_l[entA_l->_handle.index].y+entA_l->_model._ray+0.999)};
 		std::vector<char> bitset_l(state_p.getEntities().size(), 0);
 		for(size_t x = box_l._lowerX ; x <= box_l._upperX; ++x)
 		{
@@ -147,7 +147,7 @@ bool updateStepFromConflictPosition(Step &step_p, State const &state_p)
 		// check every entity with one another
 		grid_l[x][y]->for_each([&] (int handle_p)
 		{
-			if(handle_p >= stepA_l->_handle)
+			if(handle_p >= stepA_l->_handle.index)
 			{
 				return true;
 			}
@@ -167,13 +167,13 @@ bool updateStepFromConflictPosition(Step &step_p, State const &state_p)
 				return false;
 			}
 
-			EntityMoveStep *stepB_l = mapMoveStep_l[entB_l->_handle];
+			EntityMoveStep *stepB_l = mapMoveStep_l[entB_l->_handle.index];
 			if(entA_l->_model._isStatic || entB_l->_model._isStatic)
 			{
 				return false;
 			}
 			// check collision
-			else if(collision(newPos_l[entA_l->_handle], newPos_l[entB_l->_handle], entA_l->_model._ray, entB_l->_model._ray))
+			else if(collision(newPos_l[entA_l->_handle.index], newPos_l[entB_l->_handle.index], entA_l->_model._ray, entB_l->_model._ray))
 			{
 				++nbCol_l;
 				// repulsion against axis between both (from B to A)
@@ -233,8 +233,8 @@ bool updateStepFromConflictPosition(Step &step_p, State const &state_p)
 				Logger::getDebug() << " conflict solver :: solving conflict [ent "<<stepA_l->_handle<<"] with "<<normalizedAxis_l * distance_l * coefA_l
 								   << " and [ent "<<stepB_l->_handle<<"] with"<<normalizedAxis_l * distance_l * coefB_l * -1.<<std::endl;
 				// updated steps, both doing half distance
-				mapCorrection_l[stepA_l->_handle] += normalizedAxis_l * distance_l * coefA_l;
-				mapCorrection_l[stepB_l->_handle] -= normalizedAxis_l * distance_l * coefB_l;
+				mapCorrection_l[stepA_l->_handle.index] += normalizedAxis_l * distance_l * coefA_l;
+				mapCorrection_l[stepB_l->_handle.index] -= normalizedAxis_l * distance_l * coefB_l;
 			}
 			return false;
 		});
@@ -250,7 +250,7 @@ bool updateStepFromConflictPosition(Step &step_p, State const &state_p)
 	for(EntityMoveStep *ent_l: step_p.getEntityMoveStep())
 	{
 		// if update
-		if(!is_zero(mapCorrection_l[ent_l->_handle]))
+		if(!is_zero(mapCorrection_l[ent_l->_handle.index]))
 		{
 			updated_l = true;
 		}
@@ -261,7 +261,7 @@ bool updateStepFromConflictPosition(Step &step_p, State const &state_p)
 		// ensure that move does not become too chaotic
 		Fixed square_l = state_p.getEntity(ent_l->_handle)->getStepSpeed()*state_p.getEntity(ent_l->_handle)->getStepSpeed();
 		Vector origMove_l = ent_l->_move;
-		ent_l->_move = ent_l->_move + mapCorrection_l[ent_l->_handle] * 0.9;
+		ent_l->_move = ent_l->_move + mapCorrection_l[ent_l->_handle.index] * 0.9;
 		Fixed newSquare_l = square_length(ent_l->_move);
 		if(newSquare_l > square_l)
 		{
@@ -277,7 +277,7 @@ bool updateStepFromConflictPosition(Step &step_p, State const &state_p)
 		// }
 
 		Entity const *entA_l = state_p.getEntity(ent_l->_handle);
-		newPos_l[entA_l->_handle] = entA_l->_pos + ent_l->_move;
+		newPos_l[entA_l->_handle.index] = entA_l->_pos + ent_l->_move;
 	}
 
 	//////////////////////////////
@@ -294,10 +294,10 @@ bool updateStepFromConflictPosition(Step &step_p, State const &state_p)
 			continue;
 		}
 
-		Box<long> box_l {state_p.getGridIndex(newPos_l[entA_l->_handle].x-entA_l->_model._ray),
-						 state_p.getGridIndex(newPos_l[entA_l->_handle].x+entA_l->_model._ray+0.999),
-						 state_p.getGridIndex(newPos_l[entA_l->_handle].y-entA_l->_model._ray),
-						 state_p.getGridIndex(newPos_l[entA_l->_handle].y+entA_l->_model._ray+0.999)};
+		Box<long> box_l {state_p.getGridIndex(newPos_l[entA_l->_handle.index].x-entA_l->_model._ray),
+						 state_p.getGridIndex(newPos_l[entA_l->_handle.index].x+entA_l->_model._ray+0.999),
+						 state_p.getGridIndex(newPos_l[entA_l->_handle.index].y-entA_l->_model._ray),
+						 state_p.getGridIndex(newPos_l[entA_l->_handle.index].y+entA_l->_model._ray+0.999)};
 
 		std::vector<char> bitset_l(state_p.getEntities().size(), 0);
 		for(size_t x = box_l._lowerX ; x <= box_l._upperX; ++x)
@@ -307,7 +307,7 @@ bool updateStepFromConflictPosition(Step &step_p, State const &state_p)
 		// check every entity with one another
 		grid_l[x][y]->for_each([&] (int handle_p)
 		{
-			if(handle_p >= stepA_l->_handle)
+			if(handle_p >= stepA_l->_handle.index)
 			{
 				return true;
 			}
@@ -323,16 +323,16 @@ bool updateStepFromConflictPosition(Step &step_p, State const &state_p)
 				return false;
 			}
 
-			EntityMoveStep *stepB_l = mapMoveStep_l[entB_l->_handle];
+			EntityMoveStep *stepB_l = mapMoveStep_l[entB_l->_handle.index];
 			if(!entA_l->_model._isStatic && !entB_l->_model._isStatic)
 			{
 				return false;
 			}
 			// if one of the two is a building we check on rectangle instead of circles
-			Box<Fixed> boxA_l { newPos_l[entA_l->_handle].x - entA_l->_model._ray, newPos_l[entA_l->_handle].x + entA_l->_model._ray,
-								newPos_l[entA_l->_handle].y - entA_l->_model._ray, newPos_l[entA_l->_handle].y + entA_l->_model._ray };
-			Box<Fixed> boxB_l { newPos_l[entB_l->_handle].x - entB_l->_model._ray, newPos_l[entB_l->_handle].x + entB_l->_model._ray,
-								newPos_l[entB_l->_handle].y - entB_l->_model._ray, newPos_l[entB_l->_handle].y + entB_l->_model._ray };
+			Box<Fixed> boxA_l { newPos_l[entA_l->_handle.index].x - entA_l->_model._ray, newPos_l[entA_l->_handle.index].x + entA_l->_model._ray,
+								newPos_l[entA_l->_handle.index].y - entA_l->_model._ray, newPos_l[entA_l->_handle.index].y + entA_l->_model._ray };
+			Box<Fixed> boxB_l { newPos_l[entB_l->_handle.index].x - entB_l->_model._ray, newPos_l[entB_l->_handle.index].x + entB_l->_model._ray,
+								newPos_l[entB_l->_handle.index].y - entB_l->_model._ray, newPos_l[entB_l->_handle.index].y + entB_l->_model._ray };
 
 			Box<Fixed> intersect_l = { std::max(boxA_l._lowerX, boxB_l._lowerX),
 								std::min(boxA_l._upperX, boxB_l._upperX),
@@ -386,8 +386,8 @@ bool updateStepFromConflictPosition(Step &step_p, State const &state_p)
 				Logger::getDebug() << " conflict solver :: solving conflict [ent "<<stepA_l->_handle<<"] with "<<(diff_l * coefA_l * -1)
 								   << " and [ent "<<stepB_l->_handle<<"] with"<<diff_l * coefB_l<<std::endl;
 				// updated steps, both doing half distance
-				mapAbsoluteCorrection_l[stepA_l->_handle] -= diff_l * coefA_l;
-				mapAbsoluteCorrection_l[stepB_l->_handle] += diff_l * coefB_l;
+				mapAbsoluteCorrection_l[stepA_l->_handle.index] -= diff_l * coefA_l;
+				mapAbsoluteCorrection_l[stepB_l->_handle.index] += diff_l * coefB_l;
 			}
 			return false;
 		});
@@ -402,7 +402,7 @@ bool updateStepFromConflictPosition(Step &step_p, State const &state_p)
 	for(EntityMoveStep *ent_l: step_p.getEntityMoveStep())
 	{
 		// if update
-		if(!is_zero(mapAbsoluteCorrection_l[ent_l->_handle]))
+		if(!is_zero(mapAbsoluteCorrection_l[ent_l->_handle.index]))
 		{
 			updated_l = true;
 		}
@@ -410,8 +410,8 @@ bool updateStepFromConflictPosition(Step &step_p, State const &state_p)
 		{
 			continue;
 		}
-		Logger::getDebug() << " conflict solver :: "<<ent_l->_handle<<" move "<<ent_l->_move<<" absolute correction : "<<mapAbsoluteCorrection_l[ent_l->_handle]<<std::endl;
-		ent_l->_move = ent_l->_move + mapAbsoluteCorrection_l[ent_l->_handle];
+		Logger::getDebug() << " conflict solver :: "<<ent_l->_handle<<" move "<<ent_l->_move<<" absolute correction : "<<mapAbsoluteCorrection_l[ent_l->_handle.index]<<std::endl;
+		ent_l->_move = ent_l->_move + mapAbsoluteCorrection_l[ent_l->_handle.index];
 	}
 
 

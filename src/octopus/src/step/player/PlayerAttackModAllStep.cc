@@ -57,7 +57,7 @@ void PlayerAttackModAllStep::revert(State &state_p, SteppableData const *data_p)
             continue;
         }
         AttackModifierStep steppable_l(ent_l->_handle, _mod);
-        steppable_l.revert(state_p, data_l->_stepsData[ent_l->_handle]);
+        steppable_l.revert(state_p, data_l->_stepsData[ent_l->_handle.index]);
     }
 }
 
@@ -83,7 +83,7 @@ SteppableData * PlayerAttackModAllStep::newData(State const &state_p) const
         }
         AttackModifierStep steppable_l(ent_l->_handle, _mod);
 
-        data_l->_stepsData[ent_l->_handle] = steppable_l.newData(state_p);
+        data_l->_stepsData[ent_l->_handle.index] = steppable_l.newData(state_p);
     }
 
     return data_l;

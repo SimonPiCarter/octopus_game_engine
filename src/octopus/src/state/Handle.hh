@@ -18,8 +18,6 @@ struct Handle
 	unsigned long index {0};
 	unsigned char revision {0};
 
-	operator unsigned long() const { return index; }
-
 	bool operator<(Handle const &other_p) const
 	{
 		return index < other_p.index;

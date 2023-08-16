@@ -91,9 +91,9 @@ std::list<VisionChangeStep *> newVisionChangeStep(State const &state_p, Step con
 	// only do so by checking hit point changes
 	for(std::pair<Handle, Fixed> pair_l : step_p.getHpChange())
 	{
-		if(hitpoints_l[pair_l.first] + pair_l.second < 1e-3)
+		if(hitpoints_l[pair_l.first.index] + pair_l.second < 1e-3)
 		{
-			dead_l[pair_l.first] = true;
+			dead_l[pair_l.first.index] = true;
 		}
 	}
 
@@ -101,7 +101,7 @@ std::list<VisionChangeStep *> newVisionChangeStep(State const &state_p, Step con
 	for(Entity const * ent_l : state_p.getEntities())
 	{
 		unsigned long team_l = state_p.getPlayer(ent_l->_player)->_team;
-		if(!dead_l[ent_l->_handle] || alreadyDead_l[ent_l->_handle])
+		if(!dead_l[ent_l->_handle.index] || alreadyDead_l[ent_l->_handle.index])
 		{
 			continue;
 		}
@@ -120,7 +120,7 @@ std::list<VisionChangeStep *> newVisionChangeStep(State const &state_p, Step con
 	{
 		Entity const * ent_l = state_p.getEntity(moveStep_l->_handle);
 		// skip treatmen for dead entities
-		if(dead_l[ent_l->_handle] || alreadyDead_l[ent_l->_handle])
+		if(dead_l[ent_l->_handle.index] || alreadyDead_l[ent_l->_handle.index])
 		{
 			continue;
 		}

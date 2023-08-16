@@ -52,16 +52,16 @@ TEST(commandSerializationTest, simple_no_step_attackCommand)
         // check command 1
         EntityAttackCommand const * typped_l = dynamic_cast<EntityAttackCommand const *>(cmd_l);
         ASSERT_NE(nullptr, typped_l);
-        EXPECT_EQ(0, typped_l->getSource());
-        EXPECT_EQ(1, typped_l->getTarget());
+        EXPECT_EQ(0, typped_l->getSource().index);
+        EXPECT_EQ(1, typped_l->getTarget().index);
         EXPECT_EQ(true, typped_l->isFrozenTarget());
 
         // check command 2
         cmd_l = *(it_l++);
         typped_l = dynamic_cast<EntityAttackCommand const *>(cmd_l);
         ASSERT_NE(nullptr, typped_l);
-        EXPECT_EQ(1, typped_l->getSource());
-        EXPECT_EQ(0, typped_l->getTarget());
+        EXPECT_EQ(1, typped_l->getSource().index);
+        EXPECT_EQ(0, typped_l->getTarget().index);
         EXPECT_EQ(false, typped_l->isFrozenTarget());
     }
     // remove file
@@ -100,7 +100,7 @@ TEST(commandSerializationTest, simple_no_step_moveCommand)
         // check command 1
         EntityMoveCommand const * typped_l = dynamic_cast<EntityMoveCommand const *>(cmd_l);
         ASSERT_NE(nullptr, typped_l);
-        EXPECT_EQ(0, typped_l->getHandleCommand());
+        EXPECT_EQ(0, typped_l->getHandleCommand().index);
         EXPECT_EQ(Vector(12, 3), typped_l->getFinalPoint());
         EXPECT_EQ(0, typped_l->getGridStatus());
         ASSERT_EQ(1u, typped_l->getWaypoints().size());
@@ -111,7 +111,7 @@ TEST(commandSerializationTest, simple_no_step_moveCommand)
         cmd_l = *(it_l++);
         typped_l = dynamic_cast<EntityMoveCommand const *>(cmd_l);
         ASSERT_NE(nullptr, typped_l);
-        EXPECT_EQ(1, typped_l->getHandleCommand());
+        EXPECT_EQ(1, typped_l->getHandleCommand().index);
         EXPECT_EQ(Vector(15, 2), typped_l->getFinalPoint());
         EXPECT_EQ(1, typped_l->getGridStatus());
         ASSERT_EQ(2u, typped_l->getWaypoints().size());

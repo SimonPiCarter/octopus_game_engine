@@ -63,7 +63,7 @@ void PlayerBuffAllStep::revert(State &state_p, SteppableData const *data_p) cons
             continue;
         }
         EntityBuffStep buffStep_l(ent_l->_handle, _buff);
-        buffStep_l.revert(state_p, data_l->_buffStepsData[ent_l->_handle]);
+        buffStep_l.revert(state_p, data_l->_buffStepsData[ent_l->_handle.index]);
     }
 }
 
@@ -82,7 +82,7 @@ SteppableData * PlayerBuffAllStep::newData(State const &state_p) const
         }
         EntityBuffStep buffStep_l(ent_l->_handle, _buff);
 
-        data_l->_buffStepsData[ent_l->_handle] = buffStep_l.newData(state_p);
+        data_l->_buffStepsData[ent_l->_handle.index] = buffStep_l.newData(state_p);
     }
 
     return data_l;
