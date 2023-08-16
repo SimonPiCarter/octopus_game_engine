@@ -25,6 +25,8 @@ class Command;
 ///
 void writeCommands(std::ofstream &file_p, Controller const &controller_p);
 
+void writeDebugCommands(std::ofstream &file_p, Controller const &controller_p);
+
 /// @brief write a lifst of command to the file
 /// @param file_p
 /// @param list_p

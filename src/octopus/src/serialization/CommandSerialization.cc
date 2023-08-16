@@ -123,6 +123,30 @@ void writeCommands(std::ofstream &file_p, Controller const &controller_p)
     }
 }
 
+void writeDebugCommands(std::ofstream &file_p, Controller const &controller_p)
+{
+    std::vector<std::list<Command *> *> const & commandsPerLevel_l = controller_p.getCommitedCommands();
+
+    // write the number of step
+    file_p<<commandsPerLevel_l.size()<<std::endl;
+    Logger::getDebug() << ">>nbSteps " << commandsPerLevel_l.size() << std::endl;
+
+    size_t step_l = 0;
+    for(std::list<Command *> const * list_l : commandsPerLevel_l)
+    {
+        // We skip first commands because they must be loaded from context
+        // we also skip empty steps to save space
+        if(step_l == 0 || list_l->empty())
+        {
+            ++step_l;
+            continue;
+        }
+        writeDebugListOfCommand(file_p, list_l, step_l);
+
+        ++step_l;
+    }
+}
+
 void writeListOfCommand(std::ofstream &file_p, std::list<Command *> const * list_p, size_t step_p)
 {
     // write the step id
