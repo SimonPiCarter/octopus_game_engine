@@ -103,7 +103,7 @@ Command * readCommand(std::ifstream &file_p, Library const &lib_p);
 void writeCommands(std::ofstream &file_p, Controller const &controller_p)
 {
     std::vector<std::list<Command *> *> const & commandsPerLevel_l = controller_p.getCommitedCommands();
-    size_t steps_l = std::min<size_t>(commandsPerLevel_l.size(), controller_p.getFrontState()->getStepApplied());
+    size_t steps_l = std::min<size_t>(commandsPerLevel_l.size()-1, controller_p.getFrontState()->getStepApplied());
     // write the number of step
     write(file_p, steps_l);
     Logger::getDebug() << ">>nbSteps " << steps_l << std::endl;
@@ -230,7 +230,7 @@ void readCommands(std::ifstream &file_p, Controller &controller_p, Library const
     // update controller
     if(nbSteps_l!=0)
     {
-        controller_p.setOngoingStep(std::max(step_l, nbSteps_l-1));
+        controller_p.setOngoingStep(std::max(step_l, nbSteps_l));
     }
 }
 
