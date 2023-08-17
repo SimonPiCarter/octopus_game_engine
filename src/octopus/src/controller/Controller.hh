@@ -82,7 +82,7 @@ class Controller
 
 public:
 	Controller(std::list<Steppable *> const &initSteppables_p, double timePerStep_p,
-		std::list<Command *> const &initCommands_p = {}, unsigned long gridPointSize_p=1, unsigned long gridSize_p=50);
+		std::list<Command *> const &initCommands_p = {}, unsigned long gridPointSize_p=1, unsigned long gridSize_p=50, size_t reusableHandleQueueSize_p=500);
 	~Controller();
 
 	/// @brief returns true once buffer and back states are up to date
@@ -224,6 +224,10 @@ private:
 
 	/// @brief output file for debug online save (nullptr to disable)
 	std::ofstream* _ofDebug {nullptr};
+
+	/// @brief the size of the queue in states for reusable handles
+	/// (this means a free handle wont be reusable before _reusablehandleQueueSize steps have been applied)
+	size_t const _reusableHandleQueueSize;
 };
 
 } // namespace octopus

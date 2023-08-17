@@ -5,12 +5,14 @@
 #include "state/Handle.hh"
 #include "step/Steppable.hh"
 #include "utils/Vector.hh"
+#include <list>
 
 namespace octopus
 {
 	struct TickingData : public SteppableData
 	{
 		std::vector<Fixed> _oldHp;
+		std::list<Handle> _queuedFreeHandles;
 	};
 
 	/// @brief This step will contains all ticking that must happen on every step

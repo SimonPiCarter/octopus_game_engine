@@ -64,6 +64,16 @@ public:
 	/// @brief get the list of free handles
 	std::list<Handle> const &getFreeHandles() const;
 
+	/// @brief initialize the queued free handles with the desired size
+	void initializeQueueFreeHandles(size_t size_p);
+	/// @brief unfold one stack of the queued free handles
+	/// @note this should be called every time a step is applied (in the ticking step)
+	void unfoldQueuedFreeHandles();
+	/// @brief restore a list of handled back at the front of the queue and clear them from the
+	/// free handles list (they should all be at the back of the list)
+	void refoldQueuedFreeHandles(std::list<Handle> const &handles_p);
+	/// @brief return the front queued handles (used to store some data for eventual restore)
+	std::list<Handle> const &getFrontQueuedHandles() const;
 
 	std::vector<Entity *> &getEntities();
 	std::vector<Entity *> const &getEntities() const;
@@ -157,6 +167,16 @@ private:
 
 	/// @brief list of free handles
 	std::list<Handle> _freeHandles;
+
+	/// @brief queued list of free handles
+	/// @note  this list enable to queue free handle
+	/// the front stack is added to the free handles every step applied
+	/// and one new stack is added at the back. This is important to
+	/// make sure that handles are not reused before all reference to them
+	/// are cleared.
+	/// @warning the queue size cannot be 0 and represent how many steps
+	/// are applied before a free handle can be reused.
+	std::list<std::list<Handle>> _queuedfreeHandles = {{}};
 
 	/// @brief vector of all commandables
 	std::vector<Commandable *> _commandables;

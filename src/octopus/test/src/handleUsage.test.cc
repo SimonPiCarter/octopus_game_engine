@@ -49,7 +49,7 @@ TEST(handleUsageTest, reusage)
 		new FlyingCommandSpawnStep(new HandleUsageTestCommand({new EntitySpawnStep(Handle(0, 1), Entity { { 3, 3. }, false, unitModel_l})}, Handle(1), 4)),
 		new FlyingCommandSpawnStep(new HandleUsageTestCommand({new EntityHitPointChangeStep(Handle(0, 1), -10, 10, 10)}, Handle(2), 6)),
 		new FlyingCommandSpawnStep(new HandleUsageTestCommand({new EntityHitPointChangeStep(Handle(0, 1), 10, 0, 10)}, Handle(3), 8))
-	}, 1.);
+	}, 1., {}, 1, 50, 1);
 
 	// query state
 	State const * state_l = controller_l.queryState();
@@ -103,7 +103,7 @@ TEST(handleUsageTest, reusage_throw_wrong_handle)
 		new FlyingCommandSpawnStep(new HandleUsageTestCommand({new EntityHitPointChangeStep(Handle(0, 0), -10, 10, 10)}, Handle(0), 2)),
 		new FlyingCommandSpawnStep(new HandleUsageTestCommand({new EntitySpawnStep(Handle(0, 1), Entity { { 3, 3. }, false, unitModel_l})}, Handle(1), 4)),
 		new FlyingCommandSpawnStep(new HandleUsageTestCommand({new EntityHitPointChangeStep(Handle(0, 0), 10, 0, 10)}, Handle(3), 6))
-	}, 1.);
+	}, 1., {}, 1, 50, 1);
 
 	// query state
 	State const * state_l = controller_l.queryState();
@@ -159,7 +159,7 @@ TEST(handleUsageTest, attack_move_death_replaced_during_attack)
 		new CommandSpawnStep(new EntityAttackCommand(Handle(0), Handle(0), Handle(1), true)),
 		new FlyingCommandSpawnStep(new HandleUsageTestCommand({new EntityHitPointChangeStep(Handle(1, 0), -10, 10, 10)}, Handle(0), 4)),
 		new FlyingCommandSpawnStep(new HandleUsageTestCommand({new EntitySpawnStep(Handle(1,1), Entity { { 11, 3. }, false, unitModel_l})}, Handle(1), 6)),
-	}, 1);
+	}, 1., {}, 1, 50, 1);
 
 	// query state
 	State const * state_l = controller_l.queryState();
@@ -233,7 +233,7 @@ TEST(handleUsageTest, attack_move_death_replaced_during_move)
 		new CommandSpawnStep(new EntityAttackCommand(Handle(0), Handle(0), Handle(1), true)),
 		new FlyingCommandSpawnStep(new HandleUsageTestCommand({new EntityHitPointChangeStep(Handle(1, 0), -10, 10, 10)}, Handle(0), 1)),
 		new FlyingCommandSpawnStep(new HandleUsageTestCommand({new EntitySpawnStep(Handle(1,1), Entity { { 11, 3. }, false, unitModel_l})}, Handle(1), 4)),
-	}, 1);
+	}, 1., {}, 1, 50, 1);
 
 	// query state
 	State const * state_l = controller_l.queryState();
@@ -309,7 +309,7 @@ TEST(handleUsageTest, trigger_unit_died)
 		new FlyingCommandSpawnStep(new HandleUsageTestCommand({new EntityHitPointChangeStep(Handle(0, 0), -10, 10, 10)}, Handle(0), 2)),
 		new FlyingCommandSpawnStep(new HandleUsageTestCommand({new EntitySpawnStep(Handle(0,1), Entity { { 11, 3. }, false, entityModel_l})}, Handle(1), 4)),
 		new FlyingCommandSpawnStep(new HandleUsageTestCommand({new EntityHitPointChangeStep(Handle(0, 1), -10, 10, 10)}, Handle(2), 6)),
-	}, 1.);
+	}, 1., {}, 1, 50, 1);
 
 	controller_l.commitTrigger(new OnEachTriggerResourceTest(new ListenerEntityDied({Handle(0)})));
 

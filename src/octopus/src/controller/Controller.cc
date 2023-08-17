@@ -53,9 +53,11 @@ Controller::Controller(
 	double timePerStep_p,
 	std::list<Command *> const &initCommands_p,
 	unsigned long gridPointSize_p,
-	unsigned long gridSize_p)
+	unsigned long gridSize_p,
+	size_t reusableHandleQueueSize_p)
 	: _timePerStep(timePerStep_p)
 	, _initialStep(nullptr)
+	, _reusableHandleQueueSize(reusableHandleQueueSize_p)
 {
 	std::lock_guard<std::mutex> lock_l(_mutex);
 
@@ -64,9 +66,9 @@ Controller::Controller(
 	_lastHandledStep = 0;
 	_stepBundles.push_back({new Step(&_initialStep), new StepData()});
 
-	_backState = new BufferedState { 0, _stepBundles.begin(), new State(0, gridSize_p, gridPointSize_p) };
-	_bufferState = new BufferedState { 0, _stepBundles.begin(), new State(1, gridSize_p, gridPointSize_p) };
-	_frontState = new BufferedState { 0, _stepBundles.begin(), new State(2, gridSize_p, gridPointSize_p) };
+	_backState = new BufferedState { 0, _stepBundles.begin(), new State(0, gridSize_p, gridPointSize_p) };	_backState->_state->initializeQueueFreeHandles(_reusableHandleQueueSize);
+	_bufferState = new BufferedState { 0, _stepBundles.begin(), new State(1, gridSize_p, gridPointSize_p) };	_bufferState->_state->initializeQueueFreeHandles(_reusableHandleQueueSize);
+	_frontState = new BufferedState { 0, _stepBundles.begin(), new State(2, gridSize_p, gridPointSize_p) };	_frontState->_state->initializeQueueFreeHandles(_reusableHandleQueueSize);
 
 	// add steppable
 	for(Steppable * steppable_l : initSteppables_p)

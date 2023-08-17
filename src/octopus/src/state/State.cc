@@ -174,19 +174,52 @@ void State::addFreeHandle(Handle const &handle_p)
 {
 	if(handle_p.revision < std::numeric_limits<unsigned char>::max())
 	{
-		_freeHandles.push_back(handle_p);
-		++_freeHandles.back().revision;
+		_queuedfreeHandles.back().push_back(handle_p);
+		++_queuedfreeHandles.back().back().revision;
 	}
 }
 
 void State::popBackFreeHandle()
 {
-	_freeHandles.pop_back();
+	_queuedfreeHandles.back().pop_back();
 }
 
 std::list<Handle> const &State::getFreeHandles() const
 {
 	return _freeHandles;
+}
+
+
+/// @brief initialize the queued free handles with the desired size
+void State::initializeQueueFreeHandles(size_t size_p)
+{
+	_queuedfreeHandles = std::list<std::list<Handle> >(size_p, std::list<Handle>());
+}
+
+/// @brief unfold one stack of the queued free handles
+/// @note this should be called every time a step is applied (in the ticking step)
+void State::unfoldQueuedFreeHandles()
+{
+	_freeHandles.splice(_freeHandles.end(), _queuedfreeHandles.front());
+	_queuedfreeHandles.pop_front();
+	_queuedfreeHandles.push_back({});
+}
+
+/// @brief restore a list of handled back at the front of the queue and clear them from the
+/// free handles list (they should all be at the back of the list)
+void State::refoldQueuedFreeHandles(std::list<Handle> const &handles_p)
+{
+	if(!handles_p.empty())
+	{
+		_freeHandles.erase(std::prev(_freeHandles.end(), handles_p.size()));
+	}
+	_queuedfreeHandles.push_front(handles_p);
+	_queuedfreeHandles.pop_back();
+}
+/// @brief return the front queued handles (used to store some data for eventual restore)
+std::list<Handle> const &State::getFrontQueuedHandles() const
+{
+	return _queuedfreeHandles.front();
 }
 
 std::vector<Entity *> &State::getEntities()
