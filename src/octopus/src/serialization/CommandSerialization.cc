@@ -20,6 +20,7 @@
 #include "command/unit/UnitHarvestCommand.hh"
 #include "command/player/PlayerChoseOptionCommand.hh"
 #include "library/Library.hh"
+#include "state/State.hh"
 #include "state/model/entity/BuildingModel.hh"
 
 #include "logger/Logger.hh"
@@ -102,14 +103,19 @@ Command * readCommand(std::ifstream &file_p, Library const &lib_p);
 void writeCommands(std::ofstream &file_p, Controller const &controller_p)
 {
     std::vector<std::list<Command *> *> const & commandsPerLevel_l = controller_p.getCommitedCommands();
-
+    size_t steps_l = std::min<size_t>(commandsPerLevel_l.size(), controller_p.getFrontState()->getStepApplied());
     // write the number of step
-    write(file_p, commandsPerLevel_l.size());
-    Logger::getDebug() << ">>nbSteps " << commandsPerLevel_l.size() << std::endl;
+    write(file_p, steps_l);
+    Logger::getDebug() << ">>nbSteps " << steps_l << std::endl;
 
     size_t step_l = 0;
     for(std::list<Command *> const * list_l : commandsPerLevel_l)
     {
+        // stop on front state
+        if(step_l > steps_l)
+        {
+            break;
+        }
         // We skip first commands because they must be loaded from context
         // we also skip empty steps to save space
         if(step_l == 0 || list_l->empty())
@@ -126,14 +132,20 @@ void writeCommands(std::ofstream &file_p, Controller const &controller_p)
 void writeDebugCommands(std::ofstream &file_p, Controller const &controller_p)
 {
     std::vector<std::list<Command *> *> const & commandsPerLevel_l = controller_p.getCommitedCommands();
+    size_t steps_l = std::min<size_t>(commandsPerLevel_l.size(), controller_p.getFrontState()->getStepApplied());
 
     // write the number of step
-    file_p<<commandsPerLevel_l.size()<<std::endl;
-    Logger::getDebug() << ">>nbSteps " << commandsPerLevel_l.size() << std::endl;
+    file_p<<steps_l<<std::endl;
+    Logger::getDebug() << ">>nbSteps " << steps_l << std::endl;
 
     size_t step_l = 0;
     for(std::list<Command *> const * list_l : commandsPerLevel_l)
     {
+        // stop on front state
+        if(step_l > steps_l)
+        {
+            break;
+        }
         // We skip first commands because they must be loaded from context
         // we also skip empty steps to save space
         if(step_l == 0 || list_l->empty())
@@ -181,7 +193,6 @@ void writeDebugListOfCommand(std::ofstream &file_p, std::list<Command *> const *
 
 void readCommands(std::ifstream &file_p, Controller &controller_p, Library const &lib_p)
 {
-
     // read the number of step
     size_t nbSteps_l;
     file_p.read((char*) &nbSteps_l, sizeof(nbSteps_l));
@@ -400,8 +411,8 @@ void writeCommand(std::ofstream &file_p, Command const *cmd_p, Writer_t writer_p
     }
     else if(dynamic_cast<DebugCommand const *>(cmd_p))
     {
-		// NA
-	}
+        // NA
+    }
     else
     {
         throw std::logic_error("unserializable command thrown in file");
