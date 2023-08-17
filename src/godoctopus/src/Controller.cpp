@@ -600,6 +600,8 @@ void Controller::loading_loop()
     _stepDone += _controller->getMetrics()._nbStepsCompiled;
     emit_signal("loading_done");
 
+	_paused = true;
+
     loop();
 }
 
