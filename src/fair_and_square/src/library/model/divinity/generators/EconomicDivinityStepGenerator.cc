@@ -103,7 +103,6 @@ void fillLibrary(EconomicDivinityParams const &params_p, octopus::Library &lib_p
 {
 	/// @brief tier two building model
 	BuildingModel tiertwounitmodel_l { true, 0.9, 350 };
-	tiertwounitmodel_l._isUnit = true;
 	tiertwounitmodel_l._buildingTime = 2500;
 	tiertwounitmodel_l._cost["bloc"] = 75;
 	tiertwounitmodel_l._cost["ether"] = 25;
