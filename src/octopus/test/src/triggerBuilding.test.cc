@@ -84,8 +84,8 @@ TEST(triggerBuildingTest, simple)
 
 	EXPECT_NEAR(0., to_double(getResource(*state_l->getPlayer(0), "bloc")), 1e-3);
 
-	// update time to 10 seconds (12)
-	controller_l.update(10.);
+	// update time to 11 seconds (13)
+	controller_l.update(11.);
 
 	// updated until synced up
 	while(!controller_l.loop_body()) {}
