@@ -24,7 +24,7 @@ public:
 	EntityAttackMoveCommand(Handle const &commandHandle_p, Handle const &source_p,
 		Vector const &finalPoint_p, unsigned long gridStatus_p, std::list<Vector> const &waypoints_p, bool init_p=false, bool neverStop_p=false);
 
-	void setFlockInformation(FlockInformation * flockInfo_p);
+	void setFlockInformation(std::array<FlockInformation, 3> * flockInfo_p);
 
 	/// @brief
 	virtual bool applyCommand(Step & step_p, State const &state_p, CommandData const *data_p, PathManager &pathManager_p) const override;

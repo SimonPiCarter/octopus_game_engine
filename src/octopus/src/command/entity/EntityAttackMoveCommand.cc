@@ -27,7 +27,7 @@ EntityAttackMoveCommand::EntityAttackMoveCommand(Handle const &commandHandle_p, 
 	, _data(Handle(0), _subMoveCommand.getFinalPoint(), _subMoveCommand.getGridStatus(), _subMoveCommand.getWaypoints())
 {}
 
-void EntityAttackMoveCommand::setFlockInformation(FlockInformation * flockInfo_p)
+void EntityAttackMoveCommand::setFlockInformation(std::array<FlockInformation, 3> * flockInfo_p)
 {
 	_data._flockInfo = flockInfo_p;
 }

@@ -82,7 +82,7 @@ void CommandUpdateFlockingReached::apply(State &state_p) const
 	MoveData *data_l = dynamic_cast<MoveData*>(getData(ent_l->getFrontQueue()._var));
 	if(data_l->_flockInfo)
 	{
-		++data_l->_flockInfo->qtyReached;
+		++data_l->_flockInfo->at(state_p._id).qtyReached;
 	}
 }
 
@@ -93,7 +93,7 @@ void CommandUpdateFlockingReached::revert(State &state_p, SteppableData const *)
 	MoveData *data_l = dynamic_cast<MoveData*>(getData(ent_l->getFrontQueue()._var));
 	if(data_l->_flockInfo)
 	{
-		--data_l->_flockInfo->qtyReached;
+		--data_l->_flockInfo->at(state_p._id).qtyReached;
 	}
 }
 

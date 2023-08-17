@@ -4,8 +4,10 @@
 #include "command/Command.hh"
 
 #include "command/data/MoveData.hh"
+#include "state/State.hh"
 #include "state/Handle.hh"
 #include "utils/Vector.hh"
+#include <array>
 #include <list>
 
 
@@ -30,6 +32,9 @@ public:
 	Vector const &getFinalPoint() const { return _finalPoint; }
 	bool isAttackMove() const { return _attackMove; }
 	bool isNeverStop() const { return _neverStop; }
+
+	FlockInformation const &getInfo(State const &state_p) const { return _flockInfo[state_p._id]; }
+	std::array<FlockInformation, 3> const &getInfo() const { return _flockInfo; }
 private:
 	std::list<Handle> _handles {};
 	Vector _finalPoint {1,1};
@@ -38,7 +43,8 @@ private:
 	/// @brief if set to true the command will never stop when not making progress
 	bool _neverStop {false};
 
-	FlockInformation _flockInfo;
+	/// @brief formalize an array for every state
+	std::array<FlockInformation, 3> _flockInfo;
 };
 
 } // namespace octopus

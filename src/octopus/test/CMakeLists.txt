@@ -44,6 +44,7 @@ target_sources (unit_tests
 	src/constraintPosition.test.cc
 	src/controller.test.cc
 	src/customIdleEntity.test.cc
+	src/entityFlockCommand.test.cc
 	src/entityHitPointChange.test.cc
 	src/entityMoveStep.test.cc
 	src/entitySpawnStep.test.cc

@@ -3,6 +3,7 @@
 
 #include "utils/Vector.hh"
 #include "command/CommandData.hh"
+#include <array>
 #include <list>
 
 namespace octopus
@@ -12,8 +13,6 @@ namespace octopus
 /// this struct should live as long as any command containing it lives
 struct FlockInformation
 {
-	/// @brief total flock size
-	long flockSize = 0;
 	/// @brief number of member of the flock who reached destination
 	long qtyReached = 0;
 	/// @brief unique idx used to create flock unity
@@ -50,7 +49,7 @@ public:
 	// Flock
 	bool _flockStarted = false;
 	bool _flockReached = false;
-	FlockInformation * _flockInfo {nullptr};
+	std::array<FlockInformation, 3> * _flockInfo {nullptr};
 };
 
 } // namespace octopus
