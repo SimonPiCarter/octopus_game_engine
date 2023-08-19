@@ -189,6 +189,12 @@ float Entity::get_reload(Controller const *controller_p) const
     return octopus::to_double(100./ent_l->getFullReload());
 }
 
+float Entity::get_range(Controller const *controller_p) const
+{
+    octopus::Entity const *ent_l = controller_p->getEntity(octopus::Handle(_index, _revision));
+    return octopus::to_double(ent_l->_model._range);
+}
+
 bool Entity::has_rally_point(Controller const *controller_p) const
 {
     octopus::Entity const *ent_l = controller_p->getEntity(octopus::Handle(_index, _revision));
@@ -318,6 +324,7 @@ void Entity::_bind_methods()
     ClassDB::bind_method(D_METHOD("get_armor", "controller"), &Entity::get_armor);
     ClassDB::bind_method(D_METHOD("get_speed", "controller"), &Entity::get_speed);
     ClassDB::bind_method(D_METHOD("get_reload", "controller"), &Entity::get_reload);
+    ClassDB::bind_method(D_METHOD("get_range", "controller"), &Entity::get_range);
     ClassDB::bind_method(D_METHOD("has_rally_point", "controller"), &Entity::has_rally_point);
     ClassDB::bind_method(D_METHOD("get_rally_point", "controller"), &Entity::get_rally_point);
     ClassDB::bind_method(D_METHOD("get_resource_type", "controller"), &Entity::get_resource_type);
