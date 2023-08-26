@@ -4,6 +4,7 @@
 #include <list>
 #include <vector>
 #include <functional>
+#include <fstream>
 #include "utils/RandomGenerator.hh"
 
 #define LEVEL_ID_LEVEL_TEST_ANCHOR 1002

@@ -4,6 +4,7 @@
 #include <list>
 #include <vector>
 #include <functional>
+#include <fstream>
 #include "controller/trigger/Trigger.hh"
 #include "utils/RandomGenerator.hh"
 

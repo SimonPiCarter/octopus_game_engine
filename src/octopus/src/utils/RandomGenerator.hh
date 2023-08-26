@@ -1,37 +1,30 @@
 #ifndef __RandomGen__
 #define __RandomGen__
 
-#include <boost/random/mersenne_twister.hpp>
-#include <boost/random/uniform_int_distribution.hpp>
-#include <boost/random/uniform_real_distribution.hpp>
-
 namespace octopus
 {
+
+/// @brief This class is used to store the state of the random generator
+class AbstractRandomGenertorStateful
+{
+public:
+	virtual int roll(int min_p, int max_p) = 0;
+	virtual double roll_double(double min_p, double max_p) = 0;
+};
 
 /// @brief this class is unique per game and allow consistent random generation using boost since std is not platform independant
 class RandomGenerator
 {
 public:
-	RandomGenerator(unsigned long seed_p, bool alwaysMin_p=false) : _gen(seed_p), _alwaysMin(alwaysMin_p) {}
+	RandomGenerator(unsigned long seed_p, bool alwaysMin_p=false);
+	~RandomGenerator();
 
-	int roll(int min_p, int max_p)
-	{
-		if(_alwaysMin)
-		{
-			return min_p;
-		}
-		boost::random::uniform_int_distribution<> distModel_l(min_p, max_p);
-		return distModel_l(_gen);
-	}
+	int roll(int min_p, int max_p);
 
-	double roll_double(double min_p, double max_p)
-	{
-		boost::random::uniform_real_distribution<> distModel_l(min_p, max_p);
-		return distModel_l(_gen);
-	}
+	double roll_double(double min_p, double max_p);
 
 private:
-	boost::random::mt19937 _gen;
+	AbstractRandomGenertorStateful * const _state;
 	bool const _alwaysMin;
 };
 
