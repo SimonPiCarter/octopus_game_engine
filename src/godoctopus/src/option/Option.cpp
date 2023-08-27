@@ -163,7 +163,7 @@ void Option::set_option(unsigned long player_p, fas::DivinityType const &option_
     _player = player_p;
     _stats_name.push_back("");
     _params.push_back(TypedArray<String>());
-	_desc.push_back(fas::divinityUpgradeName(option_p).c_str());
+	_desc.push_back((fas::divinityUpgradeName(option_p)+"_tooltip").c_str());
 }
 
 int Option::get_nb_desc() const
