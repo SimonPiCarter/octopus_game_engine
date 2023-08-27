@@ -41,7 +41,7 @@ namespace octopus
 	class Step
 	{
 		public:
-			Step(Step const *prev_p) : _prev(prev_p), _id(prev_p?prev_p->_id+1:0) {}
+			Step(Step const *prev_p) : _id(prev_p?prev_p->_id+1:0), _prev(prev_p) {}
 			~Step();
 
 			/// @brief add step and keep ownership

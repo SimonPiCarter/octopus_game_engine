@@ -1,6 +1,7 @@
 #ifndef __STATE__
 #define __STATE__
 
+#include <map>
 #include <vector>
 #include "Handle.hh"
 #include "graph/Grid.hh"

@@ -2,7 +2,7 @@
 #define __GRID__
 
 #include "GridNode.hh"
-#include "Graph.hh"
+#include <vector>
 
 namespace octopus
 {
