@@ -85,11 +85,11 @@ std::vector<Steppable *> productionTierTwoGenertor(ProductionDivinityParams cons
 
 	// add starting number of resource for buffer
 	std::map<std::string, Fixed> map_l;
-	map_l[param_p._productionBufferResourceId] = -param_p._numberOfProductionBufferTierTwo;
+	map_l[models::ProductionBufferResourceId] = -param_p._numberOfProductionBufferTierTwo;
 	steps_l.push_back(new PlayerSpendResourceStep(player_p, map_l));
 	// regain resource on death
 	steps_l.push_back(new TriggerSpawn(new ProductionDeathResTrigger(&lib_p.getUnitModel(param_p._productionBufferModelId),
-		player_p, param_p._productionBufferResourceId, 1)));
+		player_p, models::ProductionBufferResourceId, 1)));
 
 	return steps_l;
 }
@@ -192,8 +192,6 @@ ProductionDivinityParams createDefaultParams()
 	params_l._numberOfProductionBufferTierTwo = 4;
 	/// @brief increased qty of production buffer after t3 upgrade
 	params_l._increaseOfProductionBufferTierTwo = 4;
-	/// @brief identifier of the resource used to limit the number of buffer
-	params_l._productionBufferResourceId = "ProductionBufferResource";
 	/// @brief percent reduction for time production
 	params_l._productionTimeUpgradeCoef = 0.1;
 	/// @brief percent reduction for resource cost production for tier one unit model
@@ -233,7 +231,7 @@ void fillLibrary(ProductionDivinityParams const &params_p, octopus::Library &lib
 	tiertwounitmodel_l._productionTime = 1500;
 	tiertwounitmodel_l._cost["bloc"] = 50;
 	tiertwounitmodel_l._cost["irium"] = 100;
-	tiertwounitmodel_l._cost[params_p._productionBufferResourceId] = 1;
+	tiertwounitmodel_l._cost[models::ProductionBufferResourceId] = 1;
 	tiertwounitmodel_l._damage = 0;
 	tiertwounitmodel_l._armor = 0;
 	tiertwounitmodel_l._range = 0.5;
@@ -279,7 +277,7 @@ void fillLibrary(ProductionDivinityParams const &params_p, octopus::Library &lib
 
 	// T3 increase buffer count
 	Upgrade * upProductionIncreaseBufferCount_l = new Upgrade("ProductionUpgrade_BuffNumberBuffer",
-		new ProductionMoreBufferUpgrade(params_p._productionBufferResourceId, params_p._increaseOfProductionBufferTierTwo));
+		new ProductionMoreBufferUpgrade(models::ProductionBufferResourceId, params_p._increaseOfProductionBufferTierTwo));
 	upProductionIncreaseBufferCount_l->_cost["bloc"] = 125;
 	upProductionIncreaseBufferCount_l->_cost["ether"] = 250;
 	upProductionIncreaseBufferCount_l->_cost["irium"] = 350;

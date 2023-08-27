@@ -21,6 +21,10 @@ namespace models
     const std::string ProductionUnitModelTierTwoId = "ProductionUnitModelTierTwoId";
     const std::string RecycleUnitModelTierOneId = "RecycleUnitModelTierOneId";
 
+    // specific resources names
+    const std::string RecycleDeathResourceId = "RecycleDeathBuffTrigger";
+    const std::string ProductionBufferResourceId = "ProductionBufferResource";
+
     // buildings
     const std::string AttackSpeedBuildingId = "AttackSpeedBuildingId";
     const std::string EconomicBuildingId = "EconomicBuildingId";
@@ -30,6 +34,7 @@ namespace models
     const std::string ProductionBuildingId = "ProductionBuildingId";
     const std::string RecycleBuildingId = "RecycleBuildingId";
 
+	// rune upgrade
     const std::string AttackSpeedDivId = "AttackSpeedDivId";
     const std::string EconomicDivId = "EconomicDivId";
     const std::string HealDivId = "HealDivId";
@@ -37,6 +42,7 @@ namespace models
     const std::string ProductionDivId = "ProductionDivId";
     const std::string RecycleDivId = "RecycleDivId";
 
+	// suffix
     const std::string tierOneSuffix = "_UpgradeTierOne";
     const std::string tierTwoSuffix = "_UpgradeTierTwo";
     const std::string tierThreeSuffix = "_UpgradeTierThree";

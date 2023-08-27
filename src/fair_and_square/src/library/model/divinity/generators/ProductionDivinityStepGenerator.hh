@@ -22,8 +22,6 @@ struct ProductionDivinityParams
 	long _numberOfProductionBufferTierTwo = 4;
 	/// @brief increased qty of production buffer after t3 upgrade
 	long _increaseOfProductionBufferTierTwo = 4;
-	/// @brief identifier of the resource used to limit the number of buffer
-	std::string _productionBufferResourceId = "ProductionBufferResource";
 	/// @brief coef reduction for time production (positive)
 	octopus::Fixed _productionTimeUpgradeCoef;
 	/// @brief percent reduction for resource cost production for tier one unit model (positive)

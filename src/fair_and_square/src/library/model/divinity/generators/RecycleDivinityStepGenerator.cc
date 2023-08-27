@@ -56,7 +56,7 @@ public:
 	virtual void trigger(State const &state_p, Step &step_p, unsigned long, TriggerData const &) const override
 	{
 		// when trigger is exactly reached
-		if(getResource(*state_p.getPlayer(_player), "RecycleDeathBuffTrigger") - step_p.getResourceSpent(_player, "RecycleDeathBuffTrigger") == _trigger)
+		if(getResource(*state_p.getPlayer(_player), models::RecycleDeathResourceId) - step_p.getResourceSpent(_player, models::RecycleDeathResourceId) == _trigger)
 		{
 			for(TimedBuff const & buff_l : _buffs)
 			{
@@ -76,7 +76,7 @@ std::vector<Steppable *> recycleTierOneGenertor(RecycleDivinityParams const &par
 {
 	std::vector<Steppable *> steps_l;
 
-	steps_l.push_back(new TriggerSpawn(new RecycleDeathResTrigger(player_p, "RecycleDeathBuffTrigger", 1)));
+	steps_l.push_back(new TriggerSpawn(new RecycleDeathResTrigger(player_p, models::RecycleDeathResourceId, 1)));
 	steps_l.push_back(new TriggerSpawn(new RecycleDeathBuffTrigger(params_p._tierOneUnitModelId, player_p, params_p._triggerNbUnitDeadBuffTierOne, params_p._buffTierOne)));
 
 	return steps_l;
