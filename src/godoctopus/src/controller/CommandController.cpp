@@ -219,4 +219,20 @@ void add_blueprint_command(std::list<octopus::Command*> &list_r, octopus::State 
     }
 }
 
+void add_ability_command(std::list<octopus::Command*> &list_r, octopus::State const &state_p, PackedInt32Array const &handles_p, String const &ability_p)
+{
+    std::string abilityId_l(ability_p.utf8().get_data());
+    std::list<octopus::Handle> handles_l;
+    for(size_t i = 0 ; i < handles_p.size()/2 ; ++ i)
+    {
+        handles_l.push_back(castHandle(handles_p[i*2],handles_p[i*2+1]));
+    }
+
+	for(octopus::Handle const &handle_l : handles_l)
+	{
+        octopus::Command * cmd_l = new octopus::EntityAbilityCommand(handle_l, handle_l, octopus::Vector(), abilityId_l);
+        list_r.push_back(cmd_l);
+	}
+}
+
 } // godot

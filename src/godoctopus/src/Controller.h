@@ -92,11 +92,21 @@ public:
     void set_pause(bool paused_p);
     void set_over(bool over_p);
     // getters
+	// commands available getters
     TypedArray<String> get_models(EntityHandle const * handle_p, int player_p, bool checkRequirements_p) const;
+    TypedArray<String> get_abilities(EntityHandle const * handle_p, int player_p, bool checkRequirements_p) const;
+	// upgrade getters
     bool is_done_and_non_repeatable(String const &upgrade_p, int player_p) const;
     int get_level(String const &upgrade_p, int player_p) const;
     bool is_upgrade(String const &model_p) const;
+	// ability getters
+	// get necessary reload time
+	double get_reload_time(EntityHandle const * handle_p, String const &ability_p) const;
+	// get current reload time
+	double get_current_reload_time(EntityHandle const * handle_p, String const &ability_p) const;
+
     bool is_building(String const &model_p) const;
+
     int get_world_size() const;
     int get_steps() const;
     int get_team(int player_p) const;
@@ -149,6 +159,8 @@ public:
     void add_building_cancel_command(int peer_p, PackedInt32Array const & handle_p, int player_p);
     // option
     void add_chose_option_command(int peer_p, int option_p, int player_p);
+	// ability (with no target)
+	void add_ability_command(int peer_p, PackedInt32Array const & handles_p, String const &ability_p);
 
 
     // step

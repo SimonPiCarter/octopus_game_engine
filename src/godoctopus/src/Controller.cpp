@@ -783,6 +783,24 @@ TypedArray<String> Controller::get_models(EntityHandle const * handle_p, int pla
     return models_l;
 }
 
+TypedArray<String> Controller::get_abilities(EntityHandle const * handle_p, int player_p, bool checkRequirements_p) const
+{
+    TypedArray<String> abilities_l;
+    octopus::Entity const *ent_l = _state->getEntity(castHandle(handle_p));
+	octopus::Player const * player_l = _state->getPlayer(ent_l->_player);
+
+	for(auto &&pair_l : ent_l->_model._abilities)
+	{
+		octopus::Ability const & ability_l = pair_l.second;
+		bool meetRequirements_l = octopus::meetRequirements(ability_l._requirements, *player_l);
+		if(!checkRequirements_p || meetRequirements_l)
+		{
+			abilities_l.push_back(pair_l.first.c_str());
+		}
+	}
+	return abilities_l;
+}
+
 bool Controller::is_done_and_non_repeatable(String const &upgrade_p, int player_p) const
 {
     std::string const &upgradeId_l(upgrade_p.utf8().get_data());
@@ -799,6 +817,28 @@ bool Controller::is_upgrade(String const &upgrade_p) const
 {
     std::string const &upgradeId_l(upgrade_p.utf8().get_data());
     return _lib.hasUpgrade(upgradeId_l);
+}
+
+double Controller::get_reload_time(EntityHandle const * handle_p, String const &ability_p) const
+{
+	std::string const &abilityId_l(ability_p.utf8().get_data());
+	octopus::Entity const *ent_l = _state->getEntity(castHandle(handle_p));
+
+	octopus::Ability const & ability_l = getAbility(ent_l->_model, abilityId_l);
+
+	return octopus::getMinReloadTime(ent_l->_model, ability_l._reloadKey);
+}
+
+double Controller::get_current_reload_time(EntityHandle const * handle_p, String const &ability_p) const
+{
+	std::string const &abilityId_l(ability_p.utf8().get_data());
+	octopus::Entity const *ent_l = _state->getEntity(castHandle(handle_p));
+
+	octopus::Ability const & ability_l = getAbility(ent_l->_model, abilityId_l);
+	// check reload time
+	unsigned long reload_l = octopus::getReloadAbilityTime(*ent_l, ability_l._reloadKey, octopus::getMinReloadTime(ent_l->_model, ability_l._reloadKey));
+
+	return reload_l;
 }
 
 bool Controller::is_building(String const &model_p) const
@@ -1126,6 +1166,14 @@ void Controller::add_chose_option_command(int peer_p, int option_p, int player_p
     }
 }
 
+void Controller::add_ability_command(int peer_p, PackedInt32Array const & handles_p, String const &ability_p)
+{
+    if(!_paused)
+    {
+        godot::add_ability_command(_queuedCommandsPerPeer.at(peer_p).back(), *_state, handles_p, ability_p);
+    }
+}
+
 void Controller::set_step_control(int prequeued_p)
 {
     for(int i = 0 ; i < prequeued_p-1 ; ++ i)
@@ -1205,10 +1253,13 @@ void Controller::_bind_methods()
     ClassDB::bind_method(D_METHOD("set_auto_file_debug", "debug"), &Controller::set_auto_file_debug);
     ClassDB::bind_method(D_METHOD("dump_state_as_text", "path"), &Controller::dump_state_as_text);
     ClassDB::bind_method(D_METHOD("get_models", "handle", "player", "check_requirements"), &Controller::get_models);
+    ClassDB::bind_method(D_METHOD("get_abilities", "handle", "player", "check_requirements"), &Controller::get_abilities);
 
     ClassDB::bind_method(D_METHOD("is_done_and_non_repeatable", "upgrade", "player"), &Controller::is_done_and_non_repeatable);
     ClassDB::bind_method(D_METHOD("get_level", "upgrade", "player"), &Controller::get_level);
     ClassDB::bind_method(D_METHOD("is_upgrade", "upgrade"), &Controller::is_upgrade);
+    ClassDB::bind_method(D_METHOD("get_reload_time", "handle", "ability"), &Controller::get_reload_time);
+    ClassDB::bind_method(D_METHOD("get_current_reload_time", "handle", "ability"), &Controller::get_current_reload_time);
     ClassDB::bind_method(D_METHOD("is_building", "handle"), &Controller::is_building);
     ClassDB::bind_method(D_METHOD("get_world_size"), &Controller::get_world_size);
     ClassDB::bind_method(D_METHOD("get_steps"), &Controller::get_steps);
@@ -1244,6 +1295,7 @@ void Controller::_bind_methods()
     ClassDB::bind_method(D_METHOD("add_blueprint_command", "peer", "target", "model", "player", "builders", "queued"), &Controller::add_blueprint_command);
     ClassDB::bind_method(D_METHOD("add_building_cancel_command", "peer", "handle", "player"), &Controller::add_building_cancel_command);
     ClassDB::bind_method(D_METHOD("add_chose_option_command", "peer", "option_p", "player"), &Controller::add_chose_option_command);
+    ClassDB::bind_method(D_METHOD("add_ability_command", "peer", "handles", "ability"), &Controller::add_ability_command);
 
     ClassDB::bind_method(D_METHOD("set_step_control", "prequeued_p"), &Controller::set_step_control);
     ClassDB::bind_method(D_METHOD("next_step"), &Controller::next_step);
