@@ -80,6 +80,9 @@ LifestealDivinityParams createDefaultParams()
 	LifestealDivinityParams params_l;
 
 	params_l._modelsGeneralLifeSteal = models::BasicUnitModels;
+	// remove life steal unit from models general life steal
+	params_l._modelsGeneralLifeSteal.erase(
+		std::find(params_l._modelsGeneralLifeSteal.begin(), params_l._modelsGeneralLifeSteal.end(), models::LifestealUnitModelTierOneId));
 
 	/// @brief tier one upgrade of life steal
 	params_l._improvedLifeStealTierOne = 0.25;
