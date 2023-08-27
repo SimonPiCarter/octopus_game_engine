@@ -114,14 +114,7 @@ namespace stimpack
 		Entity const *ent_l = state_p.getEntity(source_p);
 		Fixed curHp_l = ent_l->_hp + step_p.getHpChange(source_p);
 		Fixed maxHp_l = ent_l->getHpMax();
-		step_p.addSteppable(new EntityHitPointChangeStep(source_p, Fixed(-1) * hpCost_p, curHp_l, maxHp_l));
-	}
-
-	bool checker(Step const &, State const &state_p, Handle const &source_p, Handle const &, Vector const &)
-	{
-		Requirements req_l;
-		req_l._upgradeLvl[models::LifestealDivId] = 3;
-		return meetRequirements(req_l, *state_p.getPlayer(state_p.getEntity(source_p)->_player));
+		step_p.addSteppable(new EntityHitPointChangeStep(source_p, std::max(Fixed(-1) * hpCost_p, 1-curHp_l), curHp_l, maxHp_l));
 	}
 
 } // namespace stimpack
@@ -148,7 +141,7 @@ void fillLibrary(LifestealDivinityParams const &params_p, octopus::Library &lib_
 	tieroneunitmodel_l._abilities["LifeStealDivinity_Stimpack"]._reloadKey = "LifeStealDivinity_Stimpack";
 	tieroneunitmodel_l._abilities["LifeStealDivinity_Stimpack"]._runnable = std::bind(stimpack::runnable, params_p._stimBuff, params_p._stimHpCost,
 													std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4, std::placeholders::_5);
-	tieroneunitmodel_l._abilities["LifeStealDivinity_Stimpack"]._checker = stimpack::checker;
+	tieroneunitmodel_l._abilities["LifeStealDivinity_Stimpack"]._requirements._upgradeLvl[models::LifestealDivId+models::tierThreeSuffix] = 1;
 
 	lib_p.registerUnitModel(params_p._tierOneUnitModelId, tieroneunitmodel_l);
 

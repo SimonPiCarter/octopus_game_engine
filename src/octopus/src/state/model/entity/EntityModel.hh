@@ -24,6 +24,9 @@ namespace octopus
 		std::string _reloadKey;
 		std::function<void(Step &, State const &, Handle const &, Handle const &, Vector const &)> _runnable;
 		std::function<bool(Step const &, State const &, Handle const &, Handle const &, Vector const &)> _checker = alwaysOkChecker;
+		bool _requireTargetPoint = false;
+		bool _requireTargetHandle = false;
+		Requirements _requirements;
 	};
 
 	struct EntityModel
