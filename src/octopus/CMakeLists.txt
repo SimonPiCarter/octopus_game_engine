@@ -87,7 +87,7 @@ add_library(octopus
 	${CMAKE_CURRENT_SOURCE_DIR}/src/step/StepAdditionVisitor.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/step/TickingStep.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/step/command/CommandDataWaypointStep.cc
-	${CMAKE_CURRENT_SOURCE_DIR}/src/step/command/CommandIncrementNoProgressStep
+	${CMAKE_CURRENT_SOURCE_DIR}/src/step/command/CommandIncrementNoProgressStep.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/step/command/CommandMoveUpdateStep.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/step/command/CommandNewTargetStep.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/step/command/CommandQueueStep.cc
@@ -171,3 +171,22 @@ target_include_directories(octopus
 )
 
 add_subdirectory(test)
+
+# ============================================================================
+# Installation
+# ============================================================================
+
+if (CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
+	set (CMAKE_INSTALL_PREFIX "${CMAKE_BINARY_DIR}/install/${PROJECT_NAME}-${PROJECT_VERSION}" CACHE PATH "${PROJECT_NAME} default install path" FORCE)
+endif ()
+
+install (TARGETS octopus EXPORT octopus-export)
+
+install(DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/src/" # source directory
+        DESTINATION "include/octopus/" # target directory
+        FILES_MATCHING # install only matched files
+        PATTERN "*.hh" # select header files
+		PATTERN "*Graph.hh" EXCLUDE # exclude this deprecated file (exposing boost headers)
+)
+
+set (ConfigPackageLocation "lib/cmake/${PROJECT_NAME}-${PROJECT_VERSION}")

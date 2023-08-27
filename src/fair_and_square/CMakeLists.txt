@@ -69,3 +69,21 @@ if(GRAPHICS)
 	)
 	target_link_libraries(fair_and_square PUBLIC fair_and_square_lib cuttlefish)
 endif()
+
+# ============================================================================
+# Installation
+# ============================================================================
+
+if (CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
+	set (CMAKE_INSTALL_PREFIX "${CMAKE_BINARY_DIR}/install/${PROJECT_NAME}-${PROJECT_VERSION}" CACHE PATH "${PROJECT_NAME} default install path" FORCE)
+endif ()
+
+install (TARGETS fair_and_square_lib EXPORT fair_and_square_lib-export)
+
+install(DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/src/" # source directory
+        DESTINATION "include/fair_and_square/" # target directory
+        FILES_MATCHING # install only matched files
+        PATTERN "*.hh" # select header files
+)
+
+set (ConfigPackageLocation "lib/cmake/${PROJECT_NAME}-${PROJECT_VERSION}")
