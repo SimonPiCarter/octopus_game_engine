@@ -145,7 +145,8 @@ void ControllerStepVisitor::visit(octopus::BuildingStep const *steppable_p)
 {
 	octopus::Entity const * ent_l = _state->getEntity(steppable_p->_handle);
 	octopus::Building const * building_l = static_cast<octopus::Building const *>(ent_l);
-	_controller.emit_signal("build", int(steppable_p->_handle.index), octopus::to_double(building_l->_buildingProgress/building_l->_buildingModel._buildingTime));
+	_controller.emit_signal("build", int(steppable_p->_source.index), int(steppable_p->_handle.index),
+		octopus::to_double(building_l->_buildingProgress/building_l->_buildingModel._buildingTime));
 	if(building_l->isBuilt())
 	{
 		_controller.emit_signal("updated_requirements");

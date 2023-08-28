@@ -1314,7 +1314,7 @@ void Controller::_bind_methods()
 	ADD_SIGNAL(MethodInfo("harvest_unit", PropertyInfo(Variant::INT, "handle")));
 	ADD_SIGNAL(MethodInfo("hide_unit", PropertyInfo(Variant::INT, "handle")));
 	ADD_SIGNAL(MethodInfo("show_unit", PropertyInfo(Variant::INT, "handle")));
-	ADD_SIGNAL(MethodInfo("build", PropertyInfo(Variant::INT, "handle"), PropertyInfo(Variant::FLOAT, "progress")));
+	ADD_SIGNAL(MethodInfo("build", PropertyInfo(Variant::INT, "source"), PropertyInfo(Variant::INT, "handle"), PropertyInfo(Variant::FLOAT, "progress")));
 	ADD_SIGNAL(MethodInfo("option_update"));
 	ADD_SIGNAL(MethodInfo("pop_option"));
 	ADD_SIGNAL(MethodInfo("remove_rally_point", PropertyInfo(Variant::INT, "handle")));
