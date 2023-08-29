@@ -109,14 +109,6 @@ std::list<Steppable *> LevelSteps(Library &lib_p, RandomGenerator &rand_p, int s
 	Trigger * triggerLoseP0_l = new LoseTrigger(new ListenerEntityModelDied(&lib_p.getBuildingModel("command_center"), 0), 1);
 	Trigger * triggerLoseP1_l = new LoseTrigger(new ListenerEntityModelDied(&lib_p.getBuildingModel("command_center"), 1), 0);
 
-    octopus::PatternHandler handler_l;
-	octopus::VisionPattern pattern_l = handler_l.getPattern(250);
-	for(std::pair<long, long> &pair_l : pattern_l)
-	{
-		pair_l.first += 100;
-		pair_l.second += 100;
-	}
-
 	Handle handle_l(0);
 	std::list<Steppable *> spawners_l =
 	{
@@ -133,8 +125,8 @@ std::list<Steppable *> LevelSteps(Library &lib_p, RandomGenerator &rand_p, int s
 		new TriggerSpawn(new AnchorDivinityTrigger(lib_p, rand_p, 1, divinitiesPlayer2_p, 180)),
 		new FlyingCommandSpawnStep(new TimerDamage(Handle(0), 100, 0, 0, "Anchor", Handle(0))),
 		new FlyingCommandSpawnStep(new TimerDamage(Handle(1), 100, 0, 1, "Anchor", Handle(1))),
-		new TeamVisionStep(0, pattern_l, true, false),
-		new TeamVisionStep(0, pattern_l, true, true),
+		new godot::CameraStep(to_int(buildingP0_l._pos.x), to_int(buildingP0_l._pos.y), 0),
+		new godot::CameraStep(to_int(buildingP1_l._pos.x), to_int(buildingP1_l._pos.y), 1),
 	};
 
 	fas::addBuildingPlayer(spawners_l, 0, divinitiesPlayer1_p, lib_p);

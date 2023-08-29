@@ -9,8 +9,8 @@ namespace godot
 class CameraStep : public octopus::CustomStep
 {
 public:
-    CameraStep(int x, int y)
-        : _x(x), _y(y)
+    CameraStep(int x, int y, unsigned long player_p)
+        : _x(x), _y(y), _player(player_p)
     {}
     virtual void apply(octopus::State &) const {}
     virtual void revert(octopus::State &, octopus::SteppableData const *) const {}
@@ -18,6 +18,7 @@ public:
 
     int const _x;
     int const _y;
+	unsigned long const _player;
 };
 
 }

@@ -199,7 +199,7 @@ void ControllerStepVisitor::visit(octopus::CustomStep const *steppable_p)
 	}
 	else if(camera_l)
 	{
-		_controller.emit_signal("set_camera", camera_l->_x, camera_l->_y);
+		_controller.emit_signal("set_camera", camera_l->_x, camera_l->_y, int(camera_l->_player));
 	}
 	else if(dialog_l)
 	{

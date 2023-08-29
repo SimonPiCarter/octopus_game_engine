@@ -83,7 +83,7 @@ std::list<Steppable *> LevelSteps(Library &lib_p, RandomGenerator &rand_p)
 		new UnitSpawnStep(handle_l++, unit_l),
 		new UnitSpawnStep(handle_l++, unit_l),
 		new TriggerSpawn(new AnchorTrigger(lib_p, rand_p, 60)),
-		new godot::CameraStep(to_int(building_l._pos.x), to_int(building_l._pos.y)),
+		new godot::CameraStep(to_int(building_l._pos.x), to_int(building_l._pos.y), 0),
 	};
 
 	return spawners_l;

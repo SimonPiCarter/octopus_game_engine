@@ -56,7 +56,7 @@ std::list<Steppable *> LevelSteps(Library &lib_p, RandomGenerator &rand_p)
 
 	std::list<Steppable *> spawners_l =
 	{
-		new godot::CameraStep(20, 10),
+		new godot::CameraStep(20, 10, 0),
 		new PlayerLevelUpUpgradeStep(0, models::AttackSpeedDivId),
 		new PlayerLevelUpUpgradeStep(0, models::AttackSpeedDivId),
 		new PlayerLevelUpUpgradeStep(0, models::AttackSpeedDivId),

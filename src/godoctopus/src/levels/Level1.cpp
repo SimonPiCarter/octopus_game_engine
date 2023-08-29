@@ -75,7 +75,7 @@ public:
 		step_p.addSteppable(new octopus::TeamVisionStep(0, _pattern, true, true));
 		step_p.addSteppable(new octopus::TeamVisionStep(0, _pattern, true, false));
 
-		step_p.addSteppable(new godot::CameraStep(45, 45));
+		step_p.addSteppable(new godot::CameraStep(45, 45, 0));
 		step_p.addSteppable(new godot::DialogStep("show anchor"));
 	}
 private:
@@ -147,7 +147,7 @@ std::list<Steppable *> WaveLevelSteps(Library &lib_p, RandomGenerator &rand_p, u
 		new TriggerSpawn(new AnchorTrigger(lib_p, rand_p, 60)),
 		new TriggerSpawn(new VisionTrigger(pattern_l)),
 		new FlyingCommandSpawnStep(new TimerDamage(Handle(0), 100, 0, 0, "Anchor", Handle(0))),
-		new godot::CameraStep(15, 20),
+		new godot::CameraStep(15, 20, 0),
 		new godot::DialogStep("leve1_intro"),
 	};
 
