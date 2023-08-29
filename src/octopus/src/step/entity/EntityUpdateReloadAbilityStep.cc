@@ -22,7 +22,7 @@ void EntityUpdateReloadAbilityStep::revert(State &state_p, SteppableData const *
 
 bool EntityUpdateReloadAbilityStep::isNoOp() const
 {
-	return _old == _new;
+	return _old == _new && _new != 0;
 }
 
 } // namespace octopus

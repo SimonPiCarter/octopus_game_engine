@@ -25,7 +25,7 @@ namespace octopus
 			}
 
 			Handle const _handle;
-			std::string _key;
+			std::string const _key;
 			unsigned long const _old;
 			unsigned long const _new;
 	};
