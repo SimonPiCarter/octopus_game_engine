@@ -281,7 +281,7 @@ void Controller::load_duel_level(int seed_p, TypedArray<int> const &div_player_1
 	_rand = new octopus::RandomGenerator(seed_p);
 	std::list<octopus::Steppable *> spawners_l = {};
 	std::list<octopus::Steppable *> levelsteps_l = duellevel::LevelSteps(_lib, *_rand, 0,
-			fas::intToDivinityType(toVector(div_player_1_p)), fas::intToDivinityType(toVector(div_player_1_p)));
+			fas::intToDivinityType(toVector(div_player_1_p)), fas::intToDivinityType(toVector(div_player_2_p)));
 	spawners_l.splice(spawners_l.end(), levelsteps_l);
 
 	std::list<octopus::Command *> commands_l = duellevel::LevelCommands(_lib, *_rand);
