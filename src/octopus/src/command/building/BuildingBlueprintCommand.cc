@@ -56,9 +56,12 @@ void BuildingBlueprintCommand::registerCommand(Step & step_p, State const &state
 			step_p.addSteppable(new BuildingSpawnStep(buildingHandle_l, building_l, false));
 			for(Handle const &handle_l : _builders)
 			{
-				Command * cmd_l = new EntityBuildingCommand(handle_l, handle_l, buildingHandle_l, _pos, 0, {_pos}, true);
-				cmd_l->setQueued(_queued);
-				step_p.addSteppable(new CommandSpawnStep(cmd_l));
+				if(state_p.isEntityAlive(handle_l) && state_p.getEntity(handle_l)->_player == _player)
+				{
+					Command * cmd_l = new EntityBuildingCommand(handle_l, handle_l, buildingHandle_l, _pos, 0, {_pos}, true);
+					cmd_l->setQueued(_queued);
+					step_p.addSteppable(new CommandSpawnStep(cmd_l));
+				}
 			}
 		}
 	}
