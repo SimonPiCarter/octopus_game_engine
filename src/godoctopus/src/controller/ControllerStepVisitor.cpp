@@ -21,12 +21,14 @@
 #include "step/custom/implem/WindUpStartStep.hh"
 #include "step/entity/EntityHitPointChangeStep.hh"
 #include "step/entity/EntityMoveStep.hh"
+#include "step/entity/EntityUpdateReloadAbilityStep.hh"
 #include "step/entity/spawn/BuildingSpawnStep.hh"
 #include "step/entity/spawn/EntitySpawnStep.hh"
 #include "step/entity/spawn/ResourceSpawnStep.hh"
 #include "step/entity/spawn/UnitSpawnStep.hh"
 #include "step/player/PlayerAddOptionStep.hh"
 #include "step/player/PlayerPopOptionStep.hh"
+#include "step/player/PlayerBuffAllStep.hh"
 #include "step/state/StateAddConstraintPositionStep.hh"
 #include "step/state/StateRemoveConstraintPositionStep.hh"
 #include "step/unit/UnitHarvestStep.hh"
@@ -157,6 +159,19 @@ void ControllerStepVisitor::visit(octopus::PlayerAddOptionStep const *steppable_
 {
 	_controller.getOptionManagers().at(steppable_p->_player)->addOptionLayer(steppable_p);
 	_controller.emit_signal("option_update");
+}
+
+void ControllerStepVisitor::visit(octopus::EntityUpdateReloadAbilityStep const *steppable_p)
+{
+	if(steppable_p->_new == 0)
+	{
+		_controller.emit_signal("ability_used", int(steppable_p->_handle.index), String(steppable_p->_key.c_str()));
+	}
+}
+
+void ControllerStepVisitor::visit(octopus::PlayerBuffAllStep const *steppable_p)
+{
+	_controller.emit_signal("buff_all", int(steppable_p->_player), String(steppable_p->_buff._id.c_str()), String(steppable_p->_model.c_str()));
 }
 
 void ControllerStepVisitor::visit(octopus::PlayerPopOptionStep const *steppable_p)

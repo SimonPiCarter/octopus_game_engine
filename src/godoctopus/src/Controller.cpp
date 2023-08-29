@@ -1321,6 +1321,8 @@ void Controller::_bind_methods()
 	ADD_SIGNAL(MethodInfo("set_rally_point", PropertyInfo(Variant::INT, "handle"), PropertyInfo(Variant::VECTOR2, "pos")));
 	ADD_SIGNAL(MethodInfo("set_rally_point_target", PropertyInfo(Variant::INT, "handle"), PropertyInfo(Variant::INT, "target")));
 	ADD_SIGNAL(MethodInfo("updated_requirements"));
+	ADD_SIGNAL(MethodInfo("ability_used", PropertyInfo(Variant::INT, "handle"), PropertyInfo(Variant::STRING, "ability")));
+	ADD_SIGNAL(MethodInfo("buff_all", PropertyInfo(Variant::INT, "player"), PropertyInfo(Variant::STRING, "buff"), PropertyInfo(Variant::STRING, "model")));
 
 	/// blockers
 	ADD_SIGNAL(MethodInfo("spawn_blockers", PropertyInfo(Variant::FLOAT, "val"), PropertyInfo(Variant::FLOAT, "min"),

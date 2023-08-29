@@ -29,8 +29,8 @@ public:
 	virtual void visit(octopus::BuildingCancelStep const *) override;
 	virtual void visit(octopus::BuildingRemoveRallyPointStep const *) override;
 	virtual void visit(octopus::BuildingSetRallyPointStep const *) override;
-	virtual void visit(octopus::BuildingSpawnStep const *step_p) override;
-	virtual void visit(octopus::BuildingStep const *steppable_p) override;
+	virtual void visit(octopus::BuildingSpawnStep const *) override;
+	virtual void visit(octopus::BuildingStep const *) override;
 	virtual void visit(octopus::CancelUnitProductionStep const *) override {}
 	virtual void visit(octopus::CommandAddSubCommandStep const *) override {}
 	virtual void visit(octopus::CommandDataWaypointAddStep const *) override {}
@@ -60,10 +60,10 @@ public:
 	virtual void visit(octopus::EntityBuffStep const *) override {}
 	virtual void visit(octopus::EntityConditionalBuffStep const *) override {}
 	virtual void visit(octopus::EntityFrozenStep const *) override {}
-	virtual void visit(octopus::EntityHitPointChangeStep const *step_p) override;
-	virtual void visit(octopus::EntityMoveStep const *step_p) override;
-	virtual void visit(octopus::EntitySpawnStep const *step_p) override;
-	virtual void visit(octopus::EntityUpdateReloadAbilityStep const *) override {}
+	virtual void visit(octopus::EntityHitPointChangeStep const *) override;
+	virtual void visit(octopus::EntityMoveStep const *) override;
+	virtual void visit(octopus::EntitySpawnStep const *) override;
+	virtual void visit(octopus::EntityUpdateReloadAbilityStep const *) override;
 	virtual void visit(octopus::EntityUpdateWaitingStep const *) override {}
 	virtual void visit(octopus::FlyingCommandSpawnStep const *) override {}
 	virtual void visit(octopus::FlyingCommandPopStep const *) override {}
@@ -73,7 +73,7 @@ public:
 	virtual void visit(octopus::PlayerAddOptionStep const *) override;
 	virtual void visit(octopus::PlayerAddTimeProdBonusStep const *) override {}
     virtual void visit(octopus::PlayerAttackModAllStep const *) override {}
-	virtual void visit(octopus::PlayerBuffAllStep const *) override {}
+	virtual void visit(octopus::PlayerBuffAllStep const *) override;
 	virtual void visit(octopus::PlayerConditionalBuffAllStep const *) override {}
 	virtual void visit(octopus::PlayerLevelUpUpgradeStep const *) override;
 	virtual void visit(octopus::PlayerPopOptionStep const *);
@@ -84,7 +84,7 @@ public:
 	virtual void visit(octopus::ProductionPaidStep const *) override {}
 	virtual void visit(octopus::ProductionProgressionStep const *) override {}
 	virtual void visit(octopus::ResourceSlotStep const *) override {}
-	virtual void visit(octopus::ResourceSpawnStep const *step_p) override;
+	virtual void visit(octopus::ResourceSpawnStep const *) override;
 	virtual void visit(octopus::StateAddConstraintPositionStep const *) override;
 	virtual void visit(octopus::StateDrawStep const *) override {}
 	virtual void visit(octopus::StateFreeHandleStep const *) override {}
