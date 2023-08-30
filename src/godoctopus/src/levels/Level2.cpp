@@ -51,7 +51,7 @@ namespace godot
 namespace level2
 {
 
-std::list<Steppable *> WaveLevelSteps(Library &lib_p, RandomGenerator &rand_p, std::vector<WavePoolInfo> const &waveInfo_p, unsigned long player_p)
+std::list<Steppable *> WaveLevelSteps(Library &lib_p, RandomGenerator &rand_p, std::vector<WavePoolInfo> const &waveInfo_p, unsigned long player_p, unsigned long playerCount_p)
 {
 	loadMinimalModels(lib_p);
 
@@ -104,19 +104,35 @@ std::list<Steppable *> WaveLevelSteps(Library &lib_p, RandomGenerator &rand_p, s
 		waves_l.push_back(pool_l);
 	}
 
+	// the y coordinate where every wave will spawn (depends on the number of player)
+	octopus::Fixed ySpawnWave_l = 50;
+	if(playerCount_p==2)
+	{
+		ySpawnWave_l = 65;
+	}
+	else if(playerCount_p==3)
+	{
+		ySpawnWave_l = 80;
+	}
+	// if more than 3 players we stick to one player (more is not supported)
+	else
+	{
+		playerCount_p = 1;
+	}
+
 	std::list<WaveParam> params_l;
 	for(size_t i = 0 ; i < waves_l.size() ; ++ i)
 	{
 		if(i == 0)
-			params_l.push_back({octopus::Vector(60,50), octopus::Vector(20,50), 40, 40, 60, waves_l[i]});
+			params_l.push_back({octopus::Vector(60,ySpawnWave_l), octopus::Vector(20,ySpawnWave_l), 40, 40, 60, waves_l[i]});
 		else if(i==1)
-			params_l.push_back({octopus::Vector(100,50), octopus::Vector(20,50), 80, 40, 60, waves_l[i]});
+			params_l.push_back({octopus::Vector(100,ySpawnWave_l), octopus::Vector(20,ySpawnWave_l), 80, 40, 60, waves_l[i]});
 		else if(i==2)
-			params_l.push_back({octopus::Vector(140,50), octopus::Vector(20,50), 120, 40, 60, waves_l[i]});
+			params_l.push_back({octopus::Vector(140,ySpawnWave_l), octopus::Vector(20,ySpawnWave_l), 120, 40, 60, waves_l[i]});
 		else if(i==3)
-			params_l.push_back({octopus::Vector(180,50), octopus::Vector(20,50), 160, 40, 60, waves_l[i]});
+			params_l.push_back({octopus::Vector(180,ySpawnWave_l), octopus::Vector(20,ySpawnWave_l), 160, 40, 60, waves_l[i]});
 		else
-			params_l.push_back({octopus::Vector(240,50), octopus::Vector(20,50), 160, 40, 60, waves_l[i]});
+			params_l.push_back({octopus::Vector(240,ySpawnWave_l), octopus::Vector(20,ySpawnWave_l), 160, 40, 60, waves_l[i]});
 	}
 
 	WaveInfo firstWave_l = rollWave(rand_p, waves_l[0]);
@@ -124,14 +140,13 @@ std::list<Steppable *> WaveLevelSteps(Library &lib_p, RandomGenerator &rand_p, s
 	Trigger * triggerWave_l = new WaveSpawn(new ListenerStepCount(firstWave_l.earlyWave.steps), firstWave_l, true,
 			lib_p, rand_p, params_l, player_p, defaultGenerator);
 
-	Trigger * triggerLose_l = new LoseTrigger(new ListenerEntityModelDied(&lib_p.getBuildingModel("command_center"), 0));
-
 	Handle handle_l(0);
+	Handle flyingCommandHandle_l(0);
 	std::list<Steppable *> spawners_l =
 	{
-		new PlayerSpawnStep(0, 0),
-		new PlayerSpawnStep(1, 1),
-		new PlayerSpawnStep(2, 2),
+		new PlayerSpawnStep(0, 0),	// main player
+		new PlayerSpawnStep(1, 1),	// enemy
+		new PlayerSpawnStep(2, 2),	// neutral
 		new PlayerAddBuildingModel(0, lib_p.getBuildingModel("barrack_square")),
 		new PlayerAddBuildingModel(0, lib_p.getBuildingModel("barrack_circle")),
 		new PlayerAddBuildingModel(0, lib_p.getBuildingModel("barrack_triangle")),
@@ -150,31 +165,78 @@ std::list<Steppable *> WaveLevelSteps(Library &lib_p, RandomGenerator &rand_p, s
 		new UnitSpawnStep(handle_l++, unit_l),
 		new UnitSpawnStep(handle_l++, unit_l),
 		new TriggerSpawn(triggerWave_l),
-		new TriggerSpawn(triggerLose_l),
+		new TriggerSpawn(new LoseTrigger(new ListenerEntityModelDied(&lib_p.getBuildingModel("command_center"), 0))),
 		new TriggerSpawn(new AnchorTrigger(lib_p, rand_p, 150)),
-		new FlyingCommandSpawnStep(new TimerDamage(Handle(0), 100, 0, 0, "Anchor", Handle(0))),
+		new FlyingCommandSpawnStep(new TimerDamage(flyingCommandHandle_l++, 100, 0, 0, "Anchor", Handle(0))),
 		new godot::CameraStep(to_int(building_l._pos.x), to_int(building_l._pos.y), 0),
-		new godot::DialogStep("leve1_intro"),
+		//new godot::DialogStep("leve1_intro"),
 	};
 
+	// add players
+	for(unsigned long i = 1 ; i < playerCount_p ; ++ i)
+	{
+		unsigned long player_l = 2+i;
+
+		spawners_l.push_back(new PlayerSpawnStep(player_l, 0));
+		spawners_l.push_back(new PlayerAddBuildingModel(player_l, lib_p.getBuildingModel("barrack_square")));
+		spawners_l.push_back(new PlayerAddBuildingModel(player_l, lib_p.getBuildingModel("barrack_circle")));
+		spawners_l.push_back(new PlayerAddBuildingModel(player_l, lib_p.getBuildingModel("barrack_triangle")));
+		spawners_l.push_back(new PlayerAddBuildingModel(player_l, lib_p.getBuildingModel("deposit")));
+		spawners_l.push_back(new PlayerAddBuildingModel(player_l, lib_p.getBuildingModel("anchor")));
+		spawners_l.push_back(new PlayerSpendResourceStep(player_l, mapRes_l));
+
+		// update player of spawn steps
+		building_l._player = player_l;
+		unit_l._player = player_l;
+		building_l._pos.y = 50 + 30*i;
+		unit_l._pos.y = 50 + 30*i;
+
+		Handle ccHandle_l = handle_l;
+		spawners_l.push_back(new BuildingSpawnStep(handle_l++, building_l, true));
+		for(unsigned long j = 0 ; j < 10; ++ j)
+		{
+			spawners_l.push_back(new UnitSpawnStep(handle_l++, unit_l));
+		}
+		spawners_l.push_back(new TriggerSpawn(new LoseTrigger(new ListenerEntityModelDied(&lib_p.getBuildingModel("command_center"), player_l))));
+		spawners_l.push_back(new FlyingCommandSpawnStep(new TimerDamage(flyingCommandHandle_l++, 100, 0, 0, "Anchor", ccHandle_l)));
+
+		spawners_l.push_back(new godot::CameraStep(to_int(building_l._pos.x), to_int(building_l._pos.y), player_l));
+	}
+
+	// y length depends on player count
+	unsigned long yLength_l = 100;
+	unsigned long yStartGate_l = 40;
+	unsigned long gateSize_l = 20;
+	unsigned long lastGateIncrease_l = 30;
+	if(playerCount_p==2)
+	{
+		yLength_l = 130;
+		yStartGate_l = 55;
+	}
+	else if(playerCount_p==3)
+	{
+		yLength_l = 160;
+		yStartGate_l = 70;
+	}
+
 	// zone 1
-	std::list<Steppable *> zone_l = createWallSpawners(lib_p, 0, 40, 100, 40, 60, handle_l);
+	std::list<Steppable *> zone_l = createWallSpawners(lib_p, 0, 40, yLength_l, yStartGate_l, yStartGate_l+gateSize_l, handle_l);
 	spawners_l.insert(spawners_l.end(), zone_l.begin(), zone_l.end());
 
 	// zone 2
-	zone_l = createWallSpawners(lib_p, 40, 80, 100, 40, 60, handle_l);
+	zone_l = createWallSpawners(lib_p, 40, 80, yLength_l, yStartGate_l, yStartGate_l+gateSize_l, handle_l);
 	spawners_l.insert(spawners_l.end(), zone_l.begin(), zone_l.end());
 
 	// zone 3
-	zone_l = createWallSpawners(lib_p, 80, 120, 100, 40, 60, handle_l);
+	zone_l = createWallSpawners(lib_p, 80, 120, yLength_l, yStartGate_l, yStartGate_l+gateSize_l, handle_l);
 	spawners_l.insert(spawners_l.end(), zone_l.begin(), zone_l.end());
 
 	// zone 4
-	zone_l = createWallSpawners(lib_p, 120, 160, 100, 40, 60, handle_l);
+	zone_l = createWallSpawners(lib_p, 120, 160, yLength_l, yStartGate_l, yStartGate_l+gateSize_l, handle_l);
 	spawners_l.insert(spawners_l.end(), zone_l.begin(), zone_l.end());
 
 	// zone 5
-	zone_l = createWallSpawners(lib_p, 160, 220, 100, 10, 90, handle_l);
+	zone_l = createWallSpawners(lib_p, 160, 220, yLength_l, yStartGate_l-lastGateIncrease_l, yStartGate_l+gateSize_l+lastGateIncrease_l, handle_l);
 	spawners_l.insert(spawners_l.end(), zone_l.begin(), zone_l.end());
 
 	return spawners_l;
@@ -236,32 +298,47 @@ AreaSpawnerCommand * createArenaSpawnCommmand(Library &lib_p, RandomGenerator &r
 	return new AreaSpawnerCommand(rand_p, spawners_l);
 }
 
-std::list<Command *> WaveLevelCommands(Library &lib_p, RandomGenerator &rand_p)
+std::list<Command *> WaveLevelCommands(Library &lib_p, RandomGenerator &rand_p, unsigned long playerCount_p)
 {
+	unsigned long yPosTopArea_l = 5;
+	unsigned long yPosBotArea_l = 65;
+	if(playerCount_p==2)
+	{
+		yPosBotArea_l = 95;
+	}
+	else if(playerCount_p==3)
+	{
+		yPosBotArea_l = 125;
+	}
+
 	// createArenaSpawnCommmand(lib, rand, x, y, size, nb res, nb anchor, nb units, qty irium)
 	std::list<Command *> commands_l {
 		// zone 0
-		createArenaSpawnCommmand(lib_p, rand_p, 10, 10, 20, 1, 1, 0, 0),
-		createArenaSpawnCommmand(lib_p, rand_p, 10, 40, 20, 1, 0, 0, 0),
-		createArenaSpawnCommmand(lib_p, rand_p, 10, 70, 20, 1, 1, 0, 0),
+		createArenaSpawnCommmand(lib_p, rand_p, 10, yPosTopArea_l, 30, 1*playerCount_p, 1*playerCount_p, 0, 0),
+		createArenaSpawnCommmand(lib_p, rand_p, 10, yPosBotArea_l, 30, 1*playerCount_p, 1*playerCount_p, 0, 0),
 		// zone 1
-		createArenaSpawnCommmand(lib_p, rand_p, 50, 10, 20, 1, 1, 20, 500),
-		createArenaSpawnCommmand(lib_p, rand_p, 50, 40, 20, 1, 1, 10, 500),
-		createArenaSpawnCommmand(lib_p, rand_p, 50, 70, 20, 1, 1, 20, 500),
+		createArenaSpawnCommmand(lib_p, rand_p, 50, yPosTopArea_l, 30, 1*playerCount_p, 1*playerCount_p, 20, 500),
+		createArenaSpawnCommmand(lib_p, rand_p, 50, yPosBotArea_l, 30, 1*playerCount_p, 1*playerCount_p, 20, 500),
 		// zone 2
-		createArenaSpawnCommmand(lib_p, rand_p, 90, 10, 20, 1, 1, 30, 1000),
-		createArenaSpawnCommmand(lib_p, rand_p, 90, 40, 20, 1, 1, 20, 1000),
-		createArenaSpawnCommmand(lib_p, rand_p, 90, 70, 20, 1, 1, 30, 1000),
+		createArenaSpawnCommmand(lib_p, rand_p, 90, yPosTopArea_l, 30, 1*playerCount_p, 1*playerCount_p, 30, 1000),
+		createArenaSpawnCommmand(lib_p, rand_p, 90, yPosBotArea_l, 30, 1*playerCount_p, 1*playerCount_p, 30, 1000),
 		// zone 3
-		createArenaSpawnCommmand(lib_p, rand_p, 130, 10, 20, 2, 1, 40, 2000),
-		createArenaSpawnCommmand(lib_p, rand_p, 130, 40, 20, 2, 1, 30, 2000),
-		createArenaSpawnCommmand(lib_p, rand_p, 130, 70, 20, 2, 1, 40, 2000),
+		createArenaSpawnCommmand(lib_p, rand_p, 130, yPosTopArea_l, 30, 2*playerCount_p, 1*playerCount_p, 40, 2000),
+		createArenaSpawnCommmand(lib_p, rand_p, 130, yPosBotArea_l, 30, 2*playerCount_p, 1*playerCount_p, 40, 2000),
 		// zone 4
-		createArenaSpawnCommmand(lib_p, rand_p, 170, 10, 20, 2, 1, 50, 2000),
-		createArenaSpawnCommmand(lib_p, rand_p, 170, 40, 20, 2, 1, 40, 2000),
-		createArenaSpawnCommmand(lib_p, rand_p, 170, 70, 20, 2, 1, 50, 2000),
+		createArenaSpawnCommmand(lib_p, rand_p, 170, yPosTopArea_l, 30, 2*playerCount_p, 1*playerCount_p, 50, 2000),
+		createArenaSpawnCommmand(lib_p, rand_p, 170, yPosBotArea_l, 30, 2*playerCount_p, 1*playerCount_p, 50, 2000),
 	};
 
+	// players area
+	for(unsigned long i = 0 ; i < playerCount_p ; ++ i)
+	{
+		commands_l.push_back(createArenaSpawnCommmand(lib_p, rand_p, 10, 40+30*i, 20, 1, 0, 0, 0));
+		commands_l.push_back(createArenaSpawnCommmand(lib_p, rand_p, 50, 40+30*i, 20, 1, 1, 10, 500));
+		commands_l.push_back(createArenaSpawnCommmand(lib_p, rand_p, 90, 40+30*i, 20, 1, 1, 20, 1000));
+		commands_l.push_back(createArenaSpawnCommmand(lib_p, rand_p, 130, 40+30*i, 20, 2, 1, 30, 2000));
+		commands_l.push_back(createArenaSpawnCommmand(lib_p, rand_p, 170, 40+30*i, 20, 2, 1, 40, 2000));
+	}
 	return commands_l;
 }
 
@@ -383,8 +460,8 @@ std::pair<std::list<octopus::Steppable *>, std::list<octopus::Command *> > readW
 	rand_p = new octopus::RandomGenerator(header_r.seed);
 
 	std::pair<std::list<octopus::Steppable *>, std::list<octopus::Command *> > pair_l;
-	pair_l.first = WaveLevelSteps(lib_p, *rand_p, header_r.tierWaveInfo, header_r.player);
-	pair_l.second = WaveLevelCommands(lib_p, *rand_p);
+	pair_l.first = WaveLevelSteps(lib_p, *rand_p, header_r.tierWaveInfo, header_r.player, 1);
+	pair_l.second = WaveLevelCommands(lib_p, *rand_p, 1);
 	return pair_l;
 }
 

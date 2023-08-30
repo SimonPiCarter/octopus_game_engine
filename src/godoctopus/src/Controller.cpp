@@ -208,7 +208,7 @@ void Controller::load_level1(int seed_p, int nb_wave_p)
 	init(commands_l, spawners_l, false, 50, _autoSaveFile);
 }
 
-void Controller::load_level2(int seed_p, WavePattern const * wavePattern_p)
+void Controller::load_level2(int seed_p, WavePattern const * wavePattern_p, int nb_players_p)
 {
 	delete _rand;
 	_rand = new octopus::RandomGenerator(seed_p);
@@ -226,8 +226,8 @@ void Controller::load_level2(int seed_p, WavePattern const * wavePattern_p)
 	}
 	unsigned long player_l = wavePattern_p->getPlayer();
 
-	std::list<octopus::Steppable *> spawners_l = level2::WaveLevelSteps(_lib, *_rand, wavesInfo_l, player_l);
-	std::list<octopus::Command *> commands_l = level2::WaveLevelCommands(_lib, *_rand);
+	std::list<octopus::Steppable *> spawners_l = level2::WaveLevelSteps(_lib, *_rand, wavesInfo_l, player_l, nb_players_p);
+	std::list<octopus::Command *> commands_l = level2::WaveLevelCommands(_lib, *_rand, nb_players_p);
 	// enable auto save
 	newAutoSaveFile();
 	writeLevelId(*_autoSaveFile, LEVEL_ID_LEVEL_2, 50);
@@ -1233,7 +1233,7 @@ void Controller::_bind_methods()
 	ClassDB::bind_method(D_METHOD("load_dot_level", "size"), &Controller::load_dot_level);
 	ClassDB::bind_method(D_METHOD("load_lifesteal_level", "size"), &Controller::load_lifesteal_level);
 	ClassDB::bind_method(D_METHOD("load_level1", "seed", "nb_wave"), &Controller::load_level1);
-	ClassDB::bind_method(D_METHOD("load_level2", "seed", "wave_pattern"), &Controller::load_level2);
+	ClassDB::bind_method(D_METHOD("load_level2", "seed", "wave_pattern", "nb_players"), &Controller::load_level2);
 	ClassDB::bind_method(D_METHOD("load_level_test_anchor", "seed"), &Controller::load_level_test_anchor);
 	ClassDB::bind_method(D_METHOD("load_level_test_model_reading", "seed", "level_model"), &Controller::load_level_test_model_reading);
 	ClassDB::bind_method(D_METHOD("load_duel_level", "seed", "div_player_1_p", "div_player_2_p"), &Controller::load_duel_level);
