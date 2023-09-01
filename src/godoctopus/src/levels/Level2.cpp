@@ -172,10 +172,12 @@ std::list<Steppable *> WaveLevelSteps(Library &lib_p, RandomGenerator &rand_p, s
 		//new godot::DialogStep("leve1_intro"),
 	};
 
+	std::vector<unsigned long> players_l {0};
 	// add players
 	for(unsigned long i = 1 ; i < playerCount_p ; ++ i)
 	{
 		unsigned long player_l = 2+i;
+		players_l.push_back(player_l);
 
 		spawners_l.push_back(new PlayerSpawnStep(player_l, 0));
 		spawners_l.push_back(new PlayerAddBuildingModel(player_l, lib_p.getBuildingModel("barrack_square")));
@@ -220,23 +222,23 @@ std::list<Steppable *> WaveLevelSteps(Library &lib_p, RandomGenerator &rand_p, s
 	}
 
 	// zone 1
-	std::list<Steppable *> zone_l = createWallSpawners(lib_p, 0, 40, yLength_l, yStartGate_l, yStartGate_l+gateSize_l, handle_l);
+	std::list<Steppable *> zone_l = createWallSpawners(lib_p, 0, 40, yLength_l, yStartGate_l, yStartGate_l+gateSize_l, handle_l, players_l);
 	spawners_l.insert(spawners_l.end(), zone_l.begin(), zone_l.end());
 
 	// zone 2
-	zone_l = createWallSpawners(lib_p, 40, 80, yLength_l, yStartGate_l, yStartGate_l+gateSize_l, handle_l);
+	zone_l = createWallSpawners(lib_p, 40, 80, yLength_l, yStartGate_l, yStartGate_l+gateSize_l, handle_l, players_l);
 	spawners_l.insert(spawners_l.end(), zone_l.begin(), zone_l.end());
 
 	// zone 3
-	zone_l = createWallSpawners(lib_p, 80, 120, yLength_l, yStartGate_l, yStartGate_l+gateSize_l, handle_l);
+	zone_l = createWallSpawners(lib_p, 80, 120, yLength_l, yStartGate_l, yStartGate_l+gateSize_l, handle_l, players_l);
 	spawners_l.insert(spawners_l.end(), zone_l.begin(), zone_l.end());
 
 	// zone 4
-	zone_l = createWallSpawners(lib_p, 120, 160, yLength_l, yStartGate_l, yStartGate_l+gateSize_l, handle_l);
+	zone_l = createWallSpawners(lib_p, 120, 160, yLength_l, yStartGate_l, yStartGate_l+gateSize_l, handle_l, players_l);
 	spawners_l.insert(spawners_l.end(), zone_l.begin(), zone_l.end());
 
 	// zone 5
-	zone_l = createWallSpawners(lib_p, 160, 220, yLength_l, yStartGate_l-lastGateIncrease_l, yStartGate_l+gateSize_l+lastGateIncrease_l, handle_l);
+	zone_l = createWallSpawners(lib_p, 160, 220, yLength_l, yStartGate_l-lastGateIncrease_l, yStartGate_l+gateSize_l+lastGateIncrease_l, handle_l, players_l);
 	spawners_l.insert(spawners_l.end(), zone_l.begin(), zone_l.end());
 
 	return spawners_l;

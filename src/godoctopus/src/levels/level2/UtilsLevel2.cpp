@@ -30,11 +30,15 @@ std::string genModelName(octopus::RandomGenerator &gen_p)
 
 /// spawners for walls/water
 
-std::list<Steppable *> createWallSpawners(Library &lib_p, unsigned long xStart, unsigned long x, unsigned long y, unsigned long startYGate, unsigned long endYGate, Handle &handle_p)
+std::list<Steppable *> createWallSpawners(Library &lib_p, unsigned long xStart, unsigned long x, unsigned long y,
+	unsigned long startYGate, unsigned long endYGate, Handle &handle_p, std::vector<unsigned long> const &players_p)
 {
-	std::list<Steppable *> spawners_l = {
-		new StateAddConstraintPositionStep(0, x, startYGate, endYGate, true, true),
-	};
+	std::list<Steppable *> spawners_l = {};
+
+	for(unsigned long player_l : players_p)
+	{
+		spawners_l.push_back(new StateAddConstraintPositionStep(player_l, x, startYGate, endYGate, true, true));
+	}
 
 	// create walls for zone 1
 	for(size_t i = 0 ; i <= y ; i+=2)
