@@ -852,6 +852,15 @@ double Controller::get_current_reload_time(EntityHandle const * handle_p, String
 	return reload_l;
 }
 
+bool Controller::hasNonStaticBehind(EntityHandle const * handle_p, int height_p, int width_p) const
+{
+	if(!_state)
+	{
+		return false;
+	}
+	return lookUpNonStaticBehind(*_state, castHandle(handle_p), width_p, height_p);
+}
+
 bool Controller::is_building(String const &model_p) const
 {
 	std::string modelId_l(model_p.utf8().get_data());
@@ -1271,6 +1280,7 @@ void Controller::_bind_methods()
 	ClassDB::bind_method(D_METHOD("is_upgrade", "upgrade"), &Controller::is_upgrade);
 	ClassDB::bind_method(D_METHOD("get_reload_time", "handle", "ability"), &Controller::get_reload_time);
 	ClassDB::bind_method(D_METHOD("get_current_reload_time", "handle", "ability"), &Controller::get_current_reload_time);
+	ClassDB::bind_method(D_METHOD("hasNonStaticBehind", "handle", "height" "width"), &Controller::hasNonStaticBehind);
 	ClassDB::bind_method(D_METHOD("is_building", "handle"), &Controller::is_building);
 	ClassDB::bind_method(D_METHOD("get_world_size"), &Controller::get_world_size);
 	ClassDB::bind_method(D_METHOD("get_steps"), &Controller::get_steps);
