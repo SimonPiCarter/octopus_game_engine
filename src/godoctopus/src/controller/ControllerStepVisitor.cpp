@@ -22,6 +22,7 @@
 #include "step/entity/EntityHitPointChangeStep.hh"
 #include "step/entity/EntityMoveStep.hh"
 #include "step/entity/EntityUpdateReloadAbilityStep.hh"
+#include "step/entity/buff/EntityBuffStep.hh"
 #include "step/entity/spawn/BuildingSpawnStep.hh"
 #include "step/entity/spawn/EntitySpawnStep.hh"
 #include "step/entity/spawn/ResourceSpawnStep.hh"
@@ -209,6 +210,11 @@ void ControllerStepVisitor::visit(octopus::CustomStep const *steppable_p)
 	{
 		_controller.emit_signal("wave");
 	}
+}
+
+void ControllerStepVisitor::visit(octopus::EntityBuffStep const *steppable_p)
+{
+		_controller.emit_signal("buff", int(steppable_p->_target.index), String(steppable_p->_buff._id.c_str()), int(steppable_p->_buff._duration));
 }
 
 }

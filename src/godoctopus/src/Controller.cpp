@@ -1334,6 +1334,7 @@ void Controller::_bind_methods()
 	ADD_SIGNAL(MethodInfo("updated_requirements"));
 	ADD_SIGNAL(MethodInfo("ability_used", PropertyInfo(Variant::INT, "handle"), PropertyInfo(Variant::STRING, "ability")));
 	ADD_SIGNAL(MethodInfo("buff_all", PropertyInfo(Variant::INT, "player"), PropertyInfo(Variant::STRING, "buff"), PropertyInfo(Variant::STRING, "model")));
+	ADD_SIGNAL(MethodInfo("buff", PropertyInfo(Variant::INT, "handle"), PropertyInfo(Variant::STRING, "buff"), PropertyInfo(Variant::INT, "duration")));
 
 	/// blockers
 	ADD_SIGNAL(MethodInfo("spawn_blockers", PropertyInfo(Variant::FLOAT, "val"), PropertyInfo(Variant::FLOAT, "min"),
