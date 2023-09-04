@@ -46,7 +46,7 @@ public:
 	/// @brief create an optional new SteppableData
 	/// @return nullptr if not required
 	virtual SteppableData * newData(State const &) const;
-private:
+
 	/// @brief target of the buff
 	Handle const _target;
 

@@ -42,7 +42,7 @@ bool BuildingModel::isAnyDeposit() const
 
 bool BuildingModel::isProduction() const
 {
-	return !_unitModels.empty();
+	return !_unitModels.empty() || !_upgrades.empty();
 }
 
 bool BuildingModel::canProduce(UnitModel const * model_p) const
