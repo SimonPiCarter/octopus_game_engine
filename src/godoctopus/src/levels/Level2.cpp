@@ -261,6 +261,9 @@ AreaSpawnerCommand * createArenaSpawnCommmand(Library &lib_p, RandomGenerator &r
 	res4_l._resource = qtyIrium_p;
 	res4_l._player = 2;
 
+	Building tree_l({0,0}, true, lib_p.getBuildingModel("water_v_up"));
+	tree_l._player = 2;
+
 	Building anchorSpot_l({0,0}, true, lib_p.getBuildingModel("anchor_spot"));
 	anchorSpot_l._player = 2;
 
@@ -272,6 +275,11 @@ AreaSpawnerCommand * createArenaSpawnCommmand(Library &lib_p, RandomGenerator &r
 		area_l.y = y;
 		area_l.entities.emplace_back(new Resource(res3_l), nbRes_p);
 		area_l.entities.emplace_back(new Resource(res2_l), nbRes_p);
+		int nbTrees_l = rand_p.roll(2,5);
+		for(int i = 0 ; i < nbTrees_l ; ++ i)
+		{
+			area_l.entities.emplace_back(new Building(tree_l), nbRes_p);
+		}
 		if(qtyIrium_p>0)
 		{
 			area_l.entities.emplace_back(new Resource(res4_l), 1);
@@ -316,20 +324,20 @@ std::list<Command *> WaveLevelCommands(Library &lib_p, RandomGenerator &rand_p, 
 	// createArenaSpawnCommmand(lib, rand, x, y, size, nb res, nb anchor, nb units, qty irium)
 	std::list<Command *> commands_l {
 		// zone 0
-		createArenaSpawnCommmand(lib_p, rand_p, 10, yPosTopArea_l, 30, 1*playerCount_p, 1*playerCount_p, 0, 0),
-		createArenaSpawnCommmand(lib_p, rand_p, 10, yPosBotArea_l, 30, 1*playerCount_p, 1*playerCount_p, 0, 0),
+		createArenaSpawnCommmand(lib_p, rand_p, 5, yPosTopArea_l, 30, 1*playerCount_p, 1*playerCount_p, 0, 0),
+		createArenaSpawnCommmand(lib_p, rand_p, 5, yPosBotArea_l, 30, 1*playerCount_p, 1*playerCount_p, 0, 0),
 		// zone 1
-		createArenaSpawnCommmand(lib_p, rand_p, 50, yPosTopArea_l, 30, 1*playerCount_p, 1*playerCount_p, 20, 500),
-		createArenaSpawnCommmand(lib_p, rand_p, 50, yPosBotArea_l, 30, 1*playerCount_p, 1*playerCount_p, 20, 500),
+		createArenaSpawnCommmand(lib_p, rand_p, 45, yPosTopArea_l, 30, 1*playerCount_p, 1*playerCount_p, 20, 500),
+		createArenaSpawnCommmand(lib_p, rand_p, 45, yPosBotArea_l, 30, 1*playerCount_p, 1*playerCount_p, 20, 500),
 		// zone 2
-		createArenaSpawnCommmand(lib_p, rand_p, 90, yPosTopArea_l, 30, 1*playerCount_p, 1*playerCount_p, 30, 1000),
-		createArenaSpawnCommmand(lib_p, rand_p, 90, yPosBotArea_l, 30, 1*playerCount_p, 1*playerCount_p, 30, 1000),
+		createArenaSpawnCommmand(lib_p, rand_p, 85, yPosTopArea_l, 30, 1*playerCount_p, 1*playerCount_p, 30, 1000),
+		createArenaSpawnCommmand(lib_p, rand_p, 85, yPosBotArea_l, 30, 1*playerCount_p, 1*playerCount_p, 30, 1000),
 		// zone 3
-		createArenaSpawnCommmand(lib_p, rand_p, 130, yPosTopArea_l, 30, 2*playerCount_p, 1*playerCount_p, 40, 2000),
-		createArenaSpawnCommmand(lib_p, rand_p, 130, yPosBotArea_l, 30, 2*playerCount_p, 1*playerCount_p, 40, 2000),
+		createArenaSpawnCommmand(lib_p, rand_p, 125, yPosTopArea_l, 30, 2*playerCount_p, 1*playerCount_p, 40, 2000),
+		createArenaSpawnCommmand(lib_p, rand_p, 125, yPosBotArea_l, 30, 2*playerCount_p, 1*playerCount_p, 40, 2000),
 		// zone 4
-		createArenaSpawnCommmand(lib_p, rand_p, 170, yPosTopArea_l, 30, 2*playerCount_p, 1*playerCount_p, 50, 2000),
-		createArenaSpawnCommmand(lib_p, rand_p, 170, yPosBotArea_l, 30, 2*playerCount_p, 1*playerCount_p, 50, 2000),
+		createArenaSpawnCommmand(lib_p, rand_p, 165, yPosTopArea_l, 30, 2*playerCount_p, 1*playerCount_p, 50, 2000),
+		createArenaSpawnCommmand(lib_p, rand_p, 165, yPosBotArea_l, 30, 2*playerCount_p, 1*playerCount_p, 50, 2000),
 	};
 
 	// players area
