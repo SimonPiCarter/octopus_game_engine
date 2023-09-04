@@ -17,6 +17,8 @@ struct FlockInformation
 	long qtyReached = 0;
 	/// @brief unique idx used to create flock unity
 	unsigned long idx = 0;
+	/// @brief square root of qtyReached
+	Fixed sqrtQtyReached;
 };
 
 /// @brief This struct is aimed at supporting

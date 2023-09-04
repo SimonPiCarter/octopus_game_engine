@@ -83,6 +83,7 @@ void CommandUpdateFlockingReached::apply(State &state_p) const
 	if(data_l->_flockInfo)
 	{
 		++data_l->_flockInfo->at(state_p._id).qtyReached;
+		data_l->_flockInfo->at(state_p._id).sqrtQtyReached = numeric::square_root(Fixed(data_l->_flockInfo->at(state_p._id).qtyReached));
 	}
 }
 
@@ -94,6 +95,7 @@ void CommandUpdateFlockingReached::revert(State &state_p, SteppableData const *)
 	if(data_l->_flockInfo)
 	{
 		--data_l->_flockInfo->at(state_p._id).qtyReached;
+		data_l->_flockInfo->at(state_p._id).sqrtQtyReached = numeric::square_root(Fixed(data_l->_flockInfo->at(state_p._id).qtyReached));
 	}
 }
 

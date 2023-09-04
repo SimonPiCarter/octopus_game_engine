@@ -155,10 +155,10 @@ bool EntityMoveCommand::applyCommand(Step & step_p, State const &state_p, Comman
 
 	Vector delta_l = ent_l->_pos - data_l->_finalPoint;
 	Fixed tol_l = 0.1;
-	if(data_l->_flockInfo && data_l->_flockInfo->at(state_p._id).qtyReached > 0)
+	if(data_l->_flockInfo)
 	{
-		Fixed newTol_l = data_l->_flockInfo->at(state_p._id).qtyReached/(ent_l->_model._ray*3.14*4);
-		tol_l = std::max(tol_l, newTol_l);
+		Fixed newTol_l = ent_l->_model._ray*data_l->_flockInfo->at(state_p._id).sqrtQtyReached*1.1;
+		tol_l = std::max(ent_l->_model._ray, newTol_l);
 	}
 	// No more waypoint -> terminate
 	if(square_length(delta_l) < tol_l*tol_l)
