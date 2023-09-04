@@ -23,10 +23,12 @@
 #include "state/entity/Entity.hh"
 #include "state/entity/Resource.hh"
 #include "state/entity/Unit.hh"
+#include "state/entity/buff/TimedBuff.hh"
 #include "state/player/Player.hh"
 #include "state/player/upgrade/Upgrade.hh"
 #include "state/State.hh"
 #include "step/player/PlayerSpawnStep.hh"
+#include "step/player/PlayerBuffAllStep.hh"
 #include "utils/Binary.hh"
 
 // godot
@@ -252,7 +254,7 @@ void Controller::load_level_test_anchor(int seed_p)
 	init(commands_l, spawners_l, false, 50, _autoSaveFile);
 }
 
-void Controller::load_level_test_model_reading(int seed_p, godot::LevelModel *level_model_p)
+void Controller::load_level_test_model_reading(int seed_p, godot::LevelModel *level_model_p, bool buffProd_p)
 {
 	delete _rand;
 	_rand = new octopus::RandomGenerator(seed_p);
@@ -263,6 +265,15 @@ void Controller::load_level_test_model_reading(int seed_p, godot::LevelModel *le
 		spawners_l = level_model_p->generateLevelSteps(_lib);
 	}
 	spawners_l.splice(spawners_l.end(), levelsteps_l);
+
+	if(buffProd_p)
+	{
+		octopus::TimedBuff buff_l;
+		buff_l._id = "model_loading_buff_prod";
+		buff_l._type = octopus::TyppedBuff::Type::Production;
+		buff_l._coef = 9.;
+		spawners_l.push_back(new octopus::PlayerBuffAllStep(0, buff_l, ""));
+	}
 
 	std::list<octopus::Command *> commands_l = level_test_model::LevelCommands(_lib, *_rand);
 	// enable auto save
@@ -1235,7 +1246,7 @@ void Controller::_bind_methods()
 	ClassDB::bind_method(D_METHOD("load_level1", "seed", "nb_wave"), &Controller::load_level1);
 	ClassDB::bind_method(D_METHOD("load_level2", "seed", "wave_pattern", "nb_players"), &Controller::load_level2);
 	ClassDB::bind_method(D_METHOD("load_level_test_anchor", "seed"), &Controller::load_level_test_anchor);
-	ClassDB::bind_method(D_METHOD("load_level_test_model_reading", "seed", "level_model"), &Controller::load_level_test_model_reading);
+	ClassDB::bind_method(D_METHOD("load_level_test_model_reading", "seed", "level_model", "buff_prod"), &Controller::load_level_test_model_reading);
 	ClassDB::bind_method(D_METHOD("load_duel_level", "seed", "div_player_1_p", "div_player_2_p"), &Controller::load_duel_level);
 	ClassDB::bind_method(D_METHOD("load_multi_test_level", "seed", "step_count"), &Controller::load_multi_test_level);
 
