@@ -241,6 +241,14 @@ Entity const * lookUpNewTarget(State const &state_p, Handle const &sourceHandle_
 Entity const * lookUpDeposit(State const &state_p, Handle const &sourceHandle_p, Handle const &res_p);
 Entity const * lookUpNewResource(State const &state_p, Handle const &sourceHandle_p, Handle const &res_p);
 
+/// @brief Check if there are non static behind (look up) the given entity
+/// @param state_p the state
+/// @param handle_p the handle of the entity to be checked
+/// @param width_p by how many cases we check on left and right
+/// @param height_p by how many cases we check up
+/// @return true if one entity is found
+bool lookUpNonStaticBehind(State const &state_p, Handle const &handle_p, unsigned long width_p, unsigned long height_p);
+
 /// @brief Check if the player has enough resource in the given state
 /// @param state_p state in which we want to check resources
 /// @param player_p the player

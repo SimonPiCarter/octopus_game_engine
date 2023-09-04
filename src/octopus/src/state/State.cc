@@ -642,6 +642,56 @@ Entity const * lookUpNewResource(State const &state_p, Handle const &sourceHandl
 	return closest_l;
 }
 
+bool lookUpNonStaticBehind(State const &state_p, Handle const &handleSource_p, unsigned long width_p, unsigned long height_p)
+{
+	if(!state_p.isEntityAlive(handleSource_p))
+	{
+		return false;
+	}
+	Entity const * source_l = state_p.getEntity(handleSource_p);
+
+	Logger::getDebug() << " lookUpNonStaticBehind :: start"<< std::endl;
+
+	Box<long> box_l {state_p.getGridIndex(source_l->_pos.x - width_p),
+					 state_p.getGridIndex(source_l->_pos.x + width_p),
+					 state_p.getGridIndex(source_l->_pos.y - height_p),
+					 state_p.getGridIndex(source_l->_pos.y - 1)};
+
+	// grid for fast access
+	std::vector<std::vector<AbstractBitset *> > const & grid_l = state_p.getGrid();
+
+	bool found_l = false;
+
+	for(long x = box_l._lowerX ; x <= box_l._upperX; ++x)
+	{
+		for(long y = box_l._lowerY ; y <= box_l._upperY; ++y)
+		{
+			// if any non static
+			grid_l[x][y]->for_each([&] (int handle_p)
+			{
+				Entity const * check_l = state_p.getLoseEntity(handle_p);
+
+				if(!check_l->_model._isStatic)
+				{
+					found_l = true;
+					// break the loop
+					return true;
+				}
+				// go on
+				return false;
+			}
+			);
+
+			if(found_l)
+			{
+				return true;
+			}
+		}
+	}
+
+	return found_l;
+}
+
 Fixed safeGetInMapResource(std::map<std::string, Fixed> const &map_p, std::string type_p)
 {
 	auto && it_l = map_p.find(type_p);
