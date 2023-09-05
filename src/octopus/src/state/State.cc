@@ -842,6 +842,39 @@ bool checkGrid(State const &state_p, Entity const *ent_p, bool ignoreAbandonedTe
 	return true;
 }
 
+bool checkGridNode(State const &state_p, int x_p, int y_p, bool forTemple_p)
+{
+	Grid const &pathGrid_l = state_p.getPathGrid();
+	if(x_p >= 0
+	&& x_p <= pathGrid_l.getSizeX()
+	&& y_p >= 0
+	&& y_p <= pathGrid_l.getSizeY())
+	{
+		GridNode const *node_l = pathGrid_l.getNode(x_p, y_p);
+		if(forTemple_p)
+		{
+			// if content and is not an abandonned temple
+			if(node_l->getContent()
+			&& !node_l->getContent()->_model._isAbandonedTemple)
+			{
+				return false;
+			}
+			if(node_l->isFree())
+			{
+				return false;
+			}
+		}
+		else if(!node_l->isFree())
+		{
+			return false;
+		}
+		return true;
+	}
+	// out of bound
+	return false;
+}
+
+
 bool noOutOfBounds(State const &state_p, Entity const &ent_p)
 {
 	Grid const &pathGrid_l = state_p.getPathGrid();

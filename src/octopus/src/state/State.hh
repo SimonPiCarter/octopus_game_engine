@@ -285,6 +285,10 @@ VisionGrid * getVisionGrid(State &state_p, unsigned long team_p);
 /// are free
 bool checkGrid(State const &state_p, Entity const *ent_p, bool ignoreAbandonedTemples_p);
 
+/// @brief check if the grid is free on the given coordinate
+/// if forTemple_p is true a grid nod is free iif an abandonned temple is present on node
+bool checkGridNode(State const &state_p, int x_p, int y_p, bool forTemple_p);
+
 /// @brief Check that the entity does no go out of bound
 /// @note always true if entity is not static
 bool noOutOfBounds(State const &state_p, Entity const &ent_p);
