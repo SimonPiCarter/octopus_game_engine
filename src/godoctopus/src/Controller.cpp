@@ -24,6 +24,7 @@
 #include "state/entity/Resource.hh"
 #include "state/entity/Unit.hh"
 #include "state/entity/buff/TimedBuff.hh"
+#include "state/model/entity/TempleModel.hh"
 #include "state/player/Player.hh"
 #include "state/player/upgrade/Upgrade.hh"
 #include "state/State.hh"
@@ -867,6 +868,23 @@ bool Controller::is_building(String const &model_p) const
 	return _lib.hasBuildingModel(modelId_l);
 }
 
+float Controller::get_model_ray(String const &model_p) const
+{
+	std::string modelId_l(model_p.utf8().get_data());
+	return octopus::to_double(_lib.getEntityModel(modelId_l)._ray);
+}
+
+bool Controller::is_grid_free(String const &model_p, int x_p, int y_p) const
+{
+	if(_state)
+	{
+		std::string modelId_l(model_p.utf8().get_data());
+		return checkGridNode(*_state, x_p, y_p, dynamic_cast<octopus::TempleModel const*>(&_lib.getEntityModel(modelId_l)));
+	}
+	return false;
+}
+
+
 int Controller::get_world_size() const
 {
 	return _state->getWorldSize();
@@ -1281,7 +1299,9 @@ void Controller::_bind_methods()
 	ClassDB::bind_method(D_METHOD("get_reload_time", "handle", "ability"), &Controller::get_reload_time);
 	ClassDB::bind_method(D_METHOD("get_current_reload_time", "handle", "ability"), &Controller::get_current_reload_time);
 	ClassDB::bind_method(D_METHOD("hasNonStaticBehind", "handle", "height" "width"), &Controller::hasNonStaticBehind);
-	ClassDB::bind_method(D_METHOD("is_building", "handle"), &Controller::is_building);
+	ClassDB::bind_method(D_METHOD("is_building", "model"), &Controller::is_building);
+	ClassDB::bind_method(D_METHOD("get_model_ray", "model"), &Controller::get_model_ray);
+	ClassDB::bind_method(D_METHOD("is_grid_free", "model", "x", "y"), &Controller::is_grid_free);
 	ClassDB::bind_method(D_METHOD("get_world_size"), &Controller::get_world_size);
 	ClassDB::bind_method(D_METHOD("get_steps"), &Controller::get_steps);
 	ClassDB::bind_method(D_METHOD("get_team", "player"), &Controller::get_team);

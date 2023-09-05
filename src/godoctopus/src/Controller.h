@@ -108,6 +108,9 @@ public:
 	bool hasNonStaticBehind(EntityHandle const * handle_p, int height_p, int width_p) const;
 
 	bool is_building(String const &model_p) const;
+	float get_model_ray(String const &model_p) const;
+	/// @brief check if grid is free (model is required to handle specific building check)
+	bool is_grid_free(String const &model_p, int x_p, int y_p) const;
 
 	int get_world_size() const;
 	int get_steps() const;
