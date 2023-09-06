@@ -134,6 +134,12 @@ bool Entity::is_unit(Controller const *controller_p) const
     return ent_l->_model._isUnit;
 }
 
+bool Entity::is_invulnerable(Controller const *controller_p) const
+{
+    octopus::Entity const *ent_l = controller_p->getEntity(octopus::Handle(_index, _revision));
+    return ent_l->_model._invulnerable;
+}
+
 bool Entity::is_idle(Controller const *controller_p) const
 {
     octopus::Entity const *ent_l = controller_p->getEntity(octopus::Handle(_index, _revision));
@@ -321,6 +327,7 @@ void Entity::_bind_methods()
     ClassDB::bind_method(D_METHOD("is_built", "controller"), &Entity::is_built);
     ClassDB::bind_method(D_METHOD("is_resource", "controller"), &Entity::is_resource);
     ClassDB::bind_method(D_METHOD("is_unit", "controller"), &Entity::is_unit);
+    ClassDB::bind_method(D_METHOD("is_invulnerable", "controller"), &Entity::is_invulnerable);
     ClassDB::bind_method(D_METHOD("is_idle", "controller"), &Entity::is_idle);
     ClassDB::bind_method(D_METHOD("get_ray", "controller"), &Entity::get_ray);
     ClassDB::bind_method(D_METHOD("get_model", "controller"), &Entity::get_model);

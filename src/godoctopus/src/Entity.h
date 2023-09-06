@@ -85,6 +85,7 @@ public:
     bool is_built(Controller const *controller_p) const;
     bool is_resource(Controller const *controller_p) const;
     bool is_unit(Controller const *controller_p) const;
+    bool is_invulnerable(Controller const *controller_p) const;
     bool is_idle(Controller const *controller_p) const;
     int get_player(Controller const *controller_p) const;
     int get_team(Controller const *controller_p) const;
