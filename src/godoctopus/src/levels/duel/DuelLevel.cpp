@@ -152,7 +152,7 @@ Option mirrorPosition(Option const &option_p)
 }
 
 AreaSpawnerCommand * createArenaSpawnCommmand(Library &lib_p, RandomGenerator &rand_p, unsigned long x, unsigned long y, unsigned long width, unsigned long height,
-	size_t nbRes_p, size_t nbAnchorSpot_p, size_t qtyIrium_p)
+	size_t nbRes_p, size_t nbAnchorSpot_p, size_t qtyIrium_p, int minTrees_p)
 {
 	std::list<AreaSpawn> spawners_l;
 
@@ -171,6 +171,9 @@ AreaSpawnerCommand * createArenaSpawnCommmand(Library &lib_p, RandomGenerator &r
 	Building anchorSpot_l({0,0}, true, lib_p.getBuildingModel("anchor_spot"));
 	anchorSpot_l._player = 2;
 
+	Building tree_l({0,0}, true, lib_p.getBuildingModel("water_v_up"));
+	tree_l._player = 2;
+
 	{
 		AreaSpawn area_l;
 		area_l.width = width;
@@ -179,6 +182,11 @@ AreaSpawnerCommand * createArenaSpawnCommmand(Library &lib_p, RandomGenerator &r
 		area_l.y = y;
 		area_l.entities.emplace_back(new Resource(res3_l), nbRes_p);
 		area_l.entities.emplace_back(new Resource(res2_l), nbRes_p);
+		int nbTrees_l = rand_p.roll(minTrees_p,minTrees_p+3);
+		for(int i = 0 ; i < nbTrees_l ; ++ i)
+		{
+			area_l.entities.emplace_back(new Building(tree_l), nbRes_p);
+		}
         if(qtyIrium_p>0)
         {
 		    area_l.entities.emplace_back(new Resource(res4_l), 1);
@@ -199,13 +207,13 @@ AreaSpawnerCommand * createArenaSpawnCommmand(Library &lib_p, RandomGenerator &r
 std::list<Command *> LevelCommands(Library &lib_p, RandomGenerator &rand_p)
 {
 	std::list<Command *> commands_l {
-		createArenaSpawnCommmand(lib_p, rand_p, 20, 10, 10, 10, 1, 0, 0),
-		createArenaSpawnCommmand(lib_p, rand_p, 0, 0, 50, 50, 1, 1, 500),
-		createArenaSpawnCommmand(lib_p, rand_p, 50, 0, 75, 50, 1, 1, 500),
-		createArenaSpawnCommmand(lib_p, rand_p, 0, 50, 125, 50, 1, 1, 500),
-		createArenaSpawnCommmand(lib_p, rand_p, 0, 100, 125, 50, 1, 1, 500),
-		createArenaSpawnCommmand(lib_p, rand_p, 0, 150, 125, 50, 1, 1, 500),
-		createArenaSpawnCommmand(lib_p, rand_p, 0, 200, 125, 50, 1, 1, 500),
+		createArenaSpawnCommmand(lib_p, rand_p, 20, 10, 10, 10, 1, 0, 0, 2),
+		createArenaSpawnCommmand(lib_p, rand_p, 0, 0, 50, 50, 1, 1, 500, 5),
+		createArenaSpawnCommmand(lib_p, rand_p, 50, 0, 75, 50, 1, 1, 500, 5),
+		createArenaSpawnCommmand(lib_p, rand_p, 0, 50, 125, 50, 1, 1, 500, 5),
+		createArenaSpawnCommmand(lib_p, rand_p, 0, 100, 125, 50, 1, 1, 500, 5),
+		createArenaSpawnCommmand(lib_p, rand_p, 0, 150, 125, 50, 1, 1, 500, 5),
+		createArenaSpawnCommmand(lib_p, rand_p, 0, 200, 125, 50, 1, 1, 500, 5),
 	};
 
 	return commands_l;
