@@ -4,6 +4,7 @@
 #include "command/Command.hh"
 
 #include "command/data/AttackData.hh"
+#include "command/entity/EntityMoveCommand.hh"
 #include "state/Handle.hh"
 #include "utils/Vector.hh"
 #include <list>
@@ -40,6 +41,8 @@ private:
 	bool _frozenTarget {false};
 
 	AttackData _data;
+
+	EntityMoveCommand _moveCommand;
 
 	/// @brief return true if the target is not valid anymore
 	bool checkTarget(State const &state_p, Handle const & target_p, bool healing_p) const;
