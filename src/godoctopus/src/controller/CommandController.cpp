@@ -63,16 +63,31 @@ void add_move_commands(std::list<octopus::Command*> &list_r, octopus::State cons
 
 void add_move_target_commands(std::list<octopus::Command*> &list_r, octopus::State const &state_p, PackedInt32Array const &handles_p, Vector2 const &target_p, PackedInt32Array const & handleTarget_p, int , bool queued_p)
 {
-    for(size_t i = 0 ; i < handles_p.size()/2 ; ++ i)
-    {
-        octopus::Vector worldPos_l(target_p.x, target_p.y);
-        octopus::Command *cmd_l = octopus::newTargetCommand(state_p, castHandle(handles_p[i*2],handles_p[i*2+1]), castHandle(handleTarget_p[0], handleTarget_p[1]), worldPos_l, false);
-        if(cmd_l)
-        {
-            cmd_l->setQueued(queued_p);
-            list_r.push_back(cmd_l);
-        }
-    }
+	std::list<octopus::Handle> flock_l;
+	octopus::Vector worldPos_l(target_p.x, target_p.y);
+	for(size_t i = 0 ; i < handles_p.size()/2 ; ++ i)
+	{
+		octopus::Handle handle_l = castHandle(handles_p[i*2],handles_p[i*2+1]);
+		octopus::Command *cmd_l = octopus::newTargetCommand(state_p, handle_l, castHandle(handleTarget_p[0], handleTarget_p[1]), worldPos_l, false);
+		if(dynamic_cast<octopus::EntityMoveCommand*>(cmd_l))
+		{
+			delete cmd_l;
+			flock_l.push_back(handle_l);
+		}
+		else if(cmd_l)
+		{
+			cmd_l->setQueued(queued_p);
+			list_r.push_back(cmd_l);
+		}
+	}
+
+	if(!flock_l.empty())
+	{
+		octopus::Command * cmd_l = new octopus::EntityFlockMoveCommand(flock_l, worldPos_l, false);
+
+		cmd_l->setQueued(queued_p);
+		list_r.push_back(cmd_l);
+	}
 }
 
 void add_attack_move_commands(std::list<octopus::Command*> &list_r, octopus::State const &state_p, PackedInt32Array const &handles_p, Vector2 const &target_p, int, bool queued_p)
