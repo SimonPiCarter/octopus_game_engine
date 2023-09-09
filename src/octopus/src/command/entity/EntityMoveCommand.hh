@@ -24,6 +24,8 @@ public:
 
 	void setFlockInformation(std::array<FlockInformation, 3> * flockInfo_p);
 
+	void setRayTolerance(Fixed const &rayTolerance_p);
+
 	/// @brief check if _ent is close to the waypoint, if so
 	/// remove reached waypoint and create a step to the next waypoint
 	/// multiple waypoint may be removed at once last waypoint
@@ -46,6 +48,8 @@ private:
 	bool _init {false};
 	/// @brief if set to true the command will never stop when not making progress
 	bool _neverStop {false};
+	/// @brief this is an additional tolerance to the final point to avoid having entities trying to get into a static entity endelessly
+	Fixed _rayTolerance;
 
 	// data to be updated
 	MoveData _data;
