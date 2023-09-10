@@ -20,6 +20,11 @@ EntityFlockMoveCommand::EntityFlockMoveCommand(std::list<Handle> const &handles_
 	, _neverStop(neverStop_p)
 {}
 
+void EntityFlockMoveCommand::setRayTolerance(Fixed const &rayTolerance_p)
+{
+	_rayTolerance = rayTolerance_p;
+}
+
 void EntityFlockMoveCommand::registerCommand(Step &step_p, State const &state_p)
 {
 	// just store this command
@@ -55,6 +60,7 @@ void EntityFlockMoveCommand::registerCommand(Step &step_p, State const &state_p)
 		else
 		{
 			EntityMoveCommand * cmd_l = new EntityMoveCommand(handle_l, handle_l, _finalPoint, 0, {_finalPoint}, true, _neverStop);
+			cmd_l->setRayTolerance(_rayTolerance);
 			cmd_l->setFlockInformation(&_flockInfo);
 			cmd_l->setQueued(isQueued());
 			cmd_l->setStepOfRegristration(getStepOfRegistration());

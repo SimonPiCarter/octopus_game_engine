@@ -12,6 +12,7 @@
 #include "step/command/CommandNewTargetStep.hh"
 #include "step/command/CommandIncrementNoProgressStep.hh"
 #include "step/command/CommandUpdateLastPosStep.hh"
+#include "step/command/CommandDataWaypointStep.hh"
 #include "step/custom/implem/ImpactStep.hh"
 #include "step/custom/implem/WindUpStartStep.hh"
 #include "step/entity/EntityAttackStep.hh"
@@ -31,6 +32,7 @@ EntityAttackCommand::EntityAttackCommand(Handle const &commandHandle_p, Handle c
 	, _target(target_p)
 	, _frozenTarget(frozenTarget_p)
 	, _data(_target, Vector{}, 0, {})
+	, _moveCommand(commandHandle_p, source_p, {0,0}, 0, {})
 {}
 
 bool EntityAttackCommand::applyCommand(Step & step_p, State const &state_p, CommandData const *data_p, PathManager &pathManager_p) const
@@ -108,10 +110,16 @@ bool EntityAttackCommand::applyCommand(Step & step_p, State const &state_p, Comm
 		}
 
 		/// @todo if no closer target try to move randomly (orthogonal move)
+		Vector diff_l = entTarget_l->_pos - data_l._finalPoint;
+		if(square_length(diff_l) > 1.)
+		{
+			Logger::getDebug() << "\t\tEntityAttackCommand:: changed target "<< _source << " to " << entTarget_l->_pos.x.to_double()<<";"<<entTarget_l->_pos.y.to_double() <<std::endl;
+			step_p.addSteppable(new CommandDataWaypointSetStep(_handleCommand, data_l._waypoints, {entTarget_l->_pos}));
+		}
 
 		Logger::getDebug() << "\t\tEntityAttackCommand:: adding move step "<< _source << " target " << closest_l.x.to_double()<<";"<<closest_l.y.to_double() << " speed " <<entSource_l->getStepSpeed().to_double()<<std::endl;
 		// add move command
-		step_p.addEntityMoveStep(new EntityMoveStep(createEntityMoveStep(*entSource_l, closest_l, entSource_l->getStepSpeed())));
+		_moveCommand.applyCommand(step_p, state_p, data_p, pathManager_p);
 	}
 	else if(entSource_l->_reload >= entSource_l->getFullReload() )
 	{
@@ -180,8 +188,9 @@ bool EntityAttackCommand::applyCommand(Step & step_p, State const &state_p, Comm
 	return false;
 }
 
-void EntityAttackCommand::cleanUp(Step & step_p, State const &state_p, CommandData const *) const
+void EntityAttackCommand::cleanUp(Step & step_p, State const &state_p, CommandData const *data_p) const
 {
+	_moveCommand.cleanUp(step_p, state_p, data_p);
 	Entity const * entSource_l = state_p.getEntity(_source);
 	step_p.addSteppable(new EntityFrozenStep(_source, entSource_l->_frozen, false));
 }

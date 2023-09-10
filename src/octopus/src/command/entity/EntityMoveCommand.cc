@@ -35,6 +35,11 @@ void EntityMoveCommand::setFlockInformation(std::array<FlockInformation, 3> * fl
 	_data._flockInfo = flockInfo_p;
 }
 
+void EntityMoveCommand::setRayTolerance(Fixed const &rayTolerance_p)
+{
+	_rayTolerance = rayTolerance_p;
+}
+
 Vector const &getLeftMost(Vector const &pos1_p, Vector const &pos2_p)
 {
 	if(pos1_p.x > pos2_p.x)
@@ -154,11 +159,11 @@ bool EntityMoveCommand::applyCommand(Step & step_p, State const &state_p, Comman
 	}
 
 	Vector delta_l = ent_l->_pos - data_l->_finalPoint;
-	Fixed tol_l = 0.1;
+	Fixed tol_l = 0.1+_rayTolerance;
 	if(data_l->_flockInfo)
 	{
-		Fixed newTol_l = ent_l->_model._ray*data_l->_flockInfo->at(state_p._id).sqrtQtyReached*1.1;
-		tol_l = std::max(ent_l->_model._ray, newTol_l);
+		Fixed newTol_l = ent_l->_model._ray + ent_l->_model._ray*data_l->_flockInfo->at(state_p._id).sqrtQtyReached*1.1;
+		tol_l = std::max(tol_l, std::max(ent_l->_model._ray, newTol_l));
 	}
 	// No more waypoint -> terminate
 	if(square_length(delta_l) < tol_l*tol_l)
@@ -177,7 +182,6 @@ bool EntityMoveCommand::applyCommand(Step & step_p, State const &state_p, Comman
 		// check for progress
 		Fixed sqLastDiff_l = square_length(ent_l->_pos - data_l->_lastPos);
 		// progress => update position and reset count
-		// skip this if we never want to stop
 		if(sqLastDiff_l >= 0.5)
 		{
 			step_p.addSteppable(new CommandUpdateLastPosStep(_handleCommand, _source, data_l->_lastPos));

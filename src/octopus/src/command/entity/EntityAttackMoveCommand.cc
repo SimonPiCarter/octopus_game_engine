@@ -9,6 +9,7 @@
 #include "state/State.hh"
 #include "state/entity/Entity.hh"
 #include "step/Step.hh"
+#include "step/command/CommandDataWaypointStep.hh"
 #include "step/command/CommandSetPositionFromStep.hh"
 #include "step/command/CommandNewTargetStep.hh"
 #include "step/command/CommandSubAttackStep.hh"
@@ -59,8 +60,8 @@ bool EntityAttackMoveCommand::applyCommand(Step & step_p, State const &state_p, 
 		}
 		/// clean up attack command
 		subAttackCommand_l.cleanUp(step_p, state_p, data_p);
-		// get non const pointer here (required by the step)
 		step_p.addSteppable(new CommandDelSubCommandStep(_handleCommand, subAttackCommand_l));
+		step_p.addSteppable(new CommandDataWaypointSetStep(_handleCommand, attackMoveData_l._waypoints, {_subMoveCommand.getFinalPoint()}));
 		// return false is necessary here to avoid Fixed move step
 		return false;
 	}
@@ -72,7 +73,6 @@ bool EntityAttackMoveCommand::applyCommand(Step & step_p, State const &state_p, 
 		}
 		/// clean up buff command
 		subBuffCommand_l.cleanUp(step_p, state_p, data_p);
-		// get non const pointer here (required by the step)
 		step_p.addSteppable(new CommandDelSubCommandStep(_handleCommand, subBuffCommand_l));
 		// return false is necessary here to avoid Fixed move step
 		return false;

@@ -63,16 +63,44 @@ void add_move_commands(std::list<octopus::Command*> &list_r, octopus::State cons
 
 void add_move_target_commands(std::list<octopus::Command*> &list_r, octopus::State const &state_p, PackedInt32Array const &handles_p, Vector2 const &target_p, PackedInt32Array const & handleTarget_p, int , bool queued_p)
 {
-    for(size_t i = 0 ; i < handles_p.size()/2 ; ++ i)
-    {
-        octopus::Vector worldPos_l(target_p.x, target_p.y);
-        octopus::Command *cmd_l = octopus::newTargetCommand(state_p, castHandle(handles_p[i*2],handles_p[i*2+1]), castHandle(handleTarget_p[0], handleTarget_p[1]), worldPos_l, false);
-        if(cmd_l)
-        {
-            cmd_l->setQueued(queued_p);
-            list_r.push_back(cmd_l);
-        }
-    }
+	octopus::Handle target_l = castHandle(handleTarget_p[0], handleTarget_p[1]);
+	octopus::Vector worldPos_l(target_p.x, target_p.y);
+	// target entity
+	octopus::Entity const *ent_l = nullptr;
+	// if entity is alive use its position
+	if(state_p.isEntityAlive(target_l))
+	{
+		ent_l = state_p.getEntity(target_l);
+		worldPos_l = ent_l->_pos;
+	}
+
+	std::list<octopus::Handle> flock_l;
+	for(size_t i = 0 ; i < handles_p.size()/2 ; ++ i)
+	{
+		octopus::Handle handle_l = castHandle(handles_p[i*2],handles_p[i*2+1]);
+		octopus::Command *cmd_l = octopus::newTargetCommand(state_p, handle_l, target_l, worldPos_l, false);
+		if(dynamic_cast<octopus::EntityMoveCommand*>(cmd_l))
+		{
+			delete cmd_l;
+			flock_l.push_back(handle_l);
+		}
+		else if(cmd_l)
+		{
+			cmd_l->setQueued(queued_p);
+			list_r.push_back(cmd_l);
+		}
+	}
+
+	if(!flock_l.empty())
+	{
+		octopus::EntityFlockMoveCommand * cmd_l = new octopus::EntityFlockMoveCommand(flock_l, worldPos_l, false);
+		if(ent_l && ent_l->_model._isStatic)
+		{
+			cmd_l->setRayTolerance(ent_l->_model._ray*1.5);
+		}
+		cmd_l->setQueued(queued_p);
+		list_r.push_back(cmd_l);
+	}
 }
 
 void add_attack_move_commands(std::list<octopus::Command*> &list_r, octopus::State const &state_p, PackedInt32Array const &handles_p, Vector2 const &target_p, int, bool queued_p)
