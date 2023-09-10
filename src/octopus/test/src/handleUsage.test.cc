@@ -157,8 +157,8 @@ TEST(handleUsageTest, attack_move_death_replaced_during_attack)
 		new EntitySpawnStep(Handle(1), Entity { { 11, 3. }, false, unitModel_l}),
 		// entity 0 attack entity 1
 		new CommandSpawnStep(new EntityAttackCommand(Handle(0), Handle(0), Handle(1), true)),
-		new FlyingCommandSpawnStep(new HandleUsageTestCommand({new EntityHitPointChangeStep(Handle(1, 0), -10, 10, 10)}, Handle(0), 4)),
-		new FlyingCommandSpawnStep(new HandleUsageTestCommand({new EntitySpawnStep(Handle(1,1), Entity { { 11, 3. }, false, unitModel_l})}, Handle(1), 6)),
+		new FlyingCommandSpawnStep(new HandleUsageTestCommand({new EntityHitPointChangeStep(Handle(1, 0), -10, 10, 10)}, Handle(0), 5)),
+		new FlyingCommandSpawnStep(new HandleUsageTestCommand({new EntitySpawnStep(Handle(1,1), Entity { { 11, 3. }, false, unitModel_l})}, Handle(1), 7)),
 	}, 1., {}, 1, 50, 1);
 
 	// query state
@@ -167,8 +167,7 @@ TEST(handleUsageTest, attack_move_death_replaced_during_attack)
 	EXPECT_NEAR(3., to_double(state_l->getEntity(Handle(0))->_pos.x), 1e-5);
 	EXPECT_NEAR(3., to_double(state_l->getEntity(Handle(0))->_pos.y), 1e-5);
 
-	// update time to 1second (1)
-	controller_l.update(1);
+	controller_l.update(2); // (2)
 
 	// updated until synced up
 	while(!controller_l.loop_body()) {}
@@ -178,8 +177,7 @@ TEST(handleUsageTest, attack_move_death_replaced_during_attack)
 	EXPECT_NEAR(4., to_double(state_l->getEntity(Handle(0))->_pos.x), 1e-5);
 	EXPECT_NEAR(3., to_double(state_l->getEntity(Handle(0))->_pos.y), 1e-5);
 
-	// update time to 2 seconds (3)
-	controller_l.update(2);
+	controller_l.update(2); // (4)
 
 	// updated until synced up
 	while(!controller_l.loop_body()) {}
@@ -190,8 +188,7 @@ TEST(handleUsageTest, attack_move_death_replaced_during_attack)
 	EXPECT_NEAR(3., to_double(state_l->getEntity(Handle(0))->_pos.y), 1e-5);
 	EXPECT_NEAR(10., to_double(state_l->getEntity(Handle(1))->_hp), 1e-5);
 
-	// update time to 2 seconds (5)
-	controller_l.update(2);
+	controller_l.update(2); // (6)
 	// updated until synced up
 	while(!controller_l.loop_body()) {}
 
@@ -200,8 +197,7 @@ TEST(handleUsageTest, attack_move_death_replaced_during_attack)
 	// timer damage should have been done
 	EXPECT_NEAR(0., to_double(state_l->getEntity(Handle(1))->_hp), 1e-5);
 
-	// update time to 1 second (6)
-	controller_l.update(1);
+	controller_l.update(1); // (7)
 	// updated until synced up
 	while(!controller_l.loop_body()) {}
 
@@ -210,8 +206,7 @@ TEST(handleUsageTest, attack_move_death_replaced_during_attack)
 	// timer damage should have been done
 	EXPECT_NEAR(0., to_double(state_l->getEntity(Handle(1))->_hp), 1e-5);
 
-	// update time to 20 seconds (26)
-	controller_l.update(20);
+	controller_l.update(20); // (27)
 	// updated until synced up
 	while(!controller_l.loop_body()) {}
 
@@ -241,8 +236,7 @@ TEST(handleUsageTest, attack_move_death_replaced_during_move)
 	EXPECT_NEAR(3., to_double(state_l->getEntity(Handle(0))->_pos.x), 1e-5);
 	EXPECT_NEAR(3., to_double(state_l->getEntity(Handle(0))->_pos.y), 1e-5);
 
-	// update time to 1second (1)
-	controller_l.update(1);
+	controller_l.update(2); // (2)
 
 	// updated until synced up
 	while(!controller_l.loop_body()) {}
@@ -252,8 +246,7 @@ TEST(handleUsageTest, attack_move_death_replaced_during_move)
 	EXPECT_NEAR(4., to_double(state_l->getEntity(Handle(0))->_pos.x), 1e-5);
 	EXPECT_NEAR(3., to_double(state_l->getEntity(Handle(0))->_pos.y), 1e-5);
 
-	// update time to 2 seconds (3)
-	controller_l.update(2);
+	controller_l.update(2); // (4)
 
 	// updated until synced up
 	while(!controller_l.loop_body()) {}
@@ -261,18 +254,17 @@ TEST(handleUsageTest, attack_move_death_replaced_during_move)
 	state_l = controller_l.queryState();
 
 	// entity 0 stopped because entity was killed
-	EXPECT_NEAR(5., to_double(state_l->getEntity(Handle(0))->_pos.x), 1e-5);
+	EXPECT_NEAR(4., to_double(state_l->getEntity(Handle(0))->_pos.x), 1e-5);
 	EXPECT_NEAR(3., to_double(state_l->getEntity(Handle(0))->_pos.y), 1e-5);
 	EXPECT_NEAR(0., to_double(state_l->getEntity(Handle(1))->_hp), 1e-5);
 
-	// update time to 20 seconds (23)
-	controller_l.update(20);
+	controller_l.update(20); // (24)
 	// updated until synced up
 	while(!controller_l.loop_body()) {}
 
 	state_l = controller_l.queryState();
 
-	EXPECT_NEAR(5., to_double(state_l->getEntity(Handle(0))->_pos.x), 1e-5);
+	EXPECT_NEAR(4., to_double(state_l->getEntity(Handle(0))->_pos.x), 1e-5);
 	EXPECT_NEAR(3., to_double(state_l->getEntity(Handle(0))->_pos.y), 1e-5);
 	EXPECT_NEAR(10., to_double(state_l->getEntity(Handle(1,1))->_hp), 1e-5);
 

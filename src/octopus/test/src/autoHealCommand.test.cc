@@ -49,7 +49,6 @@ TEST(autoHealCommandTest, simple)
 	EXPECT_NEAR(3., to_double(state_l->getEntity(Handle(0))->_pos.x), 1e-5);
 	EXPECT_NEAR(3., to_double(state_l->getEntity(Handle(0))->_pos.y), 1e-5);
 
-	// update time to 1second (1)
 	controller_l.update(1.);
 
 	// updated until synced up
@@ -60,8 +59,7 @@ TEST(autoHealCommandTest, simple)
 	EXPECT_NEAR(3., to_double(state_l->getEntity(Handle(0))->_pos.x), 1e-5);
 	EXPECT_NEAR(3., to_double(state_l->getEntity(Handle(0))->_pos.y), 1e-5);
 
-	// update time to 1second (2)
-	controller_l.update(2.);
+	controller_l.update(3.); // (4)
 
 	// updated until synced up
 	while(!controller_l.loop_body()) {}
@@ -71,8 +69,7 @@ TEST(autoHealCommandTest, simple)
 	EXPECT_NEAR(5., to_double(state_l->getEntity(Handle(0))->_pos.x), 1e-5);
 	EXPECT_NEAR(3., to_double(state_l->getEntity(Handle(0))->_pos.y), 1e-5);
 
-	// update time to 2 seconds (5)
-	controller_l.update(2.);
+	controller_l.update(2.); // (6)
 
 	// updated until synced up
 	while(!controller_l.loop_body()) {}
@@ -83,8 +80,7 @@ TEST(autoHealCommandTest, simple)
 	EXPECT_NEAR(3., to_double(state_l->getEntity(Handle(0))->_pos.y), 1e-5);
 	EXPECT_NEAR(8., to_double(state_l->getEntity(Handle(1))->_hp), 1e-5);
 
-	// update time to 1 seconds (6)
-	controller_l.update(1.);
+	controller_l.update(1.); // (7)
 	// updated until synced up
 	while(!controller_l.loop_body()) {}
 
@@ -96,8 +92,7 @@ TEST(autoHealCommandTest, simple)
 	// Next damage should be -> reload time + windup
 	// 10 + 3 (13)
 
-	// update time to 12 seconds (18)
-	controller_l.update(12.);
+	controller_l.update(12.); // (19)
 	// updated until synced up
 	while(!controller_l.loop_body()) {}
 
@@ -106,8 +101,7 @@ TEST(autoHealCommandTest, simple)
 	// damage has been done
 	EXPECT_NEAR(9., to_double(state_l->getEntity(Handle(1))->_hp), 1e-5);
 
-	// update time to 1 second (19)
-	controller_l.update(1.);
+	controller_l.update(1.); // (20)
 	// updated until synced up
 	while(!controller_l.loop_body()) {}
 
@@ -116,8 +110,7 @@ TEST(autoHealCommandTest, simple)
 	// damage has been done twice
 	EXPECT_NEAR(10., to_double(state_l->getEntity(Handle(1))->_hp), 1e-5);
 
-	// update time to 2 second (21)
-	controller_l.update(2.);
+	controller_l.update(3.); // (23)
 	// updated until synced up
 	while(!controller_l.loop_body()) {}
 
@@ -126,8 +119,7 @@ TEST(autoHealCommandTest, simple)
 	EXPECT_NEAR(5., to_double(state_l->getEntity(Handle(0))->_pos.x), 1e-5);
 	EXPECT_NEAR(4., to_double(state_l->getEntity(Handle(0))->_pos.y), 1e-5);
 
-	// update time to 1 second (22)
-	controller_l.update(1.);
+	controller_l.update(1.); // (24)
 	// updated until synced up
 	while(!controller_l.loop_body()) {}
 
@@ -140,8 +132,7 @@ TEST(autoHealCommandTest, simple)
 	// 10 + 3 (13) after last attack (happened on time step 19)
 	// next damage should be on time step 32
 
-	// update time to 9 second (31)
-	controller_l.update(9.);
+	controller_l.update(8.); // (31)
 	// updated until synced up
 	while(!controller_l.loop_body()) {}
 
@@ -152,7 +143,6 @@ TEST(autoHealCommandTest, simple)
 	// wind up should just be over but no damage still
 	EXPECT_NEAR(8., to_double(state_l->getEntity(Handle(2))->_hp), 1e-5);
 
-	// update time to 1 second (1)
 	controller_l.update(1.);
 	// updated until synced up
 	while(!controller_l.loop_body()) {}
