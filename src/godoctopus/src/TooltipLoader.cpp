@@ -1,5 +1,7 @@
 #include "TooltipLoader.h"
 
+#include <cmath>
+
 #include "library/model/divinity/generators/EconomicDivinityStepGenerator.hh"
 #include "library/model/divinity/generators/AttackSpeedDivinityStepGenerator.hh"
 #include "library/model/divinity/generators/HealDivinityStepGenerator.hh"

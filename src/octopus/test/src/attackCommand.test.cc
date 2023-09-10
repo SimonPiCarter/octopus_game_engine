@@ -35,8 +35,7 @@ TEST(attackCommandTest, simple)
 	EXPECT_NEAR(3., to_double(state_l->getEntity(Handle(0))->_pos.x), 1e-5);
 	EXPECT_NEAR(3., to_double(state_l->getEntity(Handle(0))->_pos.y), 1e-5);
 
-	// update time to 1second (1)
-	controller_l.update(1);
+	controller_l.update(2); // (2)
 
 	// updated until synced up
 	while(!controller_l.loop_body()) {}
@@ -46,8 +45,7 @@ TEST(attackCommandTest, simple)
 	EXPECT_NEAR(4., to_double(state_l->getEntity(Handle(0))->_pos.x), 1e-5);
 	EXPECT_NEAR(3., to_double(state_l->getEntity(Handle(0))->_pos.y), 1e-5);
 
-	// update time to 2 seconds (3)
-	controller_l.update(2);
+	controller_l.update(2); // (4)
 
 	// updated until synced up
 	while(!controller_l.loop_body()) {}
@@ -58,8 +56,7 @@ TEST(attackCommandTest, simple)
 	EXPECT_NEAR(3., to_double(state_l->getEntity(Handle(0))->_pos.y), 1e-5);
 	EXPECT_NEAR(10., to_double(state_l->getEntity(Handle(1))->_hp), 1e-5);
 
-	// update time to 2 seconds (5)
-	controller_l.update(2);
+	controller_l.update(2); // (6)
 	// updated until synced up
 	while(!controller_l.loop_body()) {}
 
@@ -69,8 +66,7 @@ TEST(attackCommandTest, simple)
 	EXPECT_NEAR(10., to_double(state_l->getEntity(Handle(1))->_hp), 1e-5);
 
 
-	// update time to 1 second (6)
-	controller_l.update(1);
+	controller_l.update(1); // (7)
 	// updated until synced up
 	while(!controller_l.loop_body()) {}
 
@@ -82,8 +78,7 @@ TEST(attackCommandTest, simple)
 	// Next damage should be -> reload time + windup
 	// 10 + 3 (13)
 
-	// update time to 12 seconds (18)
-	controller_l.update(12);
+	controller_l.update(12); // (19)
 	// updated until synced up
 	while(!controller_l.loop_body()) {}
 
@@ -92,8 +87,7 @@ TEST(attackCommandTest, simple)
 	// damage has been done
 	EXPECT_NEAR(7., to_double(state_l->getEntity(Handle(1))->_hp), 1e-5);
 
-	// update time to 1 second (19)
-	controller_l.update(1);
+	controller_l.update(1); // (20)
 	// updated until synced up
 	while(!controller_l.loop_body()) {}
 
@@ -124,8 +118,8 @@ TEST(attackCommandTest, simple_bonus_dmg)
 	EXPECT_NEAR(3., to_double(state_l->getEntity(Handle(0))->_pos.x), 1e-5);
 	EXPECT_NEAR(3., to_double(state_l->getEntity(Handle(0))->_pos.y), 1e-5);
 
-	// update time to 1second (1)
-	controller_l.update(1);
+	// update time to 2second (2)
+	controller_l.update(2);
 
 	// updated until synced up
 	while(!controller_l.loop_body()) {}
@@ -135,8 +129,7 @@ TEST(attackCommandTest, simple_bonus_dmg)
 	EXPECT_NEAR(4., to_double(state_l->getEntity(Handle(0))->_pos.x), 1e-5);
 	EXPECT_NEAR(3., to_double(state_l->getEntity(Handle(0))->_pos.y), 1e-5);
 
-	// update time to 2 seconds (3)
-	controller_l.update(2);
+	controller_l.update(2); // (4)
 
 	// updated until synced up
 	while(!controller_l.loop_body()) {}
@@ -147,8 +140,7 @@ TEST(attackCommandTest, simple_bonus_dmg)
 	EXPECT_NEAR(3., to_double(state_l->getEntity(Handle(0))->_pos.y), 1e-5);
 	EXPECT_NEAR(10., to_double(state_l->getEntity(Handle(1))->_hp), 1e-5);
 
-	// update time to 2 seconds (5)
-	controller_l.update(2);
+	controller_l.update(2); // (6)
 	// updated until synced up
 	while(!controller_l.loop_body()) {}
 
@@ -158,8 +150,7 @@ TEST(attackCommandTest, simple_bonus_dmg)
 	EXPECT_NEAR(10., to_double(state_l->getEntity(Handle(1))->_hp), 1e-5);
 
 
-	// update time to 1 second (6)
-	controller_l.update(1);
+	controller_l.update(1); // (7)
 	// updated until synced up
 	while(!controller_l.loop_body()) {}
 
@@ -171,8 +162,7 @@ TEST(attackCommandTest, simple_bonus_dmg)
 	// Next damage should be -> reload time + windup
 	// 10 + 3 (13)
 
-	// update time to 12 seconds (18)
-	controller_l.update(12);
+	controller_l.update(12); // (19)
 	// updated until synced up
 	while(!controller_l.loop_body()) {}
 
@@ -181,8 +171,7 @@ TEST(attackCommandTest, simple_bonus_dmg)
 	// damage has been done
 	EXPECT_NEAR(5.5, to_double(state_l->getEntity(Handle(1))->_hp), 1e-5);
 
-	// update time to 1 second (19)
-	controller_l.update(1);
+	controller_l.update(1); // (20)
 	// updated until synced up
 	while(!controller_l.loop_body()) {}
 

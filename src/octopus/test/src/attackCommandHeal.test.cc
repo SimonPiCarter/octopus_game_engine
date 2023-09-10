@@ -40,7 +40,7 @@ TEST(attackCommandHealTest, simple)
 	EXPECT_NEAR(3., to_double(state_l->getEntity(Handle(0))->_pos.y), 1e-5);
 
 	// update time to 1second (1)
-	controller_l.update(1);
+	controller_l.update(2);
 	while(!controller_l.loop_body()) {}
 	state_l = controller_l.queryState();
 

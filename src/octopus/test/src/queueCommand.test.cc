@@ -45,8 +45,7 @@ TEST(queueCommandTest, simple)
 	EXPECT_NEAR(3., to_double(state_l->getEntity(Handle(0))->_pos.x), 1e-5);
 	EXPECT_NEAR(3., to_double(state_l->getEntity(Handle(0))->_pos.y), 1e-5);
 
-	// update time to 1second (1)
-	controller_l.update(1.);
+	controller_l.update(2.); // (2)
 
 	// updated until synced up
 	while(!controller_l.loop_body()) {}
@@ -56,8 +55,7 @@ TEST(queueCommandTest, simple)
 	EXPECT_NEAR(4., to_double(state_l->getEntity(Handle(0))->_pos.x), 1e-5);
 	EXPECT_NEAR(3., to_double(state_l->getEntity(Handle(0))->_pos.y), 1e-5);
 
-	// update time to 2 seconds (3)
-	controller_l.update(2.);
+	controller_l.update(2.); // (4)
 
 	// updated until synced up
 	while(!controller_l.loop_body()) {}
@@ -68,8 +66,7 @@ TEST(queueCommandTest, simple)
 	EXPECT_NEAR(3., to_double(state_l->getEntity(Handle(0))->_pos.y), 1e-5);
 	EXPECT_NEAR(3., to_double(state_l->getEntity(Handle(1))->_hp), 1e-5);
 
-	// update time to 2 seconds (5)
-	controller_l.update(2.);
+	controller_l.update(2.); // (6)
 	// updated until synced up
 	while(!controller_l.loop_body()) {}
 
@@ -79,8 +76,7 @@ TEST(queueCommandTest, simple)
 	EXPECT_NEAR(3., to_double(state_l->getEntity(Handle(1))->_hp), 1e-5);
 
 
-	// update time to 1 second (6)
-	controller_l.update(1.);
+	controller_l.update(1.); // (7)
 	// updated until synced up
 	while(!controller_l.loop_body()) {}
 
@@ -90,8 +86,7 @@ TEST(queueCommandTest, simple)
 	EXPECT_NEAR(0., to_double(state_l->getEntity(Handle(1))->_hp), 1e-5);
 
 
-	// update time to 1 second (7)
-	controller_l.update(1.);
+	controller_l.update(1.); // (8)
 	// updated until synced up
 	while(!controller_l.loop_body()) {}
 

@@ -116,10 +116,12 @@ bool EntityAttackCommand::applyCommand(Step & step_p, State const &state_p, Comm
 			Logger::getDebug() << "\t\tEntityAttackCommand:: changed target "<< _source << " to " << entTarget_l->_pos.x.to_double()<<";"<<entTarget_l->_pos.y.to_double() <<std::endl;
 			step_p.addSteppable(new CommandDataWaypointSetStep(_handleCommand, data_l._waypoints, {entTarget_l->_pos}));
 		}
-
-		Logger::getDebug() << "\t\tEntityAttackCommand:: adding move step "<< _source << " target " << closest_l.x.to_double()<<";"<<closest_l.y.to_double() << " speed " <<entSource_l->getStepSpeed().to_double()<<std::endl;
-		// add move command
-		_moveCommand.applyCommand(step_p, state_p, data_p, pathManager_p);
+		else
+		{
+			Logger::getDebug() << "\t\tEntityAttackCommand:: adding move step "<< _source << " target " << closest_l.x.to_double()<<";"<<closest_l.y.to_double() << " speed " <<entSource_l->getStepSpeed().to_double()<<std::endl;
+			// add move command
+			_moveCommand.applyCommand(step_p, state_p, data_p, pathManager_p);
+		}
 	}
 	else if(entSource_l->_reload >= entSource_l->getFullReload() )
 	{
