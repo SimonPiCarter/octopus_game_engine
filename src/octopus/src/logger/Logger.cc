@@ -15,8 +15,8 @@ LoggerHandler::~LoggerHandler()
 	if(_shouldLog)
 	{
 		std::lock_guard<std::mutex> lock_l(_mutex);
-		std::cout<<this->str();
-		_logFile<<this->str();
+		std::cout<<this->str()<<std::flush;
+		_logFile<<this->str()<<std::flush;
 	}
 }
 

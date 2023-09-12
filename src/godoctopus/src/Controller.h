@@ -58,7 +58,7 @@ public:
 	void load_level_test_anchor(int seed_p);
 	void load_level_test_model_reading(int seed_p, godot::LevelModel *level_model_p, bool buff_prod_p);
 	void load_duel_level(int seed_p, TypedArray<int> const &div_player_1_p, TypedArray<int> const &div_player_2_p);
-	void load_multi_test_level(int seed_p, int step_cout_p);
+	void load_multi_test_level(int seed_p, int step_cout_p, bool buff_prod_p);
 
 	// replay
 	void set_model_filename(String const &filename_p);

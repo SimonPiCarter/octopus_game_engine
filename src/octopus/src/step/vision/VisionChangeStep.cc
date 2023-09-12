@@ -124,6 +124,11 @@ std::list<VisionChangeStep *> newVisionChangeStep(State const &state_p, Step con
 		{
 			continue;
 		}
+		// skip no op step
+		if(moveStep_l->isNoOp())
+		{
+			continue;
+		}
 		unsigned long team_l = state_p.getPlayer(ent_l->_player)->_team;
 
 		long newx_l = to_int(ent_l->_pos.x+moveStep_l->_move.x);

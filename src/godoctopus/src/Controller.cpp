@@ -29,7 +29,6 @@
 #include "state/player/upgrade/Upgrade.hh"
 #include "state/State.hh"
 #include "step/player/PlayerSpawnStep.hh"
-#include "step/player/PlayerBuffAllStep.hh"
 #include "utils/Binary.hh"
 
 // godot
@@ -255,33 +254,24 @@ void Controller::load_level_test_anchor(int seed_p)
 	init(commands_l, spawners_l, false, 50, _autoSaveFile);
 }
 
-void Controller::load_level_test_model_reading(int seed_p, godot::LevelModel *level_model_p, bool buffProd_p)
+void Controller::load_level_test_model_reading(int seed_p, godot::LevelModel *level_model_p, bool buff_prod_p)
 {
 	delete _rand;
 	_rand = new octopus::RandomGenerator(seed_p);
 	std::list<octopus::Steppable *> spawners_l = {};
-	std::list<octopus::Steppable *> levelsteps_l = level_test_model::LevelSteps(_lib, *_rand);
+	std::list<octopus::Steppable *> levelsteps_l = level_test_model::LevelSteps(_lib, *_rand, buff_prod_p);
 	if(level_model_p)
 	{
 		spawners_l = level_model_p->generateLevelSteps(_lib);
 	}
 	spawners_l.splice(spawners_l.end(), levelsteps_l);
 
-	if(buffProd_p)
-	{
-		octopus::TimedBuff buff_l;
-		buff_l._id = "model_loading_buff_prod";
-		buff_l._type = octopus::TyppedBuff::Type::Production;
-		buff_l._coef = 9.;
-		spawners_l.push_back(new octopus::PlayerBuffAllStep(0, buff_l, ""));
-	}
-
 	std::list<octopus::Command *> commands_l = level_test_model::LevelCommands(_lib, *_rand);
 	// enable auto save
 	newAutoSaveFile();
 	writeLevelId(*_autoSaveFile, LEVEL_ID_LEVEL_TEST_MODEL, 50);
 	_currentLevel = LEVEL_ID_LEVEL_TEST_MODEL;
-	_headerWriter = std::bind(level_test_model::writeLevelHeader, std::placeholders::_1, level_test_model::ModelLoaderHeader {seed_p});
+	_headerWriter = std::bind(level_test_model::writeLevelHeader, std::placeholders::_1, level_test_model::ModelLoaderHeader {seed_p, buff_prod_p});
 	_headerWriter(*_autoSaveFile);
 	init(commands_l, spawners_l, true, 50, _autoSaveFile);
 }
@@ -292,7 +282,7 @@ void Controller::load_duel_level(int seed_p, TypedArray<int> const &div_player_1
 	delete _rand;
 	_rand = new octopus::RandomGenerator(seed_p);
 	std::list<octopus::Steppable *> spawners_l = {};
-	std::list<octopus::Steppable *> levelsteps_l = duellevel::LevelSteps(_lib, *_rand, 0,
+	std::list<octopus::Steppable *> levelsteps_l = duellevel::LevelSteps(_lib, *_rand, 0, false,
 			fas::intToDivinityType(toVector(div_player_1_p)), fas::intToDivinityType(toVector(div_player_2_p)));
 	spawners_l.splice(spawners_l.end(), levelsteps_l);
 
@@ -301,18 +291,18 @@ void Controller::load_duel_level(int seed_p, TypedArray<int> const &div_player_1
 	newAutoSaveFile();
 	writeLevelId(*_autoSaveFile, LEVEL_ID_DUEL, LEVEL_DUEL_SIZE/5);
 	_currentLevel = LEVEL_ID_DUEL;
-	_headerWriter = std::bind(duellevel::writeLevelHeader, std::placeholders::_1, duellevel::DuelLevelHeader {seed_p, 0});
+	_headerWriter = std::bind(duellevel::writeLevelHeader, std::placeholders::_1, duellevel::DuelLevelHeader {seed_p, 0, false});
 	_headerWriter(*_autoSaveFile);
 	init(commands_l, spawners_l, true, LEVEL_DUEL_SIZE/5, _autoSaveFile);
 }
 
-void Controller::load_multi_test_level(int seed_p, int step_cout_p)
+void Controller::load_multi_test_level(int seed_p, int step_cout_p, bool buff_prod_p)
 {
 	UtilityFunctions::print("loading multi test level with seed ",seed_p);
 	delete _rand;
 	_rand = new octopus::RandomGenerator(seed_p);
 	std::list<octopus::Steppable *> spawners_l = {};
-	std::list<octopus::Steppable *> levelsteps_l = duellevel::LevelSteps(_lib, *_rand, step_cout_p, {}, {});
+	std::list<octopus::Steppable *> levelsteps_l = duellevel::LevelSteps(_lib, *_rand, step_cout_p, buff_prod_p, {}, {});
 	spawners_l.splice(spawners_l.end(), levelsteps_l);
 
 	std::list<octopus::Command *> commands_l = duellevel::LevelCommands(_lib, *_rand);
@@ -320,7 +310,7 @@ void Controller::load_multi_test_level(int seed_p, int step_cout_p)
 	newAutoSaveFile();
 	writeLevelId(*_autoSaveFile, LEVEL_ID_DUEL, LEVEL_DUEL_SIZE/5);
 	_currentLevel = LEVEL_ID_DUEL;
-	_headerWriter = std::bind(duellevel::writeLevelHeader, std::placeholders::_1, duellevel::DuelLevelHeader {seed_p, step_cout_p});
+	_headerWriter = std::bind(duellevel::writeLevelHeader, std::placeholders::_1, duellevel::DuelLevelHeader {seed_p, step_cout_p, buff_prod_p});
 	_headerWriter(*_autoSaveFile);
 	init(commands_l, spawners_l, true, LEVEL_DUEL_SIZE/5, _autoSaveFile);
 }
@@ -1229,8 +1219,8 @@ void Controller::next_step()
 		for(octopus::Command * cmd_l : cmds_l)
 		{
 			/// @todo refactor to allow control over multiple player ?
-			_controller->queueCommandAsPlayer(cmd_l, _playerPerPeer.at(peer_l));
-			//_controller->queueCommand(cmd_l);
+			//_controller->queueCommandAsPlayer(cmd_l, _playerPerPeer.at(peer_l));
+			_controller->queueCommand(cmd_l);
 		}
 		pair_l.second.pop_front();
 	}
@@ -1275,7 +1265,7 @@ void Controller::_bind_methods()
 	ClassDB::bind_method(D_METHOD("load_level_test_anchor", "seed"), &Controller::load_level_test_anchor);
 	ClassDB::bind_method(D_METHOD("load_level_test_model_reading", "seed", "level_model", "buff_prod"), &Controller::load_level_test_model_reading);
 	ClassDB::bind_method(D_METHOD("load_duel_level", "seed", "div_player_1_p", "div_player_2_p"), &Controller::load_duel_level);
-	ClassDB::bind_method(D_METHOD("load_multi_test_level", "seed", "step_count"), &Controller::load_multi_test_level);
+	ClassDB::bind_method(D_METHOD("load_multi_test_level", "seed", "step_count", "buff_prod"), &Controller::load_multi_test_level);
 
 	ClassDB::bind_method(D_METHOD("set_model_filename", "filename"), &Controller::set_model_filename);
 	ClassDB::bind_method(D_METHOD("set_level_filename", "filename"), &Controller::set_level_filename);
