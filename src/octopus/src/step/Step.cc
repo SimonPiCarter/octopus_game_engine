@@ -288,9 +288,17 @@ Handle getNextHandle(Step const &step_p, State const &state_p)
 {
 	std::list<Handle> const & freeHandles_l = state_p.getFreeHandles();
 
+	// those handles will be available since ticking step add those handles
+	std::list<Handle> const & toBeFreeHandles_l = state_p.getFrontQueuedHandles();
+
 	if(step_p.getEntitySpawned() < freeHandles_l.size())
 	{
 		return getHandle(freeHandles_l, step_p.getEntitySpawned());
+	}
+	// return to be freed handle (consider that free handles have been taken already)
+	if(step_p.getEntitySpawned() < freeHandles_l.size() + toBeFreeHandles_l.size())
+	{
+		return getHandle(toBeFreeHandles_l, step_p.getEntitySpawned()-freeHandles_l.size());
 	}
 
 	return Handle(step_p.getEntitySpawned() - freeHandles_l.size() + state_p.getEntities().size());
