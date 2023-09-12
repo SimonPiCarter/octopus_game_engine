@@ -28,6 +28,7 @@
 #include "step/entity/spawn/ResourceSpawnStep.hh"
 #include "step/entity/spawn/BuildingSpawnStep.hh"
 #include "step/player/PlayerAddBuildingModel.hh"
+#include "step/player/PlayerBuffAllStep.hh"
 #include "step/player/PlayerSpawnStep.hh"
 #include "step/player/PlayerSpendResourceStep.hh"
 #include "step/state/StateTemplePositionAddStep.hh"
@@ -76,7 +77,8 @@ void addBuildingPlayer(std::list<Steppable *> &spawners_p, unsigned long player_
 	}
 }
 
-std::list<Steppable *> LevelSteps(Library &lib_p, RandomGenerator &rand_p, int stepCount_p, std::vector<fas::DivinityType> const &divinitiesPlayer1_p, std::vector<fas::DivinityType> const &divinitiesPlayer2_p)
+std::list<Steppable *> LevelSteps(Library &lib_p, RandomGenerator &rand_p, int stepCount_p, bool buffProd_p,
+	std::vector<fas::DivinityType> const &divinitiesPlayer1_p, std::vector<fas::DivinityType> const &divinitiesPlayer2_p)
 {
 	loadMinimalModels(lib_p);
 
@@ -142,6 +144,16 @@ std::list<Steppable *> LevelSteps(Library &lib_p, RandomGenerator &rand_p, int s
     {
         spawners_l.push_back(new TriggerSpawn(new LoseStepTrigger(stepCount_p)));
     }
+
+	if(buffProd_p)
+	{
+		octopus::TimedBuff buff_l;
+		buff_l._id = "model_loading_buff_prod";
+		buff_l._type = octopus::TyppedBuff::Type::Production;
+		buff_l._coef = 9.;
+		spawners_l.push_back(new octopus::PlayerBuffAllStep(0, buff_l, ""));
+		spawners_l.push_back(new octopus::PlayerBuffAllStep(1, buff_l, ""));
+	}
 
 	return spawners_l;
 }
@@ -258,6 +270,7 @@ void writeLevelHeader(std::ofstream &file_p, DuelLevelHeader const &header_p)
 {
     file_p.write((char*)&header_p.seed, sizeof(header_p.seed));
     file_p.write((char*)&header_p.step_count, sizeof(header_p.step_count));
+    file_p.write((char*)&header_p.buff_prod, sizeof(header_p.buff_prod));
 
 	writeDivList(file_p, header_p.div_player_1);
 	writeDivList(file_p, header_p.div_player_2);
@@ -269,6 +282,7 @@ std::pair<std::list<octopus::Steppable *>, std::list<octopus::Command *> > readL
 {
     file_p.read((char*)&header_r.seed, sizeof(header_r.seed));
     file_p.read((char*)&header_r.step_count, sizeof(header_r.step_count));
+    file_p.read((char*)&header_r.buff_prod, sizeof(header_r.buff_prod));
 
 	header_r.div_player_1 = readDivList(file_p);
 	header_r.div_player_2 = readDivList(file_p);
@@ -277,7 +291,7 @@ std::pair<std::list<octopus::Steppable *>, std::list<octopus::Command *> > readL
 	rand_p = new octopus::RandomGenerator(header_r.seed);
 
 	std::pair<std::list<octopus::Steppable *>, std::list<octopus::Command *> > pair_l;
-	pair_l.first = LevelSteps(lib_p, *rand_p, header_r.step_count, header_r.div_player_1, header_r.div_player_2);
+	pair_l.first = LevelSteps(lib_p, *rand_p, header_r.step_count, header_r.buff_prod, header_r.div_player_1, header_r.div_player_2);
 	pair_l.second = LevelCommands(lib_p, *rand_p);
 	return pair_l;
 }

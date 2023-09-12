@@ -23,12 +23,13 @@ namespace godot
 namespace level_test_model
 {
 
-std::list<octopus::Steppable *> LevelSteps(octopus::Library &lib_p, octopus::RandomGenerator &rand_p);
+std::list<octopus::Steppable *> LevelSteps(octopus::Library &lib_p, octopus::RandomGenerator &rand_p, bool buffProd_p);
 std::list<octopus::Command *> LevelCommands(octopus::Library &lib_p, octopus::RandomGenerator &rand_p);
 
 struct ModelLoaderHeader
 {
-	int seed;
+	int seed {0};
+	bool buff_prod {false};
 };
 
 /// @brief write header for classic arena level

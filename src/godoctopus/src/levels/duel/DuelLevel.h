@@ -27,7 +27,7 @@ namespace godot
 namespace duellevel
 {
 
-std::list<octopus::Steppable *> LevelSteps(octopus::Library &lib_p, octopus::RandomGenerator &rand_p, int stepCount_p,
+std::list<octopus::Steppable *> LevelSteps(octopus::Library &lib_p, octopus::RandomGenerator &rand_p, int stepCount_p, bool buffProd_p,
 	std::vector<fas::DivinityType> const &divinitiesPlayer1_p, std::vector<fas::DivinityType> const &divinitiesPlayer2_p);
 
 std::list<octopus::Command *> LevelCommands(octopus::Library &lib_p, octopus::RandomGenerator &rand_p);
@@ -38,6 +38,8 @@ struct DuelLevelHeader
 	int seed = 0;
 	// step count to end
 	int step_count = 0;
+
+	bool buff_prod {false};
 
 	// divinity types of player 1
 	std::vector<fas::DivinityType> div_player_1;

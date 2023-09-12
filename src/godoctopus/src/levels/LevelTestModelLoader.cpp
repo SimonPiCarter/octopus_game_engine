@@ -31,6 +31,7 @@
 #include "step/player/PlayerSpawnStep.hh"
 #include "step/player/PlayerSpendResourceStep.hh"
 #include "step/player/PlayerLevelUpUpgradeStep.hh"
+#include "step/player/PlayerBuffAllStep.hh"
 #include "step/state/StateTemplePositionAddStep.hh"
 #include "step/state/StateWinStep.hh"
 #include "step/team/TeamVisionStep.hh"
@@ -47,7 +48,7 @@ namespace godot
 namespace level_test_model
 {
 
-std::list<Steppable *> LevelSteps(Library &lib_p, RandomGenerator &rand_p)
+std::list<Steppable *> LevelSteps(Library &lib_p, RandomGenerator &rand_p, bool buffProd_p)
 {
 	loadMinimalModels(lib_p);
 
@@ -85,6 +86,15 @@ std::list<Steppable *> LevelSteps(Library &lib_p, RandomGenerator &rand_p)
 		}, 180)),
 	};
 
+	if(buffProd_p)
+	{
+		octopus::TimedBuff buff_l;
+		buff_l._id = "model_loading_buff_prod";
+		buff_l._type = octopus::TyppedBuff::Type::Production;
+		buff_l._coef = 9.;
+		spawners_l.push_back(new octopus::PlayerBuffAllStep(0, buff_l, ""));
+	}
+
 	fas::addBuildingPlayer(spawners_l, 0, fas::allDivinities(), lib_p);
 
 	return spawners_l;
@@ -102,6 +112,7 @@ std::list<Command *> LevelCommands(Library &lib_p, RandomGenerator &rand_p)
 void writeLevelHeader(std::ofstream &file_p, ModelLoaderHeader const &header_p)
 {
     file_p.write((char*)&header_p.seed, sizeof(header_p.seed));
+    file_p.write((char*)&header_p.buff_prod, sizeof(header_p.buff_prod));
 }
 
 /// @brief read header for classic arena level and return a pair of steppable and command
@@ -109,12 +120,13 @@ std::pair<std::list<octopus::Steppable *>, std::list<octopus::Command *> > readL
 	octopus::RandomGenerator * &rand_p, ModelLoaderHeader &header_r)
 {
     file_p.read((char*)&header_r.seed, sizeof(header_r.seed));
+    file_p.read((char*)&header_r.buff_prod, sizeof(header_r.buff_prod));
 
 	delete rand_p;
 	rand_p = new octopus::RandomGenerator(header_r.seed);
 
 	std::pair<std::list<octopus::Steppable *>, std::list<octopus::Command *> > pair_l;
-	pair_l.first = LevelSteps(lib_p, *rand_p);
+	pair_l.first = LevelSteps(lib_p, *rand_p, header_r.buff_prod);
 	pair_l.second = LevelCommands(lib_p, *rand_p);
 	return pair_l;
 }
