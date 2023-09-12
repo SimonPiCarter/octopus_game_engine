@@ -249,7 +249,7 @@ std::pair<std::list<octopus::Steppable *>, std::list<octopus::Command *> > readA
 	}
 
 	std::pair<std::list<octopus::Steppable *>, std::list<octopus::Command *> > pair_l;
-	pair_l.first = ArenaLevelSteps(lib_p, header_r.you, header_r.them);
+	pair_l.first = ArenaLevelSteps(lib_p, header_r.you, header_r.them, true);
 	pair_l.second = ArenaLevelCommands(lib_p);
 	return pair_l;
 }
