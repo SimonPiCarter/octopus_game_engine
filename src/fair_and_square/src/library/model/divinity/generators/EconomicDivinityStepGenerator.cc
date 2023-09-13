@@ -110,7 +110,7 @@ void fillLibrary(EconomicDivinityParams const &params_p, octopus::Library &lib_p
 	tiertwounitmodel_l._armor = 0;
 	tiertwounitmodel_l._lineOfSight = 6;
 	tiertwounitmodel_l._fullReload = params_p._produceTimer*100;
-	tiertwounitmodel_l._requirements._upgradeLvl[models::EconomicDivId] = 2;
+	tiertwounitmodel_l._requirements._upgradeLvl[models::EconomicDivId+models::tierTwoSuffix] = 1;
 	tiertwounitmodel_l._idleFunc = customIdleResource;
 
 	lib_p.registerBuildingModel(params_p._tierTwoBuildingModelId, tiertwounitmodel_l);
