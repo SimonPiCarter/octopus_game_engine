@@ -25,6 +25,11 @@ void EntityFlockMoveCommand::setRayTolerance(Fixed const &rayTolerance_p)
 	_rayTolerance = rayTolerance_p;
 }
 
+Fixed const & EntityFlockMoveCommand::getRayTolerance() const
+{
+	return _rayTolerance;
+}
+
 void EntityFlockMoveCommand::registerCommand(Step &step_p, State const &state_p)
 {
 	// just store this command

@@ -40,6 +40,11 @@ void EntityMoveCommand::setRayTolerance(Fixed const &rayTolerance_p)
 	_rayTolerance = rayTolerance_p;
 }
 
+Fixed const & EntityMoveCommand::getRayTolerance() const
+{
+	return _rayTolerance;
+}
+
 Vector const &getLeftMost(Vector const &pos1_p, Vector const &pos2_p)
 {
 	if(pos1_p.x > pos2_p.x)

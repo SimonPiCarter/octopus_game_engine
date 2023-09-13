@@ -22,6 +22,7 @@ public:
 	EntityFlockMoveCommand(std::list<Handle> const &commandHandles_p, Vector const &finalPoint_p, bool attackMove_p=false, bool neverStop_p=false);
 
 	void setRayTolerance(Fixed const &rayTolerance_p);
+	Fixed const & getRayTolerance() const;
 
 	/// @brief register the command into the step
 	/// This method will add move command to every commands

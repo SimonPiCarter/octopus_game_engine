@@ -77,7 +77,9 @@ TEST(commandSerializationTest, simple_no_step_moveCommand)
         // write controller
         Controller controller_l({}, 1.);
 
-        controller_l.commitCommand(new EntityMoveCommand(Handle(0), Handle(0),{12,3},0,{{12,3}}, false));
+		EntityMoveCommand * cmd1_l = new EntityMoveCommand(Handle(0), Handle(0),{12,3},0,{{12,3}}, false);
+		cmd1_l->setRayTolerance(Fixed(500, true));
+        controller_l.commitCommand(cmd1_l);
         controller_l.commitCommand(new EntityMoveCommand(Handle(1), Handle(1),{15,2},1,{{7,8}, {15,2}}, true));
 
         std::ofstream file_l(fileName_l, std::ios::out | std::ios::binary);
@@ -101,6 +103,7 @@ TEST(commandSerializationTest, simple_no_step_moveCommand)
         EntityMoveCommand const * typped_l = dynamic_cast<EntityMoveCommand const *>(cmd_l);
         ASSERT_NE(nullptr, typped_l);
         EXPECT_EQ(0, typped_l->getHandleCommand().index);
+        EXPECT_EQ(500, typped_l->getRayTolerance().data());
         EXPECT_EQ(Vector(12, 3), typped_l->getFinalPoint());
         EXPECT_EQ(0, typped_l->getGridStatus());
         ASSERT_EQ(1u, typped_l->getWaypoints().size());
@@ -112,6 +115,7 @@ TEST(commandSerializationTest, simple_no_step_moveCommand)
         typped_l = dynamic_cast<EntityMoveCommand const *>(cmd_l);
         ASSERT_NE(nullptr, typped_l);
         EXPECT_EQ(1, typped_l->getHandleCommand().index);
+        EXPECT_EQ(0, typped_l->getRayTolerance().data());
         EXPECT_EQ(Vector(15, 2), typped_l->getFinalPoint());
         EXPECT_EQ(1, typped_l->getGridStatus());
         ASSERT_EQ(2u, typped_l->getWaypoints().size());

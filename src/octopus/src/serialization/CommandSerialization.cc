@@ -253,6 +253,7 @@ void writeCommand(std::ofstream &file_p, Command const *cmd_p, Writer_t writer_p
         writer_p(file_p, 2ul);
         EntityMoveCommand const *typped_l = dynamic_cast<EntityMoveCommand const *>(cmd_p);
         writer_p(file_p, typped_l->getHandleCommand());
+        writer_p(file_p, typped_l->getRayTolerance());
         writer_p(file_p, typped_l->getFinalPoint());
         writer_p(file_p, typped_l->getGridStatus());
         writer_p(file_p, typped_l->getWaypoints().size());
@@ -396,6 +397,7 @@ void writeCommand(std::ofstream &file_p, Command const *cmd_p, Writer_t writer_p
         {
             writer_p(file_p, handle_p);
         }
+        writer_p(file_p, typped_l->getRayTolerance());
         writer_p(file_p, typped_l->getFinalPoint());
         writer_p(file_p, typped_l->isAttackMove());
         writer_p(file_p, typped_l->isNeverStop());
@@ -446,6 +448,7 @@ Command * readCommand(std::ifstream &file_p, Library const &lib_p)
     else if(cmdId_p == 2)
     {
         Handle source_l;
+        Fixed rayTolerance_l;
         Vector final_l;
         unsigned long gridStatus_l;
         size_t nbPoints_l;
@@ -454,6 +457,7 @@ Command * readCommand(std::ifstream &file_p, Library const &lib_p)
         bool neverStop_l;
 
         read(file_p, &source_l);
+        read(file_p, &rayTolerance_l);
         read(file_p, &final_l);
         read(file_p, &gridStatus_l);
         read(file_p, &nbPoints_l);
@@ -466,7 +470,9 @@ Command * readCommand(std::ifstream &file_p, Library const &lib_p)
         read(file_p, &init_l);
         read(file_p, &neverStop_l);
 
-        cmd_l = new EntityMoveCommand(source_l, source_l, final_l, gridStatus_l, points_l, init_l, neverStop_l);
+        EntityMoveCommand *move_l = new EntityMoveCommand(source_l, source_l, final_l, gridStatus_l, points_l, init_l, neverStop_l);
+		move_l->setRayTolerance(rayTolerance_l);
+		cmd_l = move_l;
     }
     else if(cmdId_p == 3)
     {
@@ -675,6 +681,7 @@ Command * readCommand(std::ifstream &file_p, Library const &lib_p)
     {
         size_t size_l;
         std::list<Handle> handles_l;
+        Fixed rayTolerance_l;
         Vector point_l;
         bool attackMove_l;
         bool neverStop_l;
@@ -686,11 +693,14 @@ Command * readCommand(std::ifstream &file_p, Library const &lib_p)
             read(file_p, &handle_l);
             handles_l.push_back(handle_l);
         }
+        read(file_p, &rayTolerance_l);
         read(file_p, &point_l);
         read(file_p, &attackMove_l);
         read(file_p, &neverStop_l);
 
-        cmd_l = new EntityFlockMoveCommand(handles_l, point_l, attackMove_l, neverStop_l);
+        EntityFlockMoveCommand * flock_l = new EntityFlockMoveCommand(handles_l, point_l, attackMove_l, neverStop_l);
+		flock_l->setRayTolerance(rayTolerance_l);
+		cmd_l = flock_l;
     }
     else if(cmdId_p == 16)
     {

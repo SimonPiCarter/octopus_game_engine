@@ -25,6 +25,7 @@ public:
 	void setFlockInformation(std::array<FlockInformation, 3> * flockInfo_p);
 
 	void setRayTolerance(Fixed const &rayTolerance_p);
+	Fixed const & getRayTolerance() const;
 
 	/// @brief check if _ent is close to the waypoint, if so
 	/// remove reached waypoint and create a step to the next waypoint
