@@ -96,7 +96,7 @@ void add_move_target_commands(std::list<octopus::Command*> &list_r, octopus::Sta
 		octopus::EntityFlockMoveCommand * cmd_l = new octopus::EntityFlockMoveCommand(flock_l, worldPos_l, false);
 		if(ent_l && ent_l->_model._isStatic)
 		{
-			cmd_l->setRayTolerance(ent_l->_model._ray*1.5);
+			cmd_l->setRayTolerance(ent_l->_model._ray*octopus::Fixed(1500000));
 		}
 		cmd_l->setQueued(queued_p);
 		list_r.push_back(cmd_l);
