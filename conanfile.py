@@ -21,7 +21,7 @@ class cfllpspConan(ConanFile):
     url = "https://edgitlab.eurodecision.com/cfl/cfllpsp"
     description = "EURODECISION cfllpsp"
     settings = "os", "compiler", "build_type", "arch"
-    requires = "boost/1.75.0",\
+    requires = "boost/1.83.0",\
                 ("gtest/1.12.1", "private")
     options = {
         "shared": [True, False],

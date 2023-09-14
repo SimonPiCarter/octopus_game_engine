@@ -6,6 +6,7 @@
 #include <set>
 #include <vector>
 #include <functional>
+#include <boost/unordered/unordered_flat_set.hpp>
 
 namespace octopus
 {
@@ -82,7 +83,7 @@ public:
 	bool empty() const override;
 
 private:
-	std::set<int> _set;
+	boost::unordered_flat_set<int> _set;
 };
 
 }
