@@ -183,7 +183,7 @@ bool Controller::loop_body()
 			Step &step_l = *_stepBundles.back()._step;
 
 			// if step was not handled already
-			Logger::getDebug() << "compiling step " << _backState->_stepHandled << " on state "<<state_l->_id<< std::endl;
+			Logger::getNormal() << "compiling step " << _backState->_stepHandled << std::endl;
 
 			const std::chrono::time_point<std::chrono::steady_clock> start_l = std::chrono::steady_clock::now();
 

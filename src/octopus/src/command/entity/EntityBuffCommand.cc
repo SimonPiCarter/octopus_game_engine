@@ -19,7 +19,7 @@ EntityBuffCommand::EntityBuffCommand(Handle const &commandHandle_p, Handle const
 
 bool EntityBuffCommand::applyCommand(Step & step_p, State const &state_p, CommandData const *, PathManager &) const
 {
-	Logger::getDebug() << "EntityBuffCommand:: apply Command "<<_target <<std::endl;
+	Logger::getNormal() << "EntityBuffCommand:: apply Command "<<_target <<std::endl;
 
 	Unit const * unit_l = dynamic_cast<Unit const *>(state_p.getEntity(_handleCommand));
 

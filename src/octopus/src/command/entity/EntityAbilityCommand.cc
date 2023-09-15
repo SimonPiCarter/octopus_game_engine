@@ -40,7 +40,7 @@ void EntityAbilityCommand::registerCommand(Step & step_p, State const &state_p)
 
 bool EntityAbilityCommand::applyCommand(Step & step_p, State const &state_p, CommandData const *, PathManager &) const
 {
-	Logger::getDebug() << "EntityAbilityCommand:: apply Command "<<_target <<std::endl;
+	Logger::getNormal() << "EntityAbilityCommand:: apply Command "<<_target <<std::endl;
 
 	Entity const * ent_l = state_p.getEntity(_handleCommand);
     getAbility(ent_l->_model, _id)._runnable(step_p, state_p, _handleCommand, _target, _pointTarget);

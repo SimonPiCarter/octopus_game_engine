@@ -29,7 +29,7 @@ BuildingUnitProductionCommand::BuildingUnitProductionCommand(Handle const &comma
 
 void BuildingUnitProductionCommand::registerCommand(Step & step_p, State const &state_p)
 {
-	Logger::getDebug() << "BuildingUnitProductionCommand:: register Command "<<_source <<std::endl;
+	Logger::getNormal() << "BuildingUnitProductionCommand:: register Command "<<_source <<std::endl;
 	Building const * building_l = dynamic_cast<Building const *>(state_p.getEntity(_source));
 	Player const & player_l = *state_p.getPlayer(building_l->_player);
 
@@ -59,24 +59,24 @@ void BuildingUnitProductionCommand::registerCommand(Step & step_p, State const &
 
 bool BuildingUnitProductionCommand::applyCommand(Step & step_p, State const &state_p, CommandData const *, PathManager &) const
 {
-	Logger::getDebug() << "BuildingUnitProductionCommand:: apply Command "<<_source <<std::endl;
+	Logger::getNormal() << "BuildingUnitProductionCommand:: apply Command "<<_source <<std::endl;
 	Building const * building_l = dynamic_cast<Building const *>(state_p.getEntity(_source));
 	Player const & player_l = *state_p.getPlayer(building_l->_player);
 
 	if(_data._canceled)
 	{
-		Logger::getDebug() << "BuildingUnitProductionCommand:: canceled Command "<<_source <<std::endl;
+		Logger::getNormal() << "BuildingUnitProductionCommand:: canceled Command "<<_source <<std::endl;
 		return true;
 	}
 
 	if(_data._progression < getProductionTime(*_data._model, player_l))
 	{
-		Logger::getDebug() << "BuildingUnitProductionCommand :: adding production progression step " <<std::endl;
+		Logger::getNormal() << "BuildingUnitProductionCommand :: adding production progression step " <<std::endl;
 		step_p.addSteppable(new ProductionProgressionStep(_handleCommand, building_l->getProduction()));
 	}
 	else
 	{
-		Logger::getDebug() << "BuildingUnitProductionCommand :: adding spawn step " <<std::endl;
+		Logger::getNormal() << "BuildingUnitProductionCommand :: adding spawn step " <<std::endl;
 
 		Unit unit_l(building_l->_pos + building_l->_buildingModel._productionOutput, false, *_data._model);
 		unit_l._player = player_l._id;

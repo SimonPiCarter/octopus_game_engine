@@ -30,7 +30,7 @@ BuildingUpgradeProductionCommand::BuildingUpgradeProductionCommand(Handle const 
 
 void BuildingUpgradeProductionCommand::registerCommand(Step & step_p, State const &state_p)
 {
-	Logger::getDebug() << "BuildingUpgradeProductionCommand:: register Command "<<_source <<std::endl;
+	Logger::getNormal() << "BuildingUpgradeProductionCommand:: register Command "<<_source <<std::endl;
 	Building const * building_l = dynamic_cast<Building const *>(state_p.getEntity(_source));
 
 	// if building is not build we skip everything
@@ -62,23 +62,23 @@ void BuildingUpgradeProductionCommand::registerCommand(Step & step_p, State cons
 
 bool BuildingUpgradeProductionCommand::applyCommand(Step & step_p, State const &state_p, CommandData const *, PathManager &) const
 {
-	Logger::getDebug() << "BuildingUpgradeProductionCommand:: apply Command "<<_source <<std::endl;
+	Logger::getNormal() << "BuildingUpgradeProductionCommand:: apply Command "<<_source <<std::endl;
 	Building const * building_l = dynamic_cast<Building const *>(state_p.getEntity(_source));
 
 	if(_data._canceled)
 	{
-		Logger::getDebug() << "BuildingUpgradeProductionCommand:: canceled Command "<<_source <<std::endl;
+		Logger::getNormal() << "BuildingUpgradeProductionCommand:: canceled Command "<<_source <<std::endl;
 		return true;
 	}
 
 	if(_data._progression < _data._upgrade->_productionTime)
 	{
-		Logger::getDebug() << "BuildingUpgradeProductionCommand :: adding production progression step " <<std::endl;
+		Logger::getNormal() << "BuildingUpgradeProductionCommand :: adding production progression step " <<std::endl;
 		step_p.addSteppable(new ProductionProgressionStep(_handleCommand, building_l->getProduction()));
 	}
 	else
 	{
-		Logger::getDebug() << "BuildingUpgradeProductionCommand :: adding spawn step " <<std::endl;
+		Logger::getNormal() << "BuildingUpgradeProductionCommand :: adding spawn step " <<std::endl;
 
 		// set ugrade as researched
 		step_p.addSteppable(new PlayerLevelUpUpgradeStep(building_l->_player, _upgrade->_id));

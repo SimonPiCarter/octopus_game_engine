@@ -46,14 +46,14 @@ bool isInRange(State const &state_p, Entity const * ent_p, Building const * buil
 
 bool EntityBuildingCommand::applyCommand(Step & step_p, State const &state_p, CommandData const *data_p, PathManager &pathManager_p) const
 {
-	Logger::getDebug() << "EntityBuildingCommand:: apply Command "<<_source <<std::endl;
+	Logger::getNormal() << "EntityBuildingCommand:: apply Command "<<_source <<std::endl;
 	MoveData const &moveData_l = *static_cast<MoveData const *>(data_p);
 	Entity const * ent_l = state_p.getEntity(_source);
 
 	// special case where entity died and has been replaced by another
 	if(!state_p.hasEntity(_target))
 	{
-		Logger::getDebug() << "EntityBuildingCommand:: building died and has been replaced"<<std::endl;
+		Logger::getNormal() << "EntityBuildingCommand:: building died and has been replaced"<<std::endl;
 		return true;
 	}
 
@@ -61,18 +61,18 @@ bool EntityBuildingCommand::applyCommand(Step & step_p, State const &state_p, Co
 
 	if(ent_l->_player != building_l->_player)
 	{
-		Logger::getDebug() << "EntityBuildingCommand:: building other player building is not allowed"<<std::endl;
+		Logger::getNormal() << "EntityBuildingCommand:: building other player building is not allowed"<<std::endl;
 		return true;
 	}
 	if(!ent_l->_model._isBuilder)
 	{
-		Logger::getDebug() << "EntityBuildingCommand:: non builder cannot build"<<std::endl;
+		Logger::getNormal() << "EntityBuildingCommand:: non builder cannot build"<<std::endl;
 		return true;
 	}
 
 	if(building_l->_canceled)
 	{
-		Logger::getDebug() << "EntityBuildingCommand:: canceled"<<std::endl;
+		Logger::getNormal() << "EntityBuildingCommand:: canceled"<<std::endl;
 		return true;
 	}
 
@@ -81,13 +81,13 @@ bool EntityBuildingCommand::applyCommand(Step & step_p, State const &state_p, Co
 	{
 		if(!step_p.isCanceled(_target))
 		{
-			Logger::getDebug() << "EntityBuildingCommand:: space taken and not cancelled yet"<<std::endl;
+			Logger::getNormal() << "EntityBuildingCommand:: space taken and not cancelled yet"<<std::endl;
 			step_p.addSteppable(new BuildingCancelStep(_target, building_l->_canceled, true));
 			step_p.addSteppable(new PlayerSpendResourceStep(building_l->_player, getReverseCostMap(building_l->_model._cost)));
 		}
 		else
 		{
-			Logger::getDebug() << "EntityBuildingCommand:: space taken and already cancelled"<<std::endl;
+			Logger::getNormal() << "EntityBuildingCommand:: space taken and already cancelled"<<std::endl;
 		}
 		return true;
 	}
@@ -95,27 +95,27 @@ bool EntityBuildingCommand::applyCommand(Step & step_p, State const &state_p, Co
 	// if building is over stop
 	if(building_l->isBuilt())
 	{
-		Logger::getDebug() << "EntityBuildingCommand:: building over"<<std::endl;
+		Logger::getNormal() << "EntityBuildingCommand:: building over"<<std::endl;
 		return true;
 	}
 
 	if(!building_l->_alive && !building_l->isBlueprint())
 	{
-		Logger::getDebug() << "EntityBuildingCommand:: building died"<<std::endl;
+		Logger::getNormal() << "EntityBuildingCommand:: building died"<<std::endl;
 		return true;
 	}
 
 	// If not in range et move
 	if(!isInRange(state_p, ent_l, building_l))
 	{
-		Logger::getDebug() << "EntityBuildingCommand:: moving"<<std::endl;
+		Logger::getNormal() << "EntityBuildingCommand:: moving"<<std::endl;
 		// run move command
 		_subMoveCommand.applyCommand(step_p, state_p, data_p, pathManager_p);
 	}
 	// If in range build after grid check
 	else
 	{
-		Logger::getDebug() << "EntityBuildingCommand:: building"<<std::endl;
+		Logger::getNormal() << "EntityBuildingCommand:: building"<<std::endl;
 		step_p.addSteppable(new BuildingStep(_source, _target, ent_l->getProduction()));
 	}
 

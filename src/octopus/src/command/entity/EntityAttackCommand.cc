@@ -43,7 +43,7 @@ bool EntityAttackCommand::applyCommand(Step & step_p, State const &state_p, Comm
 	Handle const &curTarget_l = data_l._target;
 	Entity const * entSource_l = state_p.getEntity(_source);
 
-	Logger::getDebug() << "EntityAttackCommand:: apply Command "<<_source << " -> " <<curTarget_l<<std::endl;
+	Logger::getNormal() << "EntityAttackCommand:: apply Command "<<_source << " -> " <<curTarget_l<<std::endl;
 
 	// if the current command is about healing
 	bool heal_l = entSource_l->_model._heal > 1e-3;
@@ -60,12 +60,12 @@ bool EntityAttackCommand::applyCommand(Step & step_p, State const &state_p, Comm
 		// If no target we release
 		if(!newTarget_l)
 		{
-			Logger::getDebug() << "EntityAttackCommand:: no new target found "<<std::endl;
+			Logger::getNormal() << "EntityAttackCommand:: no new target found "<<std::endl;
 			return true;
 		}
 		else
 		{
-			Logger::getDebug() << "EntityAttackCommand:: new target found "<<newTarget_l->_handle<<std::endl;
+			Logger::getNormal() << "EntityAttackCommand:: new target found "<<newTarget_l->_handle<<std::endl;
 			/// steppable to update target
 			step_p.addSteppable(new CommandNewTargetStep(_handleCommand, newTarget_l->_handle, curTarget_l));
 			return false;
@@ -73,12 +73,12 @@ bool EntityAttackCommand::applyCommand(Step & step_p, State const &state_p, Comm
 	}
 
 	Entity const * entTarget_l = state_p.getEntity(curTarget_l);
-	Logger::getDebug() << "reload" <<entSource_l->_reload<<" / "<<entSource_l->getFullReload().data() << std::endl;
+	Logger::getNormal() << "reload" <<entSource_l->_reload<<" / "<<entSource_l->getFullReload().data() << std::endl;
 	// If not in range we move to the target
 	// if windup started we skip this
 	if(!inRange(state_p, curTarget_l) && windup_l == 0)
 	{
-		Logger::getDebug() << "\tEntityAttackCommand:: not in range"<<std::endl;
+		Logger::getNormal() << "\tEntityAttackCommand:: not in range"<<std::endl;
 		// direction (source -> target)
 		Vector dir_l = entTarget_l->_pos - entSource_l->_pos;
 		// square distances
@@ -103,7 +103,7 @@ bool EntityAttackCommand::applyCommand(Step & step_p, State const &state_p, Comm
 			// If target we update
 			if(newTarget_l && newTarget_l->_handle != curTarget_l)
 			{
-				Logger::getDebug() << "EntityAttackCommand:: new target found (out of range) "<<newTarget_l->_handle<<std::endl;
+				Logger::getNormal() << "EntityAttackCommand:: new target found (out of range) "<<newTarget_l->_handle<<std::endl;
 				/// steppable to update target
 				step_p.addSteppable(new CommandNewTargetStep(_handleCommand, newTarget_l->_handle, curTarget_l));
 			}
@@ -113,12 +113,12 @@ bool EntityAttackCommand::applyCommand(Step & step_p, State const &state_p, Comm
 		Vector diff_l = entTarget_l->_pos - data_l._finalPoint;
 		if(square_length(diff_l) > 1.)
 		{
-			Logger::getDebug() << "\t\tEntityAttackCommand:: changed target "<< _source << " to " << entTarget_l->_pos.x.to_double()<<";"<<entTarget_l->_pos.y.to_double() <<std::endl;
+			Logger::getNormal() << "\t\tEntityAttackCommand:: changed target "<< _source << " to " << entTarget_l->_pos.x.to_double()<<";"<<entTarget_l->_pos.y.to_double() <<std::endl;
 			step_p.addSteppable(new CommandDataWaypointSetStep(_handleCommand, data_l._waypoints, {entTarget_l->_pos}));
 		}
 		else
 		{
-			Logger::getDebug() << "\t\tEntityAttackCommand:: adding move step "<< _source << " target " << closest_l.x.to_double()<<";"<<closest_l.y.to_double() << " speed " <<entSource_l->getStepSpeed().to_double()<<std::endl;
+			Logger::getNormal() << "\t\tEntityAttackCommand:: adding move step "<< _source << " target " << closest_l.x.to_double()<<";"<<closest_l.y.to_double() << " speed " <<entSource_l->getStepSpeed().to_double()<<std::endl;
 			// add move command
 			_moveCommand.applyCommand(step_p, state_p, data_p, pathManager_p);
 		}
@@ -130,12 +130,12 @@ bool EntityAttackCommand::applyCommand(Step & step_p, State const &state_p, Comm
 			step_p.addSteppable(new WindUpStartStep(_handleCommand));
 		}
 		step_p.addSteppable(new CommandWindUpDiffStep(_handleCommand, 1));
-		Logger::getDebug() << "\tEntityAttackCommand:: in range (winding up)"<<std::endl;
+		Logger::getNormal() << "\tEntityAttackCommand:: in range (winding up)"<<std::endl;
 		// If in range we trigger the attack (delay may be applied for animation)
 		// + 1 to take into account steppable added just before
 		if(windup_l +1 >= entSource_l->_model._windup)
 		{
-			Logger::getDebug() << "\tEntityAttackCommand:: in range (attack)"<<std::endl;
+			Logger::getNormal() << "\tEntityAttackCommand:: in range (attack)"<<std::endl;
 			// reset wind up (remove value + 1 because step +1 will be applied before resetting)
 			step_p.addSteppable(new CommandWindUpDiffStep(_handleCommand, - windup_l - 1));
 
@@ -166,7 +166,7 @@ bool EntityAttackCommand::applyCommand(Step & step_p, State const &state_p, Comm
 				Entity const * newTarget_l = lookUpNewTarget(state_p, _source, entSource_l->_aggroDistance, heal_l);
 				if(newTarget_l && newTarget_l->_model._isUnit)
 				{
-					Logger::getDebug() << "EntityAttackCommand:: new target found (out of range) "<<newTarget_l->_handle<<std::endl;
+					Logger::getNormal() << "EntityAttackCommand:: new target found (out of range) "<<newTarget_l->_handle<<std::endl;
 					/// steppable to update target
 					step_p.addSteppable(new CommandNewTargetStep(_handleCommand, newTarget_l->_handle, curTarget_l));
 				}
@@ -175,7 +175,7 @@ bool EntityAttackCommand::applyCommand(Step & step_p, State const &state_p, Comm
 	}
 	else
 	{
-		Logger::getDebug() << "\tEntityAttackCommand:: in range (reloading)"<<std::endl;
+		Logger::getNormal() << "\tEntityAttackCommand:: in range (reloading)"<<std::endl;
 	}
 
 	if(inRange(state_p, curTarget_l) || windup_l > 0)
