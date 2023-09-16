@@ -36,6 +36,7 @@ target_sources (unit_tests
 	src/buffCommand.test.cc
 	src/buffStep.test.cc
 	src/buildingCommand.test.cc
+	src/cache_benchmark.test.cc
 	src/canonical.test.cc
 	src/commandQueue.test.cc
 	src/commandSerialization.test.cc
