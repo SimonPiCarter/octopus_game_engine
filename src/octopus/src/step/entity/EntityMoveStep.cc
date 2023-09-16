@@ -54,7 +54,7 @@ EntityMoveStep createEntityMoveStep(Entity const &ent_p, Vector const &target_p,
 {
 	Vector move_l = target_p - ent_p._pos;
 	Fixed length_l = length(move_l);
-	if(length_l > 1e-3)
+	if(length_l > Fixed(Fixed::OneAsLong()/1000,true))
 	{
 		move_l /=  length_l;
 	}
