@@ -76,6 +76,7 @@ add_library(octopus
 	${CMAKE_CURRENT_SOURCE_DIR}/src/state/player/upgrade/StepUpgradeNoOpGenerator.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/state/player/upgrade/Upgrade.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/state/player/upgrade/StepUpgradeTyppedBuffGenerator.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/src/state/projectile/Projectile.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/state/vision/PatternHandler.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/state/vision/VisionGrid.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/state/vision/VisionHandler.cc
@@ -131,6 +132,8 @@ add_library(octopus
 	${CMAKE_CURRENT_SOURCE_DIR}/src/step/player/PlayerUpdateBuildingCountStep.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/step/player/bonus/PlayerAddCostBonusStep.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/step/player/bonus/PlayerAddTimeProdBonusStep.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/src/step/projectile/ProjectileMoveStep.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/src/step/projectile/ProjectileSpawnStep.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/step/resource/ResourceSlotStep.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/step/state/StateAddConstraintPositionStep.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/step/state/StateDrawStep.cc

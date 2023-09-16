@@ -97,6 +97,8 @@ namespace octopus
 	class PlayerUpdateBuildingCountStep;
 	class ProductionPaidStep;
 	class ProductionProgressionStep;
+	class ProjectileMoveStep;
+	class ProjectileSpawnStep;
 	class ResourceSlotStep;
 	class ResourceSpawnStep;
 	class StateAddConstraintPositionStep;
@@ -193,6 +195,8 @@ namespace octopus
 			virtual void visit(PlayerUpdateBuildingCountStep const *) = 0;
 			virtual void visit(ProductionPaidStep const *) = 0;
 			virtual void visit(ProductionProgressionStep const *) = 0;
+			virtual void visit(ProjectileMoveStep const *) = 0;
+			virtual void visit(ProjectileSpawnStep const *) = 0;
 			virtual void visit(ResourceSlotStep const *) = 0;
 			virtual void visit(ResourceSpawnStep const *) = 0;
 			virtual void visit(StateAddConstraintPositionStep const *) = 0;

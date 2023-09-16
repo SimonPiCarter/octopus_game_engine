@@ -941,4 +941,14 @@ unsigned long State::getStepApplied() const
 	return _stepApplied;
 }
 
+ProjectileContainer &State::getProjectileContainer()
+{
+	return _projectileContainer;
+}
+
+ProjectileContainer const &State::getProjectileContainer() const
+{
+	return _projectileContainer;
+}
+
 } // octopus

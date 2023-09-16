@@ -8,6 +8,7 @@
 #include "utils/DynamicBitset.hh"
 #include "step/ConstraintPosition.hh"
 
+#include "projectile/Projectile.hh"
 #include "vision/VisionHandler.hh"
 
 namespace octopus
@@ -160,6 +161,11 @@ public:
 	void removeStepApplied();
 	/// @brief get the number of step applied
 	unsigned long getStepApplied() const;
+
+	/// @brief getter for projectile container
+	ProjectileContainer &getProjectileContainer();
+	/// @brief getter for projectile container
+	ProjectileContainer const &getProjectileContainer() const;
 private:
 	State(State const &state_p) = delete;
 
@@ -222,6 +228,9 @@ private:
 
 	/// @brief number of step applied
 	unsigned long _stepApplied {0};
+
+	/// @brief projectile container
+	ProjectileContainer _projectileContainer;
 };
 
 /// @brief struct to represent a panel of targets within a range

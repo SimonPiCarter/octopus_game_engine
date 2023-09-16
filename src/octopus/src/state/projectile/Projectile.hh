@@ -1,0 +1,76 @@
+#ifndef __Projectile__
+#define __Projectile__
+
+#include "state/Handle.hh"
+#include "utils/Vector.hh"
+#include "utils/Fixed.hh"
+
+namespace octopus
+{
+
+class State;
+class Step;
+
+/// @brief barebone logic for projectiles
+class ProjectileStepGenetor
+{
+public:
+	virtual void generateSteps(Step &step_p, State const &state_p) const = 0;
+
+	virtual ProjectileStepGenetor * copy() const = 0;
+};
+
+/// @brief barebone data for projectiles
+struct Projectile
+{
+	/// @brief index of this projectile in the container
+	size_t _index {0};
+	/// @brief indicate if projectile is done (and free for reuse)
+	bool _done {false};
+	/// @brief position of the projectile
+	Vector _pos;
+	/// @brief position of the target of the projectile
+	Vector _posTarget;
+	/// @brief target of the projectile (can be invalid in case of no target or if target died)
+	/// in that case fall back to _posTarget
+	Handle _target;
+	/// @brief source of the projectile
+	Handle _source;
+	/// @brief projectile step speed
+	Fixed _speed;
+	/// @brief step generator when projectile hit
+	ProjectileStepGenetor const * _generator {nullptr};
+};
+
+/// @brief class responsible for storing and registering every Projectile
+class ProjectileContainer
+{
+public:
+	std::vector<Projectile> & getProjectiles() {return _projectiles; }
+	std::vector<Projectile> const & getProjectiles() const {return _projectiles; }
+
+	/// @brief mark the projectile as done and register it as free idx
+	void markDone(size_t index_p);
+	/// @brief mark the projectile as NOT done and remove it from free idx
+	void unmarkDone(size_t index_p);
+
+	std::list<size_t> const &getFreeIdx() const { return _freeIdx; }
+	std::list<size_t> &getFreeIdx() { return _freeIdx; }
+
+private:
+	std::vector<Projectile> _projectiles;
+
+	/// @brief lkist of free indexes in the vector
+	std::list<size_t> _freeIdx;
+};
+
+/// @brief Handle the basic ticking for a projectile
+/// - if projectile is close to target it will generate steps of impact and
+/// mark itself as finished
+/// - otherwise it will close on target (entity or position)
+void tickProjectile(Step &step_p, Projectile const &proj_p, State const &state_p);
+
+} // namespace octopus
+
+
+#endif // __Projectile__

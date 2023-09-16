@@ -58,6 +58,7 @@ target_sources (unit_tests
 	src/moveCommand.test.cc
 	src/playerBuffAllStep.test.cc
 	src/proceduralTerrain.test.cc
+	src/projectileStep.test.cc
 	src/queueCommand.test.cc
 	src/rallyPointProductionCommand.test.cc
 	src/random.test.cc

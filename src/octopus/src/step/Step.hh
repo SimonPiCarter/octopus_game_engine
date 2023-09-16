@@ -12,6 +12,9 @@
 #include "state/Handle.hh"
 #include "utils/Fixed.hh"
 
+#include "step/projectile/ProjectileMoveStep.hh"
+#include "step/projectile/ProjectileSpawnStep.hh"
+
 namespace octopus
 {
 	class CommandData;
@@ -54,6 +57,12 @@ namespace octopus
 
 			std::list<Steppable const *> &getSteppable();
 			std::list<Steppable const *> const &getSteppable() const;
+
+			ProjectileMoveStep & getProjectileMoveStep();
+			ProjectileMoveStep const & getProjectileMoveStep() const;
+
+			ProjectileSpawnStep & getProjectileSpawnStep();
+			ProjectileSpawnStep const & getProjectileSpawnStep() const;
 
 			Fixed & getResourceSpent(unsigned long player_p, std::string res_p);
 			Fixed getResourceSpent(unsigned long player_p, std::string res_p) const;
@@ -110,6 +119,9 @@ namespace octopus
 			std::list<EntityMoveStep *> _listEntityMoveStep;
 
 			std::list<Steppable const *> _listSteppable;
+
+			ProjectileMoveStep _projectileMoveStep;
+			ProjectileSpawnStep _projectileSpawnStep;
 
 			/// @brief the id of the step (previous step + 1)
 			unsigned long long const _id {0};

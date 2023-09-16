@@ -60,7 +60,7 @@ namespace RVO {
 	{
 		orcaLines_.clear();
 
-		const octopus::Fixed invTimeHorizonObst = Fixed::One() / timeHorizonObst_;
+		const octopus::Fixed invTimeHorizonObst = octopus::Fixed::One() / timeHorizonObst_;
 
 		/* Create obstacle ORCA lines. */
 		for (size_t i = 0; i < obstacleNeighbors_.size(); ++i) {

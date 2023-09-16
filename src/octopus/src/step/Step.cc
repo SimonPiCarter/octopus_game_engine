@@ -52,6 +52,24 @@ std::list<Steppable const *> const &Step::getSteppable() const
 	return _listSteppable;
 }
 
+ProjectileMoveStep & Step::getProjectileMoveStep()
+{
+	return _projectileMoveStep;
+}
+ProjectileMoveStep const & Step::getProjectileMoveStep() const
+{
+	return _projectileMoveStep;
+}
+
+ProjectileSpawnStep & Step::getProjectileSpawnStep()
+{
+	return _projectileSpawnStep;
+}
+ProjectileSpawnStep const & Step::getProjectileSpawnStep() const
+{
+	return _projectileSpawnStep;
+}
+
 Fixed & Step::getResourceSpent(unsigned long player_p, std::string res_p)
 {
 	return _spent[player_p][res_p];
@@ -222,6 +240,10 @@ void apply(Step const & step_p, State &state_p, StepData &stepData_p)
 		// apply steppable with state data
 		steppable_l->apply(state_p);
 	}
+
+	// apply projectile steps
+	step_p.getProjectileMoveStep().apply(state_p);
+	step_p.getProjectileSpawnStep().apply(state_p);
 }
 
 void revert(Step const & step_p, State &state_p, StepData &stepData_p)
@@ -242,6 +264,10 @@ void revert(Step const & step_p, State &state_p, StepData &stepData_p)
 		delete *it_l;
 		--i;
 	}
+
+	// revert projectile steps
+	step_p.getProjectileSpawnStep().revert(state_p, nullptr);
+	step_p.getProjectileMoveStep().revert(state_p, nullptr);
 
 	vecData_l.clear();
 	state_p.removeStepApplied();
