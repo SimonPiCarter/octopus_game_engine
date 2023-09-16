@@ -33,7 +33,7 @@ bool Entity::isIgnoringCollision() const
 Fixed applyBuff(Entity const &ent_p, Fixed val_p, Buff const &buff_p, std::vector<ConditionalBuff> const &condBuffs_p)
 {
 	Fixed offsetVal_l = val_p + buff_p._offset;
-	Fixed coefVal_l = 1. + buff_p._coef;
+	Fixed coefVal_l = Fixed::One() + buff_p._coef;
 	for(ConditionalBuff const &buff_l : condBuffs_p)
 	{
 		if(buff_l.isApplying(ent_p))
@@ -86,12 +86,12 @@ Fixed Entity::getHpRegeneration() const
 
 Fixed Entity::getProduction() const
 {
-	return applyBuff( *this, 1., _buffProduction, _condBuffProduction);
+	return applyBuff( *this, Fixed::One(), _buffProduction, _condBuffProduction);
 }
 
 Fixed Entity::getHarvest() const
 {
-	return applyBuff( *this, 1., _buffHarvest, _condBuffHarvest);
+	return applyBuff( *this, Fixed::One(), _buffHarvest, _condBuffHarvest);
 }
 
 bool Entity::isFrozen() const

@@ -21,7 +21,7 @@ OrcaManager::OrcaManager(Fixed timeStep_p, Fixed neighborDist_p, size_t maxNeigh
 	_sim->setTimeStep(_timeStep);
 
 	/// Specify the default parameters for agents that are subsequently added.
-	_sim->setAgentDefaults(_neighborDist, _maxNeighbors, _timeHorizon, _timeHorizonObst, 1.0, 0.5);
+	_sim->setAgentDefaults(_neighborDist, _maxNeighbors, _timeHorizon, _timeHorizonObst, Fixed::One(), Fixed(Fixed::OneAsLong()/2, true));
 }
 
 OrcaManager::~OrcaManager()
@@ -47,7 +47,7 @@ void OrcaManager::resetFromState(State const &state_p)
 	_sim->setTimeStep(_timeStep);
 
 	/// Specify the default parameters for agents that are subsequently added.
-	_sim->setAgentDefaults(_neighborDist, _maxNeighbors, _timeHorizon, _timeHorizonObst, 1.0, 0.5);
+	_sim->setAgentDefaults(_neighborDist, _maxNeighbors, _timeHorizon, _timeHorizonObst, Fixed::One(), Fixed(Fixed::OneAsLong()/2, true));
 
     for(octopus::Entity const * ent_l : state_p.getEntities())
     {

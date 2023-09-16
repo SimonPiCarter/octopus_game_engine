@@ -39,7 +39,7 @@
 #include "logger/Logger.hh"
 
 namespace RVO {
-	Agent::Agent(RVOSimulator *sim) : maxNeighbors_(0), maxSpeed_(0.0f), neighborDist_(0.0f), radius_(0.0f), sim_(sim), timeHorizon_(0.0f), timeHorizonObst_(0.0f), id_(0) { }
+	Agent::Agent(RVOSimulator *sim) : maxNeighbors_(0), maxSpeed_(octopus::Fixed::Zero()), neighborDist_(octopus::Fixed::Zero()), radius_(octopus::Fixed::Zero()), sim_(sim), timeHorizon_(octopus::Fixed::Zero()), timeHorizonObst_(octopus::Fixed::Zero()), id_(0) { }
 
 	void Agent::computeNeighbors()
 	{
@@ -60,7 +60,7 @@ namespace RVO {
 	{
 		orcaLines_.clear();
 
-		const octopus::Fixed invTimeHorizonObst = 1.0f / timeHorizonObst_;
+		const octopus::Fixed invTimeHorizonObst = Fixed::One() / timeHorizonObst_;
 
 		/* Create obstacle ORCA lines. */
 		for (size_t i = 0; i < obstacleNeighbors_.size(); ++i) {
@@ -105,30 +105,30 @@ namespace RVO {
 
 			Line line;
 
-			if (s < 0.0f && distSq1 <= radiusSq) {
+			if (s < octopus::Fixed::Zero() && distSq1 <= radiusSq) {
 				/* Collision with left vertex. Ignore if non-convex. */
 				if (obstacle1->isConvex_) {
-					line.point = Vector2(0.0f, 0.0f);
+					line.point = Vector2(octopus::Fixed::Zero(), octopus::Fixed::Zero());
 					line.direction = normalize(Vector2(-relativePosition1.y(), relativePosition1.x()));
 					orcaLines_.push_back(line);
 				}
 
 				continue;
 			}
-			else if (s > 1.0f && distSq2 <= radiusSq) {
+			else if (s > octopus::Fixed::One() && distSq2 <= radiusSq) {
 				/* Collision with right vertex. Ignore if non-convex
 				 * or if it will be taken care of by neighoring obstace */
-				if (obstacle2->isConvex_ && det(relativePosition2, obstacle2->unitDir_) >= 0.0f) {
-					line.point = Vector2(0.0f, 0.0f);
+				if (obstacle2->isConvex_ && det(relativePosition2, obstacle2->unitDir_) >= octopus::Fixed::Zero()) {
+					line.point = Vector2(octopus::Fixed::Zero(), octopus::Fixed::Zero());
 					line.direction = normalize(Vector2(-relativePosition2.y(), relativePosition2.x()));
 					orcaLines_.push_back(line);
 				}
 
 				continue;
 			}
-			else if (s >= 0.0f && s < 1.0f && distSqLine <= radiusSq) {
+			else if (s >= octopus::Fixed::Zero() && s < octopus::Fixed::One() && distSqLine <= radiusSq) {
 				/* Collision with obstacle segment. */
-				line.point = Vector2(0.0f, 0.0f);
+				line.point = Vector2(octopus::Fixed::Zero(), octopus::Fixed::Zero());
 				line.direction = -obstacle1->unitDir_;
 				orcaLines_.push_back(line);
 				continue;
@@ -142,7 +142,7 @@ namespace RVO {
 
 			Vector2 leftLegDirection, rightLegDirection;
 
-			if (s < 0.0f && distSqLine <= radiusSq) {
+			if (s < octopus::Fixed::Zero() && distSqLine <= radiusSq) {
 				/*
 				 * Obstacle viewed obliquely so that left vertex
 				 * defines velocity obstacle.
@@ -158,7 +158,7 @@ namespace RVO {
 				leftLegDirection = Vector2(relativePosition1.x() * leg1 - relativePosition1.y() * radius_, relativePosition1.x() * radius_ + relativePosition1.y() * leg1) / distSq1;
 				rightLegDirection = Vector2(relativePosition1.x() * leg1 + relativePosition1.y() * radius_, -relativePosition1.x() * radius_ + relativePosition1.y() * leg1) / distSq1;
 			}
-			else if (s > 1.0f && distSqLine <= radiusSq) {
+			else if (s > octopus::Fixed::One() && distSqLine <= radiusSq) {
 				/*
 				 * Obstacle viewed obliquely so that
 				 * right vertex defines velocity obstacle.
@@ -206,13 +206,13 @@ namespace RVO {
 			bool isLeftLegForeign = false;
 			bool isRightLegForeign = false;
 
-			if (obstacle1->isConvex_ && det(leftLegDirection, -leftNeighbor->unitDir_) >= 0.0f) {
+			if (obstacle1->isConvex_ && det(leftLegDirection, -leftNeighbor->unitDir_) >= octopus::Fixed::Zero()) {
 				/* Left leg points into obstacle. */
 				leftLegDirection = -leftNeighbor->unitDir_;
 				isLeftLegForeign = true;
 			}
 
-			if (obstacle2->isConvex_ && det(rightLegDirection, obstacle2->unitDir_) <= 0.0f) {
+			if (obstacle2->isConvex_ && det(rightLegDirection, obstacle2->unitDir_) <= octopus::Fixed::Zero()) {
 				/* Right leg points into obstacle. */
 				rightLegDirection = obstacle2->unitDir_;
 				isRightLegForeign = true;
@@ -230,7 +230,7 @@ namespace RVO {
 			const octopus::Fixed tLeft = ((velocity_ - leftCutoff) * leftLegDirection);
 			const octopus::Fixed tRight = ((velocity_ - rightCutoff) * rightLegDirection);
 
-			if ((t < 0.0f && tLeft < 0.0f) || (obstacle1 == obstacle2 && tLeft < 0.0f && tRight < 0.0f)) {
+			if ((t < octopus::Fixed::Zero() && tLeft < octopus::Fixed::Zero()) || (obstacle1 == obstacle2 && tLeft < octopus::Fixed::Zero() && tRight < octopus::Fixed::Zero())) {
 				/* Project on left cut-off circle. */
 				const Vector2 unitW = normalize(velocity_ - leftCutoff);
 
@@ -239,7 +239,7 @@ namespace RVO {
 				orcaLines_.push_back(line);
 				continue;
 			}
-			else if (t > 1.0f && tRight < 0.0f) {
+			else if (t > octopus::Fixed::One() && tRight < octopus::Fixed::Zero()) {
 				/* Project on right cut-off circle. */
 				const Vector2 unitW = normalize(velocity_ - rightCutoff);
 
@@ -253,9 +253,9 @@ namespace RVO {
 			 * Project on left leg, right leg, or cut-off line, whichever is closest
 			 * to velocity.
 			 */
-			const octopus::Fixed distSqCutoff = ((t < 0.0f || t > 1.0f || obstacle1 == obstacle2) ? numeric::infinity<octopus::Fixed>() : absSq(velocity_ - (leftCutoff + t * cutoffVec)));
-			const octopus::Fixed distSqLeft = ((tLeft < 0.0f) ? numeric::infinity<octopus::Fixed>() : absSq(velocity_ - (leftCutoff + tLeft * leftLegDirection)));
-			const octopus::Fixed distSqRight = ((tRight < 0.0f) ? numeric::infinity<octopus::Fixed>() : absSq(velocity_ - (rightCutoff + tRight * rightLegDirection)));
+			const octopus::Fixed distSqCutoff = ((t < octopus::Fixed::Zero() || t > octopus::Fixed::One() || obstacle1 == obstacle2) ? numeric::infinity<octopus::Fixed>() : absSq(velocity_ - (leftCutoff + t * cutoffVec)));
+			const octopus::Fixed distSqLeft = ((tLeft < octopus::Fixed::Zero()) ? numeric::infinity<octopus::Fixed>() : absSq(velocity_ - (leftCutoff + tLeft * leftLegDirection)));
+			const octopus::Fixed distSqRight = ((tRight < octopus::Fixed::Zero()) ? numeric::infinity<octopus::Fixed>() : absSq(velocity_ - (rightCutoff + tRight * rightLegDirection)));
 
 
 			if (distSqCutoff <= distSqLeft && distSqCutoff <= distSqRight) {
@@ -291,7 +291,7 @@ namespace RVO {
 
 		const size_t numObstLines = orcaLines_.size();
 
-		const octopus::Fixed invTimeHorizon = 1.0f / timeHorizon_;
+		const octopus::Fixed invTimeHorizon = octopus::Fixed::One() / timeHorizon_;
 
 		/* Create agent ORCA lines. */
 		for (size_t i = 0; i < agentNeighbors_.size(); ++i) {
@@ -314,7 +314,7 @@ namespace RVO {
 
 				const octopus::Fixed dotProduct1 = w * relativePosition;
 
-				if (dotProduct1 < 0.0f && sqr(dotProduct1) > combinedRadiusSq * wLengthSq && wLengthSq > 0) {
+				if (dotProduct1 < octopus::Fixed::Zero() && sqr(dotProduct1) > combinedRadiusSq * wLengthSq && wLengthSq > 0) {
 					/* Project on cut-off circle. */
 					const octopus::Fixed wLength = numeric::square_root(wLengthSq);
 					const Vector2 unitW = w / wLength;
@@ -326,7 +326,7 @@ namespace RVO {
 					/* Project on legs. */
 					const octopus::Fixed leg = numeric::square_root(distSq - combinedRadiusSq);
 
-					if (det(relativePosition, w) > 0.0f) {
+					if (det(relativePosition, w) > octopus::Fixed::Zero()) {
 						/* Project on left leg. */
 						line.direction = Vector2(relativePosition.x() * leg - relativePosition.y() * combinedRadius, relativePosition.x() * combinedRadius + relativePosition.y() * leg) / distSq;
 					}
@@ -342,7 +342,7 @@ namespace RVO {
 			}
 			else {
 				/* Collision. Project on cut-off circle of time timeStep. */
-				const octopus::Fixed invTimeStep = 1.0f / sim_->timeStep_;
+				const octopus::Fixed invTimeStep = octopus::Fixed::One() / sim_->timeStep_;
 
 				/* Vector from cutoff center to relative velocity. */
 				const Vector2 w = relativeVelocity - invTimeStep * relativePosition;
@@ -452,7 +452,7 @@ namespace RVO {
 		const octopus::Fixed dotProduct = lines[lineNo].point * lines[lineNo].direction;
 		const octopus::Fixed discriminant = sqr(dotProduct) + sqr(radius) - absSq(lines[lineNo].point);
 
-		if (discriminant < 0.0f) {
+		if (discriminant < octopus::Fixed::Zero()) {
 			/* Max speed circle fully invalidates line lineNo. */
 			return false;
 		}
@@ -467,7 +467,7 @@ namespace RVO {
 
 			if (numeric::abs(denominator) <= RVO_EPSILON) {
 				/* Lines lineNo and i are (almost) parallel. */
-				if (numerator < 0.0f) {
+				if (numerator < octopus::Fixed::Zero()) {
 					return false;
 				}
 				else {
@@ -477,7 +477,7 @@ namespace RVO {
 
 			const octopus::Fixed t = numerator / denominator;
 
-			if (denominator >= 0.0f) {
+			if (denominator >= octopus::Fixed::Zero()) {
 				/* Line i bounds line lineNo on the right. */
 				tRight = std::min(tRight, t);
 			}
@@ -493,7 +493,7 @@ namespace RVO {
 
 		if (directionOpt) {
 			/* Optimize direction. */
-			if (optVelocity * lines[lineNo].direction > 0.0f) {
+			if (optVelocity * lines[lineNo].direction > octopus::Fixed::Zero()) {
 				/* Take right extreme. */
 				result = lines[lineNo].point + tRight * lines[lineNo].direction;
 			}
@@ -539,7 +539,7 @@ namespace RVO {
 		}
 
 		for (size_t i = 0; i < lines.size(); ++i) {
-			if (det(lines[i].direction, lines[i].point - result) > 0.0f) {
+			if (det(lines[i].direction, lines[i].point - result) > octopus::Fixed::Zero()) {
 				/* Result does not satisfy constraint i. Compute new optimal result. */
 				const Vector2 tempResult = result;
 
@@ -555,7 +555,7 @@ namespace RVO {
 
 	void linearProgram3(const std::vector<Line> &lines, size_t numObstLines, size_t beginLine, octopus::Fixed radius, Vector2 &result)
 	{
-		octopus::Fixed distance = 0.0f;
+		octopus::Fixed distance = octopus::Fixed::Zero();
 
 		for (size_t i = beginLine; i < lines.size(); ++i) {
 			if (det(lines[i].direction, lines[i].point - result) > distance) {
@@ -569,7 +569,7 @@ namespace RVO {
 
 					if (numeric::abs(determinant) <= RVO_EPSILON) {
 						/* Line i and line j are parallel. */
-						if (lines[i].direction * lines[j].direction > 0.0f) {
+						if (lines[i].direction * lines[j].direction > octopus::Fixed::Zero()) {
 							/* Line i and line j point in the same direction. */
 							continue;
 						}

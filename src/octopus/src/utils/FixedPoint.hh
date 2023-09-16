@@ -11,6 +11,11 @@ namespace octopus
 	struct FixedPoint
 	{
 	public:
+		static constexpr long long OneAsLong() { return e; }
+		static constexpr FixedPoint<e> const & Zero() { static FixedPoint<e> zero_l(0, true); return zero_l; }
+		static constexpr FixedPoint<e> const & One() { static FixedPoint<e> one_l(e, true); return one_l; }
+		static constexpr FixedPoint<e> const & MinusOne() { static FixedPoint<e> one_l(-e, true); return one_l; }
+
 		template<class Number, class = typename std::enable_if<std::is_arithmetic<Number>::value>::type>
 		FixedPoint(Number const &val, bool internal_p=false) : _data(internal_p?val:val*e) {}
 		FixedPoint(FixedPoint<e> const &f) : _data(f._data) {}

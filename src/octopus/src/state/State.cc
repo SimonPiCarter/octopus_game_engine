@@ -23,7 +23,7 @@ FlyingCommandBundle::FlyingCommandBundle(CommandData * data_p, FlyingCommand * c
 
 Handle const FlyingCommandBundle::getHandle() const { return _cmd->getHandle(); }
 
-State::State() : _id(0), _gridSize(50), _gridPointSize(1), _pathGrid(_gridSize*_gridPointSize, _gridSize*_gridPointSize, 1., 1.), _visionHandler(_gridSize*_gridPointSize)
+State::State() : _id(0), _gridSize(50), _gridPointSize(1), _pathGrid(_gridSize*_gridPointSize, _gridSize*_gridPointSize, Fixed::One(), Fixed::One()), _visionHandler(_gridSize*_gridPointSize)
 {
 	_grid.reserve(_gridSize);
 	for(size_t i = 0 ; i < _gridSize ; ++ i)
@@ -37,7 +37,7 @@ State::State() : _id(0), _gridSize(50), _gridPointSize(1), _pathGrid(_gridSize*_
 }
 
 State::State(unsigned long id_p, unsigned long gridSize_p, unsigned long gridPointSize_p)
-	: _id(id_p), _gridSize(gridSize_p), _gridPointSize(gridPointSize_p), _pathGrid(_gridSize*_gridPointSize, _gridSize*_gridPointSize, 1., 1.), _visionHandler(_gridSize*_gridPointSize)
+	: _id(id_p), _gridSize(gridSize_p), _gridPointSize(gridPointSize_p), _pathGrid(_gridSize*_gridPointSize, _gridSize*_gridPointSize, Fixed::One(), Fixed::One()), _visionHandler(_gridSize*_gridPointSize)
 {
 	_grid.reserve(_gridSize);
 	for(size_t i = 0 ; i < _gridSize ; ++ i)

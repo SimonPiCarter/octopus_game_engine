@@ -94,19 +94,19 @@ void canonical_ordering(ValueNode const &child_p, ValueNode const &parent_p, Fix
 	{
 		ValueNode next_l = child_p;
 		next_l.x += 1;
-		entries_p.emplace_front(next_l, child_p, cost_p + 1);
+		entries_p.emplace_front(next_l, child_p, cost_p + Fixed::One());
 
 		next_l = child_p;
 		next_l.x -= 1;
-		entries_p.emplace_front(next_l, child_p, cost_p + 1);
+		entries_p.emplace_front(next_l, child_p, cost_p + Fixed::One());
 
 		next_l = child_p;
 		next_l.y += 1;
-		entries_p.emplace_front(next_l, child_p, cost_p + 1);
+		entries_p.emplace_front(next_l, child_p, cost_p + Fixed::One());
 
 		next_l = child_p;
 		next_l.y -= 1;
-		entries_p.emplace_front(next_l, child_p, cost_p + 1);
+		entries_p.emplace_front(next_l, child_p, cost_p + Fixed::One());
 	}
 	else if(isJumpPoint(child_p, parent_p, grid_p))
 	{
@@ -119,19 +119,19 @@ void canonical_ordering(ValueNode const &child_p, ValueNode const &parent_p, Fix
 	{
 		// apply the cardinal
 		ValueNode next_l = apply(child_p, parent_p, grid_p);
-		entries_p.emplace_front(next_l, child_p, cost_p + 1);
+		entries_p.emplace_front(next_l, child_p, cost_p + Fixed::One());
 		// apply first cardinal
 		next_l = apply_first_cardinal(child_p, parent_p, grid_p);
-		entries_p.emplace_front(next_l, child_p, cost_p + 1.);
+		entries_p.emplace_front(next_l, child_p, cost_p + Fixed::One());
 		// apply second cardinal
 		next_l = apply_second_cardinal(child_p, parent_p, grid_p);
-		entries_p.emplace_front(next_l, child_p, cost_p + 1.);
+		entries_p.emplace_front(next_l, child_p, cost_p + Fixed::One());
 	}
 	else if(isCardinal(child_p, parent_p))
 	{
 		// apply the cardinal
 		ValueNode next_l = apply(child_p, parent_p, grid_p);
-		entries_p.emplace_front(next_l, child_p, cost_p + 1);
+		entries_p.emplace_front(next_l, child_p, cost_p + Fixed::One());
 	}
 }
 
@@ -221,7 +221,7 @@ ValueGrid canonical_dijkstra(std::vector<std::vector<GridNode *> > const &grid_p
 	/// init all node in closed with -1 (to mean +infinity)
 	for(long i = 0 ; i < grid_p.size() ; ++i)
 	{
-		grid_l.emplace_back(grid_p[i].size(), Fixed(-1.));
+		grid_l.emplace_back(grid_p[i].size(), Fixed::MinusOne());
 	}
 
 	std::set<ValueNode, ValueSorter> open_l(buildOpenNodes(grid_p, x, y));
@@ -306,19 +306,19 @@ Vector obstacle_field(ValueGrid const &grid_p, long x, long y)
 	}
 	if(dx < 1e-3)
 	{
-		dx = -1.;
+		dx = Fixed::MinusOne();
 	}
 	else if(dx > 1e-3)
 	{
-		dx = 1.;
+		dx = Fixed::One();
 	}
 	if(dy < 1e-3)
 	{
-		dy = -1.;
+		dy = Fixed::MinusOne();
 	}
 	else if(dy > 1e-3)
 	{
-		dy = 1.;
+		dy = Fixed::One();
 	}
 	return {dx, dy};
 }
@@ -364,12 +364,12 @@ Vector direction(Fixed x, Fixed y, FlowField const &field_p)
 
 	// coef based on dx and dy
 	std::map<long, Fixed> coefX_l;
-	coefX_l[-1] = 1. - ratioX_l;
-	coefX_l[0] = 1.;
+	coefX_l[-1] = Fixed::One() - ratioX_l;
+	coefX_l[0] = Fixed::One();
 	coefX_l[1] = ratioX_l;
 	std::map<long, Fixed> coefY_l;
-	coefY_l[-1] = 1. - ratioY_l;
-	coefY_l[0] = 1.;
+	coefY_l[-1] = Fixed::One() - ratioY_l;
+	coefY_l[0] = Fixed::One();
 	coefY_l[1] = ratioY_l;
 
 	Vector result_l;
@@ -433,7 +433,7 @@ FlowFieldComputation::FlowFieldComputation(std::vector<std::vector<GridNode *> >
 	/// init all node in closed with -1 (to mean +infinity)
 	for(long i = 0 ; i < grid_p.size() ; ++i)
 	{
-		valueGrid.emplace_back(grid_p[i].size(), Fixed(-1.));
+		valueGrid.emplace_back(grid_p[i].size(), Fixed::MinusOne());
 	}
 
 	open = buildOpenNodes(grid_p, x, y);

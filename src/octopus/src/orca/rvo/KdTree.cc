@@ -346,7 +346,7 @@ namespace RVO {
 
 			const octopus::Fixed q1LeftOfI = leftOf(obstacle1->point_, obstacle2->point_, q1);
 			const octopus::Fixed q2LeftOfI = leftOf(obstacle1->point_, obstacle2->point_, q2);
-			const octopus::Fixed invLengthI = 1.0 / absSq(obstacle2->point_ - obstacle1->point_);
+			const octopus::Fixed invLengthI = octopus::Fixed::One() / absSq(obstacle2->point_ - obstacle1->point_);
 
 			if (q1LeftOfI >= 0.0 && q2LeftOfI >= 0.0) {
 				return queryVisibilityRecursive(q1, q2, radius, node->left) && ((sqr(q1LeftOfI) * invLengthI >= sqr(radius) && sqr(q2LeftOfI) * invLengthI >= sqr(radius)) || queryVisibilityRecursive(q1, q2, radius, node->right));
@@ -361,7 +361,7 @@ namespace RVO {
 			else {
 				const octopus::Fixed point1LeftOfQ = leftOf(q1, q2, obstacle1->point_);
 				const octopus::Fixed point2LeftOfQ = leftOf(q1, q2, obstacle2->point_);
-				const octopus::Fixed invLengthQ = 1.0 / absSq(q2 - q1);
+				const octopus::Fixed invLengthQ = octopus::Fixed::One() / absSq(q2 - q1);
 
 				return (point1LeftOfQ * point2LeftOfQ >= 0.0 && sqr(point1LeftOfQ) * invLengthQ > sqr(radius) && sqr(point2LeftOfQ) * invLengthQ > sqr(radius) && queryVisibilityRecursive(q1, q2, radius, node->left) && queryVisibilityRecursive(q1, q2, radius, node->right));
 			}
