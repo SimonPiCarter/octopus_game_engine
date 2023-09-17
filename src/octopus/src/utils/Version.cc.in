@@ -1,0 +1,9 @@
+#include "utils/Version.hh"
+
+namespace octopus
+{
+	std::string getHashVersion()
+	{
+		return "@GIT_HASH@";
+	}
+}

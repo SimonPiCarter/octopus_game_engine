@@ -177,6 +177,17 @@ target_include_directories(octopus
 add_subdirectory(test)
 
 # ============================================================================
+# Version management
+# ============================================================================
+
+ADD_CUSTOM_TARGET(GenerateVersionCPP
+                  COMMAND ${CMAKE_COMMAND} -P ${CMAKE_CURRENT_SOURCE_DIR}/Generate.cmake
+                  WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+                  DEPENDS RetreiveDateTime)
+
+target_sources(octopus PRIVATE ${CMAKE_BINARY_DIR}/Version.cc)
+
+# ============================================================================
 # Installation
 # ============================================================================
 
