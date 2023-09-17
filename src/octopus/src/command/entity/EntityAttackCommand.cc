@@ -150,6 +150,7 @@ bool EntityAttackCommand::applyCommand(Step & step_p, State const &state_p, Comm
 			{
 				Player const * playerSource_l = state_p.getPlayer(entSource_l->_player);
 				AttackModifierData attackModData_l {_source, curTarget_l,
+					entTarget_l->_pos,
 					playerSource_l->_id,
 					playerSource_l->_team,
 					entSource_l->getDamageNoBonus(),

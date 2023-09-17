@@ -51,7 +51,12 @@ void ChainingOverTime::applyEffect(Step & step_p, State const &state_p, CommandD
     // find new target
     Entity const *target_l = nullptr;
 
-	/// @todo make this avaialable without ent
+	// effect stops if entity died
+	if(!state_p.isEntityAlive(_ent))
+	{
+		return;
+	}
+
     TargetPanel panel_l(lookUpNewTargets(state_p, _ent, _range, false));
     for(Entity const * subTarget_l : panel_l.units)
     {

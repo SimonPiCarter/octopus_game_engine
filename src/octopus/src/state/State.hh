@@ -244,6 +244,9 @@ struct TargetPanel
 /// @brief look for new targets in a matching range
 /// @return all targets within range
 TargetPanel lookUpNewTargets(State const &state_p, Handle const &sourceHandle_p, Fixed matchDistance_p, bool filterTeam_p=true);
+/// @brief look for new targets in a matching range (do not use the source handle to fetch the entity)
+/// @return all targets within range
+TargetPanel lookUpNewTargets(State const &state_p, unsigned long sourceIndex_p, Vector const &pos_p, unsigned long team_p, Fixed matchDistance_p, bool filterTeam_p=true);
 
 Entity const * lookUpNewBuffTarget(State const &state_p, Handle const &sourceHandle_p, Fixed range_p, TimedBuff const &buff_p);
 Entity const * lookUpNewTarget(State const &state_p, Handle const &sourceHandle_p, Fixed matchDistance_p = 5., bool healing_p=false);

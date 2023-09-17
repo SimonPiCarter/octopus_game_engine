@@ -14,8 +14,7 @@ void AoEModifier::newAttackSteppable(Step &step_p, AttackModifierData const &dat
     unsigned long team_l = data_p.team;
 
     /// @brief get all within range
-	/// @todo make this available even if target is dead
-    TargetPanel panel_l(lookUpNewTargets(state_p, data_p.target, _range, false));
+    TargetPanel panel_l(lookUpNewTargets(state_p, data_p.target.index, data_p.targetPosition, data_p.team, _range, false));
 
     for(Entity const * subTarget_l : panel_l.units)
     {

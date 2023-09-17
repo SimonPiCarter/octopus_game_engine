@@ -3,6 +3,7 @@
 
 #include "state/Handle.hh"
 #include "utils/Fixed.hh"
+#include "utils/Vector.hh"
 
 namespace octopus
 {
@@ -15,12 +16,13 @@ struct AttackModifierData
 {
 	Handle const source;
 	Handle const target;
+	Vector const targetPosition;
 	unsigned long const player;
 	unsigned long const team;
 	/// @brief damage with NO bonuses
-	Fixed baseDamage;
+	Fixed const baseDamage;
 	/// @brief total damage with bonuses
-	Fixed bonusDamage;
+	Fixed const bonusDamage;
 };
 
 /// @brief apply main attack damage (no modifier)

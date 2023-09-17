@@ -401,18 +401,22 @@ Entity const * lookUpNewBuffTarget(State const &state_p, Handle const &sourceHan
 
 TargetPanel lookUpNewTargets(State const &state_p, Handle const &sourceHandle_p, Fixed matchDistance_p, bool filterTeam_p)
 {
+	Entity const * source_l = state_p.getEntity(sourceHandle_p);
+	unsigned long team_l = state_p.getPlayer(source_l->_player)->_team;
+	return lookUpNewTargets(state_p, sourceHandle_p.index, source_l->_pos, team_l, matchDistance_p, filterTeam_p);
+}
+
+TargetPanel lookUpNewTargets(State const &state_p, unsigned long sourceIndex_p, Vector const &pos_p, unsigned long team_p, Fixed matchDistance_p, bool filterTeam_p)
+{
 	TargetPanel panel_l;
 	panel_l.matchDistance = matchDistance_p;
 
-	Entity const * source_l = state_p.getEntity(sourceHandle_p);
-	unsigned long team_l = state_p.getPlayer(source_l->_player)->_team;
-
 	Logger::getDebug() << " lookUpNewTargets :: start"<< std::endl;
 
-	Box<long> box_l {state_p.getGridIndex(source_l->_pos.x - matchDistance_p),
-					 state_p.getGridIndex(source_l->_pos.x + matchDistance_p),
-					 state_p.getGridIndex(source_l->_pos.y - matchDistance_p),
-					 state_p.getGridIndex(source_l->_pos.y + matchDistance_p)};
+	Box<long> box_l {state_p.getGridIndex(pos_p.x - matchDistance_p),
+					 state_p.getGridIndex(pos_p.x + matchDistance_p),
+					 state_p.getGridIndex(pos_p.y - matchDistance_p),
+					 state_p.getGridIndex(pos_p.y + matchDistance_p)};
 	std::vector<bool> bitset_l(state_p.getEntities().size(), false);
 
 	// grid for fast access
@@ -431,10 +435,10 @@ TargetPanel lookUpNewTargets(State const &state_p, Handle const &sourceHandle_p,
 		}
 		bitset_l[handle_p] = true;
 		Entity const * ent_l = state_p.getLoseEntity(handle_p);
-		if(ent_l == source_l
+		if(handle_p == sourceIndex_p
 		|| !ent_l->_alive
 		|| ent_l->_model._invulnerable
-		|| (team_l == state_p.getPlayer(ent_l->_player)->_team && filterTeam_p))
+		|| (team_p == state_p.getPlayer(ent_l->_player)->_team && filterTeam_p))
 		{
 			// NA
 		}
@@ -451,9 +455,9 @@ TargetPanel lookUpNewTargets(State const &state_p, Handle const &sourceHandle_p,
 	}
 	}
 
-	auto remover_l = [&matchDistance_p, &source_l] (Entity const * entity_p)
+	auto remover_l = [&matchDistance_p, &pos_p] (Entity const * entity_p)
 	{
-		Fixed curSqDis_l = square_length(entity_p->_pos - source_l->_pos);
+		Fixed curSqDis_l = square_length(entity_p->_pos - pos_p);
 		return curSqDis_l > matchDistance_p*matchDistance_p + 1e-5;
 	};
 	/// remove out of range
