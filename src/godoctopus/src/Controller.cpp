@@ -30,6 +30,7 @@
 #include "state/State.hh"
 #include "step/player/PlayerSpawnStep.hh"
 #include "utils/Binary.hh"
+#include "utils/Version.hh"
 
 // godot
 #include "controller/ControllerStepVisitor.h"
@@ -755,6 +756,12 @@ void Controller::dump_state_as_text(String const &path_p)
 	}
 }
 
+String Controller::get_hash_version() const
+{
+	return String(octopus::getHashVersion().c_str());
+}
+
+
 TypedArray<String> Controller::get_models(EntityHandle const * handle_p, int player_p, bool checkRequirements_p) const
 {
 	TypedArray<String> models_l;
@@ -1280,6 +1287,7 @@ void Controller::_bind_methods()
 	ClassDB::bind_method(D_METHOD("set_auto_file_path", "path"), &Controller::set_auto_file_path);
 	ClassDB::bind_method(D_METHOD("set_auto_file_debug", "debug"), &Controller::set_auto_file_debug);
 	ClassDB::bind_method(D_METHOD("dump_state_as_text", "path"), &Controller::dump_state_as_text);
+	ClassDB::bind_method(D_METHOD("get_hash_version"), &Controller::get_hash_version);
 	ClassDB::bind_method(D_METHOD("get_models", "handle", "player", "check_requirements"), &Controller::get_models);
 	ClassDB::bind_method(D_METHOD("get_abilities", "handle", "player", "check_requirements"), &Controller::get_abilities);
 

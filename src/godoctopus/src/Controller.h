@@ -195,6 +195,10 @@ public:
 	// dump state as plain text
 	void dump_state_as_text(String const &path_p);
 
+	////////////////////////////
+	//// Miscellanous
+	////////////////////////////
+	String get_hash_version() const;
 
 	////////////////////////////
 	//// Non godot methods
