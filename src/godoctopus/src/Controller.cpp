@@ -1219,8 +1219,8 @@ void Controller::next_step()
 		for(octopus::Command * cmd_l : cmds_l)
 		{
 			/// @todo refactor to allow control over multiple player ?
-			//_controller->queueCommandAsPlayer(cmd_l, _playerPerPeer.at(peer_l));
-			_controller->queueCommand(cmd_l);
+			_controller->queueCommandAsPlayer(cmd_l, _playerPerPeer.at(peer_l));
+			//_controller->queueCommand(cmd_l);
 		}
 		pair_l.second.pop_front();
 	}
