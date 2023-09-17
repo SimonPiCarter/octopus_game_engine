@@ -75,6 +75,7 @@ target_sources (unit_tests
 	src/unitProductionBonus.test.cc
 	src/unitProductionCommand.test.cc
 	src/upgradeProductionCommand.test.cc
+	src/version.test.cc
 	src/visionGridMoveStep.test.cc
 	src/visionGridOnStep.test.cc
 )
