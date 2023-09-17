@@ -17,7 +17,6 @@ struct AttackModifierData
 	Handle const source;
 	Handle const target;
 	Vector const targetPosition;
-	unsigned long const player;
 	unsigned long const team;
 	/// @brief damage with NO bonuses
 	Fixed const baseDamage;
