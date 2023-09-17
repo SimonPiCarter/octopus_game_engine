@@ -1,5 +1,5 @@
-#ifndef __VERSION__
-#define __VERSION__
+#ifndef __VERSION_OCTOPUS__
+#define __VERSION_OCTOPUS__
 
 #include <string>
 

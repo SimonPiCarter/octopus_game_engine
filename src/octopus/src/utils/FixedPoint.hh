@@ -12,9 +12,9 @@ namespace octopus
 	{
 	public:
 		static constexpr long long OneAsLong() { return e; }
-		static constexpr FixedPoint<e> const & Zero() { static FixedPoint<e> zero_l(0, true); return zero_l; }
-		static constexpr FixedPoint<e> const & One() { static FixedPoint<e> one_l(e, true); return one_l; }
-		static constexpr FixedPoint<e> const & MinusOne() { static FixedPoint<e> one_l(-e, true); return one_l; }
+		static constexpr FixedPoint<e> Zero() { FixedPoint<e> zero_l(0, true); return zero_l; }
+		static constexpr FixedPoint<e> One() { FixedPoint<e> one_l(e, true); return one_l; }
+		static constexpr FixedPoint<e> MinusOne() { FixedPoint<e> one_l(-e, true); return one_l; }
 
 		template<class Number, class = typename std::enable_if<std::is_arithmetic<Number>::value>::type>
 		FixedPoint(Number const &val, bool internal_p=false) : _data(internal_p?val:val*e) {}

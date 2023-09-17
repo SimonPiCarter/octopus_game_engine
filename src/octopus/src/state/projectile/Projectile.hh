@@ -1,6 +1,8 @@
 #ifndef __Projectile__
 #define __Projectile__
 
+#include <list>
+
 #include "state/Handle.hh"
 #include "state/entity/attackModifier/AttackModifier.hh"
 #include "utils/Vector.hh"
