@@ -2,6 +2,7 @@
 #define __Projectile__
 
 #include "state/Handle.hh"
+#include "state/entity/attackModifier/AttackModifier.hh"
 #include "utils/Vector.hh"
 #include "utils/Fixed.hh"
 
@@ -10,15 +11,6 @@ namespace octopus
 
 class State;
 class Step;
-
-/// @brief barebone logic for projectiles
-class ProjectileStepGenetor
-{
-public:
-	virtual void generateSteps(Step &step_p, State const &state_p) const = 0;
-
-	virtual ProjectileStepGenetor * copy() const = 0;
-};
 
 /// @brief barebone data for projectiles
 struct Projectile
@@ -36,10 +28,16 @@ struct Projectile
 	Handle _target;
 	/// @brief source of the projectile
 	Handle _source;
+	/// @brief the team of the source of the projectile
+	unsigned long _sourceTeam;
 	/// @brief projectile step speed
 	Fixed _speed;
+	/// @brief damage with NO bonuses
+	Fixed _baseDamage;
+	/// @brief total damage with bonuses
+	Fixed _bonusDamage;
 	/// @brief step generator when projectile hit
-	ProjectileStepGenetor const * _generator {nullptr};
+	AttackModifier _generator;
 };
 
 /// @brief class responsible for storing and registering every Projectile

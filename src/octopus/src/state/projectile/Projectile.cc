@@ -26,10 +26,13 @@ void tickProjectile(Step &step_p, Projectile const &proj_p, State const &state_p
 	if(square_length(proj_p._pos-proj_p._posTarget) < range_check*range_check)
 	{
 		// this cannot be parallelized
-		if(proj_p._generator)
-		{
-			proj_p._generator->generateSteps(step_p, state_p);
-		}
+		AttackModifierData attackModData_l {proj_p._source, proj_p._target,
+			proj_p._posTarget,
+			proj_p._sourceTeam,
+			proj_p._baseDamage,
+			proj_p._bonusDamage
+		};
+		newAttackSteppable(proj_p._generator, step_p, attackModData_l, state_p);
 		step_p.getProjectileMoveStep().setOver(proj_p._index);
 	}
 	// else move to target
