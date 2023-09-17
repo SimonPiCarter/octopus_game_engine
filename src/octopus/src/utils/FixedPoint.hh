@@ -300,7 +300,7 @@ octopus::FixedPoint<e> square_root(octopus::FixedPoint<e> const &v)
 
 	int i = 0;
 	octopus::FixedPoint<e> delta_l = res_l * res_l - v;
-	/// @todo mettre 200?
+	/// @todo set to 200?
 	while(i < 1000 && (delta_l < mepsilon_l || delta_l > epsilon_l))
 	{
 		res_l = (res_l + v / res_l) * octopus::FixedPoint<e>(e/2, true);
