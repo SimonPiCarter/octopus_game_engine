@@ -9,6 +9,7 @@
 #include "modifiers/DotModifier.hh"
 #include "modifiers/LifeStealModifier.hh"
 #include "modifiers/SelfDamageModifier.hh"
+#include "state/Handle.hh"
 
 namespace octopus
 {
@@ -22,7 +23,7 @@ class NoModifier
 {
 public:
 	/// @brief create a new attack steppable
-	void newAttackSteppable(std::vector<Steppable *> &vec_r, const Entity &ent_p, const Entity &target_p, State const &state_p, Step const &step_p, bool disableMainAttack_p=false) const;
+	void newAttackSteppable(Step &step_p, AttackModifierData const &data_p, State const &state_p, bool disableMainAttack_p=false) const;
 };
 
 /// @brief CompositeModifier allow to stack modifiers
@@ -42,7 +43,7 @@ public:
 	std::vector<CompositableModifier> _modifiers;
 
 	/// @brief create a new attack steppable based on components
-	void newAttackSteppable(std::vector<Steppable *> &vec_r, const Entity &ent_p, const Entity &target_p, State const &state_p, Step const &step_p) const;
+	void newAttackSteppable(Step &step_p, AttackModifierData const &data_p, State const &state_p) const;
 };
 
 using AttackModifier = std::variant<
@@ -56,8 +57,7 @@ using AttackModifier = std::variant<
 >;
 
 /// @brief create attack steppable using eventual attack modifier
-/// @param currentTargetHp_p the hp of the target with deduction of every hp change in the current step (not applied yet to the state)
-void newAttackSteppable(std::vector<Steppable *> &vec_r, const Entity &ent_p, const Entity &target_p, State const &state_p, Step const &step_p);
+void newAttackSteppable(AttackModifier const &attackMod_p, Step &step_p, AttackModifierData const &data_p, State const &state_p);
 
 } // namespace octopus
 

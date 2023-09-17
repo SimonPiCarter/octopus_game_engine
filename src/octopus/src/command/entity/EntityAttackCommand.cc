@@ -148,13 +148,14 @@ bool EntityAttackCommand::applyCommand(Step & step_p, State const &state_p, Comm
 			}
 			else
 			{
-				std::vector<Steppable *> vec_l;
-				newAttackSteppable(vec_l, *entSource_l, *entTarget_l, state_p, step_p);
-				// add damage (with current hp from state and step until now)
-				for(Steppable * steppable_l : vec_l)
-				{
-					step_p.addSteppable(steppable_l);
-				}
+				Player const * playerSource_l = state_p.getPlayer(entSource_l->_player);
+				AttackModifierData attackModData_l {_source, curTarget_l,
+					playerSource_l->_id,
+					playerSource_l->_team,
+					entSource_l->getDamageNoBonus(),
+					entSource_l->getDamage(entTarget_l->_model)
+				};
+				newAttackSteppable(entSource_l->_attackMod, step_p, attackModData_l, state_p);
 			}
 			// reset reload time
 			step_p.addSteppable(new EntityAttackStep(_source, entSource_l->_reload));

@@ -51,6 +51,7 @@ void ChainingOverTime::applyEffect(Step & step_p, State const &state_p, CommandD
     // find new target
     Entity const *target_l = nullptr;
 
+	/// @todo make this avaialable without ent
     TargetPanel panel_l(lookUpNewTargets(state_p, _ent, _range, false));
     for(Entity const * subTarget_l : panel_l.units)
     {
@@ -81,21 +82,17 @@ void ChainingOverTime::applyEffect(Step & step_p, State const &state_p, CommandD
     }
 }
 
-void ChainingModifier::newAttackSteppable(std::vector<Steppable *> &vec_r, const Entity &ent_p, const Entity &target_p, State const &state_p, Step const &step_p, bool disableMainAttack_p) const
+void ChainingModifier::newAttackSteppable(Step &step_p, AttackModifierData const &data_p, State const &state_p, bool disableMainAttack_p) const
 {
-    Player const *player_l = state_p.getPlayer(ent_p._player);
-    unsigned long team_l = player_l->_team;
+    unsigned long team_l = data_p.team;
 
     Handle idx_l = state_p.getFlyingCommandHandle(step_p.getFlyingCommandSpawned());
-    vec_r.push_back(new FlyingCommandSpawnStep(
-        new ChainingOverTime(idx_l, _delay, ent_p.getDamageNoBonus()*_ratio, target_p._handle, _nbOfTicks, _ratio, _range, team_l, {target_p._handle})));
+    step_p.addSteppable(new FlyingCommandSpawnStep(
+        new ChainingOverTime(idx_l, _delay, data_p.baseDamage*_ratio, data_p.target, _nbOfTicks, _ratio, _range, team_l, {data_p.target})));
 
     if(!disableMainAttack_p)
     {
-        Fixed dmg_l = std::min(Fixed(-1), target_p.getArmor() - ent_p.getDamage(target_p._model));
-        Fixed curHp_l = target_p._hp + step_p.getHpChange(target_p._handle);
-        Fixed maxHp_l = target_p.getHpMax();
-        vec_r.push_back(new EntityHitPointChangeStep(target_p._handle, dmg_l, curHp_l, maxHp_l));
+        applyMainAttack(step_p, data_p, state_p);
     }
 }
 

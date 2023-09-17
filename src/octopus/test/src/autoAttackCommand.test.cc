@@ -151,6 +151,6 @@ TEST(autoAttackCommandTest, simple)
 
 	state_l = controller_l.queryState();
 
-	// damage shoul be done
+	// damage should be done
 	EXPECT_NEAR(5., to_double(state_l->getEntity(Handle(2))->_hp), 1e-5);
 }

@@ -9,21 +9,20 @@
 namespace octopus
 {
 
-void LifeStealModifier::newAttackSteppable(std::vector<Steppable *> &vec_r, const Entity &ent_p, const Entity &target_p, State const &state_p, Step const &step_p, bool disableMainAttack_p) const
+void LifeStealModifier::newAttackSteppable(Step &step_p, AttackModifierData const &data_p, State const &state_p, bool disableMainAttack_p) const
 {
-    // damage
-	Fixed dmg_l = std::min(Fixed(-1), target_p.getArmor() - ent_p.getDamage(target_p._model));
     if(!disableMainAttack_p)
     {
-        Fixed curHp_l = target_p._hp + step_p.getHpChange(target_p._handle);
-        Fixed maxHp_l = target_p.getHpMax();
-        vec_r.push_back(new EntityHitPointChangeStep(target_p._handle, dmg_l, curHp_l, maxHp_l));
+		applyMainAttack(step_p, data_p, state_p);
     }
     // lifesteal
-    {
-        Fixed curHp_l = ent_p._hp + step_p.getHpChange(ent_p._handle);
-        Fixed maxHp_l = ent_p.getHpMax();
-	    vec_r.push_back(new EntityHitPointChangeStep(ent_p._handle, -dmg_l*_ratio, curHp_l, maxHp_l));
+	if(state_p.isEntityAlive(data_p.source))
+	{
+		Entity const & source_l = *state_p.getLoseEntity(data_p.source.index);
+		// damage
+        Fixed curHp_l = source_l._hp + step_p.getHpChange(data_p.source);
+        Fixed maxHp_l = source_l.getHpMax();
+	    step_p.addSteppable(new EntityHitPointChangeStep(data_p.source, -data_p.baseDamage*_ratio, curHp_l, maxHp_l));
     }
 }
 

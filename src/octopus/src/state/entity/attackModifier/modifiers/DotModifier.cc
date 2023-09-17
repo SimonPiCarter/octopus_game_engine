@@ -11,17 +11,14 @@
 namespace octopus
 {
 
-void DotModifier::newAttackSteppable(std::vector<Steppable *> &vec_r, const Entity &ent_p, const Entity &target_p, State const &state_p, Step const &step_p, bool disableMainAttack_p) const
+void DotModifier::newAttackSteppable(Step &step_p, AttackModifierData const &data_p, State const &state_p, bool disableMainAttack_p) const
 {
     Handle idx_l = state_p.getFlyingCommandHandle(step_p.getFlyingCommandSpawned());
-    vec_r.push_back(new FlyingCommandSpawnStep(new DamageOverTime(idx_l, _tickRate, _nbOfTicks, _dmg, target_p._handle)));
+    step_p.addSteppable(new FlyingCommandSpawnStep(new DamageOverTime(idx_l, _tickRate, _nbOfTicks, _dmg, data_p.target)));
 
     if(!disableMainAttack_p)
     {
-        Fixed dmg_l = std::min(Fixed(-1), target_p.getArmor() - ent_p.getDamage(target_p._model));
-        Fixed curHp_l = target_p._hp + step_p.getHpChange(target_p._handle);
-        Fixed maxHp_l = target_p.getHpMax();
-        vec_r.push_back(new EntityHitPointChangeStep(target_p._handle, dmg_l, curHp_l, maxHp_l));
+		applyMainAttack(step_p, data_p, state_p);
     }
 }
 

@@ -9,13 +9,13 @@
 namespace octopus
 {
 
-void AoEModifier::newAttackSteppable(std::vector<Steppable *> &vec_r, const Entity &ent_p, const Entity &target_p, State const &state_p, Step const &step_p, bool disableMainAttack_p) const
+void AoEModifier::newAttackSteppable(Step &step_p, AttackModifierData const &data_p, State const &state_p, bool disableMainAttack_p) const
 {
-    Player const *player_l = state_p.getPlayer(ent_p._player);
-    unsigned long team_l = player_l->_team;
+    unsigned long team_l = data_p.team;
 
     /// @brief get all within range
-    TargetPanel panel_l(lookUpNewTargets(state_p, target_p._handle, _range, false));
+	/// @todo make this available even if target is dead
+    TargetPanel panel_l(lookUpNewTargets(state_p, data_p.target, _range, false));
 
     for(Entity const * subTarget_l : panel_l.units)
     {
@@ -24,7 +24,7 @@ void AoEModifier::newAttackSteppable(std::vector<Steppable *> &vec_r, const Enti
         {
             Fixed curHp_l = subTarget_l->_hp + step_p.getHpChange(subTarget_l->_handle);
             Fixed maxHp_l = subTarget_l->getHpMax();
-            vec_r.push_back(new EntityHitPointChangeStep(subTarget_l->_handle, - _ratio * ent_p.getDamageNoBonus(), curHp_l, maxHp_l));
+            step_p.addSteppable(new EntityHitPointChangeStep(subTarget_l->_handle, - _ratio * data_p.baseDamage, curHp_l, maxHp_l));
         }
     }
     for(Entity const * subTarget_l : panel_l.buildings)
@@ -34,16 +34,13 @@ void AoEModifier::newAttackSteppable(std::vector<Steppable *> &vec_r, const Enti
         {
             Fixed curHp_l = subTarget_l->_hp + step_p.getHpChange(subTarget_l->_handle);
             Fixed maxHp_l = subTarget_l->getHpMax();
-            vec_r.push_back(new EntityHitPointChangeStep(subTarget_l->_handle, - _ratio * ent_p.getDamageNoBonus(), curHp_l, maxHp_l));
+            step_p.addSteppable(new EntityHitPointChangeStep(subTarget_l->_handle, - _ratio * data_p.baseDamage, curHp_l, maxHp_l));
         }
     }
 
     if(!disableMainAttack_p)
     {
-        Fixed curHp_l = target_p._hp + step_p.getHpChange(target_p._handle);
-        Fixed maxHp_l = target_p.getHpMax();
-        Fixed dmg_l = std::min(Fixed(-1), target_p.getArmor() - ent_p.getDamage(target_p._model));
-        vec_r.push_back(new EntityHitPointChangeStep(target_p._handle, dmg_l, curHp_l, maxHp_l));
+		applyMainAttack(step_p, data_p, state_p);
     }
 }
 

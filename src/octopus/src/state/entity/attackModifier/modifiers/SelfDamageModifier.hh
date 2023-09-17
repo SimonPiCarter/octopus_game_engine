@@ -1,8 +1,10 @@
 #ifndef __SelfDamageModifier__
 #define __SelfDamageModifier__
 
-#include "utils/Fixed.hh"
 #include <vector>
+
+#include "utils/Fixed.hh"
+#include "state/entity/attackModifier/AttackModifierData.hh"
 
 namespace octopus
 {
@@ -19,7 +21,7 @@ public:
         : _damage(damage_p), _ratioCurHp(ratioCurHp_p), _ratioMaxHp(ratioMaxHp_p) {}
 
 	/// @brief create a new attack steppable
-	void newAttackSteppable(std::vector<Steppable *> &vec_r, const Entity &ent_p, const Entity &target_p, State const &state_p, Step const &step_p, bool disableMainAttack_p=false) const;
+	void newAttackSteppable(Step &step_p, AttackModifierData const &data_p, State const &state_p, bool disableMainAttack_p=false) const;
 
     Fixed _damage;
     Fixed _ratioCurHp;

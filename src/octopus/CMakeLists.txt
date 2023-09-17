@@ -62,6 +62,7 @@ add_library(octopus
 	${CMAKE_CURRENT_SOURCE_DIR}/src/state/entity/Resource.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/state/entity/Unit.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/state/entity/attackModifier/AttackModifier.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/src/state/entity/attackModifier/AttackModifierData.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/state/entity/attackModifier/modifiers/AoEModifier.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/state/entity/attackModifier/modifiers/ChainingModifier.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/state/entity/attackModifier/modifiers/DotModifier.cc
