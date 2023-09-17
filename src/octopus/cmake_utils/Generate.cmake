@@ -1,4 +1,8 @@
 
+# routine to make it update
+EXECUTE_PROCESS(COMMAND ${CMAKE_BINARY_DIR}/RetreiveDateTime OUTPUT_VARIABLE DATETIMESTRING)
+MESSAGE(STATUS "DATETIME=\"${DATETIMESTRING}\"")
+
 # ============================================================================
 # Version management
 # ============================================================================
@@ -15,4 +19,4 @@ if(result)
     message(FATAL_ERROR "Failed to get git hash: ${result}")
 endif()
 
-configure_file(${CMAKE_CURRENT_SOURCE_DIR}/src/utils/Version.cc.in ${CMAKE_BINARY_DIR}/Version.cc @ONLY)
+configure_file(Version.cc.in Version.cc @ONLY)

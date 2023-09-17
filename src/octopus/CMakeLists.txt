@@ -180,12 +180,14 @@ add_subdirectory(test)
 # Version management
 # ============================================================================
 
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/src/utils/Version.cc.in ${CMAKE_BINARY_DIR}/Version.cc.in COPYONLY)
+
 ADD_CUSTOM_TARGET(GenerateVersionCPP
-                  COMMAND ${CMAKE_COMMAND} -P ${CMAKE_CURRENT_SOURCE_DIR}/Generate.cmake
-                  WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-                  DEPENDS RetreiveDateTime)
+                  COMMAND ${CMAKE_COMMAND} -P ${CMAKE_CURRENT_SOURCE_DIR}/cmake_utils/Generate.cmake
+                  WORKING_DIRECTORY ${CMAKE_BINARY_DIR})
 
 target_sources(octopus PRIVATE ${CMAKE_BINARY_DIR}/Version.cc)
+ADD_DEPENDENCIES(octopus GenerateVersionCPP)
 
 # ============================================================================
 # Installation
