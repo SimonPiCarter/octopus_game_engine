@@ -83,8 +83,8 @@ public:
 	virtual void visit(octopus::PlayerUpdateBuildingCountStep const *) override {}
 	virtual void visit(octopus::ProductionPaidStep const *) override {}
 	virtual void visit(octopus::ProductionProgressionStep const *) override {}
-	virtual void visit(octopus::ProjectileMoveStep const *) override {}
-	virtual void visit(octopus::ProjectileSpawnStep const *) override {}
+	virtual void visit(octopus::ProjectileMoveStep const *) override;
+	virtual void visit(octopus::ProjectileSpawnStep const *) override;
 	virtual void visit(octopus::ResourceSlotStep const *) override {}
 	virtual void visit(octopus::ResourceSpawnStep const *) override;
 	virtual void visit(octopus::StateAddConstraintPositionStep const *) override;

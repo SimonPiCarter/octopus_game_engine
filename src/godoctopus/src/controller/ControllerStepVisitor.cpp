@@ -30,6 +30,8 @@
 #include "step/player/PlayerAddOptionStep.hh"
 #include "step/player/PlayerPopOptionStep.hh"
 #include "step/player/PlayerBuffAllStep.hh"
+#include "step/projectile/ProjectileMoveStep.hh"
+#include "step/projectile/ProjectileSpawnStep.hh"
 #include "step/state/StateAddConstraintPositionStep.hh"
 #include "step/state/StateRemoveConstraintPositionStep.hh"
 #include "step/unit/UnitHarvestStep.hh"
@@ -137,6 +139,39 @@ void ControllerStepVisitor::visit(octopus::EntityHitPointChangeStep const *stepp
 void ControllerStepVisitor::visit(octopus::PlayerLevelUpUpgradeStep const *)
 {
 	_controller.emit_signal("updated_requirements");
+}
+
+void ControllerStepVisitor::visit(octopus::ProjectileMoveStep const *steppable_p)
+{
+	for(size_t i = 0 ; i < steppable_p->getMove().size() ; ++ i)
+	{
+		if(!octopus::is_zero(steppable_p->getMove()[i]))
+		{
+			octopus::Projectile const & proj_l = _state->getProjectileContainer().getProjectiles()[i];
+			_controller.emit_signal("move_projectile", int(i), Vector2(octopus::to_double(proj_l._pos.x), octopus::to_double(proj_l._pos.y)));
+		}
+	}
+
+	for(size_t i = 0 ; i < steppable_p->getOver().size() ; ++ i)
+	{
+		if(steppable_p->getOver()[i])
+		{
+			_controller.emit_signal("end_projectile", int(i));
+		}
+	}
+}
+
+void ControllerStepVisitor::visit(octopus::ProjectileSpawnStep const *steppable_p)
+{
+	for(octopus::Projectile const &proj_l : steppable_p->getToBeSpawned())
+	{
+		if(proj_l._sourceModel)
+		{
+			_controller.emit_signal("spawn_projectile", int(proj_l._index), String(proj_l._sourceModel->_id.c_str()),
+				Vector2(octopus::to_double(proj_l._pos.x), octopus::to_double(proj_l._pos.y)),
+				Vector2(octopus::to_double(proj_l._posTarget.x), octopus::to_double(proj_l._posTarget.y)));
+		}
+	}
 }
 
 void ControllerStepVisitor::visit(octopus::EntityMoveStep const *steppable_p)
