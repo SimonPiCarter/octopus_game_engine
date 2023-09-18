@@ -119,6 +119,7 @@ void fillLibrary(AttackSpeedDivinityParams const &params_p, octopus::Library &li
 {
 	/// @brief tier one unit model (rapid fire unit)
 	UnitModel tieroneunitmodel_l { false, 0.5, 0.05, 50 };
+	tieroneunitmodel_l._projectile = true;
 	tieroneunitmodel_l._isUnit = true;
 	tieroneunitmodel_l._productionTime = 3000;
 	tieroneunitmodel_l._cost["bloc"] = 25;
