@@ -308,6 +308,18 @@ bool Controller::loop_body()
 
 			//
 			//
+			// Projectiles Step
+			//
+			//
+			const std::chrono::time_point<std::chrono::steady_clock> startTickingProjectileStep_l = std::chrono::steady_clock::now();
+
+			std::vector<Projectile> const &projectiles_l = state_l->getProjectileContainer().getProjectiles();
+			std::for_each(projectiles_l.begin(), projectiles_l.end(), std::bind(&tickProjectile, std::ref(step_l), std::placeholders::_1, std::ref(*state_l)));
+
+			_metrics._timeTickingProjectiles += std::chrono::nanoseconds( std::chrono::steady_clock::now() - startTickingProjectileStep_l ).count();
+
+			//
+			//
 			// Compact
 			//
 			//

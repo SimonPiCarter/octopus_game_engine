@@ -21,6 +21,7 @@ std::ostream &operator<<(std::ostream &os_p, octopus::Metrics const &metrics_p)
 	os_p<<", timeApplyingSteps (ns) = "<<metrics_p._timeApplyingSteps;
 	os_p<<", timeCompilingSteps (ns) = "<<metrics_p._timeCompilingSteps;
 	os_p<<", timeRunningCommands (ns) = "<<metrics_p._timeRunningCommands;
+	os_p<<", timeTickingProjectiles (ns) = "<<metrics_p._timeTickingProjectiles;
 	os_p<<", timeCollisionHandling (ns) = "<<metrics_p._timeCollisionHandling;
 	os_p<<", timeCollisionConstraint (ns) = "<<metrics_p._timeCollisionConstraint;
 	os_p<<", timeTrigger (ns) = "<<metrics_p._timeTrigger;
@@ -40,6 +41,7 @@ void streamMetrics(std::ostream &os_p, octopus::Metrics const &metrics_p)
 	double timeApplyingPerSteps_l = metrics_p._timeApplyingSteps/metrics_p._nbStepsApplied / 1e6;
 	double timeCompilingPerSteps_l = metrics_p._timeCompilingSteps/metrics_p._nbStepsCompiled / 1e6;
 	double timeRunningCommandsPerSteps_l = metrics_p._timeRunningCommands/metrics_p._nbStepsCompiled / 1e6;
+	double timeTickingProjectilesPerSteps_l = metrics_p._timeTickingProjectiles/metrics_p._nbStepsCompiled / 1e6;
 	double timeCollisionHandlingPerSteps_l = metrics_p._timeCollisionHandling/metrics_p._nbStepsCompiled / 1e6;
 	double timeCollisionConstraintPerSteps_l = metrics_p._timeCollisionConstraint/metrics_p._nbStepsCompiled / 1e6;
 	double timeTriggerPerSteps_l = metrics_p._timeTrigger/metrics_p._nbStepsCompiled / 1e6;
@@ -55,6 +57,7 @@ void streamMetrics(std::ostream &os_p, octopus::Metrics const &metrics_p)
 	os_p<<"\t- average time to apply a step : "<<timeApplyingPerSteps_l <<"ms"<<std::endl;
 	os_p<<"\t- average time to compile a step : "<<timeCompilingPerSteps_l <<"ms"<<std::endl;
 	os_p<<"\t\t- average time to run command each step : "<<timeRunningCommandsPerSteps_l <<"ms"<<std::endl;
+	os_p<<"\t\t- average time to tick projectiles each step : "<<timeTickingProjectilesPerSteps_l <<"ms"<<std::endl;
 	os_p<<"\t\t- average time to handle collision each step : "<<timeCollisionHandlingPerSteps_l <<"ms"<<std::endl;
 	os_p<<"\t\t- average time to handle constraint position each step : "<<timeCollisionConstraintPerSteps_l <<"ms"<<std::endl;
 	os_p<<"\t\t- average time to handle trigger each step : "<<timeTriggerPerSteps_l <<"ms"<<std::endl;

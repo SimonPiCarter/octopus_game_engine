@@ -7,6 +7,7 @@
 #include "logger/Logger.hh"
 #include "state/State.hh"
 #include "state/entity/attackModifier/AttackModifier.hh"
+#include "state/projectile/Projectile.hh"
 #include "step/Step.hh"
 #include "step/command/CommandWindUpDiffStep.hh"
 #include "step/command/CommandNewTargetStep.hh"
@@ -20,6 +21,7 @@
 #include "step/entity/EntityFrozenStep.hh"
 #include "step/entity/EntityHitPointChangeStep.hh"
 #include "step/entity/EntityUpdateWaitingStep.hh"
+#include "step/projectile/ProjectileSpawnStep.hh"
 #include "utils/Fixed.hh"
 
 
@@ -139,9 +141,9 @@ bool EntityAttackCommand::applyCommand(Step & step_p, State const &state_p, Comm
 			// reset wind up (remove value + 1 because step +1 will be applied before resetting)
 			step_p.addSteppable(new CommandWindUpDiffStep(_handleCommand, - windup_l - 1));
 
-			step_p.addSteppable(new ImpactStep(entSource_l->_model._id, entTarget_l->_pos));
 			if(heal_l)
 			{
+				step_p.addSteppable(new ImpactStep(entSource_l->_model._id, entTarget_l->_pos));
 				Fixed curHp_l = entTarget_l->_hp + step_p.getHpChange(curTarget_l);
 				Fixed maxHp_l = entTarget_l->getHpMax();
 				step_p.addSteppable(new EntityHitPointChangeStep(curTarget_l, entSource_l->getHeal(), curHp_l, maxHp_l));
@@ -155,7 +157,26 @@ bool EntityAttackCommand::applyCommand(Step & step_p, State const &state_p, Comm
 					entSource_l->getDamageNoBonus(),
 					entSource_l->getDamage(entTarget_l->_model)
 				};
-				newAttackSteppable(entSource_l->_attackMod, step_p, attackModData_l, state_p);
+				if(entSource_l->_model._projectile)
+				{
+					Projectile projectile_l;
+					projectile_l._pos = entSource_l->_pos;
+					projectile_l._posTarget = entTarget_l->_pos;
+					projectile_l._target = curTarget_l;
+					projectile_l._source = _source;
+					projectile_l._sourceModel = &entSource_l->_model;
+					projectile_l._sourceTeam = playerSource_l->_team;
+					projectile_l._speed = 0.1;
+					projectile_l._baseDamage = entSource_l->getDamageNoBonus();
+					projectile_l._bonusDamage = entSource_l->getDamage(entTarget_l->_model);
+					projectile_l._generator = entSource_l->_attackMod;
+					step_p.getProjectileSpawnStep().addProjectile(state_p.getProjectileContainer(), std::move(projectile_l));
+				}
+				else
+				{
+					step_p.addSteppable(new ImpactStep(entSource_l->_model._id, entTarget_l->_pos));
+					newAttackSteppable(entSource_l->_attackMod, step_p, attackModData_l, state_p);
+				}
 			}
 			// reset reload time
 			step_p.addSteppable(new EntityAttackStep(_source, entSource_l->_reload));

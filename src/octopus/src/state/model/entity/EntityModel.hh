@@ -93,6 +93,9 @@ namespace octopus
 		std::string _id;
 
 		std::function<void(Entity const &, Step &, State const &)> _idleFunc = idleFunctioNoOp;
+
+		/// @brief if projectile attack
+		bool _projectile {false};
 	};
 
 	std::map<std::string, Fixed> getReverseCostMap(std::map<std::string, Fixed> const &cost_p);

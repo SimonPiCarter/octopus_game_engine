@@ -86,15 +86,10 @@ void Controller::_process(double delta)
 		_over |= _state->isOver();
 		_paused |= _state->isOver();
 
-		ControllerStepVisitor vis_l(*this, _state);
 		// Every step missing
 		for(auto it_l = _lastIt ; it_l != stateAndSteps_l._stepIt ; ++it_l)
 		{
-			// Visit every stepapble in the step
-			for(octopus::Steppable const * steppable_l : it_l->_step->getSteppable())
-			{
-				vis_l(steppable_l);
-			}
+			applyControllerStepVisitor(*this, *_state, *it_l->_step);
 		}
 		_lastIt = stateAndSteps_l._stepIt;
 		_controller->setExternalMin(_lastIt->_step->getId());
@@ -482,12 +477,7 @@ void Controller::init(std::list<octopus::Command *> const &commands_p, std::list
 	_state = stateAndSteps_l._state;
 	_lastIt = stateAndSteps_l._steps.begin();
 
-	ControllerStepVisitor vis_l(*this, _state);
-	// visit intial steps
-	for(octopus::Steppable const * steppable_l : stateAndSteps_l._initialStep.getSteppable())
-	{
-		vis_l(steppable_l);
-	}
+	applyControllerStepVisitor(*this, *_state, stateAndSteps_l._initialStep);
 
 	UtilityFunctions::print("done");
 	_initDone = true;
@@ -530,12 +520,7 @@ void Controller::init_replay(std::list<octopus::Command *> const &commands_p, st
 	_state = stateAndSteps_l._state;
 	_lastIt = stateAndSteps_l._steps.begin();
 
-	ControllerStepVisitor vis_l(*this, _state);
-	// visit intial steps
-	for(octopus::Steppable const * steppable_l : stateAndSteps_l._initialStep.getSteppable())
-	{
-		vis_l(steppable_l);
-	}
+	applyControllerStepVisitor(*this, *_state, stateAndSteps_l._initialStep);
 
 	UtilityFunctions::print("done");
 	_initDone = true;
@@ -577,12 +562,7 @@ void Controller::init_loading(std::list<octopus::Command *> const &commands_p, s
 	_state = stateAndSteps_l._state;
 	_lastIt = stateAndSteps_l._steps.begin();
 
-	ControllerStepVisitor vis_l(*this, _state);
-	// visit intial steps
-	for(octopus::Steppable const * steppable_l : stateAndSteps_l._initialStep.getSteppable())
-	{
-		vis_l(steppable_l);
-	}
+	applyControllerStepVisitor(*this, *_state, stateAndSteps_l._initialStep);
 
 	UtilityFunctions::print("done");
 	_initDone = true;

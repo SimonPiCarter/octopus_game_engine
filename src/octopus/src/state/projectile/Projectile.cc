@@ -20,6 +20,10 @@ Vector getMove(Vector const &source_p, Vector const &target_p, Fixed const speed
 
 void tickProjectile(Step &step_p, Projectile const &proj_p, State const &state_p)
 {
+	if(proj_p._done)
+	{
+		return;
+	}
 	static Fixed range_check(Fixed::OneAsLong()/10, true);
 	// if in range generate impact steps
 	/// @todo use dynamic pos
@@ -45,7 +49,7 @@ void tickProjectile(Step &step_p, Projectile const &proj_p, State const &state_p
 void ProjectileContainer::markDone(size_t index_p)
 {
 	_projectiles[index_p]._done = true;
-	_freeIdx.push_back(index_p);
+	//_freeIdx.push_back(index_p);
 }
 
 void ProjectileContainer::unmarkDone(size_t index_p)

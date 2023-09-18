@@ -252,4 +252,17 @@ void ControllerStepVisitor::visit(octopus::EntityBuffStep const *steppable_p)
 		_controller.emit_signal("buff", int(steppable_p->_target.index), String(steppable_p->_buff._id.c_str()), int(steppable_p->_buff._duration));
 }
 
+void applyControllerStepVisitor(Controller &controller_p, octopus::State const &state_p, octopus::Step const &step_p)
+{
+	ControllerStepVisitor vis_l(controller_p, &state_p);
+	// visit intial steps
+	for(octopus::Steppable const * steppable_l : step_p.getSteppable())
+	{
+		vis_l(steppable_l);
+	}
+	vis_l(&step_p.getProjectileSpawnStep());
+	vis_l(&step_p.getProjectileMoveStep());
 }
+
+
+} // godot

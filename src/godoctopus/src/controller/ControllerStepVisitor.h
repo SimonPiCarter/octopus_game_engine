@@ -9,6 +9,7 @@ namespace octopus
 {
 	class Entity;
 	class State;
+	class Step;
 } // namespace octopus
 
 
@@ -113,7 +114,11 @@ private:
     octopus::State const * const _state;
 	Controller &_controller;
 };
-} // namespace cuttlefish
+
+/// @brief Apply ControllerStepVisitor to step
+void applyControllerStepVisitor(Controller &controller_p, octopus::State const &state_p, octopus::Step const &step_p);
+
+} // namespace godot
 
 
 #endif
