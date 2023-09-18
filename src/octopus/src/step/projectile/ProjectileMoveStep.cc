@@ -13,7 +13,10 @@ void ProjectileMoveStep::apply(State &state_p) const
 	ProjectileContainer & container_l = state_p.getProjectileContainer();
 	for(size_t i = 0 ; i < _move.size() ; ++ i)
 	{
-		container_l.getProjectiles()[i]._pos += _move[i];
+		if(!is_zero(_move[i]))
+		{
+			container_l.getProjectiles()[i]._pos += _move[i];
+		}
 	}
 	for(size_t i = 0 ; i < _over.size() ; ++ i)
 	{
@@ -30,7 +33,10 @@ void ProjectileMoveStep::revert(State &state_p, SteppableData const *) const
 	ProjectileContainer & container_l = state_p.getProjectileContainer();
 	for(size_t i = _move.size() ; i > 0 ; -- i)
 	{
-		container_l.getProjectiles()[i-1]._pos -= _move[i];
+		if(!is_zero(_move[i]))
+		{
+			container_l.getProjectiles()[i-1]._pos -= _move[i];
+		}
 	}
 	for(size_t i = _move.size() ; i > 0 ; -- i)
 	{

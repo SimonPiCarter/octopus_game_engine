@@ -63,7 +63,7 @@ public:
 private:
 	std::vector<Projectile> _projectiles;
 
-	/// @brief lkist of free indexes in the vector
+	/// @brief list of free indexes in the vector
 	std::list<size_t> _freeIdx;
 };
 

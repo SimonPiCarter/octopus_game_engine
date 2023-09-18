@@ -1,6 +1,7 @@
 #include "Projectile.hh"
 
 #include "step/Step.hh"
+#include "logger/Logger.hh"
 
 namespace octopus
 {
@@ -49,7 +50,7 @@ void tickProjectile(Step &step_p, Projectile const &proj_p, State const &state_p
 void ProjectileContainer::markDone(size_t index_p)
 {
 	_projectiles[index_p]._done = true;
-	//_freeIdx.push_back(index_p);
+	_freeIdx.push_back(index_p);
 }
 
 void ProjectileContainer::unmarkDone(size_t index_p)

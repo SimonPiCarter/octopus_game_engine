@@ -15,7 +15,7 @@ void ProjectileSpawnStep::apply(State &state_p) const
 	{
 		if(_toBeSpawned[i]._index < container_l.getProjectiles().size())
 		{
-			container_l.getProjectiles()[i] = _toBeSpawned[i];
+			container_l.getProjectiles()[_toBeSpawned[i]._index] = _toBeSpawned[i];
 		}
 		else
 		{
@@ -26,7 +26,7 @@ void ProjectileSpawnStep::apply(State &state_p) const
 			container_l.getProjectiles().emplace_back(_toBeSpawned[i]);
 		}
 		// release free indexes
-		if(container_l.getFreeIdx().front() == _toBeSpawned[i]._index)
+		if(!container_l.getFreeIdx().empty() && container_l.getFreeIdx().front() == _toBeSpawned[i]._index)
 		{
 			container_l.getFreeIdx().pop_front();
 		}
@@ -73,7 +73,8 @@ void ProjectileSpawnStep::addProjectile(ProjectileContainer const &container_p, 
 	}
 	else
 	{
-		projectile_p._index = proj_l.size() + _toBeSpawned.size() - freeIdx_l.size();
+		size_t index_l = proj_l.size() + _toBeSpawned.size() - freeIdx_l.size();
+		projectile_p._index = index_l;
 	}
 
 	_toBeSpawned.emplace_back(projectile_p);
