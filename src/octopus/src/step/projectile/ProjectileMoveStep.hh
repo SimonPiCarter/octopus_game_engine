@@ -23,6 +23,9 @@ public:
 
 	void setOver(size_t idx_p);
 	void setMove(size_t idx_p, Vector &&vec_p);
+
+	std::vector<Vector> const &getMove() const { return _move; }
+	std::vector<bool> const &getOver() const { return _over; }
 private:
 	std::vector<Vector> _move;
 	std::vector<bool> _over;

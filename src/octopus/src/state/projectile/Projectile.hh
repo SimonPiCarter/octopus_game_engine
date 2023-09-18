@@ -11,6 +11,7 @@
 namespace octopus
 {
 
+class EntityModel;
 class State;
 class Step;
 
@@ -30,6 +31,8 @@ struct Projectile
 	Handle _target;
 	/// @brief source of the projectile
 	Handle _source;
+	/// @brief the model of the source
+	EntityModel const * _sourceModel {nullptr};
 	/// @brief the team of the source of the projectile
 	unsigned long _sourceTeam;
 	/// @brief projectile step speed
