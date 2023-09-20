@@ -52,7 +52,10 @@ public:
 	void load_dot_level(int size_p);
 	void load_lifesteal_level(int size_p);
 
-	// levels
+	// levels (modes)
+	void load_hero_siege_level(int seed_p, int player_count_p);
+
+	// levels (fas)
 	void load_level1(int seed_p, int nb_wave_p);
 	void load_level2(int seed_p, WavePattern const * wavePattern_p, int nb_players_p);
 	void load_level_test_anchor(int seed_p);

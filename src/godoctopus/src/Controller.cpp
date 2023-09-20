@@ -37,6 +37,7 @@
 #include "controller/CommandController.h"
 #include "production/ProductionCommand.h"
 #include "levels/duel/DuelLevel.h"
+#include "levels/hero_siege/HeroSiege.h"
 #include "levels/Level1.h"
 #include "levels/Level2.h"
 #include "levels/LevelTestAnchor.h"
@@ -189,6 +190,23 @@ void Controller::load_lifesteal_level(int size_p)
 	std::list<octopus::Steppable *> spawners_l = lifestealShowcaseSteps(_lib, size_p);
 	std::list<octopus::Command *> commands_l = lifestealShowcaseCommands(_lib);
 	init(commands_l, spawners_l);
+}
+
+void Controller::load_hero_siege_level(int seed_p, int player_count_p)
+{
+	delete _rand;
+	_rand = new octopus::RandomGenerator(seed_p);
+
+	std::list<octopus::Steppable *> spawners_l = hero_siege::HeroSiegeLevelSteps(_lib, *_rand, player_count_p);
+	std::list<octopus::Command *> commands_l = hero_siege::HeroSiegeLevelCommands(_lib, *_rand, player_count_p);
+
+	// enable auto save
+	newAutoSaveFile();
+	writeLevelId(*_autoSaveFile, LEVEL_ID_HEROSIEGE, 50);
+	_currentLevel = LEVEL_ID_HEROSIEGE;
+	_headerWriter = std::bind(hero_siege::writeHeroSiegeLevelHeader, std::placeholders::_1, hero_siege::HeroSiegeLevelHeader{seed_p, (unsigned long)player_count_p});
+	_headerWriter(*_autoSaveFile);
+	init(commands_l, spawners_l, false, 50, _autoSaveFile);
 }
 
 void Controller::load_level1(int seed_p, int nb_wave_p)
@@ -1247,6 +1265,7 @@ void Controller::_bind_methods()
 	ClassDB::bind_method(D_METHOD("load_chaining_level"), &Controller::load_chaining_level);
 	ClassDB::bind_method(D_METHOD("load_dot_level", "size"), &Controller::load_dot_level);
 	ClassDB::bind_method(D_METHOD("load_lifesteal_level", "size"), &Controller::load_lifesteal_level);
+	ClassDB::bind_method(D_METHOD("load_hero_siege_level", "seed", "nb_players"), &Controller::load_hero_siege_level);
 	ClassDB::bind_method(D_METHOD("load_level1", "seed", "nb_wave"), &Controller::load_level1);
 	ClassDB::bind_method(D_METHOD("load_level2", "seed", "wave_pattern", "nb_players"), &Controller::load_level2);
 	ClassDB::bind_method(D_METHOD("load_level_test_anchor", "seed"), &Controller::load_level_test_anchor);
