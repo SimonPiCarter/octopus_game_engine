@@ -51,6 +51,8 @@ public:
 	void load_chaining_level();
 	void load_dot_level(int size_p);
 	void load_lifesteal_level(int size_p);
+	// missions
+	void load_mission_1(int seed_p, int player_count_p);
 
 	// levels (modes)
 	void load_hero_siege_level(int seed_p, int player_count_p);
