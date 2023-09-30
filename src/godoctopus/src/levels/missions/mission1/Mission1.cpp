@@ -93,8 +93,8 @@ std::list<Steppable *> Mission1Steps(Library &lib_p, RandomGenerator &rand_p, un
 	spawners_l.push_back(new TriggerSpawn(new OneShotFunctionTrigger({new ListenerEntityDied(heroHandles_l)},
 		[](State const &, Step &step_p, unsigned long, TriggerData const &)
 		{
-			step_p.addSteppable(new godot::DialogStep("mission1_failed"));
 			step_p.addSteppable(new StateWinStep(false, false, 0, 1));
+			step_p.addSteppable(new godot::DialogStep("mission1_failed", true));
 		}
 	)));
 
@@ -155,8 +155,8 @@ std::list<Steppable *> Mission1Steps(Library &lib_p, RandomGenerator &rand_p, un
 	spawners_l.push_back(new TriggerSpawn(new OneShotFunctionTrigger({new ListenerEntityDied(finalGroup_l)},
 		[](State const &, Step &step_p, unsigned long, TriggerData const &)
 		{
-			step_p.addSteppable(new godot::DialogStep("mission1_final_group_dead"));
 			step_p.addSteppable(new StateWinStep(false, false, 0, 0));
+			step_p.addSteppable(new godot::DialogStep("mission1_final_group_dead", true));
 		}
 	)));
 
