@@ -21,14 +21,14 @@ using namespace octopus;
 ///  First Zone Trigger  ///
 ////////////////////////////
 
-FirstZoneTrigger::FirstZoneTrigger(std::list<octopus::Listener *> const &listeners_p, octopus::Library const &lib_p, std::unordered_set<Handle> const &heroHandles_p, unsigned long nbPlayer_p) :
+FirstAllyTrigger::FirstAllyTrigger(std::list<octopus::Listener *> const &listeners_p, octopus::Library const &lib_p, std::unordered_set<Handle> const &heroHandles_p, unsigned long nbPlayer_p) :
 	OneShotTrigger(listeners_p),
 	_lib(lib_p),
 	_heroHandles(heroHandles_p),
 	_nbPlayer(nbPlayer_p)
 {}
 
-void FirstZoneTrigger::trigger(octopus::State const &state_p, octopus::Step &step_p, unsigned long, octopus::TriggerData const &) const
+void FirstAllyTrigger::trigger(octopus::State const &state_p, octopus::Step &step_p, unsigned long, octopus::TriggerData const &) const
 {
 	// handles for the second zone check
 	std::unordered_set<Handle> handles_l = _heroHandles;
@@ -52,20 +52,20 @@ void FirstZoneTrigger::trigger(octopus::State const &state_p, octopus::Step &ste
 	// spawn second zone trigger
 
 	step_p.addSteppable(new TriggerSpawn(
-		new SecondZoneTrigger({new ListenerEntityInBox(handles_l, Vector(58,32), Vector(5,9))}, _lib, _nbPlayer)));
+		new BaseDiscoverTrigger({new ListenerEntityInBox(handles_l, Vector(58,32), Vector(5,9))}, _lib, _nbPlayer)));
 }
 
 ////////////////////////////
 ///  Second Zone Trigger ///
 ////////////////////////////
 
-SecondZoneTrigger::SecondZoneTrigger(std::list<octopus::Listener *> const &listeners_p, octopus::Library const &lib_p, unsigned long nbPlayer_p) :
+BaseDiscoverTrigger::BaseDiscoverTrigger(std::list<octopus::Listener *> const &listeners_p, octopus::Library const &lib_p, unsigned long nbPlayer_p) :
 	OneShotTrigger(listeners_p),
 	_lib(lib_p),
 	_nbPlayer(nbPlayer_p)
 {}
 
-void SecondZoneTrigger::trigger(octopus::State const &state_p, octopus::Step &step_p, unsigned long, octopus::TriggerData const &) const
+void BaseDiscoverTrigger::trigger(octopus::State const &state_p, octopus::Step &step_p, unsigned long, octopus::TriggerData const &) const
 {
 	// handles for the second zone check
 

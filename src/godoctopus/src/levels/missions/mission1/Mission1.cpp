@@ -93,7 +93,7 @@ std::list<Steppable *> Mission1Steps(Library &lib_p, RandomGenerator &rand_p, un
 
 	// First zone triggers (removes obstacle and spawn units)
 	spawners_l.push_back(new TriggerSpawn(
-		new FirstZoneTrigger({new ListenerEntityInBox(heroHandles_l, Vector(59,11), Vector(11,8))}, lib_p, heroHandles_l, nbPlayers_p)));
+		new FirstAllyTrigger({new ListenerEntityInBox(heroHandles_l, Vector(59,11), Vector(11,8))}, lib_p, heroHandles_l, nbPlayers_p)));
 
 	load_from_editor(handle_l, spawners_l, lib_p, nbPlayers_p+1);
 

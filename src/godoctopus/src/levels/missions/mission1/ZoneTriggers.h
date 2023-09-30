@@ -10,10 +10,10 @@ namespace octopus
 	class Library;
 }
 
-class FirstZoneTrigger : public octopus::OneShotTrigger
+class FirstAllyTrigger : public octopus::OneShotTrigger
 {
 public:
-	FirstZoneTrigger(std::list<octopus::Listener *> const &listeners_p, octopus::Library const &lib_p, std::unordered_set<octopus::Handle> const &heroHandles_p, unsigned long nbPlayer_p);
+	FirstAllyTrigger(std::list<octopus::Listener *> const &listeners_p, octopus::Library const &lib_p, std::unordered_set<octopus::Handle> const &heroHandles_p, unsigned long nbPlayer_p);
 
 	/// @brief trigger by adding the given steps to the step
 	/// @param step_p the step to fill with steps from the trigger
@@ -25,10 +25,10 @@ public:
 	unsigned long const _nbPlayer;
 };
 
-class SecondZoneTrigger : public octopus::OneShotTrigger
+class BaseDiscoverTrigger : public octopus::OneShotTrigger
 {
 public:
-	SecondZoneTrigger(std::list<octopus::Listener *> const &listeners_p, octopus::Library const &lib_p, unsigned long nbPlayer_p);
+	BaseDiscoverTrigger(std::list<octopus::Listener *> const &listeners_p, octopus::Library const &lib_p, unsigned long nbPlayer_p);
 
 	/// @brief trigger by adding the given steps to the step
 	/// @param step_p the step to fill with steps from the trigger
