@@ -110,4 +110,36 @@ void ListenerEntityModelFinished::compile(EventCollection const &controller_p, S
 	step_p.addSteppable(new TriggerCountChange(data_p._triggerHandle, data_p._listenerHandle, data_p._count, data_p._count+count_l));
 }
 
+void ListenerEntityInBox::compile(EventCollection const &controller_p, Step &step_p, bool count_p, ListenerData const &data_p) const
+{
+	unsigned long count_l = 0;
+	State const & state_l = controller_p.getState();
+
+	for(Handle const handle_l : _handles)
+	{
+		if(state_l.isEntityAlive(handle_l))
+		{
+			Entity const * ent_l = state_l.getLoseEntity(handle_l.index);
+			Vector const &pos_l = ent_l->_pos;
+			if (pos_l.x >= _boxPosition.x && pos_l.x <= _boxPosition.x + _boxSize.x
+			 && pos_l.y >= _boxPosition.y && pos_l.y <= _boxPosition.y + _boxSize.y)
+			{
+				++count_l;
+				break;
+			}
+		}
+	}
+
+	if(count_l > 0)
+	{
+		// always increment by just one!
+		step_p.addSteppable(new TriggerCountChange(data_p._triggerHandle, data_p._listenerHandle, data_p._count, data_p._count+1));
+	}
+}
+
+void ListenerEntityInBox::reset(Step &step_p, ListenerData const &data_p) const
+{
+	Listener::reset(step_p, data_p);
+}
+
 } // octopus

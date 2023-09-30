@@ -114,6 +114,7 @@ public:
 	virtual void visit(UnitHarvestTypeStep const *) {}
 	virtual void visit(VisionChangeStep const *) {}
 
+	State const &getState() const { return _state; }
 private:
 	State const &_state;
 	/// statefull data

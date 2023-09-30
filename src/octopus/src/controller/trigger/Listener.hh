@@ -4,6 +4,7 @@
 #include <unordered_set>
 #include <vector>
 #include "state/Handle.hh"
+#include "utils/Vector.hh"
 
 namespace octopus
 {
@@ -58,7 +59,8 @@ public:
 	/// @brief reset the data to initial state
 	virtual void reset(Step &step_p, ListenerData const &data_p) const;
 
-	virtual ListenerData * newData(Handle const triggerHandle_p, Handle const listenerHandle_p) const = 0;
+	virtual ListenerData * newData(Handle const triggerHandle_p, Handle const listenerHandle_p) const
+		{ return new ListenerData(triggerHandle_p, listenerHandle_p); }
 };
 
 class ListenerStepCount : public Listener
@@ -134,6 +136,28 @@ public:
 
 	EntityModel const * const _model;
 	unsigned long const _player;
+};
+
+class ListenerEntityInBox : public Listener
+{
+public:
+	ListenerEntityInBox(std::unordered_set<Handle> const &handles_p, Vector boxPosition_p, Vector boxSize_p)
+		: _handles(handles_p), _boxPosition(boxPosition_p), _boxSize(boxSize_p) {}
+
+	/// @brief compile listener steps based on events in controller
+	/// @param count_p if set to true will count the number of time completed
+	virtual void compile(EventCollection const &controller_p, Step &step_p, bool count_p, ListenerData const &data_p) const override;
+
+	/// @brief reset the data to initial state
+	virtual void reset(Step &step_p, ListenerData const &data_p) const override;
+
+	/// @brief the handles that triggers when they are all dead
+	std::unordered_set<Handle> const _handles;
+
+	/// @brief the box position
+	Vector const _boxPosition;
+	/// @brief the box size
+	Vector const _boxSize;
 };
 
 }
