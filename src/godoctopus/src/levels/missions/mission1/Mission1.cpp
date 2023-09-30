@@ -140,9 +140,17 @@ std::list<Steppable *> Mission1Steps(Library &lib_p, RandomGenerator &rand_p, un
 			Handle enemy_l = Handle(handle_l++);
 			finalGroup_l.insert(enemy_l);
 
-			Unit unit_l({ 44, 86 }, false, lib_p.getUnitModel("circle"));
+			Unit unit_l({ 44, 60 }, false, lib_p.getUnitModel("circle"));
 			unit_l._player = nbPlayers_p;
 			spawners_l.push_back(new UnitSpawnStep(enemy_l, unit_l));
+
+			Building building1_l({ 36, 64 }, false, lib_p.getBuildingModel("barrack_circle"));
+			building1_l._player = nbPlayers_p;
+			spawners_l.push_back(new BuildingSpawnStep(Handle(handle_l++), building1_l, true));
+
+			Building building2_l({ 48, 68 }, false, lib_p.getBuildingModel("barrack_circle"));
+			building2_l._player = nbPlayers_p;
+			spawners_l.push_back(new BuildingSpawnStep(Handle(handle_l++), building2_l, true));
 		}
 	}
 
@@ -165,14 +173,6 @@ std::list<Steppable *> Mission1Steps(Library &lib_p, RandomGenerator &rand_p, un
 	for(unsigned long i = 0 ; i < nbPlayers_p ; ++ i)
 	{
 		spawners_l.push_back(new TriggerSpawn(new OnEachFunctionTrigger(
-			new ListenerEntityModelFinished(&lib_p.getEntityModel("worker"), i),
-			[i](State const &, Step &step_p, unsigned long, TriggerData const &)
-			{
-				std::map<std::string, Fixed> map_l; map_l["worker_count"] = -1;
-				step_p.addSteppable(new PlayerSpendResourceStep(i, map_l));
-			}
-		)));
-		spawners_l.push_back(new TriggerSpawn(new OnEachFunctionTrigger(
 			new ListenerEntityModelFinished(&lib_p.getEntityModel("circle"), i),
 			[i](State const &, Step &step_p, unsigned long, TriggerData const &)
 			{
@@ -189,9 +189,9 @@ std::list<Steppable *> Mission1Steps(Library &lib_p, RandomGenerator &rand_p, un
 			}
 		)));
 
-		listeners_l.push_back(new ListenerResource<true>(i, "worker_count", 5));
 		listeners_l.push_back(new ListenerResource<true>(i, "barrack_circle", 1));
-		listeners_l.push_back(new ListenerResource<true>(i, "circle_count", 5));
+		// 4 spawned from triggers + 5 to be produced
+		listeners_l.push_back(new ListenerResource<true>(i, "circle_count", 5+4));
 	}
 
 	for(unsigned long i = 0 ; i < nbPlayers_p ; ++ i)
