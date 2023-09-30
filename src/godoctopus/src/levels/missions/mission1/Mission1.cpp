@@ -84,16 +84,29 @@ std::list<Steppable *> Mission1Steps(Library &lib_p, RandomGenerator &rand_p, un
 
 		spawners_l.push_back(new StateAddConstraintPositionStep(i, 26, 36, 56, true, false));
 		spawners_l.push_back(new StateAddConstraintPositionStep(i, 48, 35, 57, true, false));
+
 	}
 
 	spawners_l.push_back(new PlayerSpawnStep(nbPlayers_p, 1));
 	spawners_l.push_back(new PlayerSpawnStep(nbPlayers_p+1, 2));
 	spawners_l.push_back(new godot::DialogStep("mission1_intro"));
 
+	std::vector<Handle> enemies_l;
+
+	// spawn enemies
+	for(unsigned long i = 0 ; i < nbPlayers_p ; ++ i)
+	{
+		Handle enemy_l = Handle(handle_l++);
+		enemies_l.push_back(enemy_l);
+
+		Unit unit_l({ 45, 16 }, false, lib_p.getUnitModel("triangle"));
+		unit_l._player = nbPlayers_p;
+		spawners_l.push_back(new UnitSpawnStep(enemy_l, unit_l));
+	}
 
 	// First zone triggers (removes obstacle and spawn units)
 	spawners_l.push_back(new TriggerSpawn(
-		new FirstAllyTrigger({new ListenerEntityInBox(heroHandles_l, Vector(59,11), Vector(11,8))}, lib_p, heroHandles_l, nbPlayers_p)));
+		new RescueTrigger({new ListenerEntityInBox(heroHandles_l, Vector(26,7), Vector(4,11))}, lib_p, heroHandles_l, nbPlayers_p, enemies_l)));
 
 	load_from_editor(handle_l, spawners_l, lib_p, nbPlayers_p+1);
 
