@@ -17,7 +17,7 @@
 #include "library/Library.hh"
 #include "state/entity/Building.hh"
 #include "state/entity/Unit.hh"
-// #include "state/entity/Resource.hh"
+#include "state/entity/Resource.hh"
 // #include "state/model/entity/BuildingModel.hh"
 // #include "state/vision/PatternHandler.hh"
 // #include "state/State.hh"
@@ -26,7 +26,7 @@
 // #include "step/command/flying/FlyingCommandSpawnStep.hh"
 // #include "step/custom/CustomStep.hh"
 #include "step/entity/spawn/UnitSpawnStep.hh"
-// #include "step/entity/spawn/ResourceSpawnStep.hh"
+#include "step/entity/spawn/ResourceSpawnStep.hh"
 #include "step/entity/spawn/BuildingSpawnStep.hh"
 #include "step/player/PlayerAddBuildingModel.hh"
 #include "step/player/PlayerSpawnStep.hh"
@@ -42,6 +42,7 @@
 #include "controller/step/DialogStep.h"
 
 // missions
+#include "levels/missions/helpers/DialogTrigger.h"
 #include "levels/missions/helpers/SpawnerTrigger.h"
 #include "levels/missions/mission1/ZoneTriggers.h"
 
@@ -91,24 +92,74 @@ std::list<Steppable *> Mission1Steps(Library &lib_p, RandomGenerator &rand_p, un
 	spawners_l.push_back(new PlayerSpawnStep(nbPlayers_p+1, 2));
 	spawners_l.push_back(new godot::DialogStep("mission1_intro"));
 
-	std::vector<Handle> enemies_l;
+	std::vector<Handle> trackers_l;
+	std::unordered_set<Handle> trackers_set_l;
+	std::unordered_set<Handle> firstGroup_l;
+	std::unordered_set<Handle> finalGroup_l;
 
 	// spawn enemies
 	for(unsigned long i = 0 ; i < nbPlayers_p ; ++ i)
 	{
-		Handle enemy_l = Handle(handle_l++);
-		enemies_l.push_back(enemy_l);
+		// trackers
+		{
+			Handle enemy_l = Handle(handle_l++);
+			trackers_l.push_back(enemy_l);
+			trackers_set_l.insert(enemy_l);
 
-		Unit unit_l({ 45, 16 }, false, lib_p.getUnitModel("triangle"));
-		unit_l._player = nbPlayers_p;
-		spawners_l.push_back(new UnitSpawnStep(enemy_l, unit_l));
+			Unit unit_l({ 45, 16 }, false, lib_p.getUnitModel("triangle"));
+			unit_l._player = nbPlayers_p;
+			spawners_l.push_back(new UnitSpawnStep(enemy_l, unit_l));
+		}
+
+		// first enemy group
+
+		for(unsigned long u = 0 ; u < 4  ; ++ u)
+		{
+			Handle enemy_l = Handle(handle_l++);
+			firstGroup_l.insert(enemy_l);
+
+			Unit unit_l({ 47, 35 }, false, lib_p.getUnitModel("circle"));
+			unit_l._player = nbPlayers_p;
+			spawners_l.push_back(new UnitSpawnStep(enemy_l, unit_l));
+		}
+
+		// last group of enemies
+
+		for(unsigned long u = 0 ; u < 7  ; ++ u)
+		{
+			Handle enemy_l = Handle(handle_l++);
+			finalGroup_l.insert(enemy_l);
+
+			Unit unit_l({ 44, 86 }, false, lib_p.getUnitModel("circle"));
+			unit_l._player = nbPlayers_p;
+			spawners_l.push_back(new UnitSpawnStep(enemy_l, unit_l));
+		}
 	}
 
-	// First zone triggers (removes obstacle and spawn units)
+	// First zone triggers (removes obstacle and spawn units) (zone triggers will add the next one in cascade)
 	spawners_l.push_back(new TriggerSpawn(
-		new RescueTrigger({new ListenerEntityInBox(heroHandles_l, Vector(26,7), Vector(4,11))}, lib_p, heroHandles_l, nbPlayers_p, enemies_l)));
+		new RescueTrigger({new ListenerEntityInBox(heroHandles_l, Vector(26,7), Vector(4,11))}, lib_p, heroHandles_l, nbPlayers_p, trackers_l)));
+
+	spawners_l.push_back(new TriggerSpawn(new DialogTrigger({new ListenerEntityDied(trackers_set_l)}, "mission1_trackers_dead")));
+	spawners_l.push_back(new TriggerSpawn(new DialogTrigger({new ListenerEntityDied(firstGroup_l)}, "mission1_first_group_dead")));
+	spawners_l.push_back(new TriggerSpawn(new DialogTrigger({new ListenerEntityDied(finalGroup_l)}, "mission1_final_group_dead")));
 
 	load_from_editor(handle_l, spawners_l, lib_p, nbPlayers_p+1);
+
+
+	// spawn resources
+	for(unsigned long i = 0 ; i < nbPlayers_p ; ++ i)
+	{
+		Resource res1_l({87,34+3*i-1}, true, lib_p.getResourceModel("resource_bloc"));
+		res1_l._resource = 10000;
+		res1_l._player = nbPlayers_p+1;
+		Resource res2_l({87,34+3*i+1}, true, lib_p.getResourceModel("resource_ether"));
+		res2_l._resource = 10000;
+		res2_l._player = nbPlayers_p+1;
+
+		spawners_l.push_back(new ResourceSpawnStep(Handle(handle_l++), res1_l));
+		spawners_l.push_back(new ResourceSpawnStep(Handle(handle_l++), res2_l));
+	}
 
 	return spawners_l;
 }

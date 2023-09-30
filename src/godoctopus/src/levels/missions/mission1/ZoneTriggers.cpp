@@ -116,7 +116,7 @@ void BaseDiscoverTrigger::trigger(octopus::State const &state_p, octopus::Step &
 {
 	// handles for the second zone check
 
-	Vector spawn_l {85,35};
+	Vector spawn_l {78,34};
 	for(unsigned long i = 0 ; i < _nbPlayer ; ++ i)
 	{
 		Building building_l(spawn_l+Vector(0,3*i), false, _lib.getBuildingModel("command_center"));
