@@ -32,6 +32,7 @@
 #include "step/player/PlayerSpawnStep.hh"
 #include "step/player/PlayerSpendResourceStep.hh"
 #include "step/state/StateAddConstraintPositionStep.hh"
+#include "step/state/StateRemoveConstraintPositionStep.hh"
 // #include "step/state/StateTemplePositionAddStep.hh"
 // #include "step/state/StateWinStep.hh"
 // #include "step/team/TeamVisionStep.hh"
@@ -72,6 +73,7 @@ std::list<Steppable *> Mission1Steps(Library &lib_p, RandomGenerator &rand_p, un
 	{
 		spawners_l.push_back(new PlayerSpawnStep(i, 0));
 		spawners_l.push_back(new PlayerAddBuildingModel(i, lib_p.getBuildingModel("command_center")));
+		spawners_l.push_back(new PlayerAddBuildingModel(i, lib_p.getBuildingModel("barrack_circle")));
 
 		Handle heroHandle_l = Handle(handle_l++);
 		heroHandles_l.insert(heroHandle_l);
@@ -143,6 +145,52 @@ std::list<Steppable *> Mission1Steps(Library &lib_p, RandomGenerator &rand_p, un
 	spawners_l.push_back(new TriggerSpawn(new DialogTrigger({new ListenerEntityDied(trackers_set_l)}, "mission1_trackers_dead")));
 	spawners_l.push_back(new TriggerSpawn(new DialogTrigger({new ListenerEntityDied(firstGroup_l)}, "mission1_first_group_dead")));
 	spawners_l.push_back(new TriggerSpawn(new DialogTrigger({new ListenerEntityDied(finalGroup_l)}, "mission1_final_group_dead")));
+
+	std::list<Listener*> listeners_l;
+
+	for(unsigned long i = 0 ; i < nbPlayers_p ; ++ i)
+	{
+		spawners_l.push_back(new TriggerSpawn(new OnEachFunctionTrigger(
+			new ListenerEntityModelFinished(&lib_p.getEntityModel("worker"), i),
+			[i](State const &, Step &step_p, unsigned long, TriggerData const &)
+			{
+				std::map<std::string, Fixed> map_l; map_l["worker_count"] = -1;
+				step_p.addSteppable(new PlayerSpendResourceStep(i, map_l));
+			}
+		)));
+		spawners_l.push_back(new TriggerSpawn(new OnEachFunctionTrigger(
+			new ListenerEntityModelFinished(&lib_p.getEntityModel("circle"), i),
+			[i](State const &, Step &step_p, unsigned long, TriggerData const &)
+			{
+				std::map<std::string, Fixed> map_l; map_l["circle_count"] = -1;
+				step_p.addSteppable(new PlayerSpendResourceStep(i, map_l));
+			}
+		)));
+		spawners_l.push_back(new TriggerSpawn(new OnEachFunctionTrigger(
+			new ListenerEntityModelFinished(&lib_p.getEntityModel("barrack_circle"), i),
+			[i](State const &, Step &step_p, unsigned long, TriggerData const &)
+			{
+				std::map<std::string, Fixed> map_l; map_l["barrack_circle"] = -1;
+				step_p.addSteppable(new PlayerSpendResourceStep(i, map_l));
+			}
+		)));
+
+		listeners_l.push_back(new ListenerResource<true>(i, "worker_count", 5));
+		listeners_l.push_back(new ListenerResource<true>(i, "barrack_circle", 1));
+		listeners_l.push_back(new ListenerResource<true>(i, "circle_count", 5));
+	}
+
+	for(unsigned long i = 0 ; i < nbPlayers_p ; ++ i)
+	{
+		spawners_l.push_back(new TriggerSpawn(new OneShotFunctionTrigger(
+			{listeners_l},
+			[i](State const &, Step &step_p, unsigned long, TriggerData const &)
+			{
+				step_p.addSteppable(new StateRemoveConstraintPositionStep(i, 48, 35, 57, true, false));
+				step_p.addSteppable(new godot::DialogStep("mission1_base_building_done"));
+			}
+		)));
+	}
 
 	load_from_editor(handle_l, spawners_l, lib_p, nbPlayers_p+1);
 
