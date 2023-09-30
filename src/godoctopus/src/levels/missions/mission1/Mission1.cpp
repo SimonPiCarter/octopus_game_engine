@@ -34,7 +34,7 @@
 #include "step/state/StateAddConstraintPositionStep.hh"
 #include "step/state/StateRemoveConstraintPositionStep.hh"
 // #include "step/state/StateTemplePositionAddStep.hh"
-// #include "step/state/StateWinStep.hh"
+#include "step/state/StateWinStep.hh"
 // #include "step/team/TeamVisionStep.hh"
 #include "step/trigger/TriggerSpawn.hh"
 
@@ -78,7 +78,7 @@ std::list<Steppable *> Mission1Steps(Library &lib_p, RandomGenerator &rand_p, un
 		Handle heroHandle_l = Handle(handle_l++);
 		heroHandles_l.insert(heroHandle_l);
 
-		Unit unit_l({ 10, 10 }, false, lib_p.getUnitModel("square"));
+		Unit unit_l({ 10, 10 }, false, lib_p.getUnitModel("chosen_square"));
 		unit_l._player = i;
 		spawners_l.push_back(new UnitSpawnStep(heroHandle_l, unit_l));
 
@@ -89,6 +89,14 @@ std::list<Steppable *> Mission1Steps(Library &lib_p, RandomGenerator &rand_p, un
 		spawners_l.push_back(new StateAddConstraintPositionStep(i, 48, 35, 57, true, false));
 
 	}
+
+	spawners_l.push_back(new TriggerSpawn(new OneShotFunctionTrigger({new ListenerEntityDied(heroHandles_l)},
+		[](State const &, Step &step_p, unsigned long, TriggerData const &)
+		{
+			step_p.addSteppable(new godot::DialogStep("mission1_failed"));
+			step_p.addSteppable(new StateWinStep(false, false, 0, 1));
+		}
+	)));
 
 	spawners_l.push_back(new PlayerSpawnStep(nbPlayers_p, 1));
 	spawners_l.push_back(new PlayerSpawnStep(nbPlayers_p+1, 2));
@@ -144,7 +152,13 @@ std::list<Steppable *> Mission1Steps(Library &lib_p, RandomGenerator &rand_p, un
 
 	spawners_l.push_back(new TriggerSpawn(new DialogTrigger({new ListenerEntityDied(trackers_set_l)}, "mission1_trackers_dead")));
 	spawners_l.push_back(new TriggerSpawn(new DialogTrigger({new ListenerEntityDied(firstGroup_l)}, "mission1_first_group_dead")));
-	spawners_l.push_back(new TriggerSpawn(new DialogTrigger({new ListenerEntityDied(finalGroup_l)}, "mission1_final_group_dead")));
+	spawners_l.push_back(new TriggerSpawn(new OneShotFunctionTrigger({new ListenerEntityDied(finalGroup_l)},
+		[](State const &, Step &step_p, unsigned long, TriggerData const &)
+		{
+			step_p.addSteppable(new godot::DialogStep("mission1_final_group_dead"));
+			step_p.addSteppable(new StateWinStep(false, false, 0, 0));
+		}
+	)));
 
 	std::list<Listener*> listeners_l;
 
