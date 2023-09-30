@@ -3,6 +3,7 @@
 
 #include <list>
 #include <vector>
+#include <functional>
 
 #include "state/Handle.hh"
 
@@ -71,6 +72,44 @@ class OnEachTrigger : public Trigger
 {
 public:
 	OnEachTrigger(Listener * listener_p);
+};
+
+/// @brief a trigger add steppable to the controller
+/// when all listeners are valid
+class OneShotFunctionTrigger : public OneShotTrigger
+{
+public:
+	OneShotFunctionTrigger(std::list<Listener *> const &listeners_p, std::function<void(State const &, Step &, unsigned long, TriggerData const &)> func_p)
+		: OneShotTrigger(listeners_p)
+		, _func(func_p)
+	{}
+
+	/// @brief update every listener based on the controller events
+	virtual void trigger(State const &state_p, Step &step_p, unsigned long count_p, TriggerData const &data_p) const override
+	{
+		_func(state_p, step_p, count_p, data_p);
+	}
+
+	std::function<void(State const &, Step &, unsigned long, TriggerData const &)> const _func;
+};
+
+/// @brief a trigger add steppable to the controller
+/// when all listeners are valid
+class OnEachFunctionTrigger : public OnEachTrigger
+{
+public:
+	OnEachFunctionTrigger(Listener * listener_p, std::function<void(State const &, Step &, unsigned long, TriggerData const &)> func_p)
+		: OnEachTrigger(listener_p)
+		, _func(func_p)
+	{}
+
+	/// @brief update every listener based on the controller events
+	virtual void trigger(State const &state_p, Step &step_p, unsigned long count_p, TriggerData const &data_p) const override
+	{
+		_func(state_p, step_p, count_p, data_p);
+	}
+
+	std::function<void(State const &, Step &, unsigned long, TriggerData const &)> const _func;
 };
 
 }
