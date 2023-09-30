@@ -94,7 +94,7 @@ public:
 	virtual void visit(octopus::StateRemoveConstraintPositionStep const *) override;
 	virtual void visit(octopus::StateTemplePositionAddStep const *) override {}
 	virtual void visit(octopus::StateTemplePositionRemoveStep const *) override {}
-	virtual void visit(octopus::StateWinStep const *) override {}
+	virtual void visit(octopus::StateWinStep const *) override;
 	virtual void visit(octopus::TeamVisionStep const *) {}
 	virtual void visit(octopus::TickingStep const *) override {}
 	virtual void visit(octopus::TimerDataUpdateStep const *) override {}

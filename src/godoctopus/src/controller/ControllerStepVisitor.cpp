@@ -34,6 +34,7 @@
 #include "step/projectile/ProjectileSpawnStep.hh"
 #include "step/state/StateAddConstraintPositionStep.hh"
 #include "step/state/StateRemoveConstraintPositionStep.hh"
+#include "step/state/StateWinStep.hh"
 #include "step/unit/UnitHarvestStep.hh"
 
 
@@ -77,6 +78,11 @@ void ControllerStepVisitor::visit(octopus::StateRemoveConstraintPositionStep con
 		steppable_p->_less,
 		steppable_p->_x
 	);
+}
+
+void ControllerStepVisitor::visit(octopus::StateWinStep const *steppable_p)
+{
+	_controller.emit_signal("over", int(steppable_p->_winningTeam));
 }
 
 void ControllerStepVisitor::visit(octopus::UnitSpawnStep const *steppable_p)
@@ -239,7 +245,7 @@ void ControllerStepVisitor::visit(octopus::CustomStep const *steppable_p)
 	}
 	else if(dialog_l)
 	{
-		_controller.emit_signal("spawn_dialog", String(dialog_l->_dialog.c_str()));
+		_controller.emit_signal("spawn_dialog", String(dialog_l->_dialog.c_str()), dialog_l->_over);
 	}
 	else if(wave_l)
 	{

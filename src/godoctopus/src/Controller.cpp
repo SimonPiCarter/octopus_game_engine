@@ -95,11 +95,6 @@ void Controller::_process(double delta)
 		}
 		_lastIt = stateAndSteps_l._stepIt;
 		_controller->setExternalMin(_lastIt->_step->getId());
-
-		if(_over && _state->hasWinningTeam())
-		{
-			emit_signal("over", int(_state->getWinningTeam()));
-		}
 	}
 }
 
@@ -1383,7 +1378,7 @@ void Controller::_bind_methods()
 		PropertyInfo(Variant::FLOAT, "max"), PropertyInfo(Variant::BOOL, "less"), PropertyInfo(Variant::BOOL, "x")));
 	ADD_SIGNAL(MethodInfo("impact", PropertyInfo(Variant::STRING, "model"), PropertyInfo(Variant::FLOAT, "x"), PropertyInfo(Variant::FLOAT, "y")));
 	ADD_SIGNAL(MethodInfo("set_camera", PropertyInfo(Variant::INT, "x"), PropertyInfo(Variant::INT, "y"), PropertyInfo(Variant::INT, "player")));
-	ADD_SIGNAL(MethodInfo("spawn_dialog", PropertyInfo(Variant::STRING, "model")));
+	ADD_SIGNAL(MethodInfo("spawn_dialog", PropertyInfo(Variant::STRING, "model"), PropertyInfo(Variant::BOOL, "over")));
 	ADD_SIGNAL(MethodInfo("wave"));
 
 	ADD_SIGNAL(MethodInfo("over", PropertyInfo(Variant::INT, "winning_team")));
