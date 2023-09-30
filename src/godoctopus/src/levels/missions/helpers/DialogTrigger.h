@@ -1,5 +1,5 @@
-#ifndef __Mission_SpawnTrigger__
-#define __Mission_SpawnTrigger__
+#ifndef __Mission_DialogTrigger__
+#define __Mission_DialogTrigger__
 
 #include "controller/trigger/Trigger.hh"
 #include "step/Step.hh"
