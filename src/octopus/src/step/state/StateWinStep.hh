@@ -22,7 +22,7 @@ public:
 	{
 		visitor_p->visit(this);
 	}
-private:
+
     bool const _oldIsOver;
     bool const _oldhasWinningTeam;
 	unsigned long const _oldWinningTeam;
