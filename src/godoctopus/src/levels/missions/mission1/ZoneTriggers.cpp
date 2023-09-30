@@ -123,6 +123,13 @@ void BaseDiscoverTrigger::trigger(octopus::State const &state_p, octopus::Step &
 		building_l._player = i;
 		step_p.addSteppable(new BuildingSpawnStep(getNextHandle(step_p, state_p), building_l, true));
 
+		for(unsigned long u = 0 ; u < 5 ; ++ u)
+		{
+			Unit unit_l(spawn_l+Vector(2,0), false, _lib.getUnitModel("worker"));
+			unit_l._player = i;
+			step_p.addSteppable(new UnitSpawnStep(getNextHandle(step_p, state_p), unit_l));
+		}
+
 		step_p.addSteppable(new godot::CameraStep(to_int(spawn_l.x), to_int(spawn_l.y), i));
 	}
 	step_p.addSteppable(new godot::DialogStep("mission1_second_zone"));
