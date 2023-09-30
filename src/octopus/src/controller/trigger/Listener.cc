@@ -142,4 +142,25 @@ void ListenerEntityInBox::reset(Step &step_p, ListenerData const &data_p) const
 	Listener::reset(step_p, data_p);
 }
 
+template<>
+void ListenerResource<true>::compile(EventCollection const &controller_p, Step &step_p, bool, ListenerData const &data_p) const
+{
+	State const &state_l = controller_p.getState();
+
+	Fixed res_l = getResource(*state_l.getPlayer(_player), _resource);
+	// std::cout<<"checking "<<_resource<<" for player "<<_player<<" : "<<to_int(res_l)<<std::endl;
+	if(res_l >= _qty)
+		step_p.addSteppable(new TriggerCountChange(data_p._triggerHandle, data_p._listenerHandle, data_p._count, data_p._count+1));
+}
+
+template<>
+void ListenerResource<false>::compile(EventCollection const &controller_p, Step &step_p, bool, ListenerData const &data_p) const
+{
+	State const &state_l = controller_p.getState();
+
+	Fixed res_l = getResource(*state_l.getPlayer(_player), _resource);
+	if(res_l <= _qty)
+		step_p.addSteppable(new TriggerCountChange(data_p._triggerHandle, data_p._listenerHandle, data_p._count, data_p._count+1));
+}
+
 } // octopus

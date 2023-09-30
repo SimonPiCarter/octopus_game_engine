@@ -160,6 +160,25 @@ public:
 	Vector const _boxSize;
 };
 
+template<bool Minimum>
+class ListenerResource : public Listener
+{
+public:
+	ListenerResource(unsigned long player_p, std::string const &resource_p, Fixed const &qty_p)
+		: _player(player_p), _resource(resource_p), _qty(qty_p) {}
+
+	/// @brief compile listener steps based on events in controller
+	/// @param count_p if set to true will count the number of time completed
+	virtual void compile(EventCollection const &controller_p, Step &step_p, bool count_p, ListenerData const &data_p) const override;
+
+	/// @brief player to check
+	unsigned long const _player;
+	/// @brief the resource to check
+	std::string const _resource;
+	/// @brief the quantity
+	Fixed const _qty;
+};
+
 }
 
 #endif
