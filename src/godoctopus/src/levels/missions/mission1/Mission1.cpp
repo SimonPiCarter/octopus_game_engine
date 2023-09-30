@@ -10,7 +10,8 @@
 // #include "library/model/TimerDamage.hh"
 
 // octopus
-// #include "controller/trigger/Listener.hh"
+#include "controller/trigger/Listener.hh"
+#include "controller/trigger/Trigger.hh"
 // #include "command/entity/EntityAttackMoveCommand.hh"
 // #include "command/spawner/AreaSpawnerCommand.hh"
 #include "library/Library.hh"
@@ -34,11 +35,15 @@
 // #include "step/state/StateTemplePositionAddStep.hh"
 // #include "step/state/StateWinStep.hh"
 // #include "step/team/TeamVisionStep.hh"
-// #include "step/trigger/TriggerSpawn.hh"
+#include "step/trigger/TriggerSpawn.hh"
 
 // godot
 #include "controller/step/CameraStep.h"
 #include "controller/step/DialogStep.h"
+
+// missions
+#include "levels/missions/helpers/SpawnerTrigger.h"
+#include "levels/missions/mission1/ZoneTriggers.h"
 
 using namespace octopus;
 
@@ -52,8 +57,6 @@ std::list<Steppable *> Mission1Steps(Library &lib_p, RandomGenerator &rand_p, un
 {
 	loadMinimalModels(lib_p);
 
-
-
 	unsigned long handle_l = 0;
 
 	std::list<Steppable *> spawners_l;
@@ -62,14 +65,19 @@ std::list<Steppable *> Mission1Steps(Library &lib_p, RandomGenerator &rand_p, un
 	std::map<std::string, Fixed> mapRes_l;
 	mapRes_l["bloc"] = -200;	mapRes_l["ether"] = -200;
 
+	std::unordered_set<Handle> heroHandles_l;
+
 	for(unsigned long i = 0 ; i < nbPlayers_p ; ++ i)
 	{
 		spawners_l.push_back(new PlayerSpawnStep(i, 0));
 		spawners_l.push_back(new PlayerAddBuildingModel(i, lib_p.getBuildingModel("command_center")));
 
+		Handle heroHandle_l = Handle(handle_l++);
+		heroHandles_l.insert(heroHandle_l);
+
 		Unit unit_l({ 10, 10 }, false, lib_p.getUnitModel("square"));
 		unit_l._player = i;
-		spawners_l.push_back(new UnitSpawnStep(Handle(handle_l++), unit_l));
+		spawners_l.push_back(new UnitSpawnStep(heroHandle_l, unit_l));
 
 		spawners_l.push_back(new PlayerSpendResourceStep(i, mapRes_l));
 		spawners_l.push_back(new godot::CameraStep(to_int(unit_l._pos.x), to_int(unit_l._pos.y), i));
@@ -81,6 +89,11 @@ std::list<Steppable *> Mission1Steps(Library &lib_p, RandomGenerator &rand_p, un
 	spawners_l.push_back(new PlayerSpawnStep(nbPlayers_p, 1));
 	spawners_l.push_back(new PlayerSpawnStep(nbPlayers_p+1, 2));
 	spawners_l.push_back(new godot::DialogStep("mission1_intro"));
+
+
+	// First zone triggers (removes obstacle and spawn units)
+	spawners_l.push_back(new TriggerSpawn(
+		new FirstZoneTrigger({new ListenerEntityInBox(heroHandles_l, Vector(59,11), Vector(11,8))}, lib_p, heroHandles_l, nbPlayers_p)));
 
 	load_from_editor(handle_l, spawners_l, lib_p, nbPlayers_p+1);
 

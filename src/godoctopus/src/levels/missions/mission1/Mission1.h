@@ -5,7 +5,6 @@
 #include <vector>
 #include <functional>
 #include <fstream>
-#include "controller/trigger/Trigger.hh"
 #include "utils/RandomGenerator.hh"
 
 #define LEVEL_ID_MISSION_1 2000
