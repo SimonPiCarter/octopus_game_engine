@@ -5,6 +5,7 @@
 #include "ModelUpgrade.h"
 #include "LevelModel.h"
 #include "levels/level2/wave/Wave.h"
+#include "drawer/Drawer.h"
 
 #include <gdextension_interface.h>
 #include <godot_cpp/core/defs.hpp>
@@ -31,6 +32,7 @@ void initialize_godoctopus_module(godot::ModuleInitializationLevel p_level) {
     godot::ClassDB::register_class<godot::Wave>();
     godot::ClassDB::register_class<godot::WavePool>();
     godot::ClassDB::register_class<godot::WavePattern>();
+    godot::ClassDB::register_class<godot::Drawer>();
 }
 
 void uninitialize_godoctopus_module(godot::ModuleInitializationLevel p_level) {
@@ -41,15 +43,14 @@ void uninitialize_godoctopus_module(godot::ModuleInitializationLevel p_level) {
 }
 
 extern "C" {
+// Initialization.
+GDExtensionBool GDE_EXPORT godoctopus_library_init(GDExtensionInterfaceGetProcAddress p_get_proc_address, const GDExtensionClassLibraryPtr p_library, GDExtensionInitialization *r_initialization) {
+    godot::GDExtensionBinding::InitObject init_obj(p_get_proc_address, p_library, r_initialization);
 
-GDExtensionBool GDE_EXPORT godoctopus_library_init(const GDExtensionInterface *p_interface, GDExtensionClassLibraryPtr p_library, GDExtensionInitialization *r_initialization) {
-  godot::GDExtensionBinding::InitObject init_object(p_interface, p_library, r_initialization);
+    init_obj.register_initializer(initialize_godoctopus_module);
+    init_obj.register_terminator(initialize_godoctopus_module);
+    init_obj.set_minimum_library_initialization_level(godot::ModuleInitializationLevel::MODULE_INITIALIZATION_LEVEL_SCENE);
 
-  init_object.register_initializer(initialize_godoctopus_module);
-  init_object.register_terminator(uninitialize_godoctopus_module);
-  init_object.set_minimum_library_initialization_level(godot::ModuleInitializationLevel::MODULE_INITIALIZATION_LEVEL_SCENE);
-
-  return init_object.init();
+    return init_obj.init();
 }
-
 }
