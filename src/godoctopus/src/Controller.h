@@ -15,7 +15,7 @@
 #include "controller/Controller.hh"
 #include "option/Option.h"
 #include "option/OptionManager.h"
-#include "LevelModel.h"
+#include "levels/model/LevelModel.h"
 #include "levels/level2/wave/Wave.h"
 #include "Entity.h"
 
@@ -53,6 +53,9 @@ public:
 	void load_lifesteal_level(int size_p);
 	// missions
 	void load_mission_1(int seed_p, int player_count_p);
+
+	// required for editor
+	void load_minimal_model();
 
 	// levels (modes)
 	void load_hero_siege_level(int seed_p, int player_count_p);

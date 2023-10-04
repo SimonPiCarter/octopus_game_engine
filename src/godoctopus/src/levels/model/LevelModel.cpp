@@ -49,7 +49,7 @@ void LevelModel::add_entity(String const &type, String const &model, int player,
     std::string type_l(type.utf8().get_data());
     std::string model_l(model.utf8().get_data());
     unsigned long player_l = static_cast<unsigned long>(player);
-    _entities.push_back(GodotEntity {type_l, model_l, player_l, x, y});
+    _entities.push_back(GodotEntity {type_l, model_l, player_l, x, y, {}, 0});
 }
 
 void LevelModel::_bind_methods()

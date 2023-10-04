@@ -66,9 +66,32 @@ private:
         unsigned long player;
         float x;
         float y;
+		/// @brief list of entity group of this entity
+		std::vector<unsigned long> entity_group;
+		/// @brief number of player required to spawn the entity
+		unsigned long num_players_to_spawn = 0;
     };
 
     std::vector<GodotEntity> _entities;
+
+	struct GodotTriggerAction {
+		bool dialog_enabled = false;
+		std::string dialog_idx = "";
+
+		bool unit_spawn = false;
+		std::vector<GodotEntity> enities_to_spawn;
+	};
+
+	struct GodotTrigger {
+		// trigger if a group en entity is dead
+		bool entity_dead_trigger = false;
+		unsigned long entity_dead_group = 0;
+
+		// action to be done when triggering
+		GodotTriggerAction action;
+	};
+
+    std::vector<GodotTrigger> _triggers;
 };
 
 }
