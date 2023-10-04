@@ -286,7 +286,7 @@ void Controller::load_level_test_model_reading(int seed_p, godot::LevelModel *le
 	std::list<octopus::Steppable *> levelsteps_l = level_test_model::LevelSteps(_lib, *_rand, buff_prod_p);
 	if(level_model_p)
 	{
-		spawners_l = level_model_p->generateLevelSteps(_lib);
+		spawners_l = level_model_p->generateLevelSteps(_lib, 0);
 	}
 	spawners_l.splice(spawners_l.end(), levelsteps_l);
 
@@ -450,7 +450,7 @@ void Controller::replay_level(String const &filename_p, bool replay_mode_p, godo
 		std::list<octopus::Steppable *> spawners_l;
 		if(level_model_p)
 		{
-			spawners_l = level_model_p->generateLevelSteps(_lib);
+			spawners_l = level_model_p->generateLevelSteps(_lib, 0);
 		}
 		spawners_l.splice(spawners_l.end(), levelInfo_l.first);
 		if(replay_mode_p)

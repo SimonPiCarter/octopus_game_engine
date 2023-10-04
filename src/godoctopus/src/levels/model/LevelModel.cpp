@@ -6,13 +6,13 @@
 
 // octopus
 #include "state/model/entity/EntityModel.hh"
-#include "step/entity/spawn/BuildingSpawnStep.hh"
-#include "step/state/StateTemplePositionAddStep.hh"
-#include "step/entity/spawn/ResourceSpawnStep.hh"
-#include "step/entity/spawn/UnitSpawnStep.hh"
 #include "step/player/PlayerAddBuildingModel.hh"
 #include "step/player/PlayerSpawnStep.hh"
 #include "step/player/PlayerSpendResourceStep.hh"
+#include "step/trigger/TriggerSpawn.hh"
+
+#include "utils/EntitySpawner.h"
+#include "utils/TriggerModel.h"
 
 namespace godot {
 
@@ -44,12 +44,47 @@ void LevelModel::add_building(int player, String const &building)
 ////////////////
 /// player
 ////////////////
-void LevelModel::add_entity(String const &type, String const &model, int player, float x, float y)
+void LevelModel::add_entity(String const &type, String const &model, int player, float x, float y, PackedInt32Array const &array_p, int num_of_players)
 {
     std::string type_l(type.utf8().get_data());
     std::string model_l(model.utf8().get_data());
     unsigned long player_l = static_cast<unsigned long>(player);
-    _entities.push_back(GodotEntity {type_l, model_l, player_l, x, y, {}, 0});
+    unsigned long num_of_players_l = static_cast<unsigned long>(num_of_players);
+	GodotEntity ent_l {type_l, model_l, player_l, x, y, {}, num_of_players_l};
+	for(int i = 0 ; i < array_p.size() ; ++ i)
+	{
+		ent_l.entity_group.push_back(array_p[i]);
+	}
+    _entities.push_back(ent_l);
+}
+
+int LevelModel::add_trigger()
+{
+	_triggers.push_back(GodotTrigger());
+	return _triggers.size()-1;
+}
+
+void LevelModel::set_trigger_entity_dead_group(int triggerIdx_p, int entityDeadGroup_p)
+{
+	_triggers.at(triggerIdx_p).entity_dead_trigger = true;
+	_triggers.at(triggerIdx_p).entity_dead_group = entityDeadGroup_p;
+}
+
+void LevelModel::set_trigger_action_dialog(int triggerIdx_p, String const &dialogIdx_p)
+{
+    std::string dialog_l(dialogIdx_p.utf8().get_data());
+	_triggers.at(triggerIdx_p).action.dialog_enabled = true;
+	_triggers.at(triggerIdx_p).action.dialog_idx = dialog_l;
+}
+
+void LevelModel::add_trigger_action_spawn_entity(int triggerIdx_p, String const &type, String const &model, int player, float x, float y, int num_of_players)
+{
+    std::string type_l(type.utf8().get_data());
+    std::string model_l(model.utf8().get_data());
+    unsigned long player_l = static_cast<unsigned long>(player);
+    unsigned long num_of_players_l = static_cast<unsigned long>(num_of_players);
+	_triggers.at(triggerIdx_p).action.unit_spawn = true;
+	_triggers.at(triggerIdx_p).action.entities_to_spawn.push_back(GodotEntity {type_l, model_l, player_l, x, y, {}, num_of_players_l});
 }
 
 void LevelModel::_bind_methods()
@@ -60,12 +95,17 @@ void LevelModel::_bind_methods()
     ClassDB::bind_method(D_METHOD("add_resource", "player", "resource", "quantity"), &LevelModel::add_resource);
     ClassDB::bind_method(D_METHOD("add_building", "player", "building"), &LevelModel::add_building);
 
-    ClassDB::bind_method(D_METHOD("add_entity", "type", "model", "player", "x", "y"), &LevelModel::add_entity);
+    ClassDB::bind_method(D_METHOD("add_entity", "type", "model", "player", "x", "y", "entity_group", "num_of_players"), &LevelModel::add_entity);
+
+	ClassDB::bind_method(D_METHOD("add_trigger"), &LevelModel::add_trigger);
+	ClassDB::bind_method(D_METHOD("set_trigger_entity_dead_group", "trigger_idx", "entity_dead_group"), &LevelModel::set_trigger_entity_dead_group);
+	ClassDB::bind_method(D_METHOD("set_trigger_action_dialog", "trigger_idx", "dialog_idx"), &LevelModel::set_trigger_action_dialog);
+	ClassDB::bind_method(D_METHOD("add_trigger_action_spawn_entity", "trigger_idx", "type", "model", "player", "x", "y", "num_of_players"), &LevelModel::add_trigger_action_spawn_entity);
 
     ADD_GROUP("LevelModel", "LevelModel_");
 }
 
-std::list<octopus::Steppable *> LevelModel::generateLevelSteps(octopus::Library const &lib_p)
+std::list<octopus::Steppable *> LevelModel::generateLevelSteps(octopus::Library const &lib_p, unsigned long playerCount_p)
 {
     std::list<octopus::Steppable *> steps_l;
 
@@ -86,37 +126,13 @@ std::list<octopus::Steppable *> LevelModel::generateLevelSteps(octopus::Library 
     for(unsigned long idx_l = 0 ; idx_l < _entities.size() ; ++idx_l)
     {
         GodotEntity const &ent_l = _entities.at(idx_l);
-        if(ent_l.type == "Unit")
-        {
-	        octopus::Unit unit_l({ ent_l.x, ent_l.y }, false, lib_p.getUnitModel(ent_l.model));
-            unit_l._player = ent_l.player;
-            steps_l.push_back(new octopus::UnitSpawnStep(octopus::Handle(idx_l), unit_l));
-        }
-        else if(ent_l.type == "Building")
-        {
-	        octopus::Building building_l({ ent_l.x, ent_l.y }, true, lib_p.getBuildingModel(ent_l.model));
-            building_l._player = ent_l.player;
-            steps_l.push_back(new octopus::BuildingSpawnStep(octopus::Handle(idx_l), building_l, true));
-        }
-        else if(ent_l.type == "Resource")
-        {
-	        octopus::Resource resource_l({ ent_l.x, ent_l.y }, true, lib_p.getResourceModel(ent_l.model));
-			resource_l._resource = 2000;
-            resource_l._player = ent_l.player;
-            steps_l.push_back(new octopus::ResourceSpawnStep(octopus::Handle(idx_l), resource_l));
-        }
-        else if(ent_l.type == "Anchor")
-        {
-	        octopus::Building building_l({ ent_l.x, ent_l.y }, true, lib_p.getBuildingModel(ent_l.model));
-            building_l._player = ent_l.player;
-            steps_l.push_back(new octopus::BuildingSpawnStep(octopus::Handle(idx_l), building_l, true));
-            steps_l.push_back(new octopus::StateTemplePositionAddStep({ ent_l.x, ent_l.y }));
-        }
-        else
-        {
-            throw std::logic_error("Unkown type found in entities when generating level model");
-        }
+		spawnEntity(steps_l, octopus::Handle(idx_l), ent_l, lib_p, playerCount_p);
     }
+
+    for(unsigned long idx_l = 0 ; idx_l < _triggers.size() ; ++idx_l)
+    {
+		steps_l.push_back(new octopus::TriggerSpawn(newTriggerModel(_triggers[idx_l], _entities, lib_p, playerCount_p)));
+	}
 
     return steps_l;
 }

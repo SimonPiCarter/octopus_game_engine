@@ -9,6 +9,7 @@
 
 #include "state/Handle.hh"
 #include "utils/Fixed.hh"
+#include "utils/ModelTypes.h"
 
 namespace octopus
 {
@@ -39,57 +40,28 @@ public:
     void add_building(int player, String const &building);
 
     ////////////////
-    /// player
+    /// entities
     ////////////////
-    void add_entity(String const &type_p, String const &model_p, int player, float x, float y);
+    void add_entity(String const &type_p, String const &model_p, int player, float x, float y, PackedInt32Array const &array_p, int num_of_players);
 
+    ////////////////
+    /// triggers
+    ////////////////
+	int add_trigger();
+	void set_trigger_entity_dead_group(int triggerIdx_p, int entityDeadGroup_p);
+	void set_trigger_action_dialog(int triggerIdx_p, String const &dialogIdx_p);
+	void add_trigger_action_spawn_entity(int triggerIdx_p, String const &type_p, String const &model_p, int player, float x, float y, int num_of_players);
 
     ////////////////
     /// generator (steps)
     ////////////////
-    std::list<octopus::Steppable *> generateLevelSteps(octopus::Library const &lib_p);
+    std::list<octopus::Steppable *> generateLevelSteps(octopus::Library const &lib_p, unsigned long playerCount_p);
 
 private:
-    /// @brief stored data about players
-    struct GodotPlayer {
-        std::map<std::string, octopus::Fixed> resources;
-        std::vector<std::string> buildings;
-        unsigned long team;
-    };
-
     /// @brief players to spawn
     std::vector<GodotPlayer> _players;
 
-    struct GodotEntity {
-        std::string type;
-        std::string model;
-        unsigned long player;
-        float x;
-        float y;
-		/// @brief list of entity group of this entity
-		std::vector<unsigned long> entity_group;
-		/// @brief number of player required to spawn the entity
-		unsigned long num_players_to_spawn = 0;
-    };
-
     std::vector<GodotEntity> _entities;
-
-	struct GodotTriggerAction {
-		bool dialog_enabled = false;
-		std::string dialog_idx = "";
-
-		bool unit_spawn = false;
-		std::vector<GodotEntity> enities_to_spawn;
-	};
-
-	struct GodotTrigger {
-		// trigger if a group en entity is dead
-		bool entity_dead_trigger = false;
-		unsigned long entity_dead_group = 0;
-
-		// action to be done when triggering
-		GodotTriggerAction action;
-	};
 
     std::vector<GodotTrigger> _triggers;
 };
