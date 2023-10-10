@@ -107,6 +107,9 @@ public:
 	bool is_done_and_non_repeatable(String const &upgrade_p, int player_p) const;
 	int get_level(String const &upgrade_p, int player_p) const;
 	bool is_upgrade(String const &model_p) const;
+	bool is_unit(String const &model_p) const;
+	bool is_building(String const &model_p) const;
+	bool is_resource(String const &model_p) const;
 	// ability getters
 	// get necessary reload time
 	double get_reload_time(EntityHandle const * handle_p, String const &ability_p) const;
@@ -115,7 +118,6 @@ public:
 	// check if there is non static entity behind this one
 	bool hasNonStaticBehind(EntityHandle const * handle_p, int height_p, int width_p) const;
 
-	bool is_building(String const &model_p) const;
 	float get_model_ray(String const &model_p) const;
 	/// @brief check if grid is free (model is required to handle specific building check)
 	bool is_grid_free(String const &model_p, int x_p, int y_p) const;

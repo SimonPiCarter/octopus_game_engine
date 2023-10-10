@@ -835,6 +835,21 @@ bool Controller::is_upgrade(String const &upgrade_p) const
 	std::string const &upgradeId_l(upgrade_p.utf8().get_data());
 	return _lib.hasUpgrade(upgradeId_l);
 }
+bool Controller::is_unit(String const &model_p) const
+{
+	std::string const &id_l(model_p.utf8().get_data());
+	return _lib.hasUnitModel(id_l);
+}
+bool Controller::is_building(String const &model_p) const
+{
+	std::string const &id_l(model_p.utf8().get_data());
+	return _lib.hasBuildingModel(id_l);
+}
+bool Controller::is_resource(String const &model_p) const
+{
+	std::string const &id_l(model_p.utf8().get_data());
+	return _lib.hasResourceModel(id_l);
+}
 
 double Controller::get_reload_time(EntityHandle const * handle_p, String const &ability_p) const
 {
@@ -865,12 +880,6 @@ bool Controller::hasNonStaticBehind(EntityHandle const * handle_p, int height_p,
 		return false;
 	}
 	return lookUpNonStaticBehind(*_state, castHandle(handle_p), width_p, height_p);
-}
-
-bool Controller::is_building(String const &model_p) const
-{
-	std::string modelId_l(model_p.utf8().get_data());
-	return _lib.hasBuildingModel(modelId_l);
 }
 
 float Controller::get_model_ray(String const &model_p) const
@@ -1305,10 +1314,13 @@ void Controller::_bind_methods()
 	ClassDB::bind_method(D_METHOD("is_done_and_non_repeatable", "upgrade", "player"), &Controller::is_done_and_non_repeatable);
 	ClassDB::bind_method(D_METHOD("get_level", "upgrade", "player"), &Controller::get_level);
 	ClassDB::bind_method(D_METHOD("is_upgrade", "upgrade"), &Controller::is_upgrade);
+	ClassDB::bind_method(D_METHOD("is_unit", "model"), &Controller::is_unit);
+	ClassDB::bind_method(D_METHOD("is_building", "model"), &Controller::is_building);
+	ClassDB::bind_method(D_METHOD("is_resource", "model"), &Controller::is_resource);
+
 	ClassDB::bind_method(D_METHOD("get_reload_time", "handle", "ability"), &Controller::get_reload_time);
 	ClassDB::bind_method(D_METHOD("get_current_reload_time", "handle", "ability"), &Controller::get_current_reload_time);
 	ClassDB::bind_method(D_METHOD("hasNonStaticBehind", "handle", "height" "width"), &Controller::hasNonStaticBehind);
-	ClassDB::bind_method(D_METHOD("is_building", "model"), &Controller::is_building);
 	ClassDB::bind_method(D_METHOD("get_model_ray", "model"), &Controller::get_model_ray);
 	ClassDB::bind_method(D_METHOD("is_grid_free", "model", "x", "y"), &Controller::is_grid_free);
 	ClassDB::bind_method(D_METHOD("get_world_size"), &Controller::get_world_size);
