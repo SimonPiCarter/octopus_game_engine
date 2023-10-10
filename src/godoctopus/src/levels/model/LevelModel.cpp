@@ -64,17 +64,20 @@ int LevelModel::add_trigger()
 	return _triggers.size()-1;
 }
 
-void LevelModel::set_trigger_entity_dead_group(int triggerIdx_p, int entityDeadGroup_p)
+void LevelModel::add_trigger_listener_entity_dead_group(int triggerIdx_p, int entityDeadGroup_p)
 {
-	_triggers.at(triggerIdx_p).entity_dead_trigger = true;
-	_triggers.at(triggerIdx_p).entity_dead_group = entityDeadGroup_p;
+	_triggers.at(triggerIdx_p).listeners.push_back(GodotTriggerListenerEntityDied {static_cast<unsigned long>(entityDeadGroup_p)});
 }
 
-void LevelModel::set_trigger_action_dialog(int triggerIdx_p, String const &dialogIdx_p)
+void LevelModel::add_trigger_listener_timer(int triggerIdx_p, int steps_p)
+{
+	_triggers.at(triggerIdx_p).listeners.push_back(GodotTriggerListenerTimer {static_cast<unsigned long>(steps_p)});
+}
+
+void LevelModel::add_trigger_action_dialog(int triggerIdx_p, String const &dialogIdx_p)
 {
     std::string dialog_l(dialogIdx_p.utf8().get_data());
-	_triggers.at(triggerIdx_p).action.dialog_enabled = true;
-	_triggers.at(triggerIdx_p).action.dialog_idx = dialog_l;
+	_triggers.at(triggerIdx_p).actions.push_back(GodotTriggerActionDialog {dialog_l});
 }
 
 void LevelModel::add_trigger_action_spawn_entity(int triggerIdx_p, String const &type, String const &model, int player, float x, float y, int num_of_players)
@@ -83,8 +86,10 @@ void LevelModel::add_trigger_action_spawn_entity(int triggerIdx_p, String const 
     std::string model_l(model.utf8().get_data());
     unsigned long player_l = static_cast<unsigned long>(player);
     unsigned long num_of_players_l = static_cast<unsigned long>(num_of_players);
-	_triggers.at(triggerIdx_p).action.unit_spawn = true;
-	_triggers.at(triggerIdx_p).action.entities_to_spawn.push_back(GodotEntity {type_l, model_l, player_l, x, y, {}, num_of_players_l});
+
+	GodotTriggerActionSpawn actionSpawn_l;
+	actionSpawn_l.entities_to_spawn.push_back(GodotEntity {type_l, model_l, player_l, x, y, {}, num_of_players_l});
+	_triggers.at(triggerIdx_p).actions.push_back(actionSpawn_l);
 }
 
 void LevelModel::_bind_methods()
@@ -98,8 +103,9 @@ void LevelModel::_bind_methods()
     ClassDB::bind_method(D_METHOD("add_entity", "type", "model", "player", "x", "y", "entity_group", "num_of_players"), &LevelModel::add_entity);
 
 	ClassDB::bind_method(D_METHOD("add_trigger"), &LevelModel::add_trigger);
-	ClassDB::bind_method(D_METHOD("set_trigger_entity_dead_group", "trigger_idx", "entity_dead_group"), &LevelModel::set_trigger_entity_dead_group);
-	ClassDB::bind_method(D_METHOD("set_trigger_action_dialog", "trigger_idx", "dialog_idx"), &LevelModel::set_trigger_action_dialog);
+	ClassDB::bind_method(D_METHOD("add_trigger_listener_entity_dead_group", "trigger_idx", "entity_dead_group"), &LevelModel::add_trigger_listener_entity_dead_group);
+	ClassDB::bind_method(D_METHOD("add_trigger_listener_timer", "trigger_idx", "steps"), &LevelModel::add_trigger_listener_timer);
+	ClassDB::bind_method(D_METHOD("add_trigger_action_dialog", "trigger_idx", "dialog_idx"), &LevelModel::add_trigger_action_dialog);
 	ClassDB::bind_method(D_METHOD("add_trigger_action_spawn_entity", "trigger_idx", "type", "model", "player", "x", "y", "num_of_players"), &LevelModel::add_trigger_action_spawn_entity);
 
     ADD_GROUP("LevelModel", "LevelModel_");

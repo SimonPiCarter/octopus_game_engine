@@ -4,6 +4,7 @@
 #include <map>
 #include <vector>
 #include <string>
+#include <variant>
 
 #include "utils/Fixed.hh"
 
@@ -29,23 +30,28 @@ namespace godot
 		unsigned long num_players_to_spawn = 0;
     };
 
-	struct GodotTriggerAction {
-		bool dialog_enabled = false;
-		std::string dialog_idx = "";
+	struct GodotTriggerActionDialog { std::string dialog_idx = ""; };
+	struct GodotTriggerActionSpawn { std::vector<GodotEntity> entities_to_spawn; };
+	using GodotTriggerAction = std::variant<
+		GodotTriggerActionDialog,
+		GodotTriggerActionSpawn
+	>;
 
-		bool unit_spawn = false;
-		std::vector<GodotEntity> entities_to_spawn;
-	};
+	struct GodotTriggerListenerEntityDied { unsigned long entity_group = 0; };
+	struct GodotTriggerListenerEntityProduced { unsigned long player = 0; std::string model = ""; };
+	struct GodotTriggerListenerTimer { unsigned long steps = 0; };
+	struct GodotTriggerListenerResource { unsigned long player = 0; unsigned long quantity = 0; std::string resource = ""; };
+
+	// todo add zone
+	using GodotTriggerListener = std::variant<
+		GodotTriggerListenerEntityDied,
+		GodotTriggerListenerTimer
+	>;
 
 	struct GodotTrigger {
-		// trigger if a group en entity is dead
-		bool entity_dead_trigger = false;
-		unsigned long entity_dead_group = 0;
-
-		// todo add zone
-
-		// action to be done when triggering
-		GodotTriggerAction action;
+		bool repeatable = false;
+		std::vector<GodotTriggerListener> listeners;
+		std::vector<GodotTriggerAction> actions;
 	};
 
 } // namespace godot
