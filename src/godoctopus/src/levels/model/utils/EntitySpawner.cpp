@@ -10,14 +10,13 @@
 
 namespace godot {
 
-	void spawnEntity(std::list<octopus::Steppable *> &steps_r, octopus::Handle const&idx_p, GodotEntity const &ent_p,
+	bool spawnEntity(std::list<octopus::Steppable *> &steps_r, octopus::Handle const&idx_p, GodotEntity const &ent_p,
 		octopus::Library const &lib_p, unsigned long playerCount_p)
 	{
-		/// @todo handle idx_p better in that case
-		// if(ent_p.num_players_to_spawn > playerCount_p)
-		// {
-		// 	return;
-		// }
+		if(ent_p.num_players_to_spawn > playerCount_p)
+		{
+			return false;
+		}
         if(ent_p.type == "Unit")
         {
 	        octopus::Unit unit_l({ ent_p.x, ent_p.y }, false, lib_p.getUnitModel(ent_p.model));
@@ -48,6 +47,7 @@ namespace godot {
         {
             throw std::logic_error("Unkown type found in entities when generating level model");
         }
+		return true;
 	}
 
 }

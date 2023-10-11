@@ -129,10 +129,15 @@ std::list<octopus::Steppable *> LevelModel::generateLevelSteps(octopus::Library 
         }
     }
 
+	unsigned long handle_l = 0;
     for(unsigned long idx_l = 0 ; idx_l < _entities.size() ; ++idx_l)
     {
         GodotEntity const &ent_l = _entities.at(idx_l);
-		spawnEntity(steps_l, octopus::Handle(idx_l), ent_l, lib_p, playerCount_p);
+		bool added_l = spawnEntity(steps_l, octopus::Handle(handle_l), ent_l, lib_p, playerCount_p);
+		if(added_l)
+		{
+			++handle_l;
+		}
     }
 
     for(unsigned long idx_l = 0 ; idx_l < _triggers.size() ; ++idx_l)

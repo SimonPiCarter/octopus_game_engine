@@ -24,14 +24,20 @@ struct GodotListenerVisitor
 	void operator()(GodotTriggerListenerEntityDied const &listener_p) const
 	{
 		std::unordered_set<octopus::Handle> set_l;
+		unsigned long handle_l = 0;
 		// for every entity in the group
 		for(size_t i = 0 ; i < _entities.size() ; ++i)
 		{
+			if(_entities[i].num_players_to_spawn > _playerCount)
+			{
+				continue;
+			}
 			std::vector<unsigned long> const &entGroup_l = _entities[i].entity_group;
 			if(std::find(entGroup_l.begin(), entGroup_l.end(), listener_p.entity_group) != entGroup_l.end())
 			{
-				set_l.insert(octopus::Handle(i));
+				set_l.insert(octopus::Handle(handle_l));
 			}
+			++handle_l;
 		}
 
 		octopus::ListenerEntityDied * listener_l = new octopus::ListenerEntityDied(set_l);
@@ -87,15 +93,14 @@ struct GodotActionVisitor
 
 	void operator()(GodotTriggerActionSpawn const &action_p) const
 	{
-		std::list<octopus::Steppable *> list_l;
 		for(GodotEntity const &ent_l : action_p.entities_to_spawn)
 		{
+			std::list<octopus::Steppable *> list_l;
 			spawnEntity(list_l, getNextHandle(_step, _state), ent_l, _lib, _playerCount);
-		}
-
-		for(octopus::Steppable *steppable_l : list_l)
-		{
-			_step.addSteppable(steppable_l);
+			for(octopus::Steppable *steppable_l : list_l)
+			{
+				_step.addSteppable(steppable_l);
+			}
 		}
 	}
 

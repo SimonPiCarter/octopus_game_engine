@@ -14,7 +14,7 @@ namespace godot {
 
 struct GodotEntity;
 
-void spawnEntity(std::list<octopus::Steppable *> &steps_r, octopus::Handle const&idx_p, GodotEntity const &ent_p,
+bool spawnEntity(std::list<octopus::Steppable *> &steps_r, octopus::Handle const&idx_p, GodotEntity const &ent_p,
 	octopus::Library const &lib_p, unsigned long playerCount_p);
 
 }
