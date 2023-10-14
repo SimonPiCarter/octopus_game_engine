@@ -68,7 +68,7 @@ TriggerModel * newTriggerModel(GodotTrigger const &trigger_p, std::vector<GodotE
 	}
 
 	unsigned long entity_dead_group = 0;
-	TriggerModel * trigger_l = new TriggerModel(listeners_l ,trigger_p.actions, lib_p, playerCount_p);
+	TriggerModel * trigger_l = new TriggerModel(listeners_l, trigger_p.actions, lib_p, playerCount_p);
 	return trigger_l;
 }
 
