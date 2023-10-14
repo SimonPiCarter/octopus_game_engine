@@ -74,6 +74,18 @@ void LevelModel::add_trigger_listener_timer(int triggerIdx_p, int steps_p)
 	_triggers.at(triggerIdx_p).listeners.push_back(GodotTriggerListenerTimer {static_cast<unsigned long>(steps_p)});
 }
 
+void LevelModel::add_trigger_listener_zone_player(int player_p, String const &zone_p)
+{
+    std::string zone_name_l(zone_p.utf8().get_data());
+	_triggers.at(triggerIdx_p).listeners.push_back(GodotTriggerZonePlayer {static_cast<unsigned long>(player_p), zone_name_l});
+}
+
+void LevelModel::add_trigger_listener_zone_team(int team_p, String const &zone_p)
+{
+    std::string zone_name_l(zone_p.utf8().get_data());
+	_triggers.at(triggerIdx_p).listeners.push_back(GodotTriggerZoneTeam {static_cast<unsigned long>(team_p), zone_name_l});
+}
+
 void LevelModel::add_trigger_action_dialog(int triggerIdx_p, String const &dialogIdx_p)
 {
     std::string dialog_l(dialogIdx_p.utf8().get_data());
@@ -111,6 +123,8 @@ void LevelModel::_bind_methods()
 	ClassDB::bind_method(D_METHOD("add_trigger"), &LevelModel::add_trigger);
 	ClassDB::bind_method(D_METHOD("add_trigger_listener_entity_dead_group", "trigger_idx", "entity_dead_group"), &LevelModel::add_trigger_listener_entity_dead_group);
 	ClassDB::bind_method(D_METHOD("add_trigger_listener_timer", "trigger_idx", "steps"), &LevelModel::add_trigger_listener_timer);
+	ClassDB::bind_method(D_METHOD("add_trigger_listener_zone_player", "player", "zone_name"), &LevelModel::add_trigger_listener_zone_player);
+	ClassDB::bind_method(D_METHOD("add_trigger_listener_zone_team", "team", "zone_name"), &LevelModel::add_trigger_listener_zone_team);
 	ClassDB::bind_method(D_METHOD("add_trigger_action_dialog", "trigger_idx", "dialog_idx"), &LevelModel::add_trigger_action_dialog);
 	ClassDB::bind_method(D_METHOD("add_trigger_action_spawn_entity", "trigger_idx", "type", "model", "player", "x", "y", "num_of_players"), &LevelModel::add_trigger_action_spawn_entity);
 
