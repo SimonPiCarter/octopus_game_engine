@@ -54,6 +54,11 @@ public:
 	void add_trigger_action_spawn_entity(int triggerIdx_p, String const &type_p, String const &model_p, int player, float x, float y, int num_of_players);
 
     ////////////////
+    /// zones
+    ////////////////
+	void add_zone(String const &name_p, int x, int y, int size_x, int size_y);
+
+    ////////////////
     /// generator (steps)
     ////////////////
     std::list<octopus::Steppable *> generateLevelSteps(octopus::Library const &lib_p, unsigned long playerCount_p);
@@ -65,6 +70,8 @@ private:
     std::vector<GodotEntity> _entities;
 
     std::vector<GodotTrigger> _triggers;
+
+	std::vector<GodotZone> _zones;
 };
 
 }

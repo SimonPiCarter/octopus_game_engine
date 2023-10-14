@@ -7,6 +7,7 @@
 #include <variant>
 
 #include "utils/Fixed.hh"
+#include "utils/Box.hh"
 
 namespace godot
 {
@@ -41,19 +42,26 @@ namespace godot
 	struct GodotTriggerListenerEntityProduced { unsigned long player = 0; std::string model = ""; };
 	struct GodotTriggerListenerTimer { unsigned long steps = 0; };
 	struct GodotTriggerListenerResource { unsigned long player = 0; unsigned long quantity = 0; std::string resource = ""; };
-	struct GodotTriggerZonePlayer { unsigned long player = 0; std::string zune_name = ""; };
-	struct GodotTriggerZoneTeam { unsigned long team = 0; std::string zune_name = ""; };
+	struct GodotTriggerZonePlayer { unsigned long player = 0; std::string zone_name = ""; };
+	struct GodotTriggerZoneTeam { unsigned long team = 0; std::string zone_name = ""; };
 
 	// todo add zone
 	using GodotTriggerListener = std::variant<
 		GodotTriggerListenerEntityDied,
-		GodotTriggerListenerTimer
+		GodotTriggerListenerTimer,
+		GodotTriggerZonePlayer,
+		GodotTriggerZoneTeam
 	>;
 
 	struct GodotTrigger {
 		bool repeatable = false;
 		std::vector<GodotTriggerListener> listeners;
 		std::vector<GodotTriggerAction> actions;
+	};
+
+	struct GodotZone {
+		std::string name = "";
+		octopus::Box<long> zone;
 	};
 
 } // namespace godot

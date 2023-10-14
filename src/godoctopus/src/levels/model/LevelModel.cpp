@@ -92,6 +92,12 @@ void LevelModel::add_trigger_action_spawn_entity(int triggerIdx_p, String const 
 	_triggers.at(triggerIdx_p).actions.push_back(actionSpawn_l);
 }
 
+void LevelModel::add_zone(String const &name_p, int x, int y, int size_x, int size_y)
+{
+    std::string name_l(name_p.utf8().get_data());
+	_zones.push_back(GodotZone {name_l, octopus::Box<long>{x, x+size_x, y, y+size_y} } );
+}
+
 void LevelModel::_bind_methods()
 {
     UtilityFunctions::print("Binding LevelModel methods");
@@ -107,6 +113,8 @@ void LevelModel::_bind_methods()
 	ClassDB::bind_method(D_METHOD("add_trigger_listener_timer", "trigger_idx", "steps"), &LevelModel::add_trigger_listener_timer);
 	ClassDB::bind_method(D_METHOD("add_trigger_action_dialog", "trigger_idx", "dialog_idx"), &LevelModel::add_trigger_action_dialog);
 	ClassDB::bind_method(D_METHOD("add_trigger_action_spawn_entity", "trigger_idx", "type", "model", "player", "x", "y", "num_of_players"), &LevelModel::add_trigger_action_spawn_entity);
+
+	ClassDB::bind_method(D_METHOD("add_zone", "name", "x", "y", "size_x", "size_y"), &LevelModel::add_zone);
 
     ADD_GROUP("LevelModel", "LevelModel_");
 }
@@ -142,7 +150,7 @@ std::list<octopus::Steppable *> LevelModel::generateLevelSteps(octopus::Library 
 
     for(unsigned long idx_l = 0 ; idx_l < _triggers.size() ; ++idx_l)
     {
-		steps_l.push_back(new octopus::TriggerSpawn(newTriggerModel(_triggers[idx_l], _entities, lib_p, playerCount_p)));
+		steps_l.push_back(new octopus::TriggerSpawn(newTriggerModel(_triggers[idx_l], _entities, lib_p, playerCount_p, _zones)));
 	}
 
     return steps_l;

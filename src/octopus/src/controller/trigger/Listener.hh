@@ -202,6 +202,6 @@ protected:
 		: _player(player_p), _team(team_p), _is_player(is_player_p), _is_team(is_team_p), _zone(zone_p) {}
 };
 
-}
+} // octopus
 
 #endif

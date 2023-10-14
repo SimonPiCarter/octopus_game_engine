@@ -7,6 +7,7 @@
 #include "controller/step/DialogStep.h"
 
 #include "EntitySpawner.h"
+#include "utils/Box.hh"
 
 namespace godot
 {
@@ -14,12 +15,17 @@ namespace godot
 struct GodotListenerVisitor
 {
 	GodotListenerVisitor(std::list<octopus::Listener *> &list_r, std::vector<GodotEntity> const &entities_p,
-		octopus::Library const &lib_p, unsigned long playerCount_p) :
+		octopus::Library const &lib_p, unsigned long playerCount_p, std::vector<GodotZone> const &zones_p) :
 		_list(list_r),
 		_entities(entities_p),
 		_lib(lib_p),
 		_playerCount(playerCount_p)
-	{}
+	{
+		for(GodotZone const &zone_l : zones_p)
+		{
+			_mapZone[zone_l.name] = zone_l.zone;
+		}
+	}
 
 	void operator()(GodotTriggerListenerEntityDied const &listener_p) const
 	{
@@ -50,20 +56,33 @@ struct GodotListenerVisitor
 		_list.push_back(listener_l);
 	}
 
+	void operator()(GodotTriggerZonePlayer const &listener_p) const
+	{
+		octopus::ListenerZone * listener_l = octopus::ListenerZone::newListenerZonePlayer(listener_p.player, _mapZone.at(listener_p.zone_name));
+		_list.push_back(listener_l);
+	}
+
+	void operator()(GodotTriggerZoneTeam const &listener_p) const
+	{
+		octopus::ListenerZone * listener_l = octopus::ListenerZone::newListenerZoneTeam(listener_p.team, _mapZone.at(listener_p.zone_name));
+		_list.push_back(listener_l);
+	}
+
 	std::list<octopus::Listener *> &_list;
 	std::vector<GodotEntity> const &_entities;
 	octopus::Library const &_lib;
 	unsigned long const _playerCount;
+	std::map<std::string, octopus::Box<long> > _mapZone;
 };
 
 TriggerModel * newTriggerModel(GodotTrigger const &trigger_p, std::vector<GodotEntity> const &entities_p,
-	octopus::Library const &lib_p, unsigned long playerCount_p)
+	octopus::Library const &lib_p, unsigned long playerCount_p, std::vector<GodotZone> const &zones_p)
 {
 	std::list<octopus::Listener *> listeners_l;
 	// create dead trigger
 	for(GodotTriggerListener const &listener_l : trigger_p.listeners)
 	{
-		GodotListenerVisitor vis_l(listeners_l, entities_p, lib_p, playerCount_p);
+		GodotListenerVisitor vis_l(listeners_l, entities_p, lib_p, playerCount_p, zones_p);
    		std::visit([&](auto &&arg) { vis_l(arg); }, listener_l);
 	}
 
