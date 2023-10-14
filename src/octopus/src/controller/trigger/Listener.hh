@@ -4,6 +4,7 @@
 #include <unordered_set>
 #include <vector>
 #include "state/Handle.hh"
+#include "utils/Box.hh"
 #include "utils/Vector.hh"
 
 namespace octopus
@@ -177,6 +178,28 @@ public:
 	std::string const _resource;
 	/// @brief the quantity
 	Fixed const _qty;
+};
+
+/// @brief Warning this listener can only trigger once per set and will trigger every step
+/// where an entity is the zone
+class ListenerZone : public Listener
+{
+public:
+	static ListenerZone *newListenerZonePlayer(unsigned long player_p, Box<long> const &zone_p);
+	static ListenerZone *newListenerZoneTeam(unsigned long team_p, Box<long> const &zone_p);
+
+	/// @brief compile listener steps based on events in controller
+	/// @param count_p if set to true will count the number of time completed
+	virtual void compile(EventCollection const &controller_p, Step &step_p, bool count_p, ListenerData const &data_p) const override;
+
+	unsigned long const _player;
+	unsigned long const _team;
+	bool const _is_player;
+	bool const _is_team;
+	Box<long> const _zone;
+protected:
+	ListenerZone(unsigned long player_p, unsigned long team_p, bool is_player_p, bool is_team_p, Box<long> const &zone_p)
+		: _player(player_p), _team(team_p), _is_player(is_player_p), _is_team(is_team_p), _zone(zone_p) {}
 };
 
 }

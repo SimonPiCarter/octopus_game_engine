@@ -148,7 +148,6 @@ void ListenerResource<true>::compile(EventCollection const &controller_p, Step &
 	State const &state_l = controller_p.getState();
 
 	Fixed res_l = getResource(*state_l.getPlayer(_player), _resource);
-	// std::cout<<"checking "<<_resource<<" for player "<<_player<<" : "<<to_int(res_l)<<std::endl;
 	if(res_l >= _qty)
 		step_p.addSteppable(new TriggerCountChange(data_p._triggerHandle, data_p._listenerHandle, data_p._count, data_p._count+1));
 }
@@ -162,5 +161,69 @@ void ListenerResource<false>::compile(EventCollection const &controller_p, Step 
 	if(res_l <= _qty)
 		step_p.addSteppable(new TriggerCountChange(data_p._triggerHandle, data_p._listenerHandle, data_p._count, data_p._count+1));
 }
+
+
+ListenerZone *ListenerZone::newListenerZonePlayer(unsigned long player_p, Box<long> const &zone_p)
+{
+	return new ListenerZone(player_p, 0, true, false, zone_p);
+}
+
+ListenerZone *ListenerZone::newListenerZoneTeam(unsigned long team_p, Box<long> const &zone_p)
+{
+	return new ListenerZone(0, team_p, false, true, zone_p);
+}
+
+void ListenerZone::compile(EventCollection const &collection_p, Step &step_p, bool count_p, ListenerData const &data_p) const
+{
+	State const &state_l = collection_p.getState();
+	Box<long> box_l {state_l.getGridIndex(_zone._lowerX),
+					 state_l.getGridIndex(_zone._upperX),
+					 state_l.getGridIndex(_zone._lowerY),
+					 state_l.getGridIndex(_zone._upperY)};
+	std::vector<bool> bitset_l(state_l.getEntities().size(), false);
+
+	bool found_l = false;
+
+	// grid for fast access
+	std::vector<std::vector<AbstractBitset *> > const & grid_l = state_l.getGrid();
+
+	for(long x = box_l._lowerX ; x <= box_l._upperX && !found_l ; ++x)
+	{
+		for(long y = box_l._lowerY ; y <= box_l._upperY && !found_l ; ++y)
+		{
+			// for now look for closest entity
+			grid_l[x][y]->for_each([&] (int handle_p)
+			{
+				// avoid double count
+				if(bitset_l.at(handle_p))
+				{
+					return false;
+				}
+				bitset_l[handle_p] = true;
+				Entity const * ent_l = state_l.getLoseEntity(handle_p);
+				Player const * player_l = state_l.getPlayer(ent_l->_player);
+
+				if(player_l->_id == _player && _is_player)
+				{
+					found_l = true;
+					return true;
+				}
+				if(player_l->_team == _team && _is_team)
+				{
+					found_l = true;
+					return true;
+				}
+				return false;
+			}
+			);
+		}
+	}
+
+	if(found_l)
+	{
+		step_p.addSteppable(new TriggerCountChange(data_p._triggerHandle, data_p._listenerHandle, data_p._count, data_p._count+1));
+	}
+}
+
 
 } // octopus
