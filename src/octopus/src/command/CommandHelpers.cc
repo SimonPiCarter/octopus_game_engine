@@ -15,6 +15,8 @@
 #include "state/player/Player.hh"
 #include "state/State.hh"
 
+#include "utils/FixedPoint.hh"
+
 namespace octopus
 {
 
@@ -96,7 +98,20 @@ Command * newTargetCommand(State const &state_p, Handle const &handle_p,
 		return command_l;
 	}
 	else if(target_l && !targetResource_l
-	&& player_l->_team != targetPlayer_l->_team)
+	&& player_l->_team != targetPlayer_l->_team
+	&& ::is_zero(cur_l->getHeal()))
+	{
+		EntityAttackCommand * command_l = new EntityAttackCommand(
+			handle_p,
+			handle_p,
+			target_p,
+			true
+		);
+		return command_l;
+	}
+	else if (target_l && !targetResource_l
+	&& player_l->_team == targetPlayer_l->_team
+	&& !::is_zero(cur_l->getHeal()))
 	{
 		EntityAttackCommand * command_l = new EntityAttackCommand(
 			handle_p,
