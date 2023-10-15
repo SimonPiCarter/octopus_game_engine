@@ -5,26 +5,15 @@
 #include <random>
 
 // fas
-// #include "library/model/AnchorTrigger.hh"
 #include "library/model/ModelLoader.hh"
-// #include "library/model/TimerDamage.hh"
 
 // octopus
 #include "controller/trigger/Listener.hh"
 #include "controller/trigger/Trigger.hh"
-// #include "command/entity/EntityAttackMoveCommand.hh"
-// #include "command/spawner/AreaSpawnerCommand.hh"
 #include "library/Library.hh"
 #include "state/entity/Building.hh"
 #include "state/entity/Unit.hh"
 #include "state/entity/Resource.hh"
-// #include "state/model/entity/BuildingModel.hh"
-// #include "state/vision/PatternHandler.hh"
-// #include "state/State.hh"
-// #include "step/Step.hh"
-// #include "step/command/CommandQueueStep.hh"
-// #include "step/command/flying/FlyingCommandSpawnStep.hh"
-// #include "step/custom/CustomStep.hh"
 #include "step/entity/spawn/UnitSpawnStep.hh"
 #include "step/entity/spawn/ResourceSpawnStep.hh"
 #include "step/entity/spawn/BuildingSpawnStep.hh"
@@ -33,9 +22,7 @@
 #include "step/player/PlayerSpendResourceStep.hh"
 #include "step/state/StateAddConstraintPositionStep.hh"
 #include "step/state/StateRemoveConstraintPositionStep.hh"
-// #include "step/state/StateTemplePositionAddStep.hh"
 #include "step/state/StateWinStep.hh"
-// #include "step/team/TeamVisionStep.hh"
 #include "step/trigger/TriggerSpawn.hh"
 
 // godot
