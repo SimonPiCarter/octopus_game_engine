@@ -31,7 +31,7 @@ namespace godot
 		unsigned long num_players_to_spawn = 0;
     };
 
-	struct GodotTriggerActionDialog { std::string dialog_idx = ""; };
+	struct GodotTriggerActionDialog { std::string dialog_idx = ""; bool end=false; int winning_team=0; };
 	struct GodotTriggerActionSpawn { std::vector<GodotEntity> entities_to_spawn; };
 	using GodotTriggerAction = std::variant<
 		GodotTriggerActionDialog,

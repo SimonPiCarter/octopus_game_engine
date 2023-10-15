@@ -3,6 +3,7 @@
 
 #include "controller/trigger/Listener.hh"
 #include "step/Step.hh"
+#include "step/state/StateWinStep.hh"
 
 #include "controller/step/DialogStep.h"
 
@@ -107,6 +108,10 @@ struct GodotActionVisitor
 
 	void operator()(GodotTriggerActionDialog const &action_p) const
 	{
+		if(action_p.end)
+		{
+			_step.addSteppable(new octopus::StateWinStep(false, false, 0, action_p.winning_team));
+		}
 		_step.addSteppable(new godot::DialogStep(action_p.dialog_idx));
 	}
 
