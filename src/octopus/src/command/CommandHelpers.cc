@@ -62,7 +62,7 @@ Command * newTargetCommand(State const &state_p, Handle const &handle_p,
 
 	const Entity * target_l = state_p.getEntity(target_p);
 	const Building * targetBuilding_l = dynamic_cast<const Building *>(target_l);
-	const Resource * targetRehandle_p = dynamic_cast<const Resource *>(target_l);
+	const Resource * targetResource_l = dynamic_cast<const Resource *>(target_l);
 	const Player * targetPlayer_l = state_p.getPlayer(target_l->_player);
 
 	bool alive_l = target_l->_alive || (targetBuilding_l && targetBuilding_l->isBlueprint());
@@ -79,10 +79,10 @@ Command * newTargetCommand(State const &state_p, Handle const &handle_p,
 		);
 		return command_l;
 	}
-	else if(targetRehandle_p
+	else if(targetResource_l
 	&& unit_l
-	&& unit_l->_unitModel._maxQuantity.find(targetRehandle_p->getType()) != unit_l->_unitModel._maxQuantity.end()
-	&& unit_l->_unitModel._maxQuantity.at(targetRehandle_p->getType()) > 0)
+	&& unit_l->_unitModel._maxQuantity.find(targetResource_l->getType()) != unit_l->_unitModel._maxQuantity.end()
+	&& unit_l->_unitModel._maxQuantity.at(targetResource_l->getType()) > 0)
 	{
 		UnitHarvestCommand * command_l = new UnitHarvestCommand(
 			handle_p,
@@ -95,7 +95,7 @@ Command * newTargetCommand(State const &state_p, Handle const &handle_p,
 		);
 		return command_l;
 	}
-	else if(target_l && !targetRehandle_p
+	else if(target_l && !targetResource_l
 	&& player_l->_team != targetPlayer_l->_team)
 	{
 		EntityAttackCommand * command_l = new EntityAttackCommand(
