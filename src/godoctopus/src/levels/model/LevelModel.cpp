@@ -104,6 +104,11 @@ void LevelModel::add_trigger_action_spawn_entity(int triggerIdx_p, String const 
 	_triggers.at(triggerIdx_p).actions.push_back(actionSpawn_l);
 }
 
+void LevelModel::add_trigger_action_camera(int triggerIdx_p, int x, int y, int player_p)
+{
+	_triggers.at(triggerIdx_p).actions.push_back(GodotTriggerActionCamera {x, y, player_p});
+}
+
 void LevelModel::add_zone(String const &name_p, int x, int y, int size_x, int size_y)
 {
     std::string name_l(name_p.utf8().get_data());
@@ -127,6 +132,7 @@ void LevelModel::_bind_methods()
 	ClassDB::bind_method(D_METHOD("add_trigger_listener_zone_team", "trigger_idx", "team", "zone_name"), &LevelModel::add_trigger_listener_zone_team);
 	ClassDB::bind_method(D_METHOD("add_trigger_action_dialog", "trigger_idx", "dialog_idx", "end", "winning_team"), &LevelModel::add_trigger_action_dialog);
 	ClassDB::bind_method(D_METHOD("add_trigger_action_spawn_entity", "trigger_idx", "type", "model", "player", "x", "y", "num_of_players"), &LevelModel::add_trigger_action_spawn_entity);
+	ClassDB::bind_method(D_METHOD("add_trigger_action_camera", "trigger_idx", "x", "y", "player"), &LevelModel::add_trigger_action_camera);
 
 	ClassDB::bind_method(D_METHOD("add_zone", "name", "x", "y", "size_x", "size_y"), &LevelModel::add_zone);
 
@@ -164,7 +170,12 @@ std::list<octopus::Steppable *> LevelModel::generateLevelSteps(octopus::Library 
 
     for(unsigned long idx_l = 0 ; idx_l < _triggers.size() ; ++idx_l)
     {
-		steps_l.push_back(new octopus::TriggerSpawn(newTriggerModel(_triggers[idx_l], _entities, lib_p, playerCount_p, _zones)));
+		TriggerModel * model_l = newTriggerModel(_triggers[idx_l], _entities, lib_p, playerCount_p, _zones);
+		// Can return null if trigger is not valid
+		if(model_l)
+		{
+			steps_l.push_back(new octopus::TriggerSpawn(model_l));
+		}
 	}
 
     return steps_l;

@@ -6,6 +6,7 @@
 #include "step/state/StateWinStep.hh"
 
 #include "controller/step/DialogStep.h"
+#include "controller/step/CameraStep.h"
 
 #include "EntitySpawner.h"
 #include "utils/Box.hh"
@@ -126,6 +127,11 @@ struct GodotActionVisitor
 				_step.addSteppable(steppable_l);
 			}
 		}
+	}
+
+	void operator()(GodotTriggerActionCamera const &action_p) const
+	{
+		_step.addSteppable(new godot::CameraStep(action_p.x, action_p.y, action_p.player));
 	}
 
 	octopus::State const &_state;
