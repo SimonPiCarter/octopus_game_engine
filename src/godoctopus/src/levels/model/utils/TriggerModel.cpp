@@ -29,7 +29,7 @@ struct GodotListenerVisitor
 		}
 	}
 
-	void operator()(GodotTriggerListenerEntityDied const &listener_p) const
+	void operator()(GodotTriggerListenerEntityDied const &listener_p)
 	{
 		std::unordered_set<octopus::Handle> set_l;
 		unsigned long handle_l = 0;
@@ -47,6 +47,8 @@ struct GodotListenerVisitor
 			}
 			++handle_l;
 		}
+
+		_emptyEntityGroupDead |= set_l.empty();
 
 		octopus::ListenerEntityDied * listener_l = new octopus::ListenerEntityDied(set_l);
 		_list.push_back(listener_l);
@@ -75,20 +77,25 @@ struct GodotListenerVisitor
 	octopus::Library const &_lib;
 	unsigned long const _playerCount;
 	std::map<std::string, octopus::Box<long> > _mapZone;
+
+	bool _emptyEntityGroupDead = false;
 };
 
 TriggerModel * newTriggerModel(GodotTrigger const &trigger_p, std::vector<GodotEntity> const &entities_p,
 	octopus::Library const &lib_p, unsigned long playerCount_p, std::vector<GodotZone> const &zones_p)
 {
 	std::list<octopus::Listener *> listeners_l;
-	// create dead trigger
+	GodotListenerVisitor vis_l(listeners_l, entities_p, lib_p, playerCount_p, zones_p);
+	// create listeners
 	for(GodotTriggerListener const &listener_l : trigger_p.listeners)
 	{
-		GodotListenerVisitor vis_l(listeners_l, entities_p, lib_p, playerCount_p, zones_p);
    		std::visit([&](auto &&arg) { vis_l(arg); }, listener_l);
 	}
+	if(vis_l._emptyEntityGroupDead)
+	{
+		return nullptr;
+	}
 
-	unsigned long entity_dead_group = 0;
 	TriggerModel * trigger_l = new TriggerModel(listeners_l, trigger_p.actions, lib_p, playerCount_p);
 	return trigger_l;
 }
