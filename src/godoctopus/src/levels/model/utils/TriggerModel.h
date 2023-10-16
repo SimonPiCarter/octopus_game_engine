@@ -27,7 +27,7 @@ private:
 	unsigned long const _playerCount;
 };
 
-TriggerModel * newTriggerModel(GodotTrigger const &trigger_p, std::vector<GodotEntity> const &entities_p,
+TriggerModel * newTriggerModel(GodotTrigger &trigger_p, std::vector<GodotEntity> const &entities_p,
 	octopus::Library const &lib_p, unsigned long playerCount_p, std::vector<GodotZone> const &zones_p);
 
 } // namespace godot

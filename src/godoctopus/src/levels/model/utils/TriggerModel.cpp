@@ -2,8 +2,12 @@
 
 
 #include "controller/trigger/Listener.hh"
+#include "state/State.hh"
+#include "state/entity/Entity.hh"
+#include "state/player/Player.hh"
 #include "step/Step.hh"
 #include "step/state/StateWinStep.hh"
+#include "step/entity/EntityHitPointChangeStep.hh"
 
 #include "controller/step/DialogStep.h"
 #include "controller/step/CameraStep.h"
@@ -72,6 +76,14 @@ struct GodotListenerVisitor
 		_list.push_back(listener_l);
 	}
 
+	void operator()(GodotTriggerActionDialog &) const {}
+	void operator()(GodotTriggerActionSpawn &) const {}
+	void operator()(GodotTriggerActionCamera &) const {}
+	void operator()(GodotTriggerActionZoneDamage &action_p) const
+	{
+		action_p.zone = _mapZone.at(action_p.zone_name);
+	}
+
 	std::list<octopus::Listener *> &_list;
 	std::vector<GodotEntity> const &_entities;
 	octopus::Library const &_lib;
@@ -81,7 +93,7 @@ struct GodotListenerVisitor
 	bool _emptyEntityGroupDead = false;
 };
 
-TriggerModel * newTriggerModel(GodotTrigger const &trigger_p, std::vector<GodotEntity> const &entities_p,
+TriggerModel * newTriggerModel(GodotTrigger &trigger_p, std::vector<GodotEntity> const &entities_p,
 	octopus::Library const &lib_p, unsigned long playerCount_p, std::vector<GodotZone> const &zones_p)
 {
 	std::list<octopus::Listener *> listeners_l;
@@ -91,6 +103,12 @@ TriggerModel * newTriggerModel(GodotTrigger const &trigger_p, std::vector<GodotE
 	{
    		std::visit([&](auto &&arg) { vis_l(arg); }, listener_l);
 	}
+	// handle actions (fill up data if required)
+	for(GodotTriggerAction &action_l : trigger_p.actions)
+	{
+   		std::visit([&](auto &&arg) { vis_l(arg); }, action_l);
+	}
+
 	if(vis_l._emptyEntityGroupDead)
 	{
 		return nullptr;
@@ -139,6 +157,55 @@ struct GodotActionVisitor
 	void operator()(GodotTriggerActionCamera const &action_p) const
 	{
 		_step.addSteppable(new godot::CameraStep(action_p.x, action_p.y, action_p.player));
+	}
+
+	void operator()(GodotTriggerActionZoneDamage const &action_p) const
+	{
+		octopus::Box<long> box_l {_state.getGridIndex(action_p.zone._lowerX),
+								  _state.getGridIndex(action_p.zone._upperX),
+								  _state.getGridIndex(action_p.zone._lowerY),
+								  _state.getGridIndex(action_p.zone._upperY)};
+		std::vector<bool> bitset_l(_state.getEntities().size(), false);
+
+		// grid for fast access
+		std::vector<std::vector<octopus::AbstractBitset *> > const & grid_l = _state.getGrid();
+
+		for(long x = box_l._lowerX ; x <= box_l._upperX ; ++x)
+		{
+			for(long y = box_l._lowerY ; y <= box_l._upperY ; ++y)
+			{
+				// for now look for closest entity
+				grid_l[x][y]->for_each([&] (int handle_p)
+				{
+					// avoid double count
+					if(bitset_l.at(handle_p))
+					{
+						return false;
+					}
+					bitset_l[handle_p] = true;
+					octopus::Entity const * ent_l = _state.getLoseEntity(handle_p);
+					octopus::Player const * player_l = _state.getPlayer(ent_l->_player);
+
+
+					if(ent_l->_pos.x < action_p.zone._lowerX || ent_l->_pos.x > action_p.zone._upperX
+					|| ent_l->_pos.y < action_p.zone._lowerY || ent_l->_pos.y > action_p.zone._upperY)
+					{
+						return false;
+					}
+
+					if(player_l->_team == action_p.team)
+					{
+						octopus::Fixed curHp_l = ent_l->_hp + _step.getHpChange(ent_l->_handle);
+						octopus::Fixed maxHp_l = ent_l->getHpMax();
+						_step.addSteppable(new octopus::EntityHitPointChangeStep(ent_l->_handle, -action_p.damage, curHp_l, maxHp_l));
+						return false;
+					}
+
+					return false;
+				}
+				);
+			}
+		}
 	}
 
 	octopus::State const &_state;

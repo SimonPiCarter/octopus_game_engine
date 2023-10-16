@@ -55,6 +55,7 @@ public:
 	void add_trigger_action_dialog(int triggerIdx_p, String const &dialogIdx_p, bool end_p, int team_winning_p);
 	void add_trigger_action_spawn_entity(int triggerIdx_p, String const &type_p, String const &model_p, int player, float x, float y, int num_of_players);
 	void add_trigger_action_camera(int triggerIdx_p, int x, int y, int player_p);
+	void add_trigger_action_damage_zone(int triggerIdx_p, int damage_p, int team_p, String const &zone_name_p);
 
     ////////////////
     /// zones

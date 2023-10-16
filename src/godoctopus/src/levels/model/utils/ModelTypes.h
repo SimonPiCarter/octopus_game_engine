@@ -34,10 +34,12 @@ namespace godot
 	struct GodotTriggerActionDialog { std::string dialog_idx = ""; bool end=false; int winning_team=0; };
 	struct GodotTriggerActionSpawn { std::vector<GodotEntity> entities_to_spawn; };
 	struct GodotTriggerActionCamera { int x=0; int y=0; int player=0; };
+	struct GodotTriggerActionZoneDamage { int damage = 0; unsigned long team = 0; std::string zone_name = ""; octopus::Box<long> zone; };
 	using GodotTriggerAction = std::variant<
 		GodotTriggerActionDialog,
 		GodotTriggerActionSpawn,
-		GodotTriggerActionCamera
+		GodotTriggerActionCamera,
+		GodotTriggerActionZoneDamage
 	>;
 
 	struct GodotTriggerListenerEntityDied { unsigned long entity_group = 0; };
