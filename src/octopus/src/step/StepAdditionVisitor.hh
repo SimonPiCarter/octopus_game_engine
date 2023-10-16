@@ -39,6 +39,7 @@ public:
 	virtual void visit(CommandIncrementNoProgressStep const *) {}
 	virtual void visit(CommandMoveUpdateStep const *) {}
 	virtual void visit(CommandMoveLosStep const *) {}
+	virtual void visit(CommandMoveUnlockRoutineStep const *) override {}
 	virtual void visit(CommandUpdateFlockingReached const *) override {}
 	virtual void visit(CommandMoveStepSinceUpdateIncrementStep const *) {}
 	virtual void visit(CommandNewTargetStep const *) {}

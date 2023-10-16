@@ -75,6 +75,30 @@ bool CommandMoveLosStep::isNoOp() const
 	return _oldLos == _newLos;
 }
 
+void CommandMoveUnlockRoutineStep::apply(State &state_p) const
+{
+	Commandable * ent_l = state_p.getCommandable(this->_handle);
+	Logger::getDebug() << "CommandMoveUnlockRoutineStep :: apply " << this->_handle <<std::endl;
+	MoveData *data_l = dynamic_cast<MoveData*>(getData(ent_l->getFrontQueue()._var));
+	data_l->_unlockRoutine = _new;
+}
+
+void CommandMoveUnlockRoutineStep::revert(State &state_p, SteppableData const *) const
+{
+	Commandable * ent_l = state_p.getCommandable(this->_handle);
+	Logger::getDebug() << "CommandMoveUnlockRoutineStep :: revert " << this->_handle <<std::endl;
+	MoveData *data_l = dynamic_cast<MoveData*>(getData(ent_l->getFrontQueue()._var));
+	data_l->_unlockRoutine = _old;
+}
+
+bool CommandMoveUnlockRoutineStep::isNoOp() const
+{
+	return _old._unlockState == _new._unlockState
+		&& _old._stepEndId == _new._stepEndId
+		&& _old._targetPoint == _new._targetPoint
+		&& _old._enabled == _new._enabled;
+}
+
 void CommandUpdateFlockingReached::apply(State &state_p) const
 {
 	Commandable * ent_l = state_p.getCommandable(this->_handle);
