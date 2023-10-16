@@ -203,6 +203,12 @@ void ListenerZone::compile(EventCollection const &collection_p, Step &step_p, bo
 				Entity const * ent_l = state_l.getLoseEntity(handle_p);
 				Player const * player_l = state_l.getPlayer(ent_l->_player);
 
+				if(ent_l->_pos.x < _zone._lowerX || ent_l->_pos.x > _zone._upperX
+				|| ent_l->_pos.y < _zone._lowerY || ent_l->_pos.y > _zone._upperY)
+				{
+					return false;
+				}
+
 				if(player_l->_id == _player && _is_player)
 				{
 					found_l = true;
