@@ -6,8 +6,11 @@
 #include "state/entity/Entity.hh"
 #include "state/player/Player.hh"
 #include "step/Step.hh"
+#include "step/command/CommandQueueStep.hh"
 #include "step/state/StateWinStep.hh"
 #include "step/entity/EntityHitPointChangeStep.hh"
+#include "step/entity/EntityHitPointChangeStep.hh"
+#include "command/entity/EntityAttackMoveCommand.hh"
 
 #include "controller/step/DialogStep.h"
 #include "controller/step/CameraStep.h"
@@ -140,16 +143,22 @@ struct GodotActionVisitor
 		}
 		_step.addSteppable(new godot::DialogStep(action_p.dialog_idx));
 	}
-
 	void operator()(GodotTriggerActionSpawn const &action_p) const
 	{
 		for(GodotEntity const &ent_l : action_p.entities_to_spawn)
 		{
 			std::list<octopus::Steppable *> list_l;
-			spawnEntity(list_l, getNextHandle(_step, _state), ent_l, _lib, _playerCount);
+			octopus::Handle handle_l = getNextHandle(_step, _state);
+			spawnEntity(list_l, handle_l, ent_l, _lib, _playerCount);
 			for(octopus::Steppable *steppable_l : list_l)
 			{
 				_step.addSteppable(steppable_l);
+			}
+			if(action_p.attack_move)
+			{
+				_step.addSteppable(new octopus::CommandSpawnStep(
+					new octopus::EntityAttackMoveCommand(handle_l, handle_l, octopus::Vector(action_p.x, action_p.y),
+						0, {octopus::Vector(action_p.x, action_p.y)}, true, false)));
 			}
 		}
 	}
