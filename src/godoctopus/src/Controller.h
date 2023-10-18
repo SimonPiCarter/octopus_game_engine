@@ -132,7 +132,7 @@ public:
 	/// where type < 0.1 if move command or > 0.1 if attack command
 	PackedFloat32Array get_move_targets(PackedInt32Array const &handles_p);
 
-	PackedInt32Array get_sub_selection(Rect2 const &rect_p, String const &model_p);
+	PackedInt32Array get_sub_selection(Rect2 const &rect_p, String const &model_p, int player_p);
 
 	// resources getter
 	float get_res(String const &res_p, int player_p) const;

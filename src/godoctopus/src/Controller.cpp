@@ -968,21 +968,49 @@ PackedFloat32Array Controller::get_move_targets(PackedInt32Array const &handles_
 	return array_l;
 }
 
-PackedInt32Array Controller::get_sub_selection(Rect2 const &rect_p, String const &model_p)
+PackedInt32Array Controller::get_sub_selection(Rect2 const &rect_p, String const &model_p, int player_p)
 {
+	octopus::Player const *player_l = _state->getPlayer(player_p);
 	std::string modelId_l(model_p.utf8().get_data());
 	PackedInt32Array array_l;
 	octopus::Box<octopus::Fixed> box_l {rect_p.get_position().x, rect_p.get_position().x+rect_p.get_size().x,
 		rect_p.get_position().y, rect_p.get_position().y+rect_p.get_size().y};
 
-	std::vector<octopus::Entity const *> entities_l = octopus::getAllEntitiesInBox(box_l, *_state, true);
-	for(octopus::Entity const * ent_l : entities_l)
+	for(octopus::Entity const * ent_l : _state->getEntities())
 	{
-		if(modelId_l == "" || ent_l->_model._id == modelId_l)
+		bool isBlueprint_l = ent_l->_model._isBuilding && static_cast<octopus::Building const *>(ent_l)->isBlueprint();
+
+		if(!_state->isEntityAlive(ent_l->_handle) && !isBlueprint_l)
 		{
-			array_l.push_back(ent_l->_handle.index);
+			continue;
 		}
+		if(ent_l->_model._id != modelId_l && modelId_l != "")
+		{
+			continue;
+		}
+		if(!_state->getVisionHandler().isExplored(player_l->_team, *ent_l))
+		{
+			continue;
+		}
+		if(ent_l->_model._isUnit && !_state->getVisionHandler().isVisible(player_l->_team, *ent_l))
+		{
+			continue;
+		}
+
+		octopus::Fixed lowerPosX = ent_l->_pos.x-ent_l->_model._ray;
+		octopus::Fixed upperPosX = ent_l->_pos.x+ent_l->_model._ray;
+		octopus::Fixed lowerPosY = ent_l->_pos.y-ent_l->_model._ray;
+		octopus::Fixed upperPosY = ent_l->_pos.y+ent_l->_model._ray;
+
+		if(upperPosX < box_l._lowerX || lowerPosX > box_l._upperX
+		|| upperPosY < box_l._lowerY || lowerPosY > box_l._upperY)
+		{
+			continue;
+		}
+
+		array_l.push_back(ent_l->_handle.index);
 	}
+
 	return array_l;
 }
 
@@ -1345,7 +1373,7 @@ void Controller::_bind_methods()
 	ClassDB::bind_method(D_METHOD("get_team", "player"), &Controller::get_team);
 	ClassDB::bind_method(D_METHOD("get_idle_workers", "player"), &Controller::get_idle_workers);
 	ClassDB::bind_method(D_METHOD("get_move_targets", "handles"), &Controller::get_move_targets);
-	ClassDB::bind_method(D_METHOD("get_sub_selection", "rect", "model"), &Controller::get_sub_selection);
+	ClassDB::bind_method(D_METHOD("get_sub_selection", "rect", "model", "player"), &Controller::get_sub_selection);
 
 	ClassDB::bind_method(D_METHOD("get_res", "rest", "player"), &Controller::get_res);
 	ClassDB::bind_method(D_METHOD("is_visible", "x", "y", "player"), &Controller::is_visible);
