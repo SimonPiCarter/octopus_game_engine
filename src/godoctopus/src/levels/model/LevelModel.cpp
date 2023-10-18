@@ -188,11 +188,11 @@ std::list<octopus::Steppable *> LevelModel::generateLevelSteps(octopus::Library 
 		steps_l.push_back(new octopus::PlayerSpawnStep(idx_l, player_l.team));
 
 		// create resource spawn (need negative)
-		steps_l.push_back(new octopus::PlayerSpendResourceStep(0, octopus::getReverseCostMap(player_l.resources)));
+		steps_l.push_back(new octopus::PlayerSpendResourceStep(idx_l, octopus::getReverseCostMap(player_l.resources)));
 
 		for(std::string const &modelId_l : player_l.buildings)
 		{
-			steps_l.push_back(new octopus::PlayerAddBuildingModel(0, lib_p.getBuildingModel(modelId_l)));
+			steps_l.push_back(new octopus::PlayerAddBuildingModel(idx_l, lib_p.getBuildingModel(modelId_l)));
 		}
 	}
 

@@ -95,7 +95,7 @@ std::list<Steppable *> LevelSteps(Library &lib_p, RandomGenerator &rand_p, bool 
 		spawners_l.push_back(new octopus::PlayerBuffAllStep(0, buff_l, ""));
 	}
 
-	fas::addBuildingPlayer(spawners_l, 0, fas::allDivinities(), lib_p);
+	fas::addBuildingPlayer(spawners_l, 2, fas::allDivinities(), lib_p);
 
 	return spawners_l;
 }
