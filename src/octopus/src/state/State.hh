@@ -6,6 +6,7 @@
 #include "Handle.hh"
 #include "graph/Grid.hh"
 #include "utils/DynamicBitset.hh"
+#include "utils/Box.hh"
 #include "step/ConstraintPosition.hh"
 
 #include "projectile/Projectile.hh"
@@ -304,6 +305,10 @@ bool checkGridNode(State const &state_p, int x_p, int y_p, bool forTemple_p);
 /// @brief Check that the entity does no go out of bound
 /// @note always true if entity is not static
 bool noOutOfBounds(State const &state_p, Entity const &ent_p);
+
+/// @brief get all entities that are in the given box, if includeRays_p is true will compute intersection with the ray
+/// of the entity
+std::vector<Entity const *> getAllEntitiesInBox(Box<Fixed> const &box_p, State const &state_p, bool includeRays_p);
 
 } // namespace octopus
 

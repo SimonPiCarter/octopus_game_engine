@@ -899,6 +899,54 @@ bool noOutOfBounds(State const &state_p, Entity const &ent_p)
 	return true;
 }
 
+std::vector<Entity const *> getAllEntitiesInBox(Box<Fixed> const &box_p, State const &state_p, bool includeRays_p)
+{
+	std::vector<Entity const *> result_l;
+	Box<long> box_l {state_p.getGridIndex(box_p._lowerX),
+							  state_p.getGridIndex(box_p._upperX),
+							  state_p.getGridIndex(box_p._lowerY),
+							  state_p.getGridIndex(box_p._upperY)};
+	std::vector<bool> bitset_l(state_p.getEntities().size(), false);
+
+	// grid for fast access
+	std::vector<std::vector<AbstractBitset *> > const & grid_l = state_p.getGrid();
+
+	for(long x = box_l._lowerX ; x <= box_l._upperX ; ++x)
+	{
+		for(long y = box_l._lowerY ; y <= box_l._upperY ; ++y)
+		{
+			// for now look for closest entity
+			grid_l[x][y]->for_each([&] (int handle_p)
+			{
+				// avoid double count
+				if(bitset_l.at(handle_p))
+				{
+					return false;
+				}
+				bitset_l[handle_p] = true;
+				Entity const * ent_l = state_p.getLoseEntity(handle_p);
+
+				Fixed lowerPosX = includeRays_p?ent_l->_pos.x-ent_l->_model._ray:ent_l->_pos.x;
+				Fixed upperPosX = includeRays_p?ent_l->_pos.x+ent_l->_model._ray:ent_l->_pos.x;
+				Fixed lowerPosY = includeRays_p?ent_l->_pos.y-ent_l->_model._ray:ent_l->_pos.y;
+				Fixed upperPosY = includeRays_p?ent_l->_pos.y+ent_l->_model._ray:ent_l->_pos.y;
+
+				if(upperPosX < box_p._lowerX || lowerPosX > box_p._upperX
+				|| upperPosY < box_p._lowerY || lowerPosY > box_p._upperY)
+				{
+					return false;
+				}
+
+				result_l.push_back(ent_l);
+
+				return false;
+			}
+			);
+		}
+	}
+	return result_l;
+}
+
 
 void State::setIsOver(bool over_p)
 {
