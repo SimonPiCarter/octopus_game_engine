@@ -161,49 +161,23 @@ struct GodotActionVisitor
 
 	void operator()(GodotTriggerActionZoneDamage const &action_p) const
 	{
-		octopus::Box<long> box_l {_state.getGridIndex(action_p.zone._lowerX),
-								  _state.getGridIndex(action_p.zone._upperX),
-								  _state.getGridIndex(action_p.zone._lowerY),
-								  _state.getGridIndex(action_p.zone._upperY)};
-		std::vector<bool> bitset_l(_state.getEntities().size(), false);
-
-		// grid for fast access
-		std::vector<std::vector<octopus::AbstractBitset *> > const & grid_l = _state.getGrid();
-
-		for(long x = box_l._lowerX ; x <= box_l._upperX ; ++x)
+		octopus::Box<octopus::Fixed> box_l {action_p.zone._lowerX, action_p.zone._upperX, action_p.zone._lowerY, action_p.zone._upperY};
+		std::vector<octopus::Entity const *> entities_l = octopus::getAllEntitiesInBox(box_l, _state, false);
+		for(octopus::Entity const * ent_l : entities_l)
 		{
-			for(long y = box_l._lowerY ; y <= box_l._upperY ; ++y)
+			octopus::Player const * player_l = _state.getPlayer(ent_l->_player);
+
+			if(ent_l->_pos.x < action_p.zone._lowerX || ent_l->_pos.x > action_p.zone._upperX
+			|| ent_l->_pos.y < action_p.zone._lowerY || ent_l->_pos.y > action_p.zone._upperY)
 			{
-				// for now look for closest entity
-				grid_l[x][y]->for_each([&] (int handle_p)
-				{
-					// avoid double count
-					if(bitset_l.at(handle_p))
-					{
-						return false;
-					}
-					bitset_l[handle_p] = true;
-					octopus::Entity const * ent_l = _state.getLoseEntity(handle_p);
-					octopus::Player const * player_l = _state.getPlayer(ent_l->_player);
+				continue;
+			}
 
-
-					if(ent_l->_pos.x < action_p.zone._lowerX || ent_l->_pos.x > action_p.zone._upperX
-					|| ent_l->_pos.y < action_p.zone._lowerY || ent_l->_pos.y > action_p.zone._upperY)
-					{
-						return false;
-					}
-
-					if(player_l->_team == action_p.team)
-					{
-						octopus::Fixed curHp_l = ent_l->_hp + _step.getHpChange(ent_l->_handle);
-						octopus::Fixed maxHp_l = ent_l->getHpMax();
-						_step.addSteppable(new octopus::EntityHitPointChangeStep(ent_l->_handle, -action_p.damage, curHp_l, maxHp_l));
-						return false;
-					}
-
-					return false;
-				}
-				);
+			if(player_l->_team == action_p.team)
+			{
+				octopus::Fixed curHp_l = ent_l->_hp + _step.getHpChange(ent_l->_handle);
+				octopus::Fixed maxHp_l = ent_l->getHpMax();
+				_step.addSteppable(new octopus::EntityHitPointChangeStep(ent_l->_handle, -action_p.damage, curHp_l, maxHp_l));
 			}
 		}
 	}

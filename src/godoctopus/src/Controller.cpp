@@ -968,6 +968,23 @@ PackedFloat32Array Controller::get_move_targets(PackedInt32Array const &handles_
 	return array_l;
 }
 
+PackedInt32Array Controller::get_sub_selection(Rect2 const &rect_p, String const &model_p)
+{
+	std::string modelId_l(model_p.utf8().get_data());
+	PackedInt32Array array_l;
+	octopus::Box<octopus::Fixed> box_l {rect_p.get_position().x, rect_p.get_position().x+rect_p.get_size().x,
+		rect_p.get_position().y, rect_p.get_position().y+rect_p.get_size().y};
+
+	std::vector<octopus::Entity const *> entities_l = octopus::getAllEntitiesInBox(box_l, *_state, true);
+	for(octopus::Entity const * ent_l : entities_l)
+	{
+		if(modelId_l == "" || ent_l->_model._id == modelId_l)
+		{
+			array_l.push_back(ent_l->_handle.index);
+		}
+	}
+	return array_l;
+}
 
 float Controller::get_res(String const &res_p, int player_p) const
 {
@@ -1328,6 +1345,7 @@ void Controller::_bind_methods()
 	ClassDB::bind_method(D_METHOD("get_team", "player"), &Controller::get_team);
 	ClassDB::bind_method(D_METHOD("get_idle_workers", "player"), &Controller::get_idle_workers);
 	ClassDB::bind_method(D_METHOD("get_move_targets", "handles"), &Controller::get_move_targets);
+	ClassDB::bind_method(D_METHOD("get_sub_selection", "rect", "model"), &Controller::get_sub_selection);
 
 	ClassDB::bind_method(D_METHOD("get_res", "rest", "player"), &Controller::get_res);
 	ClassDB::bind_method(D_METHOD("is_visible", "x", "y", "player"), &Controller::is_visible);
