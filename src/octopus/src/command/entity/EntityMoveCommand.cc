@@ -155,19 +155,33 @@ bool EntityMoveCommand::applyCommand(Step & step_p, State const &state_p, Comman
 	// unlock routine ?
 	bool unlock_l = data_l->_unlockRoutine._unlockState != UnlockRoutineState::NONE
 				 && data_l->_unlockRoutine._enabled;
+	// true if during the unlock we are starting a tryout to chek if we unlocked early
+	bool startTryout_l = false;
 
 	if(unlock_l)
 	{
-		if(square_length(data_l->_unlockRoutine._targetPoint - ent_l->_pos) < 0.1
-		|| step_p.getId() > data_l->_unlockRoutine._stepEndId)
+		if(square_length(data_l->_unlockRoutine._targetPoint - ent_l->_pos) < Fixed(100000, true)
+		|| step_p.getId() > data_l->_unlockRoutine._stepEndId
+		|| (data_l->_unlockRoutine._tryout && square_length(data_l->_unlockRoutine._tryoutPoint - ent_l->_pos) < ent_l->getStepSpeed()/10))
 		{
 			UnlockRoutine newRoutine_l = data_l->_unlockRoutine;
 			newRoutine_l._enabled = false;
 			step_p.addSteppable(new CommandMoveUnlockRoutineStep(_handleCommand, data_l->_unlockRoutine, newRoutine_l));
+			unlock_l = false;
 		}
 		else
 		{
-			next_l = data_l->_unlockRoutine._targetPoint;
+			unsigned long long stepDiff_l = step_p.getId() - data_l->_unlockRoutine._stepStartId;
+			// do a tryout move in direction of final target to see if we unlocked
+			if(stepDiff_l % 8 == 0 && !data_l->_unlockRoutine._tryout)
+			{
+				startTryout_l = true;
+				step_p.addSteppable(new CommandUpdateLastPosStep(_handleCommand, _source, data_l->_lastPos));
+			}
+			else
+			{
+				next_l = data_l->_unlockRoutine._targetPoint;
+			}
 		}
 	}
 
@@ -210,9 +224,10 @@ bool EntityMoveCommand::applyCommand(Step & step_p, State const &state_p, Comman
 
 		// check for progress
 		Fixed sqLastDiff_l = square_length(ent_l->_pos - data_l->_lastPos);
-		if(sqLastDiff_l < 0.5 && data_l->_countSinceProgress == 50)
+		// start unlock routing if no progress (do not start if when ignoring collision since it wont help)
+		if(sqLastDiff_l < Fixed(500000, true) && data_l->_countSinceProgress == 50 && !ent_l->isIgnoringCollision())
 		{
-			Logger::getNormal() << "almost no move : " << _handleCommand.index
+			Logger::getDebug() << "almost no move : " << _handleCommand.index
 								<< " since progress "<<data_l->_countSinceProgress << " setp id " << step_p.getId() << std::endl;
 			if(!data_l->_unlockRoutine._enabled)
 			{
@@ -224,53 +239,53 @@ bool EntityMoveCommand::applyCommand(Step & step_p, State const &state_p, Comman
 				{
 					newPoint_l = ent_l->_pos + Vector(-diff_l.y, diff_l.x) * UnlockRoutine::SmallRange + diff_l;
 					UnlockRoutine newRoutine_l {UnlockRoutineState::SMALL_1, newPoint_l,
-						step_p.getId() + UnlockRoutine::SmallRange * UnlockRoutine::MaxStepState, true};
+						step_p.getId(), step_p.getId() + UnlockRoutine::SmallRange * UnlockRoutine::MaxStepState, true, false};
 					step_p.addSteppable(new CommandMoveUnlockRoutineStep(_handleCommand, data_l->_unlockRoutine, newRoutine_l));
 				}
 				else if(data_l->_unlockRoutine._unlockState == UnlockRoutineState::SMALL_1)
 				{
 					newPoint_l = ent_l->_pos + Vector(diff_l.y, -diff_l.x) * UnlockRoutine::SmallRange + diff_l;
 					UnlockRoutine newRoutine_l {UnlockRoutineState::SMALL_2, newPoint_l,
-						step_p.getId() + UnlockRoutine::SmallRange * UnlockRoutine::MaxStepState, true};
+						step_p.getId(), step_p.getId() + UnlockRoutine::SmallRange * UnlockRoutine::MaxStepState, true, false};
 					step_p.addSteppable(new CommandMoveUnlockRoutineStep(_handleCommand, data_l->_unlockRoutine, newRoutine_l));
 				}
 				else if(data_l->_unlockRoutine._unlockState == UnlockRoutineState::SMALL_2)
 				{
 					newPoint_l = ent_l->_pos + Vector(-diff_l.y, diff_l.x) * UnlockRoutine::MiddleRange + diff_l * UnlockRoutine::SmallRange;
 					UnlockRoutine newRoutine_l {UnlockRoutineState::MIDDLE_1, newPoint_l,
-						step_p.getId() + UnlockRoutine::MiddleRange * UnlockRoutine::MaxStepState, true};
+						step_p.getId(), step_p.getId() + UnlockRoutine::MiddleRange * UnlockRoutine::MaxStepState, true, false};
 					step_p.addSteppable(new CommandMoveUnlockRoutineStep(_handleCommand, data_l->_unlockRoutine, newRoutine_l));
 				}
 				else if(data_l->_unlockRoutine._unlockState == UnlockRoutineState::MIDDLE_1)
 				{
 					newPoint_l = ent_l->_pos + Vector(diff_l.y, -diff_l.x) * UnlockRoutine::MiddleRange + diff_l * UnlockRoutine::SmallRange;
 					UnlockRoutine newRoutine_l {UnlockRoutineState::MIDDLE_2, newPoint_l,
-						step_p.getId() + UnlockRoutine::MiddleRange * UnlockRoutine::MaxStepState, true};
+						step_p.getId(), step_p.getId() + UnlockRoutine::MiddleRange * UnlockRoutine::MaxStepState, true, false};
 					step_p.addSteppable(new CommandMoveUnlockRoutineStep(_handleCommand, data_l->_unlockRoutine, newRoutine_l));
 				}
 				else if(data_l->_unlockRoutine._unlockState == UnlockRoutineState::MIDDLE_2)
 				{
 					newPoint_l = ent_l->_pos + Vector(-diff_l.y, diff_l.x) * UnlockRoutine::LongRange + diff_l * UnlockRoutine::MiddleRange;
 					UnlockRoutine newRoutine_l {UnlockRoutineState::LONG_1, newPoint_l,
-						step_p.getId() + UnlockRoutine::MiddleRange * UnlockRoutine::LongRange, true};
+						step_p.getId(), step_p.getId() + UnlockRoutine::MiddleRange * UnlockRoutine::LongRange, true, false};
 					step_p.addSteppable(new CommandMoveUnlockRoutineStep(_handleCommand, data_l->_unlockRoutine, newRoutine_l));
 				}
 				else if(data_l->_unlockRoutine._unlockState == UnlockRoutineState::LONG_1)
 				{
 					newPoint_l = ent_l->_pos + Vector(diff_l.y, -diff_l.x) * UnlockRoutine::LongRange + diff_l * UnlockRoutine::MiddleRange;
 					UnlockRoutine newRoutine_l {UnlockRoutineState::LONG_2, newPoint_l,
-						step_p.getId() + UnlockRoutine::MiddleRange * UnlockRoutine::LongRange, true};
+						step_p.getId(), step_p.getId() + UnlockRoutine::MiddleRange * UnlockRoutine::LongRange, true, false};
 					step_p.addSteppable(new CommandMoveUnlockRoutineStep(_handleCommand, data_l->_unlockRoutine, newRoutine_l));
 				}
 				else
 				{
-					UnlockRoutine newRoutine_l {UnlockRoutineState::NONE, Vector(), 0, false};
+					UnlockRoutine newRoutine_l {UnlockRoutineState::NONE, Vector(), 0, 0, false};
 					step_p.addSteppable(new CommandMoveUnlockRoutineStep(_handleCommand, data_l->_unlockRoutine, newRoutine_l));
 				}
 			}
 		}
 		// progress => update position and reset count
-		if(sqLastDiff_l >= 0.5)
+		if(sqLastDiff_l >= Fixed(500000, true))
 		{
 			step_p.addSteppable(new CommandUpdateLastPosStep(_handleCommand, _source, data_l->_lastPos));
 			// reset no progress count
@@ -282,7 +297,7 @@ bool EntityMoveCommand::applyCommand(Step & step_p, State const &state_p, Comman
 		else if(data_l->_countSinceProgress == 500)
 		{
 			// no progress
-			if(sqLastDiff_l < 0.5)
+			if(sqLastDiff_l < Fixed(500000, true))
 			{
 				return true;
 			}
@@ -294,8 +309,24 @@ bool EntityMoveCommand::applyCommand(Step & step_p, State const &state_p, Comman
 
 	Logger::getDebug() << "Adding move step orig = "<<ent_l->_pos<<" target = "<<next_l<<" step speed = " << ent_l->getStepSpeed() << std::endl;
 
+	EntityMoveStep moveStep_l = createEntityMoveStep(*ent_l, next_l, ent_l->getStepSpeed());
+
+	if(startTryout_l)
+	{
+		unsigned long long stepDiff_l = step_p.getId() - data_l->_unlockRoutine._stepStartId;
+		// do a tryout move in direction of final target to see if we unlocked
+		if(stepDiff_l % 8 == 0 && !data_l->_unlockRoutine._tryout)
+		{
+			UnlockRoutine newRoutine_l = data_l->_unlockRoutine;
+			newRoutine_l._tryout = true;
+			newRoutine_l._tryoutPoint = moveStep_l._move + ent_l->_pos;
+			step_p.addSteppable(new CommandMoveUnlockRoutineStep(_handleCommand, data_l->_unlockRoutine, newRoutine_l));
+		}
+	}
+
 	// Use next waypoint as target
-	step_p.addEntityMoveStep(new EntityMoveStep(createEntityMoveStep(*ent_l, next_l, ent_l->getStepSpeed())));
+	step_p.addEntityMoveStep(new EntityMoveStep(moveStep_l));
+
 
 	return false;
 }

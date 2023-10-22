@@ -31,9 +31,15 @@ struct UnlockRoutine
 	/// @brief the target point of the unlock state
 	Vector _targetPoint;
 	/// @brief the step id when the current state was started to know when to stop it
+	unsigned long long _stepStartId = 0;
+	/// @brief the step if when to stop the current unlock routine (to avoid getting stuck)
 	unsigned long long _stepEndId = 0;
 	/// @brief true if the unlock routine is enabled right now (meaning we want to move to its target point)
 	bool _enabled = false;
+	/// @brief true when we are trying a direct move to the original destination to check if we succesfully unlocked
+	bool _tryout = false;
+	/// @brief
+	Vector _tryoutPoint = Vector(0,0);
 
 	static unsigned long MaxStepState;
 	static unsigned long SmallRange;
