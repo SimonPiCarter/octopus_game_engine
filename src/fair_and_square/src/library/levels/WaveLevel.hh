@@ -44,13 +44,5 @@ private:
 	std::function<std::vector<octopus::Steppable *>(void)> _waveStepGenerator;
 };
 
-class LoseTrigger : public octopus::OneShotTrigger
-{
-public:
-	LoseTrigger(octopus::Listener * listener_p);
-
-	virtual void trigger(octopus::State const &state_p, octopus::Step &step_p, unsigned long, octopus::TriggerData const &) const override;
-};
-
 
 #endif

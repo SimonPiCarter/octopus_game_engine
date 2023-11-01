@@ -30,6 +30,8 @@ add_library(fair_and_square_lib
 	${CMAKE_CURRENT_SOURCE_DIR}/src/library/levels/showcase/ChainingShowcase.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/library/levels/showcase/DotShowcase.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/library/levels/showcase/LifestealShowcase.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/src/library/utils/LoseTrigger.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/src/library/utils/Randomizer.cc
 )
 
 target_link_libraries(fair_and_square_lib PUBLIC octopus)

@@ -4,6 +4,8 @@
 #include <fstream>
 #include <random>
 
+#include "library/utils/LoseTrigger.hh"
+#include "library/utils/Randomizer.hh"
 #include "library/model/AnchorTrigger.hh"
 #include "library/model/ModelLoader.hh"
 #include "library/model/TimerDamage.hh"
@@ -31,23 +33,9 @@
 #include "step/trigger/TriggerSpawn.hh"
 
 using namespace octopus;
+using namespace fas;
 
 std::vector<octopus::Steppable*> defaultGenerator() { return {}; }
-
-std::string genModelName(RandomGenerator &gen_p)
-{
-	std::string model_l = "square";
-	int random_l = gen_p.roll(0, 2);
-	if(random_l==1)
-	{
-		model_l = "triangle";
-	}
-	else if(random_l==2)
-	{
-		model_l = "circle";
-	}
-	return model_l;
-}
 
 std::list<Steppable *> WaveLevelSteps(Library &lib_p, RandomGenerator &rand_p, unsigned long waveCount_p, unsigned long stepCount_p, unsigned long player_p, unsigned long worldSize_p,
 	std::function<std::vector<octopus::Steppable *>(void)> waveStepGenerator_p)
@@ -214,11 +202,4 @@ void WaveSpawn::trigger(State const &state_p, Step &step_p, unsigned long, octop
 	{
 		step_p.addSteppable(new StateWinStep(state_p.isOver(), state_p.hasWinningTeam(), state_p.getWinningTeam(), 0));
 	}
-}
-
-LoseTrigger::LoseTrigger(Listener * listener_p) : OneShotTrigger({listener_p}) {}
-
-void LoseTrigger::trigger(State const &state_p, Step &step_p, unsigned long, octopus::TriggerData const &) const
-{
-	step_p.addSteppable(new StateWinStep(state_p.isOver(), state_p.hasWinningTeam(), state_p.getWinningTeam(), 1));
 }
