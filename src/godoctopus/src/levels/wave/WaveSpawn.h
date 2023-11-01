@@ -26,8 +26,8 @@ std::vector<octopus::Steppable*> defaultGenerator();
 
 struct WaveParam
 {
-	/// @brief point where the unit will spawn
-	octopus::Vector spawnPoint;
+	/// @brief points where the unit will spawn
+	std::vector<octopus::Vector> spawnPoints;
 	/// @brief point where the unit will attack
 	octopus::Vector targetPoint;
 	/// @brief limits to remove
