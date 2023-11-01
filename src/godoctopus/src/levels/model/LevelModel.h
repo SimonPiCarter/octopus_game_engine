@@ -71,6 +71,7 @@ public:
     ////////////////
     std::list<octopus::Steppable *> generateLevelSteps(octopus::Library const &lib_p, unsigned long playerCount_p);
 
+	std::vector<GodotEntity> const &getEntities() const { return _entities; }
 private:
     /// @brief players to spawn
     std::vector<GodotPlayer> _players;

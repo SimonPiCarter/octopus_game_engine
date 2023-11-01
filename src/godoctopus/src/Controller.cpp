@@ -44,6 +44,8 @@
 #include "levels/LevelTestAnchor.h"
 #include "levels/LevelTestModelLoader.h"
 #include "levels/missions/mission1/Mission1.h"
+#include "levels/demo/DemoLevel.h"
+#include "levels/model/utils/EntitySpawner.h"
 
 namespace godot {
 
@@ -215,6 +217,42 @@ void Controller::load_hero_siege_level(int seed_p, int player_count_p)
 	writeLevelId(*_autoSaveFile, LEVEL_ID_HEROSIEGE, 50);
 	_currentLevel = LEVEL_ID_HEROSIEGE;
 	_headerWriter = std::bind(hero_siege::writeHeroSiegeLevelHeader, std::placeholders::_1, hero_siege::HeroSiegeLevelHeader{seed_p, (unsigned long)player_count_p});
+	_headerWriter(*_autoSaveFile);
+	init(commands_l, spawners_l, false, 50, _autoSaveFile);
+}
+
+void Controller::load_demo_level(int seed_p, WavePattern const * wavePattern_p, godot::LevelModel *level_model_p, int player_count_p)
+{
+	assert(level_model_p);
+	std::vector<GodotEntityInfo> info_l = getEntityInfo(level_model_p->getEntities(), player_count_p);
+
+	delete _rand;
+	_rand = new octopus::RandomGenerator(seed_p);
+	std::vector<WavePoolInfo> wavesInfo_l;
+	// add all patterns
+	for(WavePool const * pool_l : wavePattern_p->getWavePools())
+	{
+		wavesInfo_l.push_back(convertToInfo(pool_l));
+	}
+
+	if(wavePattern_p->getPlayer() < 0)
+	{
+		UtilityFunctions::push_error("Cannot load demo level because player index < 0");
+		return;
+	}
+	unsigned long player_l = wavePattern_p->getPlayer();
+
+	std::list<octopus::Steppable *> spawners_l = {};
+	std::list<octopus::Steppable *> levelsteps_l = demo::DemoLevelSteps(_lib, *_rand, wavesInfo_l, player_l, player_count_p, info_l);
+	spawners_l = level_model_p->generateLevelSteps(_lib, 0);
+	spawners_l.splice(spawners_l.end(), levelsteps_l);
+
+	std::list<octopus::Command *> commands_l = demo::DemoLevelCommands(_lib, *_rand, player_count_p);
+	// enable auto save
+	newAutoSaveFile();
+	writeLevelId(*_autoSaveFile, LEVEL_ID_LEVEL_DEMO, 50);
+	_currentLevel = LEVEL_ID_LEVEL_DEMO;
+	_headerWriter = std::bind(level2::writeWaveLevelHeader, std::placeholders::_1, level2::WaveLevelHeader{seed_p, player_l, wavesInfo_l});
 	_headerWriter(*_autoSaveFile);
 	init(commands_l, spawners_l, false, 50, _autoSaveFile);
 }
@@ -437,6 +475,13 @@ void Controller::replay_level(String const &filename_p, bool replay_mode_p, godo
 		duellevel::DuelLevelHeader header_l;
 		levelInfo_l = duellevel::readLevelHeader(_lib, file_l, _rand, header_l);
 		_headerWriter = std::bind(duellevel::writeLevelHeader, std::placeholders::_1, header_l);
+		divOptionHandler_l = true;
+	}
+	else if(levelId_l == LEVEL_ID_LEVEL_DEMO)
+	{
+		demo::DemoLevelHeader header_l;
+		levelInfo_l = demo::readDemoLevelHeader(_lib, file_l, _rand, header_l);
+		_headerWriter = std::bind(demo::writeDemoLevelHeader, std::placeholders::_1, header_l);
 		divOptionHandler_l = true;
 	}
 	else
@@ -1332,6 +1377,7 @@ void Controller::_bind_methods()
 	ClassDB::bind_method(D_METHOD("load_mission_1", "seed", "player_count"), &Controller::load_mission_1);
 	ClassDB::bind_method(D_METHOD("load_minimal_model"), &Controller::load_minimal_model);
 	ClassDB::bind_method(D_METHOD("load_hero_siege_level", "seed", "nb_players"), &Controller::load_hero_siege_level);
+	ClassDB::bind_method(D_METHOD("load_demo_level", "seed", "wave_pattern", "level_model", "player_count"), &Controller::load_demo_level);
 	ClassDB::bind_method(D_METHOD("load_level1", "seed", "nb_wave"), &Controller::load_level1);
 	ClassDB::bind_method(D_METHOD("load_level2", "seed", "wave_pattern", "nb_players"), &Controller::load_level2);
 	ClassDB::bind_method(D_METHOD("load_level_test_anchor", "seed"), &Controller::load_level_test_anchor);
