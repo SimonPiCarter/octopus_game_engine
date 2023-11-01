@@ -166,19 +166,27 @@ bool EntityMoveCommand::applyCommand(Step & step_p, State const &state_p, Comman
 		{
 			UnlockRoutine newRoutine_l = data_l->_unlockRoutine;
 			newRoutine_l._enabled = false;
+			newRoutine_l._tryout = false;
 			step_p.addSteppable(new CommandMoveUnlockRoutineStep(_handleCommand, data_l->_unlockRoutine, newRoutine_l));
 			unlock_l = false;
 		}
 		else
 		{
-			unsigned long long stepDiff_l = step_p.getId() - data_l->_unlockRoutine._stepStartId;
-			// do a tryout move in direction of final target to see if we unlocked
-			if(stepDiff_l % 8 == 0 && !data_l->_unlockRoutine._tryout)
-			{
-				startTryout_l = true;
-				step_p.addSteppable(new CommandUpdateLastPosStep(_handleCommand, _source, data_l->_lastPos));
-			}
-			else
+			// unsigned long long stepDiff_l = step_p.getId() - data_l->_unlockRoutine._stepStartId;
+			// // do a tryout move in direction of final target to see if we unlocked
+			// if(stepDiff_l % 8 == 0 && !data_l->_unlockRoutine._tryout)
+			// {
+			// 	startTryout_l = true;
+			// 	step_p.addSteppable(new CommandUpdateLastPosStep(_handleCommand, _source, data_l->_lastPos));
+			// }
+			// else if(data_l->_unlockRoutine._tryout)
+			// {
+			// 	UnlockRoutine newRoutine_l = data_l->_unlockRoutine;
+			// 	newRoutine_l._tryout = false;
+			// 	step_p.addSteppable(new CommandMoveUnlockRoutineStep(_handleCommand, data_l->_unlockRoutine, newRoutine_l));
+			// 	next_l = data_l->_unlockRoutine._targetPoint;
+			// }
+			// else
 			{
 				next_l = data_l->_unlockRoutine._targetPoint;
 			}
