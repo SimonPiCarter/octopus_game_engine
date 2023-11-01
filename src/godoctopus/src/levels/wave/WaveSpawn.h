@@ -9,7 +9,7 @@
 #include "utils/RandomGenerator.hh"
 #include "utils/Vector.hh"
 
-#include "wave/WaveUnitCount.h"
+#include "WaveUnitCount.h"
 
 namespace octopus
 {
@@ -20,8 +20,6 @@ namespace octopus
 } // namespace octopus
 
 namespace godot
-{
-namespace level2
 {
 
 std::vector<octopus::Steppable*> defaultGenerator();
@@ -75,7 +73,6 @@ private:
 	unsigned long _winner;
 };
 
-} // namespace level2
 } // namespace godot
 
 

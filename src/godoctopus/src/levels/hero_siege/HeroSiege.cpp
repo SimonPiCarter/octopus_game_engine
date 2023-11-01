@@ -5,6 +5,8 @@
 #include <random>
 
 // fas
+#include "library/utils/Randomizer.hh"
+#include "library/utils/LoseTrigger.hh"
 #include "library/model/AnchorTrigger.hh"
 #include "library/model/ModelLoader.hh"
 #include "library/model/TimerDamage.hh"
@@ -42,6 +44,7 @@
 #include "controller/step/DialogStep.h"
 
 using namespace octopus;
+using namespace fas;
 
 namespace godot
 {
@@ -203,19 +206,6 @@ std::pair<std::list<Steppable *>, std::list<Command *> > readHeroSiegeLevelHeade
 	pair_l.first = HeroSiegeLevelSteps(lib_p, *rand_p, header_r.playerCount);
 	pair_l.second = HeroSiegeLevelCommands(lib_p, *rand_p, header_r.playerCount);
 	return pair_l;
-}
-
-/////////////////////////////////////////////
-/////////////////////////////////////////////
-/// 				Triggers			  ///
-/////////////////////////////////////////////
-/////////////////////////////////////////////
-
-LoseTrigger::LoseTrigger(Listener * listener_p) : OneShotTrigger({listener_p}) {}
-
-void LoseTrigger::trigger(State const &state_p, Step &step_p, unsigned long, TriggerData const &) const
-{
-	step_p.addSteppable(new StateWinStep(state_p.isOver(), state_p.hasWinningTeam(), state_p.getWinningTeam(), 1));
 }
 
 } // namespace hero_siege

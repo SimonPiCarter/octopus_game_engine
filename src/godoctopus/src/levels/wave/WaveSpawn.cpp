@@ -14,13 +14,10 @@
 // godot
 #include "controller/step/WaveStep.h"
 #include "controller/step/DialogStep.h"
-#include "UtilsLevel2.h"
 
 using namespace octopus;
 
 namespace godot
-{
-namespace level2
 {
 
 std::vector<octopus::Steppable*> defaultGenerator() { return {new WaveStep()}; }
@@ -109,5 +106,4 @@ void WinTrigger::trigger(octopus::State const &state_p, octopus::Step &step_p, u
 	step_p.addSteppable(new StateWinStep(state_p.isOver(), state_p.hasWinningTeam(), state_p.getWinningTeam(), _winner));
 }
 
-} // namespace level2
 } // namespace godot

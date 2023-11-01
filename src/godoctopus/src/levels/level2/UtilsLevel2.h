@@ -19,8 +19,6 @@ namespace godot
 namespace level2
 {
 
-std::string genModelName(octopus::RandomGenerator &gen_p);
-
 std::list<octopus::Steppable *> createWallSpawners(octopus::Library &lib_p, unsigned long xStart, unsigned long x, unsigned long y,
 	unsigned long startYGate, unsigned long endYGate,
 	octopus::Handle &handle_p, std::vector<unsigned long> const &players_p);

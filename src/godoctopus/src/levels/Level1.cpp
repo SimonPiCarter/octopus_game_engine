@@ -5,6 +5,8 @@
 #include <random>
 
 // fas
+#include "library/utils/Randomizer.hh"
+#include "library/utils/LoseTrigger.hh"
 #include "library/model/AnchorTrigger.hh"
 #include "library/model/ModelLoader.hh"
 #include "library/model/TimerDamage.hh"
@@ -41,6 +43,7 @@
 #include "controller/step/WaveStep.h"
 
 using namespace octopus;
+using namespace fas;
 
 namespace godot
 {
@@ -295,13 +298,6 @@ void WaveSpawn::trigger(State const &state_p, Step &step_p, unsigned long, octop
 	{
 		step_p.addSteppable(new StateWinStep(state_p.isOver(), state_p.hasWinningTeam(), state_p.getWinningTeam(), 0));
 	}
-}
-
-LoseTrigger::LoseTrigger(Listener * listener_p) : OneShotTrigger({listener_p}) {}
-
-void LoseTrigger::trigger(State const &state_p, Step &step_p, unsigned long, octopus::TriggerData const &) const
-{
-	step_p.addSteppable(new StateWinStep(state_p.isOver(), state_p.hasWinningTeam(), state_p.getWinningTeam(), 1));
 }
 
 } // namespace level1

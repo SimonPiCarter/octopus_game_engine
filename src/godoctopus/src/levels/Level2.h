@@ -8,7 +8,7 @@
 #include "controller/trigger/Trigger.hh"
 #include "utils/RandomGenerator.hh"
 
-#include "level2/wave/WaveUnitCount.h"
+#include "wave/WaveUnitCount.h"
 
 // THIS IS THE DEMO LEVEL
 #define LEVEL_ID_LEVEL_2 1001
@@ -49,14 +49,6 @@ void readWaveLevelHeader(std::ifstream &file_p, WaveLevelHeader &header_r);
 /// @brief read header for classic wave level and return a pair of steppable and command (warning delete and reset rand_p using the written seed)
 std::pair<std::list<octopus::Steppable *>, std::list<octopus::Command *> > readWaveLevelHeader(octopus::Library &lib_p, std::ifstream &file_p,
 	octopus::RandomGenerator * &rand_p, WaveLevelHeader &header_r);
-
-class LoseTrigger : public octopus::OneShotTrigger
-{
-public:
-	LoseTrigger(octopus::Listener * listener_p);
-
-	virtual void trigger(octopus::State const &state_p, octopus::Step &step_p, unsigned long, octopus::TriggerData const &) const override;
-};
 
 } // namespace level2
 } // namespace godot

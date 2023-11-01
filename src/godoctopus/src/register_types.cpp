@@ -4,7 +4,7 @@
 #include "Model.h"
 #include "ModelUpgrade.h"
 #include "levels/model/LevelModel.h"
-#include "levels/level2/wave/Wave.h"
+#include "levels/wave/Wave.h"
 #include "drawer/Drawer.h"
 
 #include <gdextension_interface.h>

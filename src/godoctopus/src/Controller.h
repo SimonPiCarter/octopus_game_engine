@@ -16,7 +16,7 @@
 #include "option/Option.h"
 #include "option/OptionManager.h"
 #include "levels/model/LevelModel.h"
-#include "levels/level2/wave/Wave.h"
+#include "levels/wave/Wave.h"
 #include "Entity.h"
 
 namespace octopus
