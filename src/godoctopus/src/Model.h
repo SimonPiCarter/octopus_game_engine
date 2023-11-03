@@ -58,6 +58,7 @@ public:
     // damage
     void set_attack_info(int damage_p, int armor_p, float range_p, int windup_p, int fullReload_p);
     void add_bonus_damage(String const &model_p, int bonus_p);
+	void set_projectile(bool projectile_p);
     // attack_modifiers
     void set_aoe_modifier(float ratio_p, float range_p, bool friendlyFire_p);
     void set_chaining_modifier(int delay_p, int chains_p, float ratio_p, float range_p);

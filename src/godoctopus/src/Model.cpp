@@ -109,6 +109,11 @@ void Model::add_bonus_damage(String const &model_p, int bonus_p)
     _model->_bonusDamage[modelType_l] = bonus_p;
 }
 
+void Model::set_projectile(bool projectile_p)
+{
+    _model->_projectile = projectile_p;
+}
+
 void Model::set_aoe_modifier(float ratio_p, float range_p, bool friendlyFire_p)
 {
     _model->_defaultAttackMod = octopus::AoEModifier(ratio_p, range_p, friendlyFire_p);
@@ -279,6 +284,7 @@ void Model::_bind_methods()
     ClassDB::bind_method(D_METHOD("add_cost", "res", "qty"), &Model::add_cost);
     ClassDB::bind_method(D_METHOD("set_attack_info", "damage", "armor", "range", "windup", "fullReload"), &Model::set_attack_info);
     ClassDB::bind_method(D_METHOD("add_bonus_damage", "model", "bonus"), &Model::add_bonus_damage);
+    ClassDB::bind_method(D_METHOD("set_projectile", "projectile"), &Model::set_projectile);
 
     ClassDB::bind_method(D_METHOD("set_aoe_modifier", "ratio", "range", "friendlyFire"), &Model::set_aoe_modifier);
     ClassDB::bind_method(D_METHOD("set_chaining_modifier", "delay", "chains", "ratio", "range"), &Model::set_chaining_modifier);
