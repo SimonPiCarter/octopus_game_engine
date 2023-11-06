@@ -1,5 +1,7 @@
 #include "Projectile.hh"
 
+#include "state/State.hh"
+#include "state/entity/Entity.hh"
 #include "step/Step.hh"
 #include "logger/Logger.hh"
 
@@ -26,13 +28,18 @@ void tickProjectile(Step &step_p, Projectile const &proj_p, State const &state_p
 		return;
 	}
 	static Fixed range_check(Fixed::OneAsLong()/10, true);
+
+	Vector target_l = proj_p._posTarget;
+	if(state_p.isEntityAlive(proj_p._target))
+	{
+		target_l = state_p.getLoseEntity(proj_p._target.index)->_pos;
+	}
 	// if in range generate impact steps
-	/// @todo use dynamic pos
-	if(square_length(proj_p._pos-proj_p._posTarget) < range_check*range_check)
+	if(square_length(proj_p._pos-target_l) < range_check*range_check)
 	{
 		// this cannot be parallelized
 		AttackModifierData attackModData_l {proj_p._source, proj_p._target,
-			proj_p._posTarget,
+			target_l,
 			proj_p._sourceTeam,
 			proj_p._baseDamage,
 			proj_p._bonusDamage
@@ -43,7 +50,7 @@ void tickProjectile(Step &step_p, Projectile const &proj_p, State const &state_p
 	// else move to target
 	else
 	{
-		step_p.getProjectileMoveStep().setMove(proj_p._index, getMove(proj_p._pos, proj_p._posTarget, proj_p._speed));
+		step_p.getProjectileMoveStep().setMove(proj_p._index, getMove(proj_p._pos, target_l, proj_p._speed));
 	}
 }
 
