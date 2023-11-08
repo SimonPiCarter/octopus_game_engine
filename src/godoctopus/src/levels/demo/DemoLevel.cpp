@@ -118,7 +118,7 @@ std::list<Steppable *> DemoLevelSteps(
 }
 
 AreaSpawnerCommand * createResourceNodeSpawnCommmand(Library &lib_p, RandomGenerator &rand_p, unsigned long x, unsigned long y, unsigned long size,
-	size_t nbRes_p, size_t nbAnchorSpot_p, size_t nbUnits_p, size_t qtyIrium_p)
+	size_t nbRes_p, size_t nbAnchorSpot_p, size_t nbUnits_p, size_t qtyIrium_p, size_t nbDoubleSquares_p, size_t nbQuadSquares_p, size_t nbUSquares_p)
 {
 	std::list<AreaSpawn> spawners_l;
 
@@ -175,6 +175,24 @@ AreaSpawnerCommand * createResourceNodeSpawnCommmand(Library &lib_p, RandomGener
 			unit_l->_player = 1;
 			area_l.entities.emplace_back(unit_l, 1);
 		}
+		for(unsigned long c = 0 ; c < nbDoubleSquares_p ; ++ c)
+		{
+			Unit *unit_l = new Unit({0, 0}, false, lib_p.getUnitModel("double_square_survival"));
+			unit_l->_player = 1;
+			area_l.entities.emplace_back(unit_l, 1);
+		}
+		for(unsigned long c = 0 ; c < nbQuadSquares_p ; ++ c)
+		{
+			Unit *unit_l = new Unit({0, 0}, false, lib_p.getUnitModel("quad_square_survival"));
+			unit_l->_player = 1;
+			area_l.entities.emplace_back(unit_l, 1);
+		}
+		for(unsigned long c = 0 ; c < nbUSquares_p ; ++ c)
+		{
+			Unit *unit_l = new Unit({0, 0}, false, lib_p.getUnitModel("U_square_survival"));
+			unit_l->_player = 1;
+			area_l.entities.emplace_back(unit_l, 1);
+		}
 		spawners_l.push_back(area_l);
 	}
 
@@ -186,25 +204,25 @@ std::list<Command *> DemoLevelCommands(Library &lib_p, RandomGenerator &rand_p, 
 	// createResourceNodeSpawnCommmand(lib, rand, x, y, size, nb res, nb anchor, nb units, qty irium)
 	std::list<Command *> commands_l {
 		// cirle 1
-		createResourceNodeSpawnCommmand(lib_p, rand_p, 154, 91, 18, 1*playerCount_p, 1*playerCount_p, 10, 500),
-		createResourceNodeSpawnCommmand(lib_p, rand_p, 108, 64, 19, 1*playerCount_p, 1*playerCount_p, 10, 500),
-		createResourceNodeSpawnCommmand(lib_p, rand_p, 71, 104, 14, 1*playerCount_p, 1*playerCount_p, 10, 500),
-		createResourceNodeSpawnCommmand(lib_p, rand_p, 108, 144, 18, 1*playerCount_p, 1*playerCount_p, 10, 500),
+		createResourceNodeSpawnCommmand(lib_p, rand_p, 154, 91, 18, 1*playerCount_p, 1*playerCount_p, 10, 500, 0, 0, 0),
+		createResourceNodeSpawnCommmand(lib_p, rand_p, 108, 64, 19, 1*playerCount_p, 1*playerCount_p, 10, 500, 0, 0, 0),
+		createResourceNodeSpawnCommmand(lib_p, rand_p, 71, 104, 14, 1*playerCount_p, 1*playerCount_p, 10, 500, 0, 0, 0),
+		createResourceNodeSpawnCommmand(lib_p, rand_p, 108, 144, 18, 1*playerCount_p, 1*playerCount_p, 10, 500, 0, 0, 0),
 		// cirle 2
-		createResourceNodeSpawnCommmand(lib_p, rand_p, 44, 147, 22, 1*playerCount_p, 1*playerCount_p, 20, 1000),
-		createResourceNodeSpawnCommmand(lib_p, rand_p, 155, 170, 22, 1*playerCount_p, 1*playerCount_p, 20, 1000),
-		createResourceNodeSpawnCommmand(lib_p, rand_p, 162, 50, 21, 1*playerCount_p, 1*playerCount_p, 20, 1000),
-		createResourceNodeSpawnCommmand(lib_p, rand_p, 56, 60, 23, 1*playerCount_p, 1*playerCount_p, 20, 1000),
+		createResourceNodeSpawnCommmand(lib_p, rand_p, 44, 147, 22, 1*playerCount_p, 1*playerCount_p, 20, 1000, 0, 5, 0),
+		createResourceNodeSpawnCommmand(lib_p, rand_p, 155, 170, 22, 1*playerCount_p, 1*playerCount_p, 20, 1000, 0, 5, 0),
+		createResourceNodeSpawnCommmand(lib_p, rand_p, 162, 50, 21, 1*playerCount_p, 1*playerCount_p, 20, 1000, 0, 5, 0),
+		createResourceNodeSpawnCommmand(lib_p, rand_p, 56, 60, 23, 1*playerCount_p, 1*playerCount_p, 20, 1000, 0, 5, 0),
 		// cirle 3
-		createResourceNodeSpawnCommmand(lib_p, rand_p, 102, 205, 27, 1*playerCount_p, 1*playerCount_p, 50, 1000),
-		createResourceNodeSpawnCommmand(lib_p, rand_p, 9, 101, 22, 1*playerCount_p, 1*playerCount_p, 50, 1000),
-		createResourceNodeSpawnCommmand(lib_p, rand_p, 106, 3, 28, 1*playerCount_p, 1*playerCount_p, 50, 1000),
-		createResourceNodeSpawnCommmand(lib_p, rand_p, 206, 115, 32, 1*playerCount_p, 1*playerCount_p, 50, 1000),
+		createResourceNodeSpawnCommmand(lib_p, rand_p, 102, 205, 27, 1*playerCount_p, 1*playerCount_p, 20, 1000, 5, 10, 0),
+		createResourceNodeSpawnCommmand(lib_p, rand_p, 9, 101, 22, 1*playerCount_p, 1*playerCount_p, 20, 1000, 5, 10, 0),
+		createResourceNodeSpawnCommmand(lib_p, rand_p, 106, 3, 28, 1*playerCount_p, 1*playerCount_p, 20, 1000, 5, 10, 0),
+		createResourceNodeSpawnCommmand(lib_p, rand_p, 206, 115, 32, 1*playerCount_p, 1*playerCount_p, 20, 1000, 5, 10, 0),
 		// cirle 4
-		createResourceNodeSpawnCommmand(lib_p, rand_p, 207, 211, 26, 2*playerCount_p, 1*playerCount_p, 50, 2000),
-		createResourceNodeSpawnCommmand(lib_p, rand_p, 16, 207, 34, 2*playerCount_p, 1*playerCount_p, 50, 2000),
-		createResourceNodeSpawnCommmand(lib_p, rand_p, 6, 4, 25, 2*playerCount_p, 1*playerCount_p, 50, 2000),
-		createResourceNodeSpawnCommmand(lib_p, rand_p, 209, 12, 31, 2*playerCount_p, 1*playerCount_p, 50, 2000),
+		createResourceNodeSpawnCommmand(lib_p, rand_p, 207, 211, 26, 2*playerCount_p, 1*playerCount_p, 30, 2000, 5, 10, 3),
+		createResourceNodeSpawnCommmand(lib_p, rand_p, 16, 207, 34, 2*playerCount_p, 1*playerCount_p, 30, 2000, 5, 10, 3),
+		createResourceNodeSpawnCommmand(lib_p, rand_p, 6, 4, 25, 2*playerCount_p, 1*playerCount_p, 30, 2000, 5, 10, 3),
+		createResourceNodeSpawnCommmand(lib_p, rand_p, 209, 12, 31, 2*playerCount_p, 1*playerCount_p, 30, 2000, 5, 10, 3),
 	};
 
 	return commands_l;
