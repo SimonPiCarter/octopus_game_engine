@@ -44,6 +44,7 @@
 #include "levels/LevelTestAnchor.h"
 #include "levels/LevelTestModelLoader.h"
 #include "levels/missions/mission1/Mission1.h"
+#include "levels/missions/mission2/Mission2.h"
 #include "levels/demo/DemoLevel.h"
 #include "levels/model/utils/EntitySpawner.h"
 
@@ -193,8 +194,29 @@ void Controller::load_lifesteal_level(int size_p)
 
 void Controller::load_mission_1(int seed_p, int player_count_p)
 {
+	delete _rand;
+	_rand = new octopus::RandomGenerator(seed_p);
+
 	std::list<octopus::Steppable *> spawners_l = mission::Mission1Steps(_lib, *_rand, player_count_p);
 	std::list<octopus::Command *> commands_l = mission::Mission1Commands(_lib, *_rand, player_count_p);
+	init(commands_l, spawners_l);
+}
+
+void Controller::load_mission_2(int seed_p, godot::LevelModel *level_model_p, int player_count_p)
+{
+	delete _rand;
+	_rand = new octopus::RandomGenerator(seed_p);
+
+	assert(level_model_p);
+	std::vector<GodotEntityInfo> info_l = getEntityInfo(level_model_p->getEntities(), player_count_p);
+
+	std::list<octopus::Steppable *> spawners_l = {};
+	std::list<octopus::Steppable *> levelsteps_l = mission::Mission2Steps(_lib, *_rand, player_count_p, info_l);
+	spawners_l = level_model_p->generateLevelSteps(_lib, player_count_p);
+	spawners_l.splice(spawners_l.end(), levelsteps_l);
+
+	std::list<octopus::Command *> commands_l = mission::Mission2Commands(_lib, *_rand, player_count_p);
+
 	init(commands_l, spawners_l);
 }
 
@@ -244,7 +266,7 @@ void Controller::load_demo_level(int seed_p, WavePattern const * wavePattern_p, 
 
 	std::list<octopus::Steppable *> spawners_l = {};
 	std::list<octopus::Steppable *> levelsteps_l = demo::DemoLevelSteps(_lib, *_rand, wavesInfo_l, player_l, player_count_p, info_l);
-	spawners_l = level_model_p->generateLevelSteps(_lib, 0);
+	spawners_l = level_model_p->generateLevelSteps(_lib, player_count_p);
 	spawners_l.splice(spawners_l.end(), levelsteps_l);
 
 	std::list<octopus::Command *> commands_l = demo::DemoLevelCommands(_lib, *_rand, player_count_p);
@@ -1375,6 +1397,7 @@ void Controller::_bind_methods()
 	ClassDB::bind_method(D_METHOD("load_dot_level", "size"), &Controller::load_dot_level);
 	ClassDB::bind_method(D_METHOD("load_lifesteal_level", "size"), &Controller::load_lifesteal_level);
 	ClassDB::bind_method(D_METHOD("load_mission_1", "seed", "player_count"), &Controller::load_mission_1);
+	ClassDB::bind_method(D_METHOD("load_mission_2", "seed", "level_model", "player_count"), &Controller::load_mission_2);
 	ClassDB::bind_method(D_METHOD("load_minimal_model"), &Controller::load_minimal_model);
 	ClassDB::bind_method(D_METHOD("load_hero_siege_level", "seed", "nb_players"), &Controller::load_hero_siege_level);
 	ClassDB::bind_method(D_METHOD("load_demo_level", "seed", "wave_pattern", "level_model", "player_count"), &Controller::load_demo_level);
