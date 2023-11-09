@@ -11,6 +11,10 @@ namespace octopus
 
 bool TimedBuff::isApplying(State const &state_p, Entity const &ent_p) const
 {
+	if(_attackMod)
+	{
+		return ent_p._model._isUnit && std::holds_alternative<NoModifier>(ent_p._attackMod);
+	}
 	if(_type == Type::Speed
 	|| _type == Type::FullReload
 	|| _type == Type::Damage
@@ -51,6 +55,11 @@ bool TimedBuff::isApplying(State const &state_p, Entity const &source_p, Entity 
 
 void TimedBuff::apply(Entity &ent_p) const
 {
+	if(_attackMod && std::holds_alternative<NoModifier>(ent_p._attackMod))
+	{
+		ent_p._attackMod = *_attackMod;
+		return;
+	}
 	switch(_type)
 	{
 		case Type::Speed:
@@ -99,6 +108,11 @@ void TimedBuff::apply(Entity &ent_p) const
 
 void TimedBuff::revert(Entity &ent_p) const
 {
+	if(_attackMod)
+	{
+		ent_p._attackMod = NoModifier();
+		return;
+	}
 	switch(_type)
 	{
 		case Type::Speed:
