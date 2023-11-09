@@ -229,7 +229,7 @@ void writeMission1Header(std::ofstream &file_p, Mission1Header const &header_p)
 }
 
 /// @brief read header for classic arena level and return a pair of steppable and command
-std::pair<std::list<octopus::Steppable *>, std::list<octopus::Command *> > readWaveLevelHeader(octopus::Library &lib_p, std::ifstream &file_p,
+std::pair<std::list<octopus::Steppable *>, std::list<octopus::Command *> > readMission1Header(octopus::Library &lib_p, std::ifstream &file_p,
 	octopus::RandomGenerator * &rand_p, Mission1Header &header_r)
 {
     file_p.read((char*)&header_r.seed, sizeof(header_r.seed));

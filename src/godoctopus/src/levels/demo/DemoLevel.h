@@ -8,6 +8,7 @@
 #include "utils/RandomGenerator.hh"
 
 #include "levels/wave/WaveUnitCount.h"
+#include "levels/model/utils/EntitySpawner.h"
 
 // THIS IS THE REAL DEMO LEVEL
 #define LEVEL_ID_LEVEL_DEMO 1999
@@ -23,8 +24,6 @@ namespace octopus
 
 namespace godot
 {
-
-struct GodotEntityInfo;
 
 namespace demo
 {
