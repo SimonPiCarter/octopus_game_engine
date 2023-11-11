@@ -27,6 +27,7 @@
 #include "step/command/CommandQueueStep.hh"
 #include "step/command/flying/FlyingCommandSpawnStep.hh"
 #include "step/custom/CustomStep.hh"
+#include "step/player/PlayerAddBuildingModel.hh"
 #include "step/player/PlayerSpawnStep.hh"
 #include "step/player/PlayerSpendResourceStep.hh"
 #include "step/state/StateTemplePositionAddStep.hh"
@@ -81,12 +82,20 @@ std::list<Steppable *> DemoLevelSteps(
 		waves_l.push_back(pool_l);
 	}
 
+	std::vector<unsigned long> handles_l = getHandles(entityInfo_p, 0, "command_center");
+	octopus::Vector waveTarget_l(124, 116);
+	if(handles_l.size() == 1)
+	{
+		GodotEntityInfo const &cc_l = entityInfo_p[handles_l[0]];
+		waveTarget_l = octopus::Vector(cc_l.x, cc_l.y);
+	}
+
 	std::list<WaveParam> params_l;
 	for(size_t i = 0 ; i < waves_l.size() ; ++ i)
 	{
 		params_l.push_back({
 			{octopus::Vector(10,10), octopus::Vector(240,10), octopus::Vector(10,240), octopus::Vector(240,240)},
-			octopus::Vector(125, 125),		// target
+			waveTarget_l,					// target
 			0, 0, 0,						// position constraint to remove (none here)
 			waves_l[i]						// wave options to be spawned
 		});
@@ -102,7 +111,13 @@ std::list<Steppable *> DemoLevelSteps(
 	Handle flyingCommandHandle_l(0);
 	for(unsigned long i = 0 ; i < playerCount_p ; ++ i)
 	{
-		unsigned long playerIdx_l = 1+i;
+		unsigned long playerIdx_l = 2+i;
+
+		spawners_l.push_back(new PlayerAddBuildingModel(playerIdx_l, lib_p.getBuildingModel("barrack_square")));
+		spawners_l.push_back(new PlayerAddBuildingModel(playerIdx_l, lib_p.getBuildingModel("barrack_circle")));
+		spawners_l.push_back(new PlayerAddBuildingModel(playerIdx_l, lib_p.getBuildingModel("barrack_triangle")));
+		spawners_l.push_back(new PlayerAddBuildingModel(playerIdx_l, lib_p.getBuildingModel("deposit")));
+		spawners_l.push_back(new PlayerAddBuildingModel(playerIdx_l, lib_p.getBuildingModel("anchor")));
 
 		fas::addBuildingPlayer(spawners_l, playerIdx_l, fas::allDivinities(), lib_p);
 		spawners_l.push_back(new TriggerSpawn(new LoseTrigger(new ListenerEntityModelDied(&lib_p.getBuildingModel("command_center"), playerIdx_l))));
@@ -110,8 +125,9 @@ std::list<Steppable *> DemoLevelSteps(
 		std::vector<unsigned long> handles_l = getHandles(entityInfo_p, playerIdx_l, "command_center");
 		for(unsigned long ccHandle_l : handles_l)
 		{
-			spawners_l.push_back(new FlyingCommandSpawnStep(new TimerDamage(flyingCommandHandle_l++, 100, 0, 0, "Anchor", Handle(ccHandle_l))));
+			spawners_l.push_back(new FlyingCommandSpawnStep(new TimerDamage(flyingCommandHandle_l++, 100, 0, playerIdx_l, "Anchor", Handle(ccHandle_l))));
 		}
+		spawners_l.push_back(new TriggerSpawn(new AnchorTrigger(lib_p, rand_p, 150, playerIdx_l)));
 	}
 
 	return spawners_l;
@@ -148,7 +164,7 @@ AreaSpawnerCommand * createResourceNodeSpawnCommmand(Library &lib_p, RandomGener
 		area_l.y = y;
 		area_l.entities.emplace_back(new Resource(res3_l), nbRes_p);
 		area_l.entities.emplace_back(new Resource(res2_l), nbRes_p);
-		int nbTrees_l = rand_p.roll(2,5);
+		int nbTrees_l = rand_p.roll(1,2);
 		for(int i = 0 ; i < nbTrees_l ; ++ i)
 		{
 			area_l.entities.emplace_back(new Building(tree_l), nbRes_p);
