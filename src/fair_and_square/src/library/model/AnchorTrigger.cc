@@ -13,9 +13,9 @@
 #include "library/model/bonus/BuffGenerators.hh"
 #include "library/model/divinity/DivinityModelLoader.hh"
 
-AnchorTrigger::AnchorTrigger(octopus::Library const &lib_p, octopus::RandomGenerator &rand_p, double bonus_p) :
-    octopus::OnEachTrigger(new octopus::ListenerEntityModelFinished(&lib_p.getBuildingModel("anchor"), 0)),
-    _player(0),
+AnchorTrigger::AnchorTrigger(octopus::Library const &lib_p, octopus::RandomGenerator &rand_p, double bonus_p, unsigned long player_p) :
+    octopus::OnEachTrigger(new octopus::ListenerEntityModelFinished(&lib_p.getBuildingModel("anchor"), player_p)),
+    _player(player_p),
     _lib(lib_p),
     _rand(rand_p),
     _bonus(bonus_p)
