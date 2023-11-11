@@ -51,12 +51,16 @@ std::list<Steppable *> Mission2Steps(Library &lib_p, RandomGenerator &rand_p, un
 			[handle_l](State const &state_p, Step &step_p, unsigned long, TriggerData const &)
 			{
 				TimedBuff buff_l;
-				buff_l._id = "AttackSpeedDivintiy_BuffDamageConditionalTierThree";
+				buff_l._id = "Mission_AncientRune_AoE_buff";
 				buff_l._duration = 3000;
 				buff_l._attackMod = AoEModifier(0.5, 5);
-				// buff_l._type = TyppedBuff::Type::Damage;
-				// buff_l._offset = 10;
 				step_p.addSteppable(new EntityBuffStep(handle_l, buff_l));
+				TimedBuff buff2_l;
+				buff2_l._id = "Mission_AncientRune_Damage_buff";
+				buff2_l._duration = 3000;
+				buff2_l._type = TyppedBuff::Type::Damage;
+				buff2_l._offset = 20;
+				step_p.addSteppable(new EntityBuffStep(handle_l, buff2_l));
 			});
 
 			spawners_l.push_back(new TriggerSpawn(triggerBuff_l));
