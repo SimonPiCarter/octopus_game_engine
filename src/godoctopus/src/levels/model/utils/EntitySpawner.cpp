@@ -20,7 +20,7 @@ namespace godot {
 			GodotEntity const &ent_l = entities_p.at(idx_l);
 			if(ent_l.num_players_to_spawn <= playerCount_p)
 			{
-				info_l.push_back({ent_l.model, handle_l, ent_l.player});
+				info_l.push_back({ent_l.model, handle_l, ent_l.player, (unsigned long)ent_l.x, (unsigned long)ent_l.y});
 				++handle_l;
 			}
 		}

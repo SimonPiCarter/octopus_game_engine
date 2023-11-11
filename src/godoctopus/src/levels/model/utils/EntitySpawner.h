@@ -21,6 +21,8 @@ struct GodotEntityInfo
 	std::string model;
 	unsigned long handle;
 	unsigned long player;
+	unsigned long x;
+	unsigned long y;
 };
 
 /// @brief Compute handle info of all entities based on the number of player
