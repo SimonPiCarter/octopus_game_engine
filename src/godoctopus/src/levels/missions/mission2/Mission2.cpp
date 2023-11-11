@@ -16,8 +16,7 @@
 #include "step/trigger/TriggerSpawn.hh"
 
 // godot
-#include "controller/step/CameraStep.h"
-#include "controller/step/DialogStep.h"
+#include "controller/step/RuneWellPopStep.h"
 
 // missions
 #include "levels/missions/helpers/DialogTrigger.h"
@@ -36,36 +35,43 @@ std::list<Steppable *> Mission2Steps(Library &lib_p, RandomGenerator &rand_p, un
 
 	std::list<Steppable *> spawners_l;
 
-	Vector boxPos_l(10, 10);
-	Vector boxSize_l(10, 10);
 
-	for(unsigned long player_l = 0 ; player_l < 3 ; ++ player_l)
+	std::vector<unsigned long> setRuneWell_l = getHandles(entityInfo_p, 2, "rune_well");
+
+	for(unsigned long runeWellIdx_l : setRuneWell_l)
 	{
-		std::vector<unsigned long> set_l = getHandles(entityInfo_p, player_l, "chosen_square");
+		GodotEntityInfo const &runeWellInfo_l = entityInfo_p.at(runeWellIdx_l);
+		Vector boxPos_l(runeWellInfo_l.x-2, runeWellInfo_l.y-2);
+		Vector boxSize_l(4,4);
 
-		for(unsigned long handleIndex_l : set_l)
+		for(unsigned long player_l = 0 ; player_l < 3 ; ++ player_l)
 		{
-			Handle handle_l(handleIndex_l);
+			std::vector<unsigned long> set_l = getHandles(entityInfo_p, player_l, "chosen_square");
 
-			Trigger * triggerBuff_l = new OneShotFunctionTrigger({new ListenerEntityInBox({handle_l}, boxPos_l, boxSize_l)},
-			[handle_l](State const &state_p, Step &step_p, unsigned long, TriggerData const &)
+			for(unsigned long handleIndex_l : set_l)
 			{
-				TimedBuff buff_l;
-				buff_l._id = "Mission_AncientRune_AoE_buff";
-				buff_l._duration = 3000;
-				buff_l._attackMod = AoEModifier(0.5, 5);
-				step_p.addSteppable(new EntityBuffStep(handle_l, buff_l));
-				TimedBuff buff2_l;
-				buff2_l._id = "Mission_AncientRune_Damage_buff";
-				buff2_l._duration = 3000;
-				buff2_l._type = TyppedBuff::Type::Damage;
-				buff2_l._offset = 20;
-				step_p.addSteppable(new EntityBuffStep(handle_l, buff2_l));
-			});
+				Handle handle_l(handleIndex_l);
 
-			spawners_l.push_back(new TriggerSpawn(triggerBuff_l));
+				Trigger * triggerBuff_l = new OneShotFunctionTrigger({new ListenerEntityInBox({handle_l}, boxPos_l, boxSize_l)},
+				[handle_l, runeWellIdx_l, player_l](State const &state_p, Step &step_p, unsigned long, TriggerData const &)
+				{
+					TimedBuff buff_l;
+					buff_l._id = "Mission_AncientRune_AoE_buff";
+					buff_l._duration = 3000;
+					buff_l._attackMod = AoEModifier(0.5, 5);
+					step_p.addSteppable(new EntityBuffStep(handle_l, buff_l));
+					TimedBuff buff2_l;
+					buff2_l._id = "Mission_AncientRune_Damage_buff";
+					buff2_l._duration = 3000;
+					buff2_l._type = TyppedBuff::Type::Damage;
+					buff2_l._offset = 20;
+					step_p.addSteppable(new EntityBuffStep(handle_l, buff2_l));
+					step_p.addSteppable(new RuneWellPopStep(runeWellIdx_l, player_l));
+				});
+
+				spawners_l.push_back(new TriggerSpawn(triggerBuff_l));
+			}
 		}
-
 	}
 
 	return spawners_l;
