@@ -37,6 +37,7 @@
 #include "step/state/StateWinStep.hh"
 #include "step/unit/UnitHarvestStep.hh"
 
+#include "controller/step/RuneWellPopStep.h"
 
 using octopus::to_double;
 
@@ -230,6 +231,7 @@ void ControllerStepVisitor::visit(octopus::CustomStep const *steppable_p)
 	DialogStep const *dialog_l = dynamic_cast<DialogStep const *>(steppable_p);
 	CameraStep const *camera_l = dynamic_cast<CameraStep const *>(steppable_p);
 	WaveStep const *wave_l = dynamic_cast<WaveStep const *>(steppable_p);
+	RuneWellPopStep const *runeWellPopStep_l = dynamic_cast<RuneWellPopStep const *>(steppable_p);
 
 	if(impact_l)
 	{
@@ -250,6 +252,10 @@ void ControllerStepVisitor::visit(octopus::CustomStep const *steppable_p)
 	else if(wave_l)
 	{
 		_controller.emit_signal("wave");
+	}
+	else if(runeWellPopStep_l)
+	{
+		_controller.emit_signal("rune_well_pop_step", (int)runeWellPopStep_l->_wellIdx, (int)runeWellPopStep_l->_player);
 	}
 }
 
