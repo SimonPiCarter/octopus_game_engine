@@ -337,6 +337,7 @@ void writeDemoLevelHeader(std::ofstream &file_p, DemoLevelHeader const &header_p
 	file_p.write((char*)&header_p.seed, sizeof(header_p.seed));
 	file_p.write((char*)&header_p.player, sizeof(header_p.player));
 	file_p.write((char*)&header_p.difficulty, sizeof(header_p.difficulty));
+	file_p.write((char*)&header_p.player_count, sizeof(header_p.player_count));
 
 	size_t size_l = header_p.tierWaveInfo.size();
 	file_p.write((char*)&size_l, sizeof(size_l));
@@ -352,6 +353,7 @@ void readDemoLevelHeader(std::ifstream &file_p, DemoLevelHeader &header_r)
 	file_p.read((char*)&header_r.seed, sizeof(header_r.seed));
 	file_p.read((char*)&header_r.player, sizeof(header_r.player));
 	file_p.read((char*)&header_r.difficulty, sizeof(header_r.difficulty));
+	file_p.read((char*)&header_r.player_count, sizeof(header_r.player_count));
 
 	size_t size_l = 0;
 	file_p.read((char*)&size_l, sizeof(size_l));
@@ -365,16 +367,16 @@ void readDemoLevelHeader(std::ifstream &file_p, DemoLevelHeader &header_r)
 }
 
 std::pair<std::list<octopus::Steppable *>, std::list<octopus::Command *> > readDemoLevelHeader(octopus::Library &lib_p, std::ifstream &file_p,
+	std::vector<GodotEntityInfo> const &entityInfo_p,
 	octopus::RandomGenerator * &rand_p, DemoLevelHeader &header_r)
 {
-	throw std::logic_error("not supported yet");
 	readDemoLevelHeader(file_p, header_r);
 
 	delete rand_p;
 	rand_p = new octopus::RandomGenerator(header_r.seed);
 
 	std::pair<std::list<octopus::Steppable *>, std::list<octopus::Command *> > pair_l;
-	pair_l.first = DemoLevelSteps(lib_p, *rand_p, header_r.tierWaveInfo, header_r.player, 1, {}, header_r.difficulty);
+	pair_l.first = DemoLevelSteps(lib_p, *rand_p, header_r.tierWaveInfo, header_r.player, header_r.player_count, entityInfo_p, header_r.difficulty);
 	pair_l.second = DemoLevelCommands(lib_p, *rand_p, 1, header_r.difficulty);
 	return pair_l;
 }

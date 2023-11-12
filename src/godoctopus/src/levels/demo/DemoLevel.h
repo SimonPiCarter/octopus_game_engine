@@ -60,6 +60,9 @@ struct DemoLevelHeader
 	/// @brief difficulty
 	int difficulty;
 
+	/// @brief player_count
+	int player_count;
+
 	/// @brief store every tier wave info
 	std::vector<WavePoolInfo> tierWaveInfo;
 };
@@ -69,7 +72,7 @@ void writeDemoLevelHeader(std::ofstream &file_p, DemoLevelHeader const &header_p
 /// @brief read header for classic wave level
 void readDemoLevelHeader(std::ifstream &file_p, DemoLevelHeader &header_r);
 /// @brief read header for classic wave level and return a pair of steppable and command (warning delete and reset rand_p using the written seed)
-std::pair<std::list<octopus::Steppable *>, std::list<octopus::Command *> > readDemoLevelHeader(octopus::Library &lib_p, std::ifstream &file_p,
+std::pair<std::list<octopus::Steppable *>, std::list<octopus::Command *> > readDemoLevelHeader(octopus::Library &lib_p, std::ifstream &file_p, std::vector<GodotEntityInfo> const &entityInfo_p,
 	octopus::RandomGenerator * &rand_p, DemoLevelHeader &header_r);
 
 } // namespace level2

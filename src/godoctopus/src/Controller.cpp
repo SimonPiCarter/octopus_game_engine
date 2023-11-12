@@ -274,7 +274,7 @@ void Controller::load_demo_level(int seed_p, WavePattern const * wavePattern_p, 
 	newAutoSaveFile();
 	writeLevelId(*_autoSaveFile, LEVEL_ID_LEVEL_DEMO, 50);
 	_currentLevel = LEVEL_ID_LEVEL_DEMO;
-	_headerWriter = std::bind(level2::writeWaveLevelHeader, std::placeholders::_1, level2::WaveLevelHeader{seed_p, player_l, wavesInfo_l});
+	_headerWriter = std::bind(demo::writeDemoLevelHeader, std::placeholders::_1, demo::DemoLevelHeader{seed_p, player_l, difficulty_p, player_count_p, wavesInfo_l});
 	_headerWriter(*_autoSaveFile);
 	init(commands_l, spawners_l, false, 50, _autoSaveFile);
 }
@@ -501,10 +501,11 @@ void Controller::replay_level(String const &filename_p, bool replay_mode_p, godo
 	}
 	else if(levelId_l == LEVEL_ID_LEVEL_DEMO)
 	{
+		std::vector<GodotEntityInfo> info_l = getEntityInfo(level_model_p->getEntities(), 1);
+
 		demo::DemoLevelHeader header_l;
-		levelInfo_l = demo::readDemoLevelHeader(_lib, file_l, _rand, header_l);
+		levelInfo_l = demo::readDemoLevelHeader(_lib, file_l, info_l, _rand, header_l);
 		_headerWriter = std::bind(demo::writeDemoLevelHeader, std::placeholders::_1, header_l);
-		divOptionHandler_l = true;
 	}
 	else
 	{
