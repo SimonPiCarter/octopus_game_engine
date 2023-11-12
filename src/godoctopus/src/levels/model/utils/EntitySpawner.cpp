@@ -64,7 +64,7 @@ namespace godot {
         else if(ent_p.type == "Resource")
         {
 	        octopus::Resource resource_l({ ent_p.x, ent_p.y }, true, lib_p.getResourceModel(ent_p.model));
-			resource_l._resource = 2000;
+			resource_l._resource = ent_p.resource_qty;
             resource_l._player = ent_p.player;
             steps_r.push_back(new octopus::ResourceSpawnStep(idx_p, resource_l));
         }

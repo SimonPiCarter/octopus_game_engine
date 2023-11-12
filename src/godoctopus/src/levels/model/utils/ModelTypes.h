@@ -29,6 +29,7 @@ namespace godot
 		std::vector<unsigned long> entity_group;
 		/// @brief number of player required to spawn the entity
 		unsigned long num_players_to_spawn = 0;
+		unsigned long resource_qty = 2000;
     };
 
 	struct GodotTriggerActionDialog { std::string dialog_idx = ""; bool end=false; int winning_team=0; };

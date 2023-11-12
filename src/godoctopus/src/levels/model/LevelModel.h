@@ -43,6 +43,7 @@ public:
     /// entities
     ////////////////
     void add_entity(String const &type_p, String const &model_p, int player, float x, float y, PackedInt32Array const &array_p, int num_of_players);
+    void add_entity_resource(String const &type_p, String const &model_p, int player, float x, float y, PackedInt32Array const &array_p, int num_of_players, int resource_qty);
 
     ////////////////
     /// triggers

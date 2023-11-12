@@ -46,11 +46,16 @@ void LevelModel::add_building(int player, String const &building)
 ////////////////
 void LevelModel::add_entity(String const &type, String const &model, int player, float x, float y, PackedInt32Array const &array_p, int num_of_players)
 {
+	add_entity_resource(type, model, player, x, y, array_p, num_of_players, 2000);
+}
+
+void LevelModel::add_entity_resource(String const &type, String const &model, int player, float x, float y, PackedInt32Array const &array_p, int num_of_players, int resource_qty)
+{
 	std::string type_l(type.utf8().get_data());
 	std::string model_l(model.utf8().get_data());
 	unsigned long player_l = static_cast<unsigned long>(player);
 	unsigned long num_of_players_l = static_cast<unsigned long>(num_of_players);
-	GodotEntity ent_l {type_l, model_l, player_l, x, y, {}, num_of_players_l};
+	GodotEntity ent_l {type_l, model_l, player_l, x, y, {}, num_of_players_l, resource_qty};
 	for(int i = 0 ; i < array_p.size() ; ++ i)
 	{
 		ent_l.entity_group.push_back(array_p[i]);
@@ -160,6 +165,7 @@ void LevelModel::_bind_methods()
 	ClassDB::bind_method(D_METHOD("add_building", "player", "building"), &LevelModel::add_building);
 
 	ClassDB::bind_method(D_METHOD("add_entity", "type", "model", "player", "x", "y", "entity_group", "num_of_players"), &LevelModel::add_entity);
+	ClassDB::bind_method(D_METHOD("add_entity_resource", "type", "model", "player", "x", "y", "entity_group", "num_of_players", "resource_qty"), &LevelModel::add_entity_resource);
 
 	ClassDB::bind_method(D_METHOD("add_trigger"), &LevelModel::add_trigger);
 	ClassDB::bind_method(D_METHOD("add_trigger_listener_entity_dead_group", "trigger_idx", "entity_dead_group"), &LevelModel::add_trigger_listener_entity_dead_group);
