@@ -56,8 +56,13 @@ std::list<Steppable *> DemoLevelSteps(
 	std::vector<WavePoolInfo> const &waveInfo_p,
 	unsigned long player_p,
 	unsigned long playerCount_p,
-	std::vector<GodotEntityInfo> const &entityInfo_p)
+	std::vector<GodotEntityInfo> const &entityInfo_p,
+	int difficulty_p)
 {
+	// Tick rate for anchor decay : easy => 1 every 2sec
+	// >= medium : 1 every sec
+	size_t anchorTickRate_l = difficulty_p < 2 ? 200 : 100;
+
 	loadMinimalModels(lib_p);
 
 	// load divinity library
@@ -125,7 +130,7 @@ std::list<Steppable *> DemoLevelSteps(
 		std::vector<unsigned long> handles_l = getHandles(entityInfo_p, playerIdx_l, "command_center");
 		for(unsigned long ccHandle_l : handles_l)
 		{
-			spawners_l.push_back(new FlyingCommandSpawnStep(new TimerDamage(flyingCommandHandle_l++, 100, 0, playerIdx_l, "Anchor", Handle(ccHandle_l))));
+			spawners_l.push_back(new FlyingCommandSpawnStep(new TimerDamage(flyingCommandHandle_l++, anchorTickRate_l, 0, playerIdx_l, "Anchor", Handle(ccHandle_l))));
 		}
 		spawners_l.push_back(new TriggerSpawn(new AnchorTrigger(lib_p, rand_p, 150, playerIdx_l)));
 	}
@@ -134,16 +139,16 @@ std::list<Steppable *> DemoLevelSteps(
 }
 
 AreaSpawnerCommand * createResourceNodeSpawnCommmand(Library &lib_p, RandomGenerator &rand_p, unsigned long x, unsigned long y, unsigned long size,
-	size_t nbRes_p, size_t nbAnchorSpot_p, size_t nbUnits_p, size_t qtyIrium_p, size_t nbDoubleSquares_p, size_t nbQuadSquares_p, size_t nbUSquares_p)
+	size_t nbRes_p, size_t nbAnchorSpot_p, size_t nbUnits_p, size_t qtyRes_p, size_t qtyIrium_p, size_t nbDoubleSquares_p, size_t nbQuadSquares_p, size_t nbUSquares_p)
 {
 	std::list<AreaSpawn> spawners_l;
 
 	Resource res2_l({0,0}, true, lib_p.getResourceModel("resource_bloc"));
-	res2_l._resource = 2000.;
+	res2_l._resource = qtyRes_p;
 	res2_l._player = 0;
 
 	Resource res3_l({0,0}, true, lib_p.getResourceModel("resource_ether"));
-	res3_l._resource = 2000.;
+	res3_l._resource = qtyRes_p;
 	res3_l._player = 0;
 
 	Resource res4_l({0,0}, true, lib_p.getResourceModel("resource_irium"));
@@ -215,30 +220,34 @@ AreaSpawnerCommand * createResourceNodeSpawnCommmand(Library &lib_p, RandomGener
 	return new AreaSpawnerCommand(rand_p, spawners_l);
 }
 
-std::list<Command *> DemoLevelCommands(Library &lib_p, RandomGenerator &rand_p, unsigned long playerCount_p)
+std::list<Command *> DemoLevelCommands(Library &lib_p, RandomGenerator &rand_p, unsigned long playerCount_p, int difficulty_p)
 {
+	// resource on basic resources node based on difficulty
+	size_t basicRes_l = difficulty_p < 3 ? 4000 : 2000;
+	size_t advancedRes_l = difficulty_p < 3 ? 1000 : 500;
+
 	// createResourceNodeSpawnCommmand(lib, rand, x, y, size, nb res, nb anchor, nb units, qty irium)
 	std::list<Command *> commands_l {
 		// cirle 1
-		createResourceNodeSpawnCommmand(lib_p, rand_p, 154, 91, 18, 1*playerCount_p, 1*playerCount_p, 10, 500, 0, 0, 0),
-		createResourceNodeSpawnCommmand(lib_p, rand_p, 108, 64, 19, 1*playerCount_p, 1*playerCount_p, 10, 500, 0, 0, 0),
-		createResourceNodeSpawnCommmand(lib_p, rand_p, 71, 104, 14, 1*playerCount_p, 1*playerCount_p, 10, 500, 0, 0, 0),
-		createResourceNodeSpawnCommmand(lib_p, rand_p, 108, 144, 18, 1*playerCount_p, 1*playerCount_p, 10, 500, 0, 0, 0),
+		createResourceNodeSpawnCommmand(lib_p, rand_p, 154, 91, 18, 1*playerCount_p, 1*playerCount_p, 10, basicRes_l, advancedRes_l, 0, 0, 0),
+		createResourceNodeSpawnCommmand(lib_p, rand_p, 108, 64, 19, 1*playerCount_p, 1*playerCount_p, 10, basicRes_l, advancedRes_l, 0, 0, 0),
+		createResourceNodeSpawnCommmand(lib_p, rand_p, 71, 104, 14, 1*playerCount_p, 1*playerCount_p, 10, basicRes_l, advancedRes_l, 0, 0, 0),
+		createResourceNodeSpawnCommmand(lib_p, rand_p, 108, 144, 18, 1*playerCount_p, 1*playerCount_p, 10, basicRes_l, advancedRes_l, 0, 0, 0),
 		// cirle 2
-		createResourceNodeSpawnCommmand(lib_p, rand_p, 44, 147, 22, 1*playerCount_p, 1*playerCount_p, 20, 1000, 0, 5, 0),
-		createResourceNodeSpawnCommmand(lib_p, rand_p, 155, 170, 22, 1*playerCount_p, 1*playerCount_p, 20, 1000, 0, 5, 0),
-		createResourceNodeSpawnCommmand(lib_p, rand_p, 162, 50, 21, 1*playerCount_p, 1*playerCount_p, 20, 1000, 0, 5, 0),
-		createResourceNodeSpawnCommmand(lib_p, rand_p, 56, 60, 23, 1*playerCount_p, 1*playerCount_p, 20, 1000, 0, 5, 0),
+		createResourceNodeSpawnCommmand(lib_p, rand_p, 44, 147, 22, 1*playerCount_p, 1*playerCount_p, 20, basicRes_l, 2*advancedRes_l, 0, 5, 0),
+		createResourceNodeSpawnCommmand(lib_p, rand_p, 155, 170, 22, 1*playerCount_p, 1*playerCount_p, 20, basicRes_l, 2*advancedRes_l, 0, 5, 0),
+		createResourceNodeSpawnCommmand(lib_p, rand_p, 162, 50, 21, 1*playerCount_p, 1*playerCount_p, 20, basicRes_l, 2*advancedRes_l, 0, 5, 0),
+		createResourceNodeSpawnCommmand(lib_p, rand_p, 56, 60, 23, 1*playerCount_p, 1*playerCount_p, 20, basicRes_l, 2*advancedRes_l, 0, 5, 0),
 		// cirle 3
-		createResourceNodeSpawnCommmand(lib_p, rand_p, 102, 205, 27, 1*playerCount_p, 1*playerCount_p, 20, 1000, 5, 10, 0),
-		createResourceNodeSpawnCommmand(lib_p, rand_p, 9, 101, 22, 1*playerCount_p, 1*playerCount_p, 20, 1000, 5, 10, 0),
-		createResourceNodeSpawnCommmand(lib_p, rand_p, 106, 3, 28, 1*playerCount_p, 1*playerCount_p, 20, 1000, 5, 10, 0),
-		createResourceNodeSpawnCommmand(lib_p, rand_p, 206, 115, 32, 1*playerCount_p, 1*playerCount_p, 20, 1000, 5, 10, 0),
+		createResourceNodeSpawnCommmand(lib_p, rand_p, 102, 205, 27, 1*playerCount_p, 1*playerCount_p, 20, basicRes_l, 2*advancedRes_l, 5, 10, 0),
+		createResourceNodeSpawnCommmand(lib_p, rand_p, 9, 101, 22, 1*playerCount_p, 1*playerCount_p, 20, basicRes_l, 2*advancedRes_l, 5, 10, 0),
+		createResourceNodeSpawnCommmand(lib_p, rand_p, 106, 3, 28, 1*playerCount_p, 1*playerCount_p, 20, basicRes_l, 2*advancedRes_l, 5, 10, 0),
+		createResourceNodeSpawnCommmand(lib_p, rand_p, 206, 115, 32, 1*playerCount_p, 1*playerCount_p, 20, basicRes_l, 2*advancedRes_l, 5, 10, 0),
 		// cirle 4
-		createResourceNodeSpawnCommmand(lib_p, rand_p, 207, 211, 26, 2*playerCount_p, 1*playerCount_p, 30, 2000, 5, 10, 3),
-		createResourceNodeSpawnCommmand(lib_p, rand_p, 16, 207, 34, 2*playerCount_p, 1*playerCount_p, 30, 2000, 5, 10, 3),
-		createResourceNodeSpawnCommmand(lib_p, rand_p, 6, 4, 25, 2*playerCount_p, 1*playerCount_p, 30, 2000, 5, 10, 3),
-		createResourceNodeSpawnCommmand(lib_p, rand_p, 209, 12, 31, 2*playerCount_p, 1*playerCount_p, 30, 2000, 5, 10, 3),
+		createResourceNodeSpawnCommmand(lib_p, rand_p, 207, 211, 26, 2*playerCount_p, 1*playerCount_p, 30, basicRes_l, 4*advancedRes_l, 5, 10, 3),
+		createResourceNodeSpawnCommmand(lib_p, rand_p, 16, 207, 34, 2*playerCount_p, 1*playerCount_p, 30, basicRes_l, 4*advancedRes_l, 5, 10, 3),
+		createResourceNodeSpawnCommmand(lib_p, rand_p, 6, 4, 25, 2*playerCount_p, 1*playerCount_p, 30, basicRes_l, 4*advancedRes_l, 5, 10, 3),
+		createResourceNodeSpawnCommmand(lib_p, rand_p, 209, 12, 31, 2*playerCount_p, 1*playerCount_p, 30, basicRes_l, 4*advancedRes_l, 5, 10, 3),
 	};
 
 	return commands_l;
@@ -327,6 +336,7 @@ void writeDemoLevelHeader(std::ofstream &file_p, DemoLevelHeader const &header_p
 {
 	file_p.write((char*)&header_p.seed, sizeof(header_p.seed));
 	file_p.write((char*)&header_p.player, sizeof(header_p.player));
+	file_p.write((char*)&header_p.difficulty, sizeof(header_p.difficulty));
 
 	size_t size_l = header_p.tierWaveInfo.size();
 	file_p.write((char*)&size_l, sizeof(size_l));
@@ -341,6 +351,7 @@ void readDemoLevelHeader(std::ifstream &file_p, DemoLevelHeader &header_r)
 {
 	file_p.read((char*)&header_r.seed, sizeof(header_r.seed));
 	file_p.read((char*)&header_r.player, sizeof(header_r.player));
+	file_p.read((char*)&header_r.difficulty, sizeof(header_r.difficulty));
 
 	size_t size_l = 0;
 	file_p.read((char*)&size_l, sizeof(size_l));
@@ -363,8 +374,8 @@ std::pair<std::list<octopus::Steppable *>, std::list<octopus::Command *> > readD
 	rand_p = new octopus::RandomGenerator(header_r.seed);
 
 	std::pair<std::list<octopus::Steppable *>, std::list<octopus::Command *> > pair_l;
-	pair_l.first = DemoLevelSteps(lib_p, *rand_p, header_r.tierWaveInfo, header_r.player, 1, {});
-	pair_l.second = DemoLevelCommands(lib_p, *rand_p, 1);
+	pair_l.first = DemoLevelSteps(lib_p, *rand_p, header_r.tierWaveInfo, header_r.player, 1, {}, header_r.difficulty);
+	pair_l.second = DemoLevelCommands(lib_p, *rand_p, 1, header_r.difficulty);
 	return pair_l;
 }
 

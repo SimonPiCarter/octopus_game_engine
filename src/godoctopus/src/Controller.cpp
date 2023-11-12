@@ -243,7 +243,7 @@ void Controller::load_hero_siege_level(int seed_p, int player_count_p)
 	init(commands_l, spawners_l, false, 50, _autoSaveFile);
 }
 
-void Controller::load_demo_level(int seed_p, WavePattern const * wavePattern_p, godot::LevelModel *level_model_p, int player_count_p)
+void Controller::load_demo_level(int seed_p, WavePattern const * wavePattern_p, godot::LevelModel *level_model_p, int player_count_p, int difficulty_p)
 {
 	assert(level_model_p);
 	std::vector<GodotEntityInfo> info_l = getEntityInfo(level_model_p->getEntities(), player_count_p);
@@ -265,11 +265,11 @@ void Controller::load_demo_level(int seed_p, WavePattern const * wavePattern_p, 
 	unsigned long player_l = wavePattern_p->getPlayer();
 
 	std::list<octopus::Steppable *> spawners_l = {};
-	std::list<octopus::Steppable *> levelsteps_l = demo::DemoLevelSteps(_lib, *_rand, wavesInfo_l, player_l, player_count_p, info_l);
+	std::list<octopus::Steppable *> levelsteps_l = demo::DemoLevelSteps(_lib, *_rand, wavesInfo_l, player_l, player_count_p, info_l, difficulty_p);
 	spawners_l = level_model_p->generateLevelSteps(_lib, player_count_p);
 	spawners_l.splice(spawners_l.end(), levelsteps_l);
 
-	std::list<octopus::Command *> commands_l = demo::DemoLevelCommands(_lib, *_rand, player_count_p);
+	std::list<octopus::Command *> commands_l = demo::DemoLevelCommands(_lib, *_rand, player_count_p, difficulty_p);
 	// enable auto save
 	newAutoSaveFile();
 	writeLevelId(*_autoSaveFile, LEVEL_ID_LEVEL_DEMO, 50);
@@ -1400,7 +1400,7 @@ void Controller::_bind_methods()
 	ClassDB::bind_method(D_METHOD("load_mission_2", "seed", "level_model", "player_count"), &Controller::load_mission_2);
 	ClassDB::bind_method(D_METHOD("load_minimal_model"), &Controller::load_minimal_model);
 	ClassDB::bind_method(D_METHOD("load_hero_siege_level", "seed", "nb_players"), &Controller::load_hero_siege_level);
-	ClassDB::bind_method(D_METHOD("load_demo_level", "seed", "wave_pattern", "level_model", "player_count"), &Controller::load_demo_level);
+	ClassDB::bind_method(D_METHOD("load_demo_level", "seed", "wave_pattern", "level_model", "player_count", "difficulty"), &Controller::load_demo_level);
 	ClassDB::bind_method(D_METHOD("load_level1", "seed", "nb_wave"), &Controller::load_level1);
 	ClassDB::bind_method(D_METHOD("load_level2", "seed", "wave_pattern", "nb_players"), &Controller::load_level2);
 	ClassDB::bind_method(D_METHOD("load_level_test_anchor", "seed"), &Controller::load_level_test_anchor);

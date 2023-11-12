@@ -60,7 +60,7 @@ public:
 
 	// levels (modes)
 	void load_hero_siege_level(int seed_p, int player_count_p);
-	void load_demo_level(int seed_p, WavePattern const * wavePattern_p, godot::LevelModel *level_model_p, int player_count_p);
+	void load_demo_level(int seed_p, WavePattern const * wavePattern_p, godot::LevelModel *level_model_p, int player_count_p, int difficulty_p);
 
 	// levels (fas)
 	void load_level1(int seed_p, int nb_wave_p);

@@ -28,10 +28,26 @@ namespace godot
 namespace demo
 {
 
+/// @brief
+/// @param lib_p
+/// @param rand_p
+/// @param waveInfo_p
+/// @param player_p
+/// @param playerCount_p
+/// @param entityInfo_p
+/// @param difficulty_p Easiest is 1, Hardest is 3
+/// @return
 std::list<octopus::Steppable *> DemoLevelSteps(octopus::Library &lib_p, octopus::RandomGenerator &rand_p,
 	std::vector<WavePoolInfo> const &waveInfo_p, unsigned long player_p, unsigned long playerCount_p,
-	std::vector<GodotEntityInfo> const &entityInfo_p);
-std::list<octopus::Command *> DemoLevelCommands(octopus::Library &lib_p, octopus::RandomGenerator &rand_p, unsigned long playerCount_p);
+	std::vector<GodotEntityInfo> const &entityInfo_p, int difficulty_p);
+
+/// @brief
+/// @param lib_p
+/// @param rand_p
+/// @param playerCount_p
+/// @param difficulty_p Easiest is 1, Hardest is 3
+/// @return
+std::list<octopus::Command *> DemoLevelCommands(octopus::Library &lib_p, octopus::RandomGenerator &rand_p, unsigned long playerCount_p, int difficulty_p);
 
 struct DemoLevelHeader
 {
@@ -40,6 +56,9 @@ struct DemoLevelHeader
 
 	/// @brief player to spawn waves
 	unsigned long player;
+
+	/// @brief difficulty
+	int difficulty;
 
 	/// @brief store every tier wave info
 	std::vector<WavePoolInfo> tierWaveInfo;
