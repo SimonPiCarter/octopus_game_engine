@@ -296,18 +296,6 @@ bool Controller::loop_body()
 
 			//
 			//
-			// Vision Step
-			//
-			//
-			const std::chrono::time_point<std::chrono::steady_clock> startVisionStep_l = std::chrono::steady_clock::now();
-
-			std::list<VisionChangeStep *> list_l = newVisionChangeStep(*state_l, step_l, state_l->getWorldSize(), state_l->getVisionHandler().getPatternHandler());
-			std::for_each(list_l.begin(), list_l.end(), std::bind(&Step::addSteppable, &step_l, std::placeholders::_1));
-
-			_metrics._timeVisionChange += std::chrono::nanoseconds( std::chrono::steady_clock::now() - startVisionStep_l ).count();
-
-			//
-			//
 			// Projectiles Step
 			//
 			//
@@ -317,6 +305,18 @@ bool Controller::loop_body()
 			std::for_each(projectiles_l.begin(), projectiles_l.end(), std::bind(&tickProjectile, std::ref(step_l), std::placeholders::_1, std::ref(*state_l)));
 
 			_metrics._timeTickingProjectiles += std::chrono::nanoseconds( std::chrono::steady_clock::now() - startTickingProjectileStep_l ).count();
+
+			//
+			//
+			// Vision Step
+			//
+			//
+			const std::chrono::time_point<std::chrono::steady_clock> startVisionStep_l = std::chrono::steady_clock::now();
+
+			std::list<VisionChangeStep *> list_l = newVisionChangeStep(*state_l, step_l, state_l->getWorldSize(), state_l->getVisionHandler().getPatternHandler());
+			std::for_each(list_l.begin(), list_l.end(), std::bind(&Step::addSteppable, &step_l, std::placeholders::_1));
+
+			_metrics._timeVisionChange += std::chrono::nanoseconds( std::chrono::steady_clock::now() - startVisionStep_l ).count();
 
 			//
 			//
