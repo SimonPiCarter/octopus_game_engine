@@ -22,11 +22,12 @@ namespace godot
 
 std::vector<octopus::Steppable*> defaultGenerator() { return {new WaveStep()}; }
 
-WaveSpawn::WaveSpawn(Listener * listener_p, WaveInfo const &currentWave_p, bool earlyWave_p,
+WaveSpawn::WaveSpawn(Listener * listener_p, WaveInfo const &currentWave_p, std::vector<octopus::Vector> const &currentSpawnPoint_p, bool earlyWave_p,
 	Library const &lib_p, RandomGenerator &rand_p, std::list<WaveParam> const &param_p, unsigned long player_p,
     std::function<std::vector<octopus::Steppable *>(void)> waveStepGenerator_p) :
 		OneShotTrigger({listener_p}),
 		_currentWave(currentWave_p),
+		_currentSpawnPoints(currentSpawnPoint_p),
 		_earlyWave(earlyWave_p),
 		_lib(lib_p),
 		_rand(rand_p),
@@ -45,7 +46,7 @@ void WaveSpawn::trigger(State const &state_p, Step &step_p, unsigned long, octop
 	for(WaveUnitCount const &unitCount_l : content_l.units)
 	{
 		std::string modelName_l = unitCount_l.model;
-		for(octopus::Vector const &spawnPoint_l : currentParams_l.spawnPoints)
+		for(octopus::Vector const &spawnPoint_l : _currentSpawnPoints)
 		{
 			// spawn the given unit count
 			for(int i = 0 ; i < unitCount_l.count ; ++ i)
@@ -59,6 +60,9 @@ void WaveSpawn::trigger(State const &state_p, Step &step_p, unsigned long, octop
 			}
 		}
 	}
+
+	step_p.addSteppable(new WaveSpawPointStep(_currentSpawnPoints));
+
 	if(!_earlyWave)
 	{
 		step_p.addSteppable(new StateRemoveConstraintPositionStep(0, currentParams_l.limitX, currentParams_l.limitYStart, currentParams_l.limitYEnd, true, true));
@@ -84,16 +88,18 @@ void WaveSpawn::trigger(State const &state_p, Step &step_p, unsigned long, octop
 		}
 		else
 		{
-			WaveInfo nextWave_l = rollWave(_rand, nextParams_l.front().wavePool);
+			WaveParam const &param_l = nextParams_l.front();
+			WaveInfo nextWave_l = rollWave(_rand, param_l.wavePool);
+			std::vector<octopus::Vector> rolledSpawns_l = rollSpawnPoints(param_l.spawnPoints, param_l.nSpawnPoints, _rand);
 
-			step_p.addSteppable(new TriggerSpawn(new WaveSpawn(new ListenerStepCount(nextWave_l.earlyWave.steps), nextWave_l, true,
+			step_p.addSteppable(new TriggerSpawn(new WaveSpawn(new ListenerStepCount(nextWave_l.earlyWave.steps), nextWave_l, rolledSpawns_l, true,
 				_lib, _rand, nextParams_l, _player, _waveStepGenerator)));
 		}
 	}
 	else
 	{
 		// prepare main wave
-		step_p.addSteppable(new TriggerSpawn(new WaveSpawn(new ListenerStepCount(_currentWave.mainWave.steps), _currentWave, false,
+		step_p.addSteppable(new TriggerSpawn(new WaveSpawn(new ListenerStepCount(_currentWave.mainWave.steps), _currentWave, _currentSpawnPoints, false,
 			_lib, _rand, _params, _player, _waveStepGenerator)));
 	}
 }
@@ -106,6 +112,20 @@ WinTrigger::WinTrigger(unsigned long winner_p, std::unordered_set<octopus::Handl
 void WinTrigger::trigger(octopus::State const &state_p, octopus::Step &step_p, unsigned long, octopus::TriggerData const &) const
 {
 	step_p.addSteppable(new StateWinStep(state_p.isOver(), state_p.hasWinningTeam(), state_p.getWinningTeam(), _winner));
+}
+
+std::vector<octopus::Vector> rollSpawnPoints(std::vector<octopus::Vector> const &candidates_p, unsigned long number_p, octopus::RandomGenerator &rand_p)
+{
+	std::vector<octopus::Vector> candidateSpawns_l = candidates_p;
+	std::vector<octopus::Vector> rolledSpawns_l;
+	unsigned long size_l = std::max<unsigned long>(1, std::min<unsigned long>(candidateSpawns_l.size(), number_p));
+	for(unsigned long i = 0 ; i < size_l ; ++i)
+	{
+		int roll_l = rand_p.roll(0, candidateSpawns_l.size()-1);
+		rolledSpawns_l.push_back(candidateSpawns_l[roll_l]);
+		candidateSpawns_l.erase(std::next(candidateSpawns_l.begin(), roll_l));
+	}
+	return rolledSpawns_l;
 }
 
 } // namespace godot

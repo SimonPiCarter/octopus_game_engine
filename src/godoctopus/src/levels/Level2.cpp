@@ -140,7 +140,7 @@ std::list<Steppable *> WaveLevelSteps(Library &lib_p, RandomGenerator &rand_p, s
 
 	WaveInfo firstWave_l = rollWave(rand_p, waves_l[0]);
 
-	Trigger * triggerWave_l = new WaveSpawn(new ListenerStepCount(firstWave_l.earlyWave.steps), firstWave_l, true,
+	Trigger * triggerWave_l = new WaveSpawn(new ListenerStepCount(firstWave_l.earlyWave.steps), firstWave_l, {octopus::Vector(60,ySpawnWave_l)}, true,
 			lib_p, rand_p, params_l, player_p, defaultGenerator);
 
 	Handle handle_l(0);

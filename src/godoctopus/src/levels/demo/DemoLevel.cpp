@@ -106,9 +106,11 @@ std::list<Steppable *> DemoLevelSteps(
 		});
 	}
 
-	WaveInfo firstWave_l = rollWave(rand_p, waves_l[0]);
+	WaveParam const &paramFirst_l = *params_l.begin();
+	WaveInfo firstWave_l = rollWave(rand_p, paramFirst_l.wavePool);
+	std::vector<octopus::Vector> rolledSpawns_l = rollSpawnPoints(paramFirst_l.spawnPoints, paramFirst_l.nSpawnPoints, rand_p);
 
-	Trigger * triggerWave_l = new WaveSpawn(new ListenerStepCount(firstWave_l.earlyWave.steps), firstWave_l, true,
+	Trigger * triggerWave_l = new WaveSpawn(new ListenerStepCount(firstWave_l.earlyWave.steps), firstWave_l, rolledSpawns_l, true,
 			lib_p, rand_p, params_l, player_p, defaultGenerator);
 
 	spawners_l.push_back(new TriggerSpawn(triggerWave_l));
