@@ -37,7 +37,7 @@ struct WaveParam
 	/// @brief wave pool info used to generate the wave
 	WavePoolInfo wavePool;
 	/// @brief number of spawn points to roll each wave
-	unsigned long nSpawnPoints;
+	unsigned long nSpawnPoints = 1;
 };
 
 class WaveSpawn : public octopus::OneShotTrigger

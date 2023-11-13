@@ -63,6 +63,9 @@ std::list<Steppable *> DemoLevelSteps(
 	// >= medium : 1 every sec
 	size_t anchorTickRate_l = difficulty_p < 2 ? 200 : 100;
 
+	// number of spawn points
+	unsigned long nSpawnPoints_l = difficulty_p < 2 ? 1 : 2;
+
 	loadMinimalModels(lib_p);
 
 	// load divinity library
@@ -102,7 +105,8 @@ std::list<Steppable *> DemoLevelSteps(
 			{octopus::Vector(10,10), octopus::Vector(240,10), octopus::Vector(10,240), octopus::Vector(240,240)},
 			waveTarget_l,					// target
 			0, 0, 0,						// position constraint to remove (none here)
-			waves_l[i]						// wave options to be spawned
+			waves_l[i],						// wave options to be spawned
+			nSpawnPoints_l
 		});
 	}
 
