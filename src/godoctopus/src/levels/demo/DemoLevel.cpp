@@ -65,6 +65,10 @@ std::list<Steppable *> DemoLevelSteps(
 
 	// number of spawn points
 	unsigned long nSpawnPoints_l = difficulty_p < 2 ? 1 : 2;
+	if (difficulty_p == 3)
+	{
+		nSpawnPoints_l = 3;
+	}
 
 	loadMinimalModels(lib_p);
 
