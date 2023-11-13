@@ -673,11 +673,12 @@ void Controller::loading_loop()
 	// fast speed loading
 	while(!_controller->loop_body())
 	{
-		emit_signal("loading_state", double(_controller->getMetrics()._nbStepsCompiled)/totalSteps_l);
+		double ratio_l = double(_controller->getMetrics()._nbStepsCompiled)/totalSteps_l;
+		call_deferred("emit_signal", "loading_state", ratio_l);
 	}
 	// set up step done
 	_stepDone += _controller->getMetrics()._nbStepsCompiled;
-	emit_signal("loading_done");
+	call_deferred("emit_signal", "loading_done");
 
 	_paused = true;
 
