@@ -231,6 +231,7 @@ void ControllerStepVisitor::visit(octopus::CustomStep const *steppable_p)
 	DialogStep const *dialog_l = dynamic_cast<DialogStep const *>(steppable_p);
 	CameraStep const *camera_l = dynamic_cast<CameraStep const *>(steppable_p);
 	WaveStep const *wave_l = dynamic_cast<WaveStep const *>(steppable_p);
+	WaveSpawPointStep const *waveSpawnPoint_l = dynamic_cast<WaveSpawPointStep const *>(steppable_p);
 	RuneWellPopStep const *runeWellPopStep_l = dynamic_cast<RuneWellPopStep const *>(steppable_p);
 
 	if(impact_l)
@@ -252,6 +253,13 @@ void ControllerStepVisitor::visit(octopus::CustomStep const *steppable_p)
 	else if(wave_l)
 	{
 		_controller.emit_signal("wave");
+	}
+	else if(waveSpawnPoint_l)
+	{
+		for(octopus::Vector const &point_l : waveSpawnPoint_l->getPoints())
+		{
+			_controller.emit_signal("wave_spawn_point", (int)point_l.x.to_double(), (int)point_l.y.to_double());
+		}
 	}
 	else if(runeWellPopStep_l)
 	{

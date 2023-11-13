@@ -1517,6 +1517,7 @@ void Controller::_bind_methods()
 	ADD_SIGNAL(MethodInfo("set_camera", PropertyInfo(Variant::INT, "x"), PropertyInfo(Variant::INT, "y"), PropertyInfo(Variant::INT, "player")));
 	ADD_SIGNAL(MethodInfo("spawn_dialog", PropertyInfo(Variant::STRING, "model"), PropertyInfo(Variant::BOOL, "over")));
 	ADD_SIGNAL(MethodInfo("wave"));
+	ADD_SIGNAL(MethodInfo("wave_spawn_point", PropertyInfo(Variant::INT, "x"), PropertyInfo(Variant::INT, "y")));
 	ADD_SIGNAL(MethodInfo("rune_well_pop_step", PropertyInfo(Variant::INT, "well"), PropertyInfo(Variant::INT, "player")));
 
 	ADD_SIGNAL(MethodInfo("over", PropertyInfo(Variant::INT, "winning_team")));
