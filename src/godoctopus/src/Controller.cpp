@@ -1048,8 +1048,9 @@ PackedInt32Array Controller::get_sub_selection(Rect2 const &rect_p, String const
 	for(octopus::Entity const * ent_l : _state->getEntities())
 	{
 		bool isBlueprint_l = ent_l->_model._isBuilding && static_cast<octopus::Building const *>(ent_l)->isBlueprint();
+		bool isCancelled_l = ent_l->_model._isBuilding && static_cast<octopus::Building const *>(ent_l)->_canceled;
 
-		if(!_state->isEntityAlive(ent_l->_handle) && !isBlueprint_l)
+		if(!_state->isEntityAlive(ent_l->_handle) && (!isBlueprint_l || isCancelled_l))
 		{
 			continue;
 		}
