@@ -22,7 +22,7 @@ void LifeStealModifier::newAttackSteppable(Step &step_p, AttackModifierData cons
 		// damage
         Fixed curHp_l = source_l._hp + step_p.getHpChange(data_p.source);
         Fixed maxHp_l = source_l.getHpMax();
-	    step_p.addSteppable(new EntityHitPointChangeStep(data_p.source, -data_p.baseDamage*_ratio, curHp_l, maxHp_l));
+	    step_p.addSteppable(new EntityHitPointChangeStep(data_p.source, data_p.baseDamage*_ratio, curHp_l, maxHp_l));
     }
 }
 
