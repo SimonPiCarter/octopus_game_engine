@@ -70,6 +70,8 @@ public:
     void add_building_requirements(String const &name_p);
     void add_upgrade_lvl_requirements_min(String const &name_p, int level_p);
     void add_upgrade_lvl_requirements_max(String const &name_p, int level_p);
+	// misc
+	void set_invulnerable(bool invulnerable_p);
 
 
     /////////////////

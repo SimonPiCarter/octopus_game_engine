@@ -155,6 +155,11 @@ void Model::add_upgrade_lvl_requirements_max(String const &name_p, int level_p)
     _model->_requirements._upgradeLvlMax[name_p.utf8().get_data()] = level_p;
 }
 
+void Model::set_invulnerable(bool invulnerable_p)
+{
+	_model->_invulnerable = invulnerable_p;
+}
+
 /////////////////
 //   Building  //
 /////////////////
@@ -296,6 +301,8 @@ void Model::_bind_methods()
     ClassDB::bind_method(D_METHOD("add_building_requirements", "name"), &Model::add_building_requirements);
     ClassDB::bind_method(D_METHOD("add_upgrade_lvl_requirements_min", "name", "level"), &Model::add_upgrade_lvl_requirements_min);
     ClassDB::bind_method(D_METHOD("add_upgrade_lvl_requirements_max", "name", "level"), &Model::add_upgrade_lvl_requirements_max);
+
+    ClassDB::bind_method(D_METHOD("set_invulnerable", "invulnerable"), &Model::set_invulnerable);
 
     // Building
     ClassDB::bind_method(D_METHOD("add_unit_produced", "controller", "unit"), &Model::add_unit_produced);
