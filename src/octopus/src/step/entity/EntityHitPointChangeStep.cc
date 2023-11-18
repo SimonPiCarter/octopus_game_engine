@@ -1,6 +1,7 @@
 #include "EntityHitPointChangeStep.hh"
 
 #include "state/State.hh"
+#include "step/Step.hh"
 #include "logger/Logger.hh"
 
 namespace octopus
@@ -70,6 +71,13 @@ void EntityHitPointChangeStep::revert(State &state_p, SteppableData const *) con
 bool EntityHitPointChangeStep::isNoOp() const
 {
 	return ::is_zero(_delta);
+}
+
+EntityHitPointChangeStep * makeNewEntityHitPointChangeStep(Entity const &entity_p, Step const &step_p, Fixed const &change_p)
+{
+	Fixed curHp_l = entity_p._hp + step_p.getHpChange(entity_p._handle);
+	Fixed maxHp_l = entity_p.getHpMax();
+	return new EntityHitPointChangeStep(entity_p._handle, change_p, curHp_l, maxHp_l);
 }
 
 } // namespace octopus

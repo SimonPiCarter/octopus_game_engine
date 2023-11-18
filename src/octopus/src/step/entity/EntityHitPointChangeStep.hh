@@ -32,6 +32,8 @@ namespace octopus
 			Handle _handle {0};
 			Fixed _delta;
 	};
+
+	EntityHitPointChangeStep * makeNewEntityHitPointChangeStep(Entity const &entity_p, Step const &step_p, Fixed const &change_p);
 }
 
 #endif
