@@ -13,6 +13,7 @@
 #include "library/Library.hh"
 #include "state/entity/buff/TimedBuff.hh"
 #include "step/entity/buff/EntityBuffStep.hh"
+#include "step/entity/EntityHitPointChangeStep.hh"
 #include "step/trigger/TriggerSpawn.hh"
 
 // godot
@@ -35,8 +36,7 @@ std::list<Steppable *> Mission2Steps(Library &lib_p, RandomGenerator &rand_p, un
 
 	std::list<Steppable *> spawners_l;
 
-
-	std::vector<unsigned long> setRuneWell_l = getHandles(entityInfo_p, 2, "rune_well");
+	std::vector<unsigned long> setRuneWell_l = getHandles(entityInfo_p, 0, "rune_well");
 
 	for(unsigned long runeWellIdx_l : setRuneWell_l)
 	{
@@ -55,17 +55,23 @@ std::list<Steppable *> Mission2Steps(Library &lib_p, RandomGenerator &rand_p, un
 				Trigger * triggerBuff_l = new OneShotFunctionTrigger({new ListenerEntityInBox({handle_l}, boxPos_l, boxSize_l)},
 				[handle_l, runeWellIdx_l, player_l](State const &state_p, Step &step_p, unsigned long, TriggerData const &)
 				{
+					Entity const *ent_l = state_p.getEntity(handle_l);
+
 					TimedBuff buff_l;
 					buff_l._id = "Mission_AncientRune_AoE_buff";
 					buff_l._duration = 3000;
 					buff_l._attackMod = AoEModifier(0.5, 5);
 					step_p.addSteppable(new EntityBuffStep(handle_l, buff_l));
+
 					TimedBuff buff2_l;
 					buff2_l._id = "Mission_AncientRune_Damage_buff";
 					buff2_l._duration = 3000;
 					buff2_l._type = TyppedBuff::Type::Damage;
 					buff2_l._offset = 20;
 					step_p.addSteppable(new EntityBuffStep(handle_l, buff2_l));
+
+					step_p.addSteppable(makeNewEntityHitPointChangeStep(*ent_l, step_p, ent_l->getHpMax()));
+
 					step_p.addSteppable(new RuneWellPopStep(runeWellIdx_l, player_l));
 				});
 
