@@ -767,7 +767,7 @@ void Controller::windup(int handle_p)
 void Controller::kill(octopus::Handle const & handle_p)
 {
 	octopus::Entity const &entity_l = *_state->getEntity(handle_p);
-	if(entity_l._model._isUnit)
+	if(entity_l._model._isUnit || entity_l._model._isBuilding)
 	{
 		emit_signal("kill_unit", int(handle_p.index));
 	}
