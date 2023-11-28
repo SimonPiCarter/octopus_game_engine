@@ -148,8 +148,16 @@ std::list<Steppable *> Mission1Steps(Library &lib_p, RandomGenerator &rand_p, un
 	spawners_l.push_back(new TriggerSpawn(new DialogTrigger({new ListenerEntityDied(trackers_set_l)}, "mission1_trackers_dead")));
 	spawners_l.push_back(new TriggerSpawn(new DialogTrigger({new ListenerEntityDied(firstGroup_l)}, "mission1_first_group_dead")));
 	spawners_l.push_back(new TriggerSpawn(new OneShotFunctionTrigger({new ListenerEntityDied(finalGroup_l)},
-		[](State const &, Step &step_p, unsigned long, TriggerData const &)
+		[nbPlayers_p, &lib_p](State const &state_p, Step &step_p, unsigned long, TriggerData const &)
 		{
+			Unit unit_l({ 38, 64 }, false, lib_p.getUnitModel("circle"));
+			unit_l._player = 0;
+			step_p.addSteppable(new UnitSpawnStep(getNextHandle(step_p, state_p), unit_l));
+			for(unsigned long i = 0 ; i < nbPlayers_p ; ++ i)
+			{
+				step_p.addSteppable(new godot::CameraStep(to_int(unit_l._pos.x), to_int(unit_l._pos.y), i));
+			}
+
 			step_p.addSteppable(new StateWinStep(false, false, 0, 0));
 			step_p.addSteppable(new godot::DialogStep("mission1_final_group_dead", true));
 		}
