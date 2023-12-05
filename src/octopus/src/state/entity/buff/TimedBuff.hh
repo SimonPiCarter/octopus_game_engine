@@ -5,7 +5,7 @@
 #include <string>
 #include "Buff.hh"
 #include "utils/Fixed.hh"
-#include "state/entity/attackModifier/Attackmodifier.hh"
+#include "state/entity/attackModifier/AttackModifier.hh"
 
 namespace octopus
 {
