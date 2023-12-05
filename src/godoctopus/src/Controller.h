@@ -15,6 +15,7 @@
 #include "controller/Controller.hh"
 #include "option/Option.h"
 #include "option/OptionManager.h"
+#include "file/FileHeader.h"
 #include "levels/model/LevelModel.h"
 #include "levels/wave/Wave.h"
 #include "Entity.h"
@@ -76,6 +77,10 @@ public:
 	String get_model_filename(String const &filename_p);
 	String get_level_filename(String const &filename_p);
 	void replay_level(String const &filename_p, bool replay_mode_p, godot::LevelModel *level_model_p);
+
+	// File header parsing
+	godot::FileHeader const * get_file_header() const;
+	godot::FileHeader const * read_file_header(String const &filename_p);
 
 	// start engine with given level
 	void init(std::list<octopus::Command *> const &commands_p, std::list<octopus::Steppable *> const &spawners_p, bool divOptionManager_p=false, size_t size_p=50, std::ofstream *file_p=nullptr);
@@ -246,10 +251,8 @@ private:
 	size_t _currentLevel = 0;
 	// header writer of level
 	std::function<void(std::ofstream&)> _headerWriter;
-	// path to model file if any ("" if none)
-	std::string _modelFile = "";
-	// path to level file if any ("" if none)
-	std::string _levelFile = "";
+	// FileHeader
+	FileHeader _fileHeader;
 
 	std::list<octopus::StepBundle>::const_iterator _lastIt;
 

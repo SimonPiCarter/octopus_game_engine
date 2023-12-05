@@ -402,12 +402,12 @@ void Controller::load_multi_test_level(int seed_p, int step_cout_p, bool buff_pr
 
 void Controller::set_model_filename(String const &filename_p)
 {
-	_modelFile = filename_p.utf8().get_data();
+	_fileHeader.set_model_filename(filename_p);
 }
 
 void Controller::set_level_filename(String const &filename_p)
 {
-	_levelFile = filename_p.utf8().get_data();
+	_fileHeader.set_level_filename(filename_p);
 }
 
 String Controller::get_model_filename(String const &filename_p)
@@ -439,8 +439,7 @@ void Controller::replay_level(String const &filename_p, bool replay_mode_p, godo
 	std::string filename_l(filename_p.utf8().get_data());
 	std::ifstream file_l(filename_l, std::ios::in | std::ios::binary);
 
-	_modelFile = octopus::readString(file_l);
-	_levelFile = octopus::readString(file_l);
+	loadFromStream(_fileHeader, file_l);
 
 	size_t levelId_l;
 	size_t size_l;
@@ -530,6 +529,22 @@ void Controller::replay_level(String const &filename_p, bool replay_mode_p, godo
 			init_loading(levelInfo_l.second, spawners_l, divOptionHandler_l, size_l, file_l);
 		}
 	}
+}
+
+
+godot::FileHeader const * Controller::get_file_header() const
+{
+	return &_fileHeader;
+}
+
+godot::FileHeader const * Controller::read_file_header(String const &filename_p)
+{
+	std::string filename_l(filename_p.utf8().get_data());
+	std::ifstream file_l(filename_l, std::ios::in | std::ios::binary);
+
+	loadFromStream(_fileHeader, file_l);
+
+	return &_fileHeader;
 }
 
 void Controller::init(std::list<octopus::Command *> const &commands_p, std::list<octopus::Steppable *> const &spawners_p, bool divOptionManager_p, size_t size_p, std::ofstream *file_p)
@@ -798,16 +813,18 @@ void Controller::save_to_file(String const &path_p)
 	{
 		std::string path_l(path_p.utf8().get_data());
 		std::ofstream file_l(path_l, std::ios::out | std::ios::binary);
-		octopus::writeString(file_l, _modelFile);
-		octopus::writeString(file_l, _levelFile);
+
+		// write Godot header
+		saveToStream(_fileHeader, file_l);
+
+		// write octopus engine info
 		writeLevelId(file_l, _currentLevel, get_world_size()/5);
 		_headerWriter(file_l);
 		writeCommands(file_l, *_controller);
 
 		path_l += ".debug";
 		std::ofstream fileDebug_l(path_l, std::ios::out);
-		fileDebug_l<<_modelFile<<std::endl;
-		fileDebug_l<<_levelFile<<std::endl;
+		saveDebugToStream(_fileHeader, file_l);
 		writeDebugCommands(fileDebug_l, *_controller);
 	}
 }
@@ -1558,11 +1575,11 @@ void Controller::newAutoSaveFile()
 	delete _autoSaveFile;
 	delete _autoSaveFileDebug;
 	_autoSaveFile = new std::ofstream(_autoSavePath, std::ios::out | std::ios::binary);
-	octopus::writeString(*_autoSaveFile, _modelFile);
-	octopus::writeString(*_autoSaveFile, _levelFile);
+	saveToStream(_fileHeader, *_autoSaveFile);
 	if(_enableAutoSaveFileDebug)
 	{
 		_autoSaveFileDebug = new std::ofstream(_autoSavePath+".d", std::ios::out);
+		saveDebugToStream(_fileHeader, *_autoSaveFileDebug);
 	}
 }
 

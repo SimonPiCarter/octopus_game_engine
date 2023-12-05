@@ -6,6 +6,7 @@
 #include "levels/model/LevelModel.h"
 #include "levels/wave/Wave.h"
 #include "drawer/Drawer.h"
+#include "file/FileHeader.h"
 
 #include <gdextension_interface.h>
 #include <godot_cpp/core/defs.hpp>
@@ -33,6 +34,7 @@ void initialize_godoctopus_module(godot::ModuleInitializationLevel p_level) {
     godot::ClassDB::register_class<godot::WavePool>();
     godot::ClassDB::register_class<godot::WavePattern>();
     godot::ClassDB::register_class<godot::Drawer>();
+    godot::ClassDB::register_class<godot::FileHeader>();
 }
 
 void uninitialize_godoctopus_module(godot::ModuleInitializationLevel p_level) {
