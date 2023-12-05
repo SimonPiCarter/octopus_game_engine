@@ -55,7 +55,7 @@ void LevelModel::add_entity_resource(String const &type, String const &model, in
 	std::string model_l(model.utf8().get_data());
 	unsigned long player_l = static_cast<unsigned long>(player);
 	unsigned long num_of_players_l = static_cast<unsigned long>(num_of_players);
-	GodotEntity ent_l {type_l, model_l, player_l, x, y, {}, num_of_players_l, resource_qty};
+	GodotEntity ent_l {type_l, model_l, player_l, x, y, {}, num_of_players_l, static_cast<unsigned long>(resource_qty)};
 	for(int i = 0 ; i < array_p.size() ; ++ i)
 	{
 		ent_l.entity_group.push_back(array_p[i]);
