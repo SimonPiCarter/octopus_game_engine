@@ -1526,6 +1526,17 @@ void Controller::_bind_methods()
 	ADD_SIGNAL(MethodInfo("move_projectile", PropertyInfo(Variant::INT, "index"), PropertyInfo(Variant::VECTOR2, "pos")));
 	ADD_SIGNAL(MethodInfo("end_projectile", PropertyInfo(Variant::INT, "index")));
 
+	/// signals for objective handling
+	ADD_SIGNAL(MethodInfo("add_main_objective", PropertyInfo(Variant::STRING, "key_objective"),
+		PropertyInfo(Variant::STRING, "text"), PropertyInfo(Variant::INT, "count")));
+	ADD_SIGNAL(MethodInfo("add_secondary_objective", PropertyInfo(Variant::STRING, "key_objective"),
+		PropertyInfo(Variant::STRING, "text"), PropertyInfo(Variant::INT, "count")));
+	ADD_SIGNAL(MethodInfo("set_complete_objective", PropertyInfo(Variant::STRING, "key_objective"), PropertyInfo(Variant::BOOL, "complete")));
+	ADD_SIGNAL(MethodInfo("set_fail_objective", PropertyInfo(Variant::STRING, "key_objective"), PropertyInfo(Variant::BOOL, "fail")));
+	ADD_SIGNAL(MethodInfo("increment_objective", PropertyInfo(Variant::STRING, "key_objective")));
+	ADD_SIGNAL(MethodInfo("decrement_objective", PropertyInfo(Variant::STRING, "key_objective")));
+	ADD_SIGNAL(MethodInfo("remove_objective", PropertyInfo(Variant::STRING, "key_objective")));
+
 	/// blockers
 	ADD_SIGNAL(MethodInfo("spawn_blockers", PropertyInfo(Variant::FLOAT, "val"), PropertyInfo(Variant::FLOAT, "min"),
 		PropertyInfo(Variant::FLOAT, "max"), PropertyInfo(Variant::BOOL, "less"), PropertyInfo(Variant::BOOL, "x")));
