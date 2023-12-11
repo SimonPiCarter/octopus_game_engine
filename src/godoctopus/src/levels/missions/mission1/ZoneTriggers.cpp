@@ -17,6 +17,7 @@
 // godot
 #include "controller/step/CameraStep.h"
 #include "controller/step/DialogStep.h"
+#include "controller/step/ObjectiveStep.h"
 
 using namespace octopus;
 
@@ -49,6 +50,7 @@ void RescueTrigger::trigger(octopus::State const &state_p, octopus::Step &step_p
 		step_p.addSteppable(new godot::CameraStep(to_int(spawn_l.x), to_int(spawn_l.y), i));
 	}
 	step_p.addSteppable(new godot::DialogStep("mission1_rescue"));
+	step_p.addSteppable(new godot::RemoveObjectiveStep("mission1_explore"));
 
 	// move step of rescue
 	step_p.addSteppable(new CommandSpawnStep(new EntityMoveCommand(rescue_l, rescue_l, Vector(22, 12), 0, {Vector(22, 12)}, true, true)));
@@ -95,6 +97,8 @@ void FirstAllyTrigger::trigger(octopus::State const &state_p, octopus::Step &ste
 		step_p.addSteppable(new StateRemoveConstraintPositionStep(i, 26, 36, 56, true, false));
 	}
 	step_p.addSteppable(new godot::DialogStep("mission1_first_zone"));
+	step_p.addSteppable(new godot::RemoveObjectiveStep("mission1_find_others"));
+	step_p.addSteppable(new godot::AddObjectiveStep("mission1_find_base", "mission1_find_base", 0, true));
 
 	// spawn second zone trigger
 
@@ -131,6 +135,9 @@ void BaseDiscoverTrigger::trigger(octopus::State const &state_p, octopus::Step &
 		}
 
 		step_p.addSteppable(new godot::CameraStep(to_int(spawn_l.x), to_int(spawn_l.y), i));
+		step_p.addSteppable(new godot::AddObjectiveStep("circle_build."+std::to_string(i), "circle_build."+std::to_string(i), 5, true));
+		step_p.addSteppable(new godot::AddObjectiveStep("barrack_build."+std::to_string(i), "barrack_build."+std::to_string(i), 1, true));
 	}
 	step_p.addSteppable(new godot::DialogStep("mission1_second_zone"));
+	step_p.addSteppable(new godot::RemoveObjectiveStep("mission1_find_base"));
 }
