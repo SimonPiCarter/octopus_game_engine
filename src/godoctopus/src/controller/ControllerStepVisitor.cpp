@@ -4,6 +4,7 @@
 #include "step/CameraStep.h"
 #include "step/DialogStep.h"
 #include "step/WaveStep.h"
+#include "step/ObjectiveStep.h"
 
 // octopus
 #include "command/data/AttackMoveData.hh"
@@ -234,6 +235,9 @@ void ControllerStepVisitor::visit(octopus::CustomStep const *steppable_p)
 	WaveSpawPointStep const *waveSpawnPoint_l = dynamic_cast<WaveSpawPointStep const *>(steppable_p);
 	RuneWellPopStep const *runeWellPopStep_l = dynamic_cast<RuneWellPopStep const *>(steppable_p);
 
+	// objective handling
+	AbstractObjectiveStep const * objectiveStep_l = dynamic_cast<AbstractObjectiveStep const *>(steppable_p);
+
 	if(impact_l)
 	{
 		_controller.emit_signal("impact", String(impact_l->_model.c_str()), octopus::to_double(impact_l->_pos.x), octopus::to_double(impact_l->_pos.y));
@@ -264,6 +268,10 @@ void ControllerStepVisitor::visit(octopus::CustomStep const *steppable_p)
 	else if(runeWellPopStep_l)
 	{
 		_controller.emit_signal("rune_well_pop_step", (int)runeWellPopStep_l->_wellIdx, (int)runeWellPopStep_l->_player);
+	}
+	else if(objectiveStep_l)
+	{
+		objectiveStep_l->add_signals(_controller);
 	}
 }
 
