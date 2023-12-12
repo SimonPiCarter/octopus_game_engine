@@ -415,10 +415,10 @@ String Controller::get_model_filename(String const &filename_p)
 	std::string filename_l(filename_p.utf8().get_data());
 	std::ifstream file_l(filename_l, std::ios::in | std::ios::binary);
 
-	std::string modelFileName_l;
-	modelFileName_l = octopus::readString(file_l);
+	FileHeader header_l;
+	loadFromStream(header_l, file_l);
 
-	return String(modelFileName_l.c_str());
+	return header_l.get_model_filename();
 }
 
 String Controller::get_level_filename(String const &filename_p)
@@ -426,12 +426,10 @@ String Controller::get_level_filename(String const &filename_p)
 	std::string filename_l(filename_p.utf8().get_data());
 	std::ifstream file_l(filename_l, std::ios::in | std::ios::binary);
 
-	std::string levelFileName_l;
-	// skip model file name
-	octopus::readString(file_l);
-	levelFileName_l = octopus::readString(file_l);
+	FileHeader header_l;
+	loadFromStream(header_l, file_l);
 
-	return String(levelFileName_l.c_str());
+	return header_l.get_level_filename();
 }
 
 void Controller::replay_level(String const &filename_p, bool replay_mode_p, godot::LevelModel *level_model_p)
@@ -824,7 +822,7 @@ void Controller::save_to_file(String const &path_p)
 
 		path_l += ".debug";
 		std::ofstream fileDebug_l(path_l, std::ios::out);
-		saveDebugToStream(_fileHeader, file_l);
+		saveDebugToStream(_fileHeader, fileDebug_l);
 		writeDebugCommands(fileDebug_l, *_controller);
 	}
 }
