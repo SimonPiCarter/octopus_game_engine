@@ -1506,6 +1506,7 @@ void Controller::_bind_methods()
 	ADD_SIGNAL(MethodInfo("kill_unit", PropertyInfo(Variant::INT, "handle")));
 	ADD_SIGNAL(MethodInfo("clear_entity", PropertyInfo(Variant::INT, "handle")));
 	ADD_SIGNAL(MethodInfo("hp_change", PropertyInfo(Variant::INT, "handle"), PropertyInfo(Variant::FLOAT, "ratio"), PropertyInfo(Variant::FLOAT, "diff")));
+	ADD_SIGNAL(MethodInfo("harvest_drop", PropertyInfo(Variant::INT, "handle"), PropertyInfo(Variant::INT, "player"), PropertyInfo(Variant::FLOAT, "qty"), PropertyInfo(Variant::STRING, "type")));
 	ADD_SIGNAL(MethodInfo("harvest_unit", PropertyInfo(Variant::INT, "handle")));
 	ADD_SIGNAL(MethodInfo("hide_unit", PropertyInfo(Variant::INT, "handle")));
 	ADD_SIGNAL(MethodInfo("show_unit", PropertyInfo(Variant::INT, "handle")));

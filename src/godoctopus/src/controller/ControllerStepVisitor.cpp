@@ -11,6 +11,7 @@
 #include "state/entity/Building.hh"
 #include "state/entity/Entity.hh"
 #include "state/entity/Resource.hh"
+#include "state/entity/Unit.hh"
 #include "state/State.hh"
 #include "step/building/BuildingCancelStep.hh"
 #include "step/building/BuildingRemoveRallyPointStep.hh"
@@ -114,6 +115,18 @@ void ControllerStepVisitor::visit(octopus::BuildingSetRallyPointStep const *step
 	}
 }
 
+void ControllerStepVisitor::visit(octopus::UnitHarvestDropStep const *steppable_p)
+{
+	octopus::Entity const * ent_l = _state->getEntity(steppable_p->_handle);
+	octopus::Unit const * unit_l = dynamic_cast<octopus::Unit const *>(ent_l);
+
+	_controller.emit_signal("harvest_drop",
+		int(ent_l->_handle.index),
+		int(unit_l->_player),
+		octopus::to_double(steppable_p->_dropped),
+		String(unit_l->_typeOfResource.c_str()));
+}
+
 void ControllerStepVisitor::visit(octopus::UnitHarvestQuantityStep const *steppable_p)
 {
 	_controller.emit_signal("harvest_unit", int(steppable_p->_handle.index));
@@ -122,6 +135,7 @@ void ControllerStepVisitor::visit(octopus::UnitHarvestQuantityStep const *steppa
 		_controller.emit_signal("clear_entity", int(steppable_p->_res.index));
 	}
 }
+
 
 void ControllerStepVisitor::visit(octopus::CommandHarvestTimeSinceHarvestStep const *steppable_p)
 {
