@@ -33,7 +33,7 @@ public:
 	void _ready() override;
 	// void _process(double delta) override;
 	void move(double delta);
-	// void _draw() override;
+	void _draw() override;
 
 
     // Will be called by Godot when the class is registered

@@ -36,6 +36,17 @@ namespace godot
 		}
 	}
 
+	void Drawer::_draw()
+	{
+		if(_ref.is_valid())
+		{
+			for(int i = 0 ; i < _number ; ++ i)
+			{
+				draw_texture_rect_region(_ref, Rect2(_bullets[i].pos, Vector2(32,32)) , Rect2(0,0, 32,32));
+			}
+		}
+	}
+
 	void Drawer::_bind_methods()
 	{
 		ClassDB::bind_method(D_METHOD("set_texture", "texture"), &Drawer::set_texture);
