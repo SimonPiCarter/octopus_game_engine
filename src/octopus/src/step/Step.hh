@@ -55,8 +55,10 @@ namespace octopus
 			std::list<EntityMoveStep *> &getEntityMoveStep();
 			std::list<EntityMoveStep *> const &getEntityMoveStep() const;
 
-			std::list<Steppable const *> &getSteppable();
+			// std::list<Steppable const *> &getSteppable();
 			std::list<Steppable const *> const &getSteppable() const;
+
+			std::list<Steppable const *> const &getSteppableNoMoveStep() const;
 
 			ProjectileMoveStep & getProjectileMoveStep();
 			ProjectileMoveStep const & getProjectileMoveStep() const;
@@ -116,9 +118,11 @@ namespace octopus
 
 			unsigned long long getId() const { return _id; }
 		private:
+			void registerStep(Steppable * step_p);
 			std::list<EntityMoveStep *> _listEntityMoveStep;
 
 			std::list<Steppable const *> _listSteppable;
+			std::list<Steppable const *> _listSteppableNoMoveStep;
 
 			ProjectileMoveStep _projectileMoveStep;
 			ProjectileSpawnStep _projectileSpawnStep;

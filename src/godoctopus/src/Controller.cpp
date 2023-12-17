@@ -97,6 +97,8 @@ void Controller::_process(double delta)
 		{
 			applyControllerStepVisitor(*this, *_state, *it_l->_step);
 		}
+		applyMoves(*this, *_state);
+
 		_lastIt = stateAndSteps_l._stepIt;
 		_controller->setExternalMin(_lastIt->_step->getId());
 	}
@@ -587,6 +589,7 @@ void Controller::init(std::list<octopus::Command *> const &commands_p, std::list
 	_lastIt = stateAndSteps_l._steps.begin();
 
 	applyControllerStepVisitor(*this, *_state, stateAndSteps_l._initialStep);
+	applyMoves(*this, *_state);
 
 	UtilityFunctions::print("done");
 	_initDone = true;
@@ -630,6 +633,7 @@ void Controller::init_replay(std::list<octopus::Command *> const &commands_p, st
 	_lastIt = stateAndSteps_l._steps.begin();
 
 	applyControllerStepVisitor(*this, *_state, stateAndSteps_l._initialStep);
+	applyMoves(*this, *_state);
 
 	UtilityFunctions::print("done");
 	_initDone = true;
@@ -665,13 +669,12 @@ void Controller::init_loading(std::list<octopus::Command *> const &commands_p, s
 
 	octopus::readCommands(file_p, *_controller, _lib);
 
-	auto last_l = std::chrono::steady_clock::now();
-
 	octopus::StateAndSteps stateAndSteps_l = _controller->queryStateAndSteps();
 	_state = stateAndSteps_l._state;
 	_lastIt = stateAndSteps_l._steps.begin();
 
 	applyControllerStepVisitor(*this, *_state, stateAndSteps_l._initialStep);
+	applyMoves(*this, *_state);
 
 	UtilityFunctions::print("done");
 	_initDone = true;

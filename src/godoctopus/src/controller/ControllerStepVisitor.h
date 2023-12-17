@@ -118,6 +118,7 @@ private:
 
 /// @brief Apply ControllerStepVisitor to step
 void applyControllerStepVisitor(Controller &controller_p, octopus::State const &state_p, octopus::Step const &step_p);
+void applyMoves(Controller &controller_p, octopus::State const &state_p);
 
 } // namespace godot
 

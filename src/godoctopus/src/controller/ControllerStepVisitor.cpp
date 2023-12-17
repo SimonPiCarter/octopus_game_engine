@@ -298,7 +298,7 @@ void applyControllerStepVisitor(Controller &controller_p, octopus::State const &
 {
 	ControllerStepVisitor vis_l(controller_p, &state_p);
 	// visit intial steps
-	for(octopus::Steppable const * steppable_l : step_p.getSteppable())
+	for(octopus::Steppable const * steppable_l : step_p.getSteppableNoMoveStep())
 	{
 		vis_l(steppable_l);
 	}
@@ -306,5 +306,16 @@ void applyControllerStepVisitor(Controller &controller_p, octopus::State const &
 	vis_l(&step_p.getProjectileMoveStep());
 }
 
+void applyMoves(Controller &controller_p, octopus::State const &state_p)
+{
+	for(octopus::Entity const * ent_l : state_p.getEntities())
+	{
+		if(state_p.isEntityAlive(ent_l->_handle) && !ent_l->_model._isStatic)
+		{
+			controller_p.emit_signal("move_unit", int(ent_l->_handle.index),
+				Vector2(octopus::to_double(ent_l->_pos.x), octopus::to_double(ent_l->_pos.y)));
+		}
+	}
+}
 
 } // godot

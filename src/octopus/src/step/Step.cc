@@ -22,10 +22,16 @@ Step::~Step()
 void Step::addEntityMoveStep(EntityMoveStep * step_p)
 {
 	_listEntityMoveStep.push_back(step_p);
-	this->addSteppable(step_p);
+	this->registerStep(step_p);
 }
 
 void Step::addSteppable(Steppable * step_p)
+{
+	_listSteppableNoMoveStep.push_back(step_p);
+	this->registerStep(step_p);
+}
+
+void Step::registerStep(Steppable * step_p)
 {
 	StepAdditionVisitor vis_l(*this);
 	vis_l(step_p);
@@ -42,14 +48,19 @@ std::list<EntityMoveStep *> const &Step::getEntityMoveStep() const
 	return _listEntityMoveStep;
 }
 
-std::list<Steppable const *> &Step::getSteppable()
-{
-	return _listSteppable;
-}
+// std::list<Steppable const *> &Step::getSteppable()
+// {
+// 	return _listSteppable;
+// }
 
 std::list<Steppable const *> const &Step::getSteppable() const
 {
 	return _listSteppable;
+}
+
+std::list<Steppable const *> const &Step::getSteppableNoMoveStep() const
+{
+	return _listSteppableNoMoveStep;
 }
 
 ProjectileMoveStep & Step::getProjectileMoveStep()
@@ -276,20 +287,20 @@ void revert(Step const & step_p, State &state_p, StepData &stepData_p)
 void compact(Step & step_p)
 {
 	// first remove entity move step
-	step_p.getEntityMoveStep().clear();
+	// step_p.getEntityMoveStep().clear();
 
-	for(auto it_l = step_p.getSteppable().begin() ; it_l != step_p.getSteppable().end() ; )
-	{
-		if((*it_l)->isNoOp())
-		{
-			delete *it_l;
-			it_l = step_p.getSteppable().erase(it_l);
-		}
-		else
-		{
-			++it_l;
-		}
-	}
+	// for(auto it_l = step_p.getSteppable().begin() ; it_l != step_p.getSteppable().end() ; )
+	// {
+	// 	if((*it_l)->isNoOp())
+	// 	{
+	// 		delete *it_l;
+	// 		it_l = step_p.getSteppable().erase(it_l);
+	// 	}
+	// 	else
+	// 	{
+	// 		++it_l;
+	// 	}
+	// }
 }
 
 void visitAll(Step const &step_p, SteppableVisitor &visitor_p)
