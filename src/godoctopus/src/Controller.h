@@ -124,6 +124,7 @@ public:
 	double get_current_reload_time(EntityHandle const * handle_p, String const &ability_p) const;
 	// check if there is non static entity behind this one
 	bool hasNonStaticBehind(EntityHandle const * handle_p, int height_p, int width_p) const;
+	bool hasNonStaticBehindFromPos(Vector2 const &pos_p, int height_p, int width_p) const;
 
 	float get_model_ray(String const &model_p) const;
 	/// @brief check if grid is free (model is required to handle specific building check)

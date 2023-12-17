@@ -45,7 +45,7 @@ namespace godot
 		ClassDB::bind_method(D_METHOD("get_texture"), &TextureDrawer::get_texture);
 		ClassDB::bind_method(D_METHOD("add_point", "position"), &TextureDrawer::add_point);
 
-		ADD_GROUP("TextureDrawer", "Drawer_");
+		ADD_GROUP("TextureDrawer", "TextureDrawer_");
 		ADD_PROPERTY(PropertyInfo(Variant::OBJECT, "texture", PROPERTY_HINT_RESOURCE_TYPE, "AtlasTexture"), "set_texture", "get_texture");
 	}
 

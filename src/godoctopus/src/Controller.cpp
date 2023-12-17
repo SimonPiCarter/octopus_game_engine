@@ -966,6 +966,15 @@ bool Controller::hasNonStaticBehind(EntityHandle const * handle_p, int height_p,
 	return lookUpNonStaticBehind(*_state, castHandle(handle_p), width_p, height_p);
 }
 
+bool Controller::hasNonStaticBehindFromPos(Vector2 const &pos_p, int height_p, int width_p) const
+{
+	if(!_state)
+	{
+		return false;
+	}
+	return lookUpNonStaticBehind(*_state, pos_p.x, pos_p.y, width_p, height_p);
+}
+
 float Controller::get_model_ray(String const &model_p) const
 {
 	std::string modelId_l(model_p.utf8().get_data());

@@ -8,6 +8,8 @@
 #include "file/FileHeader.h"
 #include "drawer/Drawer.h"
 #include "drawer/TextureDrawer.h"
+#include "drawer/MultiTextureDrawer.h"
+#include "drawer/StaticPropsDrawer.h"
 
 #include <gdextension_interface.h>
 #include <godot_cpp/core/defs.hpp>
@@ -37,6 +39,8 @@ void initialize_godoctopus_module(godot::ModuleInitializationLevel p_level) {
     godot::ClassDB::register_class<godot::FileHeader>();
     godot::ClassDB::register_class<godot::Drawer>();
     godot::ClassDB::register_class<godot::TextureDrawer>();
+    godot::ClassDB::register_class<godot::MultiTextureDrawer>();
+    godot::ClassDB::register_class<godot::StaticPropsDrawer>();
 }
 
 void uninitialize_godoctopus_module(godot::ModuleInitializationLevel p_level) {
