@@ -653,13 +653,18 @@ bool lookUpNonStaticBehind(State const &state_p, Handle const &handleSource_p, u
 		return false;
 	}
 	Entity const * source_l = state_p.getEntity(handleSource_p);
+	return lookUpNonStaticBehind(state_p, source_l->_pos.x, source_l->_pos.y, width_p, height_p);
+}
+
+bool lookUpNonStaticBehind(State const &state_p, Fixed x_p, Fixed y_p, unsigned long width_p, unsigned long height_p)
+{
 
 	Logger::getDebug() << " lookUpNonStaticBehind :: start"<< std::endl;
 
-	Box<long> box_l {state_p.getGridIndex(source_l->_pos.x - width_p),
-					 state_p.getGridIndex(source_l->_pos.x + width_p),
-					 state_p.getGridIndex(source_l->_pos.y - height_p),
-					 state_p.getGridIndex(source_l->_pos.y)};
+	Box<long> box_l {state_p.getGridIndex(x_p - width_p),
+					 state_p.getGridIndex(x_p + width_p),
+					 state_p.getGridIndex(y_p - height_p),
+					 state_p.getGridIndex(y_p)};
 
 	// grid for fast access
 	std::vector<std::vector<AbstractBitset *> > const & grid_l = state_p.getGrid();
@@ -676,10 +681,10 @@ bool lookUpNonStaticBehind(State const &state_p, Handle const &handleSource_p, u
 				Entity const * check_l = state_p.getLoseEntity(handle_p);
 
 				if(!check_l->_model._isStatic
-				&& check_l->_pos.x > source_l->_pos.x - width_p
-				&& check_l->_pos.x < source_l->_pos.x + width_p
-				&& check_l->_pos.y > source_l->_pos.y - height_p
-				&& check_l->_pos.y < source_l->_pos.y)
+				&& check_l->_pos.x > x_p - width_p
+				&& check_l->_pos.x < x_p + width_p
+				&& check_l->_pos.y > y_p - height_p
+				&& check_l->_pos.y < y_p)
 				{
 					found_l = true;
 					// break the loop
