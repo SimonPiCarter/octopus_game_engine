@@ -199,7 +199,15 @@ void Controller::load_mission_1(int seed_p, int player_count_p)
 
 	std::list<octopus::Steppable *> spawners_l = mission::Mission1Steps(_lib, *_rand, player_count_p);
 	std::list<octopus::Command *> commands_l = mission::Mission1Commands(_lib, *_rand, player_count_p);
-	init(commands_l, spawners_l);
+
+	// enable auto save
+	newAutoSaveFile();
+	writeLevelId(*_autoSaveFile, LEVEL_ID_MISSION_1, 50);
+	_currentLevel = LEVEL_ID_MISSION_1;
+	_headerWriter = std::bind(mission::writeMission1Header, std::placeholders::_1, mission::Mission1Header {seed_p, (unsigned long)player_count_p});
+	_headerWriter(*_autoSaveFile);
+
+	init(commands_l, spawners_l, false, 50, _autoSaveFile);
 }
 
 void Controller::load_mission_2(int seed_p, godot::LevelModel *level_model_p, int player_count_p)
@@ -217,7 +225,14 @@ void Controller::load_mission_2(int seed_p, godot::LevelModel *level_model_p, in
 
 	std::list<octopus::Command *> commands_l = mission::Mission2Commands(_lib, *_rand, player_count_p);
 
-	init(commands_l, spawners_l);
+	// enable auto save
+	newAutoSaveFile();
+	writeLevelId(*_autoSaveFile, LEVEL_ID_MISSION_2, 50);
+	_currentLevel = LEVEL_ID_MISSION_2;
+	_headerWriter = std::bind(mission::writeMission2Header, std::placeholders::_1, mission::Mission2Header {seed_p, (unsigned long)player_count_p});
+	_headerWriter(*_autoSaveFile);
+
+	init(commands_l, spawners_l, false, 50, _autoSaveFile);
 }
 
 void Controller::load_minimal_model()
@@ -504,6 +519,18 @@ void Controller::replay_level(String const &filename_p, bool replay_mode_p, godo
 		levelInfo_l = demo::readDemoLevelHeader(_lib, file_l, info_l, _rand, header_l);
 		_headerWriter = std::bind(demo::writeDemoLevelHeader, std::placeholders::_1, header_l);
 	}
+	else if(levelId_l == LEVEL_ID_MISSION_1)
+	{
+		mission::Mission1Header header_l;
+		levelInfo_l = mission::readMission1Header(_lib, file_l,_rand, header_l);
+		_headerWriter = std::bind(mission::writeMission1Header, std::placeholders::_1, header_l);
+	}
+	else if(levelId_l == LEVEL_ID_MISSION_2)
+	{
+		mission::Mission2Header header_l;
+		levelInfo_l = mission::readMission2Header(_lib, file_l,_rand, header_l);
+		_headerWriter = std::bind(mission::writeMission2Header, std::placeholders::_1, header_l);
+	}
 	else
 	{
 		valid_l = false;
@@ -526,6 +553,10 @@ void Controller::replay_level(String const &filename_p, bool replay_mode_p, godo
 		{
 			init_loading(levelInfo_l.second, spawners_l, divOptionHandler_l, size_l, file_l);
 		}
+	}
+	else
+	{
+		throw std::logic_error(std::string("replay_level is not implemented for level ")+std::to_string(levelId_l));
 	}
 }
 
