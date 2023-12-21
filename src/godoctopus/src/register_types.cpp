@@ -3,6 +3,7 @@
 #include "option/Option.h"
 #include "Model.h"
 #include "ModelUpgrade.h"
+#include "editor/GridBuild.h"
 #include "levels/model/LevelModel.h"
 #include "levels/wave/Wave.h"
 #include "file/FileHeader.h"
@@ -41,6 +42,7 @@ void initialize_godoctopus_module(godot::ModuleInitializationLevel p_level) {
     godot::ClassDB::register_class<godot::TextureDrawer>();
     godot::ClassDB::register_class<godot::MultiTextureDrawer>();
     godot::ClassDB::register_class<godot::StaticPropsDrawer>();
+    godot::ClassDB::register_class<godot::GridBuild>();
 }
 
 void uninitialize_godoctopus_module(godot::ModuleInitializationLevel p_level) {
