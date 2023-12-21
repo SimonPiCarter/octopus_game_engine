@@ -53,7 +53,7 @@ public:
 	virtual void add_signals(Controller & controller) const final;
 };
 
-/// @brief this step fails an objective
+/// @brief this step completes an objective
 class CompleteObjectiveStep : public AbstractObjectiveStep
 {
 public:
@@ -65,7 +65,7 @@ public:
 	virtual void add_signals(Controller & controller) const final;
 };
 
-/// @brief this step fails an objective
+/// @brief this step increment an objective
 class IncrementObjectiveStep : public AbstractObjectiveStep
 {
 public:

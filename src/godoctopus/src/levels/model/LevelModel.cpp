@@ -108,6 +108,30 @@ void LevelModel::add_trigger_action_damage_zone(int triggerIdx_p, int damage_p, 
 	_triggers.at(triggerIdx_p).actions.push_back(GodotTriggerActionZoneDamage {damage_p, static_cast<unsigned long>(team_p), zone_name_l, octopus::Box<long>()});
 }
 
+void LevelModel::add_trigger_action_add_objective(int triggerIdx_p, String const &obj_name_p, bool is_main_p, int count_p, bool remove_p)
+{
+	std::string obj_name_l(obj_name_p.utf8().get_data());
+	_triggers.at(triggerIdx_p).actions.push_back(GodotTriggerActionAddObjective {obj_name_l, is_main_p, count_p, remove_p});
+}
+
+void LevelModel::add_trigger_action_complete_objective(int triggerIdx_p, String const &obj_name_p, bool complete_p)
+{
+	std::string obj_name_l(obj_name_p.utf8().get_data());
+	_triggers.at(triggerIdx_p).actions.push_back(GodotTriggerActionCompleteObjective {obj_name_l, complete_p});
+}
+
+void LevelModel::add_trigger_action_fail_objective(int triggerIdx_p, String const &obj_name_p, bool fail_p)
+{
+	std::string obj_name_l(obj_name_p.utf8().get_data());
+	_triggers.at(triggerIdx_p).actions.push_back(GodotTriggerActionFailObjective {obj_name_l, fail_p});
+}
+
+void LevelModel::add_trigger_action_increment_objective(int triggerIdx_p, String const &obj_name_p, bool increment_p)
+{
+	std::string obj_name_l(obj_name_p.utf8().get_data());
+	_triggers.at(triggerIdx_p).actions.push_back(GodotTriggerActionIncrementObjective {obj_name_l, increment_p});
+}
+
 int LevelModel::add_trigger_action_spawn(int triggerIdx_p)
 {
 	int idx_l = _triggers.at(triggerIdx_p).actions.size();
@@ -175,6 +199,11 @@ void LevelModel::_bind_methods()
 	ClassDB::bind_method(D_METHOD("add_trigger_action_dialog", "trigger_idx", "dialog_idx", "end", "winning_team"), &LevelModel::add_trigger_action_dialog);
 	ClassDB::bind_method(D_METHOD("add_trigger_action_camera", "trigger_idx", "x", "y", "player"), &LevelModel::add_trigger_action_camera);
 	ClassDB::bind_method(D_METHOD("add_trigger_action_damage_zone", "trigger_idx", "damage", "team", "zone_name"), &LevelModel::add_trigger_action_damage_zone);
+	ClassDB::bind_method(D_METHOD("add_trigger_action_add_objective", "trigger_idx", "obj_name", "is_main", "count", "remove"), &LevelModel::add_trigger_action_add_objective);
+	ClassDB::bind_method(D_METHOD("add_trigger_action_complete_objective", "trigger_idx", "obj_name", "complete"), &LevelModel::add_trigger_action_complete_objective);
+	ClassDB::bind_method(D_METHOD("add_trigger_action_fail_objective", "trigger_idx", "obj_name", "fail"), &LevelModel::add_trigger_action_fail_objective);
+	ClassDB::bind_method(D_METHOD("add_trigger_action_increment_objective", "trigger_idx", "obj_name", "increment"), &LevelModel::add_trigger_action_increment_objective);
+
 	ClassDB::bind_method(D_METHOD("add_trigger_action_spawn", "trigger_idx"), &LevelModel::add_trigger_action_spawn);
 	ClassDB::bind_method(D_METHOD("action_spawn_add_entity", "trigger_idx", "action_idx", "type", "model", "player", "x", "y", "num_of_players"), &LevelModel::action_spawn_add_entity);
 	ClassDB::bind_method(D_METHOD("action_spawn_add_attack_move", "trigger_idx", "action_idx", "x", "y"), &LevelModel::action_spawn_add_attack_move);

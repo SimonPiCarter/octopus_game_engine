@@ -14,6 +14,7 @@
 
 #include "controller/step/DialogStep.h"
 #include "controller/step/CameraStep.h"
+#include "controller/step/ObjectiveStep.h"
 
 #include "EntitySpawner.h"
 #include "utils/Box.hh"
@@ -86,6 +87,10 @@ struct GodotListenerVisitor
 	{
 		action_p.zone = _mapZone.at(action_p.zone_name);
 	}
+	void operator()(GodotTriggerActionAddObjective&) const {}
+	void operator()(GodotTriggerActionCompleteObjective&) const {}
+	void operator()(GodotTriggerActionFailObjective&) const {}
+	void operator()(GodotTriggerActionIncrementObjective&) const {}
 
 	std::list<octopus::Listener *> &_list;
 	std::vector<GodotEntity> const &_entities;
@@ -189,6 +194,33 @@ struct GodotActionVisitor
 				_step.addSteppable(new octopus::EntityHitPointChangeStep(ent_l->_handle, -action_p.damage, curHp_l, maxHp_l));
 			}
 		}
+	}
+
+	void operator()(GodotTriggerActionAddObjective const &action_p) const
+	{
+		if(action_p.remove)
+		{
+			_step.addSteppable(new RemoveObjectiveStep(action_p.obj_name));
+		}
+		else
+		{
+			_step.addSteppable(new AddObjectiveStep(action_p.obj_name, action_p.obj_name, action_p.count, action_p.is_main));
+		}
+	}
+
+	void operator()(GodotTriggerActionCompleteObjective const &action_p) const
+	{
+		_step.addSteppable(new CompleteObjectiveStep(action_p.obj_name, action_p.complete));
+	}
+
+	void operator()(GodotTriggerActionFailObjective const &action_p) const
+	{
+		_step.addSteppable(new FailObjectiveStep(action_p.obj_name, action_p.fail));
+	}
+
+	void operator()(GodotTriggerActionIncrementObjective const &action_p) const
+	{
+		_step.addSteppable(new IncrementObjectiveStep(action_p.obj_name, action_p.increment));
 	}
 
 	octopus::State const &_state;
