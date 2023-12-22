@@ -1,5 +1,6 @@
 #pragma once
 
+#include <map>
 #include <godot_cpp/godot.hpp>
 #include <godot_cpp/classes/node2d.hpp>
 #include <godot_cpp/classes/atlas_texture.hpp>
@@ -46,6 +47,11 @@ public:
 	// get an array with all the coordinate of rooted entities
 	TypedArray<Vector2i> get_root_coord();
 
+	void set_feature(int feature_p) { _feature = feature_p; build_palett(); }
+	TypedArray<Color> get_color_palett();
+	TypedArray<int> get_labels_palett();
+	void show_sprite(bool show_p) { _show_sprite = show_p; }
+
 	void _ready() override;
 	void _process(double delta_p) override;
 	void _draw() override;
@@ -88,16 +94,38 @@ public:
 	Vector2i const & get_root(int x, int y) { return _data[x][y].root; }
 
 private:
+	/// @brief reset the data
 	void update_data();
+	/// @brief get the index ofthe case based from the feature
+	int get_index_from_feature(int x, int y);
+	/// @brief build palett
+	void build_palett();
+	/// @brief cycle between 32 colors
+	Color pop_color();
 
+	/// base parameters
 	int _size_case = 32;
 	int _world_size = 250;
-
 	AtlasTexture * _standard = nullptr;
 	AtlasTexture * _highlighted = nullptr;
 	AtlasTexture * _blocked = nullptr;
 
+	/// @brief data
 	std::vector<std::vector<GridBuildData> > _data;
+
+	/// @brief colors to cycle through
+	std::map<int, Color> _palett;
+
+	/// @brief feature to display color palett from
+	/// 0 : none
+	/// 1 : player
+	/// 2 : qty
+	/// 3 : group
+	/// 4 : num players
+	int _feature = 0;
+
+	/// @brief tell if we need to show sprites
+	bool _show_sprite = true;
 };
 
 }
