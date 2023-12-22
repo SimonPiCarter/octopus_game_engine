@@ -9,24 +9,25 @@ on:
 jobs:
   build:
 
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
+    container: ubuntu:18.04
 
     steps:
     - uses: actions/checkout@v3
-    #- run: apt update && apt install -y --no-install-recommends python3-pip virtualenv cmake make g++
-    #- run: virtualenv --python=python3 .venv
-    #- run: source .venv/bin/activate
-    - run: pip3 install wheel setuptools
+    - run: apt update && apt install -y --no-install-recommends python3-pip virtualenv cmake make g++
+    - run: virtualenv --python=python3 .venv
+    - run: source .venv/bin/activate
+    #- run: pip3 install wheel setuptools
     - run: pip3 install conan==1.60 --upgrade
-    - run: |
-        echo "/home/runner/.local/bin" >> $GITHUB_PATH
-      shell: bash
-    - name: Fill in output variable
-      id: output_version
-      shell: bash
-      run: |
-        conan --version
-        echo "version=$(conan --version)" >> $GITHUB_OUTPUT
+    #- run: |
+    #    echo "/home/runner/.local/bin" >> $GITHUB_PATH
+    #  shell: bash
+    #- name: Fill in output variable
+    #  id: output_version
+    #  shell: bash
+    #  run: |
+    #    conan --version
+    #    echo "version=$(conan --version)" >> $GITHUB_OUTPUT
     - run: conan profile new default --detect
     - run: conan profile update settings.compiler.libcxx=libstdc++11 default
     - run: conan install . -if builds/Release -s build_type=Release --build=missing
