@@ -6,7 +6,9 @@
 
 find_package(Git)
 
-if(Git_FOUND)
+if($ENV{GITHUB_SHA})
+	set(GIT_HASH $ENV{GITHUB_SHA})
+elseif(Git_FOUND)
 	execute_process(
 		COMMAND ${GIT_EXECUTABLE} rev-parse HEAD
 		RESULT_VARIABLE result
@@ -14,10 +16,6 @@ if(Git_FOUND)
 		OUTPUT_STRIP_TRAILING_WHITESPACE
 		)
 else()
-	set(result 1)
-endif()
-
-if(result)
 	set(GIT_HASH ${PROJECT_VERSION})
 endif()
 
