@@ -13,7 +13,7 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
-    - run: apt update && apt install -y --no-install-recommends python3-pip virtualenv cmake make g++
+    #- run: apt update && apt install -y --no-install-recommends python3-pip virtualenv cmake make g++
     - run: virtualenv --python=python3 .venv
     - run: source .venv/bin/activate
     - run: pip3 install conan==1.60
