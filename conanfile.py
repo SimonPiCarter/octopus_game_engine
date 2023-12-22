@@ -23,6 +23,7 @@ class cfllpspConan(ConanFile):
     settings = "os", "compiler", "build_type", "arch"
     requires = "boost/1.83.0",\
                 ("gtest/1.12.1", "private")
+    tool_requires = "cmake/3.27.9"
     options = {
         "shared": [True, False],
         "fPIC": [True, False],
