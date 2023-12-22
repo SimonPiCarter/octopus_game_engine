@@ -6,7 +6,7 @@
 
 find_package(Git)
 
-if($ENV{GITHUB_SHA})
+if(DEFINED ENV{GITHUB_SHA})
 	set(GIT_HASH $ENV{GITHUB_SHA})
 elseif(Git_FOUND)
 	execute_process(
