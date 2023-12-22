@@ -21,7 +21,7 @@ jobs:
           pip3 install conan==1.60 --upgrade
           conan profile new default --detect
           conan profile update settings.compiler.libcxx=libstdc++11 default
-          conan install . -if builds/Release -s build_type=Release --build=missing
+          conan install . -if builds/Release -s build_type=Release --build=missing -o with_godot=True
           conan package . -if builds/Release -bf builds/Release || conan package . -if builds/Release -bf builds/Release
       shell: bash
     #- run: pip3 install wheel setuptools
