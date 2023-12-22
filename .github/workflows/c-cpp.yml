@@ -27,7 +27,7 @@ jobs:
     - run: conan profile update settings.compiler.libcxx=libstdc++11 default
     - run: conan install . -if builds/Release -s build_type=Release --build=missing -o with_godot=True
     - run: conan package . -if builds/Release -bf builds/Release || conan package . -if builds/Release -bf builds/Release
-    - uses: actions/upload-artifact@v4
+    - uses: actions/upload-artifact@v3
       with:
         name: libgodoctopus.so
         path: builds/Release/lib/libgodoctopus.so
