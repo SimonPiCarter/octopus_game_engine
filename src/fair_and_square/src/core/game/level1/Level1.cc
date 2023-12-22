@@ -6,6 +6,8 @@
 
 // fas
 #include "core/lang/LangEntries.hh"
+#include "library/utils/Randomizer.hh"
+#include "library/utils/LoseTrigger.hh"
 #include "library/model/AnchorTrigger.hh"
 #include "library/model/ModelLoader.hh"
 #include "library/model/TimerDamage.hh"
@@ -50,22 +52,6 @@ namespace level1
 {
 
 std::vector<octopus::Steppable*> defaultGenerator() { return {}; }
-
-std::string genModelName(RandomGenerator &gen_p)
-{
-	std::string model_l = "square";
-	int random_l = gen_p.roll(0, 2);
-	if(random_l==1)
-	{
-		model_l = "triangle";
-	}
-	else if(random_l==2)
-	{
-		model_l = "circle";
-	}
-	return model_l;
-}
-
 
 class VisionTrigger : public octopus::OneShotTrigger
 {
@@ -274,13 +260,6 @@ void WaveSpawn::trigger(State const &state_p, Step &step_p, unsigned long, octop
 	{
 		step_p.addSteppable(new StateWinStep(state_p.isOver(), state_p.hasWinningTeam(), state_p.getWinningTeam(), 0));
 	}
-}
-
-LoseTrigger::LoseTrigger(Listener * listener_p) : OneShotTrigger({listener_p}) {}
-
-void LoseTrigger::trigger(State const &state_p, Step &step_p, unsigned long, octopus::TriggerData const &) const
-{
-	step_p.addSteppable(new StateWinStep(state_p.isOver(), state_p.hasWinningTeam(), state_p.getWinningTeam(), 1));
 }
 
 } // namespace level1

@@ -44,6 +44,9 @@
 #include "levels/LevelTestAnchor.h"
 #include "levels/LevelTestModelLoader.h"
 #include "levels/missions/mission1/Mission1.h"
+#include "levels/missions/mission2/Mission2.h"
+#include "levels/demo/DemoLevel.h"
+#include "levels/model/utils/EntitySpawner.h"
 
 namespace godot {
 
@@ -191,9 +194,45 @@ void Controller::load_lifesteal_level(int size_p)
 
 void Controller::load_mission_1(int seed_p, int player_count_p)
 {
+	delete _rand;
+	_rand = new octopus::RandomGenerator(seed_p);
+
 	std::list<octopus::Steppable *> spawners_l = mission::Mission1Steps(_lib, *_rand, player_count_p);
 	std::list<octopus::Command *> commands_l = mission::Mission1Commands(_lib, *_rand, player_count_p);
-	init(commands_l, spawners_l);
+
+	// enable auto save
+	newAutoSaveFile();
+	writeLevelId(*_autoSaveFile, LEVEL_ID_MISSION_1, 50);
+	_currentLevel = LEVEL_ID_MISSION_1;
+	_headerWriter = std::bind(mission::writeMission1Header, std::placeholders::_1, mission::Mission1Header {seed_p, (unsigned long)player_count_p});
+	_headerWriter(*_autoSaveFile);
+
+	init(commands_l, spawners_l, false, 50, _autoSaveFile);
+}
+
+void Controller::load_mission_2(int seed_p, godot::LevelModel *level_model_p, int player_count_p)
+{
+	delete _rand;
+	_rand = new octopus::RandomGenerator(seed_p);
+
+	assert(level_model_p);
+	std::vector<GodotEntityInfo> info_l = getEntityInfo(level_model_p->getEntities(), player_count_p);
+
+	std::list<octopus::Steppable *> spawners_l = {};
+	std::list<octopus::Steppable *> levelsteps_l = mission::Mission2Steps(_lib, *_rand, player_count_p, info_l);
+	spawners_l = level_model_p->generateLevelSteps(_lib, player_count_p);
+	spawners_l.splice(spawners_l.end(), levelsteps_l);
+
+	std::list<octopus::Command *> commands_l = mission::Mission2Commands(_lib, *_rand, player_count_p);
+
+	// enable auto save
+	newAutoSaveFile();
+	writeLevelId(*_autoSaveFile, LEVEL_ID_MISSION_2, 50);
+	_currentLevel = LEVEL_ID_MISSION_2;
+	_headerWriter = std::bind(mission::writeMission2Header, std::placeholders::_1, mission::Mission2Header {seed_p, (unsigned long)player_count_p});
+	_headerWriter(*_autoSaveFile);
+
+	init(commands_l, spawners_l, false, 50, _autoSaveFile);
 }
 
 void Controller::load_minimal_model()
@@ -215,6 +254,42 @@ void Controller::load_hero_siege_level(int seed_p, int player_count_p)
 	writeLevelId(*_autoSaveFile, LEVEL_ID_HEROSIEGE, 50);
 	_currentLevel = LEVEL_ID_HEROSIEGE;
 	_headerWriter = std::bind(hero_siege::writeHeroSiegeLevelHeader, std::placeholders::_1, hero_siege::HeroSiegeLevelHeader{seed_p, (unsigned long)player_count_p});
+	_headerWriter(*_autoSaveFile);
+	init(commands_l, spawners_l, false, 50, _autoSaveFile);
+}
+
+void Controller::load_demo_level(int seed_p, WavePattern const * wavePattern_p, godot::LevelModel *level_model_p, int player_count_p, int difficulty_p)
+{
+	assert(level_model_p);
+	std::vector<GodotEntityInfo> info_l = getEntityInfo(level_model_p->getEntities(), player_count_p);
+
+	delete _rand;
+	_rand = new octopus::RandomGenerator(seed_p);
+	std::vector<WavePoolInfo> wavesInfo_l;
+	// add all patterns
+	for(WavePool const * pool_l : wavePattern_p->getWavePools())
+	{
+		wavesInfo_l.push_back(convertToInfo(pool_l));
+	}
+
+	if(wavePattern_p->getPlayer() < 0)
+	{
+		UtilityFunctions::push_error("Cannot load demo level because player index < 0");
+		return;
+	}
+	unsigned long player_l = wavePattern_p->getPlayer();
+
+	std::list<octopus::Steppable *> spawners_l = {};
+	std::list<octopus::Steppable *> levelsteps_l = demo::DemoLevelSteps(_lib, *_rand, wavesInfo_l, player_l, player_count_p, info_l, difficulty_p);
+	spawners_l = level_model_p->generateLevelSteps(_lib, player_count_p);
+	spawners_l.splice(spawners_l.end(), levelsteps_l);
+
+	std::list<octopus::Command *> commands_l = demo::DemoLevelCommands(_lib, *_rand, player_count_p, difficulty_p);
+	// enable auto save
+	newAutoSaveFile();
+	writeLevelId(*_autoSaveFile, LEVEL_ID_LEVEL_DEMO, 50);
+	_currentLevel = LEVEL_ID_LEVEL_DEMO;
+	_headerWriter = std::bind(demo::writeDemoLevelHeader, std::placeholders::_1, demo::DemoLevelHeader{seed_p, player_l, difficulty_p, player_count_p, wavesInfo_l});
 	_headerWriter(*_autoSaveFile);
 	init(commands_l, spawners_l, false, 50, _autoSaveFile);
 }
@@ -342,12 +417,12 @@ void Controller::load_multi_test_level(int seed_p, int step_cout_p, bool buff_pr
 
 void Controller::set_model_filename(String const &filename_p)
 {
-	_modelFile = filename_p.utf8().get_data();
+	_fileHeader.set_model_filename(filename_p);
 }
 
 void Controller::set_level_filename(String const &filename_p)
 {
-	_levelFile = filename_p.utf8().get_data();
+	_fileHeader.set_level_filename(filename_p);
 }
 
 String Controller::get_model_filename(String const &filename_p)
@@ -355,10 +430,10 @@ String Controller::get_model_filename(String const &filename_p)
 	std::string filename_l(filename_p.utf8().get_data());
 	std::ifstream file_l(filename_l, std::ios::in | std::ios::binary);
 
-	std::string modelFileName_l;
-	modelFileName_l = octopus::readString(file_l);
+	FileHeader header_l;
+	loadFromStream(header_l, file_l);
 
-	return String(modelFileName_l.c_str());
+	return header_l.get_model_filename();
 }
 
 String Controller::get_level_filename(String const &filename_p)
@@ -366,12 +441,10 @@ String Controller::get_level_filename(String const &filename_p)
 	std::string filename_l(filename_p.utf8().get_data());
 	std::ifstream file_l(filename_l, std::ios::in | std::ios::binary);
 
-	std::string levelFileName_l;
-	// skip model file name
-	octopus::readString(file_l);
-	levelFileName_l = octopus::readString(file_l);
+	FileHeader header_l;
+	loadFromStream(header_l, file_l);
 
-	return String(levelFileName_l.c_str());
+	return header_l.get_level_filename();
 }
 
 void Controller::replay_level(String const &filename_p, bool replay_mode_p, godot::LevelModel *level_model_p)
@@ -379,8 +452,7 @@ void Controller::replay_level(String const &filename_p, bool replay_mode_p, godo
 	std::string filename_l(filename_p.utf8().get_data());
 	std::ifstream file_l(filename_l, std::ios::in | std::ios::binary);
 
-	_modelFile = octopus::readString(file_l);
-	_levelFile = octopus::readString(file_l);
+	loadFromStream(_fileHeader, file_l);
 
 	size_t levelId_l;
 	size_t size_l;
@@ -439,6 +511,26 @@ void Controller::replay_level(String const &filename_p, bool replay_mode_p, godo
 		_headerWriter = std::bind(duellevel::writeLevelHeader, std::placeholders::_1, header_l);
 		divOptionHandler_l = true;
 	}
+	else if(levelId_l == LEVEL_ID_LEVEL_DEMO)
+	{
+		std::vector<GodotEntityInfo> info_l = getEntityInfo(level_model_p->getEntities(), 1);
+
+		demo::DemoLevelHeader header_l;
+		levelInfo_l = demo::readDemoLevelHeader(_lib, file_l, info_l, _rand, header_l);
+		_headerWriter = std::bind(demo::writeDemoLevelHeader, std::placeholders::_1, header_l);
+	}
+	else if(levelId_l == LEVEL_ID_MISSION_1)
+	{
+		mission::Mission1Header header_l;
+		levelInfo_l = mission::readMission1Header(_lib, file_l,_rand, header_l);
+		_headerWriter = std::bind(mission::writeMission1Header, std::placeholders::_1, header_l);
+	}
+	else if(levelId_l == LEVEL_ID_MISSION_2)
+	{
+		mission::Mission2Header header_l;
+		levelInfo_l = mission::readMission2Header(_lib, file_l,_rand, header_l);
+		_headerWriter = std::bind(mission::writeMission2Header, std::placeholders::_1, header_l);
+	}
 	else
 	{
 		valid_l = false;
@@ -462,6 +554,26 @@ void Controller::replay_level(String const &filename_p, bool replay_mode_p, godo
 			init_loading(levelInfo_l.second, spawners_l, divOptionHandler_l, size_l, file_l);
 		}
 	}
+	else
+	{
+		throw std::logic_error(std::string("replay_level is not implemented for level ")+std::to_string(levelId_l));
+	}
+}
+
+
+godot::FileHeader const * Controller::get_file_header() const
+{
+	return &_fileHeader;
+}
+
+godot::FileHeader const * Controller::read_file_header(String const &filename_p)
+{
+	std::string filename_l(filename_p.utf8().get_data());
+	std::ifstream file_l(filename_l, std::ios::in | std::ios::binary);
+
+	loadFromStream(_fileHeader, file_l);
+
+	return &_fileHeader;
 }
 
 void Controller::init(std::list<octopus::Command *> const &commands_p, std::list<octopus::Steppable *> const &spawners_p, bool divOptionManager_p, size_t size_p, std::ofstream *file_p)
@@ -605,11 +717,12 @@ void Controller::loading_loop()
 	// fast speed loading
 	while(!_controller->loop_body())
 	{
-		emit_signal("loading_state", double(_controller->getMetrics()._nbStepsCompiled)/totalSteps_l);
+		double ratio_l = double(_controller->getMetrics()._nbStepsCompiled)/totalSteps_l;
+		call_deferred("emit_signal", "loading_state", ratio_l);
 	}
 	// set up step done
 	_stepDone += _controller->getMetrics()._nbStepsCompiled;
-	emit_signal("loading_done");
+	call_deferred("emit_signal", "loading_done");
 
 	_paused = true;
 
@@ -698,7 +811,7 @@ void Controller::windup(int handle_p)
 void Controller::kill(octopus::Handle const & handle_p)
 {
 	octopus::Entity const &entity_l = *_state->getEntity(handle_p);
-	if(entity_l._model._isUnit)
+	if(entity_l._model._isUnit || entity_l._model._isBuilding)
 	{
 		emit_signal("kill_unit", int(handle_p.index));
 	}
@@ -729,16 +842,18 @@ void Controller::save_to_file(String const &path_p)
 	{
 		std::string path_l(path_p.utf8().get_data());
 		std::ofstream file_l(path_l, std::ios::out | std::ios::binary);
-		octopus::writeString(file_l, _modelFile);
-		octopus::writeString(file_l, _levelFile);
+
+		// write Godot header
+		saveToStream(_fileHeader, file_l);
+
+		// write octopus engine info
 		writeLevelId(file_l, _currentLevel, get_world_size()/5);
 		_headerWriter(file_l);
 		writeCommands(file_l, *_controller);
 
 		path_l += ".debug";
 		std::ofstream fileDebug_l(path_l, std::ios::out);
-		fileDebug_l<<_modelFile<<std::endl;
-		fileDebug_l<<_levelFile<<std::endl;
+		saveDebugToStream(_fileHeader, fileDebug_l);
 		writeDebugCommands(fileDebug_l, *_controller);
 	}
 }
@@ -882,6 +997,15 @@ bool Controller::hasNonStaticBehind(EntityHandle const * handle_p, int height_p,
 	return lookUpNonStaticBehind(*_state, castHandle(handle_p), width_p, height_p);
 }
 
+bool Controller::hasNonStaticBehindFromPos(Vector2 const &pos_p, int height_p, int width_p) const
+{
+	if(!_state)
+	{
+		return false;
+	}
+	return lookUpNonStaticBehind(*_state, pos_p.x, pos_p.y, width_p, height_p);
+}
+
 float Controller::get_model_ray(String const &model_p) const
 {
 	std::string modelId_l(model_p.utf8().get_data());
@@ -979,8 +1103,9 @@ PackedInt32Array Controller::get_sub_selection(Rect2 const &rect_p, String const
 	for(octopus::Entity const * ent_l : _state->getEntities())
 	{
 		bool isBlueprint_l = ent_l->_model._isBuilding && static_cast<octopus::Building const *>(ent_l)->isBlueprint();
+		bool isCancelled_l = ent_l->_model._isBuilding && static_cast<octopus::Building const *>(ent_l)->_canceled;
 
-		if(!_state->isEntityAlive(ent_l->_handle) && !isBlueprint_l)
+		if(!_state->isEntityAlive(ent_l->_handle) && (!isBlueprint_l || isCancelled_l))
 		{
 			continue;
 		}
@@ -1330,8 +1455,10 @@ void Controller::_bind_methods()
 	ClassDB::bind_method(D_METHOD("load_dot_level", "size"), &Controller::load_dot_level);
 	ClassDB::bind_method(D_METHOD("load_lifesteal_level", "size"), &Controller::load_lifesteal_level);
 	ClassDB::bind_method(D_METHOD("load_mission_1", "seed", "player_count"), &Controller::load_mission_1);
+	ClassDB::bind_method(D_METHOD("load_mission_2", "seed", "level_model", "player_count"), &Controller::load_mission_2);
 	ClassDB::bind_method(D_METHOD("load_minimal_model"), &Controller::load_minimal_model);
 	ClassDB::bind_method(D_METHOD("load_hero_siege_level", "seed", "nb_players"), &Controller::load_hero_siege_level);
+	ClassDB::bind_method(D_METHOD("load_demo_level", "seed", "wave_pattern", "level_model", "player_count", "difficulty"), &Controller::load_demo_level);
 	ClassDB::bind_method(D_METHOD("load_level1", "seed", "nb_wave"), &Controller::load_level1);
 	ClassDB::bind_method(D_METHOD("load_level2", "seed", "wave_pattern", "nb_players"), &Controller::load_level2);
 	ClassDB::bind_method(D_METHOD("load_level_test_anchor", "seed"), &Controller::load_level_test_anchor);
@@ -1419,6 +1546,7 @@ void Controller::_bind_methods()
 	ADD_SIGNAL(MethodInfo("kill_unit", PropertyInfo(Variant::INT, "handle")));
 	ADD_SIGNAL(MethodInfo("clear_entity", PropertyInfo(Variant::INT, "handle")));
 	ADD_SIGNAL(MethodInfo("hp_change", PropertyInfo(Variant::INT, "handle"), PropertyInfo(Variant::FLOAT, "ratio"), PropertyInfo(Variant::FLOAT, "diff")));
+	ADD_SIGNAL(MethodInfo("harvest_drop", PropertyInfo(Variant::INT, "handle"), PropertyInfo(Variant::INT, "player"), PropertyInfo(Variant::FLOAT, "qty"), PropertyInfo(Variant::STRING, "type")));
 	ADD_SIGNAL(MethodInfo("harvest_unit", PropertyInfo(Variant::INT, "handle")));
 	ADD_SIGNAL(MethodInfo("hide_unit", PropertyInfo(Variant::INT, "handle")));
 	ADD_SIGNAL(MethodInfo("show_unit", PropertyInfo(Variant::INT, "handle")));
@@ -1437,6 +1565,17 @@ void Controller::_bind_methods()
 	ADD_SIGNAL(MethodInfo("move_projectile", PropertyInfo(Variant::INT, "index"), PropertyInfo(Variant::VECTOR2, "pos")));
 	ADD_SIGNAL(MethodInfo("end_projectile", PropertyInfo(Variant::INT, "index")));
 
+	/// signals for objective handling
+	ADD_SIGNAL(MethodInfo("add_main_objective", PropertyInfo(Variant::STRING, "key_objective"),
+		PropertyInfo(Variant::STRING, "text"), PropertyInfo(Variant::INT, "count")));
+	ADD_SIGNAL(MethodInfo("add_secondary_objective", PropertyInfo(Variant::STRING, "key_objective"),
+		PropertyInfo(Variant::STRING, "text"), PropertyInfo(Variant::INT, "count")));
+	ADD_SIGNAL(MethodInfo("set_complete_objective", PropertyInfo(Variant::STRING, "key_objective"), PropertyInfo(Variant::BOOL, "complete")));
+	ADD_SIGNAL(MethodInfo("set_fail_objective", PropertyInfo(Variant::STRING, "key_objective"), PropertyInfo(Variant::BOOL, "fail")));
+	ADD_SIGNAL(MethodInfo("increment_objective", PropertyInfo(Variant::STRING, "key_objective")));
+	ADD_SIGNAL(MethodInfo("decrement_objective", PropertyInfo(Variant::STRING, "key_objective")));
+	ADD_SIGNAL(MethodInfo("remove_objective", PropertyInfo(Variant::STRING, "key_objective")));
+
 	/// blockers
 	ADD_SIGNAL(MethodInfo("spawn_blockers", PropertyInfo(Variant::FLOAT, "val"), PropertyInfo(Variant::FLOAT, "min"),
 		PropertyInfo(Variant::FLOAT, "max"), PropertyInfo(Variant::BOOL, "less"), PropertyInfo(Variant::BOOL, "x")));
@@ -1446,6 +1585,8 @@ void Controller::_bind_methods()
 	ADD_SIGNAL(MethodInfo("set_camera", PropertyInfo(Variant::INT, "x"), PropertyInfo(Variant::INT, "y"), PropertyInfo(Variant::INT, "player")));
 	ADD_SIGNAL(MethodInfo("spawn_dialog", PropertyInfo(Variant::STRING, "model"), PropertyInfo(Variant::BOOL, "over")));
 	ADD_SIGNAL(MethodInfo("wave"));
+	ADD_SIGNAL(MethodInfo("wave_spawn_point", PropertyInfo(Variant::INT, "x"), PropertyInfo(Variant::INT, "y")));
+	ADD_SIGNAL(MethodInfo("rune_well_pop_step", PropertyInfo(Variant::INT, "well"), PropertyInfo(Variant::INT, "player")));
 
 	ADD_SIGNAL(MethodInfo("over", PropertyInfo(Variant::INT, "winning_team")));
 
@@ -1484,11 +1625,11 @@ void Controller::newAutoSaveFile()
 	delete _autoSaveFile;
 	delete _autoSaveFileDebug;
 	_autoSaveFile = new std::ofstream(_autoSavePath, std::ios::out | std::ios::binary);
-	octopus::writeString(*_autoSaveFile, _modelFile);
-	octopus::writeString(*_autoSaveFile, _levelFile);
+	saveToStream(_fileHeader, *_autoSaveFile);
 	if(_enableAutoSaveFileDebug)
 	{
 		_autoSaveFileDebug = new std::ofstream(_autoSavePath+".d", std::ios::out);
+		saveDebugToStream(_fileHeader, *_autoSaveFileDebug);
 	}
 }
 

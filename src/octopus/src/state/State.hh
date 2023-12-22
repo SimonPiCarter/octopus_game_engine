@@ -261,6 +261,7 @@ Entity const * lookUpNewResource(State const &state_p, Handle const &sourceHandl
 /// @param height_p by how many cases we check up
 /// @return true if one entity is found
 bool lookUpNonStaticBehind(State const &state_p, Handle const &handle_p, unsigned long width_p, unsigned long height_p);
+bool lookUpNonStaticBehind(State const &state_p, Fixed x, Fixed y, unsigned long width_p, unsigned long height_p);
 
 /// @brief Check if the player has enough resource in the given state
 /// @param state_p state in which we want to check resources

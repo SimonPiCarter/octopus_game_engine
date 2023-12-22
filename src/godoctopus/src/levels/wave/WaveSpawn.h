@@ -9,7 +9,7 @@
 #include "utils/RandomGenerator.hh"
 #include "utils/Vector.hh"
 
-#include "wave/WaveUnitCount.h"
+#include "WaveUnitCount.h"
 
 namespace octopus
 {
@@ -21,15 +21,13 @@ namespace octopus
 
 namespace godot
 {
-namespace level2
-{
 
 std::vector<octopus::Steppable*> defaultGenerator();
 
 struct WaveParam
 {
-	/// @brief point where the unit will spawn
-	octopus::Vector spawnPoint;
+	/// @brief points where the unit will spawn
+	std::vector<octopus::Vector> spawnPoints;
 	/// @brief point where the unit will attack
 	octopus::Vector targetPoint;
 	/// @brief limits to remove
@@ -38,12 +36,14 @@ struct WaveParam
 	unsigned long limitYEnd;
 	/// @brief wave pool info used to generate the wave
 	WavePoolInfo wavePool;
+	/// @brief number of spawn points to roll each wave
+	unsigned long nSpawnPoints = 1;
 };
 
 class WaveSpawn : public octopus::OneShotTrigger
 {
 public:
-	WaveSpawn(octopus::Listener * listener_p, WaveInfo const &currentWave_p, bool earlyWave_p,
+	WaveSpawn(octopus::Listener * listener_p, WaveInfo const &currentWave_p, std::vector<octopus::Vector> const &currentSpawnPoint_p, bool earlyWave_p,
 		octopus::Library const &lib_p, octopus::RandomGenerator &rand_p, std::list<WaveParam> const &param_p, unsigned long player_p,
 		std::function<std::vector<octopus::Steppable *>(void)> waveStepGenerator_p);
 
@@ -52,6 +52,8 @@ public:
 private:
 	/// @brief required because wave has already been picked from the current pool
 	WaveInfo const _currentWave;
+	/// @brief required because currentspawn point has been picked
+	std::vector<octopus::Vector> const _currentSpawnPoints;
 	/// @brief true if the ealy wave the the current wave is supposed to spawn
 	bool const _earlyWave;
 	octopus::Library const &_lib;
@@ -75,7 +77,9 @@ private:
 	unsigned long _winner;
 };
 
-} // namespace level2
+/// @brief Roll N spawn points from the candidates
+std::vector<octopus::Vector> rollSpawnPoints(std::vector<octopus::Vector> const &candidates_p, unsigned long number_p, octopus::RandomGenerator &rand_p);
+
 } // namespace godot
 
 

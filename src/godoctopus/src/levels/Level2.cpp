@@ -5,6 +5,8 @@
 #include <random>
 
 // fas
+#include "library/utils/Randomizer.hh"
+#include "library/utils/LoseTrigger.hh"
 #include "library/model/AnchorTrigger.hh"
 #include "library/model/ModelLoader.hh"
 #include "library/model/TimerDamage.hh"
@@ -41,10 +43,11 @@
 #include "controller/step/CameraStep.h"
 #include "controller/step/DialogStep.h"
 
-#include "level2/WaveSpawn.h"
+#include "wave/WaveSpawn.h"
 #include "level2/UtilsLevel2.h"
 
 using namespace octopus;
+using namespace fas;
 
 namespace godot
 {
@@ -124,20 +127,20 @@ std::list<Steppable *> WaveLevelSteps(Library &lib_p, RandomGenerator &rand_p, s
 	for(size_t i = 0 ; i < waves_l.size() ; ++ i)
 	{
 		if(i == 0)
-			params_l.push_back({octopus::Vector(60,ySpawnWave_l), octopus::Vector(20,ySpawnWave_l), 40, 40, 60, waves_l[i]});
+			params_l.push_back({{octopus::Vector(60,ySpawnWave_l)}, octopus::Vector(20,ySpawnWave_l), 40, 40, 60, waves_l[i]});
 		else if(i==1)
-			params_l.push_back({octopus::Vector(100,ySpawnWave_l), octopus::Vector(20,ySpawnWave_l), 80, 40, 60, waves_l[i]});
+			params_l.push_back({{octopus::Vector(100,ySpawnWave_l)}, octopus::Vector(20,ySpawnWave_l), 80, 40, 60, waves_l[i]});
 		else if(i==2)
-			params_l.push_back({octopus::Vector(140,ySpawnWave_l), octopus::Vector(20,ySpawnWave_l), 120, 40, 60, waves_l[i]});
+			params_l.push_back({{octopus::Vector(140,ySpawnWave_l)}, octopus::Vector(20,ySpawnWave_l), 120, 40, 60, waves_l[i]});
 		else if(i==3)
-			params_l.push_back({octopus::Vector(180,ySpawnWave_l), octopus::Vector(20,ySpawnWave_l), 160, 40, 60, waves_l[i]});
+			params_l.push_back({{octopus::Vector(180,ySpawnWave_l)}, octopus::Vector(20,ySpawnWave_l), 160, 40, 60, waves_l[i]});
 		else
-			params_l.push_back({octopus::Vector(240,ySpawnWave_l), octopus::Vector(20,ySpawnWave_l), 160, 40, 60, waves_l[i]});
+			params_l.push_back({{octopus::Vector(240,ySpawnWave_l)}, octopus::Vector(20,ySpawnWave_l), 160, 40, 60, waves_l[i]});
 	}
 
 	WaveInfo firstWave_l = rollWave(rand_p, waves_l[0]);
 
-	Trigger * triggerWave_l = new WaveSpawn(new ListenerStepCount(firstWave_l.earlyWave.steps), firstWave_l, true,
+	Trigger * triggerWave_l = new WaveSpawn(new ListenerStepCount(firstWave_l.earlyWave.steps), firstWave_l, {octopus::Vector(60,ySpawnWave_l)}, true,
 			lib_p, rand_p, params_l, player_p, defaultGenerator);
 
 	Handle handle_l(0);
@@ -473,19 +476,6 @@ std::pair<std::list<octopus::Steppable *>, std::list<octopus::Command *> > readW
 	pair_l.first = WaveLevelSteps(lib_p, *rand_p, header_r.tierWaveInfo, header_r.player, 1);
 	pair_l.second = WaveLevelCommands(lib_p, *rand_p, 1);
 	return pair_l;
-}
-
-/////////////////////////////////////////////
-/////////////////////////////////////////////
-/// 				Triggers			  ///
-/////////////////////////////////////////////
-/////////////////////////////////////////////
-
-LoseTrigger::LoseTrigger(Listener * listener_p) : OneShotTrigger({listener_p}) {}
-
-void LoseTrigger::trigger(State const &state_p, Step &step_p, unsigned long, octopus::TriggerData const &) const
-{
-	step_p.addSteppable(new StateWinStep(state_p.isOver(), state_p.hasWinningTeam(), state_p.getWinningTeam(), 1));
 }
 
 } // namespace level2

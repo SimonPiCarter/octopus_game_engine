@@ -214,7 +214,7 @@ bool EntityMoveCommand::applyCommand(Step & step_p, State const &state_p, Comman
 		{
 			Logger::getNormal() << "almost no move : " << _handleCommand.index
 								<< " since progress "<<data_l->_countSinceProgress << " setp id " << step_p.getId() << std::endl;
-			if(!data_l->_unlockRoutine._enabled)
+			if(!data_l->_unlockRoutine._enabled && !data_l->_ignoreCollision)
 			{
 				Vector newPoint_l;
 				Vector diff_l = data_l->_finalPoint - ent_l->_pos;

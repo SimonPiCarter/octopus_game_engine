@@ -15,8 +15,9 @@
 #include "controller/Controller.hh"
 #include "option/Option.h"
 #include "option/OptionManager.h"
+#include "file/FileHeader.h"
 #include "levels/model/LevelModel.h"
-#include "levels/level2/wave/Wave.h"
+#include "levels/wave/Wave.h"
 #include "Entity.h"
 
 namespace octopus
@@ -53,12 +54,14 @@ public:
 	void load_lifesteal_level(int size_p);
 	// missions
 	void load_mission_1(int seed_p, int player_count_p);
+	void load_mission_2(int seed_p, godot::LevelModel *level_model_p, int player_count_p);
 
 	// required for editor
 	void load_minimal_model();
 
 	// levels (modes)
 	void load_hero_siege_level(int seed_p, int player_count_p);
+	void load_demo_level(int seed_p, WavePattern const * wavePattern_p, godot::LevelModel *level_model_p, int player_count_p, int difficulty_p);
 
 	// levels (fas)
 	void load_level1(int seed_p, int nb_wave_p);
@@ -74,6 +77,10 @@ public:
 	String get_model_filename(String const &filename_p);
 	String get_level_filename(String const &filename_p);
 	void replay_level(String const &filename_p, bool replay_mode_p, godot::LevelModel *level_model_p);
+
+	// File header parsing
+	godot::FileHeader const * get_file_header() const;
+	godot::FileHeader const * read_file_header(String const &filename_p);
 
 	// start engine with given level
 	void init(std::list<octopus::Command *> const &commands_p, std::list<octopus::Steppable *> const &spawners_p, bool divOptionManager_p=false, size_t size_p=50, std::ofstream *file_p=nullptr);
@@ -117,6 +124,7 @@ public:
 	double get_current_reload_time(EntityHandle const * handle_p, String const &ability_p) const;
 	// check if there is non static entity behind this one
 	bool hasNonStaticBehind(EntityHandle const * handle_p, int height_p, int width_p) const;
+	bool hasNonStaticBehindFromPos(Vector2 const &pos_p, int height_p, int width_p) const;
 
 	float get_model_ray(String const &model_p) const;
 	/// @brief check if grid is free (model is required to handle specific building check)
@@ -244,10 +252,8 @@ private:
 	size_t _currentLevel = 0;
 	// header writer of level
 	std::function<void(std::ofstream&)> _headerWriter;
-	// path to model file if any ("" if none)
-	std::string _modelFile = "";
-	// path to level file if any ("" if none)
-	std::string _levelFile = "";
+	// FileHeader
+	FileHeader _fileHeader;
 
 	std::list<octopus::StepBundle>::const_iterator _lastIt;
 

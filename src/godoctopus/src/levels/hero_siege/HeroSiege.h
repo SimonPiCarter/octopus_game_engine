@@ -44,14 +44,6 @@ void readHeroSiegeLevelHeader(std::ifstream &file_p, HeroSiegeLevelHeader &heade
 std::pair<std::list<octopus::Steppable *>, std::list<octopus::Command *> > readHeroSiegeLevelHeader(octopus::Library &lib_p, std::ifstream &file_p,
 	octopus::RandomGenerator * &rand_p, HeroSiegeLevelHeader &header_r);
 
-class LoseTrigger : public octopus::OneShotTrigger
-{
-public:
-	LoseTrigger(octopus::Listener * listener_p);
-
-	virtual void trigger(octopus::State const &state_p, octopus::Step &step_p, unsigned long, octopus::TriggerData const &) const override;
-};
-
 } // namespace level2
 } // namespace godot
 

@@ -29,17 +29,26 @@ namespace godot
 		std::vector<unsigned long> entity_group;
 		/// @brief number of player required to spawn the entity
 		unsigned long num_players_to_spawn = 0;
+		unsigned long resource_qty = 2000;
     };
 
 	struct GodotTriggerActionDialog { std::string dialog_idx = ""; bool end=false; int winning_team=0; };
 	struct GodotTriggerActionSpawn { std::vector<GodotEntity> entities_to_spawn; bool attack_move=false; float x=0; float y=0; };
 	struct GodotTriggerActionCamera { int x=0; int y=0; int player=0; };
 	struct GodotTriggerActionZoneDamage { int damage = 0; unsigned long team = 0; std::string zone_name = ""; octopus::Box<long> zone; };
+	struct GodotTriggerActionAddObjective { std::string obj_name = ""; bool is_main=true; int count=-1; bool remove=false; };
+	struct GodotTriggerActionCompleteObjective { std::string obj_name = ""; bool complete=true; };
+	struct GodotTriggerActionFailObjective { std::string obj_name = ""; bool fail=true; };
+	struct GodotTriggerActionIncrementObjective { std::string obj_name = ""; bool increment=true; };
 	using GodotTriggerAction = std::variant<
 		GodotTriggerActionDialog,
 		GodotTriggerActionSpawn,
 		GodotTriggerActionCamera,
-		GodotTriggerActionZoneDamage
+		GodotTriggerActionZoneDamage,
+		GodotTriggerActionAddObjective,
+		GodotTriggerActionCompleteObjective,
+		GodotTriggerActionFailObjective,
+		GodotTriggerActionIncrementObjective
 	>;
 
 	struct GodotTriggerListenerEntityDied { unsigned long entity_group = 0; };

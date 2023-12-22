@@ -1,9 +1,11 @@
 #ifndef __TimedBuff__
 #define __TimedBuff__
 
+#include <optional>
 #include <string>
 #include "Buff.hh"
 #include "utils/Fixed.hh"
+#include "state/entity/attackModifier/AttackModifier.hh"
 
 namespace octopus
 {
@@ -17,6 +19,9 @@ struct TimedBuff : public TyppedBuff
 	bool _debuff {false};
 
 	std::string _id;
+
+	/// @brief optional attack modifier
+	std::optional<AttackModifier> _attackMod = std::nullopt;
 
 	/// @brief check if the buff apply to the entity
 	/// @param ent_p the entity to test

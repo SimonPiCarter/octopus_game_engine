@@ -4,12 +4,14 @@
 #include "step/CameraStep.h"
 #include "step/DialogStep.h"
 #include "step/WaveStep.h"
+#include "step/ObjectiveStep.h"
 
 // octopus
 #include "command/data/AttackMoveData.hh"
 #include "state/entity/Building.hh"
 #include "state/entity/Entity.hh"
 #include "state/entity/Resource.hh"
+#include "state/entity/Unit.hh"
 #include "state/State.hh"
 #include "step/building/BuildingCancelStep.hh"
 #include "step/building/BuildingRemoveRallyPointStep.hh"
@@ -37,6 +39,7 @@
 #include "step/state/StateWinStep.hh"
 #include "step/unit/UnitHarvestStep.hh"
 
+#include "controller/step/RuneWellPopStep.h"
 
 using octopus::to_double;
 
@@ -112,6 +115,18 @@ void ControllerStepVisitor::visit(octopus::BuildingSetRallyPointStep const *step
 	}
 }
 
+void ControllerStepVisitor::visit(octopus::UnitHarvestDropStep const *steppable_p)
+{
+	octopus::Entity const * ent_l = _state->getEntity(steppable_p->_handle);
+	octopus::Unit const * unit_l = dynamic_cast<octopus::Unit const *>(ent_l);
+
+	_controller.emit_signal("harvest_drop",
+		int(ent_l->_handle.index),
+		int(unit_l->_player),
+		octopus::to_double(steppable_p->_dropped),
+		String(unit_l->_typeOfResource.c_str()));
+}
+
 void ControllerStepVisitor::visit(octopus::UnitHarvestQuantityStep const *steppable_p)
 {
 	_controller.emit_signal("harvest_unit", int(steppable_p->_handle.index));
@@ -120,6 +135,7 @@ void ControllerStepVisitor::visit(octopus::UnitHarvestQuantityStep const *steppa
 		_controller.emit_signal("clear_entity", int(steppable_p->_res.index));
 	}
 }
+
 
 void ControllerStepVisitor::visit(octopus::CommandHarvestTimeSinceHarvestStep const *steppable_p)
 {
@@ -230,6 +246,11 @@ void ControllerStepVisitor::visit(octopus::CustomStep const *steppable_p)
 	DialogStep const *dialog_l = dynamic_cast<DialogStep const *>(steppable_p);
 	CameraStep const *camera_l = dynamic_cast<CameraStep const *>(steppable_p);
 	WaveStep const *wave_l = dynamic_cast<WaveStep const *>(steppable_p);
+	WaveSpawPointStep const *waveSpawnPoint_l = dynamic_cast<WaveSpawPointStep const *>(steppable_p);
+	RuneWellPopStep const *runeWellPopStep_l = dynamic_cast<RuneWellPopStep const *>(steppable_p);
+
+	// objective handling
+	AbstractObjectiveStep const * objectiveStep_l = dynamic_cast<AbstractObjectiveStep const *>(steppable_p);
 
 	if(impact_l)
 	{
@@ -250,6 +271,21 @@ void ControllerStepVisitor::visit(octopus::CustomStep const *steppable_p)
 	else if(wave_l)
 	{
 		_controller.emit_signal("wave");
+	}
+	else if(waveSpawnPoint_l)
+	{
+		for(octopus::Vector const &point_l : waveSpawnPoint_l->getPoints())
+		{
+			_controller.emit_signal("wave_spawn_point", (int)point_l.x.to_double(), (int)point_l.y.to_double());
+		}
+	}
+	else if(runeWellPopStep_l)
+	{
+		_controller.emit_signal("rune_well_pop_step", (int)runeWellPopStep_l->_wellIdx, (int)runeWellPopStep_l->_player);
+	}
+	else if(objectiveStep_l)
+	{
+		objectiveStep_l->add_signals(_controller);
 	}
 }
 

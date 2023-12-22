@@ -28,6 +28,7 @@
 // godot
 #include "controller/step/CameraStep.h"
 #include "controller/step/DialogStep.h"
+#include "controller/step/ObjectiveStep.h"
 
 // missions
 #include "levels/missions/helpers/DialogTrigger.h"
@@ -145,15 +146,36 @@ std::list<Steppable *> Mission1Steps(Library &lib_p, RandomGenerator &rand_p, un
 	spawners_l.push_back(new TriggerSpawn(
 		new RescueTrigger({new ListenerEntityInBox(heroHandles_l, Vector(26,7), Vector(4,11))}, lib_p, heroHandles_l, nbPlayers_p, trackers_l)));
 
-	spawners_l.push_back(new TriggerSpawn(new DialogTrigger({new ListenerEntityDied(trackers_set_l)}, "mission1_trackers_dead")));
-	spawners_l.push_back(new TriggerSpawn(new DialogTrigger({new ListenerEntityDied(firstGroup_l)}, "mission1_first_group_dead")));
-	spawners_l.push_back(new TriggerSpawn(new OneShotFunctionTrigger({new ListenerEntityDied(finalGroup_l)},
+
+
+	spawners_l.push_back(new TriggerSpawn(new OneShotFunctionTrigger({new ListenerEntityDied(trackers_set_l)},
 		[](State const &, Step &step_p, unsigned long, TriggerData const &)
 		{
-			step_p.addSteppable(new StateWinStep(false, false, 0, 0));
-			step_p.addSteppable(new godot::DialogStep("mission1_final_group_dead", true));
+			step_p.addSteppable(new godot::DialogStep("mission1_trackers_dead", false));
+			step_p.addSteppable(new godot::AddObjectiveStep("mission1_find_others", "mission1_find_others", 0, true));
+			step_p.addSteppable(new godot::AddObjectiveStep("mission1_free_maa", "mission1_free_maa", 0, true));
 		}
 	)));
+	spawners_l.push_back(new TriggerSpawn(new DialogTrigger({new ListenerEntityDied(firstGroup_l)}, "mission1_first_group_dead")));
+	spawners_l.push_back(new TriggerSpawn(new OneShotFunctionTrigger({new ListenerEntityDied(finalGroup_l)},
+		[nbPlayers_p, &lib_p](State const &state_p, Step &step_p, unsigned long, TriggerData const &)
+		{
+			Unit unit_l({ 38, 64 }, false, lib_p.getUnitModel("circle"));
+			unit_l._player = 0;
+			step_p.addSteppable(new UnitSpawnStep(getNextHandle(step_p, state_p), unit_l));
+			for(unsigned long i = 0 ; i < nbPlayers_p ; ++ i)
+			{
+				step_p.addSteppable(new godot::CameraStep(to_int(unit_l._pos.x), to_int(unit_l._pos.y), i));
+			}
+
+			step_p.addSteppable(new StateWinStep(false, false, 0, 0));
+			step_p.addSteppable(new godot::DialogStep("mission1_final_group_dead", true));
+			step_p.addSteppable(new godot::RemoveObjectiveStep("mission1_free_maa"));
+			step_p.addSteppable(new godot::FailObjectiveStep("mission1_survive", true));
+		}
+	)));
+	spawners_l.push_back(new godot::AddObjectiveStep("mission1_survive", "mission1_survive", 0, true));
+	spawners_l.push_back(new godot::AddObjectiveStep("mission1_explore", "mission1_explore", 0, true));
 
 	std::list<Listener*> listeners_l;
 
@@ -161,10 +183,14 @@ std::list<Steppable *> Mission1Steps(Library &lib_p, RandomGenerator &rand_p, un
 	{
 		spawners_l.push_back(new TriggerSpawn(new OnEachFunctionTrigger(
 			new ListenerEntityModelFinished(&lib_p.getEntityModel("circle"), i),
-			[i](State const &, Step &step_p, unsigned long, TriggerData const &)
+			[i](State const &state_p, Step &step_p, unsigned long, TriggerData const &)
 			{
 				std::map<std::string, Fixed> map_l; map_l["circle_count"] = -1;
 				step_p.addSteppable(new PlayerSpendResourceStep(i, map_l));
+				if(getResource(*state_p.getPlayer(i), "circle_count") >= 4)
+				{
+					step_p.addSteppable(new IncrementObjectiveStep("circle_build."+std::to_string(i), true));
+				}
 			}
 		)));
 		spawners_l.push_back(new TriggerSpawn(new OnEachFunctionTrigger(
@@ -173,6 +199,7 @@ std::list<Steppable *> Mission1Steps(Library &lib_p, RandomGenerator &rand_p, un
 			{
 				std::map<std::string, Fixed> map_l; map_l["barrack_circle"] = -1;
 				step_p.addSteppable(new PlayerSpendResourceStep(i, map_l));
+				step_p.addSteppable(new IncrementObjectiveStep("barrack_build."+std::to_string(i), true));
 			}
 		)));
 
@@ -189,6 +216,8 @@ std::list<Steppable *> Mission1Steps(Library &lib_p, RandomGenerator &rand_p, un
 			{
 				step_p.addSteppable(new StateRemoveConstraintPositionStep(i, 48, 35, 57, true, false));
 				step_p.addSteppable(new godot::DialogStep("mission1_base_building_done"));
+				step_p.addSteppable(new godot::RemoveObjectiveStep("circle_build."+std::to_string(i)));
+				step_p.addSteppable(new godot::RemoveObjectiveStep("barrack_build."+std::to_string(i)));
 			}
 		)));
 	}
@@ -229,7 +258,7 @@ void writeMission1Header(std::ofstream &file_p, Mission1Header const &header_p)
 }
 
 /// @brief read header for classic arena level and return a pair of steppable and command
-std::pair<std::list<octopus::Steppable *>, std::list<octopus::Command *> > readWaveLevelHeader(octopus::Library &lib_p, std::ifstream &file_p,
+std::pair<std::list<octopus::Steppable *>, std::list<octopus::Command *> > readMission1Header(octopus::Library &lib_p, std::ifstream &file_p,
 	octopus::RandomGenerator * &rand_p, Mission1Header &header_r)
 {
     file_p.read((char*)&header_r.seed, sizeof(header_r.seed));

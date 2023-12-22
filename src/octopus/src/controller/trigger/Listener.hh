@@ -180,7 +180,7 @@ public:
 	Fixed const _qty;
 };
 
-/// @brief Warning this listener can only trigger once per set and will trigger every step
+/// @brief Warning this listener can only trigger once per step and will trigger every step
 /// where an entity is the zone
 class ListenerZone : public Listener
 {

@@ -12,22 +12,6 @@ namespace godot
 {
 namespace level2
 {
-
-std::string genModelName(octopus::RandomGenerator &gen_p)
-{
-	std::string model_l = "square";
-	int random_l = gen_p.roll(0, 2);
-	if(random_l==1)
-	{
-		model_l = "triangle";
-	}
-	else if(random_l==2)
-	{
-		model_l = "circle";
-	}
-	return model_l;
-}
-
 /// spawners for walls/water
 
 std::list<Steppable *> createWallSpawners(Library &lib_p, unsigned long xStart, unsigned long x, unsigned long y,
