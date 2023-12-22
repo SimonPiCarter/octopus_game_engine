@@ -1,0 +1,24 @@
+name: C/C++ CI
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu:18.04
+
+    steps:
+    - uses: actions/checkout@v3
+    - run: apt update && apt install -y --no-install-recommends python3-pip virtualenv cmake make g++
+    - run: virtualenv --python=python3 .venv
+    - run: source .venv/bin/activate
+    - run: pip3 install conan==1.60
+    - run: conan profile new default --detect
+    - run: conan profile update settings.compiler.libcxx=libstdc++11 default
+    - run: conan install . -if builds/Release -s build_type=Release --build=missing
+    - run: conan package . -if builds/Release -bf builds/Release || conan package . -if builds/Release -bf builds/Release
+
