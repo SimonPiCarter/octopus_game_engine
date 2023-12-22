@@ -14,10 +14,11 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
-    - run: apt update && apt install -y --no-install-recommends python3-pip virtualenv cmake make g++
+    - run: apt-get update && apt install -y --no-install-recommends python3-pip virtualenv cmake make g++
     - run: virtualenv --python=python3 .venv
     - run: |
           source .venv/bin/activate
+          pip3 install conan==1.60 --upgrade
           conan profile new default --detect
           conan profile update settings.compiler.libcxx=libstdc++11 default
           conan install . -if builds/Release -s build_type=Release --build=missing
