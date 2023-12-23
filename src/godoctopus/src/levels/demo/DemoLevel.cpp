@@ -387,7 +387,7 @@ std::pair<std::list<octopus::Steppable *>, std::list<octopus::Command *> > readD
 
 	std::pair<std::list<octopus::Steppable *>, std::list<octopus::Command *> > pair_l;
 	pair_l.first = DemoLevelSteps(lib_p, *rand_p, header_r.tierWaveInfo, header_r.player, header_r.player_count, entityInfo_p, header_r.difficulty);
-	pair_l.second = DemoLevelCommands(lib_p, *rand_p, 1, header_r.difficulty);
+	pair_l.second = DemoLevelCommands(lib_p, *rand_p, header_r.player_count, header_r.difficulty);
 	return pair_l;
 }
 
