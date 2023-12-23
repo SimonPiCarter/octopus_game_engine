@@ -73,6 +73,16 @@ int FileHeader::get_num_players() const
     return _num_players;
 }
 
+void FileHeader::set_idx_first_player(int idx_first_player_p)
+{
+    _idx_first_player = idx_first_player_p;
+}
+
+int FileHeader::get_idx_first_player() const
+{
+    return _idx_first_player;
+}
+
 void FileHeader::_bind_methods()
 {
     UtilityFunctions::print("Binding FileHeader methods");
@@ -89,6 +99,8 @@ void FileHeader::_bind_methods()
     ClassDB::bind_method(D_METHOD("get_environment_id"), &FileHeader::get_environment_id);
     ClassDB::bind_method(D_METHOD("set_num_players", "num_players"), &FileHeader::set_num_players);
     ClassDB::bind_method(D_METHOD("get_num_players"), &FileHeader::get_num_players);
+    ClassDB::bind_method(D_METHOD("set_idx_first_player", "idx_first_player"), &FileHeader::set_idx_first_player);
+    ClassDB::bind_method(D_METHOD("get_idx_first_player"), &FileHeader::get_idx_first_player);
 
     ADD_GROUP("FileHeader", "FileHeader_");
 }
@@ -101,6 +113,7 @@ void loadFromStream(FileHeader &file_header_p, std::istream &file_p)
 	std::string compaign_id_l = octopus::readString(file_p);
 	int env_id_l = 0;           file_p.read((char*)&env_id_l, sizeof(env_id_l));
 	int num_players_l = 0;      file_p.read((char*)&num_players_l, sizeof(num_players_l));
+	int idx_first_player_l = 0;      file_p.read((char*)&idx_first_player_l, sizeof(idx_first_player_l));
 
     file_header_p.set_version(version_l);
     file_header_p.set_model_filename(model_name_l.c_str());
@@ -108,6 +121,7 @@ void loadFromStream(FileHeader &file_header_p, std::istream &file_p)
     file_header_p.set_campaign_id(compaign_id_l.c_str());
     file_header_p.set_environment_id(env_id_l);
     file_header_p.set_num_players(num_players_l);
+    file_header_p.set_idx_first_player(idx_first_player_l);
 }
 
 void saveToStream(FileHeader const &file_header_p, std::ostream &file_p)
@@ -118,6 +132,7 @@ void saveToStream(FileHeader const &file_header_p, std::ostream &file_p)
 	std::string compaign_id_l = file_header_p.get_campaign_id().utf8().get_data();
 	int env_id_l = file_header_p.get_environment_id();
 	int num_players_l = file_header_p.get_num_players();
+	int idx_first_player_l = file_header_p.get_idx_first_player();
 
     file_p.write((char*)&version_l, sizeof(version_l));
     octopus::writeString(file_p, model_name_l);
@@ -125,6 +140,7 @@ void saveToStream(FileHeader const &file_header_p, std::ostream &file_p)
     octopus::writeString(file_p, compaign_id_l);
     file_p.write((char*)&env_id_l, sizeof(env_id_l));
     file_p.write((char*)&num_players_l, sizeof(num_players_l));
+    file_p.write((char*)&idx_first_player_l, sizeof(idx_first_player_l));
 }
 
 void saveDebugToStream(FileHeader const &file_header_p, std::ostream &file_p)

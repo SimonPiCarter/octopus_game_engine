@@ -35,6 +35,9 @@ public:
     void set_num_players(int num_players_p);
     int get_num_players() const;
 
+    void set_idx_first_player(int idx_first_player_p);
+    int get_idx_first_player() const;
+
     // Will be called by Godot when the class is registered
     // Use this to add properties to your class
     static void _bind_methods();
@@ -52,6 +55,8 @@ private:
     int _environment_id = 0;
     /// @brief number of players registered in this save
     int _num_players = 1;
+    /// @brief index of the first playable slot
+    int _idx_first_player = 0;
 };
 
 void loadFromStream(FileHeader &file_header_p, std::istream &file_p);

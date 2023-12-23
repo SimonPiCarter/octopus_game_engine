@@ -518,7 +518,7 @@ void Controller::replay_level(String const &filename_p, bool replay_mode_p, godo
 	}
 	else if(levelId_l == LEVEL_ID_LEVEL_DEMO)
 	{
-		std::vector<GodotEntityInfo> info_l = getEntityInfo(level_model_p->getEntities(), 2);
+		std::vector<GodotEntityInfo> info_l = getEntityInfo(level_model_p->getEntities(), _fileHeader->get_num_players());
 
 		demo::DemoLevelHeader header_l;
 		levelInfo_l = demo::readDemoLevelHeader(_lib, file_l, info_l, _rand, header_l);
@@ -547,7 +547,7 @@ void Controller::replay_level(String const &filename_p, bool replay_mode_p, godo
 		std::list<octopus::Steppable *> spawners_l;
 		if(level_model_p)
 		{
-			spawners_l = level_model_p->generateLevelSteps(_lib, 2);
+			spawners_l = level_model_p->generateLevelSteps(_lib, _fileHeader->get_num_players());
 		}
 		spawners_l.splice(spawners_l.end(), levelInfo_l.first);
 		if(replay_mode_p)
@@ -1477,6 +1477,7 @@ void Controller::_bind_methods()
 	ClassDB::bind_method(D_METHOD("get_level_filename", "filename"), &Controller::get_level_filename);
 	ClassDB::bind_method(D_METHOD("replay_level", "filename", "replay_mode", "level_model"), &Controller::replay_level);
 	ClassDB::bind_method(D_METHOD("get_file_header"), &Controller::get_file_header);
+	ClassDB::bind_method(D_METHOD("read_file_header", "filename"), &Controller::read_file_header);
 
 	ClassDB::bind_method(D_METHOD("has_state"), &Controller::has_state);
 	ClassDB::bind_method(D_METHOD("set_pause", "pause"), &Controller::set_pause);
