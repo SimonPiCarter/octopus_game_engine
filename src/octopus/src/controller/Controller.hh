@@ -133,6 +133,7 @@ public:
 
 	void enableORCA() { _orcaCollision = true; }
 
+	void setTimePerStep(double timePerStep_p) { _timePerStep = timePerStep_p; }
 	double getTimePerStep() const { return _timePerStep; }
 
 	std::vector<std::list<Command *> *> const & getCommitedCommands() const { return _commitedCommands; }
@@ -175,7 +176,7 @@ private:
 	PathManager _pathManager;
 
 	/// @brief required time per step
-	double const _timePerStep {0.1};
+	double _timePerStep {0.1};
 	/// @brief time since last update of step
 	double _overTime {0.};
 	/// @brief ongoing step, all command received are aggregated into this step
