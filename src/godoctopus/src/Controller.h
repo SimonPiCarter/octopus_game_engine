@@ -36,6 +36,7 @@ class Controller : public Node {
 	GDCLASS(Controller, Node)
 
 public:
+	Controller();
 	~Controller();
 
 	// Will be called by Godot when the class is registered
@@ -79,8 +80,8 @@ public:
 	void replay_level(String const &filename_p, bool replay_mode_p, godot::LevelModel *level_model_p);
 
 	// File header parsing
-	godot::FileHeader const * get_file_header() const;
-	godot::FileHeader const * read_file_header(String const &filename_p);
+	godot::FileHeader * get_file_header();
+	godot::FileHeader * read_file_header(String const &filename_p);
 
 	// start engine with given level
 	void init(std::list<octopus::Command *> const &commands_p, std::list<octopus::Steppable *> const &spawners_p, bool divOptionManager_p=false, size_t size_p=50, std::ofstream *file_p=nullptr);
@@ -253,7 +254,7 @@ private:
 	// header writer of level
 	std::function<void(std::ofstream&)> _headerWriter;
 	// FileHeader
-	FileHeader _fileHeader;
+	FileHeader * _fileHeader = nullptr;
 
 	std::list<octopus::StepBundle>::const_iterator _lastIt;
 

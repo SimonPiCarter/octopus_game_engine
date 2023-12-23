@@ -63,6 +63,11 @@ std::vector<T> toVector(TypedArray<T> const &array_p)
 	return vec_l;
 }
 
+Controller::Controller()
+{
+	_fileHeader = memnew(FileHeader());
+}
+
 Controller::~Controller()
 {
 	if(_controllerThread)
@@ -417,12 +422,12 @@ void Controller::load_multi_test_level(int seed_p, int step_cout_p, bool buff_pr
 
 void Controller::set_model_filename(String const &filename_p)
 {
-	_fileHeader.set_model_filename(filename_p);
+	_fileHeader->set_model_filename(filename_p);
 }
 
 void Controller::set_level_filename(String const &filename_p)
 {
-	_fileHeader.set_level_filename(filename_p);
+	_fileHeader->set_level_filename(filename_p);
 }
 
 String Controller::get_model_filename(String const &filename_p)
@@ -452,7 +457,7 @@ void Controller::replay_level(String const &filename_p, bool replay_mode_p, godo
 	std::string filename_l(filename_p.utf8().get_data());
 	std::ifstream file_l(filename_l, std::ios::in | std::ios::binary);
 
-	loadFromStream(_fileHeader, file_l);
+	loadFromStream(*_fileHeader, file_l);
 
 	size_t levelId_l;
 	size_t size_l;
@@ -513,7 +518,7 @@ void Controller::replay_level(String const &filename_p, bool replay_mode_p, godo
 	}
 	else if(levelId_l == LEVEL_ID_LEVEL_DEMO)
 	{
-		std::vector<GodotEntityInfo> info_l = getEntityInfo(level_model_p->getEntities(), 1);
+		std::vector<GodotEntityInfo> info_l = getEntityInfo(level_model_p->getEntities(), 2);
 
 		demo::DemoLevelHeader header_l;
 		levelInfo_l = demo::readDemoLevelHeader(_lib, file_l, info_l, _rand, header_l);
@@ -542,7 +547,7 @@ void Controller::replay_level(String const &filename_p, bool replay_mode_p, godo
 		std::list<octopus::Steppable *> spawners_l;
 		if(level_model_p)
 		{
-			spawners_l = level_model_p->generateLevelSteps(_lib, 0);
+			spawners_l = level_model_p->generateLevelSteps(_lib, 2);
 		}
 		spawners_l.splice(spawners_l.end(), levelInfo_l.first);
 		if(replay_mode_p)
@@ -561,19 +566,19 @@ void Controller::replay_level(String const &filename_p, bool replay_mode_p, godo
 }
 
 
-godot::FileHeader const * Controller::get_file_header() const
+godot::FileHeader * Controller::get_file_header()
 {
-	return &_fileHeader;
+	return _fileHeader;
 }
 
-godot::FileHeader const * Controller::read_file_header(String const &filename_p)
+godot::FileHeader * Controller::read_file_header(String const &filename_p)
 {
 	std::string filename_l(filename_p.utf8().get_data());
 	std::ifstream file_l(filename_l, std::ios::in | std::ios::binary);
 
-	loadFromStream(_fileHeader, file_l);
+	loadFromStream(*_fileHeader, file_l);
 
-	return &_fileHeader;
+	return _fileHeader;
 }
 
 void Controller::init(std::list<octopus::Command *> const &commands_p, std::list<octopus::Steppable *> const &spawners_p, bool divOptionManager_p, size_t size_p, std::ofstream *file_p)
@@ -844,7 +849,7 @@ void Controller::save_to_file(String const &path_p)
 		std::ofstream file_l(path_l, std::ios::out | std::ios::binary);
 
 		// write Godot header
-		saveToStream(_fileHeader, file_l);
+		saveToStream(*_fileHeader, file_l);
 
 		// write octopus engine info
 		writeLevelId(file_l, _currentLevel, get_world_size()/5);
@@ -853,7 +858,7 @@ void Controller::save_to_file(String const &path_p)
 
 		path_l += ".debug";
 		std::ofstream fileDebug_l(path_l, std::ios::out);
-		saveDebugToStream(_fileHeader, fileDebug_l);
+		saveDebugToStream(*_fileHeader, fileDebug_l);
 		writeDebugCommands(fileDebug_l, *_controller);
 	}
 }
@@ -1471,6 +1476,7 @@ void Controller::_bind_methods()
 	ClassDB::bind_method(D_METHOD("get_model_filename", "filename"), &Controller::get_model_filename);
 	ClassDB::bind_method(D_METHOD("get_level_filename", "filename"), &Controller::get_level_filename);
 	ClassDB::bind_method(D_METHOD("replay_level", "filename", "replay_mode", "level_model"), &Controller::replay_level);
+	ClassDB::bind_method(D_METHOD("get_file_header"), &Controller::get_file_header);
 
 	ClassDB::bind_method(D_METHOD("has_state"), &Controller::has_state);
 	ClassDB::bind_method(D_METHOD("set_pause", "pause"), &Controller::set_pause);
@@ -1625,11 +1631,11 @@ void Controller::newAutoSaveFile()
 	delete _autoSaveFile;
 	delete _autoSaveFileDebug;
 	_autoSaveFile = new std::ofstream(_autoSavePath, std::ios::out | std::ios::binary);
-	saveToStream(_fileHeader, *_autoSaveFile);
+	saveToStream(*_fileHeader, *_autoSaveFile);
 	if(_enableAutoSaveFileDebug)
 	{
 		_autoSaveFileDebug = new std::ofstream(_autoSavePath+".d", std::ios::out);
-		saveDebugToStream(_fileHeader, *_autoSaveFileDebug);
+		saveDebugToStream(*_fileHeader, *_autoSaveFileDebug);
 	}
 }
 
