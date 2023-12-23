@@ -841,6 +841,14 @@ void Controller::set_over(bool over_p)
 	_over = over_p;
 }
 
+void Controller::set_fast_forward(bool fast_forward_p)
+{
+	if(_controller)
+	{
+		_controller->setTimePerStep(fast_forward_p?0.001:0.01);
+	}
+}
+
 void Controller::save_to_file(String const &path_p)
 {
 	if(has_state())
@@ -1482,6 +1490,7 @@ void Controller::_bind_methods()
 	ClassDB::bind_method(D_METHOD("has_state"), &Controller::has_state);
 	ClassDB::bind_method(D_METHOD("set_pause", "pause"), &Controller::set_pause);
 	ClassDB::bind_method(D_METHOD("set_over", "over"), &Controller::set_over);
+	ClassDB::bind_method(D_METHOD("set_fast_forward", "fast_forward"), &Controller::set_fast_forward);
 	ClassDB::bind_method(D_METHOD("save_to_file", "path"), &Controller::save_to_file);
 	ClassDB::bind_method(D_METHOD("set_auto_file_path", "path"), &Controller::set_auto_file_path);
 	ClassDB::bind_method(D_METHOD("set_auto_file_debug", "debug"), &Controller::set_auto_file_debug);

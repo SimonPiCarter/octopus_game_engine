@@ -107,6 +107,7 @@ public:
 	// setters
 	void set_pause(bool paused_p);
 	void set_over(bool over_p);
+	void set_fast_forward(bool fast_forward_p);
 	// getters
 	// commands available getters
 	TypedArray<String> get_models(EntityHandle const * handle_p, int player_p, bool checkRequirements_p) const;
