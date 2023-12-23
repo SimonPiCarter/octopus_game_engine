@@ -68,11 +68,11 @@ void add_move_target_commands(std::list<octopus::Command*> &list_r, octopus::Sta
 	// target entity
 	octopus::Entity const *ent_l = nullptr;
 	// if entity is alive use its position
-	if(state_p.isEntityAlive(target_l))
-	{
-		ent_l = state_p.getEntity(target_l);
-		worldPos_l = ent_l->_pos;
-	}
+	// if(state_p.isEntityAlive(target_l))
+	// {
+	// 	ent_l = state_p.getEntity(target_l);
+	// 	worldPos_l = ent_l->_pos;
+	// }
 
 	std::list<octopus::Handle> flock_l;
 	for(size_t i = 0 ; i < handles_p.size()/2 ; ++ i)
