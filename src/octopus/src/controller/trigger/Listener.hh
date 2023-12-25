@@ -161,6 +161,7 @@ public:
 	Vector const _boxSize;
 };
 
+/// @tparam Minimum if true the listener will trigger when the resource is > than the qty
 template<bool Minimum>
 class ListenerResource : public Listener
 {

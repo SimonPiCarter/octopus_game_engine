@@ -2,6 +2,7 @@
 
 
 #include "controller/trigger/Listener.hh"
+#include "library/Library.hh"
 #include "state/State.hh"
 #include "state/entity/Entity.hh"
 #include "state/player/Player.hh"
@@ -10,6 +11,7 @@
 #include "step/state/StateWinStep.hh"
 #include "step/entity/EntityHitPointChangeStep.hh"
 #include "step/entity/EntityHitPointChangeStep.hh"
+#include "step/player/PlayerSpendResourceStep.hh"
 #include "command/entity/EntityAttackMoveCommand.hh"
 
 #include "controller/step/DialogStep.h"
@@ -80,6 +82,26 @@ struct GodotListenerVisitor
 		_list.push_back(listener_l);
 	}
 
+	void operator()(GodotTriggerListenerResource const &listener_p) const
+	{
+		if(listener_p.lower_than)
+		{
+			octopus::ListenerResource<false> * listener_l = new octopus::ListenerResource<false>(listener_p.player, listener_p.resource, listener_p.qty);
+			_list.push_back(listener_l);
+		}
+		else
+		{
+			octopus::ListenerResource<true> * listener_l = new octopus::ListenerResource<true>(listener_p.player, listener_p.resource, listener_p.qty);
+			_list.push_back(listener_l);
+		}
+	}
+
+	void operator()(GodotTriggerEntityProduced const &listener_p) const
+	{
+		octopus::ListenerEntityModelFinished * listener_l = new octopus::ListenerEntityModelFinished(&_lib.getEntityModel(listener_p.model), listener_p.player);
+		_list.push_back(listener_l);
+	}
+
 	void operator()(GodotTriggerActionDialog &) const {}
 	void operator()(GodotTriggerActionSpawn &) const {}
 	void operator()(GodotTriggerActionCamera &) const {}
@@ -91,6 +113,7 @@ struct GodotListenerVisitor
 	void operator()(GodotTriggerActionCompleteObjective&) const {}
 	void operator()(GodotTriggerActionFailObjective&) const {}
 	void operator()(GodotTriggerActionIncrementObjective&) const {}
+	void operator()(GodotTriggerActionResource&) const {}
 
 	std::list<octopus::Listener *> &_list;
 	std::vector<GodotEntity> const &_entities;
@@ -221,6 +244,13 @@ struct GodotActionVisitor
 	void operator()(GodotTriggerActionIncrementObjective const &action_p) const
 	{
 		_step.addSteppable(new IncrementObjectiveStep(action_p.obj_name, action_p.increment));
+	}
+
+	void operator()(GodotTriggerActionResource const &action_p) const
+	{
+		std::map<std::string, octopus::Fixed> resources_l;
+		resources_l[action_p.resource] = octopus::Fixed(-action_p.qty);
+		_step.addSteppable(new octopus::PlayerSpendResourceStep(action_p.player, resources_l));
 	}
 
 	octopus::State const &_state;

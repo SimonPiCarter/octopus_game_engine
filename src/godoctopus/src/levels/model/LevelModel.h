@@ -53,6 +53,9 @@ public:
 	void add_trigger_listener_timer(int triggerIdx_p, int steps_p);
 	void add_trigger_listener_zone_player(int triggerIdx_p, int player_p, String const &zone_p);
 	void add_trigger_listener_zone_team(int triggerIdx_p, int team_p, String const &zone_p);
+	void add_trigger_listener_resource(int triggerIdx_p, int player_p, String const &resource_p, int qty_p, bool lower_than_p);
+	void add_trigger_listener_entity_produced(int triggerIdx_p, int player_p, String const &model_p);
+
 	void add_trigger_action_dialog(int triggerIdx_p, String const &dialogIdx_p, bool end_p, int team_winning_p);
 	void add_trigger_action_camera(int triggerIdx_p, int x, int y, int player_p);
 	void add_trigger_action_damage_zone(int triggerIdx_p, int damage_p, int team_p, String const &zone_name_p);
@@ -60,6 +63,7 @@ public:
     void add_trigger_action_complete_objective(int triggerIdx_p, String const &obj_name_p, bool complete_p);
     void add_trigger_action_fail_objective(int triggerIdx_p, String const &obj_name_p, bool fail_p);
     void add_trigger_action_increment_objective(int triggerIdx_p, String const &obj_name_p, bool increment_p);
+    void add_trigger_action_resource(int triggerIdx_p, int player_p, int qty_p, String const &resource_p);
 
 	// action spawn
 	int add_trigger_action_spawn(int triggerIdx_p);

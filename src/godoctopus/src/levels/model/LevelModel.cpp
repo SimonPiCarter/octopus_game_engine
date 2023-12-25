@@ -91,6 +91,18 @@ void LevelModel::add_trigger_listener_zone_team(int triggerIdx_p, int team_p, St
 	_triggers.at(triggerIdx_p).listeners.push_back(GodotTriggerZoneTeam {static_cast<unsigned long>(team_p), zone_name_l});
 }
 
+void LevelModel::add_trigger_listener_resource(int triggerIdx_p, int player_p, String const &resource_p, int qty_p, bool lower_than_p)
+{
+	std::string resource_l(resource_p.utf8().get_data());
+	_triggers.at(triggerIdx_p).listeners.push_back(GodotTriggerListenerResource {static_cast<unsigned long>(player_p), resource_l, qty_p, lower_than_p});
+}
+
+void LevelModel::add_trigger_listener_entity_produced(int triggerIdx_p, int player_p, String const &model_p)
+{
+	std::string model_l(model_p.utf8().get_data());
+	_triggers.at(triggerIdx_p).listeners.push_back(GodotTriggerEntityProduced {static_cast<unsigned long>(player_p), model_l});
+}
+
 void LevelModel::add_trigger_action_dialog(int triggerIdx_p, String const &dialogIdx_p, bool end_p, int team_winning_p)
 {
 	std::string dialog_l(dialogIdx_p.utf8().get_data());
@@ -130,6 +142,12 @@ void LevelModel::add_trigger_action_increment_objective(int triggerIdx_p, String
 {
 	std::string obj_name_l(obj_name_p.utf8().get_data());
 	_triggers.at(triggerIdx_p).actions.push_back(GodotTriggerActionIncrementObjective {obj_name_l, increment_p});
+}
+
+void LevelModel::add_trigger_action_resource(int triggerIdx_p, int player_p, int qty_p, String const &resource_p)
+{
+	std::string resource_l(resource_p.utf8().get_data());
+	_triggers.at(triggerIdx_p).actions.push_back(GodotTriggerActionResource {static_cast<unsigned long>(player_p), qty_p, resource_l});
 }
 
 int LevelModel::add_trigger_action_spawn(int triggerIdx_p)
@@ -196,6 +214,8 @@ void LevelModel::_bind_methods()
 	ClassDB::bind_method(D_METHOD("add_trigger_listener_timer", "trigger_idx", "steps"), &LevelModel::add_trigger_listener_timer);
 	ClassDB::bind_method(D_METHOD("add_trigger_listener_zone_player", "trigger_idx", "player", "zone_name"), &LevelModel::add_trigger_listener_zone_player);
 	ClassDB::bind_method(D_METHOD("add_trigger_listener_zone_team", "trigger_idx", "team", "zone_name"), &LevelModel::add_trigger_listener_zone_team);
+	ClassDB::bind_method(D_METHOD("add_trigger_listener_resource", "trigger_idx", "player", "resource", "quantity", "lower_than"), &LevelModel::add_trigger_listener_resource);
+	ClassDB::bind_method(D_METHOD("add_trigger_listener_entity_produced", "trigger_idx", "player", "model"), &LevelModel::add_trigger_listener_entity_produced);
 	ClassDB::bind_method(D_METHOD("add_trigger_action_dialog", "trigger_idx", "dialog_idx", "end", "winning_team"), &LevelModel::add_trigger_action_dialog);
 	ClassDB::bind_method(D_METHOD("add_trigger_action_camera", "trigger_idx", "x", "y", "player"), &LevelModel::add_trigger_action_camera);
 	ClassDB::bind_method(D_METHOD("add_trigger_action_damage_zone", "trigger_idx", "damage", "team", "zone_name"), &LevelModel::add_trigger_action_damage_zone);
@@ -203,6 +223,7 @@ void LevelModel::_bind_methods()
 	ClassDB::bind_method(D_METHOD("add_trigger_action_complete_objective", "trigger_idx", "obj_name", "complete"), &LevelModel::add_trigger_action_complete_objective);
 	ClassDB::bind_method(D_METHOD("add_trigger_action_fail_objective", "trigger_idx", "obj_name", "fail"), &LevelModel::add_trigger_action_fail_objective);
 	ClassDB::bind_method(D_METHOD("add_trigger_action_increment_objective", "trigger_idx", "obj_name", "increment"), &LevelModel::add_trigger_action_increment_objective);
+	ClassDB::bind_method(D_METHOD("add_trigger_action_resource", "trigger_idx", "player", "quantity", "resource"), &LevelModel::add_trigger_action_resource);
 
 	ClassDB::bind_method(D_METHOD("add_trigger_action_spawn", "trigger_idx"), &LevelModel::add_trigger_action_spawn);
 	ClassDB::bind_method(D_METHOD("action_spawn_add_entity", "trigger_idx", "action_idx", "type", "model", "player", "x", "y", "num_of_players"), &LevelModel::action_spawn_add_entity);

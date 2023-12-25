@@ -40,6 +40,7 @@ namespace godot
 	struct GodotTriggerActionCompleteObjective { std::string obj_name = ""; bool complete=true; };
 	struct GodotTriggerActionFailObjective { std::string obj_name = ""; bool fail=true; };
 	struct GodotTriggerActionIncrementObjective { std::string obj_name = ""; bool increment=true; };
+	struct GodotTriggerActionResource { unsigned long player=0; int qty = 0; std::string resource = "";};
 	using GodotTriggerAction = std::variant<
 		GodotTriggerActionDialog,
 		GodotTriggerActionSpawn,
@@ -48,22 +49,26 @@ namespace godot
 		GodotTriggerActionAddObjective,
 		GodotTriggerActionCompleteObjective,
 		GodotTriggerActionFailObjective,
-		GodotTriggerActionIncrementObjective
+		GodotTriggerActionIncrementObjective,
+		GodotTriggerActionResource
 	>;
 
 	struct GodotTriggerListenerEntityDied { unsigned long entity_group = 0; };
 	struct GodotTriggerListenerEntityProduced { unsigned long player = 0; std::string model = ""; };
 	struct GodotTriggerListenerTimer { unsigned long steps = 0; };
-	struct GodotTriggerListenerResource { unsigned long player = 0; unsigned long quantity = 0; std::string resource = ""; };
 	struct GodotTriggerZonePlayer { unsigned long player = 0; std::string zone_name = ""; };
 	struct GodotTriggerZoneTeam { unsigned long team = 0; std::string zone_name = ""; };
+	struct GodotTriggerListenerResource { unsigned long player = 0; std::string resource = ""; int qty=0; bool lower_than=false; };
+	struct GodotTriggerEntityProduced { unsigned long player = 0; std::string model = ""; };
 
 	// todo add zone
 	using GodotTriggerListener = std::variant<
 		GodotTriggerListenerEntityDied,
 		GodotTriggerListenerTimer,
 		GodotTriggerZonePlayer,
-		GodotTriggerZoneTeam
+		GodotTriggerZoneTeam,
+		GodotTriggerListenerResource,
+		GodotTriggerEntityProduced
 	>;
 
 	struct GodotTrigger {
