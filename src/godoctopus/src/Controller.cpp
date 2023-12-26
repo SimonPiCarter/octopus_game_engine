@@ -358,15 +358,16 @@ void Controller::load_level_test_anchor(int seed_p)
 	init(commands_l, spawners_l, false, 50, _autoSaveFile);
 }
 
-void Controller::load_level_test_model_reading(int seed_p, godot::LevelModel *level_model_p, bool buff_prod_p)
+void Controller::load_level_test_model_reading(int seed_p, godot::LevelModel *level_model_p, bool buff_prod_p,
+	bool upgrades_rune_p, int idx_first_player_p, int nb_players_p)
 {
 	delete _rand;
 	_rand = new octopus::RandomGenerator(seed_p);
 	std::list<octopus::Steppable *> spawners_l = {};
-	std::list<octopus::Steppable *> levelsteps_l = level_test_model::LevelSteps(_lib, *_rand, buff_prod_p);
+	std::list<octopus::Steppable *> levelsteps_l = level_test_model::LevelSteps(_lib, *_rand, buff_prod_p, upgrades_rune_p, idx_first_player_p, nb_players_p);
 	if(level_model_p)
 	{
-		spawners_l = level_model_p->generateLevelSteps(_lib, 0);
+		spawners_l = level_model_p->generateLevelSteps(_lib, nb_players_p);
 	}
 	spawners_l.splice(spawners_l.end(), levelsteps_l);
 
@@ -505,7 +506,7 @@ void Controller::replay_level(String const &filename_p, bool replay_mode_p, godo
 	else if(levelId_l == LEVEL_ID_LEVEL_TEST_MODEL)
 	{
 		level_test_model::ModelLoaderHeader header_l;
-		levelInfo_l = level_test_model::readLevelHeader(_lib, file_l, _rand, header_l);
+		levelInfo_l = level_test_model::readLevelHeader(_lib, file_l, _rand, header_l, *_fileHeader);
 		_headerWriter = std::bind(level_test_model::writeLevelHeader, std::placeholders::_1, header_l);
 		divOptionHandler_l = true;
 	}
@@ -1475,7 +1476,7 @@ void Controller::_bind_methods()
 	ClassDB::bind_method(D_METHOD("load_level1", "seed", "nb_wave"), &Controller::load_level1);
 	ClassDB::bind_method(D_METHOD("load_level2", "seed", "wave_pattern", "nb_players"), &Controller::load_level2);
 	ClassDB::bind_method(D_METHOD("load_level_test_anchor", "seed"), &Controller::load_level_test_anchor);
-	ClassDB::bind_method(D_METHOD("load_level_test_model_reading", "seed", "level_model", "buff_prod"), &Controller::load_level_test_model_reading);
+	ClassDB::bind_method(D_METHOD("load_level_test_model_reading", "seed", "level_model", "buff_prod", "upgrade_rune", "idx_first_player", "player_count"), &Controller::load_level_test_model_reading);
 	ClassDB::bind_method(D_METHOD("load_duel_level", "seed", "div_player_1_p", "div_player_2_p"), &Controller::load_duel_level);
 	ClassDB::bind_method(D_METHOD("load_multi_test_level", "seed", "step_count", "buff_prod"), &Controller::load_multi_test_level);
 

@@ -50,6 +50,7 @@ std::vector<DivinityType> allDivinities();
 std::vector<DivinityType> getMaxedOutDivinities(octopus::Player const &player_p, unsigned long maxLevel_p=3);
 
 void addBuildingPlayer(std::list<octopus::Steppable *> &spawners_p, unsigned long player_p, std::vector<DivinityType> const &divinities_p, octopus::Library &lib_p);
+void addDivinityBuildingPlayer(std::list<octopus::Steppable *> &spawners_p, unsigned long player_p, std::vector<DivinityType> const &divinities_p, octopus::Library &lib_p);
 
 } // namespace fas
 

@@ -40,6 +40,7 @@
 // godot
 #include "controller/step/CameraStep.h"
 #include "controller/step/DialogStep.h"
+#include "file/FileHeader.h"
 
 using namespace octopus;
 
@@ -48,43 +49,15 @@ namespace godot
 namespace level_test_model
 {
 
-std::list<Steppable *> LevelSteps(Library &lib_p, RandomGenerator &rand_p, bool buffProd_p)
+std::list<Steppable *> LevelSteps(Library &lib_p, RandomGenerator &rand_p, bool buffProd_p, bool upgrades_rune_p,
+	unsigned long idx_first_player_p, unsigned long nb_players_p)
 {
 	loadMinimalModels(lib_p);
 
 	// load divinity library
 	fas::loadLibrary(lib_p);
 
-	std::list<Steppable *> spawners_l =
-	{
-		new godot::CameraStep(20, 10, 0),
-		new PlayerLevelUpUpgradeStep(0, models::AttackSpeedDivId),
-		new PlayerLevelUpUpgradeStep(0, models::AttackSpeedDivId),
-		new PlayerLevelUpUpgradeStep(0, models::AttackSpeedDivId),
-		new PlayerLevelUpUpgradeStep(0, models::EconomicDivId),
-		new PlayerLevelUpUpgradeStep(0, models::EconomicDivId),
-		new PlayerLevelUpUpgradeStep(0, models::EconomicDivId),
-		new PlayerLevelUpUpgradeStep(0, models::HealDivId),
-		new PlayerLevelUpUpgradeStep(0, models::HealDivId),
-		new PlayerLevelUpUpgradeStep(0, models::HealDivId),
-		new PlayerLevelUpUpgradeStep(0, models::LifestealDivId),
-		new PlayerLevelUpUpgradeStep(0, models::LifestealDivId),
-		new PlayerLevelUpUpgradeStep(0, models::LifestealDivId),
-		new PlayerLevelUpUpgradeStep(0, models::ProductionDivId),
-		new PlayerLevelUpUpgradeStep(0, models::ProductionDivId),
-		new PlayerLevelUpUpgradeStep(0, models::ProductionDivId),
-		new PlayerLevelUpUpgradeStep(0, models::RecycleDivId),
-		new PlayerLevelUpUpgradeStep(0, models::RecycleDivId),
-		new PlayerLevelUpUpgradeStep(0, models::RecycleDivId),
-		new TriggerSpawn(new AnchorDivinityTrigger(lib_p, rand_p, 0, {
-			fas::DivinityType::AttackSpeed,
-			fas::DivinityType::Economic,
-			fas::DivinityType::Heal,
-			fas::DivinityType::Lifesteal,
-			fas::DivinityType::Production,
-			fas::DivinityType::Recycle,
-		}, 180)),
-	};
+	std::list<Steppable *> spawners_l = {};
 
 	if(buffProd_p)
 	{
@@ -92,10 +65,44 @@ std::list<Steppable *> LevelSteps(Library &lib_p, RandomGenerator &rand_p, bool 
 		buff_l._id = "model_loading_buff_prod";
 		buff_l._type = octopus::TyppedBuff::Type::Production;
 		buff_l._coef = 9.;
-		spawners_l.push_back(new octopus::PlayerBuffAllStep(0, buff_l, ""));
+		for(unsigned long player_l = 0 ; player_l < nb_players_p+idx_first_player_p ; ++player_l )
+		{
+			spawners_l.push_back(new octopus::PlayerBuffAllStep(player_l, buff_l, ""));
+		}
 	}
 
-	fas::addBuildingPlayer(spawners_l, 2, fas::allDivinities(), lib_p);
+	if(upgrades_rune_p)
+	{
+		for(unsigned long player_l = 0 ; player_l < nb_players_p+idx_first_player_p ; ++player_l )
+		{
+			spawners_l.push_back(new PlayerLevelUpUpgradeStep(player_l, models::AttackSpeedDivId));
+			spawners_l.push_back(new PlayerLevelUpUpgradeStep(player_l, models::AttackSpeedDivId));
+			spawners_l.push_back(new PlayerLevelUpUpgradeStep(player_l, models::AttackSpeedDivId));
+			spawners_l.push_back(new PlayerLevelUpUpgradeStep(player_l, models::EconomicDivId));
+			spawners_l.push_back(new PlayerLevelUpUpgradeStep(player_l, models::EconomicDivId));
+			spawners_l.push_back(new PlayerLevelUpUpgradeStep(player_l, models::EconomicDivId));
+			spawners_l.push_back(new PlayerLevelUpUpgradeStep(player_l, models::HealDivId));
+			spawners_l.push_back(new PlayerLevelUpUpgradeStep(player_l, models::HealDivId));
+			spawners_l.push_back(new PlayerLevelUpUpgradeStep(player_l, models::HealDivId));
+			spawners_l.push_back(new PlayerLevelUpUpgradeStep(player_l, models::LifestealDivId));
+			spawners_l.push_back(new PlayerLevelUpUpgradeStep(player_l, models::LifestealDivId));
+			spawners_l.push_back(new PlayerLevelUpUpgradeStep(player_l, models::LifestealDivId));
+			spawners_l.push_back(new PlayerLevelUpUpgradeStep(player_l, models::ProductionDivId));
+			spawners_l.push_back(new PlayerLevelUpUpgradeStep(player_l, models::ProductionDivId));
+			spawners_l.push_back(new PlayerLevelUpUpgradeStep(player_l, models::ProductionDivId));
+			spawners_l.push_back(new PlayerLevelUpUpgradeStep(player_l, models::RecycleDivId));
+			spawners_l.push_back(new PlayerLevelUpUpgradeStep(player_l, models::RecycleDivId));
+			spawners_l.push_back(new PlayerLevelUpUpgradeStep(player_l, models::RecycleDivId));
+		}
+	}
+
+	for(unsigned long player_l = 0 ; player_l < nb_players_p+idx_first_player_p ; ++player_l )
+	{
+		spawners_l.push_back(
+			new TriggerSpawn(new AnchorDivinityTrigger(lib_p, rand_p, player_l, fas::allDivinities(), 180))
+		);
+		fas::addDivinityBuildingPlayer(spawners_l, player_l, fas::allDivinities(), lib_p);
+	}
 
 	return spawners_l;
 }
@@ -113,20 +120,22 @@ void writeLevelHeader(std::ofstream &file_p, ModelLoaderHeader const &header_p)
 {
     file_p.write((char*)&header_p.seed, sizeof(header_p.seed));
     file_p.write((char*)&header_p.buff_prod, sizeof(header_p.buff_prod));
+    file_p.write((char*)&header_p.upgrade_rune, sizeof(header_p.upgrade_rune));
 }
 
 /// @brief read header for classic arena level and return a pair of steppable and command
 std::pair<std::list<octopus::Steppable *>, std::list<octopus::Command *> > readLevelHeader(octopus::Library &lib_p, std::ifstream &file_p,
-	octopus::RandomGenerator * &rand_p, ModelLoaderHeader &header_r)
+	octopus::RandomGenerator * &rand_p, ModelLoaderHeader &header_r, FileHeader const &_fileHeader)
 {
     file_p.read((char*)&header_r.seed, sizeof(header_r.seed));
     file_p.read((char*)&header_r.buff_prod, sizeof(header_r.buff_prod));
+    file_p.read((char*)&header_r.upgrade_rune, sizeof(header_r.upgrade_rune));
 
 	delete rand_p;
 	rand_p = new octopus::RandomGenerator(header_r.seed);
 
 	std::pair<std::list<octopus::Steppable *>, std::list<octopus::Command *> > pair_l;
-	pair_l.first = LevelSteps(lib_p, *rand_p, header_r.buff_prod);
+	pair_l.first = LevelSteps(lib_p, *rand_p, header_r.buff_prod, header_r.upgrade_rune, _fileHeader.get_idx_first_player(), _fileHeader.get_num_players());
 	pair_l.second = LevelCommands(lib_p, *rand_p);
 	return pair_l;
 }

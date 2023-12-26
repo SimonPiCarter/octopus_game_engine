@@ -153,6 +153,11 @@ void addBuildingPlayer(std::list<octopus::Steppable *> &spawners_p, unsigned lon
 	spawners_p.push_back(new octopus::PlayerAddBuildingModel(player_p, lib_p.getBuildingModel("deposit")));
 	spawners_p.push_back(new octopus::PlayerAddBuildingModel(player_p, lib_p.getBuildingModel("anchor")));
 
+    addDivinityBuildingPlayer(spawners_p, player_p, divinities_p, lib_p);
+}
+
+void addDivinityBuildingPlayer(std::list<octopus::Steppable *> &spawners_p, unsigned long player_p, std::vector<DivinityType> const &divinities_p, octopus::Library &lib_p)
+{
 	for(fas::DivinityType div_l : divinities_p)
 	{
 		std::vector<octopus::Steppable *> steps_l = newPlayerBuilding(player_p, div_l, lib_p);
