@@ -83,6 +83,7 @@ std::list<Steppable *> Mission1Steps(Library &lib_p, RandomGenerator &rand_p, un
 		{
 			step_p.addSteppable(new StateWinStep(false, false, 0, 1));
 			step_p.addSteppable(new godot::DialogStep("mission1_failed", true));
+			step_p.addSteppable(new godot::FailObjectiveStep("mission1_survive", true));
 		}
 	)));
 
@@ -170,8 +171,8 @@ std::list<Steppable *> Mission1Steps(Library &lib_p, RandomGenerator &rand_p, un
 
 			step_p.addSteppable(new StateWinStep(false, false, 0, 0));
 			step_p.addSteppable(new godot::DialogStep("mission1_final_group_dead", true));
-			step_p.addSteppable(new godot::RemoveObjectiveStep("mission1_free_maa"));
-			step_p.addSteppable(new godot::FailObjectiveStep("mission1_survive", true));
+			step_p.addSteppable(new godot::CompleteObjectiveStep("mission1_free_maa", true));
+			step_p.addSteppable(new godot::CompleteObjectiveStep("mission1_survive", true));
 		}
 	)));
 	spawners_l.push_back(new godot::AddObjectiveStep("mission1_survive", "mission1_survive", 0, true));

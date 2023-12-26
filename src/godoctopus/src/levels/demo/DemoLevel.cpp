@@ -6,7 +6,6 @@
 
 // fas
 #include "library/utils/Randomizer.hh"
-#include "library/utils/LoseTrigger.hh"
 #include "library/model/AnchorTrigger.hh"
 #include "library/model/ModelLoader.hh"
 #include "library/model/TimerDamage.hh"
@@ -31,6 +30,7 @@
 #include "step/player/PlayerSpawnStep.hh"
 #include "step/player/PlayerSpendResourceStep.hh"
 #include "step/state/StateTemplePositionAddStep.hh"
+#include "step/state/StateWinStep.hh"
 #include "step/team/TeamVisionStep.hh"
 #include "step/trigger/TriggerSpawn.hh"
 #include "utils/Binary.hh"
@@ -38,6 +38,8 @@
 // godot
 #include "controller/step/CameraStep.h"
 #include "controller/step/DialogStep.h"
+#include "controller/step/WaveStep.h"
+#include "controller/step/ObjectiveStep.h"
 
 #include "levels/wave/WaveSpawn.h"
 #include "levels/model/utils/EntitySpawner.h"
@@ -49,6 +51,14 @@ namespace godot
 {
 namespace demo
 {
+
+std::vector<octopus::Steppable*> demoGenerator()
+{
+	return {
+		new WaveStep(),
+		new godot::IncrementObjectiveStep("survival_defend_waves", true)
+	};
+}
 
 std::list<Steppable *> DemoLevelSteps(
 	Library &lib_p,
@@ -119,7 +129,7 @@ std::list<Steppable *> DemoLevelSteps(
 	std::vector<octopus::Vector> rolledSpawns_l = rollSpawnPoints(paramFirst_l.spawnPoints, paramFirst_l.nSpawnPoints, rand_p);
 
 	Trigger * triggerWave_l = new WaveSpawn(new ListenerStepCount(firstWave_l.earlyWave.steps), firstWave_l, rolledSpawns_l, true,
-			lib_p, rand_p, params_l, player_p, defaultGenerator);
+			lib_p, rand_p, params_l, player_p, demoGenerator);
 
 	spawners_l.push_back(new TriggerSpawn(triggerWave_l));
 
@@ -135,7 +145,16 @@ std::list<Steppable *> DemoLevelSteps(
 		spawners_l.push_back(new PlayerAddBuildingModel(playerIdx_l, lib_p.getBuildingModel("anchor")));
 
 		fas::addBuildingPlayer(spawners_l, playerIdx_l, fas::allDivinities(), lib_p);
-		spawners_l.push_back(new TriggerSpawn(new LoseTrigger(new ListenerEntityModelDied(&lib_p.getBuildingModel("command_center"), playerIdx_l))));
+		// lose trigger
+		spawners_l.push_back(new TriggerSpawn(new OnEachFunctionTrigger(
+			new ListenerEntityModelDied(&lib_p.getBuildingModel("command_center"), playerIdx_l),
+			[](State const &state_p, Step &step_p, unsigned long, TriggerData const &)
+			{
+				step_p.addSteppable(new octopus::StateWinStep(state_p.isOver(), state_p.hasWinningTeam(), state_p.getWinningTeam(), 1));
+				step_p.addSteppable(new godot::FailObjectiveStep("survival_survive", true));
+			}
+		)));
+
 		// handles of command_center spawned by the level
 		std::vector<unsigned long> handles_l = getHandles(entityInfo_p, playerIdx_l, "command_center");
 		for(unsigned long ccHandle_l : handles_l)
@@ -144,6 +163,9 @@ std::list<Steppable *> DemoLevelSteps(
 		}
 		spawners_l.push_back(new TriggerSpawn(new AnchorTrigger(lib_p, rand_p, 150, playerIdx_l)));
 	}
+
+	spawners_l.push_back(new godot::AddObjectiveStep("survival_survive", "survival_survive", -1, true));
+	spawners_l.push_back(new godot::AddObjectiveStep("survival_defend_waves", "survival_defend_waves", 2*waves_l.size(), true));
 
 	return spawners_l;
 }
