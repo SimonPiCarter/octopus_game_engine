@@ -94,6 +94,8 @@ namespace RVO {
 
 		ThreadPool pool;
 
+		std::vector<std::pair<octopus::Fixed , const Agent *> > const & getAgentNeighbors(unsigned long idx_p) const;
+
 		/**
 		 * \brief      Constructs a simulator instance and sets the default
 		 *             properties for any new agent that is added.

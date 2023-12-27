@@ -3,12 +3,14 @@
 
 #include "state/Handle.hh"
 #include <cstddef>
+#include <vector>
 #include <unordered_map>
 #include "utils/Fixed.hh"
 
 namespace RVO
 {
     class RVOSimulator;
+    class Agent;
 }
 
 namespace octopus
@@ -52,6 +54,8 @@ public:
     /// @param step_p
     /// @return
     static bool ShouldReset(OrcaManager const *manager_p, State const &state_p, Step const &step_p);
+
+    std::vector<std::pair<octopus::Fixed , const RVO::Agent *> > const & getAgentNeighbors(octopus::Handle const &handle_p) const;
 
 private:
     Fixed const _timeStep;

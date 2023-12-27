@@ -14,14 +14,14 @@
 #include "graph/PathManager.hh"
 #include "graph/Grid.hh"
 #include "graph/GridNode.hh"
+#include "orca/rvo/Agent.hh"
 
 namespace octopus
 {
 
-unsigned long UnlockRoutine::MaxStepState = 50;
-unsigned long UnlockRoutine::SmallRange = 2;
-unsigned long UnlockRoutine::MiddleRange = 5;
-unsigned long UnlockRoutine::LongRange = 10;
+unsigned long long UnlockRoutine::UpdateSteps = 32;
+unsigned long long UnlockRoutine::MaxStepState = 500;
+Fixed UnlockRoutine::SquareDistanceMax = 2.25;
 
 EntityMoveCommand::EntityMoveCommand(Handle const &commandHandle_p, Handle const &source_p,
 		Vector const &finalPoint_p, unsigned long gridStatus_p, std::list<Vector> const &waypoints_p, bool init_p, bool neverStop_p)
@@ -153,13 +153,15 @@ bool EntityMoveCommand::applyCommand(Step & step_p, State const &state_p, Comman
 	step_p.addSteppable(new CommandMoveStepSinceUpdateIncrementStep(_handleCommand));
 
 	// unlock routine ?
-	bool unlock_l = data_l->_unlockRoutine._unlockState != UnlockRoutineState::NONE
-				 && data_l->_unlockRoutine._enabled;
+	bool unlock_l = data_l->_unlockRoutine._enabled;
 
-	if(unlock_l)
+	if(unlock_l && pathManager_p.getOrcaManager())
 	{
-		if(square_length(data_l->_unlockRoutine._targetPoint - ent_l->_pos) < 0.1
-		|| step_p.getId() > data_l->_unlockRoutine._stepEndId)
+		OrcaManager const * orcaManager_l = pathManager_p.getOrcaManager();
+
+		std::vector<std::pair<octopus::Fixed , const RVO::Agent *> > const & neighbours_l = orcaManager_l->getAgentNeighbors(ent_l->_handle);
+		// end unlock if time expired
+		if(step_p.getId() > data_l->_unlockRoutine._stepEndId)
 		{
 			UnlockRoutine newRoutine_l = data_l->_unlockRoutine;
 			newRoutine_l._enabled = false;
@@ -167,7 +169,85 @@ bool EntityMoveCommand::applyCommand(Step & step_p, State const &state_p, Comman
 		}
 		else
 		{
-			next_l = data_l->_unlockRoutine._targetPoint;
+			// update point if required
+			if((step_p.getId() - data_l->_unlockRoutine._stepStartId) % UnlockRoutine::UpdateSteps == 0)
+			{
+				UnlockRoutine newRoutine_l = data_l->_unlockRoutine;
+
+				Vector to_target_point_l = data_l->_finalPoint - ent_l->_pos;
+				Vector repulsion_l;
+				for(auto && pair_l : neighbours_l)
+				{
+					Vector other_pos_l = pair_l.second->getEnt()->_pos;
+					Vector diff_l = ent_l->_pos - other_pos_l;
+					Fixed dot_prod_l = dot_product(diff_l, to_target_point_l);
+					if(dot_prod_l > 0)
+					{
+						continue;
+					}
+					Fixed squared_length_l = pair_l.first;
+					if(squared_length_l > UnlockRoutine::SquareDistanceMax)
+					{
+						continue;
+					}
+					repulsion_l += diff_l/squared_length_l/squared_length_l;
+				}
+
+				Fixed length_prod_l = square_length(repulsion_l)*square_length(to_target_point_l);
+				if(length_prod_l > 0)
+				{
+					Fixed dot_prod_l = dot_product(repulsion_l, to_target_point_l);
+					Logger::getDebug() << "routine "<<ent_l->_handle<<std::endl;
+					Logger::getDebug() << "\trepulsion_l = "<<repulsion_l<<std::endl;
+					Logger::getDebug() << "\tto_target_point_l = "<<to_target_point_l<<std::endl;
+					Logger::getDebug() << "\tdot_prod_l = "<<dot_prod_l<<std::endl;
+					Logger::getDebug() << "\tlength_prod_l = "<<length_prod_l<<std::endl;
+					Logger::getDebug() << "\tdot_prod_sq = "<<dot_prod_l*dot_prod_l/length_prod_l<<std::endl;
+
+					if(dot_prod_l*dot_prod_l/length_prod_l > 0.5*0.5)
+					{
+						Vector new_dir_l = Vector(repulsion_l.y, -repulsion_l.x);
+
+						if(data_l->_unlockRoutine._unlockState == UnlockRoutineState::NONE)
+						{
+							newRoutine_l._unlockState = UnlockRoutineState::LEFT;
+						}
+						else if(data_l->_unlockRoutine._unlockState == UnlockRoutineState::RIGHT)
+						{
+							new_dir_l = Vector(-repulsion_l.y, repulsion_l.x);
+						}
+						if(dot_product(new_dir_l, to_target_point_l) > 0 && data_l->_unlockRoutine._unlockState == UnlockRoutineState::NONE)
+						{
+							newRoutine_l._unlockState = UnlockRoutineState::RIGHT;
+							new_dir_l = Vector(-repulsion_l.y, repulsion_l.x);
+						}
+
+						next_l = ent_l->_pos + new_dir_l/length(new_dir_l)*ent_l->getStepSpeed()*UnlockRoutine::MaxStepState;
+						Logger::getDebug() << "updated next_l = "<<next_l - ent_l->_pos<<std::endl;
+						newRoutine_l._targetPoint = next_l;
+					}
+					else
+					{
+						Logger::getDebug() << "stop routine next_l = "<<next_l - ent_l->_pos<<std::endl;
+						// stop routine
+						newRoutine_l._enabled = false;
+					}
+					step_p.addSteppable(new CommandMoveUnlockRoutineStep(_handleCommand, data_l->_unlockRoutine, newRoutine_l));
+				}
+				else
+				{
+					next_l = data_l->_finalPoint;
+					Logger::getDebug() << "stop routine no neighbour = "<<next_l - ent_l->_pos<<std::endl;
+					// stop routine
+					newRoutine_l._targetPoint = next_l;
+					step_p.addSteppable(new CommandMoveUnlockRoutineStep(_handleCommand, data_l->_unlockRoutine, newRoutine_l));
+				}
+			}
+			else
+			{
+				// used stored point
+				next_l = data_l->_unlockRoutine._targetPoint;
+			}
 		}
 	}
 
@@ -216,57 +296,8 @@ bool EntityMoveCommand::applyCommand(Step & step_p, State const &state_p, Comman
 								<< " since progress "<<data_l->_countSinceProgress << " setp id " << step_p.getId() << std::endl;
 			if(!data_l->_unlockRoutine._enabled && !data_l->_ignoreCollision)
 			{
-				Vector newPoint_l;
-				Vector diff_l = data_l->_finalPoint - ent_l->_pos;
-				diff_l /= length(diff_l);
-				// progress into unlocking routine
-				if(data_l->_unlockRoutine._unlockState == UnlockRoutineState::NONE)
-				{
-					newPoint_l = ent_l->_pos + Vector(-diff_l.y, diff_l.x) * UnlockRoutine::SmallRange + diff_l;
-					UnlockRoutine newRoutine_l {UnlockRoutineState::SMALL_1, newPoint_l,
-						step_p.getId() + UnlockRoutine::SmallRange * UnlockRoutine::MaxStepState, true};
-					step_p.addSteppable(new CommandMoveUnlockRoutineStep(_handleCommand, data_l->_unlockRoutine, newRoutine_l));
-				}
-				else if(data_l->_unlockRoutine._unlockState == UnlockRoutineState::SMALL_1)
-				{
-					newPoint_l = ent_l->_pos + Vector(diff_l.y, -diff_l.x) * UnlockRoutine::SmallRange + diff_l;
-					UnlockRoutine newRoutine_l {UnlockRoutineState::SMALL_2, newPoint_l,
-						step_p.getId() + UnlockRoutine::SmallRange * UnlockRoutine::MaxStepState, true};
-					step_p.addSteppable(new CommandMoveUnlockRoutineStep(_handleCommand, data_l->_unlockRoutine, newRoutine_l));
-				}
-				else if(data_l->_unlockRoutine._unlockState == UnlockRoutineState::SMALL_2)
-				{
-					newPoint_l = ent_l->_pos + Vector(-diff_l.y, diff_l.x) * UnlockRoutine::MiddleRange + diff_l * UnlockRoutine::SmallRange;
-					UnlockRoutine newRoutine_l {UnlockRoutineState::MIDDLE_1, newPoint_l,
-						step_p.getId() + UnlockRoutine::MiddleRange * UnlockRoutine::MaxStepState, true};
-					step_p.addSteppable(new CommandMoveUnlockRoutineStep(_handleCommand, data_l->_unlockRoutine, newRoutine_l));
-				}
-				else if(data_l->_unlockRoutine._unlockState == UnlockRoutineState::MIDDLE_1)
-				{
-					newPoint_l = ent_l->_pos + Vector(diff_l.y, -diff_l.x) * UnlockRoutine::MiddleRange + diff_l * UnlockRoutine::SmallRange;
-					UnlockRoutine newRoutine_l {UnlockRoutineState::MIDDLE_2, newPoint_l,
-						step_p.getId() + UnlockRoutine::MiddleRange * UnlockRoutine::MaxStepState, true};
-					step_p.addSteppable(new CommandMoveUnlockRoutineStep(_handleCommand, data_l->_unlockRoutine, newRoutine_l));
-				}
-				else if(data_l->_unlockRoutine._unlockState == UnlockRoutineState::MIDDLE_2)
-				{
-					newPoint_l = ent_l->_pos + Vector(-diff_l.y, diff_l.x) * UnlockRoutine::LongRange + diff_l * UnlockRoutine::MiddleRange;
-					UnlockRoutine newRoutine_l {UnlockRoutineState::LONG_1, newPoint_l,
-						step_p.getId() + UnlockRoutine::MiddleRange * UnlockRoutine::LongRange, true};
-					step_p.addSteppable(new CommandMoveUnlockRoutineStep(_handleCommand, data_l->_unlockRoutine, newRoutine_l));
-				}
-				else if(data_l->_unlockRoutine._unlockState == UnlockRoutineState::LONG_1)
-				{
-					newPoint_l = ent_l->_pos + Vector(diff_l.y, -diff_l.x) * UnlockRoutine::LongRange + diff_l * UnlockRoutine::MiddleRange;
-					UnlockRoutine newRoutine_l {UnlockRoutineState::LONG_2, newPoint_l,
-						step_p.getId() + UnlockRoutine::MiddleRange * UnlockRoutine::LongRange, true};
-					step_p.addSteppable(new CommandMoveUnlockRoutineStep(_handleCommand, data_l->_unlockRoutine, newRoutine_l));
-				}
-				else
-				{
-					UnlockRoutine newRoutine_l {UnlockRoutineState::NONE, Vector(), 0, false};
-					step_p.addSteppable(new CommandMoveUnlockRoutineStep(_handleCommand, data_l->_unlockRoutine, newRoutine_l));
-				}
+				UnlockRoutine newRoutine_l {UnlockRoutineState::NONE, Vector(), step_p.getId()+UnlockRoutine::MaxStepState, step_p.getId()+1, true};
+				step_p.addSteppable(new CommandMoveUnlockRoutineStep(_handleCommand, data_l->_unlockRoutine, newRoutine_l));
 			}
 		}
 		// progress => update position and reset count

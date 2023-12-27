@@ -21,6 +21,7 @@ namespace octopus
 
 	Fixed length(Vector const &vec_p);
 	Fixed square_length(Vector const &vec_p);
+	Fixed dot_product(Vector const &a, Vector const b);
 
 	bool same_direction(Vector const & a, Vector const & b);
 

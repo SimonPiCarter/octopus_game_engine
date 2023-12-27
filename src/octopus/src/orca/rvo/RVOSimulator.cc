@@ -48,6 +48,11 @@ namespace RVO {
 		kdTree_ = new KdTree(this);
 	}
 
+	std::vector<std::pair<octopus::Fixed , const Agent *> > const & RVOSimulator::getAgentNeighbors(unsigned long idx_p) const
+	{
+		return agents_[idx_p].getAgentNeighbors();
+	}
+
 	RVOSimulator::RVOSimulator(octopus::Fixed timeStep, octopus::Fixed neighborDist, size_t maxNeighbors, octopus::Fixed timeHorizon, octopus::Fixed timeHorizonObst, octopus::Fixed radius, octopus::Fixed maxSpeed, const Vector2 &velocity) : defaultAgent_(NULL), globalTime_(0.0f), kdTree_(NULL), timeStep_(timeStep), pool(12)
 	{
 		kdTree_ = new KdTree(this);
