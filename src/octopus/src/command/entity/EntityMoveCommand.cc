@@ -212,7 +212,7 @@ bool EntityMoveCommand::applyCommand(Step & step_p, State const &state_p, Comman
 		Fixed sqLastDiff_l = square_length(ent_l->_pos - data_l->_lastPos);
 		if(sqLastDiff_l < 0.5 && data_l->_countSinceProgress == 50)
 		{
-			Logger::getNormal() << "almost no move : " << _handleCommand.index
+			Logger::getDebug() << "almost no move : " << _handleCommand.index
 								<< " since progress "<<data_l->_countSinceProgress << " setp id " << step_p.getId() << std::endl;
 			if(!data_l->_unlockRoutine._enabled && !data_l->_ignoreCollision)
 			{
