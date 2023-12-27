@@ -145,11 +145,21 @@ void saveToStream(FileHeader const &file_header_p, std::ostream &file_p)
 
 void saveDebugToStream(FileHeader const &file_header_p, std::ostream &file_p)
 {
+	int version_l = file_header_p.get_version();
 	std::string model_name_l = file_header_p.get_model_filename().utf8().get_data();
 	std::string level_name_l = file_header_p.get_level_filename().utf8().get_data();
+	std::string compaign_id_l = file_header_p.get_campaign_id().utf8().get_data();
+	int env_id_l = file_header_p.get_environment_id();
+	int num_players_l = file_header_p.get_num_players();
+	int idx_first_player_l = file_header_p.get_idx_first_player();
 
+    file_p<<version_l<<std::endl;
     file_p<<model_name_l<<std::endl;
     file_p<<level_name_l<<std::endl;
+    file_p<<compaign_id_l<<std::endl;
+    file_p<<env_id_l<<std::endl;
+    file_p<<num_players_l<<std::endl;
+    file_p<<idx_first_player_l<<std::endl;
 }
 
 }

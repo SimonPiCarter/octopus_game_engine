@@ -251,6 +251,8 @@ bool Controller::loop_body()
 					_orcaManager->setupStep(*state_l, step_l);
 					_orcaManager->doStep();
 					_orcaManager->commitStep(*state_l, step_l);
+
+					_pathManager.setOrcaManager(_orcaManager);
 				}
 				else
 				{

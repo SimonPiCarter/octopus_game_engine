@@ -8,6 +8,7 @@
 #include <thread>
 
 #include "graph/CanonicalDijkstra.hh"
+#include "orca/OrcaManager.hh"
 
 namespace octopus
 {
@@ -58,6 +59,9 @@ public:
 	std::vector<std::vector<GridNode *> > const & getInternalGrid() const { return _internalGrid; }
 
 	static bool ForceLoSCheck;
+
+	void setOrcaManager(OrcaManager const *orca_p) { _orcaManager = orca_p; }
+	OrcaManager const *getOrcaManager() const { return _orcaManager; }
 protected:
 	/// @brief thread for parallel computing
 	std::thread _thread;
@@ -75,6 +79,8 @@ protected:
 
 	/// @brief map of computed queries
 	std::map<std::pair<long, long>, FlowFieldResult> _completed;
+
+	OrcaManager const * _orcaManager = nullptr;
 };
 } // namespace octopus
 

@@ -22,7 +22,7 @@ struct FlockInformation
 };
 
 /// @brief represent the unlock routine state (1 and 2 tells if we are going "left" or "right", SMALL,MIDDLE,LONG tells by how much we move on the side)
-enum class UnlockRoutineState { SMALL_1, SMALL_2, MIDDLE_1, MIDDLE_2, LONG_1, LONG_2, NONE };
+enum class UnlockRoutineState { LEFT, RIGHT, NONE };
 /// @brief Basic struct to store the unlock routine state in move data
 struct UnlockRoutine
 {
@@ -30,15 +30,16 @@ struct UnlockRoutine
 	UnlockRoutineState _unlockState = UnlockRoutineState::NONE;
 	/// @brief the target point of the unlock state
 	Vector _targetPoint;
-	/// @brief the step id when the current state was started to know when to stop it
+	/// @brief the step id when the rputine should stop
 	unsigned long long _stepEndId = 0;
+	/// @brief the step if when the routine was started to know when to update target points
+	unsigned long long _stepStartId = 0;
 	/// @brief true if the unlock routine is enabled right now (meaning we want to move to its target point)
 	bool _enabled = false;
 
-	static unsigned long MaxStepState;
-	static unsigned long SmallRange;
-	static unsigned long MiddleRange;
-	static unsigned long LongRange;
+	static unsigned long long UpdateSteps;
+	static unsigned long long MaxStepState;
+	static Fixed SquareDistanceMax;
 };
 
 /// @brief This struct is aimed at supporting

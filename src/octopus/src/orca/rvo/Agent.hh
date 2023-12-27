@@ -60,6 +60,9 @@ namespace RVO {
 		 * \param      sim             The simulator instance.
 		 */
 		explicit Agent(RVOSimulator *sim);
+
+		octopus::Entity const *getEnt() const { return ent_; }
+		std::vector<std::pair<octopus::Fixed , const Agent *> > const & getAgentNeighbors() const { return agentNeighbors_; }
 	private:
 
 		/**

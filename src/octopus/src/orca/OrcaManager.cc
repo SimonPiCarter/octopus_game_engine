@@ -202,4 +202,14 @@ bool OrcaManager::ShouldReset(OrcaManager const *manager_p, State const &state_p
     return false;
 }
 
+std::vector<std::pair<octopus::Fixed , const RVO::Agent *> > const & OrcaManager::getAgentNeighbors(octopus::Handle const &handle_p) const
+{
+    if(!_sim)
+    {
+        return {};
+    }
+    return _sim->getAgentNeighbors(_mapHandleIdx.at(handle_p));
+}
+
+
 } // namespace octopus
