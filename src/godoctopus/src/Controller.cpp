@@ -1026,12 +1026,13 @@ float Controller::get_model_ray(String const &model_p) const
 	return octopus::to_double(_lib.getEntityModel(modelId_l)._ray);
 }
 
-bool Controller::is_grid_free(String const &model_p, int x_p, int y_p) const
+bool Controller::is_grid_free(String const &model_p, int x_p, int y_p, int player_p) const
 {
 	if(_state)
 	{
 		std::string modelId_l(model_p.utf8().get_data());
-		return checkGridNode(*_state, x_p, y_p, dynamic_cast<octopus::TempleModel const*>(&_lib.getEntityModel(modelId_l)));
+		return is_explored(x_p, y_p, player_p)
+			&& checkGridNode(*_state, x_p, y_p, dynamic_cast<octopus::TempleModel const*>(&_lib.getEntityModel(modelId_l)));
 	}
 	return false;
 }
@@ -1511,7 +1512,7 @@ void Controller::_bind_methods()
 	ClassDB::bind_method(D_METHOD("get_current_reload_time", "handle", "ability"), &Controller::get_current_reload_time);
 	ClassDB::bind_method(D_METHOD("hasNonStaticBehind", "handle", "height" "width"), &Controller::hasNonStaticBehind);
 	ClassDB::bind_method(D_METHOD("get_model_ray", "model"), &Controller::get_model_ray);
-	ClassDB::bind_method(D_METHOD("is_grid_free", "model", "x", "y"), &Controller::is_grid_free);
+	ClassDB::bind_method(D_METHOD("is_grid_free", "model", "x", "y", "player"), &Controller::is_grid_free);
 	ClassDB::bind_method(D_METHOD("get_world_size"), &Controller::get_world_size);
 	ClassDB::bind_method(D_METHOD("get_steps"), &Controller::get_steps);
 	ClassDB::bind_method(D_METHOD("get_team", "player"), &Controller::get_team);

@@ -130,7 +130,7 @@ public:
 
 	float get_model_ray(String const &model_p) const;
 	/// @brief check if grid is free (model is required to handle specific building check)
-	bool is_grid_free(String const &model_p, int x_p, int y_p) const;
+	bool is_grid_free(String const &model_p, int x_p, int y_p, int player_p) const;
 
 	int get_world_size() const;
 	int get_steps() const;
