@@ -190,6 +190,10 @@ bool EntityMoveCommand::applyCommand(Step & step_p, State const &state_p, Comman
 					{
 						continue;
 					}
+					if(squared_length_l == Fixed::Zero())
+					{
+						continue;
+					}
 					repulsion_l += diff_l/squared_length_l/squared_length_l;
 				}
 
