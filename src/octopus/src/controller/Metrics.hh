@@ -30,6 +30,7 @@ struct Metrics
 	size_t _spikeCompilingSteps {0};
 	size_t _nbEntities {0};
 	size_t _nbCommandables {0};
+	std::vector<double> _vecTimeCompilingSteps;
 };
 
 /// @brief update nb entities and commandables metrics

@@ -369,6 +369,7 @@ bool Controller::loop_body()
 			auto &&time_l = std::chrono::nanoseconds( std::chrono::steady_clock::now() - start_l ).count();
 			_metrics._nbStepsCompiled += 1;
 			_metrics._timeCompilingSteps += time_l;
+			_metrics._vecTimeCompilingSteps.push_back(time_l);
 			if(time_l > _timePerStep * 1e9)
 			{
 				++_metrics._spikeCompilingSteps;
