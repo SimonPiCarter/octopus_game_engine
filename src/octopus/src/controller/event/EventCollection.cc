@@ -88,7 +88,8 @@ void EventCollection::visit(EntityHitPointChangeStep const *step_p)
 	Logger::getDebug() << "EventCollection :: visit EntityHitPointChangeStep " << step_p->_handle
 					   << " : "<<oldHp_l << " => " << newHp_l <<std::endl;
 
-	if(newHp_l <= 0 && oldHp_l > 0
+	if(ent_l->_hp <= Fixed::Zero()
+	&& newHp_l <= Fixed::Zero() && oldHp_l > Fixed::Zero()
 	&& _diedHandles.find(step_p->_handle) == _diedHandles.end())
 	{
 		Logger::getDebug() << "\ttrigger"<<std::endl;
