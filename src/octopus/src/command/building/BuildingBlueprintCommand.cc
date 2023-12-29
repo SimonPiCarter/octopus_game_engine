@@ -32,6 +32,8 @@ BuildingBlueprintCommand::BuildingBlueprintCommand(Vector const &pos_p, unsigned
 void BuildingBlueprintCommand::registerCommand(Step & step_p, State const &state_p)
 {
 	Logger::getDebug() << "BuildingBlueprintCommand:: register Command "<<_player <<std::endl;
+	Building building_l(_pos, true, *_model);
+	building_l._player = _player;
 	// If not payed we update player resource
 	// and mark this production as paid
 	if(!checkResource(state_p, _player, _model->_cost, step_p.getResourceSpent(_player)))
@@ -44,10 +46,13 @@ void BuildingBlueprintCommand::registerCommand(Step & step_p, State const &state
 		Logger::getDebug() << "BuildingBlueprintCommand:: missing requirements "<<_player <<std::endl;
 		step_p.addSteppable(new MissingResourceStep(_player));
 	}
+	else if(!checkExplored(state_p, &building_l, _player))
+	{
+		Logger::getDebug() << "BuildingBlueprintCommand:: unexplored zone "<<_player <<std::endl;
+		step_p.addSteppable(new MissingResourceStep(_player));
+	}
 	else
 	{
-		Building building_l(_pos, true, *_model);
-		building_l._player = _player;
 		if(noOutOfBounds(state_p, building_l) && _model->checkLegality(building_l, state_p))
 		{
 			Handle buildingHandle_l = getNextHandle(step_p, state_p);

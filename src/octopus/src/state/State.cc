@@ -816,6 +816,32 @@ Box<long long> getBox(Entity const &ent_p)
 					};
 }
 
+bool checkExplored(State const &state_p, Entity const *ent_p, unsigned long player_p)
+{
+	if(!noOutOfBounds(state_p, *ent_p))
+	{
+		return false;
+	}
+	Box<long long> box_l = getBox(*ent_p);
+	octopus::Player const *player_l = state_p.getPlayer(player_p);
+
+	// only check grid if static
+	if(ent_p->_model._isStatic)
+	{
+		for(long long x = box_l._lowerX ; x < box_l._upperX; ++x)
+		{
+			for(long long y = box_l._lowerY ; y < box_l._upperY; ++y)
+			{
+				if(!state_p.getVisionHandler().isExplored(player_l->_team, x, y))
+				{
+					return false;
+				}
+			}
+		}
+	}
+	return true;
+}
+
 bool checkGrid(State const &state_p, Entity const *ent_p, bool ignoreAbandonedTemples_p)
 {
 	if(!noOutOfBounds(state_p, *ent_p))
