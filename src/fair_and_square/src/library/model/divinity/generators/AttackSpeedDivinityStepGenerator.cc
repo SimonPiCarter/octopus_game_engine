@@ -141,7 +141,7 @@ void fillLibrary(AttackSpeedDivinityParams const &params_p, octopus::Library &li
 	attackspeedBuffTierThree_l->_cost["bloc"] = 250;
 	attackspeedBuffTierThree_l->_cost["ether"] = 350;
 	attackspeedBuffTierThree_l->_cost["irium"] = 450;
-	attackspeedBuffTierThree_l->_productionTime = 30000;
+	attackspeedBuffTierThree_l->_productionTime = 12000;
 	attackspeedBuffTierThree_l->_requirements._upgradeLvl[models::AttackSpeedDivId+models::tierThreeSuffix] = 1;
 	lib_p.registerUpgrade(attackspeedBuffTierThree_l->_id, attackspeedBuffTierThree_l);
 

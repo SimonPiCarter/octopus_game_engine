@@ -125,7 +125,7 @@ void fillLibrary(EconomicDivinityParams const &params_p, octopus::Library &lib_p
 	resUpTierThree_l->_cost["bloc"] = 250;
 	resUpTierThree_l->_cost["ether"] = 450;
 	resUpTierThree_l->_cost["irium"] = 450;
-	resUpTierThree_l->_productionTime = 30000;
+	resUpTierThree_l->_productionTime = 12000;
 	resUpTierThree_l->_requirements._upgradeLvl[models::EconomicDivId+models::tierThreeSuffix] = 1;
 
 	lib_p.registerUpgrade(resUpTierThree_l->_id, resUpTierThree_l);
