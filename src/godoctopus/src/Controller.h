@@ -221,6 +221,10 @@ public:
 	//// Miscellanous
 	////////////////////////////
 	String get_hash_version() const;
+	double get_avg_last_compile_time(int numbers_p) const;
+	double get_max_compile_time(int numbers_p) const;
+	void dump_compile_times(String const &path_p) const;
+	void print_metrics() const;
 
 	////////////////////////////
 	//// Non godot methods

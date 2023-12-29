@@ -898,6 +898,53 @@ String Controller::get_hash_version() const
 	return String(octopus::getHashVersion().c_str());
 }
 
+double Controller::get_avg_last_compile_time(int numbers_p) const
+{
+	std::vector<double> const &compile_times = _controller->getMetrics()._vecTimeCompilingSteps;
+	int counted_l = 0;
+	double time_l = 0;
+	for(int i = int(compile_times.size())-1 ; i >= 0 && counted_l < numbers_p ; --i)
+	{
+		++counted_l;
+		time_l += compile_times[i];
+	}
+	return time_l/double(counted_l);
+}
+
+double Controller::get_max_compile_time(int numbers_p) const
+{
+	std::vector<double> const &compile_times = _controller->getMetrics()._vecTimeCompilingSteps;
+	int counted_l = 0;
+	double time_l = 0;
+	for(int i = int(compile_times.size())-1 ; i >= 0 && counted_l < numbers_p ; --i)
+	{
+		++counted_l;
+		time_l = std::max(time_l, compile_times[i]);
+	}
+	return time_l;
+}
+
+void Controller::dump_compile_times(String const &path_p) const
+{
+	std::string path_l(path_p.utf8().get_data());
+	std::ofstream file_l(path_l);
+	std::vector<double> const &compile_times = _controller->getMetrics()._vecTimeCompilingSteps;
+	size_t i = 0;
+	file_l<<"step;compile_time"<<"\n";
+	for(double time_l : compile_times)
+	{
+		file_l<<i<<";"<<time_l<<"\n";
+		++i;
+	}
+}
+
+void Controller::print_metrics() const
+{
+	std::stringstream ss_l;
+	ss_l << _controller->getMetrics()<<std::endl;
+	String metrics_l(ss_l.str().c_str());
+	UtilityFunctions::print(metrics_l);
+}
 
 TypedArray<String> Controller::get_models(EntityHandle const * handle_p, int player_p, bool checkRequirements_p) const
 {
@@ -1498,6 +1545,10 @@ void Controller::_bind_methods()
 	ClassDB::bind_method(D_METHOD("set_auto_file_debug", "debug"), &Controller::set_auto_file_debug);
 	ClassDB::bind_method(D_METHOD("dump_state_as_text", "path"), &Controller::dump_state_as_text);
 	ClassDB::bind_method(D_METHOD("get_hash_version"), &Controller::get_hash_version);
+	ClassDB::bind_method(D_METHOD("get_avg_last_compile_time" , "number"), &Controller::get_avg_last_compile_time);
+	ClassDB::bind_method(D_METHOD("get_max_compile_time" , "number"), &Controller::get_max_compile_time);
+	ClassDB::bind_method(D_METHOD("dump_compile_times", "path"), &Controller::dump_compile_times);
+	ClassDB::bind_method(D_METHOD("print_metrics"), &Controller::print_metrics);
 	ClassDB::bind_method(D_METHOD("get_models", "handle", "player", "check_requirements"), &Controller::get_models);
 	ClassDB::bind_method(D_METHOD("get_abilities", "handle", "player", "check_requirements"), &Controller::get_abilities);
 
