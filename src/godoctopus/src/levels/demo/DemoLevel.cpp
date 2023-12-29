@@ -67,7 +67,8 @@ std::list<Steppable *> DemoLevelSteps(
 	unsigned long player_p,
 	unsigned long playerCount_p,
 	std::vector<GodotEntityInfo> const &entityInfo_p,
-	int difficulty_p)
+	int difficulty_p,
+	bool demo_p)
 {
 	// Tick rate for anchor decay : easy => 1 every 2sec
 	// >= medium : 1 every sec
@@ -161,7 +162,12 @@ std::list<Steppable *> DemoLevelSteps(
 		{
 			spawners_l.push_back(new FlyingCommandSpawnStep(new TimerDamage(flyingCommandHandle_l++, anchorTickRate_l, 0, playerIdx_l, "Anchor", Handle(ccHandle_l))));
 		}
-		spawners_l.push_back(new TriggerSpawn(new AnchorTrigger(lib_p, rand_p, 150, playerIdx_l)));
+		std::vector<fas::DivinityType> forbidden_l;
+		if(demo_p)
+		{
+			forbidden_l = notDemoDivinities();
+		}
+		spawners_l.push_back(new TriggerSpawn(new AnchorTrigger(lib_p, rand_p, 150, playerIdx_l, forbidden_l)));
 	}
 
 	spawners_l.push_back(new godot::AddObjectiveStep("survival_survive", "survival_survive", -1, true));
@@ -408,7 +414,7 @@ std::pair<std::list<octopus::Steppable *>, std::list<octopus::Command *> > readD
 	rand_p = new octopus::RandomGenerator(header_r.seed);
 
 	std::pair<std::list<octopus::Steppable *>, std::list<octopus::Command *> > pair_l;
-	pair_l.first = DemoLevelSteps(lib_p, *rand_p, header_r.tierWaveInfo, header_r.player, header_r.player_count, entityInfo_p, header_r.difficulty);
+	pair_l.first = DemoLevelSteps(lib_p, *rand_p, header_r.tierWaveInfo, header_r.player, header_r.player_count, entityInfo_p, header_r.difficulty, false);
 	pair_l.second = DemoLevelCommands(lib_p, *rand_p, header_r.player_count, header_r.difficulty);
 	return pair_l;
 }

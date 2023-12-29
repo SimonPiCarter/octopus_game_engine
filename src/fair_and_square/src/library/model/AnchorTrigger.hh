@@ -5,6 +5,8 @@
 #include "controller/trigger/Listener.hh"
 #include "utils/RandomGenerator.hh"
 
+#include "library/model/divinity/DivinityModelLoader.hh"
+
 namespace octopus
 {
 class Library;
@@ -14,7 +16,8 @@ class Library;
 class AnchorTrigger : public octopus::OnEachTrigger
 {
 public:
-	AnchorTrigger(octopus::Library const &lib_p, octopus::RandomGenerator &rand_p, double bonus_p, unsigned long player_p=0);
+	AnchorTrigger(octopus::Library const &lib_p, octopus::RandomGenerator &rand_p, double bonus_p,
+		unsigned long player_p=0, std::vector<fas::DivinityType> const &forbidden_p={});
 	virtual void trigger(octopus::State const &, octopus::Step &step_p, unsigned long, octopus::TriggerData const &) const override;
 
 private:
@@ -24,6 +27,8 @@ private:
 	octopus::RandomGenerator & _rand;
 
 	double const _bonus;
+
+	std::vector<fas::DivinityType> const _forbidden;
 
 	/// @brief count of trigger during the game to generate buff id
 	/// need to be mutable to be incremented when triggering

@@ -130,6 +130,24 @@ std::vector<DivinityType> allDivinities()
     };
 }
 
+std::vector<DivinityType> notDemoDivinities()
+{
+    return {
+        DivinityType::Economic,
+        DivinityType::Lifesteal
+    };
+}
+
+std::vector<DivinityType> demoDivinities()
+{
+    return {
+        DivinityType::AttackSpeed,
+        DivinityType::Heal,
+        DivinityType::Production,
+        DivinityType::Recycle
+    };
+}
+
 std::vector<DivinityType> getMaxedOutDivinities(octopus::Player const &player_p, unsigned long maxLevel_p)
 {
 	std::vector<DivinityType> maxedOut_l;

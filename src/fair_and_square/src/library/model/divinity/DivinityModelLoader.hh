@@ -42,6 +42,8 @@ DivinityType rollOneRandomDivinity(octopus::RandomGenerator &rand_p, std::vector
 DivinityType rollOneRandomDivinityFromList(octopus::RandomGenerator &rand_p, std::vector<DivinityType> const &list_p, std::vector<DivinityType> const &exceptions_p);
 
 std::vector<DivinityType> allDivinities();
+std::vector<DivinityType> notDemoDivinities();
+std::vector<DivinityType> demoDivinities();
 
 /// @brief get all the divinities that are maxed out
 /// @param player_p the player to check from

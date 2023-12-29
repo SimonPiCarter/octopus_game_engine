@@ -39,7 +39,8 @@ namespace demo
 /// @return
 std::list<octopus::Steppable *> DemoLevelSteps(octopus::Library &lib_p, octopus::RandomGenerator &rand_p,
 	std::vector<WavePoolInfo> const &waveInfo_p, unsigned long player_p, unsigned long playerCount_p,
-	std::vector<GodotEntityInfo> const &entityInfo_p, int difficulty_p);
+	std::vector<GodotEntityInfo> const &entityInfo_p, int difficulty_p,
+	bool demo_p);
 
 /// @brief
 /// @param lib_p
