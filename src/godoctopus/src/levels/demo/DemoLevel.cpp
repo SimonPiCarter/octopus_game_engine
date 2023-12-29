@@ -414,7 +414,7 @@ std::pair<std::list<octopus::Steppable *>, std::list<octopus::Command *> > readD
 	rand_p = new octopus::RandomGenerator(header_r.seed);
 
 	std::pair<std::list<octopus::Steppable *>, std::list<octopus::Command *> > pair_l;
-	pair_l.first = DemoLevelSteps(lib_p, *rand_p, header_r.tierWaveInfo, header_r.player, header_r.player_count, entityInfo_p, header_r.difficulty, false);
+	pair_l.first = DemoLevelSteps(lib_p, *rand_p, header_r.tierWaveInfo, header_r.player, header_r.player_count, entityInfo_p, header_r.difficulty, true);
 	pair_l.second = DemoLevelCommands(lib_p, *rand_p, header_r.player_count, header_r.difficulty);
 	return pair_l;
 }

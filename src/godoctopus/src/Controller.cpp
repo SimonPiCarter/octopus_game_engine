@@ -285,7 +285,7 @@ void Controller::load_demo_level(int seed_p, WavePattern const * wavePattern_p, 
 	unsigned long player_l = wavePattern_p->getPlayer();
 
 	std::list<octopus::Steppable *> spawners_l = {};
-	std::list<octopus::Steppable *> levelsteps_l = demo::DemoLevelSteps(_lib, *_rand, wavesInfo_l, player_l, player_count_p, info_l, difficulty_p);
+	std::list<octopus::Steppable *> levelsteps_l = demo::DemoLevelSteps(_lib, *_rand, wavesInfo_l, player_l, player_count_p, info_l, difficulty_p, true);
 	spawners_l = level_model_p->generateLevelSteps(_lib, player_count_p);
 	spawners_l.splice(spawners_l.end(), levelsteps_l);
 

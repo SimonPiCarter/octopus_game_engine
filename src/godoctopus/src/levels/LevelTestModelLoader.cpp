@@ -99,9 +99,9 @@ std::list<Steppable *> LevelSteps(Library &lib_p, RandomGenerator &rand_p, bool 
 	for(unsigned long player_l = 0 ; player_l < nb_players_p+idx_first_player_p ; ++player_l )
 	{
 		spawners_l.push_back(
-			new TriggerSpawn(new AnchorDivinityTrigger(lib_p, rand_p, player_l, fas::allDivinities(), 180))
+			new TriggerSpawn(new AnchorDivinityTrigger(lib_p, rand_p, player_l, fas::demoDivinities(), 180))
 		);
-		fas::addDivinityBuildingPlayer(spawners_l, player_l, fas::allDivinities(), lib_p);
+		fas::addDivinityBuildingPlayer(spawners_l, player_l, fas::demoDivinities(), lib_p);
 	}
 
 	return spawners_l;
