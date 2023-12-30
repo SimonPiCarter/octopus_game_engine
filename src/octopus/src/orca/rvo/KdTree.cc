@@ -257,7 +257,28 @@ namespace RVO {
 		queryAgentTreeRecursive(agent, rangeSq, 0);
 	}
 
-	void KdTree::computeObstacleNeighbors(Agent *agent, octopus::Fixed rangeSq) const
+	void KdTree::addObstacle(Obstacle const *obstacle_source, Agent *agent, octopus::Fixed const &rangeSq) const
+	{
+		using namespace octopus;
+		Obstacle const *obstacle1 = obstacle_source;
+		do
+		{
+			Obstacle const *obstacle2 = obstacle1->nextObstacle_;
+			const Fixed agentLeftOfLine = leftOf(obstacle1->point_, obstacle2->point_, agent->position_);
+			const Fixed distSqLine = sqr(agentLeftOfLine) / absSq(obstacle2->point_ - obstacle1->point_);
+
+			if (distSqLine < rangeSq && agentLeftOfLine < 0.0) {
+				/*
+					* Try obstacle at this node only if agent is on right side of
+					* obstacle (and can see obstacle).
+					*/
+				agent->insertObstacleNeighbor(obstacle1, rangeSq);
+			}
+			obstacle1 = obstacle2;
+		} while(obstacle1 != obstacle_source);
+	}
+
+	void KdTree::computeObstacleNeighbors(Agent *agent, octopus::Fixed const &rangeSq) const
 	{
 		using namespace octopus;
 		State const &state_l = *sim_->state_;
@@ -269,10 +290,13 @@ namespace RVO {
 						   to_int((pos_l.y+rangeSq+0.999))
 					};
 
+		// out of bound obstacle
+		addObstacle(sim_->obstacles_[0], agent, rangeSq);
+
 		std::unordered_set<unsigned long> handledIdx_l;
-		for(long long x = box_l._lowerX ; x < box_l._upperX; ++x)
+		for(long long x = std::max(0ll, box_l._lowerX) ; x < box_l._upperX && x <state_l.getPathGrid().getSizeX() ; ++x)
 		{
-			for(long long y = box_l._lowerY ; y < box_l._upperY; ++y)
+			for(long long y = std::max(0ll, box_l._lowerY) ; y < box_l._upperY && y < state_l.getPathGrid().getSizeY(); ++y)
 			{
 				GridNode const *node_l = state_l.getPathGrid().getNode(x, y);
 
@@ -284,23 +308,7 @@ namespace RVO {
 
 					size_t idx_l = sim_->mapHandleIdx_.at(node_l->getContent()->_handle);
 
-					Obstacle const *obstacle1 = sim_->obstacles_[idx_l];
-
-					do
-					{
-						Obstacle const *obstacle2 = obstacle1->nextObstacle_;
-						const Fixed agentLeftOfLine = leftOf(obstacle1->point_, obstacle2->point_, agent->position_);
-						const Fixed distSqLine = sqr(agentLeftOfLine) / absSq(obstacle2->point_ - obstacle1->point_);
-
-						if (distSqLine < rangeSq && agentLeftOfLine < 0.0) {
-							/*
-								* Try obstacle at this node only if agent is on right side of
-								* obstacle (and can see obstacle).
-								*/
-							agent->insertObstacleNeighbor(obstacle1, rangeSq);
-						}
-						obstacle1 = obstacle2;
-					} while(obstacle1 != sim_->obstacles_[idx_l]);
+					addObstacle(sim_->obstacles_[idx_l], agent, rangeSq);
 				}
 			}
 		}

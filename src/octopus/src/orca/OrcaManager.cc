@@ -50,6 +50,14 @@ void OrcaManager::resetFromState(State const &state_p)
 	/// Specify the default parameters for agents that are subsequently added.
 	_sim->setAgentDefaults(_neighborDist, _maxNeighbors, _timeHorizon, _timeHorizonObst, Fixed::One(), Fixed(Fixed::OneAsLong()/2, true));
 
+    // load obstacle out of map
+    _sim->addObstacle({
+        RVO::Vector2(state_p.getWorldSize(), 0),
+        RVO::Vector2(0, 0),
+        RVO::Vector2(0, state_p.getWorldSize()),
+        RVO::Vector2(state_p.getWorldSize(), state_p.getWorldSize()),
+    });
+
     for(octopus::Entity const * ent_l : state_p.getEntities())
     {
 		if(!ent_l->isActive())
@@ -76,14 +84,6 @@ void OrcaManager::resetFromState(State const &state_p)
             _mapHandleIdx[ent_l->_handle] = idx_l;
         }
     }
-
-    // load obstacle out of map
-    _sim->addObstacle({
-        RVO::Vector2(state_p.getWorldSize(), 0),
-        RVO::Vector2(0, 0),
-        RVO::Vector2(0, state_p.getWorldSize()),
-        RVO::Vector2(state_p.getWorldSize(), state_p.getWorldSize()),
-    });
 
 	//_sim->processObstacles();
 }

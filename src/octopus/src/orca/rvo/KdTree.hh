@@ -142,6 +142,8 @@ namespace RVO {
 		ObstacleTreeNode *buildObstacleTreeRecursive(const std::vector<Obstacle *> &
 													 obstacles);
 
+		void addObstacle(Obstacle const *obstacle_source, Agent *agent, octopus::Fixed const &rangeSq) const;
+
 		/**
 		 * \brief      Computes the agent neighbors of the specified agent.
 		 * \param      agent           A pointer to the agent for which agent
@@ -156,7 +158,7 @@ namespace RVO {
 		 *                             neighbors are to be computed.
 		 * \param      rangeSq         The squared range around the agent.
 		 */
-		void computeObstacleNeighbors(Agent *agent, octopus::Fixed rangeSq) const;
+		void computeObstacleNeighbors(Agent *agent, octopus::Fixed const &rangeSq) const;
 
 		/**
 		 * \brief      Deletes the specified obstacle tree node.
