@@ -18,4 +18,14 @@ struct Box
 };
 } // octopus
 
+template<typename T>
+std::ostream &operator<<(std::ostream &os_p, octopus::Box<T> const &box_p)
+{
+	return os_p<<"Box[x : "
+		<< box_p._lowerX<<","
+		<< box_p._upperX<<", y : "
+		<< box_p._lowerY<<","
+		<< box_p._upperY<<"]";
+}
+
 #endif
