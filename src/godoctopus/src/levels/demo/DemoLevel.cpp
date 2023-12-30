@@ -133,7 +133,7 @@ std::list<Steppable *> DemoLevelSteps(
 			lib_p, rand_p, params_l, player_p, demoGenerator);
 
 	spawners_l.push_back(new TriggerSpawn(triggerWave_l));
-
+	spawners_l.push_back(new godot::DialogStep("leve1_intro"));
 	Handle flyingCommandHandle_l(0);
 	for(unsigned long i = 0 ; i < playerCount_p ; ++ i)
 	{
