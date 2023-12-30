@@ -198,7 +198,10 @@ void ControllerStepVisitor::visit(octopus::ProjectileSpawnStep const *steppable_
 
 void ControllerStepVisitor::visit(octopus::EntityMoveStep const *steppable_p)
 {
-	_controller.move(steppable_p->_handle);
+	if(!_skipMoveSteps)
+	{
+		_controller.move(steppable_p->_handle);
+	}
 }
 
 void ControllerStepVisitor::visit(octopus::BuildingStep const *steppable_p)
@@ -296,7 +299,7 @@ void ControllerStepVisitor::visit(octopus::EntityBuffStep const *steppable_p)
 
 void applyControllerStepVisitor(Controller &controller_p, octopus::State const &state_p, octopus::Step const &step_p)
 {
-	ControllerStepVisitor vis_l(controller_p, &state_p);
+	ControllerStepVisitor vis_l(controller_p, &state_p, step_p.getId()+1 != state_p.getStepApplied());
 	// visit intial steps
 	for(octopus::Steppable const * steppable_l : step_p.getSteppable())
 	{

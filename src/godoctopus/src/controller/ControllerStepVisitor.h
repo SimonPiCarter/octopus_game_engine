@@ -23,8 +23,8 @@ class Controller;
 class ControllerStepVisitor : public octopus::SteppableVisitor
 {
 public:
-	ControllerStepVisitor(Controller &controller_p, octopus::State const *state_p)
-		: _controller(controller_p), _state(state_p) {}
+	ControllerStepVisitor(Controller &controller_p, octopus::State const *state_p, bool skipMoveSteps_p)
+		: _controller(controller_p), _state(state_p), _skipMoveSteps(skipMoveSteps_p) {}
 
 	virtual void visit(octopus::AttackModifierStep const *) override {}
 	virtual void visit(octopus::BuildingCancelStep const *) override;
@@ -114,6 +114,7 @@ public:
 private:
     octopus::State const * const _state;
 	Controller &_controller;
+	bool const _skipMoveSteps;
 };
 
 /// @brief Apply ControllerStepVisitor to step
