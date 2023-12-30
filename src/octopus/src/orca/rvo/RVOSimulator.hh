@@ -41,14 +41,17 @@
 #include <cstddef>
 #include <limits>
 #include <vector>
+#include <unordered_map>
 
 #include "Vector2.hh"
 #include "utils/ThreadPool.hh"
+#include "state/Handle.hh"
 
 namespace octopus
 {
 	class EntityMoveStep;
 	class Entity;
+	class State;
 }
 
 namespace RVO {
@@ -90,7 +93,7 @@ namespace RVO {
 		/**
 		 * \brief      Constructs a simulator instance.
 		 */
-		RVOSimulator();
+		RVOSimulator(std::unordered_map<octopus::Handle, size_t> const &mapHandleIdx_p);
 
 		ThreadPool pool;
 
@@ -139,7 +142,8 @@ namespace RVO {
 		 */
 		RVOSimulator(octopus::Fixed timeStep, octopus::Fixed neighborDist, size_t maxNeighbors,
 					 octopus::Fixed timeHorizon, octopus::Fixed timeHorizonObst, octopus::Fixed radius,
-					 octopus::Fixed maxSpeed, const Vector2 &velocity = Vector2());
+					 octopus::Fixed maxSpeed, std::unordered_map<octopus::Handle, size_t> const &mapHandleIdx_p,
+					 const Vector2 &velocity = Vector2());
 
 		/**
 		 * \brief      Destroys this simulator instance.
@@ -594,6 +598,7 @@ namespace RVO {
 		 */
 		void setTimeStep(octopus::Fixed timeStep);
 
+		void setState(octopus::State const &state_p) { state_ = &state_p; }
 	private:
 		std::vector<Agent> agents_;
 		Agent *defaultAgent_;
@@ -601,6 +606,8 @@ namespace RVO {
 		KdTree *kdTree_;
 		std::vector<Obstacle *> obstacles_;
 		octopus::Fixed timeStep_;
+		octopus::State const * state_;
+    	std::unordered_map<octopus::Handle, size_t> const &mapHandleIdx_;
 
 		friend class Agent;
 		friend class KdTree;

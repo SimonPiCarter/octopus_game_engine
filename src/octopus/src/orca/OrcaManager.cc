@@ -16,7 +16,7 @@ OrcaManager::OrcaManager(Fixed timeStep_p, Fixed neighborDist_p, size_t maxNeigh
     _timeHorizon(timeHorizon_p),
     _timeHorizonObst(timeHorizonObst_p)
 {
-    _sim = new RVO::RVOSimulator();
+    _sim = new RVO::RVOSimulator(_mapHandleIdx);
 	/// Specify the global time step of the simulation.
 	_sim->setTimeStep(_timeStep);
 
@@ -42,7 +42,8 @@ void OrcaManager::resetFromState(State const &state_p)
     _mapHandleIdx.clear();
 
     // new sim
-    _sim = new RVO::RVOSimulator();
+    _sim = new RVO::RVOSimulator(_mapHandleIdx);
+    _sim->setState(state_p);
 	/// Specify the global time step of the simulation.
 	_sim->setTimeStep(_timeStep);
 
@@ -58,12 +59,13 @@ void OrcaManager::resetFromState(State const &state_p)
         if(ent_l->_model._isStatic)
         {
             // load obstacle
-	        _sim->addObstacle({
-                RVO::Vector2(ent_l->_pos.x-ent_l->_model._ray, ent_l->_pos.y-ent_l->_model._ray*0.8),
-                RVO::Vector2(ent_l->_pos.x+ent_l->_model._ray, ent_l->_pos.y-ent_l->_model._ray*0.8),
-                RVO::Vector2(ent_l->_pos.x+ent_l->_model._ray, ent_l->_pos.y+ent_l->_model._ray*0.8),
-                RVO::Vector2(ent_l->_pos.x-ent_l->_model._ray, ent_l->_pos.y+ent_l->_model._ray*0.8),
+	        size_t idx_l = _sim->addObstacle({
+                RVO::Vector2(ent_l->_pos.x-ent_l->_model._ray*0.8, ent_l->_pos.y-ent_l->_model._ray*0.8),
+                RVO::Vector2(ent_l->_pos.x+ent_l->_model._ray*0.8, ent_l->_pos.y-ent_l->_model._ray*0.8),
+                RVO::Vector2(ent_l->_pos.x+ent_l->_model._ray*0.8, ent_l->_pos.y+ent_l->_model._ray*0.8),
+                RVO::Vector2(ent_l->_pos.x-ent_l->_model._ray*0.8, ent_l->_pos.y+ent_l->_model._ray*0.8),
             });
+            _mapHandleIdx[ent_l->_handle] = idx_l;
         }
         else
         {
@@ -83,7 +85,7 @@ void OrcaManager::resetFromState(State const &state_p)
         RVO::Vector2(state_p.getWorldSize(), state_p.getWorldSize()),
     });
 
-	_sim->processObstacles();
+	//_sim->processObstacles();
 }
 
 void OrcaManager::setupStep(State const &state_p, Step &step_p)

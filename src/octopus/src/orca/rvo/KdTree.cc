@@ -36,6 +36,12 @@
 #include "RVOSimulator.hh"
 #include "Obstacle.hh"
 
+#include "state/State.hh"
+#include "state/entity/Entity.hh"
+#include "graph/GridNode.hh"
+#include "graph/Grid.hh"
+#include "utils/Box.hh"
+
 namespace RVO {
 	KdTree::KdTree(RVOSimulator *sim) : obstacleTree_(NULL), sim_(sim) { }
 
@@ -253,7 +259,53 @@ namespace RVO {
 
 	void KdTree::computeObstacleNeighbors(Agent *agent, octopus::Fixed rangeSq) const
 	{
-		queryObstacleTreeRecursive(agent, rangeSq, obstacleTree_);
+		using namespace octopus;
+		State const &state_l = *sim_->state_;
+		Entity const *ent_l = agent->ent_;
+		Vector const &pos_l = ent_l->_pos;
+		Box<long long> box_l { to_int((pos_l.x-rangeSq)),
+						   to_int((pos_l.x+rangeSq+0.999)),
+						   to_int((pos_l.y-rangeSq)),
+						   to_int((pos_l.y+rangeSq+0.999))
+					};
+
+		std::unordered_set<unsigned long> handledIdx_l;
+		for(long long x = box_l._lowerX ; x < box_l._upperX; ++x)
+		{
+			for(long long y = box_l._lowerY ; y < box_l._upperY; ++y)
+			{
+				GridNode const *node_l = state_l.getPathGrid().getNode(x, y);
+
+				if(!node_l->isFree()
+				&& handledIdx_l.find(node_l->getContent()->_handle.index) == handledIdx_l.end())
+				{
+					Entity const *obstacle_l = node_l->getContent();
+					handledIdx_l.insert(obstacle_l->_handle.index);
+
+					size_t idx_l = sim_->mapHandleIdx_.at(node_l->getContent()->_handle);
+
+					Obstacle const *obstacle1 = sim_->obstacles_[idx_l];
+
+					do
+					{
+						Obstacle const *obstacle2 = obstacle1->nextObstacle_;
+						const Fixed agentLeftOfLine = leftOf(obstacle1->point_, obstacle2->point_, agent->position_);
+						const Fixed distSqLine = sqr(agentLeftOfLine) / absSq(obstacle2->point_ - obstacle1->point_);
+
+						if (distSqLine < rangeSq && agentLeftOfLine < 0.0) {
+							/*
+								* Try obstacle at this node only if agent is on right side of
+								* obstacle (and can see obstacle).
+								*/
+							agent->insertObstacleNeighbor(obstacle1, rangeSq);
+						}
+						obstacle1 = obstacle2;
+					} while(obstacle1 != sim_->obstacles_[idx_l]);
+				}
+			}
+		}
+		// old way
+		//queryObstacleTreeRecursive(agent, rangeSq, obstacleTree_);
 	}
 
 	void KdTree::deleteObstacleTree(ObstacleTreeNode *node)

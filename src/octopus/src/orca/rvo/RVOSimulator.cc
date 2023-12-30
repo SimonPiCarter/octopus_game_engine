@@ -43,7 +43,8 @@
 #include <condition_variable>
 
 namespace RVO {
-	RVOSimulator::RVOSimulator() : defaultAgent_(NULL), globalTime_(0.0f), kdTree_(NULL), timeStep_(0.0f), pool(12)
+	RVOSimulator::RVOSimulator(std::unordered_map<octopus::Handle, size_t> const &mapHandleIdx_p) :
+		pool(12), defaultAgent_(NULL), globalTime_(0.0f), kdTree_(NULL), timeStep_(0.0f), mapHandleIdx_(mapHandleIdx_p)
 	{
 		kdTree_ = new KdTree(this);
 	}
@@ -53,7 +54,10 @@ namespace RVO {
 		return agents_[idx_p].getAgentNeighbors();
 	}
 
-	RVOSimulator::RVOSimulator(octopus::Fixed timeStep, octopus::Fixed neighborDist, size_t maxNeighbors, octopus::Fixed timeHorizon, octopus::Fixed timeHorizonObst, octopus::Fixed radius, octopus::Fixed maxSpeed, const Vector2 &velocity) : defaultAgent_(NULL), globalTime_(0.0f), kdTree_(NULL), timeStep_(timeStep), pool(12)
+	RVOSimulator::RVOSimulator(octopus::Fixed timeStep, octopus::Fixed neighborDist, size_t maxNeighbors,
+		octopus::Fixed timeHorizon, octopus::Fixed timeHorizonObst, octopus::Fixed radius, octopus::Fixed maxSpeed,
+		std::unordered_map<octopus::Handle, size_t> const &mapHandleIdx_p, const Vector2 &velocity) :
+		pool(12), defaultAgent_(NULL), globalTime_(0.0f), kdTree_(NULL), timeStep_(timeStep), mapHandleIdx_(mapHandleIdx_p)
 	{
 		kdTree_ = new KdTree(this);
 		defaultAgent_ = new Agent(this);
