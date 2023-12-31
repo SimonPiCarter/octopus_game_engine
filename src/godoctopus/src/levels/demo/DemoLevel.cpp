@@ -138,13 +138,6 @@ std::list<Steppable *> DemoLevelSteps(
 	{
 		unsigned long playerIdx_l = 2+i;
 
-		spawners_l.push_back(new PlayerAddBuildingModel(playerIdx_l, lib_p.getBuildingModel("command_center")));
-		spawners_l.push_back(new PlayerAddBuildingModel(playerIdx_l, lib_p.getBuildingModel("barrack_square")));
-		spawners_l.push_back(new PlayerAddBuildingModel(playerIdx_l, lib_p.getBuildingModel("barrack_circle")));
-		spawners_l.push_back(new PlayerAddBuildingModel(playerIdx_l, lib_p.getBuildingModel("barrack_triangle")));
-		spawners_l.push_back(new PlayerAddBuildingModel(playerIdx_l, lib_p.getBuildingModel("deposit")));
-		spawners_l.push_back(new PlayerAddBuildingModel(playerIdx_l, lib_p.getBuildingModel("anchor")));
-
 		fas::addBuildingPlayer(spawners_l, playerIdx_l, fas::allDivinities(), lib_p);
 		// lose trigger
 		spawners_l.push_back(new TriggerSpawn(new OnEachFunctionTrigger(

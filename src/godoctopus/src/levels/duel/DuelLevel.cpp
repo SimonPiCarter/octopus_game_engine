@@ -85,10 +85,10 @@ std::list<Steppable *> LevelSteps(Library &lib_p, RandomGenerator &rand_p, int s
 	// load divinity library
 	fas::loadLibrary(lib_p);
 
-	Building buildingP0_l({20, 10}, true, lib_p.getBuildingModel("command_center"));
+	Building buildingP0_l({20, 10}, true, lib_p.getBuildingModel("gate"));
 	Unit unitP0_l({ 17, 10 }, false, lib_p.getUnitModel("worker"));
 
-	Building buildingP1_l({LEVEL_DUEL_SIZE-20+1, LEVEL_DUEL_SIZE-10+1}, true, lib_p.getBuildingModel("command_center"));
+	Building buildingP1_l({LEVEL_DUEL_SIZE-20+1, LEVEL_DUEL_SIZE-10+1}, true, lib_p.getBuildingModel("gate"));
     buildingP1_l._player = 1;
 	Unit unitP1_l({ LEVEL_DUEL_SIZE-17+1, LEVEL_DUEL_SIZE-10+1 }, false, lib_p.getUnitModel("worker"));
     unitP1_l._player = 1;
@@ -108,8 +108,8 @@ std::list<Steppable *> LevelSteps(Library &lib_p, RandomGenerator &rand_p, int s
 		mapRes_l["Anchor"] = -anchor_l;
 	}
 
-	Trigger * triggerLoseP0_l = new LoseTrigger(new ListenerEntityModelDied(&lib_p.getBuildingModel("command_center"), 0), 1);
-	Trigger * triggerLoseP1_l = new LoseTrigger(new ListenerEntityModelDied(&lib_p.getBuildingModel("command_center"), 1), 0);
+	Trigger * triggerLoseP0_l = new LoseTrigger(new ListenerEntityModelDied(&lib_p.getBuildingModel("gate"), 0), 1);
+	Trigger * triggerLoseP1_l = new LoseTrigger(new ListenerEntityModelDied(&lib_p.getBuildingModel("gate"), 1), 0);
 
 	Handle handle_l(0);
 	std::list<Steppable *> spawners_l =
