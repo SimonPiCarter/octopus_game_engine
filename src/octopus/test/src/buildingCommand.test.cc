@@ -97,6 +97,7 @@ TEST(buildingCommandTest, cancelled)
 	UnitModel unitModel_l { false, 1., 1., 10. };
 	unitModel_l._isUnit = true;
 	unitModel_l._isBuilder = true;
+	unitModel_l._lineOfSight = 50;
 	Unit unit1_l({ 5, 3.5 }, false, unitModel_l);
 	Unit unit2_l({ 8, 3.5 }, false, unitModel_l);
 
