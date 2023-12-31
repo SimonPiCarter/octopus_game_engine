@@ -105,7 +105,7 @@ std::list<Steppable *> DemoLevelSteps(
 		waves_l.push_back(pool_l);
 	}
 
-	std::vector<unsigned long> handles_l = getHandles(entityInfo_p, 0, "command_center");
+	std::vector<unsigned long> handles_l = getHandlesAnyPlayer(entityInfo_p, "gate");
 	octopus::Vector waveTarget_l(124, 116);
 	if(handles_l.size() == 1)
 	{
@@ -133,12 +133,12 @@ std::list<Steppable *> DemoLevelSteps(
 			lib_p, rand_p, params_l, player_p, demoGenerator);
 
 	spawners_l.push_back(new TriggerSpawn(triggerWave_l));
-	spawners_l.push_back(new godot::DialogStep("leve1_intro"));
 	Handle flyingCommandHandle_l(0);
 	for(unsigned long i = 0 ; i < playerCount_p ; ++ i)
 	{
 		unsigned long playerIdx_l = 2+i;
 
+		spawners_l.push_back(new PlayerAddBuildingModel(playerIdx_l, lib_p.getBuildingModel("command_center")));
 		spawners_l.push_back(new PlayerAddBuildingModel(playerIdx_l, lib_p.getBuildingModel("barrack_square")));
 		spawners_l.push_back(new PlayerAddBuildingModel(playerIdx_l, lib_p.getBuildingModel("barrack_circle")));
 		spawners_l.push_back(new PlayerAddBuildingModel(playerIdx_l, lib_p.getBuildingModel("barrack_triangle")));
@@ -148,7 +148,7 @@ std::list<Steppable *> DemoLevelSteps(
 		fas::addBuildingPlayer(spawners_l, playerIdx_l, fas::allDivinities(), lib_p);
 		// lose trigger
 		spawners_l.push_back(new TriggerSpawn(new OnEachFunctionTrigger(
-			new ListenerEntityModelDied(&lib_p.getBuildingModel("command_center"), playerIdx_l),
+			new ListenerEntityModelDied(&lib_p.getBuildingModel("gate"), playerIdx_l),
 			[](State const &state_p, Step &step_p, unsigned long, TriggerData const &)
 			{
 				step_p.addSteppable(new octopus::StateWinStep(state_p.isOver(), state_p.hasWinningTeam(), state_p.getWinningTeam(), 1));
@@ -157,7 +157,9 @@ std::list<Steppable *> DemoLevelSteps(
 		)));
 
 		// handles of command_center spawned by the level
-		std::vector<unsigned long> handles_l = getHandles(entityInfo_p, playerIdx_l, "command_center");
+		std::vector<unsigned long> handles_l = getHandles(entityInfo_p, playerIdx_l, "gate");
+		std::vector<unsigned long> handlesCC_l = getHandles(entityInfo_p, playerIdx_l, "command_center");
+		handles_l.insert(handles_l.end(), handlesCC_l.begin(), handlesCC_l.end());
 		for(unsigned long ccHandle_l : handles_l)
 		{
 			spawners_l.push_back(new FlyingCommandSpawnStep(new TimerDamage(flyingCommandHandle_l++, anchorTickRate_l, 0, playerIdx_l, "Anchor", Handle(ccHandle_l))));

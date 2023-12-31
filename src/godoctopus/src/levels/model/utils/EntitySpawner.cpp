@@ -42,6 +42,21 @@ namespace godot {
 		return handles_l;
 	}
 
+	std::vector<unsigned long> getHandlesAnyPlayer(std::vector<GodotEntityInfo> const &info_p, std::string const &model_p)
+	{
+		std::vector<unsigned long> handles_l;
+
+		for(GodotEntityInfo const &info_l : info_p)
+		{
+			if(info_l.model == model_p)
+			{
+				handles_l.push_back(info_l.handle);
+			}
+		}
+
+		return handles_l;
+	}
+
 	bool spawnEntity(std::list<octopus::Steppable *> &steps_r, octopus::Handle const&idx_p, GodotEntity const &ent_p,
 		octopus::Library const &lib_p, unsigned long playerCount_p)
 	{

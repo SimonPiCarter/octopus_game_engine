@@ -33,6 +33,8 @@ std::vector<GodotEntityInfo> getEntityInfo(std::vector<GodotEntity> const &entit
 
 /// @brief Get the handles for the given player and model
 std::vector<unsigned long> getHandles(std::vector<GodotEntityInfo> const &info_p, unsigned long player_p, std::string const &model_p);
+/// @brief Get the handles for the model
+std::vector<unsigned long> getHandlesAnyPlayer(std::vector<GodotEntityInfo> const &info_p, std::string const &model_p);
 
 bool spawnEntity(std::list<octopus::Steppable *> &steps_r, octopus::Handle const&idx_p, GodotEntity const &ent_p,
 	octopus::Library const &lib_p, unsigned long playerCount_p);
