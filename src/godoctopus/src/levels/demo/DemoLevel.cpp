@@ -138,7 +138,7 @@ std::list<Steppable *> DemoLevelSteps(
 	{
 		unsigned long playerIdx_l = 2+i;
 
-		fas::addBuildingPlayer(spawners_l, playerIdx_l, fas::allDivinities(), lib_p);
+		fas::addBuildingPlayer(spawners_l, playerIdx_l, {}, lib_p);
 		// lose trigger
 		spawners_l.push_back(new TriggerSpawn(new OnEachFunctionTrigger(
 			new ListenerEntityModelDied(&lib_p.getBuildingModel("gate"), playerIdx_l),
