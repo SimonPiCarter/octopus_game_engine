@@ -61,7 +61,9 @@ public:
 	{
 		ListenerEntityData const * entData_l = dynamic_cast<ListenerEntityData const * >(data_p._listenerData[0]);
 		Entity const * ent_l = entData_l->_entities[count_p];
-		step_p.addSteppable(new UnitSpawnStep(getNextHandle(step_p, state_p), {ent_l->_pos, false, _modelRespawn}));
+		Unit unit_l = {ent_l->_pos, false, _modelRespawn};
+		unit_l._player = ent_l->_player;
+		step_p.addSteppable(new UnitSpawnStep(getNextHandle(step_p, state_p), unit_l));
 	}
 
 private:
