@@ -208,7 +208,8 @@ std::vector<std::pair<octopus::Fixed , const RVO::Agent *> > const & OrcaManager
 {
     if(!_sim)
     {
-        return {};
+        static std::vector<std::pair<octopus::Fixed , const RVO::Agent *> > res_l;
+        return res_l;
     }
     return _sim->getAgentNeighbors(_mapHandleIdx.at(handle_p));
 }
