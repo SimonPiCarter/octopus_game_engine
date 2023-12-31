@@ -158,7 +158,6 @@ std::list<Steppable *> DemoLevelSteps(
 
 		// handles of command_center spawned by the level
 		std::vector<unsigned long> handles_l = getHandlesAnyPlayer(entityInfo_p, "gate");
-		handles_l.insert(handles_l.end(), handlesCC_l.begin(), handlesCC_l.end());
 		for(unsigned long gateHandle_l : handles_l)
 		{
 			spawners_l.push_back(new FlyingCommandSpawnStep(new TimerDamage(flyingCommandHandle_l++, anchorTickRate_l, 0, playerIdx_l, "Anchor", Handle(gateHandle_l))));
