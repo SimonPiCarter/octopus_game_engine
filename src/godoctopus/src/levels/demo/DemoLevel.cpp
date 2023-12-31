@@ -157,12 +157,11 @@ std::list<Steppable *> DemoLevelSteps(
 		)));
 
 		// handles of command_center spawned by the level
-		std::vector<unsigned long> handles_l = getHandles(entityInfo_p, playerIdx_l, "gate");
-		std::vector<unsigned long> handlesCC_l = getHandles(entityInfo_p, playerIdx_l, "command_center");
+		std::vector<unsigned long> handles_l = getHandlesAnyPlayer(entityInfo_p, "gate");
 		handles_l.insert(handles_l.end(), handlesCC_l.begin(), handlesCC_l.end());
-		for(unsigned long ccHandle_l : handles_l)
+		for(unsigned long gateHandle_l : handles_l)
 		{
-			spawners_l.push_back(new FlyingCommandSpawnStep(new TimerDamage(flyingCommandHandle_l++, anchorTickRate_l, 0, playerIdx_l, "Anchor", Handle(ccHandle_l))));
+			spawners_l.push_back(new FlyingCommandSpawnStep(new TimerDamage(flyingCommandHandle_l++, anchorTickRate_l, 0, playerIdx_l, "Anchor", Handle(gateHandle_l))));
 		}
 		std::vector<fas::DivinityType> forbidden_l;
 		if(demo_p)
