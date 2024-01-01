@@ -741,6 +741,7 @@ void Controller::loop()
 
 	auto last_l = std::chrono::steady_clock::now();
 	double elapsed_l = 0.;
+	_catchedException = false;
 
 	UtilityFunctions::print("Playing...");
 
@@ -767,6 +768,8 @@ void Controller::loop()
 	catch(const std::exception& e)
 	{
 		UtilityFunctions::print("catched exception ", e.what());
+		_catchedException = true;
+		_exception = e.what();
 	}
 
 	UtilityFunctions::print("Over");
@@ -1303,6 +1306,17 @@ godot::Option *Controller::get_chosen_option_them(int idx_p, int player_p) const
 	return _optionManagers.at(player_p)->getChosenSecondaryOption(idx_p);
 }
 
+bool Controller::has_catched_exception() const
+{
+	return _catchedException;
+}
+
+String Controller::get_exception_message() const
+{
+	String exception_l = _exception.c_str();
+	return exception_l;
+}
+
 void Controller::get_productions(TypedArray<EntityHandle> const &handles_p, int max_p)
 {
 	std::vector<CommandInfo> vecCommands_l;
@@ -1584,6 +1598,9 @@ void Controller::_bind_methods()
 	ClassDB::bind_method(D_METHOD("get_available_option_them", "idx", "player"), &Controller::get_available_option_them);
 	ClassDB::bind_method(D_METHOD("get_chosen_option_you", "idx", "player"), &Controller::get_chosen_option_you);
 	ClassDB::bind_method(D_METHOD("get_chosen_option_them", "idx", "player"), &Controller::get_chosen_option_them);
+
+	ClassDB::bind_method(D_METHOD("has_catched_exception"), &Controller::has_catched_exception);
+	ClassDB::bind_method(D_METHOD("get_exception_message"), &Controller::get_exception_message);
 
 	ClassDB::bind_method(D_METHOD("get_productions", "handles", "max"), &Controller::get_productions);
 	ClassDB::bind_method(D_METHOD("get_visible_units", "player", "ent_registered_p"), &Controller::get_visible_units);

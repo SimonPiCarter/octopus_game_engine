@@ -163,6 +163,10 @@ public:
 	godot::Option *get_chosen_option_you(int idx_p, int player_p) const;
 	godot::Option *get_chosen_option_them(int idx_p, int player_p) const;
 
+	// error getters
+	bool has_catched_exception() const;
+	String get_exception_message() const;
+
 	// signal emmiter
 
 	/// @brief will emit one signal per production to create
@@ -280,6 +284,9 @@ private:
 	std::map<int, std::list<std::list<octopus::Command*> > > _queuedCommandsPerPeer;
 	/// @brief player per peer
 	std::map<int, unsigned long> _playerPerPeer;
+
+	bool _catchedException = false;
+	std::string _exception;
 
 };
 
