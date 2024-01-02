@@ -161,7 +161,7 @@ std::list<Steppable *> Mission1Steps(Library &lib_p, RandomGenerator &rand_p, un
 	spawners_l.push_back(new TriggerSpawn(new OneShotFunctionTrigger({new ListenerEntityDied(finalGroup_l)},
 		[nbPlayers_p, &lib_p](State const &state_p, Step &step_p, unsigned long, TriggerData const &)
 		{
-			Unit unit_l({ 38, 64 }, false, lib_p.getUnitModel("circle"));
+			Unit unit_l({ 38, 64 }, false, lib_p.getUnitModel("maa"));
 			unit_l._player = 0;
 			step_p.addSteppable(new UnitSpawnStep(getNextHandle(step_p, state_p), unit_l));
 			for(unsigned long i = 0 ; i < nbPlayers_p ; ++ i)
