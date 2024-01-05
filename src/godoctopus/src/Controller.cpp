@@ -104,6 +104,18 @@ void Controller::_process(double delta)
 		}
 		_lastIt = stateAndSteps_l._stepIt;
 		_controller->setExternalMin(_lastIt->_step->getId());
+
+		if(_forceAllMoveUpdate)
+		{
+			for(octopus::Entity const * ent_l : _state->getEntities())
+			{
+				if(_state->isEntityAlive(ent_l->_handle))
+				{
+					move(ent_l->_handle);
+				}
+			}
+			_forceAllMoveUpdate = false;
+		}
 	}
 }
 
@@ -731,6 +743,9 @@ void Controller::loading_loop()
 	call_deferred("emit_signal", "loading_done");
 
 	_paused = true;
+
+	// update all positions since they might be outdated
+	_forceAllMoveUpdate = true;
 
 	loop();
 }

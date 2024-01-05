@@ -258,6 +258,7 @@ private:
 	octopus::State const * _state = nullptr;
 	bool _over = false;
 	bool _paused = false;
+	bool _forceAllMoveUpdate = false;
 	// level id
 	size_t _currentLevel = 0;
 	// header writer of level
