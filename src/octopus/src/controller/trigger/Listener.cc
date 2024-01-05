@@ -162,6 +162,15 @@ void ListenerResource<false>::compile(EventCollection const &controller_p, Step 
 		step_p.addSteppable(new TriggerCountChange(data_p._triggerHandle, data_p._listenerHandle, data_p._count, data_p._count+1));
 }
 
+void ListenerUpgrade::compile(EventCollection const &controller_p, Step &step_p, bool, ListenerData const &data_p) const
+{
+	State const &state_l = controller_p.getState();
+	Player const *player_l = state_l.getPlayer(_player);
+
+	unsigned long lvl_p = getUpgradeLvl(*player_l, _upgrade);
+	if(lvl_p >= _level)
+		step_p.addSteppable(new TriggerCountChange(data_p._triggerHandle, data_p._listenerHandle, data_p._count, data_p._count+1));
+}
 
 ListenerZone *ListenerZone::newListenerZonePlayer(unsigned long player_p, Box<long> const &zone_p)
 {

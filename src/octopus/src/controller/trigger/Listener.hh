@@ -181,6 +181,24 @@ public:
 	Fixed const _qty;
 };
 
+class ListenerUpgrade : public Listener
+{
+public:
+	ListenerUpgrade(unsigned long player_p, std::string const &upgrade_p, unsigned long const &level_p)
+		: _player(player_p), _upgrade(upgrade_p), _level(level_p) {}
+
+	/// @brief compile listener steps based on events in controller
+	/// @param count_p if set to true will count the number of time completed
+	virtual void compile(EventCollection const &controller_p, Step &step_p, bool count_p, ListenerData const &data_p) const override;
+
+	/// @brief player to check
+	unsigned long const _player;
+	/// @brief the resource to check
+	std::string const _upgrade;
+	/// @brief the quantity
+	unsigned long const _level;
+};
+
 /// @brief Warning this listener can only trigger once per step and will trigger every step
 /// where an entity is the zone
 class ListenerZone : public Listener
