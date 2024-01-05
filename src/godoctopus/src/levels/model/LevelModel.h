@@ -55,6 +55,7 @@ public:
 	void add_trigger_listener_zone_team(int triggerIdx_p, int team_p, String const &zone_p);
 	void add_trigger_listener_resource(int triggerIdx_p, int player_p, String const &resource_p, int qty_p, bool lower_than_p);
 	void add_trigger_listener_entity_produced(int triggerIdx_p, int player_p, String const &model_p);
+	void add_trigger_listener_upgrade(int triggerIdx_p, int player_p, int level_p, String const &upgrade_p);
 
 	void add_trigger_action_dialog(int triggerIdx_p, String const &dialogIdx_p, bool end_p, int team_winning_p);
 	void add_trigger_action_camera(int triggerIdx_p, int x, int y, int player_p);

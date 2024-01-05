@@ -102,6 +102,12 @@ struct GodotListenerVisitor
 		_list.push_back(listener_l);
 	}
 
+	void operator()(GodotTriggerUpgrade const &listener_p) const
+	{
+		octopus::ListenerUpgrade * listener_l = new octopus::ListenerUpgrade(listener_p.player, listener_p.upgrade, listener_p.level);
+		_list.push_back(listener_l);
+	}
+
 	void operator()(GodotTriggerActionDialog &) const {}
 	void operator()(GodotTriggerActionSpawn &) const {}
 	void operator()(GodotTriggerActionCamera &) const {}

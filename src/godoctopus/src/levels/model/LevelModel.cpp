@@ -103,6 +103,12 @@ void LevelModel::add_trigger_listener_entity_produced(int triggerIdx_p, int play
 	_triggers.at(triggerIdx_p).listeners.push_back(GodotTriggerEntityProduced {static_cast<unsigned long>(player_p), model_l});
 }
 
+void LevelModel::add_trigger_listener_upgrade(int triggerIdx_p, int player_p, int level_p, String const &upgrade_p)
+{
+	std::string upgrade_l(upgrade_p.utf8().get_data());
+	_triggers.at(triggerIdx_p).listeners.push_back(GodotTriggerUpgrade {static_cast<unsigned long>(player_p), upgrade_l, level_p});
+}
+
 void LevelModel::add_trigger_action_dialog(int triggerIdx_p, String const &dialogIdx_p, bool end_p, int team_winning_p)
 {
 	std::string dialog_l(dialogIdx_p.utf8().get_data());
@@ -216,6 +222,7 @@ void LevelModel::_bind_methods()
 	ClassDB::bind_method(D_METHOD("add_trigger_listener_zone_team", "trigger_idx", "team", "zone_name"), &LevelModel::add_trigger_listener_zone_team);
 	ClassDB::bind_method(D_METHOD("add_trigger_listener_resource", "trigger_idx", "player", "resource", "quantity", "lower_than"), &LevelModel::add_trigger_listener_resource);
 	ClassDB::bind_method(D_METHOD("add_trigger_listener_entity_produced", "trigger_idx", "player", "model"), &LevelModel::add_trigger_listener_entity_produced);
+	ClassDB::bind_method(D_METHOD("add_trigger_listener_upgrade", "trigger_idx", "player", "level", "upgrade"), &LevelModel::add_trigger_listener_upgrade);
 	ClassDB::bind_method(D_METHOD("add_trigger_action_dialog", "trigger_idx", "dialog_idx", "end", "winning_team"), &LevelModel::add_trigger_action_dialog);
 	ClassDB::bind_method(D_METHOD("add_trigger_action_camera", "trigger_idx", "x", "y", "player"), &LevelModel::add_trigger_action_camera);
 	ClassDB::bind_method(D_METHOD("add_trigger_action_damage_zone", "trigger_idx", "damage", "team", "zone_name"), &LevelModel::add_trigger_action_damage_zone);

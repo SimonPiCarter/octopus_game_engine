@@ -60,6 +60,7 @@ namespace godot
 	struct GodotTriggerZoneTeam { unsigned long team = 0; std::string zone_name = ""; };
 	struct GodotTriggerListenerResource { unsigned long player = 0; std::string resource = ""; int qty=0; bool lower_than=false; };
 	struct GodotTriggerEntityProduced { unsigned long player = 0; std::string model = ""; };
+	struct GodotTriggerUpgrade { unsigned long player = 0; std::string upgrade = ""; int level=0; };
 
 	// todo add zone
 	using GodotTriggerListener = std::variant<
@@ -68,7 +69,8 @@ namespace godot
 		GodotTriggerZonePlayer,
 		GodotTriggerZoneTeam,
 		GodotTriggerListenerResource,
-		GodotTriggerEntityProduced
+		GodotTriggerEntityProduced,
+		GodotTriggerUpgrade
 	>;
 
 	struct GodotTrigger {
