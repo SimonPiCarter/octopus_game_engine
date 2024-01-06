@@ -9,6 +9,6 @@
 #define LEVEL_ID_MAZE 2
 
 /// @brief write level id and size of the world in a binary file
-void writeLevelId(std::ofstream &file_p, size_t const &id_p, size_t const &size_p);
+void writeLevelId(std::ofstream &file_p, uint32_t const &id_p, uint32_t const &size_p);
 
 #endif

@@ -14,7 +14,7 @@ namespace octopus
 } // namespace octopus
 
 
-std::list<octopus::Steppable *> lifestealShowcaseSteps(octopus::Library &lib_p, size_t number_p);
+std::list<octopus::Steppable *> lifestealShowcaseSteps(octopus::Library &lib_p, uint32_t number_p);
 std::list<octopus::Command *> lifestealShowcaseCommands(octopus::Library &lib_p);
 
 #endif

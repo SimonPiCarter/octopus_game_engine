@@ -129,7 +129,7 @@ octopus::Command * ChoicePanel::newCommandFromOption(int option_p)
 	return new octopus::PlayerChoseOptionCommand(_player, _key, option_p);
 }
 
-int getXOffset(size_t idx_p, size_t size_p, int w)
+int getXOffset(uint32_t idx_p, uint32_t size_p, int w)
 {
 	int spacing_l = 10;
 	int off1_l = spacing_l / 2;
@@ -143,7 +143,7 @@ int getXOffset(size_t idx_p, size_t size_p, int w)
 		}
 		return off1_l + (idx_p - size_p/2) * off2_l - w/2;
 	}
-	size_t middle_l = size_p / 2;
+	uint32_t middle_l = size_p / 2;
 	if(idx_p < middle_l)
 	{
 		return -off3_l - (middle_l - idx_p) * off2_l - w/2;
@@ -178,8 +178,8 @@ void ChoicePanel::loadChosenOption()
 	{
 		_options = _chosenOptions;
 		_key = "";
-		size_t i = 0;
-		size_t middle_l = _options.size()/2;
+		uint32_t i = 0;
+		uint32_t middle_l = _options.size()/2;
 		/// temporary texts
 		for(Option const &opt_l : _options)
 		{
@@ -223,7 +223,7 @@ void ChoicePanel::updateCurrent()
 	{
 		_options = _queuedOptions.front();
 		_key = _queuedKeys.front();
-		size_t i = 0;
+		uint32_t i = 0;
 		/// temporary texts
 		for(Option const &opt_l : _options)
 		{

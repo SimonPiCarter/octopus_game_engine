@@ -30,7 +30,7 @@
 
 using namespace octopus;
 
-std::list<Steppable *> ArenaLevelSteps(Library &lib_p, size_t number_p)
+std::list<Steppable *> ArenaLevelSteps(Library &lib_p, uint32_t number_p)
 {
 	loadModels(lib_p);
 
@@ -56,7 +56,7 @@ std::list<Steppable *> ArenaLevelSteps(Library &lib_p, size_t number_p)
 	};
 
 	unsigned long id_l = 0;
-	for(size_t i = 0; i < number_p ; ++ i)
+	for(uint32_t i = 0; i < number_p ; ++ i)
 	{
 		spawners_l.push_back(new UnitSpawnStep(Handle(id_l++), square1_l));
 		spawners_l.push_back(new UnitSpawnStep(Handle(id_l++), circle2_l));
@@ -97,23 +97,23 @@ std::list<octopus::Steppable *> ArenaLevelSteps(octopus::Library &lib_p, std::ve
 
 	unsigned long id_l = 0;
 
-	for(size_t i = 0 ; i < you_p.size() ; ++ i )
+	for(uint32_t i = 0 ; i < you_p.size() ; ++ i )
 	{
 		Unit unit_l({ 15, 20. }, false, lib_p.getUnitModel(you_p.at(i).model));
 		unit_l._player = 0;
 
-		for(size_t j = 0; j < you_p.at(i).nb ; ++ j)
+		for(uint32_t j = 0; j < you_p.at(i).nb ; ++ j)
 		{
 			spawners_l.push_back(new UnitSpawnStep(Handle(id_l++), unit_l));
 		}
 	}
 
-	for(size_t i = 0 ; i < them_p.size() ; ++ i )
+	for(uint32_t i = 0 ; i < them_p.size() ; ++ i )
 	{
 		Unit unit_l({ 35, 20. }, false, lib_p.getUnitModel(them_p.at(i).model));
 		unit_l._player = 1;
 
-		for(size_t j = 0; j < them_p.at(i).nb ; ++ j)
+		for(uint32_t j = 0; j < them_p.at(i).nb ; ++ j)
 		{
 			spawners_l.push_back(new UnitSpawnStep(Handle(id_l++), unit_l));
 		}
@@ -122,7 +122,7 @@ std::list<octopus::Steppable *> ArenaLevelSteps(octopus::Library &lib_p, std::ve
 	return spawners_l;
 }
 
-std::list<octopus::Steppable *> ArenaKamikazeSteps(octopus::Library &lib_p, size_t numberYou_p, size_t numberThem_p, bool fast_p)
+std::list<octopus::Steppable *> ArenaKamikazeSteps(octopus::Library &lib_p, uint32_t numberYou_p, uint32_t numberThem_p, bool fast_p)
 {
     octopus::PatternHandler handler_l;
 	octopus::VisionPattern pattern_l = handler_l.getPattern(50);
@@ -184,11 +184,11 @@ std::list<octopus::Steppable *> ArenaKamikazeSteps(octopus::Library &lib_p, size
 	square_l._aggroDistance = 20;
 
 	unsigned long id_l = 0;
-	for(size_t i = 0; i < numberYou_p ; ++ i)
+	for(uint32_t i = 0; i < numberYou_p ; ++ i)
 	{
 		spawners_l.push_back(new UnitSpawnStep(Handle(id_l++), triangle_l));
 	}
-	for(size_t i = 0; i < numberThem_p ; ++ i)
+	for(uint32_t i = 0; i < numberThem_p ; ++ i)
 	{
 		spawners_l.push_back(new UnitSpawnStep(Handle(id_l), square_l));
 		++id_l;
@@ -205,7 +205,7 @@ std::list<Command *> ArenaLevelCommands(Library &)
 void writeArenaLevelHeader(std::ofstream &file_p, ArenaLevelHeader const &header_p)
 {
 	// write your arena info
-	size_t size_l = header_p.you.size();
+	uint32_t size_l = header_p.you.size();
     file_p.write((char*)&size_l, sizeof(size_l));
 	for(ArenaInfo const &info_l : header_p.you)
 	{
@@ -229,20 +229,20 @@ std::pair<std::list<octopus::Steppable *>, std::list<octopus::Command *> > readA
 	header_r.you.clear();
 	header_r.them.clear();
 
-	size_t size_l = 0;
+	uint32_t size_l = 0;
     file_p.read((char*)&size_l, sizeof(size_l));
-	for(size_t i = 0 ; i < size_l ; ++ i)
+	for(uint32_t i = 0 ; i < size_l ; ++ i)
 	{
-		size_t nb_l;
+		uint32_t nb_l;
 		file_p.read((char*)&nb_l, sizeof(nb_l));
 		std::string model_l = readString(file_p);
 		header_r.you.push_back({nb_l, model_l});
 	}
 
     file_p.read((char*)&size_l, sizeof(size_l));
-	for(size_t i = 0 ; i < size_l ; ++ i)
+	for(uint32_t i = 0 ; i < size_l ; ++ i)
 	{
-		size_t nb_l;
+		uint32_t nb_l;
 		file_p.read((char*)&nb_l, sizeof(nb_l));
 		std::string model_l = readString(file_p);
 		header_r.them.push_back({nb_l, model_l});

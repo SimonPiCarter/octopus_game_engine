@@ -27,7 +27,7 @@
 
 using namespace octopus;
 
-std::list<Steppable *> MazeLevelSteps(Library &lib_p, size_t number_p)
+std::list<Steppable *> MazeLevelSteps(Library &lib_p, uint32_t number_p)
 {
 	loadModels(lib_p);
 
@@ -42,7 +42,7 @@ std::list<Steppable *> MazeLevelSteps(Library &lib_p, size_t number_p)
 	};
 
 	unsigned long id_l = 0;
-	for(size_t i = 0; i < number_p ; ++ i)
+	for(uint32_t i = 0; i < number_p ; ++ i)
 	{
 		spawners_l.push_back(new UnitSpawnStep(Handle(id_l++), square1_l));
 	}
@@ -74,9 +74,9 @@ std::list<Steppable *> MazeLevelSteps(Library &lib_p, size_t number_p)
 		{1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
 	};
 
-	for(size_t i = 0 ; i < maze_l.size() ; ++i)
+	for(uint32_t i = 0 ; i < maze_l.size() ; ++i)
 	{
-		for(size_t j = 0 ; j < maze_l.at(i).size() ; ++j)
+		for(uint32_t j = 0 ; j < maze_l.at(i).size() ; ++j)
 		{
 			if(maze_l.at(i).at(j) == 1)
 			{
@@ -95,7 +95,7 @@ std::list<Command *> MazeLevelCommands(Library &lib_p)
 }
 
 /// @brief write header for classic arena level
-void writeMazeLevelHeader(std::ofstream &file_p, size_t number_p)
+void writeMazeLevelHeader(std::ofstream &file_p, uint32_t number_p)
 {
     file_p.write((char*)&number_p, sizeof(number_p));
 }
@@ -103,7 +103,7 @@ void writeMazeLevelHeader(std::ofstream &file_p, size_t number_p)
 /// @brief read header for classic arena level and return a pair of steppable and command
 std::pair<std::list<octopus::Steppable *>, std::list<octopus::Command *> > readMazeLevelHeader(octopus::Library &lib_p, std::ifstream &file_p)
 {
-	size_t number_l;
+	uint32_t number_l;
 
 	file_p.read((char*)&number_l, sizeof(number_l));
 

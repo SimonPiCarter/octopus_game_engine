@@ -58,7 +58,7 @@ void AnchorTrigger::trigger(octopus::State const &state_p, octopus::Step &step_p
 		options_l.push_back(divOption_l);
 	}
 
-    for(size_t i = 0 ; i < 3-options_l.size() ; ++ i )
+    for(uint32_t i = 0 ; i < 3-options_l.size() ; ++ i )
     {
         Option option_l;
 

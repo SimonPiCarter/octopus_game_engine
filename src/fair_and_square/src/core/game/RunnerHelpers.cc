@@ -82,7 +82,7 @@ void runAndSaveGame(Window &window_p, std::list<octopus::Steppable *> &spawners_
 	controller_l.enableORCA();
 
 	// neeed nb of steps in header of the file
-	size_t header_l = 0;
+	uint32_t header_l = 0;
 	file_p.write((char*)&header_l, sizeof(header_l));
 	controller_l.setOnlineSaveFile(&file_p);
 

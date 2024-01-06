@@ -40,9 +40,9 @@ int main()
 	octopus::Logger::getNormal()<<"Playing"<<std::endl;
 
 	// print progress variables
-	size_t const total_l = 6000;
-	size_t lastPrint_l = 0;
-	size_t const stepPrint_l = 100;
+	uint32_t const total_l = 6000;
+	uint32_t lastPrint_l = 0;
+	uint32_t const stepPrint_l = 100;
 
 	while(!over_l && controller_l.getMetrics()._nbStepsCompiled < total_l)
 	{

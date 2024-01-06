@@ -267,7 +267,7 @@ void OneOptionPanel::updateIconsPosition()
     }
     else
     {
-        size_t count_l = 0;
+        uint32_t count_l = 0;
         for(cuttlefish::Picture * pic_l : _mainIcons)
         {
             pic_l->setDestination(_x+ (count_l+1) * (double(_w)/(_mainIcons.size()+1))-32, _y+10, 64, 64);

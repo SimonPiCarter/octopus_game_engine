@@ -32,7 +32,7 @@ private:
 
 	/// @brief count of trigger during the game to generate buff id
 	/// need to be mutable to be incremented when triggering
-	mutable size_t _count {0};
+	mutable uint32_t _count {0};
 };
 
 #endif

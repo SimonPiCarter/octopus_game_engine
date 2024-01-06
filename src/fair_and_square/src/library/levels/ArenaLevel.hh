@@ -16,18 +16,18 @@ namespace octopus
 
 struct ArenaInfo
 {
-	size_t nb;
+	uint32_t nb;
 	std::string model;
 };
 
-std::list<octopus::Steppable *> ArenaLevelSteps(octopus::Library &lib_p, size_t number_p);
+std::list<octopus::Steppable *> ArenaLevelSteps(octopus::Library &lib_p, uint32_t number_p);
 std::list<octopus::Steppable *> ArenaLevelSteps(octopus::Library &lib_p, std::vector<ArenaInfo> const &you_p,
 											std::vector<ArenaInfo> const &them_p, bool loadMinimalModel_p=false);
 
 /// @brief Create a steps to setup a level where you need to dodge kamikaze units
 /// @param numberYou_p number of unit to dodge
 /// @param numberThem_p number of kamikaze units
-std::list<octopus::Steppable *> ArenaKamikazeSteps(octopus::Library &lib_p, size_t numberYou_p, size_t numberThem_p, bool fast_p);
+std::list<octopus::Steppable *> ArenaKamikazeSteps(octopus::Library &lib_p, uint32_t numberYou_p, uint32_t numberThem_p, bool fast_p);
 
 std::list<octopus::Command *> ArenaLevelCommands(octopus::Library &lib_p);
 
@@ -46,8 +46,8 @@ std::pair<std::list<octopus::Steppable *>, std::list<octopus::Command *> > readA
 
 struct KamikazeHeader
 {
-	size_t you;
-	size_t them;
+	uint32_t you;
+	uint32_t them;
 	bool fast;
 };
 
