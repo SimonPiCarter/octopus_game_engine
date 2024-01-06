@@ -54,13 +54,13 @@ void tickProjectile(Step &step_p, Projectile const &proj_p, State const &state_p
 	}
 }
 
-void ProjectileContainer::markDone(size_t index_p)
+void ProjectileContainer::markDone(uint32_t index_p)
 {
 	_projectiles[index_p]._done = true;
 	_freeIdx.push_back(index_p);
 }
 
-void ProjectileContainer::unmarkDone(size_t index_p)
+void ProjectileContainer::unmarkDone(uint32_t index_p)
 {
 	_projectiles[index_p]._done = false;
 	if(_freeIdx.back() != index_p)

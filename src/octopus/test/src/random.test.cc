@@ -11,7 +11,7 @@ TEST(random, std)
 
     std::uniform_int_distribution<> distModel_l(0, 10);
 
-    for(size_t i = 0; i < 10 ; ++ i)
+    for(uint32_t i = 0; i < 10 ; ++ i)
     {
         std::cout<<distModel_l(gen_l)<<std::endl;
     }
@@ -23,7 +23,7 @@ TEST(random, boost)
 
     boost::random::uniform_int_distribution<> distModel_l(0, 10);
 
-    for(size_t i = 0; i < 10 ; ++ i)
+    for(uint32_t i = 0; i < 10 ; ++ i)
     {
         std::cout<<distModel_l(gen_l)<<std::endl;
     }

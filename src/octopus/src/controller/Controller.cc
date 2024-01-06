@@ -54,7 +54,7 @@ Controller::Controller(
 	std::list<Command *> const &initCommands_p,
 	unsigned long gridPointSize_p,
 	unsigned long gridSize_p,
-	size_t reusableHandleQueueSize_p)
+	uint32_t reusableHandleQueueSize_p)
 	: _timePerStep(timePerStep_p)
 	, _initialStep(nullptr)
 	, _reusableHandleQueueSize(reusableHandleQueueSize_p)
@@ -263,7 +263,7 @@ bool Controller::loop_body()
 			}
 			else
 			{
-				for(size_t i = 0; i < 1 && octopus::updateStepFromConflictPosition(step_l, *state_l) ; ++ i) {}
+				for(uint32_t i = 0; i < 1 && octopus::updateStepFromConflictPosition(step_l, *state_l) ; ++ i) {}
 			}
 
 			_metrics._timeCollisionHandling += std::chrono::nanoseconds( std::chrono::steady_clock::now() - startCollision_l ).count();
@@ -549,7 +549,7 @@ void Controller::addQueuedLayer()
 	_queuedCommands.push_back(new std::list<Command *>());
 }
 
-size_t Controller::getQueuedSize() const
+uint32_t Controller::getQueuedSize() const
 {
 	return _queuedCommands.size();
 }
@@ -712,7 +712,7 @@ void Controller::handleTriggers(State const &state_p, Step &step_p, Step const &
 		if(trigger_l->isComplete(data_l))
 		{
 			// trigger
-			for(size_t count_l = 0 ; count_l < trigger_l->getCount(data_l) ; ++count_l)
+			for(uint32_t count_l = 0 ; count_l < trigger_l->getCount(data_l) ; ++count_l)
 			{
 				Logger::getDebug() << "handleTriggers :: trigger on trigger "<<curHandle_l<<std::endl;
 				trigger_l->trigger(state_p, step_p, count_l, data_l);

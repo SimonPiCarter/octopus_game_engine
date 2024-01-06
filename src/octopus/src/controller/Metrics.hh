@@ -12,8 +12,8 @@ namespace octopus
 
 struct Metrics
 {
-	size_t _nbStepsApplied {0};
-	size_t _nbStepsCompiled {0};
+	uint32_t _nbStepsApplied {0};
+	uint32_t _nbStepsCompiled {0};
 	/// @brief time in nano seconds
 	double _timeApplyingSteps {0.};
 	/// @brief time in nano seconds
@@ -27,9 +27,9 @@ struct Metrics
 	double _timeVisionChange {0.};
 	double _timeCompactingSteps {0.};
 	double _maxTimeCompilingSteps {0.};
-	size_t _spikeCompilingSteps {0};
-	size_t _nbEntities {0};
-	size_t _nbCommandables {0};
+	uint32_t _spikeCompilingSteps {0};
+	uint32_t _nbEntities {0};
+	uint32_t _nbCommandables {0};
 	std::vector<double> _vecTimeCompilingSteps;
 };
 

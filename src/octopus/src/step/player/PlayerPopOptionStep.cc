@@ -66,7 +66,7 @@ void PlayerPopOptionStep::revert(State &state_p, SteppableData const *data_p) co
     std::vector<Steppable *> subSteps_l = generator_l->getSteppables(_choice);
 
     // revert chosen sub steps (use > 0 to avoid unsigned -1 and infinite loop)
-    for(size_t i = subSteps_l.size() ; i > 0 ; --i)
+    for(uint32_t i = subSteps_l.size() ; i > 0 ; --i)
     {
         Steppable const * step_l = subSteps_l[i-1];
         SteppableData const * stepData_l = data_l->_data[i-1];

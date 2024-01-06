@@ -19,7 +19,7 @@ class Step;
 struct Projectile
 {
 	/// @brief index of this projectile in the container
-	size_t _index {0};
+	uint32_t _index {0};
 	/// @brief indicate if projectile is done (and free for reuse)
 	bool _done {false};
 	/// @brief position of the projectile
@@ -53,18 +53,18 @@ public:
 	std::vector<Projectile> const & getProjectiles() const {return _projectiles; }
 
 	/// @brief mark the projectile as done and register it as free idx
-	void markDone(size_t index_p);
+	void markDone(uint32_t index_p);
 	/// @brief mark the projectile as NOT done and remove it from free idx
-	void unmarkDone(size_t index_p);
+	void unmarkDone(uint32_t index_p);
 
-	std::list<size_t> const &getFreeIdx() const { return _freeIdx; }
-	std::list<size_t> &getFreeIdx() { return _freeIdx; }
+	std::list<uint32_t> const &getFreeIdx() const { return _freeIdx; }
+	std::list<uint32_t> &getFreeIdx() { return _freeIdx; }
 
 private:
 	std::vector<Projectile> _projectiles;
 
 	/// @brief list of free indexes in the vector
-	std::list<size_t> _freeIdx;
+	std::list<uint32_t> _freeIdx;
 };
 
 /// @brief Handle the basic ticking for a projectile

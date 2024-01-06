@@ -20,17 +20,17 @@ class Grid
 {
 public:
 	/// @brief create the grid with the given dimensions
-	Grid(size_t sizeX_p, size_t sizeY_p, Fixed stepX_p, Fixed stepY_p, bool noGraph_p=false);
+	Grid(uint32_t sizeX_p, uint32_t sizeY_p, Fixed stepX_p, Fixed stepY_p, bool noGraph_p=false);
 
 	~Grid();
 
 	GridNode const * getNode(Vector const &vec_p) const;
 
-	GridNode * getNode(size_t x, size_t y);
-	GridNode const * getNode(size_t x, size_t y) const;
+	GridNode * getNode(uint32_t x, uint32_t y);
+	GridNode const * getNode(uint32_t x, uint32_t y) const;
 
-	size_t getSizeX() const { return _sizeX; }
-	size_t getSizeY() const { return _sizeY; }
+	uint32_t getSizeX() const { return _sizeX; }
+	uint32_t getSizeY() const { return _sizeY; }
 
 	Fixed getStepX() const { return _stepX; }
 	Fixed getStepY() const { return _stepY; }
@@ -40,8 +40,8 @@ private:
 	/// @brief all grid node storred by indexes
 	std::vector<std::vector<GridNode *> > _internalGrid;
 
-	size_t const _sizeX;
-	size_t const _sizeY;
+	uint32_t const _sizeX;
+	uint32_t const _sizeY;
 
 	Fixed const _stepX;
 	Fixed const _stepY;

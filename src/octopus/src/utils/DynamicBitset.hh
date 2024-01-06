@@ -27,7 +27,7 @@ public:
 	virtual ~AbstractBitset() {}
 
 	/// @brief set a bit to the given value
-	virtual void set(size_t idx_p, bool val_p) = 0;
+	virtual void set(uint32_t idx_p, bool val_p) = 0;
 	/// @brief reset the bitset
 	virtual void reset() = 0;
 
@@ -43,12 +43,12 @@ public:
 class DynamicBitset : public AbstractBitset
 {
 public:
-	DynamicBitset(size_t nb_p);
+	DynamicBitset(uint32_t nb_p);
 
 	/// @brief return the logical size of the bitset
-	size_t size() const;
+	uint32_t size() const;
 
-	void set(size_t idx_p, bool val_p) override;
+	void set(uint32_t idx_p, bool val_p) override;
 
 	void reset() override;
 
@@ -61,10 +61,10 @@ private:
 	std::vector<unsigned long> _vecBitset;
 	/// @brief this is the logical size of the bitset
 	/// This can be different from the underlying data
-	size_t _bitsetSize;
+	uint32_t _bitsetSize;
 
 	/// @brief size of the underlying type (eg 64 for unsigned long usually)
-	size_t const _size;
+	uint32_t const _size;
 
 	friend octopus::DynamicBitset & ::operator&=(octopus::DynamicBitset &a, octopus::DynamicBitset const &b);
 	friend octopus::DynamicBitset & ::operator|=(octopus::DynamicBitset &a, octopus::DynamicBitset const &b);
@@ -74,7 +74,7 @@ private:
 class SetBitset : public AbstractBitset
 {
 public:
-	void set(size_t idx_p, bool val_p) override;
+	void set(uint32_t idx_p, bool val_p) override;
 
 	void reset() override;
 

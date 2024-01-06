@@ -47,7 +47,7 @@ private:
 	/// @brief internal graph
 	mygraph_t *_g = nullptr;
 
-	void buildEdge(mygraph_t &g, size_t i, size_t j, size_t k, size_t l,
+	void buildEdge(mygraph_t &g, uint32_t i, uint32_t j, uint32_t k, uint32_t l,
 		std::vector<std::vector<GridNode *> > const &nodes_p, std::unordered_map<GridNode const *, Vertex> const & nodeIndex_p);
 };
 

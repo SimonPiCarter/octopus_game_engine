@@ -70,7 +70,7 @@ struct HandleSorterPtr
 template<>
 struct std::hash<octopus::Handle>
 {
-	size_t operator()(octopus::Handle const &handle_p) const
+	uint32_t operator()(octopus::Handle const &handle_p) const
 	{
 		return handle_p.revision * 10000000 + handle_p.index;
 	}

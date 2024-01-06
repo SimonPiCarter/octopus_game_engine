@@ -80,7 +80,7 @@ void read(std::ifstream &file_p, T *data_p)
 template<>
 void read(std::ifstream &file_p, std::string *data_p)
 {
-    size_t size_l;
+    uint32_t size_l;
     read(file_p, &size_l);
     data_p->resize(size_l);
     file_p.read(&(*data_p)[0], size_l);
@@ -103,12 +103,12 @@ Command * readCommand(std::ifstream &file_p, Library const &lib_p);
 void writeCommands(std::ofstream &file_p, Controller const &controller_p)
 {
     std::vector<std::list<Command *> *> const & commandsPerLevel_l = controller_p.getCommitedCommands();
-    size_t steps_l = std::min<size_t>(commandsPerLevel_l.size()-1, controller_p.getFrontState()->getStepApplied());
+    uint32_t steps_l = std::min<uint32_t>(commandsPerLevel_l.size()-1, controller_p.getFrontState()->getStepApplied());
     // write the number of step
     write(file_p, steps_l);
     Logger::getDebug() << ">>nbSteps " << steps_l << std::endl;
 
-    size_t step_l = 0;
+    uint32_t step_l = 0;
     for(std::list<Command *> const * list_l : commandsPerLevel_l)
     {
         // stop on front state
@@ -132,13 +132,13 @@ void writeCommands(std::ofstream &file_p, Controller const &controller_p)
 void writeDebugCommands(std::ofstream &file_p, Controller const &controller_p)
 {
     std::vector<std::list<Command *> *> const & commandsPerLevel_l = controller_p.getCommitedCommands();
-    size_t steps_l = std::min<size_t>(commandsPerLevel_l.size(), controller_p.getFrontState()->getStepApplied());
+    uint32_t steps_l = std::min<uint32_t>(commandsPerLevel_l.size(), controller_p.getFrontState()->getStepApplied());
 
     // write the number of step
     file_p<<steps_l<<std::endl;
     Logger::getDebug() << ">>nbSteps " << steps_l << std::endl;
 
-    size_t step_l = 0;
+    uint32_t step_l = 0;
     for(std::list<Command *> const * list_l : commandsPerLevel_l)
     {
         // stop on front state
@@ -159,7 +159,7 @@ void writeDebugCommands(std::ofstream &file_p, Controller const &controller_p)
     }
 }
 
-void writeListOfCommand(std::ofstream &file_p, std::list<Command *> const * list_p, size_t step_p)
+void writeListOfCommand(std::ofstream &file_p, std::list<Command *> const * list_p, uint32_t step_p)
 {
     // write the step id
     write(file_p, step_p);
@@ -176,7 +176,7 @@ void writeListOfCommand(std::ofstream &file_p, std::list<Command *> const * list
     file_p.flush();
 }
 
-void writeDebugListOfCommand(std::ofstream &file_p, std::list<Command *> const * list_p, size_t step_p)
+void writeDebugListOfCommand(std::ofstream &file_p, std::list<Command *> const * list_p, uint32_t step_p)
 {
     // write the step id
     file_p<<"step : "<<step_p<<std::endl;
@@ -194,7 +194,7 @@ void writeDebugListOfCommand(std::ofstream &file_p, std::list<Command *> const *
 void readCommands(std::ifstream &file_p, Controller &controller_p, Library const &lib_p)
 {
     // read the number of step
-    size_t nbSteps_l;
+    uint32_t nbSteps_l;
     file_p.read((char*) &nbSteps_l, sizeof(nbSteps_l));
 
     Logger::getDebug() << "<<nbSteps_l " << nbSteps_l << std::endl;
@@ -204,7 +204,7 @@ void readCommands(std::ifstream &file_p, Controller &controller_p, Library const
     int length_l = file_p.tellg();
     file_p.seekg (cur_l, file_p.beg);
 
-    size_t step_l = 0;
+    uint32_t step_l = 0;
     while(file_p.tellg() < length_l)
     {
         // read the id of this step
@@ -213,7 +213,7 @@ void readCommands(std::ifstream &file_p, Controller &controller_p, Library const
         Logger::getDebug() << "<<step_l "<< step_l << std::endl;
 
         // read the number of commands for this step
-        size_t nbCommands_l;
+        uint32_t nbCommands_l;
         read(file_p, &nbCommands_l);
 
         Logger::getDebug() << "<<nbCommands_l "<< nbCommands_l << std::endl;
@@ -221,7 +221,7 @@ void readCommands(std::ifstream &file_p, Controller &controller_p, Library const
         // update controller
         controller_p.setOngoingStep(step_l);
 
-        for(size_t cmd_l = 0 ; cmd_l < nbCommands_l ; ++ cmd_l)
+        for(uint32_t cmd_l = 0 ; cmd_l < nbCommands_l ; ++ cmd_l)
         {
             controller_p.commitCommand(readCommand(file_p, lib_p));
         }
@@ -451,7 +451,7 @@ Command * readCommand(std::ifstream &file_p, Library const &lib_p)
         Fixed rayTolerance_l;
         Vector final_l;
         unsigned long gridStatus_l;
-        size_t nbPoints_l;
+        uint32_t nbPoints_l;
         std::list<Vector> points_l;
         bool init_l;
         bool neverStop_l;
@@ -461,7 +461,7 @@ Command * readCommand(std::ifstream &file_p, Library const &lib_p)
         read(file_p, &final_l);
         read(file_p, &gridStatus_l);
         read(file_p, &nbPoints_l);
-        for(size_t i = 0 ; i < nbPoints_l ; ++i)
+        for(uint32_t i = 0 ; i < nbPoints_l ; ++i)
         {
             Vector vec_l;
             read(file_p, &vec_l);
@@ -479,7 +479,7 @@ Command * readCommand(std::ifstream &file_p, Library const &lib_p)
         Handle source_l;
         Vector final_l;
         unsigned long gridStatus_l;
-        size_t nbPoints_l;
+        uint32_t nbPoints_l;
         std::list<Vector> points_l;
         bool init_l;
         bool neverStop_l;
@@ -488,7 +488,7 @@ Command * readCommand(std::ifstream &file_p, Library const &lib_p)
         read(file_p, &final_l);
         read(file_p, &gridStatus_l);
         read(file_p, &nbPoints_l);
-        for(size_t i = 0 ; i < nbPoints_l ; ++i)
+        for(uint32_t i = 0 ; i < nbPoints_l ; ++i)
         {
             Vector vec_l;
             read(file_p, &vec_l);
@@ -505,7 +505,7 @@ Command * readCommand(std::ifstream &file_p, Library const &lib_p)
         Handle source_l;
         Vector final_l;
         unsigned long gridStatus_l;
-        size_t nbPoints_l;
+        uint32_t nbPoints_l;
         std::list<Vector> points_l;
         bool init_l;
 
@@ -514,7 +514,7 @@ Command * readCommand(std::ifstream &file_p, Library const &lib_p)
         read(file_p, &final_l);
         read(file_p, &gridStatus_l);
         read(file_p, &nbPoints_l);
-        for(size_t i = 0 ; i < nbPoints_l ; ++i)
+        for(uint32_t i = 0 ; i < nbPoints_l ; ++i)
         {
             Vector vec_l;
             read(file_p, &vec_l);
@@ -537,7 +537,7 @@ Command * readCommand(std::ifstream &file_p, Library const &lib_p)
         Vector pos_l;
         unsigned long player_l;
         std::string id_l;
-        size_t size_l;
+        uint32_t size_l;
         std::vector<Handle> builders_l;
 
         read(file_p, &pos_l);
@@ -545,7 +545,7 @@ Command * readCommand(std::ifstream &file_p, Library const &lib_p)
         read(file_p, &id_l);
 
         read(file_p, &size_l);
-        for(size_t i = 0 ; i < size_l ; ++ i)
+        for(uint32_t i = 0 ; i < size_l ; ++ i)
         {
             Handle handle_l;
             read(file_p, &handle_l);
@@ -570,7 +570,7 @@ Command * readCommand(std::ifstream &file_p, Library const &lib_p)
         Handle source_l;
         Vector final_l;
         unsigned long gridStatus_l;
-        size_t nbPoints_l;
+        uint32_t nbPoints_l;
         std::list<Vector> points_l;
         bool init_l;
 
@@ -579,7 +579,7 @@ Command * readCommand(std::ifstream &file_p, Library const &lib_p)
         read(file_p, &final_l);
         read(file_p, &gridStatus_l);
         read(file_p, &nbPoints_l);
-        for(size_t i = 0 ; i < nbPoints_l ; ++i)
+        for(uint32_t i = 0 ; i < nbPoints_l ; ++i)
         {
             Vector vec_l;
             read(file_p, &vec_l);
@@ -595,7 +595,7 @@ Command * readCommand(std::ifstream &file_p, Library const &lib_p)
         Handle source_l;
         Vector final_l;
         unsigned long gridStatus_l;
-        size_t nbPoints_l;
+        uint32_t nbPoints_l;
         std::list<Vector> points_l;
         bool init_l;
 
@@ -604,7 +604,7 @@ Command * readCommand(std::ifstream &file_p, Library const &lib_p)
         read(file_p, &final_l);
         read(file_p, &gridStatus_l);
         read(file_p, &nbPoints_l);
-        for(size_t i = 0 ; i < nbPoints_l ; ++i)
+        for(uint32_t i = 0 ; i < nbPoints_l ; ++i)
         {
             Vector vec_l;
             read(file_p, &vec_l);
@@ -679,7 +679,7 @@ Command * readCommand(std::ifstream &file_p, Library const &lib_p)
     }
     else if(cmdId_p == 15)
     {
-        size_t size_l;
+        uint32_t size_l;
         std::list<Handle> handles_l;
         Fixed rayTolerance_l;
         Vector point_l;
@@ -687,7 +687,7 @@ Command * readCommand(std::ifstream &file_p, Library const &lib_p)
         bool neverStop_l;
 
         read(file_p, &size_l);
-        for(size_t i = 0 ; i < size_l ; ++i)
+        for(uint32_t i = 0 ; i < size_l ; ++i)
         {
             Handle handle_l;
             read(file_p, &handle_l);

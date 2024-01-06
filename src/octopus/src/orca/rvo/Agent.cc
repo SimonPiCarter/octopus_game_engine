@@ -63,7 +63,7 @@ namespace RVO {
 		const octopus::Fixed invTimeHorizonObst = octopus::Fixed::One() / timeHorizonObst_;
 
 		/* Create obstacle ORCA lines. */
-		for (size_t i = 0; i < obstacleNeighbors_.size(); ++i) {
+		for (uint32_t i = 0; i < obstacleNeighbors_.size(); ++i) {
 
 			const Obstacle *obstacle1 = obstacleNeighbors_[i].second;
 			const Obstacle *obstacle2 = obstacle1->nextObstacle_;
@@ -77,7 +77,7 @@ namespace RVO {
 			 */
 			bool alreadyCovered = false;
 
-			for (size_t j = 0; j < orcaLines_.size(); ++j) {
+			for (uint32_t j = 0; j < orcaLines_.size(); ++j) {
 				const octopus::Fixed det1_l = det(invTimeHorizonObst * relativePosition1 - orcaLines_[j].point, orcaLines_[j].direction) - invTimeHorizonObst * radius_;
 				const octopus::Fixed det2_l = det(invTimeHorizonObst * relativePosition2 - orcaLines_[j].point, orcaLines_[j].direction) - invTimeHorizonObst * radius_;
 
@@ -289,12 +289,12 @@ namespace RVO {
 			}
 		}
 
-		const size_t numObstLines = orcaLines_.size();
+		const uint32_t numObstLines = orcaLines_.size();
 
 		const octopus::Fixed invTimeHorizon = octopus::Fixed::One() / timeHorizon_;
 
 		/* Create agent ORCA lines. */
-		for (size_t i = 0; i < agentNeighbors_.size(); ++i) {
+		for (uint32_t i = 0; i < agentNeighbors_.size(); ++i) {
 			const Agent *const other = agentNeighbors_[i].second;
 
 			const Vector2 relativePosition = other->position_ - position_;
@@ -383,7 +383,7 @@ namespace RVO {
 			}
 		}
 
-		size_t lineFail = linearProgram2(orcaLines_, maxSpeed_, prefVelocity_, false, newVelocity_);
+		uint32_t lineFail = linearProgram2(orcaLines_, maxSpeed_, prefVelocity_, false, newVelocity_);
 
 		if (lineFail < orcaLines_.size()) {
 			linearProgram3(orcaLines_, numObstLines, lineFail, maxSpeed_, newVelocity_);
@@ -400,7 +400,7 @@ namespace RVO {
 					agentNeighbors_.push_back(std::make_pair(distSq, agent));
 				}
 
-				size_t i = agentNeighbors_.size() - 1;
+				uint32_t i = agentNeighbors_.size() - 1;
 
 				while (i != 0 && distSq < agentNeighbors_[i - 1].first) {
 					std::swap(agentNeighbors_[i], agentNeighbors_[i - 1]);
@@ -425,7 +425,7 @@ namespace RVO {
 		if (distSq < rangeSq) {
 			obstacleNeighbors_.push_back(std::make_pair(distSq, obstacle));
 
-			size_t i = obstacleNeighbors_.size() - 1;
+			uint32_t i = obstacleNeighbors_.size() - 1;
 
 			while (i != 0 && distSq < obstacleNeighbors_[i - 1].first) {
 				obstacleNeighbors_[i] = obstacleNeighbors_[i - 1];
@@ -447,7 +447,7 @@ namespace RVO {
 		return ent_ && ent_->isActive() && !ent_->isIgnoringCollision();
 	}
 
-	bool linearProgram1(const std::vector<Line> &lines, size_t lineNo, octopus::Fixed radius, const Vector2 &optVelocity, bool directionOpt, Vector2 &result)
+	bool linearProgram1(const std::vector<Line> &lines, uint32_t lineNo, octopus::Fixed radius, const Vector2 &optVelocity, bool directionOpt, Vector2 &result)
 	{
 		const octopus::Fixed dotProduct = lines[lineNo].point * lines[lineNo].direction;
 		const octopus::Fixed discriminant = sqr(dotProduct) + sqr(radius) - absSq(lines[lineNo].point);
@@ -461,7 +461,7 @@ namespace RVO {
 		octopus::Fixed tLeft = -dotProduct - sqrtDiscriminant;
 		octopus::Fixed tRight = -dotProduct + sqrtDiscriminant;
 
-		for (size_t i = 0; i < lineNo; ++i) {
+		for (uint32_t i = 0; i < lineNo; ++i) {
 			const octopus::Fixed denominator = det(lines[lineNo].direction, lines[i].direction);
 			const octopus::Fixed numerator = det(lines[i].direction, lines[lineNo].point - lines[i].point);
 
@@ -520,7 +520,7 @@ namespace RVO {
 		return true;
 	}
 
-	size_t linearProgram2(const std::vector<Line> &lines, octopus::Fixed radius, const Vector2 &optVelocity, bool directionOpt, Vector2 &result)
+	uint32_t linearProgram2(const std::vector<Line> &lines, octopus::Fixed radius, const Vector2 &optVelocity, bool directionOpt, Vector2 &result)
 	{
 		if (directionOpt) {
 			/*
@@ -538,7 +538,7 @@ namespace RVO {
 			result = optVelocity;
 		}
 
-		for (size_t i = 0; i < lines.size(); ++i) {
+		for (uint32_t i = 0; i < lines.size(); ++i) {
 			if (det(lines[i].direction, lines[i].point - result) > octopus::Fixed::Zero()) {
 				/* Result does not satisfy constraint i. Compute new optimal result. */
 				const Vector2 tempResult = result;
@@ -553,16 +553,16 @@ namespace RVO {
 		return lines.size();
 	}
 
-	void linearProgram3(const std::vector<Line> &lines, size_t numObstLines, size_t beginLine, octopus::Fixed radius, Vector2 &result)
+	void linearProgram3(const std::vector<Line> &lines, uint32_t numObstLines, uint32_t beginLine, octopus::Fixed radius, Vector2 &result)
 	{
 		octopus::Fixed distance = octopus::Fixed::Zero();
 
-		for (size_t i = beginLine; i < lines.size(); ++i) {
+		for (uint32_t i = beginLine; i < lines.size(); ++i) {
 			if (det(lines[i].direction, lines[i].point - result) > distance) {
 				/* Result does not satisfy constraint of line i. */
 				std::vector<Line> projLines(lines.begin(), lines.begin() + static_cast<ptrdiff_t>(numObstLines));
 
-				for (size_t j = numObstLines; j < i; ++j) {
+				for (uint32_t j = numObstLines; j < i; ++j) {
 					Line line;
 
 					octopus::Fixed determinant = det(lines[i].direction, lines[j].direction);

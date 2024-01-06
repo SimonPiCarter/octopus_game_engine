@@ -13,7 +13,7 @@ namespace octopus
 /// @brief check that all row have the same size
 bool checkNodes(std::vector<std::vector<GridNode *> > const &nodes_p)
 {
-	size_t size_l = 0;
+	uint32_t size_l = 0;
 	bool first_l = true;
 	for(std::vector<GridNode *> const &row_l : nodes_p)
 	{
@@ -30,7 +30,7 @@ bool checkNodes(std::vector<std::vector<GridNode *> > const &nodes_p)
 	return true;
 }
 
-void Graph::buildEdge(mygraph_t &g, size_t i, size_t j, size_t k, size_t l,
+void Graph::buildEdge(mygraph_t &g, uint32_t i, uint32_t j, uint32_t k, uint32_t l,
 	std::vector<std::vector<GridNode *> > const &nodes_p, std::unordered_map<GridNode const *, Vertex> const & nodeIndex_p)
 {
 	typedef boost::adjacency_list< boost::listS, boost::vecS, boost::undirectedS, VertexProperties, EdgeProperties> mygraph_t;
@@ -88,16 +88,16 @@ Graph::Graph(std::vector<std::vector<GridNode *> > const &nodes_p)
 	}
 	_g = new mygraph_t();
 
-	for(size_t i = 0 ; i < _nodes.size() ; ++i)
+	for(uint32_t i = 0 ; i < _nodes.size() ; ++i)
 	{
-		for(size_t j = 0 ; j < _nodes.at(i).size() ; ++j)
+		for(uint32_t j = 0 ; j < _nodes.at(i).size() ; ++j)
 		{
 			_nodeIndex[_nodes.at(i).at(j)] = add_vertex(*_g);
 			_vecNodes.push_back(_nodes.at(i).at(j));
 		}
 	}
 
-	for(size_t i = 0 ; i < _nodes.size() ; ++i)
+	for(uint32_t i = 0 ; i < _nodes.size() ; ++i)
 	{
 		// skip last row
 		if(i+1 == _nodes.size())
@@ -105,7 +105,7 @@ Graph::Graph(std::vector<std::vector<GridNode *> > const &nodes_p)
 			continue;
 		}
 
-		for(size_t j = 0 ; j < _nodes.at(i).size() ; ++j)
+		for(uint32_t j = 0 ; j < _nodes.at(i).size() ; ++j)
 		{
 			// skip last column
 			if(j+1 == _nodes.size())

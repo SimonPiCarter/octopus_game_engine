@@ -61,7 +61,7 @@ namespace RVO {
 	 * A value equal to the largest unsigned integer that is returned in case
 	 * of an error by functions in RVO::RVOSimulator.
 	 */
-	const size_t RVO_ERROR = std::numeric_limits<size_t>::max();
+	const uint32_t RVO_ERROR = std::numeric_limits<uint32_t>::max();
 
 	/**
 	 * \brief      Defines a directed line.
@@ -93,7 +93,7 @@ namespace RVO {
 		/**
 		 * \brief      Constructs a simulator instance.
 		 */
-		RVOSimulator(std::unordered_map<octopus::Handle, size_t> const &mapHandleIdx_p);
+		RVOSimulator(std::unordered_map<octopus::Handle, uint32_t> const &mapHandleIdx_p);
 
 		ThreadPool pool;
 
@@ -140,9 +140,9 @@ namespace RVO {
 		 * \param      velocity        The default initial two-dimensional linear
 		 *                             velocity of a new agent (optional).
 		 */
-		RVOSimulator(octopus::Fixed timeStep, octopus::Fixed neighborDist, size_t maxNeighbors,
+		RVOSimulator(octopus::Fixed timeStep, octopus::Fixed neighborDist, uint32_t maxNeighbors,
 					 octopus::Fixed timeHorizon, octopus::Fixed timeHorizonObst, octopus::Fixed radius,
-					 octopus::Fixed maxSpeed, std::unordered_map<octopus::Handle, size_t> const &mapHandleIdx_p,
+					 octopus::Fixed maxSpeed, std::unordered_map<octopus::Handle, uint32_t> const &mapHandleIdx_p,
 					 const Vector2 &velocity = Vector2());
 
 		/**
@@ -158,7 +158,7 @@ namespace RVO {
 		 * \return     The number of the agent, or RVO::RVO_ERROR when the agent
 		 *             defaults have not been set.
 		 */
-		size_t addAgent(const Vector2 &position);
+		uint32_t addAgent(const Vector2 &position);
 
 		/**
 		 * \brief      Adds a new agent to the simulation.
@@ -201,8 +201,8 @@ namespace RVO {
 		 *                             of this agent (optional).
 		 * \return     The number of the agent.
 		 */
-		size_t addAgent(const Vector2 &position, octopus::Fixed neighborDist,
-						size_t maxNeighbors, octopus::Fixed timeHorizon,
+		uint32_t addAgent(const Vector2 &position, octopus::Fixed neighborDist,
+						uint32_t maxNeighbors, octopus::Fixed timeHorizon,
 						octopus::Fixed timeHorizonObst, octopus::Fixed radius, octopus::Fixed maxSpeed,
 						const Vector2 &velocity = Vector2());
 
@@ -216,7 +216,7 @@ namespace RVO {
 		 *             the environment, the vertices should be listed in clockwise
 		 *             order.
 		 */
-		size_t addObstacle(const std::vector<Vector2> &vertices);
+		uint32_t addObstacle(const std::vector<Vector2> &vertices);
 
 		/**
 		 * \brief      Lets the simulator perform a simulation step and updates the
@@ -234,7 +234,7 @@ namespace RVO {
 		 *                             retrieved.
 		 * \return     The number of the neighboring agent.
 		 */
-		size_t getAgentAgentNeighbor(size_t agentNo, size_t neighborNo) const;
+		uint32_t getAgentAgentNeighbor(uint32_t agentNo, uint32_t neighborNo) const;
 
 		/**
 		 * \brief      Returns the maximum neighbor count of a specified agent.
@@ -242,7 +242,7 @@ namespace RVO {
 		 *                             neighbor count is to be retrieved.
 		 * \return     The present maximum neighbor count of the agent.
 		 */
-		size_t getAgentMaxNeighbors(size_t agentNo) const;
+		uint32_t getAgentMaxNeighbors(uint32_t agentNo) const;
 
 		/**
 		 * \brief      Returns the maximum speed of a specified agent.
@@ -250,7 +250,7 @@ namespace RVO {
 		 *                             is to be retrieved.
 		 * \return     The present maximum speed of the agent.
 		 */
-		octopus::Fixed getAgentMaxSpeed(size_t agentNo) const;
+		octopus::Fixed getAgentMaxSpeed(uint32_t agentNo) const;
 
 		/**
 		 * \brief      Returns the maximum neighbor distance of a specified
@@ -259,7 +259,7 @@ namespace RVO {
 		 *                             neighbor distance is to be retrieved.
 		 * \return     The present maximum neighbor distance of the agent.
 		 */
-		octopus::Fixed getAgentNeighborDist(size_t agentNo) const;
+		octopus::Fixed getAgentNeighborDist(uint32_t agentNo) const;
 
 		/**
 		 * \brief      Returns the count of agent neighbors taken into account to
@@ -269,7 +269,7 @@ namespace RVO {
 		 * \return     The count of agent neighbors taken into account to compute
 		 *             the current velocity for the specified agent.
 		 */
-		size_t getAgentNumAgentNeighbors(size_t agentNo) const;
+		uint32_t getAgentNumAgentNeighbors(uint32_t agentNo) const;
 
 		/**
 		 * \brief      Returns the count of obstacle neighbors taken into account
@@ -279,7 +279,7 @@ namespace RVO {
 		 * \return     The count of obstacle neighbors taken into account to
 		 *             compute the current velocity for the specified agent.
 		 */
-		size_t getAgentNumObstacleNeighbors(size_t agentNo) const;
+		uint32_t getAgentNumObstacleNeighbors(uint32_t agentNo) const;
 
 
 		/**
@@ -290,7 +290,7 @@ namespace RVO {
 		 * \return     The count of ORCA constraints used to compute the current
 		 *             velocity for the specified agent.
 		 */
-		size_t getAgentNumORCALines(size_t agentNo) const;
+		uint32_t getAgentNumORCALines(uint32_t agentNo) const;
 
 		/**
 		 * \brief      Returns the specified obstacle neighbor of the specified
@@ -302,7 +302,7 @@ namespace RVO {
 		 * \return     The number of the first vertex of the neighboring obstacle
 		 *             edge.
 		 */
-		size_t getAgentObstacleNeighbor(size_t agentNo, size_t neighborNo) const;
+		uint32_t getAgentObstacleNeighbor(uint32_t agentNo, uint32_t neighborNo) const;
 
 		/**
 		 * \brief      Returns the specified ORCA constraint of the specified
@@ -316,7 +316,7 @@ namespace RVO {
 		 *             permissible velocities with respect to the specified
 		 *             ORCA constraint.
 		 */
-		const Line &getAgentORCALine(size_t agentNo, size_t lineNo) const;
+		const Line &getAgentORCALine(uint32_t agentNo, uint32_t lineNo) const;
 
 		/**
 		 * \brief      Returns the two-dimensional position of a specified
@@ -326,9 +326,9 @@ namespace RVO {
 		 * \return     The present two-dimensional position of the (center of the)
 		 *             agent.
 		 */
-		const Vector2 &getAgentPosition(size_t agentNo) const;
+		const Vector2 &getAgentPosition(uint32_t agentNo) const;
 
-		octopus::EntityMoveStep * getAgentMoveStep(size_t agentNo);
+		octopus::EntityMoveStep * getAgentMoveStep(uint32_t agentNo);
 
 		/**
 		 * \brief      Returns the two-dimensional preferred velocity of a
@@ -338,7 +338,7 @@ namespace RVO {
 		 *                             retrieved.
 		 * \return     The present two-dimensional preferred velocity of the agent.
 		 */
-		const Vector2 &getAgentPrefVelocity(size_t agentNo) const;
+		const Vector2 &getAgentPrefVelocity(uint32_t agentNo) const;
 
 		/**
 		 * \brief      Returns the radius of a specified agent.
@@ -346,7 +346,7 @@ namespace RVO {
 		 *                             be retrieved.
 		 * \return     The present radius of the agent.
 		 */
-		octopus::Fixed getAgentRadius(size_t agentNo) const;
+		octopus::Fixed getAgentRadius(uint32_t agentNo) const;
 
 		/**
 		 * \brief      Returns the time horizon of a specified agent.
@@ -354,7 +354,7 @@ namespace RVO {
 		 *                             is to be retrieved.
 		 * \return     The present time horizon of the agent.
 		 */
-		octopus::Fixed getAgentTimeHorizon(size_t agentNo) const;
+		octopus::Fixed getAgentTimeHorizon(uint32_t agentNo) const;
 
 		/**
 		 * \brief      Returns the time horizon with respect to obstacles of a
@@ -365,7 +365,7 @@ namespace RVO {
 		 * \return     The present time horizon with respect to obstacles of the
 		 *             agent.
 		 */
-		octopus::Fixed getAgentTimeHorizonObst(size_t agentNo) const;
+		octopus::Fixed getAgentTimeHorizonObst(uint32_t agentNo) const;
 
 		/**
 		 * \brief      Returns the two-dimensional linear velocity of a
@@ -375,7 +375,7 @@ namespace RVO {
 		 *                             retrieved.
 		 * \return     The present two-dimensional linear velocity of the agent.
 		 */
-		const Vector2 &getAgentVelocity(size_t agentNo) const;
+		const Vector2 &getAgentVelocity(uint32_t agentNo) const;
 
 		/**
 		 * \brief      Returns the global time of the simulation.
@@ -387,13 +387,13 @@ namespace RVO {
 		 * \brief      Returns the count of agents in the simulation.
 		 * \return     The count of agents in the simulation.
 		 */
-		size_t getNumAgents() const;
+		uint32_t getNumAgents() const;
 
 		/**
 		 * \brief      Returns the count of obstacle vertices in the simulation.
 		 * \return     The count of obstacle vertices in the simulation.
 		 */
-		size_t getNumObstacleVertices() const;
+		uint32_t getNumObstacleVertices() const;
 
 		/**
 		 * \brief      Returns the two-dimensional position of a specified obstacle
@@ -403,7 +403,7 @@ namespace RVO {
 		 * \return     The two-dimensional position of the specified obstacle
 		 *             vertex.
 		 */
-		const Vector2 &getObstacleVertex(size_t vertexNo) const;
+		const Vector2 &getObstacleVertex(uint32_t vertexNo) const;
 
 		/**
 		 * \brief      Returns the number of the obstacle vertex succeeding the
@@ -413,7 +413,7 @@ namespace RVO {
 		 * \return     The number of the obstacle vertex succeeding the specified
 		 *             obstacle vertex in its polygon.
 		 */
-		size_t getNextObstacleVertexNo(size_t vertexNo) const;
+		uint32_t getNextObstacleVertexNo(uint32_t vertexNo) const;
 
 		/**
 		 * \brief      Returns the number of the obstacle vertex preceding the
@@ -423,7 +423,7 @@ namespace RVO {
 		 * \return     The number of the obstacle vertex preceding the specified
 		 *             obstacle vertex in its polygon.
 		 */
-		size_t getPrevObstacleVertexNo(size_t vertexNo) const;
+		uint32_t getPrevObstacleVertexNo(uint32_t vertexNo) const;
 
 		/**
 		 * \brief      Returns the time step of the simulation.
@@ -494,7 +494,7 @@ namespace RVO {
 		 * \param      velocity        The default initial two-dimensional linear
 		 *                             velocity of a new agent (optional).
 		 */
-		void setAgentDefaults(octopus::Fixed neighborDist, size_t maxNeighbors,
+		void setAgentDefaults(octopus::Fixed neighborDist, uint32_t maxNeighbors,
 							  octopus::Fixed timeHorizon, octopus::Fixed timeHorizonObst,
 							  octopus::Fixed radius, octopus::Fixed maxSpeed,
 							  const Vector2 &velocity = Vector2());
@@ -505,7 +505,7 @@ namespace RVO {
 		 *                             neighbor count is to be modified.
 		 * \param      maxNeighbors    The replacement maximum neighbor count.
 		 */
-		void setAgentMaxNeighbors(size_t agentNo, size_t maxNeighbors);
+		void setAgentMaxNeighbors(uint32_t agentNo, uint32_t maxNeighbors);
 
 		/**
 		 * \brief      Sets the maximum speed of a specified agent.
@@ -514,7 +514,7 @@ namespace RVO {
 		 * \param      maxSpeed        The replacement maximum speed. Must be
 		 *                             non-negative.
 		 */
-		void setAgentMaxSpeed(size_t agentNo, octopus::Fixed maxSpeed);
+		void setAgentMaxSpeed(uint32_t agentNo, octopus::Fixed maxSpeed);
 
 		/**
 		 * \brief      Sets the maximum neighbor distance of a specified agent.
@@ -523,7 +523,7 @@ namespace RVO {
 		 * \param      neighborDist    The replacement maximum neighbor distance.
 		 *                             Must be non-negative.
 		 */
-		void setAgentNeighborDist(size_t agentNo, octopus::Fixed neighborDist);
+		void setAgentNeighborDist(uint32_t agentNo, octopus::Fixed neighborDist);
 
 		/**
 		 * \brief      Sets the two-dimensional position of a specified agent.
@@ -532,13 +532,13 @@ namespace RVO {
 		 * \param      position        The replacement of the two-dimensional
 		 *                             position.
 		 */
-		void setAgentPosition(size_t agentNo, const Vector2 &position);
+		void setAgentPosition(uint32_t agentNo, const Vector2 &position);
 
-		void setAgentMoveStep(size_t agentNo, octopus::EntityMoveStep *moveStep);
+		void setAgentMoveStep(uint32_t agentNo, octopus::EntityMoveStep *moveStep);
 
-		void setAgentEntity(size_t agentNo, octopus::Entity const *ent);
+		void setAgentEntity(uint32_t agentNo, octopus::Entity const *ent);
 
-		void setAgentWeight(size_t agentNo, octopus::Fixed weight);
+		void setAgentWeight(uint32_t agentNo, octopus::Fixed weight);
 
 		/**
 		 * \brief      Sets the two-dimensional preferred velocity of a
@@ -549,7 +549,7 @@ namespace RVO {
 		 * \param      prefVelocity    The replacement of the two-dimensional
 		 *                             preferred velocity.
 		 */
-		void setAgentPrefVelocity(size_t agentNo, const Vector2 &prefVelocity);
+		void setAgentPrefVelocity(uint32_t agentNo, const Vector2 &prefVelocity);
 
 		/**
 		 * \brief      Sets the radius of a specified agent.
@@ -558,7 +558,7 @@ namespace RVO {
 		 * \param      radius          The replacement radius.
 		 *                             Must be non-negative.
 		 */
-		void setAgentRadius(size_t agentNo, octopus::Fixed radius);
+		void setAgentRadius(uint32_t agentNo, octopus::Fixed radius);
 
 		/**
 		 * \brief      Sets the time horizon of a specified agent with respect
@@ -568,7 +568,7 @@ namespace RVO {
 		 * \param      timeHorizon     The replacement time horizon with respect
 		 *                             to other agents. Must be positive.
 		 */
-		void setAgentTimeHorizon(size_t agentNo, octopus::Fixed timeHorizon);
+		void setAgentTimeHorizon(uint32_t agentNo, octopus::Fixed timeHorizon);
 
 		/**
 		 * \brief      Sets the time horizon of a specified agent with respect
@@ -578,7 +578,7 @@ namespace RVO {
 		 * \param      timeHorizonObst The replacement time horizon with respect to
 		 *                             obstacles. Must be positive.
 		 */
-		void setAgentTimeHorizonObst(size_t agentNo, octopus::Fixed timeHorizonObst);
+		void setAgentTimeHorizonObst(uint32_t agentNo, octopus::Fixed timeHorizonObst);
 
 		/**
 		 * \brief      Sets the two-dimensional linear velocity of a specified
@@ -589,7 +589,7 @@ namespace RVO {
 		 * \param      velocity        The replacement two-dimensional linear
 		 *                             velocity.
 		 */
-		void setAgentVelocity(size_t agentNo, const Vector2 &velocity);
+		void setAgentVelocity(uint32_t agentNo, const Vector2 &velocity);
 
 		/**
 		 * \brief      Sets the time step of the simulation.
@@ -607,7 +607,7 @@ namespace RVO {
 		std::vector<Obstacle *> obstacles_;
 		octopus::Fixed timeStep_;
 		octopus::State const * state_;
-    	std::unordered_map<octopus::Handle, size_t> const &mapHandleIdx_;
+    	std::unordered_map<octopus::Handle, uint32_t> const &mapHandleIdx_;
 
 		friend class Agent;
 		friend class KdTree;

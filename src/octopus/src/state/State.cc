@@ -26,10 +26,10 @@ Handle const FlyingCommandBundle::getHandle() const { return _cmd->getHandle(); 
 State::State() : _id(0), _gridSize(50), _gridPointSize(1), _pathGrid(_gridSize*_gridPointSize, _gridSize*_gridPointSize, Fixed::One(), Fixed::One()), _visionHandler(_gridSize*_gridPointSize)
 {
 	_grid.reserve(_gridSize);
-	for(size_t i = 0 ; i < _gridSize ; ++ i)
+	for(uint32_t i = 0 ; i < _gridSize ; ++ i)
 	{
 		_grid.push_back(std::vector<AbstractBitset *>());
-		for(size_t j = 0 ; j < _gridSize ; ++ j)
+		for(uint32_t j = 0 ; j < _gridSize ; ++ j)
 		{
 			_grid.at(i).emplace_back(new SetBitset());
 		}
@@ -40,10 +40,10 @@ State::State(unsigned long id_p, unsigned long gridSize_p, unsigned long gridPoi
 	: _id(id_p), _gridSize(gridSize_p), _gridPointSize(gridPointSize_p), _pathGrid(_gridSize*_gridPointSize, _gridSize*_gridPointSize, Fixed::One(), Fixed::One()), _visionHandler(_gridSize*_gridPointSize)
 {
 	_grid.reserve(_gridSize);
-	for(size_t i = 0 ; i < _gridSize ; ++ i)
+	for(uint32_t i = 0 ; i < _gridSize ; ++ i)
 	{
 		_grid.push_back(std::vector<AbstractBitset *>());
-		for(size_t j = 0 ; j < _gridSize ; ++ j)
+		for(uint32_t j = 0 ; j < _gridSize ; ++ j)
 		{
 			_grid.at(i).emplace_back(new SetBitset());
 		}
@@ -60,9 +60,9 @@ State::~State()
 	{
 		delete player_l;
 	}
-	for(size_t i = 0 ; i < _gridSize ; ++ i)
+	for(uint32_t i = 0 ; i < _gridSize ; ++ i)
 	{
-		for(size_t j = 0 ; j < _gridSize ; ++ j)
+		for(uint32_t j = 0 ; j < _gridSize ; ++ j)
 		{
 			delete _grid.at(i).at(j);
 		}
@@ -191,7 +191,7 @@ std::list<Handle> const &State::getFreeHandles() const
 
 
 /// @brief initialize the queued free handles with the desired size
-void State::initializeQueueFreeHandles(size_t size_p)
+void State::initializeQueueFreeHandles(uint32_t size_p)
 {
 	_queuedfreeHandles = std::list<std::list<Handle> >(size_p, std::list<Handle>());
 }

@@ -5,22 +5,22 @@
 namespace octopus
 {
 
-DynamicBitset::DynamicBitset(size_t nb_p) :
+DynamicBitset::DynamicBitset(uint32_t nb_p) :
 	_bitsetSize(nb_p),
 	_size(sizeof(unsigned long)*8)
 {
-	for(size_t i = 0 ; i < std::ceil(double(_bitsetSize)/_size) ; ++i)
+	for(uint32_t i = 0 ; i < std::ceil(double(_bitsetSize)/_size) ; ++i)
 	{
 		_vecBitset.emplace_back(0ul);
 	}
 }
 
-void DynamicBitset::set(size_t idx_p, bool val_p)
+void DynamicBitset::set(uint32_t idx_p, bool val_p)
 {
 	// get index in the vector
-	size_t idxInVec_l = idx_p/_size;
+	uint32_t idxInVec_l = idx_p/_size;
 	// get index in the underlying long
-	size_t idxInLong_l = idx_p - idxInVec_l * _size;
+	uint32_t idxInLong_l = idx_p - idxInVec_l * _size;
 
 	unsigned long &long_l = _vecBitset[idxInVec_l];
 
@@ -42,14 +42,14 @@ void DynamicBitset::reset()
 	}
 }
 
-size_t DynamicBitset::size() const
+uint32_t DynamicBitset::size() const
 {
 	return _bitsetSize;
 }
 
 void DynamicBitset::for_each(std::function<bool(int)> fn_p) const
 {
-	for (size_t k = 0; k < _vecBitset.size(); ++k) {
+	for (uint32_t k = 0; k < _vecBitset.size(); ++k) {
 		unsigned long bitset_l = _vecBitset[k];
 		#ifdef _MSC_VER
 			int r = 0;
@@ -85,7 +85,7 @@ void DynamicBitset::for_each(std::function<bool(int)> fn_p) const
 
 bool DynamicBitset::empty() const
 {
-	for (size_t k = 0; k < _vecBitset.size(); ++k) {
+	for (uint32_t k = 0; k < _vecBitset.size(); ++k) {
 		if(_vecBitset[k] > 0)
 		{
 			return false;
@@ -94,7 +94,7 @@ bool DynamicBitset::empty() const
 	return true;
 }
 
-void SetBitset::set(size_t idx_p, bool val_p)
+void SetBitset::set(uint32_t idx_p, bool val_p)
 {
 	if(val_p)
 	{
@@ -132,7 +132,7 @@ bool SetBitset::empty() const
 
 octopus::DynamicBitset & operator&=(octopus::DynamicBitset &a, octopus::DynamicBitset const &b)
 {
-	for(size_t i = 0 ; i < a._vecBitset.size() ; ++ i)
+	for(uint32_t i = 0 ; i < a._vecBitset.size() ; ++ i)
 	{
 		a._vecBitset[i] &= b._vecBitset[i];
 	}
@@ -140,7 +140,7 @@ octopus::DynamicBitset & operator&=(octopus::DynamicBitset &a, octopus::DynamicB
 }
 octopus::DynamicBitset & operator|=(octopus::DynamicBitset &a, octopus::DynamicBitset const &b)
 {
-	for(size_t i = 0 ; i < a._vecBitset.size() ; ++ i)
+	for(uint32_t i = 0 ; i < a._vecBitset.size() ; ++ i)
 	{
 		a._vecBitset[i] |= b._vecBitset[i];
 	}

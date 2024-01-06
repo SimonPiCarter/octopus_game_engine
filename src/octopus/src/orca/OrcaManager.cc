@@ -9,7 +9,7 @@
 
 namespace octopus
 {
-OrcaManager::OrcaManager(Fixed timeStep_p, Fixed neighborDist_p, size_t maxNeighbors_p, Fixed timeHorizon_p, Fixed timeHorizonObst_p) :
+OrcaManager::OrcaManager(Fixed timeStep_p, Fixed neighborDist_p, uint32_t maxNeighbors_p, Fixed timeHorizon_p, Fixed timeHorizonObst_p) :
     _timeStep(timeStep_p),
     _neighborDist(neighborDist_p),
     _maxNeighbors(maxNeighbors_p),
@@ -67,7 +67,7 @@ void OrcaManager::resetFromState(State const &state_p)
         if(ent_l->_model._isStatic)
         {
             // load obstacle
-	        size_t idx_l = _sim->addObstacle({
+	        uint32_t idx_l = _sim->addObstacle({
                 RVO::Vector2(ent_l->_pos.x-ent_l->_model._ray*0.8, ent_l->_pos.y-ent_l->_model._ray*0.8),
                 RVO::Vector2(ent_l->_pos.x+ent_l->_model._ray*0.8, ent_l->_pos.y-ent_l->_model._ray*0.8),
                 RVO::Vector2(ent_l->_pos.x+ent_l->_model._ray*0.8, ent_l->_pos.y+ent_l->_model._ray*0.8),
@@ -78,7 +78,7 @@ void OrcaManager::resetFromState(State const &state_p)
         else
         {
             // load agent
-		    size_t idx_l = _sim->addAgent(RVO::Vector2(ent_l->_pos.x,ent_l->_pos.y));
+		    uint32_t idx_l = _sim->addAgent(RVO::Vector2(ent_l->_pos.x,ent_l->_pos.y));
             _sim->setAgentRadius(idx_l, ent_l->_model._ray);
 
             _mapHandleIdx[ent_l->_handle] = idx_l;
@@ -98,7 +98,7 @@ void OrcaManager::setupStep(State const &state_p, Step &step_p)
         {
             continue;
         }
-        size_t idx_l = _mapHandleIdx[ent_l->_handle];
+        uint32_t idx_l = _mapHandleIdx[ent_l->_handle];
         if(ent_l->isFrozen())
         {
             _sim->setAgentMaxSpeed(idx_l, 0);
@@ -134,7 +134,7 @@ void OrcaManager::setupStep(State const &state_p, Step &step_p)
         }
 		if(mapMoveStep_l[ent_l->_handle.index] == nullptr && ent_l->isActive() && !ent_l->isFrozen())
 		{
-            size_t idx_l = _mapHandleIdx[ent_l->_handle];
+            uint32_t idx_l = _mapHandleIdx[ent_l->_handle];
             _sim->setAgentWeight(idx_l, 0.01);
 
 			EntityMoveStep *step_l = new EntityMoveStep(ent_l->_handle, {0, 0});
@@ -150,7 +150,7 @@ void OrcaManager::setupStep(State const &state_p, Step &step_p)
         {
             continue;
         }
-        size_t idx_l = _mapHandleIdx[moveStep_l->_handle];
+        uint32_t idx_l = _mapHandleIdx[moveStep_l->_handle];
         _sim->setAgentMoveStep(idx_l, moveStep_l);
         _sim->setAgentPrefVelocity(idx_l, RVO::Vector2(moveStep_l->_move.x, moveStep_l->_move.y));
     }
@@ -162,7 +162,7 @@ void OrcaManager::setupStep(State const &state_p, Step &step_p)
         {
             continue;
         }
-        size_t idx_l = _mapHandleIdx[moveStep_l->_handle];
+        uint32_t idx_l = _mapHandleIdx[moveStep_l->_handle];
         _sim->setAgentVelocity(idx_l, RVO::Vector2(moveStep_l->_move.x, moveStep_l->_move.y));
     }
 }
@@ -181,7 +181,7 @@ void OrcaManager::commitStep(State const &state_p, Step &step_p)
         {
             continue;
         }
-        size_t idx_l = _mapHandleIdx[moveStep_l->_handle];
+        uint32_t idx_l = _mapHandleIdx[moveStep_l->_handle];
         moveStep_l->_move.x = _sim->getAgentVelocity(idx_l).x();
         moveStep_l->_move.y = _sim->getAgentVelocity(idx_l).y();
     }

@@ -57,17 +57,17 @@ namespace RVO {
 			/**
 			 * \brief      The beginning node number.
 			 */
-			size_t begin;
+			uint32_t begin;
 
 			/**
 			 * \brief      The ending node number.
 			 */
-			size_t end;
+			uint32_t end;
 
 			/**
 			 * \brief      The left node number.
 			 */
-			size_t left;
+			uint32_t left;
 
 			/**
 			 * \brief      The maximum x-coordinate.
@@ -92,7 +92,7 @@ namespace RVO {
 			/**
 			 * \brief      The right node number.
 			 */
-			size_t right;
+			uint32_t right;
 		};
 
 		/**
@@ -132,7 +132,7 @@ namespace RVO {
 		 */
 		void buildAgentTree();
 
-		void buildAgentTreeRecursive(size_t begin, size_t end, size_t node);
+		void buildAgentTreeRecursive(uint32_t begin, uint32_t end, uint32_t node);
 
 		/**
 		 * \brief      Builds an obstacle <i>k</i>d-tree.
@@ -168,7 +168,7 @@ namespace RVO {
 		void deleteObstacleTree(ObstacleTreeNode *node);
 
 		void queryAgentTreeRecursive(Agent *agent, octopus::Fixed  &rangeSq,
-									 size_t node) const;
+									 uint32_t node) const;
 
 		void queryObstacleTreeRecursive(Agent *agent, octopus::Fixed rangeSq,
 										const ObstacleTreeNode *node) const;
@@ -197,7 +197,7 @@ namespace RVO {
 		ObstacleTreeNode *obstacleTree_;
 		RVOSimulator *sim_;
 
-		static const size_t MAX_LEAF_SIZE = 5;
+		static const uint32_t MAX_LEAF_SIZE = 5;
 
 		friend class Agent;
 		friend class RVOSimulator;

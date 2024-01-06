@@ -22,16 +22,16 @@
 // 		{ 9, 9 }
 // 	};
 // 	ASSERT_EQ(expected_l.size(), path_l.size());
-// 	size_t idx_l = 0;
+// 	uint32_t idx_l = 0;
 // 	for(GridNode const * node_l : path_l)
 // 	{
 // 		EXPECT_TRUE(expected_l.at(idx_l) == node_l->getPosition() - Vector(0.5,0.5));// << "expected = "<<expected_l.at(idx_l) << " real = "<<node_l->getPosition();
 // 		++idx_l;
 // 	}
 
-// 	for(size_t i = 1; i < 8 ; ++ i)
+// 	for(uint32_t i = 1; i < 8 ; ++ i)
 // 	{
-// 		for(size_t j = 1; j < 8 ; ++ j)
+// 		for(uint32_t j = 1; j < 8 ; ++ j)
 // 		{
 // 			grid_l.getNode(i,j)->setFree(false);
 // 		}

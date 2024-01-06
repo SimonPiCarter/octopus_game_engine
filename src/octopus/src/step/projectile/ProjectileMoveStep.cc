@@ -11,14 +11,14 @@ void ProjectileMoveStep::apply(State &state_p) const
 {
 	Logger::getDebug() << "ProjectileMoveStep :: apply "<<std::endl;
 	ProjectileContainer & container_l = state_p.getProjectileContainer();
-	for(size_t i = 0 ; i < _move.size() ; ++ i)
+	for(uint32_t i = 0 ; i < _move.size() ; ++ i)
 	{
 		if(!is_zero(_move[i]))
 		{
 			container_l.getProjectiles()[i]._pos += _move[i];
 		}
 	}
-	for(size_t i = 0 ; i < _over.size() ; ++ i)
+	for(uint32_t i = 0 ; i < _over.size() ; ++ i)
 	{
 		if(_over[i])
 		{
@@ -31,14 +31,14 @@ void ProjectileMoveStep::revert(State &state_p, SteppableData const *) const
 {
 	Logger::getDebug() << "ProjectileMoveStep :: revert "<<std::endl;
 	ProjectileContainer & container_l = state_p.getProjectileContainer();
-	for(size_t i = _move.size() ; i > 0 ; -- i)
+	for(uint32_t i = _move.size() ; i > 0 ; -- i)
 	{
 		if(!is_zero(_move[i]))
 		{
 			container_l.getProjectiles()[i-1]._pos -= _move[i];
 		}
 	}
-	for(size_t i = _move.size() ; i > 0 ; -- i)
+	for(uint32_t i = _move.size() ; i > 0 ; -- i)
 	{
 		if(_over[i-1])
 		{
@@ -52,7 +52,7 @@ bool ProjectileMoveStep::isNoOp() const
 	return false;
 }
 
-void ProjectileMoveStep::setOver(size_t idx_p)
+void ProjectileMoveStep::setOver(uint32_t idx_p)
 {
 	if(idx_p >= _over.size())
 	{
@@ -61,7 +61,7 @@ void ProjectileMoveStep::setOver(size_t idx_p)
 	_over[idx_p] = true;
 }
 
-void ProjectileMoveStep::setMove(size_t idx_p, Vector &&vec_p)
+void ProjectileMoveStep::setMove(uint32_t idx_p, Vector &&vec_p)
 {
 	if(idx_p >= _move.size())
 	{

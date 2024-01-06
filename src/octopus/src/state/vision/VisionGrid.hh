@@ -58,7 +58,7 @@ public:
 	void updateExplorationFromMovement(const Entity &ent_p, long dx, long dy, PatternHandler &patternHandler_p);
 
 	/// @brief increment given grid element
-	void incrementVisionGrid(size_t x, size_t y, long long delta_p, bool exploration_p);
+	void incrementVisionGrid(uint32_t x, uint32_t y, long long delta_p, bool exploration_p);
 
 	unsigned long const &getSize() const { return _size; }
 protected:

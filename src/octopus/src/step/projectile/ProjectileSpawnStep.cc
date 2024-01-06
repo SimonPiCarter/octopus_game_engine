@@ -11,7 +11,7 @@ void ProjectileSpawnStep::apply(State &state_p) const
 	Logger::getDebug() << "ProjectileSpawnStep :: apply "<<std::endl;
 	ProjectileContainer & container_l = state_p.getProjectileContainer();
 
-	for(size_t i = 0 ; i < _toBeSpawned.size() ; ++ i)
+	for(uint32_t i = 0 ; i < _toBeSpawned.size() ; ++ i)
 	{
 		if(_toBeSpawned[i]._index < container_l.getProjectiles().size())
 		{
@@ -38,7 +38,7 @@ void ProjectileSpawnStep::revert(State &state_p, SteppableData const *) const
 	Logger::getDebug() << "ProjectileSpawnStep :: revert "<<std::endl;
 	ProjectileContainer & container_l = state_p.getProjectileContainer();
 
-	for(size_t i = _toBeSpawned.size() ; i > 0 ; -- i)
+	for(uint32_t i = _toBeSpawned.size() ; i > 0 ; -- i)
 	{
 		// disable projectile
 		container_l.getProjectiles()[i-1]._done = true;
@@ -52,10 +52,10 @@ bool ProjectileSpawnStep::isNoOp() const
 	return _toBeSpawned.empty();
 }
 
-size_t get(std::list<size_t> const &freeIdx_p, size_t idx_p)
+uint32_t get(std::list<uint32_t> const &freeIdx_p, uint32_t idx_p)
 {
 	auto &&it_l = freeIdx_p.begin();
-	for(size_t count_l = 0 ; count_l < idx_p ; ++ count_l)
+	for(uint32_t count_l = 0 ; count_l < idx_p ; ++ count_l)
 	{
 		++it_l;
 	}
@@ -64,7 +64,7 @@ size_t get(std::list<size_t> const &freeIdx_p, size_t idx_p)
 
 void ProjectileSpawnStep::addProjectile(ProjectileContainer const &container_p, Projectile &&projectile_p)
 {
-	std::list<size_t> const &freeIdx_l = container_p.getFreeIdx();
+	std::list<uint32_t> const &freeIdx_l = container_p.getFreeIdx();
 	std::vector<Projectile> const &proj_l = container_p.getProjectiles();
 
 	if(_toBeSpawned.size() < freeIdx_l.size())
@@ -73,7 +73,7 @@ void ProjectileSpawnStep::addProjectile(ProjectileContainer const &container_p, 
 	}
 	else
 	{
-		size_t index_l = proj_l.size() + _toBeSpawned.size() - freeIdx_l.size();
+		uint32_t index_l = proj_l.size() + _toBeSpawned.size() - freeIdx_l.size();
 		projectile_p._index = index_l;
 	}
 

@@ -21,8 +21,8 @@ public:
 		visitor_p->visit(this);
 	}
 
-	void setOver(size_t idx_p);
-	void setMove(size_t idx_p, Vector &&vec_p);
+	void setOver(uint32_t idx_p);
+	void setMove(uint32_t idx_p, Vector &&vec_p);
 
 	std::vector<Vector> const &getMove() const { return _move; }
 	std::vector<bool> const &getOver() const { return _over; }

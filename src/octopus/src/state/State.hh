@@ -68,7 +68,7 @@ public:
 	std::list<Handle> const &getFreeHandles() const;
 
 	/// @brief initialize the queued free handles with the desired size
-	void initializeQueueFreeHandles(size_t size_p);
+	void initializeQueueFreeHandles(uint32_t size_p);
 	/// @brief unfold one stack of the queued free handles
 	/// @note this should be called every time a step is applied (in the ticking step)
 	void unfoldQueuedFreeHandles();

@@ -35,7 +35,7 @@ void FlyingCommandPopStep::revert(State &state_p, SteppableData const *) const
 {
 	Logger::getDebug() << "FlyingCommandPopStep :: revert " <<std::endl;
 
-	size_t size_l = state_p.getFlyingCommands().size();
+	uint32_t size_l = state_p.getFlyingCommands().size();
 
 	// reuse stored data
 	state_p.getFlyingCommands().emplace_hint(state_p.getFlyingCommands().end(), _cmd->getHandle(), FlyingCommandBundle{_mapData[state_p._id], _cmd});

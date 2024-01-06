@@ -253,7 +253,7 @@ void revert(Step const & step_p, State &state_p, StepData &stepData_p)
 	{
 		throw std::logic_error("tried to revert the same step twice to a state or reverted a step without applying it first");
 	}
-	size_t i = vecData_l.size();
+	uint32_t i = vecData_l.size();
 	// apply all steppables (in reverse order)
 	for(auto it_l = step_p.getSteppable().rbegin() ; it_l != step_p.getSteppable().rend() ; ++it_l)
 	{

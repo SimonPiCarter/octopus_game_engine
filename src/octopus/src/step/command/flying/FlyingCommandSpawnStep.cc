@@ -12,7 +12,7 @@ void FlyingCommandSpawnStep::apply(State &state_p) const
 {
 	Logger::getDebug() << "FlyingCommandSpawnStep :: apply " <<std::endl;
 
-	size_t size_l = state_p.getFlyingCommands().size();
+	uint32_t size_l = state_p.getFlyingCommands().size();
 
 	state_p.getFlyingCommands().emplace_hint(state_p.getFlyingCommands().end(), _cmd->getHandle(), FlyingCommandBundle{_cmd->newData(), _cmd});
 

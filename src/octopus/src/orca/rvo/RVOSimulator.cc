@@ -43,7 +43,7 @@
 #include <condition_variable>
 
 namespace RVO {
-	RVOSimulator::RVOSimulator(std::unordered_map<octopus::Handle, size_t> const &mapHandleIdx_p) :
+	RVOSimulator::RVOSimulator(std::unordered_map<octopus::Handle, uint32_t> const &mapHandleIdx_p) :
 		pool(12), defaultAgent_(NULL), globalTime_(0.0f), kdTree_(NULL), timeStep_(0.0f), mapHandleIdx_(mapHandleIdx_p)
 	{
 		kdTree_ = new KdTree(this);
@@ -54,9 +54,9 @@ namespace RVO {
 		return agents_[idx_p].getAgentNeighbors();
 	}
 
-	RVOSimulator::RVOSimulator(octopus::Fixed timeStep, octopus::Fixed neighborDist, size_t maxNeighbors,
+	RVOSimulator::RVOSimulator(octopus::Fixed timeStep, octopus::Fixed neighborDist, uint32_t maxNeighbors,
 		octopus::Fixed timeHorizon, octopus::Fixed timeHorizonObst, octopus::Fixed radius, octopus::Fixed maxSpeed,
-		std::unordered_map<octopus::Handle, size_t> const &mapHandleIdx_p, const Vector2 &velocity) :
+		std::unordered_map<octopus::Handle, uint32_t> const &mapHandleIdx_p, const Vector2 &velocity) :
 		pool(12), defaultAgent_(NULL), globalTime_(0.0f), kdTree_(NULL), timeStep_(timeStep), mapHandleIdx_(mapHandleIdx_p)
 	{
 		kdTree_ = new KdTree(this);
@@ -77,7 +77,7 @@ namespace RVO {
 			delete defaultAgent_;
 		}
 
-		for (size_t i = 0; i < obstacles_.size(); ++i) {
+		for (uint32_t i = 0; i < obstacles_.size(); ++i) {
 			delete obstacles_[i];
 		}
 
@@ -85,7 +85,7 @@ namespace RVO {
 		delete kdTree_;
 	}
 
-	size_t RVOSimulator::addAgent(const Vector2 &position)
+	uint32_t RVOSimulator::addAgent(const Vector2 &position)
 	{
 		if (defaultAgent_ == NULL) {
 			return RVO_ERROR;
@@ -109,7 +109,7 @@ namespace RVO {
 		return agents_.size() - 1;
 	}
 
-	size_t RVOSimulator::addAgent(const Vector2 &position, octopus::Fixed neighborDist, size_t maxNeighbors, octopus::Fixed timeHorizon, octopus::Fixed timeHorizonObst, octopus::Fixed radius, octopus::Fixed maxSpeed, const Vector2 &velocity)
+	uint32_t RVOSimulator::addAgent(const Vector2 &position, octopus::Fixed neighborDist, uint32_t maxNeighbors, octopus::Fixed timeHorizon, octopus::Fixed timeHorizonObst, octopus::Fixed radius, octopus::Fixed maxSpeed, const Vector2 &velocity)
 	{
 		agents_.emplace_back(this);
 		Agent *agent = &agents_.back();
@@ -128,15 +128,15 @@ namespace RVO {
 		return agents_.size() - 1;
 	}
 
-	size_t RVOSimulator::addObstacle(const std::vector<Vector2> &vertices)
+	uint32_t RVOSimulator::addObstacle(const std::vector<Vector2> &vertices)
 	{
 		if (vertices.size() < 2) {
 			return RVO_ERROR;
 		}
 
-		const size_t obstacleNo = obstacles_.size();
+		const uint32_t obstacleNo = obstacles_.size();
 
-		for (size_t i = 0; i < vertices.size(); ++i) {
+		for (uint32_t i = 0; i < vertices.size(); ++i) {
 			Obstacle *obstacle = new Obstacle();
 			obstacle->point_ = vertices[i];
 
@@ -222,82 +222,82 @@ namespace RVO {
 		globalTime_ += timeStep_;
 	}
 
-	size_t RVOSimulator::getAgentAgentNeighbor(size_t agentNo, size_t neighborNo) const
+	uint32_t RVOSimulator::getAgentAgentNeighbor(uint32_t agentNo, uint32_t neighborNo) const
 	{
 		return agents_[agentNo].agentNeighbors_[neighborNo].second->id_;
 	}
 
-	size_t RVOSimulator::getAgentMaxNeighbors(size_t agentNo) const
+	uint32_t RVOSimulator::getAgentMaxNeighbors(uint32_t agentNo) const
 	{
 		return agents_[agentNo].maxNeighbors_;
 	}
 
-	octopus::Fixed RVOSimulator::getAgentMaxSpeed(size_t agentNo) const
+	octopus::Fixed RVOSimulator::getAgentMaxSpeed(uint32_t agentNo) const
 	{
 		return agents_[agentNo].maxSpeed_;
 	}
 
-	octopus::Fixed RVOSimulator::getAgentNeighborDist(size_t agentNo) const
+	octopus::Fixed RVOSimulator::getAgentNeighborDist(uint32_t agentNo) const
 	{
 		return agents_[agentNo].neighborDist_;
 	}
 
-	size_t RVOSimulator::getAgentNumAgentNeighbors(size_t agentNo) const
+	uint32_t RVOSimulator::getAgentNumAgentNeighbors(uint32_t agentNo) const
 	{
 		return agents_[agentNo].agentNeighbors_.size();
 	}
 
-	size_t RVOSimulator::getAgentNumObstacleNeighbors(size_t agentNo) const
+	uint32_t RVOSimulator::getAgentNumObstacleNeighbors(uint32_t agentNo) const
 	{
 		return agents_[agentNo].obstacleNeighbors_.size();
 	}
 
-	size_t RVOSimulator::getAgentNumORCALines(size_t agentNo) const
+	uint32_t RVOSimulator::getAgentNumORCALines(uint32_t agentNo) const
 	{
 		return agents_[agentNo].orcaLines_.size();
 	}
 
-	size_t RVOSimulator::getAgentObstacleNeighbor(size_t agentNo, size_t neighborNo) const
+	uint32_t RVOSimulator::getAgentObstacleNeighbor(uint32_t agentNo, uint32_t neighborNo) const
 	{
 		return agents_[agentNo].obstacleNeighbors_[neighborNo].second->id_;
 	}
 
-	const Line &RVOSimulator::getAgentORCALine(size_t agentNo, size_t lineNo) const
+	const Line &RVOSimulator::getAgentORCALine(uint32_t agentNo, uint32_t lineNo) const
 	{
 		return agents_[agentNo].orcaLines_[lineNo];
 	}
 
-	const Vector2 &RVOSimulator::getAgentPosition(size_t agentNo) const
+	const Vector2 &RVOSimulator::getAgentPosition(uint32_t agentNo) const
 	{
 		return agents_[agentNo].position_;
 	}
 
-	octopus::EntityMoveStep * RVOSimulator::getAgentMoveStep(size_t agentNo)
+	octopus::EntityMoveStep * RVOSimulator::getAgentMoveStep(uint32_t agentNo)
 	{
 		return agents_[agentNo].moveStep_;
 	}
 
-	const Vector2 &RVOSimulator::getAgentPrefVelocity(size_t agentNo) const
+	const Vector2 &RVOSimulator::getAgentPrefVelocity(uint32_t agentNo) const
 	{
 		return agents_[agentNo].prefVelocity_;
 	}
 
-	octopus::Fixed RVOSimulator::getAgentRadius(size_t agentNo) const
+	octopus::Fixed RVOSimulator::getAgentRadius(uint32_t agentNo) const
 	{
 		return agents_[agentNo].radius_;
 	}
 
-	octopus::Fixed RVOSimulator::getAgentTimeHorizon(size_t agentNo) const
+	octopus::Fixed RVOSimulator::getAgentTimeHorizon(uint32_t agentNo) const
 	{
 		return agents_[agentNo].timeHorizon_;
 	}
 
-	octopus::Fixed RVOSimulator::getAgentTimeHorizonObst(size_t agentNo) const
+	octopus::Fixed RVOSimulator::getAgentTimeHorizonObst(uint32_t agentNo) const
 	{
 		return agents_[agentNo].timeHorizonObst_;
 	}
 
-	const Vector2 &RVOSimulator::getAgentVelocity(size_t agentNo) const
+	const Vector2 &RVOSimulator::getAgentVelocity(uint32_t agentNo) const
 	{
 		return agents_[agentNo].velocity_;
 	}
@@ -307,27 +307,27 @@ namespace RVO {
 		return globalTime_;
 	}
 
-	size_t RVOSimulator::getNumAgents() const
+	uint32_t RVOSimulator::getNumAgents() const
 	{
 		return agents_.size();
 	}
 
-	size_t RVOSimulator::getNumObstacleVertices() const
+	uint32_t RVOSimulator::getNumObstacleVertices() const
 	{
 		return obstacles_.size();
 	}
 
-	const Vector2 &RVOSimulator::getObstacleVertex(size_t vertexNo) const
+	const Vector2 &RVOSimulator::getObstacleVertex(uint32_t vertexNo) const
 	{
 		return obstacles_[vertexNo]->point_;
 	}
 
-	size_t RVOSimulator::getNextObstacleVertexNo(size_t vertexNo) const
+	uint32_t RVOSimulator::getNextObstacleVertexNo(uint32_t vertexNo) const
 	{
 		return obstacles_[vertexNo]->nextObstacle_->id_;
 	}
 
-	size_t RVOSimulator::getPrevObstacleVertexNo(size_t vertexNo) const
+	uint32_t RVOSimulator::getPrevObstacleVertexNo(uint32_t vertexNo) const
 	{
 		return obstacles_[vertexNo]->prevObstacle_->id_;
 	}
@@ -347,7 +347,7 @@ namespace RVO {
 		return kdTree_->queryVisibility(point1, point2, radius);
 	}
 
-	void RVOSimulator::setAgentDefaults(octopus::Fixed neighborDist, size_t maxNeighbors, octopus::Fixed timeHorizon, octopus::Fixed timeHorizonObst, octopus::Fixed radius, octopus::Fixed maxSpeed, const Vector2 &velocity)
+	void RVOSimulator::setAgentDefaults(octopus::Fixed neighborDist, uint32_t maxNeighbors, octopus::Fixed timeHorizon, octopus::Fixed timeHorizonObst, octopus::Fixed radius, octopus::Fixed maxSpeed, const Vector2 &velocity)
 	{
 		if (defaultAgent_ == NULL) {
 			defaultAgent_ = new Agent(this);
@@ -362,62 +362,62 @@ namespace RVO {
 		defaultAgent_->velocity_ = velocity;
 	}
 
-	void RVOSimulator::setAgentMaxNeighbors(size_t agentNo, size_t maxNeighbors)
+	void RVOSimulator::setAgentMaxNeighbors(uint32_t agentNo, uint32_t maxNeighbors)
 	{
 		agents_[agentNo].maxNeighbors_ = maxNeighbors;
 	}
 
-	void RVOSimulator::setAgentMaxSpeed(size_t agentNo, octopus::Fixed maxSpeed)
+	void RVOSimulator::setAgentMaxSpeed(uint32_t agentNo, octopus::Fixed maxSpeed)
 	{
 		agents_[agentNo].maxSpeed_ = maxSpeed;
 	}
 
-	void RVOSimulator::setAgentNeighborDist(size_t agentNo, octopus::Fixed neighborDist)
+	void RVOSimulator::setAgentNeighborDist(uint32_t agentNo, octopus::Fixed neighborDist)
 	{
 		agents_[agentNo].neighborDist_ = neighborDist;
 	}
 
-	void RVOSimulator::setAgentPosition(size_t agentNo, const Vector2 &position)
+	void RVOSimulator::setAgentPosition(uint32_t agentNo, const Vector2 &position)
 	{
 		agents_[agentNo].position_ = position;
 	}
 
-	void RVOSimulator::setAgentMoveStep(size_t agentNo, octopus::EntityMoveStep *moveStep)
+	void RVOSimulator::setAgentMoveStep(uint32_t agentNo, octopus::EntityMoveStep *moveStep)
 	{
 		agents_[agentNo].moveStep_ = moveStep;
 	}
 
-	void RVOSimulator::setAgentEntity(size_t agentNo, octopus::Entity const *ent)
+	void RVOSimulator::setAgentEntity(uint32_t agentNo, octopus::Entity const *ent)
 	{
 		agents_[agentNo].ent_ = ent;
 	}
 
-	void RVOSimulator::setAgentWeight(size_t agentNo, octopus::Fixed weight)
+	void RVOSimulator::setAgentWeight(uint32_t agentNo, octopus::Fixed weight)
 	{
 		agents_[agentNo].weight_ = weight;
 	}
 
-	void RVOSimulator::setAgentPrefVelocity(size_t agentNo, const Vector2 &prefVelocity)
+	void RVOSimulator::setAgentPrefVelocity(uint32_t agentNo, const Vector2 &prefVelocity)
 	{
 		agents_[agentNo].prefVelocity_ = prefVelocity;
 	}
 
-	void RVOSimulator::setAgentRadius(size_t agentNo, octopus::Fixed radius)
+	void RVOSimulator::setAgentRadius(uint32_t agentNo, octopus::Fixed radius)
 	{
 		agents_[agentNo].radius_ = radius;
 	}
 
-	void RVOSimulator::setAgentTimeHorizon(size_t agentNo, octopus::Fixed timeHorizon)
+	void RVOSimulator::setAgentTimeHorizon(uint32_t agentNo, octopus::Fixed timeHorizon)
 	{
 		agents_[agentNo].timeHorizon_ = timeHorizon;
 	}
 
-	void RVOSimulator::setAgentTimeHorizonObst(size_t agentNo, octopus::Fixed timeHorizonObst)
+	void RVOSimulator::setAgentTimeHorizonObst(uint32_t agentNo, octopus::Fixed timeHorizonObst)
 	{
 		agents_[agentNo].timeHorizonObst_ = timeHorizonObst;
 	}
 
-	void RVOSimulator::setAgentVelocity(size_t agentNo, const Vector2 &velocity)
+	void RVOSimulator::setAgentVelocity(uint32_t agentNo, const Vector2 &velocity)
 	{
 		agents_[agentNo].velocity_ = velocity;
 	}

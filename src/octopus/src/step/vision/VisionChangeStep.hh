@@ -15,7 +15,7 @@ class VisionChangeStep : public Steppable
 {
 public:
 	/// @brief construct step using a movable map (to avoid any copy)
-	VisionChangeStep(unsigned long team_p, std::unordered_map<size_t , std::unordered_map<size_t, long long> > &&delta_p, bool exploration_p=false);
+	VisionChangeStep(unsigned long team_p, std::unordered_map<uint32_t , std::unordered_map<uint32_t, long long> > &&delta_p, bool exploration_p=false);
 
 	virtual void apply(State &state_p) const override;
 	virtual void revert(State &state_p, SteppableData const *) const override;
@@ -32,7 +32,7 @@ private:
 	unsigned long const _team;
 
 	/// @brief sparse storage of the delta to be applied
-	std::unordered_map<size_t , std::unordered_map<size_t, long long> > _delta;
+	std::unordered_map<uint32_t , std::unordered_map<uint32_t, long long> > _delta;
 
 	bool const _exploration;
 };

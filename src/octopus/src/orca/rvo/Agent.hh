@@ -104,7 +104,7 @@ namespace RVO {
 		bool active() const;
 
 		std::vector<std::pair<octopus::Fixed , const Agent *> > agentNeighbors_;
-		size_t maxNeighbors_;
+		uint32_t maxNeighbors_;
 		octopus::Fixed maxSpeed_;
 		octopus::Fixed neighborDist_;
 		Vector2 newVelocity_;
@@ -120,7 +120,7 @@ namespace RVO {
 
 		octopus::Fixed weight_ {1};
 
-		size_t id_;
+		uint32_t id_;
 
 		octopus::EntityMoveStep * moveStep_;
 		octopus::Entity const * ent_;
@@ -142,7 +142,7 @@ namespace RVO {
 	 * \param      result        A reference to the result of the linear program.
 	 * \return     True if successful.
 	 */
-	bool linearProgram1(const std::vector<Line> &lines, size_t lineNo,
+	bool linearProgram1(const std::vector<Line> &lines, uint32_t lineNo,
 						octopus::Fixed radius, const Vector2 &optVelocity,
 						bool directionOpt, Vector2 &result);
 
@@ -157,7 +157,7 @@ namespace RVO {
 	 * \param      result        A reference to the result of the linear program.
 	 * \return     The number of the line it fails on, and the number of lines if successful.
 	 */
-	size_t linearProgram2(const std::vector<Line> &lines, octopus::Fixed radius,
+	uint32_t linearProgram2(const std::vector<Line> &lines, octopus::Fixed radius,
 						  const Vector2 &optVelocity, bool directionOpt,
 						  Vector2 &result);
 
@@ -171,7 +171,7 @@ namespace RVO {
 	 * \param      radius        The radius of the circular constraint.
 	 * \param      result        A reference to the result of the linear program.
 	 */
-	void linearProgram3(const std::vector<Line> &lines, size_t numObstLines, size_t beginLine,
+	void linearProgram3(const std::vector<Line> &lines, uint32_t numObstLines, uint32_t beginLine,
 						octopus::Fixed radius, Vector2 &result);
 }
 

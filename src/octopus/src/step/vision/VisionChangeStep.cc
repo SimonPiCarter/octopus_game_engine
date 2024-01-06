@@ -14,15 +14,15 @@ namespace octopus
 {
 
 
-VisionChangeStep::VisionChangeStep(unsigned long team_p, std::unordered_map<size_t , std::unordered_map<size_t, long long> > &&delta_p, bool exploration_p)
+VisionChangeStep::VisionChangeStep(unsigned long team_p, std::unordered_map<uint32_t , std::unordered_map<uint32_t, long long> > &&delta_p, bool exploration_p)
 	: _team(team_p), _delta(delta_p), _exploration(exploration_p)
 {
-	size_t count_l = 0;
-	size_t kept_l = 0;
+	uint32_t count_l = 0;
+	uint32_t kept_l = 0;
 	// clean up zero element in the map
 	for(auto && itFirst_l = _delta.begin() ; itFirst_l != _delta.end() ; ++ itFirst_l)
 	{
-		std::unordered_map<size_t, long long> &mapSecond_l = itFirst_l->second;
+		std::unordered_map<uint32_t, long long> &mapSecond_l = itFirst_l->second;
 		for(auto && itSecond_l = mapSecond_l.begin() ; itSecond_l != mapSecond_l.end() ;)
 		{
 			long long const & val_l = itSecond_l->second;
@@ -72,8 +72,8 @@ void VisionChangeStep::revert(State &state_p, SteppableData const *) const
 
 std::list<VisionChangeStep *> newVisionChangeStep(State const &state_p, Step const &step_p, long worldSize_p, PatternHandler &handler_p)
 {
-	std::unordered_map<unsigned long , std::unordered_map<size_t , std::unordered_map<size_t, long long> > > deltaPerTeam_l;
-	std::unordered_map<unsigned long , std::unordered_map<size_t , std::unordered_map<size_t, long long> > > deltaPerTeamExploration_l;
+	std::unordered_map<unsigned long , std::unordered_map<uint32_t , std::unordered_map<uint32_t, long long> > > deltaPerTeam_l;
+	std::unordered_map<unsigned long , std::unordered_map<uint32_t , std::unordered_map<uint32_t, long long> > > deltaPerTeamExploration_l;
 
 	std::vector<Fixed> hitpoints_l;
 	std::vector<bool> dead_l;

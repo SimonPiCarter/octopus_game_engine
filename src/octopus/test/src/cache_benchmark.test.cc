@@ -11,21 +11,21 @@ class CacheTest : public testing::Test
 protected:
     static void SetUpTestSuite()
 	{
-		size_t size_l = 5000;
+		uint32_t size_l = 5000;
 		_continuous.reserve(size_l);
 		_random.reserve(size_l);
 		std::vector<Position *> temp_l;
 		temp_l.reserve(size_l);
-		for(size_t i = 0 ; i < size_l ; ++ i)
+		for(uint32_t i = 0 ; i < size_l ; ++ i)
 		{
 			_continuous.push_back(Position());
 			temp_l.push_back(new Position());
 			_random.push_back(nullptr);
 		}
-		size_t batch_l = 100;
-		for(size_t i = 0 ; i < size_l/batch_l ; ++ i)
+		uint32_t batch_l = 100;
+		for(uint32_t i = 0 ; i < size_l/batch_l ; ++ i)
 		{
-			for(size_t j = 0 ; j < batch_l ; ++ j)
+			for(uint32_t j = 0 ; j < batch_l ; ++ j)
 			{
 				std::swap(_random[i*batch_l+j], temp_l[j*size_l/batch_l+i]);
 			}

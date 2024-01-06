@@ -109,7 +109,7 @@ void VisionGrid::updateExplorationFromMovement(const Entity &ent_p, long dx, lon
 	updateGrid(ent_p, true, _exploration, pattern_l);
 }
 
-void VisionGrid::incrementVisionGrid(size_t x, size_t y, long long delta_p, bool exploration_p)
+void VisionGrid::incrementVisionGrid(uint32_t x, uint32_t y, long long delta_p, bool exploration_p)
 {
 	if(!exploration_p)
 	{

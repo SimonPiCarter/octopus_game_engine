@@ -45,7 +45,7 @@ using CommandVar = std::variant<NoOpCommand, CommandSimple>;
 struct CommandBundle
 {
 	CommandVar _var;
-	size_t _idx {0};
+	uint32_t _idx {0};
 };
 
 class CommandQueue
@@ -112,7 +112,7 @@ public:
 	}
 
 	/// @brief Get the bundle associated to the id
-	CommandBundle const &getBundle(size_t id_p) const
+	CommandBundle const &getBundle(uint32_t id_p) const
 	{
 		for(CommandBundle const & bundle_l: _commandQueue)
 		{
@@ -124,7 +124,7 @@ public:
 		throw std::logic_error("CommandQueue could not get bundle with id "+std::to_string(id_p));
 	}
 	/// @brief Get the bundle associated to the id
-	CommandBundle &getBundle(size_t id_p)
+	CommandBundle &getBundle(uint32_t id_p)
 	{
 		for(CommandBundle & bundle_l: _commandQueue)
 		{
@@ -150,9 +150,9 @@ protected:
 	/// @brief list of all actions in the command queue
 	std::list<CommandBundle> _commandQueue;
 
-	size_t _idx = 0;
+	uint32_t _idx = 0;
 
-	size_t getNextId()
+	uint32_t getNextId()
 	{
 		return _idx++;
 	}

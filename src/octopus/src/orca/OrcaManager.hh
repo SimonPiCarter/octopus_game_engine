@@ -28,7 +28,7 @@ class Step;
 class OrcaManager
 {
 public:
-    OrcaManager(Fixed timeStep_p, Fixed neighborDist_p, size_t maxNeighbors_p, Fixed timeHorizon_p, Fixed timeHorizonObst_p);
+    OrcaManager(Fixed timeStep_p, Fixed neighborDist_p, uint32_t maxNeighbors_p, Fixed timeHorizon_p, Fixed timeHorizonObst_p);
     ~OrcaManager();
 
     /// @brief will load actors and obstacles from current state
@@ -60,7 +60,7 @@ public:
 private:
     Fixed const _timeStep;
     Fixed const _neighborDist;
-    size_t const _maxNeighbors;
+    uint32_t const _maxNeighbors;
     Fixed const _timeHorizon;
     Fixed const _timeHorizonObst;
 
@@ -70,7 +70,7 @@ private:
     RVO::RVOSimulator *_sim {nullptr};
 
     /// @brief temporary mapping
-    std::unordered_map<octopus::Handle, size_t> _mapHandleIdx;
+    std::unordered_map<octopus::Handle, uint32_t> _mapHandleIdx;
 };
 } // namespace octopus
 

@@ -399,9 +399,9 @@ Vector direction(Fixed x, Fixed y, FlowField const &field_p)
 
 std::ostream &stream(std::ostream & os_p, ValueGrid const &grid_p)
 {
-	for(size_t i = 0; i < grid_p.size() ; ++ i)
+	for(uint32_t i = 0; i < grid_p.size() ; ++ i)
 	{
-		for(size_t j = 0; j < grid_p.size() ; ++ j)
+		for(uint32_t j = 0; j < grid_p.size() ; ++ j)
 		{
 			assert(grid_p[j].size() > i);
 			os_p<<grid_p[j][i]<<",\t";
@@ -413,9 +413,9 @@ std::ostream &stream(std::ostream & os_p, ValueGrid const &grid_p)
 
 std::ostream &stream(std::ostream & os_p, FlowField const &field_p)
 {
-	for(size_t i = 0; i < field_p.size() ; ++ i)
+	for(uint32_t i = 0; i < field_p.size() ; ++ i)
 	{
-		for(size_t j = 0; j < field_p.size() ; ++ j)
+		for(uint32_t j = 0; j < field_p.size() ; ++ j)
 		{
 			assert(field_p[j].size() > i);
 			os_p<<field_p[j][i]<<",\t";

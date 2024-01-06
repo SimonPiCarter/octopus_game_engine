@@ -64,9 +64,9 @@ TEST(canonicalTest, borders)
 	///
 	Grid grid_l(10, 10, 1., 1., true);
 
-	for(size_t i = 1; i < 9 ; ++ i)
+	for(uint32_t i = 1; i < 9 ; ++ i)
 	{
-		for(size_t j = 1; j < 9 ; ++ j)
+		for(uint32_t j = 1; j < 9 ; ++ j)
 		{
 			grid_l.getNode(i,j)->setFree(false);
 		}
