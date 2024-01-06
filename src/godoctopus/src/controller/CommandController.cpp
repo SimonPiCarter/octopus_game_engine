@@ -32,7 +32,7 @@ void add_move_commands(std::list<octopus::Command*> &list_r, octopus::State cons
 {
     bool isFlocking_l = false;
     octopus::Vector worldPos_l(target_p.x, target_p.y);
-    for(size_t i = 0 ; i < handles_p.size()/2 ; ++ i)
+    for(uint32_t i = 0 ; i < handles_p.size()/2 ; ++ i)
     {
         octopus::Command *cmd_l = octopus::newTargetCommand(state_p, castHandle(handles_p[i*2],handles_p[i*2+1]), octopus::Handle(0), worldPos_l, true);
         if(dynamic_cast<octopus::EntityMoveCommand*>(cmd_l))
@@ -50,7 +50,7 @@ void add_move_commands(std::list<octopus::Command*> &list_r, octopus::State cons
     if(isFlocking_l)
     {
         std::list<octopus::Handle> handles_l;
-        for(size_t i = 0 ; i < handles_p.size()/2 ; ++ i)
+        for(uint32_t i = 0 ; i < handles_p.size()/2 ; ++ i)
         {
             handles_l.push_back(castHandle(handles_p[i*2],handles_p[i*2+1]));
         }
@@ -75,7 +75,7 @@ void add_move_target_commands(std::list<octopus::Command*> &list_r, octopus::Sta
 	// }
 
 	std::list<octopus::Handle> flock_l;
-	for(size_t i = 0 ; i < handles_p.size()/2 ; ++ i)
+	for(uint32_t i = 0 ; i < handles_p.size()/2 ; ++ i)
 	{
 		octopus::Handle handle_l = castHandle(handles_p[i*2],handles_p[i*2+1]);
 		octopus::Command *cmd_l = octopus::newTargetCommand(state_p, handle_l, target_l, worldPos_l, false);
@@ -107,7 +107,7 @@ void add_attack_move_commands(std::list<octopus::Command*> &list_r, octopus::Sta
 {
     octopus::Vector worldPos_l(target_p.x, target_p.y);
     std::list<octopus::Handle> handles_l;
-    for(size_t i = 0 ; i < handles_p.size()/2 ; ++ i)
+    for(uint32_t i = 0 ; i < handles_p.size()/2 ; ++ i)
     {
         handles_l.push_back(castHandle(handles_p[i*2],handles_p[i*2+1]));
     }
@@ -119,7 +119,7 @@ void add_attack_move_commands(std::list<octopus::Command*> &list_r, octopus::Sta
 
 void add_stop_commands(std::list<octopus::Command*> &list_r, octopus::State const &state_p, PackedInt32Array const &handles_p, int, bool queued_p)
 {
-    for(size_t i = 0 ; i < handles_p.size()/2 ; ++ i)
+    for(uint32_t i = 0 ; i < handles_p.size()/2 ; ++ i)
     {
         octopus::Handle idx_l = castHandle(handles_p[i*2],handles_p[i*2+1]);
         const octopus::Entity * cur_l = state_p.getEntity(idx_l);
@@ -161,7 +161,7 @@ octopus::Handle getBestProductionBuilding(PackedInt32Array const &handles_p, oct
     bool found_l = false;
     octopus::Handle best_l {std::numeric_limits<unsigned long>::max(), 0};
     unsigned long lowestQueue_l = 0;
-    for(size_t i = 0 ; i < handles_p.size()/2 ; ++ i)
+    for(uint32_t i = 0 ; i < handles_p.size()/2 ; ++ i)
     {
         octopus::Handle idx_l = castHandle(handles_p[i*2],handles_p[i*2+1]);
         // check ent
@@ -234,7 +234,7 @@ void add_blueprint_command(std::list<octopus::Command*> &list_r, octopus::State 
 {
     std::string modelId_l(model_p.utf8().get_data());
     std::vector<octopus::Handle> builders_l;
-    for(size_t i = 0 ; i < builders_p.size()/2 ; ++ i)
+    for(uint32_t i = 0 ; i < builders_p.size()/2 ; ++ i)
     {
         builders_l.push_back(castHandle(builders_p[2*i], builders_p[2*i+1]));
     }
@@ -251,7 +251,7 @@ void add_ability_command(std::list<octopus::Command*> &list_r, octopus::State co
 {
     std::string abilityId_l(ability_p.utf8().get_data());
     std::list<octopus::Handle> handles_l;
-    for(size_t i = 0 ; i < handles_p.size()/2 ; ++ i)
+    for(uint32_t i = 0 ; i < handles_p.size()/2 ; ++ i)
     {
         handles_l.push_back(castHandle(handles_p[i*2],handles_p[i*2+1]));
     }

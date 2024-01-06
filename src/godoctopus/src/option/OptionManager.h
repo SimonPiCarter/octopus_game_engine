@@ -42,21 +42,21 @@ public:
     virtual void unregisterOption(octopus::PlayerPopOptionStep const *) = 0;
 
     /// @brief accessor for front queued options
-    virtual godot::Option *getPrimaryOption(size_t idx_p) const = 0;
-    virtual godot::Option *getSecondaryOption(size_t idx_p) const = 0;
+    virtual godot::Option *getPrimaryOption(uint32_t idx_p) const = 0;
+    virtual godot::Option *getSecondaryOption(uint32_t idx_p) const = 0;
 
     /// @brief accessor for already chosen options
-    virtual godot::Option *getChosenPrimaryOption(size_t idx_p) const = 0;
-    virtual godot::Option *getChosenSecondaryOption(size_t idx_p) const = 0;
+    virtual godot::Option *getChosenPrimaryOption(uint32_t idx_p) const = 0;
+    virtual godot::Option *getChosenSecondaryOption(uint32_t idx_p) const = 0;
 
     /// @brief getter of queued options size
-    virtual size_t getQueuedOptionsSize() const = 0;
+    virtual uint32_t getQueuedOptionsSize() const = 0;
 
     /// @brief getter of chosen options size
-    virtual size_t getChosenOptionsSize() const = 0;
+    virtual uint32_t getChosenOptionsSize() const = 0;
 
     /// @brief getter for the current option size (number of options availables)
-    virtual size_t getCurrentOptionSize() const = 0;
+    virtual uint32_t getCurrentOptionSize() const = 0;
 
 protected:
 	std::list<std::string> _queuedKeys;
@@ -77,21 +77,21 @@ public:
 	virtual void unregisterOption(octopus::PlayerPopOptionStep const *) override;
 
     /// @brief accessor for front queued options
-    virtual godot::Option *getPrimaryOption(size_t idx_p) const override;
-    virtual godot::Option *getSecondaryOption(size_t idx_p) const override;
+    virtual godot::Option *getPrimaryOption(uint32_t idx_p) const override;
+    virtual godot::Option *getSecondaryOption(uint32_t idx_p) const override;
 
     /// @brief accessor for already chosen options
-    virtual godot::Option *getChosenPrimaryOption(size_t idx_p) const override;
-    virtual godot::Option *getChosenSecondaryOption(size_t idx_p) const override;
+    virtual godot::Option *getChosenPrimaryOption(uint32_t idx_p) const override;
+    virtual godot::Option *getChosenSecondaryOption(uint32_t idx_p) const override;
 
     /// @brief getter of queued options size
-    virtual size_t getQueuedOptionsSize() const override;
+    virtual uint32_t getQueuedOptionsSize() const override;
 
     /// @brief getter of chosen options size
-    virtual size_t getChosenOptionsSize() const override;
+    virtual uint32_t getChosenOptionsSize() const override;
 
     /// @brief getter for the current option size (number of options availables)
-    virtual size_t getCurrentOptionSize() const override;
+    virtual uint32_t getCurrentOptionSize() const override;
 private:
 	/// @brief list of all options queued
 	std::list<std::vector<::Option>> _queuedOptions;
@@ -112,21 +112,21 @@ public:
 	virtual void unregisterOption(octopus::PlayerPopOptionStep const *) override;
 
     /// @brief accessor for front queued options
-    virtual godot::Option *getPrimaryOption(size_t idx_p) const override;
-    virtual godot::Option *getSecondaryOption(size_t idx_p) const override;
+    virtual godot::Option *getPrimaryOption(uint32_t idx_p) const override;
+    virtual godot::Option *getSecondaryOption(uint32_t idx_p) const override;
 
     /// @brief accessor for already chosen options
-    virtual godot::Option *getChosenPrimaryOption(size_t idx_p) const override;
-    virtual godot::Option *getChosenSecondaryOption(size_t idx_p) const override;
+    virtual godot::Option *getChosenPrimaryOption(uint32_t idx_p) const override;
+    virtual godot::Option *getChosenSecondaryOption(uint32_t idx_p) const override;
 
     /// @brief getter of queued options size
-    virtual size_t getQueuedOptionsSize() const override;
+    virtual uint32_t getQueuedOptionsSize() const override;
 
     /// @brief getter of chosen options size
-    virtual size_t getChosenOptionsSize() const override;
+    virtual uint32_t getChosenOptionsSize() const override;
 
     /// @brief getter for the current option size (number of options availables)
-    virtual size_t getCurrentOptionSize() const override;
+    virtual uint32_t getCurrentOptionSize() const override;
 private:
 	/// @brief list of all options queued
 	std::list<std::vector<fas::DivinityType>> _queuedOptions;

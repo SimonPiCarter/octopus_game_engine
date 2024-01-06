@@ -44,7 +44,7 @@ struct GodotListenerVisitor
 		std::unordered_set<octopus::Handle> set_l;
 		unsigned long handle_l = 0;
 		// for every entity in the group
-		for(size_t i = 0 ; i < _entities.size() ; ++i)
+		for(uint32_t i = 0 ; i < _entities.size() ; ++i)
 		{
 			if(_entities[i].num_players_to_spawn > _playerCount)
 			{

@@ -55,7 +55,7 @@ std::vector<T> toVector(TypedArray<T> const &array_p)
 {
 	std::vector<T> vec_l;
 
-	for(size_t i = 0 ; i < array_p.size() ; ++ i)
+	for(uint32_t i = 0 ; i < array_p.size() ; ++ i)
 	{
 		vec_l.push_back(array_p[i]);
 	}
@@ -132,12 +132,12 @@ void Controller::load_arena_level(TypedArray<int> const &size_you_p, TypedArray<
 {
 	std::vector<ArenaInfo> you_l;
 	std::vector<ArenaInfo> them_l;
-	for(size_t i = 0 ; i < size_you_p.size() && i < model_you_p.size() ; ++ i)
+	for(uint32_t i = 0 ; i < size_you_p.size() && i < model_you_p.size() ; ++ i)
 	{
 		String str_l = model_you_p[i];
 		you_l.push_back({size_you_p[i], std::string(str_l.utf8().get_data())});
 	}
-	for(size_t i = 0 ; i < size_them_p.size() && i < model_them_p.size() ; ++ i)
+	for(uint32_t i = 0 ; i < size_them_p.size() && i < model_them_p.size() ; ++ i)
 	{
 		String str_l = model_them_p[i];
 		them_l.push_back({size_them_p[i], std::string(str_l.utf8().get_data())});
@@ -162,7 +162,7 @@ void Controller::load_kamikaze_level(int you_p, int them_p, bool fast_p)
 	newAutoSaveFile();
 	writeLevelId(*_autoSaveFile, LEVEL_ID_ARENA_KAMIKAZE, 10);
 	_currentLevel = LEVEL_ID_ARENA_KAMIKAZE;
-	_headerWriter = std::bind(writeArenaKamikazeHeader, std::placeholders::_1, KamikazeHeader {size_t(you_p), size_t(them_p), fast_p});
+	_headerWriter = std::bind(writeArenaKamikazeHeader, std::placeholders::_1, KamikazeHeader {uint32_t(you_p), uint32_t(them_p), fast_p});
 	_headerWriter(*_autoSaveFile);
 	// init with autosave
 	init(commands_l, spawners_l, false, 10, _autoSaveFile);
@@ -472,8 +472,8 @@ void Controller::replay_level(String const &filename_p, bool replay_mode_p, godo
 
 	loadFromStream(*_fileHeader, file_l);
 
-	size_t levelId_l;
-	size_t size_l;
+	uint32_t levelId_l;
+	uint32_t size_l;
 	file_l.read((char*)&levelId_l, sizeof(levelId_l));
 	file_l.read((char*)&size_l, sizeof(size_l));
 	bool divOptionHandler_l = false;
@@ -596,7 +596,7 @@ godot::FileHeader * Controller::read_file_header(String const &filename_p)
 	return _fileHeader;
 }
 
-void Controller::init(std::list<octopus::Command *> const &commands_p, std::list<octopus::Steppable *> const &spawners_p, bool divOptionManager_p, size_t size_p, std::ofstream *file_p)
+void Controller::init(std::list<octopus::Command *> const &commands_p, std::list<octopus::Steppable *> const &spawners_p, bool divOptionManager_p, uint32_t size_p, std::ofstream *file_p)
 {
 	UtilityFunctions::print("init controller...");
 
@@ -627,7 +627,7 @@ void Controller::init(std::list<octopus::Command *> const &commands_p, std::list
 	{
 		UtilityFunctions::print("autosave enabled");
 		// neeed nb of steps in header of the file
-		size_t header_l = 0;
+		uint32_t header_l = 0;
 		file_p->write((char*)&header_l, sizeof(header_l));
 		_controller->setOnlineSaveFile(file_p);
 		_controller->setOnlineSaveFileDebug(_autoSaveFileDebug);
@@ -645,7 +645,7 @@ void Controller::init(std::list<octopus::Command *> const &commands_p, std::list
 	_controllerThread = new std::thread(&Controller::loop, this);
 }
 
-void Controller::init_replay(std::list<octopus::Command *> const &commands_p, std::list<octopus::Steppable *> const &spawners_p, bool divOptionManager_p, size_t size_p, std::ifstream &file_p)
+void Controller::init_replay(std::list<octopus::Command *> const &commands_p, std::list<octopus::Steppable *> const &spawners_p, bool divOptionManager_p, uint32_t size_p, std::ifstream &file_p)
 {
 	UtilityFunctions::print("init controller...");
 
@@ -688,7 +688,7 @@ void Controller::init_replay(std::list<octopus::Command *> const &commands_p, st
 	_controllerThread = new std::thread(&Controller::loop, this);
 }
 
-void Controller::init_loading(std::list<octopus::Command *> const &commands_p, std::list<octopus::Steppable *> const &spawners_p, bool divOptionManager_p, size_t size_p, std::ifstream &file_p)
+void Controller::init_loading(std::list<octopus::Command *> const &commands_p, std::list<octopus::Steppable *> const &spawners_p, bool divOptionManager_p, uint32_t size_p, std::ifstream &file_p)
 {
 	UtilityFunctions::print("init controller...");
 
@@ -949,7 +949,7 @@ void Controller::dump_compile_times(String const &path_p) const
 	std::string path_l(path_p.utf8().get_data());
 	std::ofstream file_l(path_l);
 	std::vector<double> const &compile_times = _controller->getMetrics()._vecTimeCompilingSteps;
-	size_t i = 0;
+	uint32_t i = 0;
 	file_l<<"step;compile_time"<<"\n";
 	for(double time_l : compile_times)
 	{
@@ -1144,7 +1144,7 @@ PackedFloat32Array Controller::get_move_targets(PackedInt32Array const &handles_
 {
 	std::unordered_map<octopus::Vector, bool> mapPoints_l;
 	// iterate on every entity to store final points
-	for(size_t i = 0 ; i < handles_p.size()/2 ; ++ i)
+	for(uint32_t i = 0 ; i < handles_p.size()/2 ; ++ i)
 	{
 		octopus::Handle handle_l = castHandle(handles_p[i*2],handles_p[i*2+1]);
 		if(_state->hasEntity(handle_l))
@@ -1338,17 +1338,17 @@ void Controller::get_productions(TypedArray<EntityHandle> const &handles_p, int 
 {
 	std::vector<CommandInfo> vecCommands_l;
 
-	for(size_t i = 0 ; i < handles_p.size() ; ++ i)
+	for(uint32_t i = 0 ; i < handles_p.size() ; ++ i)
 	{
 		octopus::Entity const * ent_l = _state->getEntity(castHandle(handles_p[i]));
-		size_t posInQueue_l = 0;
+		uint32_t posInQueue_l = 0;
 		for(octopus::CommandBundle const &bundle_l : ent_l->getQueue().getList())
 		{
 			octopus::Command const *cmd_l = getCommandFromVar(bundle_l._var);
 			octopus::ProductionData const *data_l = dynamic_cast<octopus::ProductionData const *>(getData(bundle_l._var));
 			if(cmd_l && data_l && !data_l->_canceled)
 			{
-				vecCommands_l.push_back({cmd_l->getHandleCommand(), data_l, bundle_l._idx, posInQueue_l});
+				vecCommands_l.push_back({cmd_l->getHandleCommand(), data_l, uint32_t(bundle_l._idx), posInQueue_l});
 			}
 			++posInQueue_l;
 		}
@@ -1356,7 +1356,7 @@ void Controller::get_productions(TypedArray<EntityHandle> const &handles_p, int 
 
 	std::sort(vecCommands_l.begin(), vecCommands_l.end(), CommandSorter());
 
-	for(size_t i = 0 ; i < std::min<size_t>(vecCommands_l.size(), max_p) ; ++i)
+	for(uint32_t i = 0 ; i < std::min<uint32_t>(vecCommands_l.size(), max_p) ; ++i)
 	{
 		CommandInfo const &info_l = vecCommands_l[i];
 		String model_l(info_l.data->getIdModel().c_str());

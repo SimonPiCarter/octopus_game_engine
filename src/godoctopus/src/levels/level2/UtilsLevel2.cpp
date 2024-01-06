@@ -25,7 +25,7 @@ std::list<Steppable *> createWallSpawners(Library &lib_p, unsigned long xStart, 
 	}
 
 	// create walls for zone 1
-	for(size_t i = 0 ; i <= y ; i+=2)
+	for(uint32_t i = 0 ; i <= y ; i+=2)
 	{
 		if(i > startYGate && i < endYGate)
 		{
@@ -56,7 +56,7 @@ std::list<Steppable *> createWallSpawners(Library &lib_p, unsigned long xStart, 
 		building_l._player = 2;
 		spawners_l.push_back(new BuildingSpawnStep(handle_p++, building_l, true));
 	}
-	for(size_t i = xStart ; i < x ; i+=2)
+	for(uint32_t i = xStart ; i < x ; i+=2)
 	{
 		Building building_l({i, y+1}, true, lib_p.getBuildingModel("water_h"));
 		building_l._player = 2;

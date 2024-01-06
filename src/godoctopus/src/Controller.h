@@ -84,9 +84,9 @@ public:
 	godot::FileHeader * read_file_header(String const &filename_p);
 
 	// start engine with given level
-	void init(std::list<octopus::Command *> const &commands_p, std::list<octopus::Steppable *> const &spawners_p, bool divOptionManager_p=false, size_t size_p=50, std::ofstream *file_p=nullptr);
-	void init_replay(std::list<octopus::Command *> const &commands_p, std::list<octopus::Steppable *> const &spawners_p, bool divOptionManager_p, size_t size_p, std::ifstream &file_p);
-	void init_loading(std::list<octopus::Command *> const &commands_p, std::list<octopus::Steppable *> const &spawners_p, bool divOptionManager_p, size_t size_p, std::ifstream &file_p);
+	void init(std::list<octopus::Command *> const &commands_p, std::list<octopus::Steppable *> const &spawners_p, bool divOptionManager_p=false, uint32_t size_p=50, std::ofstream *file_p=nullptr);
+	void init_replay(std::list<octopus::Command *> const &commands_p, std::list<octopus::Steppable *> const &spawners_p, bool divOptionManager_p, uint32_t size_p, std::ifstream &file_p);
+	void init_loading(std::list<octopus::Command *> const &commands_p, std::list<octopus::Steppable *> const &spawners_p, bool divOptionManager_p, uint32_t size_p, std::ifstream &file_p);
 	void loading_loop();
 	void loop();
 
@@ -260,7 +260,7 @@ private:
 	bool _paused = false;
 	bool _forceAllMoveUpdate = false;
 	// level id
-	size_t _currentLevel = 0;
+	uint32_t _currentLevel = 0;
 	// header writer of level
 	std::function<void(std::ofstream&)> _headerWriter;
 	// FileHeader

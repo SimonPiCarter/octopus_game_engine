@@ -89,7 +89,7 @@ std::list<Steppable *> LevelSteps(Library &lib_p, RandomGenerator &rand_p)
 	return spawners_l;
 }
 
-AreaSpawnerCommand * createArenaSpawnCommmand(Library &lib_p, RandomGenerator &rand_p, unsigned long x, unsigned long y, unsigned long size, size_t nbAnchorSpot_p)
+AreaSpawnerCommand * createArenaSpawnCommmand(Library &lib_p, RandomGenerator &rand_p, unsigned long x, unsigned long y, unsigned long size, uint32_t nbAnchorSpot_p)
 {
 	std::list<AreaSpawn> spawners_l;
 

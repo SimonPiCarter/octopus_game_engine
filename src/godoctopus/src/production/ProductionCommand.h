@@ -17,9 +17,9 @@ struct CommandInfo
 {
 	octopus::Handle handle;
 	octopus::ProductionData const * data;
-	size_t idx;
+	uint32_t idx;
 	/// @brief used for sorting purpose
-	size_t posInQueue;
+	uint32_t posInQueue;
 };
 
 

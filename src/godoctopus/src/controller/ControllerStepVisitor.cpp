@@ -165,7 +165,7 @@ void ControllerStepVisitor::visit(octopus::PlayerLevelUpUpgradeStep const *)
 
 void ControllerStepVisitor::visit(octopus::ProjectileMoveStep const *steppable_p)
 {
-	for(size_t i = 0 ; i < steppable_p->getMove().size() ; ++ i)
+	for(uint32_t i = 0 ; i < steppable_p->getMove().size() ; ++ i)
 	{
 		if(!octopus::is_zero(steppable_p->getMove()[i]))
 		{
@@ -174,7 +174,7 @@ void ControllerStepVisitor::visit(octopus::ProjectileMoveStep const *steppable_p
 		}
 	}
 
-	for(size_t i = 0 ; i < steppable_p->getOver().size() ; ++ i)
+	for(uint32_t i = 0 ; i < steppable_p->getOver().size() ; ++ i)
 	{
 		if(steppable_p->getOver()[i])
 		{

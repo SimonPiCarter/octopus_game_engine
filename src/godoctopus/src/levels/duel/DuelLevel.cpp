@@ -134,7 +134,7 @@ std::list<Steppable *> LevelSteps(Library &lib_p, RandomGenerator &rand_p, int s
 	fas::addBuildingPlayer(spawners_l, 0, divinitiesPlayer1_p, lib_p);
 	fas::addBuildingPlayer(spawners_l, 1, divinitiesPlayer2_p, lib_p);
 
-    for(size_t i = 0 ; i < 10 ; ++i)
+    for(uint32_t i = 0 ; i < 10 ; ++i)
     {
         spawners_l.push_back(new UnitSpawnStep(handle_l++, unitP0_l));
         spawners_l.push_back(new UnitSpawnStep(handle_l++, unitP1_l));
@@ -164,7 +164,7 @@ Option mirrorPosition(Option const &option_p)
 }
 
 AreaSpawnerCommand * createArenaSpawnCommmand(Library &lib_p, RandomGenerator &rand_p, unsigned long x, unsigned long y, unsigned long width, unsigned long height,
-	size_t nbRes_p, size_t nbAnchorSpot_p, size_t qtyIrium_p, int minTrees_p)
+	uint32_t nbRes_p, uint32_t nbAnchorSpot_p, uint32_t qtyIrium_p, int minTrees_p)
 {
 	std::list<AreaSpawn> spawners_l;
 
@@ -236,10 +236,10 @@ namespace
 
 void writeDivList(std::ofstream &file_p, std::vector<fas::DivinityType> const &types_p)
 {
-	size_t size_l = types_p.size();
+	uint32_t size_l = types_p.size();
 	file_p.write((char*)&size_l, sizeof(size_l));
 
-	for(size_t i = 0 ; i < size_l ; ++i)
+	for(uint32_t i = 0 ; i < size_l ; ++i)
 	{
 		file_p.write((char*)&types_p.at(i), sizeof(types_p.at(i)));
 	}
@@ -247,12 +247,12 @@ void writeDivList(std::ofstream &file_p, std::vector<fas::DivinityType> const &t
 
 std::vector<fas::DivinityType> readDivList(std::ifstream &file_p)
 {
-	size_t size_l = 0;
+	uint32_t size_l = 0;
 	file_p.read((char*)&size_l, sizeof(size_l));
 
 	std::vector<fas::DivinityType> types_l;
 
-	for(size_t i = 0 ; i < size_l ; ++i)
+	for(uint32_t i = 0 ; i < size_l ; ++i)
 	{
 		fas::DivinityType type_l;
 		file_p.read((char*)&type_l, sizeof(type_l));

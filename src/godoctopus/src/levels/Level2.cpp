@@ -124,7 +124,7 @@ std::list<Steppable *> WaveLevelSteps(Library &lib_p, RandomGenerator &rand_p, s
 	}
 
 	std::list<WaveParam> params_l;
-	for(size_t i = 0 ; i < waves_l.size() ; ++ i)
+	for(uint32_t i = 0 ; i < waves_l.size() ; ++ i)
 	{
 		if(i == 0)
 			params_l.push_back({{octopus::Vector(60,ySpawnWave_l)}, octopus::Vector(20,ySpawnWave_l), 40, 40, 60, waves_l[i]});
@@ -248,7 +248,7 @@ std::list<Steppable *> WaveLevelSteps(Library &lib_p, RandomGenerator &rand_p, s
 }
 
 AreaSpawnerCommand * createArenaSpawnCommmand(Library &lib_p, RandomGenerator &rand_p, unsigned long x, unsigned long y, unsigned long size,
-	size_t nbRes_p, size_t nbAnchorSpot_p, size_t nbUnits_p, size_t qtyIrium_p)
+	uint32_t nbRes_p, uint32_t nbAnchorSpot_p, uint32_t nbUnits_p, uint32_t qtyIrium_p)
 {
 	std::list<AreaSpawn> spawners_l;
 
@@ -364,7 +364,7 @@ std::list<Command *> WaveLevelCommands(Library &lib_p, RandomGenerator &rand_p, 
 void writeWaveContentInfo(std::ofstream &file_p, WaveContentInfo const &info_p)
 {
 	file_p.write((char*)&info_p.steps, sizeof(info_p.steps));
-	size_t size_l = info_p.units.size();
+	uint32_t size_l = info_p.units.size();
 	file_p.write((char*)&size_l, sizeof(size_l));
 	for(WaveUnitCount const &unitCount_l : info_p.units)
 	{
@@ -376,9 +376,9 @@ void writeWaveContentInfo(std::ofstream &file_p, WaveContentInfo const &info_p)
 void readWaveContentInfo(std::ifstream &file_p, WaveContentInfo &info_p)
 {
 	file_p.read((char*)&info_p.steps, sizeof(info_p.steps));
-	size_t size_l = 0;
+	uint32_t size_l = 0;
 	file_p.read((char*)&size_l, sizeof(size_l));
-	for(size_t i = 0 ; i < size_l ; ++ i)
+	for(uint32_t i = 0 ; i < size_l ; ++ i)
 	{
 		info_p.units.push_back(WaveUnitCount());
 		info_p.units.back().model = readString(file_p);
@@ -389,7 +389,7 @@ void readWaveContentInfo(std::ifstream &file_p, WaveContentInfo &info_p)
 void writeWavePoolInfo(std::ofstream &file_p, WavePoolInfo const &info_p)
 {
 	// write wave info
-	size_t size_l = info_p.infos.size();
+	uint32_t size_l = info_p.infos.size();
 	file_p.write((char*)&size_l, sizeof(size_l));
 	for(WaveInfo const &waveInfo_l : info_p.infos)
 	{
@@ -411,15 +411,15 @@ void writeWavePoolInfo(std::ofstream &file_p, WavePoolInfo const &info_p)
 void readWavePoolInfo(std::ifstream &file_p, WavePoolInfo &info_p)
 {
 	// read wave info
-	size_t size_l = 0;
+	uint32_t size_l = 0;
 	file_p.read((char*)&size_l, sizeof(size_l));
-	for(size_t i = 0 ; i < size_l ; ++ i)
+	for(uint32_t i = 0 ; i < size_l ; ++ i)
 	{
 		WaveInfo waveInfo_l;
 		// read upgrades
-		size_t sizeUpgrades_l = 0;
+		uint32_t sizeUpgrades_l = 0;
 		file_p.read((char*)&sizeUpgrades_l, sizeof(sizeUpgrades_l));
-		for(size_t j = 0 ; j < sizeUpgrades_l ; ++ j)
+		for(uint32_t j = 0 ; j < sizeUpgrades_l ; ++ j)
 		{
 			std::string up_l = readString(file_p);
 			waveInfo_l.upgrades.push_back(up_l);
@@ -439,7 +439,7 @@ void writeWaveLevelHeader(std::ofstream &file_p, WaveLevelHeader const &header_p
 	file_p.write((char*)&header_p.seed, sizeof(header_p.seed));
 	file_p.write((char*)&header_p.player, sizeof(header_p.player));
 
-	size_t size_l = header_p.tierWaveInfo.size();
+	uint32_t size_l = header_p.tierWaveInfo.size();
 	file_p.write((char*)&size_l, sizeof(size_l));
 
 	for(WavePoolInfo const &info_l : header_p.tierWaveInfo)
@@ -453,10 +453,10 @@ void readWaveLevelHeader(std::ifstream &file_p, WaveLevelHeader &header_r)
 	file_p.read((char*)&header_r.seed, sizeof(header_r.seed));
 	file_p.read((char*)&header_r.player, sizeof(header_r.player));
 
-	size_t size_l = 0;
+	uint32_t size_l = 0;
 	file_p.read((char*)&size_l, sizeof(size_l));
 
-	for(size_t i = 0 ; i < size_l ; ++ i)
+	for(uint32_t i = 0 ; i < size_l ; ++ i)
 	{
 		WavePoolInfo info_l;
 		readWavePoolInfo(file_p, info_l);
