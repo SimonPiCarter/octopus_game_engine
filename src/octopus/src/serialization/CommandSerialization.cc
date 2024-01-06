@@ -38,7 +38,7 @@ void write(std::ofstream &file_p, T const &data_p)
 template<>
 void write(std::ofstream &file_p, std::string const &data_p)
 {
-    write(file_p, data_p.size());
+    write(file_p, uint32_t(data_p.size()));
     file_p.write((char*)data_p.c_str(), data_p.size());
 }
 template<>
@@ -56,6 +56,12 @@ struct BinaryWriter
         write(file_p, data_p);
     }
 };
+
+template<>
+void BinaryWriter::operator()(std::ofstream &file_p, size_t const &data_p)
+{
+    file_p<<uint32_t(data_p)<<std::endl;
+}
 
 struct TextWriter
 {
@@ -165,7 +171,7 @@ void writeListOfCommand(std::ofstream &file_p, std::list<Command *> const * list
     write(file_p, step_p);
     Logger::getDebug() << ">>step " << step_p << std::endl;
     // write the number of commands for this step
-    write(file_p, list_p->size());
+    write(file_p, uint32_t(list_p->size()));
     Logger::getDebug() << ">>nbCommands " << list_p->size() << std::endl;
 
     for(Command const * cmd_l : *list_p)
@@ -242,7 +248,7 @@ void writeCommand(std::ofstream &file_p, Command const *cmd_p, Writer_t writer_p
 
     if(dynamic_cast<EntityAttackCommand const *>(cmd_p))
     {
-        writer_p(file_p, 1ul);
+        writer_p(file_p, uint32_t(1));
         EntityAttackCommand const *typped_l = dynamic_cast<EntityAttackCommand const *>(cmd_p);
         writer_p(file_p, typped_l->getSource());
         writer_p(file_p, typped_l->getTarget());
@@ -250,13 +256,13 @@ void writeCommand(std::ofstream &file_p, Command const *cmd_p, Writer_t writer_p
     }
     else if(dynamic_cast<EntityMoveCommand const *>(cmd_p))
     {
-        writer_p(file_p, 2ul);
+        writer_p(file_p, uint32_t(2));
         EntityMoveCommand const *typped_l = dynamic_cast<EntityMoveCommand const *>(cmd_p);
         writer_p(file_p, typped_l->getHandleCommand());
         writer_p(file_p, typped_l->getRayTolerance());
         writer_p(file_p, typped_l->getFinalPoint());
         writer_p(file_p, typped_l->getGridStatus());
-        writer_p(file_p, typped_l->getWaypoints().size());
+        writer_p(file_p, uint32_t(typped_l->getWaypoints().size()));
         for(Vector const &vec_l : typped_l->getWaypoints())
         {
             writer_p(file_p, vec_l);
@@ -266,12 +272,12 @@ void writeCommand(std::ofstream &file_p, Command const *cmd_p, Writer_t writer_p
     }
     else if(dynamic_cast<EntityAttackMoveCommand const *>(cmd_p))
     {
-        writer_p(file_p, 3ul);
+        writer_p(file_p, uint32_t(3));
         EntityAttackMoveCommand const *typped_l = dynamic_cast<EntityAttackMoveCommand const *>(cmd_p);
         writer_p(file_p, typped_l->getSubMoveCommand().getHandleCommand());
         writer_p(file_p, typped_l->getSubMoveCommand().getFinalPoint());
         writer_p(file_p, typped_l->getSubMoveCommand().getGridStatus());
-        writer_p(file_p, typped_l->getSubMoveCommand().getWaypoints().size());
+        writer_p(file_p, uint32_t(typped_l->getSubMoveCommand().getWaypoints().size()));
         for(Vector const &vec_l : typped_l->getSubMoveCommand().getWaypoints())
         {
             writer_p(file_p, vec_l);
@@ -281,13 +287,13 @@ void writeCommand(std::ofstream &file_p, Command const *cmd_p, Writer_t writer_p
     }
     else if(dynamic_cast<EntityBuildingCommand const *>(cmd_p))
     {
-        writer_p(file_p, 4ul);
+        writer_p(file_p, uint32_t(4));
         EntityBuildingCommand const *typped_l = dynamic_cast<EntityBuildingCommand const *>(cmd_p);
         writer_p(file_p, typped_l->getTarget());
         writer_p(file_p, typped_l->getSubMoveCommand().getHandleCommand());
         writer_p(file_p, typped_l->getSubMoveCommand().getFinalPoint());
         writer_p(file_p, typped_l->getSubMoveCommand().getGridStatus());
-        writer_p(file_p, typped_l->getSubMoveCommand().getWaypoints().size());
+        writer_p(file_p, uint32_t(typped_l->getSubMoveCommand().getWaypoints().size()));
         for(Vector const &vec_l : typped_l->getSubMoveCommand().getWaypoints())
         {
             writer_p(file_p, vec_l);
@@ -296,18 +302,18 @@ void writeCommand(std::ofstream &file_p, Command const *cmd_p, Writer_t writer_p
     }
     else if(dynamic_cast<EntityWaitCommand const *>(cmd_p))
     {
-        writer_p(file_p, 5ul);
+        writer_p(file_p, uint32_t(5));
         EntityWaitCommand const *typped_l = dynamic_cast<EntityWaitCommand const *>(cmd_p);
         writer_p(file_p, typped_l->getHandleCommand());
     }
     else if(dynamic_cast<BuildingBlueprintCommand const *>(cmd_p))
     {
-        writer_p(file_p, 6ul);
+        writer_p(file_p, uint32_t(6));
         BuildingBlueprintCommand const *typped_l = dynamic_cast<BuildingBlueprintCommand const *>(cmd_p);
         writer_p(file_p, typped_l->getPos());
         writer_p(file_p, typped_l->getPlayer());
         writer_p(file_p, typped_l->getModel()._id);
-        writer_p(file_p, typped_l->getBuilders().size());
+        writer_p(file_p, uint32_t(typped_l->getBuilders().size()));
         for(Handle const &handle_l : typped_l->getBuilders())
         {
             writer_p(file_p, handle_l);
@@ -315,20 +321,20 @@ void writeCommand(std::ofstream &file_p, Command const *cmd_p, Writer_t writer_p
     }
     else if(dynamic_cast<BuildingUnitProductionCommand const *>(cmd_p))
     {
-        writer_p(file_p, 7ul);
+        writer_p(file_p, uint32_t(7));
         BuildingUnitProductionCommand const *typped_l = dynamic_cast<BuildingUnitProductionCommand const *>(cmd_p);
         writer_p(file_p, typped_l->getHandleCommand());
         writer_p(file_p, typped_l->getModel()._id);
     }
     else if(dynamic_cast<UnitDropCommand const *>(cmd_p))
     {
-        writer_p(file_p, 8ul);
+        writer_p(file_p, uint32_t(8));
         UnitDropCommand const *typped_l = dynamic_cast<UnitDropCommand const *>(cmd_p);
         writer_p(file_p, typped_l->getDeposit());
         writer_p(file_p, typped_l->getSubMoveCommand().getHandleCommand());
         writer_p(file_p, typped_l->getSubMoveCommand().getFinalPoint());
         writer_p(file_p, typped_l->getSubMoveCommand().getGridStatus());
-        writer_p(file_p, typped_l->getSubMoveCommand().getWaypoints().size());
+        writer_p(file_p, uint32_t(typped_l->getSubMoveCommand().getWaypoints().size()));
         for(Vector const &vec_l : typped_l->getSubMoveCommand().getWaypoints())
         {
             writer_p(file_p, vec_l);
@@ -337,13 +343,13 @@ void writeCommand(std::ofstream &file_p, Command const *cmd_p, Writer_t writer_p
     }
     else if(dynamic_cast<UnitHarvestCommand const *>(cmd_p))
     {
-        writer_p(file_p, 9ul);
+        writer_p(file_p, uint32_t(9));
         UnitHarvestCommand const *typped_l = dynamic_cast<UnitHarvestCommand const *>(cmd_p);
         writer_p(file_p, typped_l->getResource());
         writer_p(file_p, typped_l->getSubMoveCommand().getHandleCommand());
         writer_p(file_p, typped_l->getSubMoveCommand().getFinalPoint());
         writer_p(file_p, typped_l->getSubMoveCommand().getGridStatus());
-        writer_p(file_p, typped_l->getSubMoveCommand().getWaypoints().size());
+        writer_p(file_p, uint32_t(typped_l->getSubMoveCommand().getWaypoints().size()));
         for(Vector const &vec_l : typped_l->getSubMoveCommand().getWaypoints())
         {
             writer_p(file_p, vec_l);
@@ -352,7 +358,7 @@ void writeCommand(std::ofstream &file_p, Command const *cmd_p, Writer_t writer_p
     }
     else if(dynamic_cast<PlayerChoseOptionCommand const *>(cmd_p))
     {
-        writer_p(file_p, 10ul);
+        writer_p(file_p, uint32_t(10));
         PlayerChoseOptionCommand const *typped_l = dynamic_cast<PlayerChoseOptionCommand const *>(cmd_p);
         writer_p(file_p, typped_l->getPlayer());
         writer_p(file_p, typped_l->getKey());
@@ -360,27 +366,27 @@ void writeCommand(std::ofstream &file_p, Command const *cmd_p, Writer_t writer_p
     }
     else if(dynamic_cast<BuildingUpgradeProductionCommand const *>(cmd_p))
     {
-        writer_p(file_p, 11ul);
+        writer_p(file_p, uint32_t(11));
         BuildingUpgradeProductionCommand const *typped_l = dynamic_cast<BuildingUpgradeProductionCommand const *>(cmd_p);
         writer_p(file_p, typped_l->getHandleCommand());
         writer_p(file_p, typped_l->getUpgrade()._id);
     }
     else if(dynamic_cast<BuildingUnitCancelCommand const *>(cmd_p))
     {
-        writer_p(file_p, 12ul);
+        writer_p(file_p, uint32_t(12));
         BuildingUnitCancelCommand const *typped_l = dynamic_cast<BuildingUnitCancelCommand const *>(cmd_p);
         writer_p(file_p, typped_l->getHandleCommand());
         writer_p(file_p, typped_l->_idx);
     }
     else if(dynamic_cast<BuildingCancelCommand const *>(cmd_p))
     {
-        writer_p(file_p, 13ul);
+        writer_p(file_p, uint32_t(13));
         BuildingCancelCommand const *typped_l = dynamic_cast<BuildingCancelCommand const *>(cmd_p);
         writer_p(file_p, typped_l->getHandleCommand());
     }
     else if(dynamic_cast<BuildingRallyPointCommand const *>(cmd_p))
     {
-        writer_p(file_p, 14ul);
+        writer_p(file_p, uint32_t(14));
         BuildingRallyPointCommand const *typped_l = dynamic_cast<BuildingRallyPointCommand const *>(cmd_p);
         writer_p(file_p, typped_l->getHandleCommand());
         writer_p(file_p, typped_l->_reset);
@@ -390,9 +396,9 @@ void writeCommand(std::ofstream &file_p, Command const *cmd_p, Writer_t writer_p
     }
     else if(dynamic_cast<EntityFlockMoveCommand const *>(cmd_p))
     {
-        writer_p(file_p, 15ul);
+        writer_p(file_p, uint32_t(15));
         EntityFlockMoveCommand const *typped_l = dynamic_cast<EntityFlockMoveCommand const *>(cmd_p);
-        writer_p(file_p, typped_l->getHandles().size());
+        writer_p(file_p, uint32_t(typped_l->getHandles().size()));
         for(Handle const &handle_p : typped_l->getHandles())
         {
             writer_p(file_p, handle_p);
@@ -404,7 +410,7 @@ void writeCommand(std::ofstream &file_p, Command const *cmd_p, Writer_t writer_p
     }
     else if(dynamic_cast<EntityAbilityCommand const *>(cmd_p))
     {
-        writer_p(file_p, 16ul);
+        writer_p(file_p, uint32_t(16));
         EntityAbilityCommand const *typped_l = dynamic_cast<EntityAbilityCommand const *>(cmd_p);
         writer_p(file_p, typped_l->getHandleCommand());
         writer_p(file_p, typped_l->_target);
@@ -425,7 +431,7 @@ Command * readCommand(std::ifstream &file_p, Library const &lib_p)
 {
     Command * cmd_l = nullptr;
     bool queued_l;
-    unsigned long cmdId_p;
+    uint32_t cmdId_p;
 
     // read common info
     read(file_p, &queued_l);
