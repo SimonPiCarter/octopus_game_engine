@@ -477,6 +477,8 @@ void Controller::replay_level(String const &filename_p, bool replay_mode_p, godo
 	file_l.read((char*)&levelId_l, sizeof(levelId_l));
 	file_l.read((char*)&size_l, sizeof(size_l));
 	bool divOptionHandler_l = false;
+	// update current level
+	_currentLevel = levelId_l;
 
 	bool valid_l = true;
 	std::pair<std::list<octopus::Steppable *>, std::list<octopus::Command *> > levelInfo_l;
