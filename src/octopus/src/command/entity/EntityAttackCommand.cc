@@ -59,10 +59,22 @@ bool EntityAttackCommand::applyCommand(Step & step_p, State const &state_p, Comm
 		// If target is dead we look for another target in range
 		Entity const * newTarget_l = lookUpNewTarget(state_p, _source, entSource_l->_aggroDistance, heal_l);
 
-		// If no target we release
+		// If no target relese or we move to the entity if healing
 		if(!newTarget_l)
 		{
 			Logger::getDebug() << "EntityAttackCommand:: no new target found "<<std::endl;
+			if(heal_l)
+			{
+				if(state_p.isEntityAlive(curTarget_l) && data_l._waypoints.size() == 0)
+				{
+					Logger::getDebug() << "EntityAttackCommand:: healer still moving to unit "<<std::endl;
+					Entity const * entTarget_l = state_p.getEntity(curTarget_l);
+					step_p.addSteppable(new CommandDataWaypointSetStep(_handleCommand, data_l._waypoints, {entTarget_l->_pos}));
+					// return false to avoid move command directly stopping
+					return false;
+				}
+				return _moveCommand.applyCommand(step_p, state_p, data_p, pathManager_p);
+			}
 			return true;
 		}
 		else
