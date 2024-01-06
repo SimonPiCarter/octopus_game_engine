@@ -1348,7 +1348,7 @@ void Controller::get_productions(TypedArray<EntityHandle> const &handles_p, int 
 			octopus::ProductionData const *data_l = dynamic_cast<octopus::ProductionData const *>(getData(bundle_l._var));
 			if(cmd_l && data_l && !data_l->_canceled)
 			{
-				vecCommands_l.push_back({cmd_l->getHandleCommand(), data_l, uint32_t(bundle_l._idx), posInQueue_l});
+				vecCommands_l.push_back({cmd_l->getHandleCommand(), data_l, bundle_l._idx, posInQueue_l});
 			}
 			++posInQueue_l;
 		}
