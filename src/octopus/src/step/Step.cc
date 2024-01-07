@@ -21,12 +21,16 @@ Step::~Step()
 
 void Step::addEntityMoveStep(EntityMoveStep * step_p)
 {
-	_listEntityMoveStep.push_back(step_p);
+	{
+		std::lock_guard lock_l(_mut);
+		_listEntityMoveStep.push_back(step_p);
+	}
 	this->addSteppable(step_p);
 }
 
 void Step::addSteppable(Steppable * step_p)
 {
+	std::lock_guard lock_l(_mut);
 	StepAdditionVisitor vis_l(*this);
 	vis_l(step_p);
 	_listSteppable.push_back(step_p);

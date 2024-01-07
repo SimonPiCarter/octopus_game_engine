@@ -58,6 +58,7 @@ Controller::Controller(
 	: _timePerStep(timePerStep_p)
 	, _initialStep(nullptr)
 	, _reusableHandleQueueSize(reusableHandleQueueSize_p)
+	, _pool(12)
 {
 	std::lock_guard<std::mutex> lock_l(_mutex);
 
@@ -195,13 +196,31 @@ bool Controller::loop_body()
 			//
 			//
 
+			int total_l = 0;
+			int finished_l = 0;
+			std::mutex terminationMutex_l;
+			std::condition_variable termination_l;
+			std::unique_lock<std::mutex> lock_l(terminationMutex_l);
+
 			// apply all commands
 			for(Commandable * cmdable_l : state_l->getEntities())
 			{
 				if(cmdable_l->isActive())
 				{
-					cmdable_l->runCommands(step_l, *state_l, _pathManager);
+					++total_l;
+					_pool.queueJob([cmdable_l,&step_l,&state_l,this, &finished_l, &termination_l, &terminationMutex_l]()
+					{
+						cmdable_l->runCommands(step_l, *state_l, _pathManager);
+						std::unique_lock<std::mutex> lock_l(terminationMutex_l);
+						finished_l++;
+						termination_l.notify_all();
+					});
 				}
+			}
+
+			if(finished_l < total_l)
+			{
+				termination_l.wait(lock_l, [&]{ return finished_l >= total_l ; });
 			}
 
 			for(auto &&pair_l : state_l->getFlyingCommands())

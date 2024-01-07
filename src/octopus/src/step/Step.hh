@@ -8,6 +8,7 @@
 #include <unordered_set>
 #include <set>
 #include <vector>
+#include <mutex>
 
 #include "state/Handle.hh"
 #include "utils/Fixed.hh"
@@ -154,6 +155,8 @@ namespace octopus
 			std::unordered_map<Handle, Fixed> _hpChange;
 
 			Step const * const _prev {nullptr};
+
+			std::mutex _mut;
 
 	};
 
