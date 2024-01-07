@@ -2,6 +2,7 @@
 #define __LifestealShowcase__
 
 #include <cstddef>
+#include <cstdint>
 #include <list>
 
 namespace octopus

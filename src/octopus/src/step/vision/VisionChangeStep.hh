@@ -3,6 +3,7 @@
 
 #include "step/Steppable.hh"
 #include <cstddef>
+#include <cstdint>
 #include <unordered_map>
 #include <list>
 
