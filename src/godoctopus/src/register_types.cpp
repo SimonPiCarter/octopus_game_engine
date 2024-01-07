@@ -12,6 +12,7 @@
 #include "drawer/MultiTextureDrawer.h"
 #include "drawer/StaticPropsDrawer.h"
 #include "drawer/entity/EntityDrawer.h"
+#include "drawer/entity/AnimationDrawer.h"
 #include "drawer/entity/SimulationNode.h"
 
 #include <gdextension_interface.h>
@@ -45,6 +46,7 @@ void initialize_godoctopus_module(godot::ModuleInitializationLevel p_level) {
     godot::ClassDB::register_class<godot::MultiTextureDrawer>();
     godot::ClassDB::register_class<godot::StaticPropsDrawer>();
     godot::ClassDB::register_class<godot::GridBuild>();
+    godot::ClassDB::register_class<godot::AnimationDrawer>();
     godot::ClassDB::register_class<godot::EntityDrawer>();
     godot::ClassDB::register_class<godot::SimulationNode>();
 }

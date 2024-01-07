@@ -5,9 +5,12 @@
 #include <algorithm>
 #include <chrono>
 
+#include "visitor/SimulationVisitor.h"
+
 #include "library/levels/ArenaLevel.hh"
 
 #include "controller/Controller.hh"
+#include "command/data/AttackData.hh"
 #include "library/Library.hh"
 #include "state/State.hh"
 #include "state/entity/Entity.hh"
@@ -26,11 +29,14 @@ namespace godot
 
 	void SimulationNode::init_demo(
 		TypedArray<Vector2i> const &team_1_p, TypedArray<Vector2i> const &team_2_p,
-		Ref<AtlasTexture> const & texture_p, Ref<AtlasTexture> const & texture2_p)
+		Ref<AtlasTexture> const & texture_p, Ref<AtlasTexture> const & texture2_p,
+		Ref<SpriteFrames> const & animation_p)
 	{
 		delete _controllerThread;
 		delete _controller;
 		delete _lib;
+
+		_animation = animation_p;
 
 		size_t nb_l = 1;
 		_lib = new octopus::Library();
@@ -41,6 +47,9 @@ namespace godot
 
 		octopus::UnitModel unitModel_l { false, 0.5, 0.1, 100};
 		unitModel_l._range = 0.5;
+		unitModel_l._windup = 25;
+		unitModel_l._fullReload = 50;
+		unitModel_l._damage = 10;
 
 		_lib->registerUnitModel("model", unitModel_l);
 		octopus::UnitModel const &model_l = _lib->getUnitModel("model");
@@ -85,6 +94,11 @@ namespace godot
 		_controller->enableORCA();
 		_controller->setExternalMin(0);
 		_controller->addQueuedLayer();
+
+		octopus::StateAndSteps stateAndSteps_l = _controller->queryStateAndSteps();
+		_state = stateAndSteps_l._state;
+		_lastIt = stateAndSteps_l._steps.begin();
+
 		_controllerThread = new std::thread(&SimulationNode::loop, this);
 	}
 
@@ -125,8 +139,10 @@ namespace godot
 			return;
 		}
 		octopus::State const * oldState_l = _state;
-		_state = _controller->queryState();
-		if(_entityDrawer && _state && _state != oldState_l)
+		octopus::StateAndSteps newState_l = _controller->queryStateAndSteps();
+		_state = newState_l._state;
+		if(_entityDrawer && _animationDrawer
+		&& _state && _state != oldState_l)
 		{
 			_entityDrawer->update_pos();
 			std::vector<Vector2> & newPos_l = _entityDrawer->getNewPos();
@@ -140,6 +156,17 @@ namespace godot
 				pos_l.y = ent_l->_pos.y.to_double() * 32;
 				instances_l[i].enabled = ent_l->_alive;
 			}
+
+			SimulationVisitor vis_l(this);
+			// Every step missing
+			for(auto it_l = _lastIt ; it_l != newState_l._stepIt ; ++it_l)
+			{
+				for(octopus::Steppable const * steppable_l : it_l->_step->getSteppable())
+				{
+					vis_l(steppable_l);
+				}
+			}
+			_lastIt = newState_l._stepIt;
 		}
 	}
 
@@ -153,6 +180,15 @@ namespace godot
 		_entityDrawer = entityDrawer_p;
 	}
 
+	AnimationDrawer *SimulationNode::getAnimationDrawer() const
+	{
+		return _animationDrawer;
+	}
+
+	void SimulationNode::setAnimationDrawer(AnimationDrawer * animationDrawer_p)
+	{
+		_animationDrawer = animationDrawer_p;
+	}
 
 	void SimulationNode::_bind_methods()
 	{
@@ -164,8 +200,24 @@ namespace godot
 		ClassDB::bind_method(D_METHOD("getEntityDrawer"), &SimulationNode::getEntityDrawer);
 		ClassDB::bind_method(D_METHOD("setEntityDrawer", "entity_drawer"), &SimulationNode::setEntityDrawer);
 
+		ClassDB::bind_method(D_METHOD("getAnimationDrawer"), &SimulationNode::getAnimationDrawer);
+		ClassDB::bind_method(D_METHOD("setAnimationDrawer", "Animation_drawer"), &SimulationNode::setAnimationDrawer);
+
 		ADD_GROUP("SimulationNode", "SimulationNode_");
 		ADD_PROPERTY(PropertyInfo(Variant::NODE_PATH, "entity_drawer", PROPERTY_HINT_OBJECT_ID, "EntityDrawer"), "setEntityDrawer", "getEntityDrawer");
+		ADD_PROPERTY(PropertyInfo(Variant::NODE_PATH, "animation_drawer", PROPERTY_HINT_OBJECT_ID, "AnimationDrawer"), "setAnimationDrawer", "getAnimationDrawer");
+	}
+
+	void SimulationNode::pop_wind_up(octopus::Handle const &handle_p)
+	{
+		if(_animationDrawer && _state)
+		{
+			octopus::Entity const *ent_l = _state->getEntity(handle_p);
+			Vector2 pos_l;
+			pos_l.x = ent_l->_pos.x.to_double() * 32;
+			pos_l.y = ent_l->_pos.y.to_double() * 32;
+			_animationDrawer->add_instance(pos_l, Vector2(-16,-16), _animation);
+		}
 	}
 
 	void SimulationNode::loop()
