@@ -15,7 +15,7 @@ void CommandNewTargetStep::apply(State &state_p) const
 	AttackData *data_l = dynamic_cast<AttackData *>(getData(ent_l->getFrontQueue()._var));
 	if(data_l->_target != _oldTarget)
 	{
-		throw std::logic_error("Setting target had incoherent old target regarding content in state");
+		throw std::logic_error("CommandNewTargetStep :: Setting target had incoherent old target regarding content in state");
 	}
 	data_l->_target = _newTarget;
 }
@@ -27,7 +27,7 @@ void CommandNewTargetStep::revert(State &state_p, SteppableData const *) const
 	AttackData *data_l = dynamic_cast<AttackData *>(getData(ent_l->getFrontQueue()._var));
 	if(data_l->_target != _newTarget)
 	{
-		throw std::logic_error("Setting target had incoherent old target regarding content in state");
+		throw std::logic_error("CommandNewTargetStep :: Setting target had incoherent old target regarding content in state");
 	}
 	data_l->_target = _oldTarget;
 }

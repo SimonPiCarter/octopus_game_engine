@@ -20,7 +20,7 @@ void TimerDataUpdateStep::apply(State &state_p) const
 	TimerData *data_l = dynamic_cast<TimerData*>(it_l->second._data);
 	if(data_l->_time != _old)
 	{
-		throw std::logic_error("Setting target had incoherent old target regarding content in state");
+		throw std::logic_error("TimerDataUpdateStep :: Setting target had incoherent old target regarding content in state");
 	}
 	data_l->_time = _new;
 }
@@ -34,7 +34,7 @@ void TimerDataUpdateStep::revert(State &state_p, SteppableData const *) const
 	TimerData *data_l = dynamic_cast<TimerData*>(it_l->second._data);
 	if(data_l->_time != _new)
 	{
-		throw std::logic_error("Setting target had incoherent old target regarding content in state");
+		throw std::logic_error("TimerDataUpdateStep :: Setting target had incoherent old target regarding content in state");
 	}
 	data_l->_time = _old;
 }
