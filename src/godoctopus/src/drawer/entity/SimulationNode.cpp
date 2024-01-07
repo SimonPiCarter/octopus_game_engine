@@ -167,6 +167,7 @@ namespace godot
 				}
 			}
 			_lastIt = newState_l._stepIt;
+			_controller->setExternalMin(_lastIt->_step->getId());
 		}
 	}
 
