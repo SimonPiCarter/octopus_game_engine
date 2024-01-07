@@ -256,9 +256,16 @@ bool Controller::loop_body()
 				}
 				else
 				{
+
+					const std::chrono::time_point<std::chrono::steady_clock> startSetupStape_l = std::chrono::steady_clock::now();
 					_orcaManager->setupStep(*state_l, step_l);
+					_metrics._timeSetupStep += std::chrono::nanoseconds( std::chrono::steady_clock::now() - startSetupStape_l ).count();
+					const std::chrono::time_point<std::chrono::steady_clock> startDoStep_l = std::chrono::steady_clock::now();
 					_orcaManager->doStep();
+					_metrics._timeDoStep += std::chrono::nanoseconds( std::chrono::steady_clock::now() - startDoStep_l ).count();
+					const std::chrono::time_point<std::chrono::steady_clock> startCommitStep_l = std::chrono::steady_clock::now();
 					_orcaManager->commitStep(*state_l, step_l);
+					_metrics._timeCommitStep += std::chrono::nanoseconds( std::chrono::steady_clock::now() - startCommitStep_l ).count();
 				}
 			}
 			else

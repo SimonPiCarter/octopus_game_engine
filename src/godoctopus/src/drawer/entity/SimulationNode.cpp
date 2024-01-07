@@ -39,7 +39,7 @@ namespace godot
 			new octopus::PlayerSpawnStep(1,1),
 		};
 
-		octopus::UnitModel unitModel_l { false, 0.5, 0.05, 100};
+		octopus::UnitModel unitModel_l { false, 0.5, 0.1, 100};
 		unitModel_l._range = 0.5;
 
 		_lib->registerUnitModel("model", unitModel_l);
@@ -67,7 +67,7 @@ namespace godot
 			}
 		}
 
-		double stepTime_l = 0.01;
+		double stepTime_l = 0.02;
 		if(_entityDrawer)
 		{
 			for(size_t i = 0 ; i < team_1_p.size()*nb_l ; ++i)
@@ -83,6 +83,8 @@ namespace godot
 
 		_controller = new octopus::Controller(spawners_l, stepTime_l, {}, 5, 50);
 		_controller->enableORCA();
+		_controller->setExternalMin(0);
+		_controller->addQueuedLayer();
 		_controllerThread = new std::thread(&SimulationNode::loop, this);
 	}
 
@@ -93,11 +95,28 @@ namespace godot
 		{
 			handles_l.push_back(octopus::Handle(i, 0));
 		}
-		_controller->commitCommand(new octopus::EntityFlockMoveCommand(handles_l, octopus::Vector(target.x, target.y), true, true));
+		_controller->commitCommand(new octopus::EntityFlockMoveCommand(handles_l, octopus::Vector(target.x, target.y), false, true));
 	}
 
 	void SimulationNode::_ready()
 	{}
+
+	double SimulationNode::get_avg_last_compile_time(int numbers_p) const
+	{
+		if(!_controller)
+		{
+			return 0.;
+		}
+		std::vector<double> const &compile_times = _controller->getMetrics()._vecTimeCompilingSteps;
+		int counted_l = 0;
+		double time_l = 0;
+		for(int i = int(compile_times.size())-1 ; i >= 0 && counted_l < numbers_p ; --i)
+		{
+			++counted_l;
+			time_l += compile_times[i];
+		}
+		return time_l/double(counted_l);
+	}
 
 	void SimulationNode::_process(double delta_p)
 	{
@@ -139,6 +158,9 @@ namespace godot
 	{
 		ClassDB::bind_method(D_METHOD("init_demo", "pos_1", "pos_2", "texture_1", "texture_2"), &SimulationNode::init_demo);
 		ClassDB::bind_method(D_METHOD("trigger_demo", "target" ,"start", "end"), &SimulationNode::trigger_demo);
+		ClassDB::bind_method(D_METHOD("set_over", "over"), &SimulationNode::set_over);
+		ClassDB::bind_method(D_METHOD("get_avg_last_compile_time", "nb"), &SimulationNode::get_avg_last_compile_time);
+
 		ClassDB::bind_method(D_METHOD("getEntityDrawer"), &SimulationNode::getEntityDrawer);
 		ClassDB::bind_method(D_METHOD("setEntityDrawer", "entity_drawer"), &SimulationNode::setEntityDrawer);
 
@@ -172,6 +194,19 @@ namespace godot
 		catch(const std::exception& e)
 		{
 			UtilityFunctions::print("catched exception ", e.what());
+		}
+
+		if(_controller)
+		{
+			std::stringstream ss_l;
+			streamMetrics(ss_l, _controller->getMetrics());
+			String metrics_l(ss_l.str().c_str());
+			UtilityFunctions::print(metrics_l);
+			UtilityFunctions::print("los_check_l = ", octopus::EntityMoveCommand::los_check_l);
+			UtilityFunctions::print("unlock_l = ", octopus::EntityMoveCommand::unlock_l);
+			UtilityFunctions::print("field_l = ", octopus::EntityMoveCommand::field_l);
+			UtilityFunctions::print("prog_l = ", octopus::EntityMoveCommand::prog_l);
+			UtilityFunctions::print("total_l = ", octopus::EntityMoveCommand::total_l);
 		}
 
 		UtilityFunctions::print("Over");

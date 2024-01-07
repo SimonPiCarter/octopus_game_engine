@@ -19,6 +19,12 @@
 namespace octopus
 {
 
+double EntityMoveCommand::los_check_l = 0;
+double EntityMoveCommand::unlock_l = 0;
+double EntityMoveCommand::field_l = 0;
+double EntityMoveCommand::prog_l = 0;
+double EntityMoveCommand::total_l = 0;
+
 unsigned long long UnlockRoutine::UpdateSteps = 32;
 unsigned long long UnlockRoutine::MaxStepState = 500;
 Fixed UnlockRoutine::SquareDistanceMax = 2.25;
@@ -121,6 +127,7 @@ bool losCheck(Grid const &grid_p, Vector const &pos1_p, Vector const &pos2_p)
 
 bool EntityMoveCommand::applyCommand(Step & step_p, State const &state_p, CommandData const *data_p, PathManager &pathManager_p) const
 {
+std::chrono::time_point<std::chrono::steady_clock> ss = std::chrono::steady_clock::now();
 	MoveData const *data_l = dynamic_cast<MoveData const *>(data_p);
 	std::list<Vector> const &waypoints_l =  data_l->_waypoints;
 	// No waypoint -> terminate
@@ -138,17 +145,18 @@ bool EntityMoveCommand::applyCommand(Step & step_p, State const &state_p, Comman
 	///
 	Vector next_l = data_l->_finalPoint;
 
+std::chrono::time_point<std::chrono::steady_clock> s = std::chrono::steady_clock::now();
 	bool los_l = data_l->_los;
 	// line check every several steps
-	if(data_l->_stepSinceUpdate % 50 == 0 || PathManager::ForceLoSCheck)
-	{
-		// reset step since update count (do not update grid status (not used anyway))
-		step_p.addSteppable(new CommandMoveUpdateStep(_handleCommand, data_l->_stepSinceUpdate, data_l->_gridStatus, data_l->_gridStatus));
-		// perform a line check
-		los_l = losCheck(state_p.getPathGrid(), ent_l->_pos, data_l->_finalPoint);
-		Logger::getDebug() << "los check returned " << los_l << std::endl;
-		step_p.addSteppable(new CommandMoveLosStep(_handleCommand, data_l->_los, los_l));
-	}
+	// if(data_l->_stepSinceUpdate % 50 == 0 || PathManager::ForceLoSCheck)
+	// {
+	// 	// reset step since update count (do not update grid status (not used anyway))
+	// 	step_p.addSteppable(new CommandMoveUpdateStep(_handleCommand, data_l->_stepSinceUpdate, data_l->_gridStatus, data_l->_gridStatus));
+	// 	// perform a line check
+	// 	los_l = losCheck(state_p.getPathGrid(), ent_l->_pos, data_l->_finalPoint);
+	// 	Logger::getDebug() << "los check returned " << los_l << std::endl;
+	// 	step_p.addSteppable(new CommandMoveLosStep(_handleCommand, data_l->_los, los_l));
+	// }
 	// increment step since update (everytime otherwise will loop reseting)
 	step_p.addSteppable(new CommandMoveStepSinceUpdateIncrementStep(_handleCommand));
 
@@ -258,8 +266,13 @@ bool EntityMoveCommand::applyCommand(Step & step_p, State const &state_p, Comman
 	// query field if no los and no unlock routine
 	if(!los_l && !unlock_l)
 	{
+s = std::chrono::steady_clock::now();
 		pathManager_p.queryFlowField(to_int(data_l->_finalPoint.x), to_int(data_l->_finalPoint.y));
+los_check_l += std::chrono::nanoseconds( std::chrono::steady_clock::now() - s ).count();
+s = std::chrono::steady_clock::now();
 		FlowField const * field_l = pathManager_p.getFlowField(to_int(data_l->_finalPoint.x), to_int(data_l->_finalPoint.y));
+unlock_l += std::chrono::nanoseconds( std::chrono::steady_clock::now() - s ).count();
+s = std::chrono::steady_clock::now();
 		if(field_l )
 		{
 			// direction directly on the square
@@ -269,6 +282,7 @@ bool EntityMoveCommand::applyCommand(Step & step_p, State const &state_p, Comman
 				next_l = ent_l->_pos + direction(ent_l->_pos.x, ent_l->_pos.y, *field_l);
 			}
 		}
+field_l += std::chrono::nanoseconds( std::chrono::steady_clock::now() - s ).count();
 	}
 
 	Vector delta_l = ent_l->_pos - data_l->_finalPoint;
@@ -286,6 +300,7 @@ bool EntityMoveCommand::applyCommand(Step & step_p, State const &state_p, Comman
 		return true;
 	}
 
+s = std::chrono::steady_clock::now();
 	// skip this if we never want to stop
 	if(!_neverStop)
 	{
@@ -326,12 +341,14 @@ bool EntityMoveCommand::applyCommand(Step & step_p, State const &state_p, Comman
 			step_p.addSteppable(new CommandIncrementNoProgressStep(_handleCommand, data_l->_countSinceProgress+1, 0));
 		}
 	}
+prog_l += std::chrono::nanoseconds( std::chrono::steady_clock::now() - s ).count();
 
 	Logger::getDebug() << "Adding move step orig = "<<ent_l->_pos<<" target = "<<next_l<<" step speed = " << ent_l->getStepSpeed() << std::endl;
 
 	// Use next waypoint as target
 	step_p.addEntityMoveStep(new EntityMoveStep(createEntityMoveStep(*ent_l, next_l, ent_l->getStepSpeed())));
 
+total_l += std::chrono::nanoseconds( std::chrono::steady_clock::now() - ss ).count();
 	return false;
 }
 

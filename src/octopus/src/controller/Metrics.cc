@@ -65,4 +65,8 @@ void streamMetrics(std::ostream &os_p, octopus::Metrics const &metrics_p)
 	os_p<<"\t\t- average time to handle compacting each step : "<<timeCompactingStepsPerSteps_l <<"ms"<<std::endl;
 	os_p<<"\t- maxmimum time to compile a step : "<<maxCompilingStep_l <<"ms"<<std::endl;
 	os_p<<"\t- number of spike compilation : "<<metrics_p._spikeCompilingSteps<<std::endl;
+	os_p<<"\t- time ORCA Setup Step : "<<metrics_p._timeSetupStep/metrics_p._nbStepsCompiled / 1e6 <<"ms"<<std::endl;
+	os_p<<"\t- time ORCA Do Step : "<<metrics_p._timeDoStep/metrics_p._nbStepsCompiled / 1e6 <<"ms"<<std::endl;
+	os_p<<"\t- time ORCA Commit Step : "<<metrics_p._timeCommitStep/metrics_p._nbStepsCompiled / 1e6 <<"ms"<<std::endl;
+
 }

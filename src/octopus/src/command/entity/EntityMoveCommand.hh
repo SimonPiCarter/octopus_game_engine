@@ -41,6 +41,12 @@ public:
 
 	virtual CommandData * getData() override { return &_data; }
 	virtual CommandData const * getData() const override { return &_data; }
+
+	static double los_check_l;
+	static double unlock_l;
+	static double field_l;
+	static double prog_l;
+	static double total_l;
 private:
 	Handle _source {0};
 	Vector _finalPoint {1,1};

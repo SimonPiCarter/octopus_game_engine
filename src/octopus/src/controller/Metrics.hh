@@ -31,6 +31,10 @@ struct Metrics
 	size_t _nbEntities {0};
 	size_t _nbCommandables {0};
 	std::vector<double> _vecTimeCompilingSteps;
+
+	double _timeSetupStep {0.};
+	double _timeDoStep {0.};
+	double _timeCommitStep {0.};
 };
 
 /// @brief update nb entities and commandables metrics

@@ -32,6 +32,9 @@ public:
 		Ref<AtlasTexture> const & texture_p, Ref<AtlasTexture> const & texture2_p);
 	void trigger_demo(Vector2 const &target, int start, int end);
 
+	void set_over(bool over_p) { _over = over_p; }
+	double get_avg_last_compile_time(int numbers_p) const;
+
 	void _ready() override;
 	void _process(double delta_p) override;
 

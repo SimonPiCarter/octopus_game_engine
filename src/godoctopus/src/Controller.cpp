@@ -134,12 +134,12 @@ void Controller::load_arena_level(TypedArray<int> const &size_you_p, TypedArray<
 	std::list<octopus::Command *> commands_l = ArenaLevelCommands(_lib);
 	// enable auto save
 	newAutoSaveFile();
-	writeLevelId(*_autoSaveFile, LEVEL_ID_ARENA, 10);
+	writeLevelId(*_autoSaveFile, LEVEL_ID_ARENA, 50);
 	_currentLevel = LEVEL_ID_ARENA;
 	_headerWriter = std::bind(writeArenaLevelHeader, std::placeholders::_1, ArenaLevelHeader {you_l, them_l});
 	_headerWriter(*_autoSaveFile);
 	// init with autosave
-	init(commands_l, spawners_l, false, 10, _autoSaveFile);
+	init(commands_l, spawners_l, false, 50, _autoSaveFile);
 }
 
 void Controller::load_kamikaze_level(int you_p, int them_p, bool fast_p)
