@@ -2,6 +2,7 @@
 #define __VisionGrid__
 
 #include <cstddef>
+#include <cstdint>
 #include <vector>
 
 namespace octopus
