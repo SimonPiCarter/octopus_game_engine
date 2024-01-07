@@ -97,6 +97,7 @@ add_library(octopus
 	${CMAKE_CURRENT_SOURCE_DIR}/src/step/command/CommandSubAttackStep.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/step/command/CommandUpdateLastPosStep.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/step/command/CommandWindUpDiffStep.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/src/step/command/MissingResourceStep.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/step/command/ProductionPaidStep.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/step/command/ProductionProgressionStep.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/step/command/data/CancelUnitProductionStep.cc

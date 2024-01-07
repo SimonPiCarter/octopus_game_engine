@@ -41,18 +41,29 @@ void BuildingUnitProductionCommand::registerCommand(Step & step_p, State const &
 
 	std::map<std::string, Fixed> cost_l = getCost(*_model, player_l);
 
+	std::string missingRes_l = checkResource(state_p, building_l->_player, cost_l, step_p.getResourceSpent(building_l->_player));
+	bool req_l = meetRequirements(_model->_requirements, *state_p.getPlayer(building_l->_player));
 	// check if we can pay for it and if building can produce it
-	if(checkResource(state_p, building_l->_player, cost_l, step_p.getResourceSpent(building_l->_player))
+	if(missingRes_l == ""
 	&& building_l->_buildingModel.canProduce(_model)
-	&& meetRequirements(_model->_requirements, *state_p.getPlayer(building_l->_player)))
+	&& req_l)
 	{
 		step_p.addSteppable(new PlayerSpendResourceStep(building_l->_player, cost_l));
 		step_p.addSteppable(new CommandSpawnStep(this));
 	}
 	// else add informative step for failure
+	else if(missingRes_l != "")
+	{
+		step_p.addSteppable(new MissingResourceStep(building_l->_player, missingRes_l));
+		step_p.addSteppable(new CommandStorageStep(this));
+	}
+	else if(!req_l)
+	{
+		step_p.addSteppable(new MissingResourceStep(building_l->_player, MissingResourceStep::MissingRequirement));
+		step_p.addSteppable(new CommandStorageStep(this));
+	}
 	else
 	{
-		step_p.addSteppable(new MissingResourceStep(building_l->_player));
 		step_p.addSteppable(new CommandStorageStep(this));
 	}
 }

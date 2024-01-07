@@ -268,8 +268,8 @@ bool lookUpNonStaticBehind(State const &state_p, Fixed x, Fixed y, unsigned long
 /// @param player_p the player
 /// @param cost_p the cost
 /// @param spent_p the resources already spent (not applied yet on the state)
-/// @return true iif player has enough resource
-bool checkResource(State const &state_p, unsigned long player_p, std::map<std::string, Fixed> const & cost_p, std::map<std::string, Fixed> const & spent_p);
+/// @return the missing resource or an empty string if no missing resource
+std::string checkResource(State const &state_p, unsigned long player_p, std::map<std::string, Fixed> const & cost_p, std::map<std::string, Fixed> const & spent_p);
 
 /// @brief update positional info based on the entity and the set parameter
 void updateGrid(State &state_p, Entity const *ent_p, bool set_p);

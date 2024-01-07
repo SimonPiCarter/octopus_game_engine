@@ -716,7 +716,7 @@ Fixed safeGetInMapResource(std::map<std::string, Fixed> const &map_p, std::strin
 	return res_l;
 }
 
-bool checkResource(State const &state_p, unsigned long player_p, std::map<std::string, Fixed> const &cost_p, std::map<std::string, Fixed> const & spent_p)
+std::string checkResource(State const &state_p, unsigned long player_p, std::map<std::string, Fixed> const &cost_p, std::map<std::string, Fixed> const & spent_p)
 {
 	Player const * player_l = state_p.getPlayer(player_p);
 	for(auto && pair_l : cost_p)
@@ -726,10 +726,10 @@ bool checkResource(State const &state_p, unsigned long player_p, std::map<std::s
 		// One resource is too much for player resources
 		if(pair_l.second + spent_l > res_l + 1e-5)
 		{
-			return false;
+			return pair_l.first;
 		}
 	}
-	return true;
+	return "";
 }
 
 void updateGrid(State &state_p, Entity const *ent_p, bool set_p)

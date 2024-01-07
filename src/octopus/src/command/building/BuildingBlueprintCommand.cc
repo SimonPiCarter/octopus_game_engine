@@ -36,20 +36,21 @@ void BuildingBlueprintCommand::registerCommand(Step & step_p, State const &state
 	building_l._player = _player;
 	// If not payed we update player resource
 	// and mark this production as paid
-	if(!checkResource(state_p, _player, _model->_cost, step_p.getResourceSpent(_player)))
+	std::string missingRes_l = checkResource(state_p, _player, _model->_cost, step_p.getResourceSpent(_player));
+	if(missingRes_l != "")
 	{
 		Logger::getDebug() << "BuildingBlueprintCommand:: missing resource "<<_player <<std::endl;
-		step_p.addSteppable(new MissingResourceStep(_player));
+		step_p.addSteppable(new MissingResourceStep(_player, missingRes_l));
 	}
 	else if(!meetRequirements(_model->_requirements, *state_p.getPlayer(_player)))
 	{
 		Logger::getDebug() << "BuildingBlueprintCommand:: missing requirements "<<_player <<std::endl;
-		step_p.addSteppable(new MissingResourceStep(_player));
+		step_p.addSteppable(new MissingResourceStep(_player, MissingResourceStep::MissingRequirement));
 	}
 	else if(!checkExplored(state_p, &building_l, _player))
 	{
 		Logger::getDebug() << "BuildingBlueprintCommand:: unexplored zone "<<_player <<std::endl;
-		step_p.addSteppable(new MissingResourceStep(_player));
+		step_p.addSteppable(new MissingResourceStep(_player, MissingResourceStep::BadPlacement));
 	}
 	else
 	{

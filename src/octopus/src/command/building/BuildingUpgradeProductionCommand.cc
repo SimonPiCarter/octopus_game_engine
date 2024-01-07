@@ -40,12 +40,14 @@ void BuildingUpgradeProductionCommand::registerCommand(Step & step_p, State cons
 	}
 
 	Player const &player_l = *state_p.getPlayer(building_l->_player);
-	bool canPay_l = checkResource(state_p, building_l->_player, _upgrade->_cost, step_p.getResourceSpent(building_l->_player));
+	std::string missingRes_l = checkResource(state_p, building_l->_player, _upgrade->_cost, step_p.getResourceSpent(building_l->_player));
 	bool canProduce_l = building_l->_buildingModel.canProduce(_upgrade);
 	bool inStep = step_p.isUpgradeProduced(building_l->_player, _upgrade->_id);
+	bool req_l = checkUpgradeRequirements(player_l, *_upgrade);
 	// check if we can pay for it and if building can produce it
-	if(canPay_l && canProduce_l
-	&& checkUpgradeRequirements(player_l, *_upgrade)
+	if(missingRes_l == ""
+	&& canProduce_l
+	&& req_l
 	&& (_upgrade->_repeatable || !inStep))
 	{
 		step_p.addSteppable(new PlayerSpendResourceStep(building_l->_player, _upgrade->_cost));
@@ -53,9 +55,18 @@ void BuildingUpgradeProductionCommand::registerCommand(Step & step_p, State cons
 		step_p.addSteppable(new PlayerProducedUpgradeStep(building_l->_player, _upgrade->_id, true));
 	}
 	// else add informative step for failure
+	else if (missingRes_l != "")
+	{
+		step_p.addSteppable(new MissingResourceStep(building_l->_player, missingRes_l));
+		step_p.addSteppable(new CommandStorageStep(this));
+	}
+	else if(!req_l)
+	{
+		step_p.addSteppable(new MissingResourceStep(building_l->_player, MissingResourceStep::MissingRequirement));
+		step_p.addSteppable(new CommandStorageStep(this));
+	}
 	else
 	{
-		step_p.addSteppable(new MissingResourceStep(building_l->_player));
 		step_p.addSteppable(new CommandStorageStep(this));
 	}
 }

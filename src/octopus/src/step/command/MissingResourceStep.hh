@@ -10,7 +10,7 @@ namespace octopus
 class MissingResourceStep : public Steppable
 {
 	public:
-		MissingResourceStep(unsigned long player_p) : _player(player_p) {}
+		MissingResourceStep(unsigned long player_p, std::string const &resource_p) : _player(player_p), _resource(resource_p) {}
 
 		virtual void apply(State &) const override {}
 		virtual void revert(State &, SteppableData const *) const override {}
@@ -25,6 +25,10 @@ class MissingResourceStep : public Steppable
 		}
 
 		unsigned long _player {0};
+		std::string _resource;
+
+		static std::string MissingRequirement;
+		static std::string BadPlacement;
 };
 }
 
