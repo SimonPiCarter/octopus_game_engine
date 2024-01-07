@@ -95,7 +95,7 @@ namespace godot
 		{
 			handles_l.push_back(octopus::Handle(i, 0));
 		}
-		_controller->commitCommand(new octopus::EntityFlockMoveCommand(handles_l, octopus::Vector(target.x, target.y), false, true));
+		_controller->commitCommand(new octopus::EntityFlockMoveCommand(handles_l, octopus::Vector(target.x, target.y), true, true));
 	}
 
 	void SimulationNode::_ready()
