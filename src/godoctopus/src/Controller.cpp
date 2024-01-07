@@ -1678,6 +1678,8 @@ void Controller::_bind_methods()
 	ADD_SIGNAL(MethodInfo("increment_objective", PropertyInfo(Variant::STRING, "key_objective")));
 	ADD_SIGNAL(MethodInfo("decrement_objective", PropertyInfo(Variant::STRING, "key_objective")));
 	ADD_SIGNAL(MethodInfo("remove_objective", PropertyInfo(Variant::STRING, "key_objective")));
+	ADD_SIGNAL(MethodInfo("missing_resource", PropertyInfo(Variant::INT, "player"), PropertyInfo(Variant::STRING, "resource")));
+
 
 	/// blockers
 	ADD_SIGNAL(MethodInfo("spawn_blockers", PropertyInfo(Variant::FLOAT, "val"), PropertyInfo(Variant::FLOAT, "min"),

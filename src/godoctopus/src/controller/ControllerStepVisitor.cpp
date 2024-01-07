@@ -19,6 +19,7 @@
 #include "step/building/BuildingStep.hh"
 #include "step/command/harvest/CommandHarvestStep.hh"
 #include "step/command/CommandWindUpDiffStep.hh"
+#include "step/command/MissingResourceStep.hh"
 #include "step/custom/implem/ImpactStep.hh"
 #include "step/custom/implem/WindUpStartStep.hh"
 #include "step/entity/EntityHitPointChangeStep.hh"
@@ -228,6 +229,11 @@ void ControllerStepVisitor::visit(octopus::EntityUpdateReloadAbilityStep const *
 	{
 		_controller.emit_signal("ability_used", int(steppable_p->_handle.index), String(steppable_p->_key.c_str()));
 	}
+}
+
+void ControllerStepVisitor::visit(octopus::MissingResourceStep const *steppable_p)
+{
+	_controller.emit_signal("missing_resource", int(steppable_p->_player), String(steppable_p->_resource.c_str()));
 }
 
 void ControllerStepVisitor::visit(octopus::PlayerBuffAllStep const *steppable_p)
