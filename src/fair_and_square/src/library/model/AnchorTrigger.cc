@@ -26,7 +26,7 @@ void AnchorTrigger::trigger(octopus::State const &state_p, octopus::Step &step_p
 {
     std::map<std::string, octopus::Fixed> map_l;
     map_l["Anchor"] = -_bonus;
-    step_p.addSteppable(new octopus::PlayerSpendResourceStep(_player, map_l));
+    step_p.addSteppable(state_p, new octopus::PlayerSpendResourceStep(_player, map_l));
 
     std::string id_l = std::to_string(_count++);
     std::vector<Option> options_l;
@@ -69,7 +69,7 @@ void AnchorTrigger::trigger(octopus::State const &state_p, octopus::Step &step_p
     }
 
 	octopus::ListenerEntityData const * listenerData_l = dynamic_cast<octopus::ListenerEntityData const *>(data_p._listenerData[0]);
-    step_p.addSteppable(new octopus::StateTemplePositionRemoveStep(listenerData_l->_entities.at(idx_p)->_pos));
+    step_p.addSteppable(state_p, new octopus::StateTemplePositionRemoveStep(listenerData_l->_entities.at(idx_p)->_pos));
 
-    step_p.addSteppable(new octopus::PlayerAddOptionStep(_player, id_l, new BuffGenerator(options_l, _lib)));
+    step_p.addSteppable(state_p, new octopus::PlayerAddOptionStep(_player, id_l, new BuffGenerator(options_l, _lib)));
 }

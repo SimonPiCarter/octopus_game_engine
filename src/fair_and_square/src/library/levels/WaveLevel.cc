@@ -186,20 +186,20 @@ void WaveSpawn::trigger(State const &state_p, Step &step_p, unsigned long, octop
 		Unit unit_l({ _worldSize-_rand.roll(10,20), _worldSize-_rand.roll(10,20) }, false, _lib.getUnitModel(modelName_l));
 		unit_l._player = _player;
 		Handle handle_l = getNextHandle(step_p, state_p);
-		step_p.addSteppable(new UnitSpawnStep(handle_l, unit_l));
-		step_p.addSteppable(new CommandSpawnStep(new EntityAttackMoveCommand(handle_l, handle_l, {7., 20.}, 0, {{7., 20.}}, true )));
+		step_p.addSteppable(state_p, new UnitSpawnStep(handle_l, unit_l));
+		step_p.addSteppable(state_p, new CommandSpawnStep(new EntityAttackMoveCommand(handle_l, handle_l, {7., 20.}, 0, {{7., 20.}}, true )));
 	}
 
 	std::vector<octopus::Steppable *> stepsGenerated_l = _waveStepGenerator();
 	for(octopus::Steppable *step_l : stepsGenerated_l)
 	{
-		step_p.addSteppable(step_l);
+		step_p.addSteppable(state_p, step_l);
 	}
-	step_p.addSteppable(new TriggerSpawn(new WaveSpawn(new ListenerStepCount(_stepWait), _lib, _rand, _wave+1, _stepWait, _finalWave, _player, _worldSize, _waveStepGenerator)));
+	step_p.addSteppable(state_p, new TriggerSpawn(new WaveSpawn(new ListenerStepCount(_stepWait), _lib, _rand, _wave+1, _stepWait, _finalWave, _player, _worldSize, _waveStepGenerator)));
 
 	// win after 10 waves
 	if(_wave == _finalWave)
 	{
-		step_p.addSteppable(new StateWinStep(state_p.isOver(), state_p.hasWinningTeam(), state_p.getWinningTeam(), 0));
+		step_p.addSteppable(state_p, new StateWinStep(state_p.isOver(), state_p.hasWinningTeam(), state_p.getWinningTeam(), 0));
 	}
 }

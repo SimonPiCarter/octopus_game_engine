@@ -32,13 +32,13 @@ void EntityAbilityCommand::registerCommand(Step & step_p, State const &state_p)
     && step_p.checkAbilityNotAlreadyRegistered(_handleCommand, ability_l._reloadKey))
     {
         // reset reload time
-        step_p.addSteppable(new EntityUpdateReloadAbilityStep(_handleCommand, ability_l._reloadKey, reload_l, 0));
+        step_p.addSteppable(state_p, new EntityUpdateReloadAbilityStep(_handleCommand, ability_l._reloadKey, reload_l, 0));
         // spaw command
-	    step_p.addSteppable(new CommandSpawnStep(this));
+	    step_p.addSteppable(state_p, new CommandSpawnStep(this));
     }
 }
 
-bool EntityAbilityCommand::applyCommand(Step & step_p, State const &state_p, CommandData const *, PathManager &) const
+bool EntityAbilityCommand::applyCommand(StepShallow & step_p, State const &state_p, CommandData const *, PathManager &) const
 {
 	Logger::getDebug() << "EntityAbilityCommand:: apply Command "<<_target <<std::endl;
 

@@ -109,7 +109,7 @@ unsigned long Entity::getTimeSinceBuff(std::string const &idBuff_p) const
 	return it_l->second;
 }
 
-void Entity::runCommands(Step & step_p, State const &state_p, PathManager &pathManager_p)
+void Entity::runCommands(StepShallow & step_p, State const &state_p, PathManager &pathManager_p)
 {
 	if(_waiting < 100000)
 	{

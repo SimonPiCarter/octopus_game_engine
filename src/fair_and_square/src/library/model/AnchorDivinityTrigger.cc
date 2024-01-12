@@ -24,7 +24,7 @@ void AnchorDivinityTrigger::trigger(octopus::State const &state_p, octopus::Step
 {
     std::map<std::string, octopus::Fixed> map_l;
     map_l["Anchor"] = -_bonus;
-    step_p.addSteppable(new octopus::PlayerSpendResourceStep(_player, map_l));
+    step_p.addSteppable(state_p, new octopus::PlayerSpendResourceStep(_player, map_l));
 
     std::vector<fas::DivinityType> options_l;
     for(int i = 0 ; i < 3 ; ++ i)
@@ -37,8 +37,8 @@ void AnchorDivinityTrigger::trigger(octopus::State const &state_p, octopus::Step
     }
 
 	octopus::ListenerEntityData const * listenerData_l = dynamic_cast<octopus::ListenerEntityData const *>(data_p._listenerData[0]);
-    step_p.addSteppable(new octopus::StateTemplePositionRemoveStep(listenerData_l->_entities.at(idx_p)->_pos));
+    step_p.addSteppable(state_p, new octopus::StateTemplePositionRemoveStep(listenerData_l->_entities.at(idx_p)->_pos));
 
     std::string id_l = std::to_string(_count++);
-    step_p.addSteppable(new octopus::PlayerAddOptionStep(_player, id_l, new DivinityGenerator(_player, options_l)));
+    step_p.addSteppable(state_p, new octopus::PlayerAddOptionStep(_player, id_l, new DivinityGenerator(_player, options_l)));
 }

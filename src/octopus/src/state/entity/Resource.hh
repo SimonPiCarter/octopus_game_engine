@@ -41,11 +41,10 @@ bool hasHarvestPoint(Resource const &resource_p);
 
 /// @brief get the closest harvest point (using manhatan distance) for the given harvester
 /// @param state_p state to check if harvesters registered are still alive
-/// @param step_p step to check if a free slot have been taken already
 /// @param harvester_p the harvester to use
 /// @param resource_p the resoruce to use
 /// @return -1 if no free harvest point or no harvest point at all
-int getBestHarvestPoint(State const &state_p, Step const &step_p, Entity const &harvester_p, Resource const &resource_p);
+int getBestHarvestPoint(State const &state_p, Entity const &harvester_p, Resource const &resource_p);
 
 }
 

@@ -32,7 +32,7 @@ TEST(conflictSolverTest, simple)
 	updateVisionGrid(state_l, building_l, true);
 
 	EntityMoveStep * moveStep_l = new EntityMoveStep(Handle(0), Vector { -1, -1} );
-	step_l.addEntityMoveStep(moveStep_l);
+	step_l.addEntityMoveStep(state_l, moveStep_l);
 
 	updateStepFromConflictPosition(step_l, state_l);
 

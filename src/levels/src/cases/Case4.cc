@@ -118,32 +118,32 @@ public:
 			Unit unit_l({ 5, 35. }, false, _lib.getUnitModel("soldier"));
 			unit_l._player = 1;
 			Handle handle_l = getNextHandle(step_p, state_p);
-			step_p.addSteppable(new UnitSpawnStep(handle_l, unit_l));
-			step_p.addSteppable(new CommandSpawnStep(new EntityMoveCommand(handle_l, handle_l, {25., 35.}, 0, {{25., 35.}} )));
+			step_p.addSteppable(state_p, new UnitSpawnStep(handle_l, unit_l));
+			step_p.addSteppable(state_p, new CommandSpawnStep(new EntityMoveCommand(handle_l, handle_l, {25., 35.}, 0, {{25., 35.}} )));
 		}
 		{
 			Unit unit_l({ 6, 35. }, false, _lib.getUnitModel("soldier"));
 			unit_l._player = 1;
 			Handle handle_l = getNextHandle(step_p, state_p);
-			step_p.addSteppable(new UnitSpawnStep(handle_l, unit_l));
-			step_p.addSteppable(new CommandSpawnStep(new EntityMoveCommand(handle_l, handle_l, {25., 35.}, 0, {{25., 35.}} )));
+			step_p.addSteppable(state_p, new UnitSpawnStep(handle_l, unit_l));
+			step_p.addSteppable(state_p, new CommandSpawnStep(new EntityMoveCommand(handle_l, handle_l, {25., 35.}, 0, {{25., 35.}} )));
 		}
 		{
 			Unit unit_l({ 5, 36. }, false, _lib.getUnitModel("soldier"));
 			unit_l._player = 1;
 			Handle handle_l = getNextHandle(step_p, state_p);
-			step_p.addSteppable(new UnitSpawnStep(handle_l, unit_l));
-			step_p.addSteppable(new CommandSpawnStep(new EntityMoveCommand(handle_l, handle_l, {25., 35.}, 0, {{25., 35.}} )));
+			step_p.addSteppable(state_p, new UnitSpawnStep(handle_l, unit_l));
+			step_p.addSteppable(state_p, new CommandSpawnStep(new EntityMoveCommand(handle_l, handle_l, {25., 35.}, 0, {{25., 35.}} )));
 		}
 		{
 			Unit unit_l({ 6, 36. }, false, _lib.getUnitModel("soldier"));
 			unit_l._player = 1;
 			Handle handle_l = getNextHandle(step_p, state_p);
-			step_p.addSteppable(new UnitSpawnStep(handle_l, unit_l));
-			step_p.addSteppable(new CommandSpawnStep(new EntityMoveCommand(handle_l, handle_l, {25., 35.}, 0, {{25., 35.}} )));
+			step_p.addSteppable(state_p, new UnitSpawnStep(handle_l, unit_l));
+			step_p.addSteppable(state_p, new CommandSpawnStep(new EntityMoveCommand(handle_l, handle_l, {25., 35.}, 0, {{25., 35.}} )));
 		}
 
-		step_p.addSteppable(new TriggerSpawn(new Case4TriggerSpawn(new ListenerStepCount(200), _lib)));
+		step_p.addSteppable(state_p, new TriggerSpawn(new Case4TriggerSpawn(new ListenerStepCount(200), _lib)));
 	}
 private:
 	Library const &_lib;

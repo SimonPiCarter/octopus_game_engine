@@ -18,7 +18,7 @@ public:
 	EntityBuffCommand(Handle const &commandHandle_p, Handle const &target_p, TimedBuff const &buff_p);
 
 	/// @brief
-	virtual bool applyCommand(Step & step_p, State const &state_p, CommandData const *data_p, PathManager &pathManager_p) const override;
+	virtual bool applyCommand(StepShallow & step_p, State const &state_p, CommandData const *data_p, PathManager &pathManager_p) const override;
 
 	TimedBuff const &getBuff() const { return _buff; }
 private:

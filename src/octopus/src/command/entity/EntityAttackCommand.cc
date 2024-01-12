@@ -37,7 +37,7 @@ EntityAttackCommand::EntityAttackCommand(Handle const &commandHandle_p, Handle c
 	, _moveCommand(commandHandle_p, source_p, {0,0}, 0, {})
 {}
 
-bool EntityAttackCommand::applyCommand(Step & step_p, State const &state_p, CommandData const *data_p, PathManager &pathManager_p) const
+bool EntityAttackCommand::applyCommand(StepShallow & step_p, State const &state_p, CommandData const *data_p, PathManager &pathManager_p) const
 {
 	// get data
 	AttackMoveData const &data_l = *static_cast<AttackMoveData const *>(data_p);
@@ -45,7 +45,7 @@ bool EntityAttackCommand::applyCommand(Step & step_p, State const &state_p, Comm
 	Handle const &curTarget_l = data_l._target;
 	Entity const * entSource_l = state_p.getEntity(_source);
 
-	Logger::getDebug() << "EntityAttackCommand:: apply Command "<<_source << " -> " <<curTarget_l<<std::endl;
+	Logger::getDebug() << "EntityAttackCommand:: apply Command "<<_source.index << " -> " <<curTarget_l.index<<std::endl;
 
 	// if the current command is about healing
 	bool heal_l = entSource_l->_model._heal > 1e-3;
@@ -79,7 +79,7 @@ bool EntityAttackCommand::applyCommand(Step & step_p, State const &state_p, Comm
 		}
 		else
 		{
-			Logger::getDebug() << "EntityAttackCommand:: new target found "<<newTarget_l->_handle<<std::endl;
+			Logger::getDebug() << "EntityAttackCommand:: new target found "<<newTarget_l->_handle.index<<std::endl;
 			/// steppable to update target
 			step_p.addSteppable(new CommandNewTargetStep(_handleCommand, newTarget_l->_handle, curTarget_l));
 			return false;
@@ -117,7 +117,7 @@ bool EntityAttackCommand::applyCommand(Step & step_p, State const &state_p, Comm
 			// If target we update
 			if(newTarget_l && newTarget_l->_handle != curTarget_l)
 			{
-				Logger::getDebug() << "EntityAttackCommand:: new target found (out of range) "<<newTarget_l->_handle<<std::endl;
+				Logger::getDebug() << "EntityAttackCommand:: new target found (out of range) "<<newTarget_l->_handle.index<<std::endl;
 				/// steppable to update target
 				step_p.addSteppable(new CommandNewTargetStep(_handleCommand, newTarget_l->_handle, curTarget_l));
 			}
@@ -127,12 +127,12 @@ bool EntityAttackCommand::applyCommand(Step & step_p, State const &state_p, Comm
 		Vector diff_l = entTarget_l->_pos - data_l._finalPoint;
 		if(square_length(diff_l) > 1.)
 		{
-			Logger::getDebug() << "\t\tEntityAttackCommand:: changed target "<< _source << " to " << entTarget_l->_pos.x.to_double()<<";"<<entTarget_l->_pos.y.to_double() <<std::endl;
+			Logger::getDebug() << "\t\tEntityAttackCommand:: changed target "<< _source.index << " to " << entTarget_l->_pos.x.to_double()<<";"<<entTarget_l->_pos.y.to_double() <<std::endl;
 			step_p.addSteppable(new CommandDataWaypointSetStep(_handleCommand, data_l._waypoints, {entTarget_l->_pos}));
 		}
 		else
 		{
-			Logger::getDebug() << "\t\tEntityAttackCommand:: adding move step "<< _source << " target " << closest_l.x.to_double()<<";"<<closest_l.y.to_double() << " speed " <<entSource_l->getStepSpeed().to_double()<<std::endl;
+			Logger::getDebug() << "\t\tEntityAttackCommand:: adding move step "<< _source.index << " target " << closest_l.x.to_double()<<";"<<closest_l.y.to_double() << " speed " <<entSource_l->getStepSpeed().to_double()<<std::endl;
 			// add move command
 			_moveCommand.applyCommand(step_p, state_p, data_p, pathManager_p);
 		}
@@ -156,9 +156,7 @@ bool EntityAttackCommand::applyCommand(Step & step_p, State const &state_p, Comm
 			if(heal_l)
 			{
 				step_p.addSteppable(new ImpactStep(entSource_l->_model._id, entTarget_l->_pos));
-				Fixed curHp_l = entTarget_l->_hp + step_p.getHpChange(curTarget_l);
-				Fixed maxHp_l = entTarget_l->getHpMax();
-				step_p.addSteppable(new EntityHitPointChangeStep(curTarget_l, entSource_l->getHeal(), curHp_l, maxHp_l));
+				step_p.addSteppable(new EntityHitPointChangeStep(curTarget_l, entSource_l->getHeal()));
 			}
 			else
 			{
@@ -182,7 +180,7 @@ bool EntityAttackCommand::applyCommand(Step & step_p, State const &state_p, Comm
 					projectile_l._baseDamage = entSource_l->getDamageNoBonus();
 					projectile_l._bonusDamage = entSource_l->getDamage(entTarget_l->_model);
 					projectile_l._generator = entSource_l->_attackMod;
-					step_p.getProjectileSpawnStep().addProjectile(state_p.getProjectileContainer(), std::move(projectile_l));
+					step_p.addProjectile(std::move(projectile_l));
 				}
 				else
 				{
@@ -200,7 +198,7 @@ bool EntityAttackCommand::applyCommand(Step & step_p, State const &state_p, Comm
 				Entity const * newTarget_l = lookUpNewTarget(state_p, _source, entSource_l->_aggroDistance, heal_l);
 				if(newTarget_l && newTarget_l->_model._isUnit)
 				{
-					Logger::getDebug() << "EntityAttackCommand:: new target found (out of range) "<<newTarget_l->_handle<<std::endl;
+					Logger::getDebug() << "EntityAttackCommand:: new target found (out of range) "<<newTarget_l->_handle.index<<std::endl;
 					/// steppable to update target
 					step_p.addSteppable(new CommandNewTargetStep(_handleCommand, newTarget_l->_handle, curTarget_l));
 				}
@@ -224,7 +222,7 @@ bool EntityAttackCommand::applyCommand(Step & step_p, State const &state_p, Comm
 	return false;
 }
 
-void EntityAttackCommand::cleanUp(Step & step_p, State const &state_p, CommandData const *data_p) const
+void EntityAttackCommand::cleanUp(StepShallow & step_p, State const &state_p, CommandData const *data_p) const
 {
 	_moveCommand.cleanUp(step_p, state_p, data_p);
 	Entity const * entSource_l = state_p.getEntity(_source);

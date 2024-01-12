@@ -19,14 +19,15 @@ Step::~Step()
 	}
 }
 
-void Step::addEntityMoveStep(EntityMoveStep * step_p)
+void Step::addEntityMoveStep(State const &state_p, EntityMoveStep * step_p)
 {
 	_listEntityMoveStep.push_back(step_p);
-	this->addSteppable(step_p);
+	this->addSteppable(state_p, step_p);
 }
 
-void Step::addSteppable(Steppable * step_p)
+void Step::addSteppable(State const &state_p, Steppable * step_p)
 {
+	step_p->consolidate(state_p, *this);
 	StepAdditionVisitor vis_l(*this);
 	vis_l(step_p);
 	_listSteppable.push_back(step_p);
@@ -42,12 +43,12 @@ std::list<EntityMoveStep *> const &Step::getEntityMoveStep() const
 	return _listEntityMoveStep;
 }
 
-std::list<Steppable const *> &Step::getSteppable()
+std::list<Steppable *> &Step::getSteppable()
 {
 	return _listSteppable;
 }
 
-std::list<Steppable const *> const &Step::getSteppable() const
+std::list<Steppable *> const &Step::getSteppable() const
 {
 	return _listSteppable;
 }
@@ -328,6 +329,38 @@ Handle getNextHandle(Step const &step_p, State const &state_p)
 	}
 
 	return Handle(step_p.getEntitySpawned() - freeHandles_l.size() + state_p.getEntities().size());
+}
+
+void consolidate(State const &state_p, Step &step_p, StepShallow &shallow_p)
+{
+	StepAdditionVisitor vis_l(step_p);
+	// consolidate step data
+	for(Steppable * steppable_l : shallow_p.getListSteppable())
+	{
+		steppable_l->consolidate(state_p, step_p);
+		vis_l(steppable_l);
+	}
+	for(Steppable * steppable_l : shallow_p.getListEntityMoveStep())
+	{
+		steppable_l->consolidate(state_p, step_p);
+		vis_l(steppable_l);
+	}
+
+	step_p.getSteppable().splice(step_p.getSteppable().end(), shallow_p.getListSteppable());
+	for(EntityMoveStep * steppable_l : shallow_p.getListEntityMoveStep())
+	{
+		step_p.getEntityMoveStep().push_back(steppable_l);
+		step_p.getSteppable().push_back(steppable_l);
+	}
+
+	// merge projectile steps
+	for(Projectile &proj_l : shallow_p.getToBeSpawned())
+	{
+		step_p.getProjectileSpawnStep().addProjectile(state_p.getProjectileContainer(), std::move(proj_l));
+	}
+
+	// merge projectile move/over
+	step_p.getProjectileMoveStep().merge(std::move(shallow_p.getProjectileMoveStep()));
 }
 
 } // namespace octopus

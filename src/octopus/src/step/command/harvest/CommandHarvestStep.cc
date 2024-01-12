@@ -5,6 +5,7 @@
 #include "command/CommandData.hh"
 #include "command/Commandable.hh"
 #include "state/State.hh"
+#include "step/Step.hh"
 #include "logger/Logger.hh"
 
 namespace octopus
@@ -89,6 +90,14 @@ void CommandHarvestTimeSinceHarvestStep::revert(State &state_p, SteppableData co
 bool CommandHarvestTimeSinceHarvestStep::isNoOp() const
 {
 	return _old == _new;
+}
+
+void CommandHarvestPointChangeStep::consolidate(State const &state_p, Step const &step_p)
+{
+	if(step_p.isSlotTaken(_res, _new))
+	{
+		_new = -1;
+	}
 }
 
 void CommandHarvestPointChangeStep::apply(State &state_p) const

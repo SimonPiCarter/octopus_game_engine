@@ -6,7 +6,7 @@
 #include "step/player/PlayerSpendResourceStep.hh"
 #include "step/Step.hh"
 
-void TimerDamage::applyEffect(octopus::Step & step_p, octopus::State const &state_p, octopus::CommandData const *, octopus::PathManager &) const
+void TimerDamage::applyEffect(octopus::StepShallow & step_p, octopus::State const &state_p, octopus::CommandData const *, octopus::PathManager &) const
 {
     const octopus::Player *player_l = state_p.getPlayer(_player);
     octopus::Fixed res_l = octopus::getResource(*player_l, _res);
@@ -19,8 +19,6 @@ void TimerDamage::applyEffect(octopus::Step & step_p, octopus::State const &stat
     }
     else
     {
-        octopus::Fixed maxHp_l = state_p.getEntity(_ent)->getHpMax();
-        octopus::Fixed curHp_l = state_p.getEntity(_ent)->_hp + step_p.getHpChange(_ent);
-        step_p.addSteppable(new octopus::EntityHitPointChangeStep(_ent, -10., curHp_l, maxHp_l));
+        step_p.addSteppable(new octopus::EntityHitPointChangeStep(_ent, -10.));
     }
 }

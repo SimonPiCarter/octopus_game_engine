@@ -30,7 +30,7 @@ public:
 
 	/// @brief compile command or info into the step
 	/// @return true if command is over
-	virtual bool applyCommand(Step & step_p, State const &state_p, CommandData const *data_p, PathManager &pathManager_p) const override;
+	virtual bool applyCommand(StepShallow & step_p, State const &state_p, CommandData const *data_p, PathManager &pathManager_p) const override;
 
 private:
 	Library const *_lib;

@@ -218,9 +218,7 @@ struct GodotActionVisitor
 
 			if(player_l->_team == action_p.team)
 			{
-				octopus::Fixed curHp_l = ent_l->_hp + _step.getHpChange(ent_l->_handle);
-				octopus::Fixed maxHp_l = ent_l->getHpMax();
-				_step.addSteppable(new octopus::EntityHitPointChangeStep(ent_l->_handle, -action_p.damage, curHp_l, maxHp_l));
+				_step.addSteppable(new octopus::EntityHitPointChangeStep(ent_l->_handle, -action_p.damage));
 			}
 		}
 	}

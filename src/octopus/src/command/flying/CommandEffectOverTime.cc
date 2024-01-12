@@ -6,7 +6,7 @@
 namespace octopus
 {
 
-bool CommandEffectOverTime::applyCommand(Step & step_p, State const &state_p, CommandData const * data_p, PathManager &pathManager_p) const
+bool CommandEffectOverTime::applyCommand(StepShallow & step_p, State const &state_p, CommandData const * data_p, PathManager &pathManager_p) const
 {
 	TimerData const *timerData_l = dynamic_cast<TimerData const *>(data_p);
 	step_p.addSteppable(new TimerDataUpdateStep(getHandle(), timerData_l->_time, timerData_l->_time+1));

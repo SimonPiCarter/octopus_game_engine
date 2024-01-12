@@ -24,16 +24,16 @@ void PlayerChoseOptionCommand::registerCommand(Step & step_p, State const &state
 	// check for available option
 	Player const & player_l = *state_p.getPlayer(_player);
 
-	step_p.addSteppable(new CommandStorageStep(this));
+	step_p.addSteppable(state_p, new CommandStorageStep(this));
 
 	if(player_l._options.find(_key) != player_l._options.end()
 	&& player_l._options.at(_key)->getNumOptions() > _option)
 	{
-		step_p.addSteppable(new PlayerPopOptionStep(_player, _key, _option));
+		step_p.addSteppable(state_p, new PlayerPopOptionStep(_player, _key, _option));
 	}
 }
 
-bool PlayerChoseOptionCommand::applyCommand(Step &, State const &, CommandData const *, PathManager &) const
+bool PlayerChoseOptionCommand::applyCommand(StepShallow &, State const &, CommandData const *, PathManager &) const
 {
 	return true;
 }

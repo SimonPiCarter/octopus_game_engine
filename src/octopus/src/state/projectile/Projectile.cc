@@ -21,7 +21,7 @@ Vector getMove(Vector const &source_p, Vector const &target_p, Fixed const speed
 	return move_l;
 }
 
-void tickProjectile(Step &step_p, Projectile const &proj_p, State const &state_p)
+void tickProjectile(StepShallow &step_p, Projectile const &proj_p, State const &state_p)
 {
 	if(proj_p._done)
 	{

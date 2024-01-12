@@ -31,7 +31,7 @@ TEST(condBuffStepTest, simple_speed_min_hp)
 
 	EXPECT_NEAR(2., to_double(state_l.getEntity(Handle(0))->getStepSpeed()), 1e-5);
 
-	EntityHitPointChangeStep stepHp_l(Handle(0), -1, 10, 10);
+	EntityHitPointChangeStep stepHp_l(Handle(0), -1);
 	stepHp_l.apply(state_l);
 
 	EXPECT_NEAR(1., to_double(state_l.getEntity(Handle(0))->getStepSpeed()), 1e-5);
@@ -58,7 +58,7 @@ TEST(condBuffStepTest, simple_speed_max_hp)
 
 	EXPECT_NEAR(1., to_double(state_l.getEntity(Handle(0))->getStepSpeed()), 1e-5);
 
-	EntityHitPointChangeStep stepHp_l(Handle(0), -1, 10, 10);
+	EntityHitPointChangeStep stepHp_l(Handle(0), -1);
 	stepHp_l.apply(state_l);
 
 	EXPECT_NEAR(2., to_double(state_l.getEntity(Handle(0))->getStepSpeed()), 1e-5);

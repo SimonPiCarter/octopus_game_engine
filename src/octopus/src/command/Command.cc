@@ -8,12 +8,12 @@
 
 namespace octopus
 {
-void Command::registerCommand(Step &step_p, State const &)
+void Command::registerCommand(Step &step_p, State const &state_p)
 {
-	step_p.addSteppable(new CommandSpawnStep(this));
+	step_p.addSteppable(state_p, new CommandSpawnStep(this));
 }
 
-void Command::cleanUp(Step & , State const &, CommandData const *) const {}
+void Command::cleanUp(StepShallow & , State const &, CommandData const *) const {}
 
 bool Command::checkPlayer(State const &state_p, unsigned long player_p) const
 {

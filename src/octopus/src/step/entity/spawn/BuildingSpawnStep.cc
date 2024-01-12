@@ -4,7 +4,7 @@ namespace octopus
 {
 
 BuildingSpawnStep::BuildingSpawnStep(Handle const &handle_p, Building const &model_p, bool builtAlready_p)
-	: SpawnModelStep(handle_p, model_p, builtAlready_p)
+	: SpawnModelStep(model_p, builtAlready_p)
 {}
 
 

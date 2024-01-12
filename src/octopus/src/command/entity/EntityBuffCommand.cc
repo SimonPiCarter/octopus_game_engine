@@ -17,7 +17,7 @@ EntityBuffCommand::EntityBuffCommand(Handle const &commandHandle_p, Handle const
 	, _buff(buff_p)
 {}
 
-bool EntityBuffCommand::applyCommand(Step & step_p, State const &state_p, CommandData const *, PathManager &) const
+bool EntityBuffCommand::applyCommand(StepShallow & step_p, State const &state_p, CommandData const *, PathManager &) const
 {
 	Logger::getDebug() << "EntityBuffCommand:: apply Command "<<_target <<std::endl;
 

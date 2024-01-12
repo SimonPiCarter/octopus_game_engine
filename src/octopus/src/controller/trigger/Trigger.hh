@@ -38,7 +38,7 @@ public:
 	bool isComplete(TriggerData const &data_p) const;
 
 	/// @brief reset count for all listeners
-	void reset(Step &step_p, TriggerData const &data_p) const;
+	void reset(State const &state_p, Step &step_p, TriggerData const &data_p) const;
 
 	/// @brief return the minimum count among all triggers
 	unsigned long getCount(TriggerData const &data_p) const;

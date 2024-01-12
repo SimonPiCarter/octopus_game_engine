@@ -195,7 +195,12 @@ namespace octopus
 			return _data/double(e);
 		}
 
-		long long data() const
+		long long const &data() const
+		{
+			return _data;
+		}
+
+		long long &data()
 		{
 			return _data;
 		}

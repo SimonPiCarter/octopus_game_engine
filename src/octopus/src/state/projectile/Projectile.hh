@@ -71,7 +71,7 @@ private:
 /// - if projectile is close to target it will generate steps of impact and
 /// mark itself as finished
 /// - otherwise it will close on target (entity or position)
-void tickProjectile(Step &step_p, Projectile const &proj_p, State const &state_p);
+void tickProjectile(StepShallow &step_p, Projectile const &proj_p, State const &state_p);
 
 } // namespace octopus
 

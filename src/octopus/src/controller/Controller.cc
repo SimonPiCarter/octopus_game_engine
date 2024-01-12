@@ -18,6 +18,7 @@
 #include "step/ConflictPositionSolver.hh"
 #include "step/TickingStep.hh"
 #include "step/ConstraintPosition.hh"
+#include "step/StepAdditionVisitor.hh"
 #include "step/command/CommandQueueStep.hh"
 #include "step/command/flying/FlyingCommandPopStep.hh"
 #include "step/command/flying/FlyingCommandSpawnStep.hh"
@@ -73,6 +74,7 @@ Controller::Controller(
 	// add steppable
 	for(Steppable * steppable_l : initSteppables_p)
 	{
+		/// @fixme redondant with l105?
 		CommandSpawnStep * cmdSpawn_l = dynamic_cast<CommandSpawnStep *>(steppable_l);
 		if(cmdSpawn_l)
 		{
@@ -83,7 +85,7 @@ Controller::Controller(
 		{
 			_triggers[0].push_back(triggerSpawn_l->_trigger);
 		}
-		_initialStep.addSteppable(steppable_l);
+		_initialStep.addSteppable(*_backState->_state, steppable_l);
 	}
 	// add commands
 	for(Command * cmd_l : initCommands_p)
@@ -195,12 +197,13 @@ bool Controller::loop_body()
 			//
 			//
 
+			StepShallow stepShallow_l(step_l.getId());
 			// apply all commands
 			for(Commandable * cmdable_l : state_l->getEntities())
 			{
 				if(cmdable_l->isActive())
 				{
-					cmdable_l->runCommands(step_l, *state_l, _pathManager);
+					cmdable_l->runCommands(stepShallow_l, *state_l, _pathManager);
 				}
 			}
 
@@ -208,11 +211,13 @@ bool Controller::loop_body()
 			{
 				FlyingCommandBundle const & cmd_l = pair_l.second;
 				// if over remove it
-				if(cmd_l._cmd->applyCommand(step_l, *state_l, cmd_l._data, _pathManager))
+				if(cmd_l._cmd->applyCommand(stepShallow_l, *state_l, cmd_l._data, _pathManager))
 				{
-					step_l.addSteppable(new FlyingCommandPopStep(cmd_l._cmd));
+					stepShallow_l.addSteppable(new FlyingCommandPopStep(cmd_l._cmd));
 				}
 			}
+
+			consolidate(*state_l, step_l, stepShallow_l);
 
 			// push new commands
 			std::list<Command *> * commands_l = nullptr;
@@ -290,7 +295,7 @@ bool Controller::loop_body()
 			// push new triggers
 			for(Trigger * trigger_l : _queuedTriggers[_backState->_stepHandled-1])
 			{
-				step_l.addSteppable(new TriggerSpawn(trigger_l));
+				step_l.addSteppable(*state_l, new TriggerSpawn(trigger_l));
 			}
 			handleTriggers(*state_l, step_l, getStepBeforeLastCompiledStep());
 
@@ -303,8 +308,11 @@ bool Controller::loop_body()
 			//
 			const std::chrono::time_point<std::chrono::steady_clock> startTickingProjectileStep_l = std::chrono::steady_clock::now();
 
+			StepShallow stepShallowProjectile_l(step_l.getId());
 			std::vector<Projectile> const &projectiles_l = state_l->getProjectileContainer().getProjectiles();
-			std::for_each(projectiles_l.begin(), projectiles_l.end(), std::bind(&tickProjectile, std::ref(step_l), std::placeholders::_1, std::ref(*state_l)));
+			std::for_each(projectiles_l.begin(), projectiles_l.end(), std::bind(&tickProjectile, std::ref(stepShallowProjectile_l), std::placeholders::_1, std::ref(*state_l)));
+
+			consolidate(*state_l, step_l, stepShallowProjectile_l);
 
 			_metrics._timeTickingProjectiles += std::chrono::nanoseconds( std::chrono::steady_clock::now() - startTickingProjectileStep_l ).count();
 
@@ -316,7 +324,7 @@ bool Controller::loop_body()
 			const std::chrono::time_point<std::chrono::steady_clock> startVisionStep_l = std::chrono::steady_clock::now();
 
 			std::list<VisionChangeStep *> list_l = newVisionChangeStep(*state_l, step_l, state_l->getWorldSize(), state_l->getVisionHandler().getPatternHandler());
-			std::for_each(list_l.begin(), list_l.end(), std::bind(&Step::addSteppable, &step_l, std::placeholders::_1));
+			std::for_each(list_l.begin(), list_l.end(), std::bind(&Step::addSteppable, &step_l, std::ref(*state_l), std::placeholders::_1));
 
 			_metrics._timeVisionChange += std::chrono::nanoseconds( std::chrono::steady_clock::now() - startVisionStep_l ).count();
 
@@ -363,7 +371,7 @@ bool Controller::loop_body()
 
 			// Prepare next step
 			_stepBundles.push_back({new Step(_stepBundles.back()._step), new StepData()});
-			_stepBundles.back()._step->addSteppable(new TickingStep());
+			_stepBundles.back()._step->addSteppable(*state_l, new TickingStep());
 			_lastHandledStep = _backState->_stepHandled;
 
 			auto &&time_l = std::chrono::nanoseconds( std::chrono::steady_clock::now() - start_l ).count();
@@ -662,13 +670,13 @@ void Controller::handleTriggers(State const &state_p, Step &step_p, Step const &
 				if(data_l)
 				{
 					Player const &player_l = *state_p.getPlayer(ent_l._player);
-					step_p.addSteppable(new PlayerSpendResourceStep(ent_l._player, getReverseCostMap(data_l->getCost(player_l))));
+					step_p.addSteppable(state_p, new PlayerSpendResourceStep(ent_l._player, getReverseCostMap(data_l->getCost(player_l))));
 				}
 				// if update remove update being processed
 				UpgradeProductionData const * upgradeData_l = dynamic_cast<UpgradeProductionData const *>(data_l);
 				if(upgradeData_l)
 				{
-					step_p.addSteppable(new PlayerProducedUpgradeStep(ent_l._player, upgradeData_l->_upgrade->_id, false));
+					step_p.addSteppable(state_p, new PlayerProducedUpgradeStep(ent_l._player, upgradeData_l->_upgrade->_id, false));
 				}
 			}
 		}
@@ -682,7 +690,7 @@ void Controller::handleTriggers(State const &state_p, Step &step_p, Step const &
 		freeHandles_l.push_back(ent_l._handle);
 	}
 
-	step_p.addSteppable(new StateFreeHandleStep(freeHandles_l));
+	step_p.addSteppable(state_p, new StateFreeHandleStep(freeHandles_l));
 
 	for(EventEntityModelFinished const * spanwed_l : visitor_l._listEventEntityModelFinished)
 	{
@@ -696,7 +704,7 @@ void Controller::handleTriggers(State const &state_p, Step &step_p, Step const &
 
 	for(auto &&pair_l : mapDeltaBuildingPerPlayer_l)
 	{
-		step_p.addSteppable(new PlayerUpdateBuildingCountStep(pair_l.first, pair_l.second));
+		step_p.addSteppable(state_p, new PlayerUpdateBuildingCountStep(pair_l.first, pair_l.second));
 	}
 
 	Handle curHandle_l(0);
@@ -722,13 +730,13 @@ void Controller::handleTriggers(State const &state_p, Step &step_p, Step const &
 			if(trigger_l->_isOneShot)
 			{
 				// if one shot disable trigger
-				step_p.addSteppable(new TriggerEnableChange(curHandle_l, data_l._isEnabled, false));
+				step_p.addSteppable(state_p, new TriggerEnableChange(curHandle_l, data_l._isEnabled, false));
 				Logger::getDebug() << "handleTriggers :: disable "<<curHandle_l<<std::endl;
 			}
 			else
 			{
 				// Else reset data
-				trigger_l->reset(step_p, data_l);
+				trigger_l->reset(state_p, step_p, data_l);
 				Logger::getDebug() << "handleTriggers :: reset "<<curHandle_l<<std::endl;
 			}
 		}

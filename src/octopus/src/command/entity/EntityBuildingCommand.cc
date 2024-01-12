@@ -44,7 +44,7 @@ bool isInRange(State const &state_p, Entity const * ent_p, Building const * buil
 	return false;
 }
 
-bool EntityBuildingCommand::applyCommand(Step & step_p, State const &state_p, CommandData const *data_p, PathManager &pathManager_p) const
+bool EntityBuildingCommand::applyCommand(StepShallow & step_p, State const &state_p, CommandData const *data_p, PathManager &pathManager_p) const
 {
 	Logger::getDebug() << "EntityBuildingCommand:: apply Command "<<_source <<std::endl;
 	MoveData const &moveData_l = *static_cast<MoveData const *>(data_p);
@@ -79,16 +79,8 @@ bool EntityBuildingCommand::applyCommand(Step & step_p, State const &state_p, Co
 	if(building_l->isBlueprint()
 	&& !building_l->_buildingModel.checkGrid(*building_l, state_p))
 	{
-		if(!step_p.isCanceled(_target))
-		{
-			Logger::getDebug() << "EntityBuildingCommand:: space taken and not cancelled yet"<<std::endl;
-			step_p.addSteppable(new BuildingCancelStep(_target, building_l->_canceled, true));
-			step_p.addSteppable(new PlayerSpendResourceStep(building_l->_player, getReverseCostMap(building_l->_model._cost)));
-		}
-		else
-		{
-			Logger::getDebug() << "EntityBuildingCommand:: space taken and already cancelled"<<std::endl;
-		}
+		Logger::getDebug() << "EntityBuildingCommand:: cancelling"<<std::endl;
+		step_p.addSteppable(new BuildingCancelStep(_target, true, building_l->_model._cost));
 		return true;
 	}
 

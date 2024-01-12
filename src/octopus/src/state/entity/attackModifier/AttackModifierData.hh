@@ -9,7 +9,7 @@ namespace octopus
 {
 
 class State;
-class Step;
+class StepShallow;
 
 /// @brief the data required to apply a modifier
 struct AttackModifierData
@@ -25,7 +25,7 @@ struct AttackModifierData
 };
 
 /// @brief apply main attack damage (no modifier)
-void applyMainAttack(Step &step_p, AttackModifierData const &data_p, State const &state_p);
+void applyMainAttack(StepShallow &step_p, AttackModifierData const &data_p, State const &state_p);
 
 } // octopus
 #endif

@@ -19,7 +19,7 @@ void BuildingUnitCancelCommand::registerCommand(Step & step_p, State const &stat
 	Logger::getDebug() << "BuildingUnitCancelCommand:: register Command "<<_handleCommand <<std::endl;
 	Entity const * ent_l = state_p.getEntity(_handleCommand);
 
-	step_p.addSteppable(new CommandStorageStep(this));
+	step_p.addSteppable(state_p, new CommandStorageStep(this));
 	// get bundle
 	CommandBundle const *bundle_l = ent_l->getQueue().getBundle(_idx);
 	// if bundle is null means that the command was already cancelled and cleaned up
@@ -33,13 +33,13 @@ void BuildingUnitCancelCommand::registerCommand(Step & step_p, State const &stat
 	if(prodData_l && !prodData_l->_canceled && !step_p.isCmdCanceled(CommandIdx(_handleCommand, _idx)))
 	{
 		Player const &player_l = *state_p.getPlayer(ent_l->_player);
-		step_p.addSteppable(new PlayerSpendResourceStep(ent_l->_player, getReverseCostMap(prodData_l->getCost(player_l))));
-		step_p.addSteppable(new CancelUnitProductionStep(_handleCommand, _idx));
+		step_p.addSteppable(state_p, new PlayerSpendResourceStep(ent_l->_player, getReverseCostMap(prodData_l->getCost(player_l))));
+		step_p.addSteppable(state_p, new CancelUnitProductionStep(_handleCommand, _idx));
 		// if update remove update being processed
 		UpgradeProductionData const * upgradeData_l = dynamic_cast<UpgradeProductionData const *>(data_l);
 		if(upgradeData_l)
 		{
-			step_p.addSteppable(new PlayerProducedUpgradeStep(ent_l->_player, upgradeData_l->_upgrade->_id, false));
+			step_p.addSteppable(state_p, new PlayerProducedUpgradeStep(ent_l->_player, upgradeData_l->_upgrade->_id, false));
 		}
 	}
 }

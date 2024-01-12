@@ -42,10 +42,12 @@ TEST(ProjectileStepTest, simple)
 	EXPECT_EQ(1u, state_l.getProjectileContainer().getProjectiles().at(1)._index);
 
 	Step step_l(nullptr);
+	StepShallow shallow_l(0);
 	for(Projectile const &curProj_l : state_l.getProjectileContainer().getProjectiles())
 	{
-		tickProjectile(step_l, curProj_l, state_l);
+		tickProjectile(shallow_l, curProj_l, state_l);
 	}
+	consolidate(state_l, step_l, shallow_l);
 
 	ProjectileMoveStep const& moveStep_l = step_l.getProjectileMoveStep();
 

@@ -23,7 +23,7 @@ class NoModifier
 {
 public:
 	/// @brief create a new attack steppable
-	void newAttackSteppable(Step &step_p, AttackModifierData const &data_p, State const &state_p, bool disableMainAttack_p=false) const;
+	void newAttackSteppable(StepShallow &step_p, AttackModifierData const &data_p, State const &state_p, bool disableMainAttack_p=false) const;
 };
 
 /// @brief CompositeModifier allow to stack modifiers
@@ -43,7 +43,7 @@ public:
 	std::vector<CompositableModifier> _modifiers;
 
 	/// @brief create a new attack steppable based on components
-	void newAttackSteppable(Step &step_p, AttackModifierData const &data_p, State const &state_p) const;
+	void newAttackSteppable(StepShallow &step_p, AttackModifierData const &data_p, State const &state_p) const;
 };
 
 using AttackModifier = std::variant<
@@ -57,7 +57,7 @@ using AttackModifier = std::variant<
 >;
 
 /// @brief create attack steppable using eventual attack modifier
-void newAttackSteppable(AttackModifier const &attackMod_p, Step &step_p, AttackModifierData const &data_p, State const &state_p);
+void newAttackSteppable(AttackModifier const &attackMod_p, StepShallow &step_p, AttackModifierData const &data_p, State const &state_p);
 
 } // namespace octopus
 

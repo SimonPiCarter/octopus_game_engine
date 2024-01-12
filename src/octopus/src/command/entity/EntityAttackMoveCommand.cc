@@ -41,7 +41,7 @@ bool shouldStopAttacking(AttackMoveData const &attackMoveData_p, Entity const *e
 	return square_length(diff_l) > maxSqDistance_l;
 }
 
-bool EntityAttackMoveCommand::applyCommand(Step & step_p, State const &state_p, CommandData const *data_p, PathManager &pathManager_p) const
+bool EntityAttackMoveCommand::applyCommand(StepShallow & step_p, State const &state_p, CommandData const *data_p, PathManager &pathManager_p) const
 {
 	Logger::getDebug() << "EntityAttackMoveCommand:: apply Command "<<_source <<std::endl;
 	AttackMoveData const &attackMoveData_l = *static_cast<AttackMoveData const *>(data_p);
@@ -111,7 +111,7 @@ bool EntityAttackMoveCommand::applyCommand(Step & step_p, State const &state_p, 
 	return _subMoveCommand.applyCommand(step_p, state_p, data_p, pathManager_p);
 }
 
-void EntityAttackMoveCommand::cleanUp(Step & step_p, State const &state_p, CommandData const *data_p) const
+void EntityAttackMoveCommand::cleanUp(StepShallow & step_p, State const &state_p, CommandData const *data_p) const
 {
 	AttackMoveData const &attackMoveData_l = *static_cast<AttackMoveData const *>(data_p);
 	EntityAttackCommand const & subAttackCommand_l = attackMoveData_l._subAttackCommand;

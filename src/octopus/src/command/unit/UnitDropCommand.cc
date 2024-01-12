@@ -36,11 +36,11 @@ void UnitDropCommand::registerCommand(Step &step_p, State const &state_p)
 	&& building_l->_player == unit_l->_player
 	&& building_l->_buildingModel.isDeposit(unit_l->_typeOfResource) )
 	{
-		step_p.addSteppable(new CommandSpawnStep(this));
+		step_p.addSteppable(state_p, new CommandSpawnStep(this));
 	}
 	else
 	{
-		step_p.addSteppable(new CommandStorageStep(this));
+		step_p.addSteppable(state_p, new CommandStorageStep(this));
 	}
 }
 
@@ -66,7 +66,7 @@ bool depostInRange(State const &state_p, Unit const * unit_p, Handle const res_p
 	return false;
 }
 
-bool UnitDropCommand::applyCommand(Step & step_p, State const &state_p, CommandData const *data_p, PathManager &pathManager_p) const
+bool UnitDropCommand::applyCommand(StepShallow & step_p, State const &state_p, CommandData const *data_p, PathManager &pathManager_p) const
 {
 	Logger::getDebug() << "UnitDropCommand:: apply Command "<<_source <<std::endl;
 	MoveData const &data_l = *static_cast<MoveData const *>(data_p);

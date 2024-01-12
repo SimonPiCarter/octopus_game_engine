@@ -33,7 +33,7 @@ public:
 		// add resource for the player
 		std::map<std::string, Fixed> map_l;
 		map_l[_res] = -_qty;
-		step_p.addSteppable(new PlayerSpendResourceStep(_player, map_l));
+		step_p.addSteppable(state_p, new PlayerSpendResourceStep(_player, map_l));
 	}
 
 private:
@@ -60,7 +60,7 @@ public:
 		{
 			for(TimedBuff const & buff_l : _buffs)
 			{
-				step_p.addSteppable(new PlayerBuffAllStep(_player, buff_l, _model));
+				step_p.addSteppable(state_p, new PlayerBuffAllStep(_player, buff_l, _model));
 			}
 		}
 	}

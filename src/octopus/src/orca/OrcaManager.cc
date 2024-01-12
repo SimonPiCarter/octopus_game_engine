@@ -138,7 +138,7 @@ void OrcaManager::setupStep(State const &state_p, Step &step_p)
             _sim->setAgentWeight(idx_l, 0.01);
 
 			EntityMoveStep *step_l = new EntityMoveStep(ent_l->_handle, {0, 0});
-			step_p.addEntityMoveStep(step_l);
+			step_p.addEntityMoveStep(state_p, step_l);
 			mapMoveStep_l[ent_l->_handle.index] = step_l;
 		}
 	}

@@ -41,6 +41,35 @@ namespace octopus
 		}
 	};
 
+	class StepShallow
+	{
+		public:
+			StepShallow(unsigned long long id_p) : _id(id_p) {}
+			/// @brief add step and keep ownership
+			void addEntityMoveStep(EntityMoveStep * step_p) { _listEntityMoveStep.push_back(step_p); }
+			/// @brief add step and keep ownership
+			void addSteppable(Steppable * step_p) { _listSteppable.push_back(step_p); }
+
+			std::list<EntityMoveStep *> & getListEntityMoveStep() { return _listEntityMoveStep; }
+			std::list<Steppable *> & getListSteppable() { return _listSteppable; }
+
+			void addProjectile(Projectile &&projectile_p) { _toBeSpawned.emplace_back(projectile_p); }
+			std::list<Projectile> & getToBeSpawned() { return _toBeSpawned; }
+
+			ProjectileMoveStep & getProjectileMoveStep() { return _projectileMoveStep; }
+			ProjectileMoveStep const & getProjectileMoveStep() const { return _projectileMoveStep; }
+
+			unsigned long long getId() const { return _id; }
+		private:
+			std::list<EntityMoveStep *> _listEntityMoveStep;
+			std::list<Steppable *> _listSteppable;
+
+			std::list<Projectile> _toBeSpawned;
+			ProjectileMoveStep _projectileMoveStep;
+
+			unsigned long long _id = 0;
+	};
+
 	class Step
 	{
 		public:
@@ -48,15 +77,15 @@ namespace octopus
 			~Step();
 
 			/// @brief add step and keep ownership
-			void addEntityMoveStep(EntityMoveStep * step_p);
+			void addEntityMoveStep(State const &state_p, EntityMoveStep * step_p);
 			/// @brief add step and keep ownership
-			void addSteppable(Steppable * step_p);
+			void addSteppable(State const &state_p, Steppable * step_p);
 
 			std::list<EntityMoveStep *> &getEntityMoveStep();
 			std::list<EntityMoveStep *> const &getEntityMoveStep() const;
 
-			std::list<Steppable const *> &getSteppable();
-			std::list<Steppable const *> const &getSteppable() const;
+			std::list<Steppable *> &getSteppable();
+			std::list<Steppable *> const &getSteppable() const;
 
 			ProjectileMoveStep & getProjectileMoveStep();
 			ProjectileMoveStep const & getProjectileMoveStep() const;
@@ -118,7 +147,7 @@ namespace octopus
 		private:
 			std::list<EntityMoveStep *> _listEntityMoveStep;
 
-			std::list<Steppable const *> _listSteppable;
+			std::list<Steppable*> _listSteppable;
 
 			ProjectileMoveStep _projectileMoveStep;
 			ProjectileSpawnStep _projectileSpawnStep;
@@ -185,6 +214,14 @@ namespace octopus
 	/// @param state_p the state on which the step is gonna be applied
 	/// @return the next handle
 	Handle getNextHandle(Step const &step_p, State const &state_p);
+
+	/// @brief append the step shallow to the given step
+	/// and consolidate all steppables
+	/// @param state_p required to consolidate steppables
+	/// @param step_p
+	/// @param shallow_p
+	void consolidate(State const &state_p, Step &step_p, StepShallow &shallow_p);
+
 }
 
 #endif

@@ -14,7 +14,7 @@ namespace octopus
 	class Entity;
 	class Step;
 	class State;
-	void idleFunctioNoOp(Entity const &, Step &, State const &);
+	void idleFunctioNoOp(Entity const &, StepShallow &, State const &);
 
 	bool alwaysOkChecker(Step const &, State const &, Handle const &, Handle const &, Vector const &);
 
@@ -22,7 +22,7 @@ namespace octopus
 	{
 		std::string _id;
 		std::string _reloadKey;
-		std::function<void(Step &, State const &, Handle const &, Handle const &, Vector const &)> _runnable;
+		std::function<void(StepShallow &, State const &, Handle const &, Handle const &, Vector const &)> _runnable;
 		std::function<bool(Step const &, State const &, Handle const &, Handle const &, Vector const &)> _checker = alwaysOkChecker;
 		bool _requireTargetPoint = false;
 		bool _requireTargetHandle = false;
@@ -92,7 +92,7 @@ namespace octopus
 		/// @brief id to be set up when library loads a model
 		std::string _id;
 
-		std::function<void(Entity const &, Step &, State const &)> _idleFunc = idleFunctioNoOp;
+		std::function<void(Entity const &, StepShallow &, State const &)> _idleFunc = idleFunctioNoOp;
 
 		/// @brief if projectile attack
 		bool _projectile {false};

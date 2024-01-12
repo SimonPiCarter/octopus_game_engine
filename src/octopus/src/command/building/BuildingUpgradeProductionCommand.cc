@@ -50,28 +50,28 @@ void BuildingUpgradeProductionCommand::registerCommand(Step & step_p, State cons
 	&& req_l
 	&& (_upgrade->_repeatable || !inStep))
 	{
-		step_p.addSteppable(new PlayerSpendResourceStep(building_l->_player, _upgrade->_cost));
-		step_p.addSteppable(new CommandSpawnStep(this));
-		step_p.addSteppable(new PlayerProducedUpgradeStep(building_l->_player, _upgrade->_id, true));
+		step_p.addSteppable(state_p, new PlayerSpendResourceStep(building_l->_player, _upgrade->_cost));
+		step_p.addSteppable(state_p, new CommandSpawnStep(this));
+		step_p.addSteppable(state_p, new PlayerProducedUpgradeStep(building_l->_player, _upgrade->_id, true));
 	}
 	// else add informative step for failure
 	else if (missingRes_l != "")
 	{
-		step_p.addSteppable(new MissingResourceStep(building_l->_player, missingRes_l));
-		step_p.addSteppable(new CommandStorageStep(this));
+		step_p.addSteppable(state_p, new MissingResourceStep(building_l->_player, missingRes_l));
+		step_p.addSteppable(state_p, new CommandStorageStep(this));
 	}
 	else if(!req_l)
 	{
-		step_p.addSteppable(new MissingResourceStep(building_l->_player, MissingResourceStep::MissingRequirement));
-		step_p.addSteppable(new CommandStorageStep(this));
+		step_p.addSteppable(state_p, new MissingResourceStep(building_l->_player, MissingResourceStep::MissingRequirement));
+		step_p.addSteppable(state_p, new CommandStorageStep(this));
 	}
 	else
 	{
-		step_p.addSteppable(new CommandStorageStep(this));
+		step_p.addSteppable(state_p, new CommandStorageStep(this));
 	}
 }
 
-bool BuildingUpgradeProductionCommand::applyCommand(Step & step_p, State const &state_p, CommandData const *, PathManager &) const
+bool BuildingUpgradeProductionCommand::applyCommand(StepShallow & step_p, State const &state_p, CommandData const *, PathManager &) const
 {
 	Logger::getDebug() << "BuildingUpgradeProductionCommand:: apply Command "<<_source <<std::endl;
 	Building const * building_l = dynamic_cast<Building const *>(state_p.getEntity(_source));

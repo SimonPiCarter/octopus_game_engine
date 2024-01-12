@@ -9,7 +9,7 @@
 namespace octopus
 {
 
-void AoEModifier::newAttackSteppable(Step &step_p, AttackModifierData const &data_p, State const &state_p, bool disableMainAttack_p) const
+void AoEModifier::newAttackSteppable(StepShallow &step_p, AttackModifierData const &data_p, State const &state_p, bool disableMainAttack_p) const
 {
     unsigned long team_l = data_p.team;
 
@@ -21,9 +21,7 @@ void AoEModifier::newAttackSteppable(Step &step_p, AttackModifierData const &dat
         Player const *otherPlayer_l = state_p.getPlayer(subTarget_l->_player);
         if(otherPlayer_l->_team != team_l || _friendlyFire)
         {
-            Fixed curHp_l = subTarget_l->_hp + step_p.getHpChange(subTarget_l->_handle);
-            Fixed maxHp_l = subTarget_l->getHpMax();
-            step_p.addSteppable(new EntityHitPointChangeStep(subTarget_l->_handle, - _ratio * data_p.baseDamage, curHp_l, maxHp_l));
+            step_p.addSteppable(new EntityHitPointChangeStep(subTarget_l->_handle, - _ratio * data_p.baseDamage));
         }
     }
     for(Entity const * subTarget_l : panel_l.buildings)
@@ -31,9 +29,7 @@ void AoEModifier::newAttackSteppable(Step &step_p, AttackModifierData const &dat
         Player const *otherPlayer_l = state_p.getPlayer(subTarget_l->_player);
         if(otherPlayer_l->_team != team_l || _friendlyFire)
         {
-            Fixed curHp_l = subTarget_l->_hp + step_p.getHpChange(subTarget_l->_handle);
-            Fixed maxHp_l = subTarget_l->getHpMax();
-            step_p.addSteppable(new EntityHitPointChangeStep(subTarget_l->_handle, - _ratio * data_p.baseDamage, curHp_l, maxHp_l));
+            step_p.addSteppable(new EntityHitPointChangeStep(subTarget_l->_handle, - _ratio * data_p.baseDamage));
         }
     }
 

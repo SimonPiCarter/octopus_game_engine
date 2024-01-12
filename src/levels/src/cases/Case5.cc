@@ -90,7 +90,7 @@ public:
 
 	virtual void trigger(State const &state_p, Step &step_p, unsigned long, TriggerData const &) const override
 	{
-		step_p.addSteppable(new StateWinStep(state_p.isOver(), state_p.hasWinningTeam(), state_p.getWinningTeam(), _team));
+		step_p.addSteppable(state_p, new StateWinStep(state_p.isOver(), state_p.hasWinningTeam(), state_p.getWinningTeam(), _team));
 	}
 private:
 	unsigned long const _team;
@@ -103,7 +103,7 @@ public:
 
 	virtual void trigger(State const &state_p, Step &step_p, unsigned long, TriggerData const &) const override
 	{
-		step_p.addSteppable(new StateDrawStep(state_p.isOver(), state_p.hasWinningTeam()));
+		step_p.addSteppable(state_p, new StateDrawStep(state_p.isOver(), state_p.hasWinningTeam()));
 	}
 };
 

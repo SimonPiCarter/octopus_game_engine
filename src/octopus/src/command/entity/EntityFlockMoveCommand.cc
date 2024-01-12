@@ -33,7 +33,7 @@ Fixed const & EntityFlockMoveCommand::getRayTolerance() const
 void EntityFlockMoveCommand::registerCommand(Step &step_p, State const &state_p)
 {
 	// just store this command
-	step_p.addSteppable(new CommandStorageStep(this));
+	step_p.addSteppable(state_p, new CommandStorageStep(this));
 
 	unsigned long player_l = state_p.getEntity(_handleCommand)->_player;
 
@@ -60,7 +60,7 @@ void EntityFlockMoveCommand::registerCommand(Step &step_p, State const &state_p)
 			cmd_l->setFlockInformation(&_flockInfo);
 			cmd_l->setQueued(isQueued());
 			cmd_l->setStepOfRegristration(getStepOfRegistration());
-			step_p.addSteppable(new CommandSpawnStep(cmd_l));
+			step_p.addSteppable(state_p, new CommandSpawnStep(cmd_l));
 		}
 		else
 		{
@@ -69,7 +69,7 @@ void EntityFlockMoveCommand::registerCommand(Step &step_p, State const &state_p)
 			cmd_l->setFlockInformation(&_flockInfo);
 			cmd_l->setQueued(isQueued());
 			cmd_l->setStepOfRegristration(getStepOfRegistration());
-			step_p.addSteppable(new CommandSpawnStep(cmd_l));
+			step_p.addSteppable(state_p, new CommandSpawnStep(cmd_l));
 		}
 	}
 }

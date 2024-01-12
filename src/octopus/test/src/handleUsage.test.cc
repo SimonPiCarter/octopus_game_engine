@@ -26,7 +26,7 @@ public:
 		, _steps(steps_p)
 	{}
 
-	virtual void applyEffect(Step & step_p, State const &, CommandData const *, PathManager &) const
+	virtual void applyEffect(StepShallow & step_p, State const &state_p, CommandData const * data_p, PathManager &pathManager_p) const override
 	{
 		for(Steppable * step_l : _steps)
 		{
@@ -45,10 +45,10 @@ TEST(handleUsageTest, reusage)
 	Controller controller_l({
 		new PlayerSpawnStep(0, 0),
 		new EntitySpawnStep(Handle(0), Entity { { 3, 3. }, false, unitModel_l}),
-		new FlyingCommandSpawnStep(new HandleUsageTestCommand({new EntityHitPointChangeStep(Handle(0, 0), -10, 10, 10)}, Handle(0), 2)),
+		new FlyingCommandSpawnStep(new HandleUsageTestCommand({new EntityHitPointChangeStep(Handle(0, 0), -10)}, Handle(0), 2)),
 		new FlyingCommandSpawnStep(new HandleUsageTestCommand({new EntitySpawnStep(Handle(0, 1), Entity { { 3, 3. }, false, unitModel_l})}, Handle(1), 4)),
-		new FlyingCommandSpawnStep(new HandleUsageTestCommand({new EntityHitPointChangeStep(Handle(0, 1), -10, 10, 10)}, Handle(2), 6)),
-		new FlyingCommandSpawnStep(new HandleUsageTestCommand({new EntityHitPointChangeStep(Handle(0, 1), 10, 0, 10)}, Handle(3), 8))
+		new FlyingCommandSpawnStep(new HandleUsageTestCommand({new EntityHitPointChangeStep(Handle(0, 1), -10)}, Handle(2), 6)),
+		new FlyingCommandSpawnStep(new HandleUsageTestCommand({new EntityHitPointChangeStep(Handle(0, 1), 10)}, Handle(3), 8))
 	}, 1., {}, 1, 50, 1);
 
 	// query state
@@ -100,9 +100,9 @@ TEST(handleUsageTest, reusage_throw_wrong_handle)
 	Controller controller_l({
 		new PlayerSpawnStep(0, 0),
 		new EntitySpawnStep(Handle(0), Entity { { 3, 3. }, false, unitModel_l}),
-		new FlyingCommandSpawnStep(new HandleUsageTestCommand({new EntityHitPointChangeStep(Handle(0, 0), -10, 10, 10)}, Handle(0), 2)),
+		new FlyingCommandSpawnStep(new HandleUsageTestCommand({new EntityHitPointChangeStep(Handle(0, 0), -10)}, Handle(0), 2)),
 		new FlyingCommandSpawnStep(new HandleUsageTestCommand({new EntitySpawnStep(Handle(0, 1), Entity { { 3, 3. }, false, unitModel_l})}, Handle(1), 4)),
-		new FlyingCommandSpawnStep(new HandleUsageTestCommand({new EntityHitPointChangeStep(Handle(0, 0), 10, 0, 10)}, Handle(3), 6))
+		new FlyingCommandSpawnStep(new HandleUsageTestCommand({new EntityHitPointChangeStep(Handle(0, 0), 10)}, Handle(3), 6))
 	}, 1., {}, 1, 50, 1);
 
 	// query state
@@ -157,7 +157,7 @@ TEST(handleUsageTest, attack_move_death_replaced_during_attack)
 		new EntitySpawnStep(Handle(1), Entity { { 11, 3. }, false, unitModel_l}),
 		// entity 0 attack entity 1
 		new CommandSpawnStep(new EntityAttackCommand(Handle(0), Handle(0), Handle(1), true)),
-		new FlyingCommandSpawnStep(new HandleUsageTestCommand({new EntityHitPointChangeStep(Handle(1, 0), -10, 10, 10)}, Handle(0), 5)),
+		new FlyingCommandSpawnStep(new HandleUsageTestCommand({new EntityHitPointChangeStep(Handle(1, 0), -10)}, Handle(0), 5)),
 		new FlyingCommandSpawnStep(new HandleUsageTestCommand({new EntitySpawnStep(Handle(1,1), Entity { { 11, 3. }, false, unitModel_l})}, Handle(1), 7)),
 	}, 1., {}, 1, 50, 1);
 
@@ -226,7 +226,7 @@ TEST(handleUsageTest, attack_move_death_replaced_during_move)
 		new EntitySpawnStep(Handle(1), Entity { { 11, 3. }, false, unitModel_l}),
 		// entity 0 attack entity 1
 		new CommandSpawnStep(new EntityAttackCommand(Handle(0), Handle(0), Handle(1), true)),
-		new FlyingCommandSpawnStep(new HandleUsageTestCommand({new EntityHitPointChangeStep(Handle(1, 0), -10, 10, 10)}, Handle(0), 1)),
+		new FlyingCommandSpawnStep(new HandleUsageTestCommand({new EntityHitPointChangeStep(Handle(1, 0), -10)}, Handle(0), 1)),
 		new FlyingCommandSpawnStep(new HandleUsageTestCommand({new EntitySpawnStep(Handle(1,1), Entity { { 11, 3. }, false, unitModel_l})}, Handle(1), 4)),
 	}, 1., {}, 1, 50, 1);
 
@@ -275,11 +275,11 @@ class OnEachTriggerResourceTest : public OnEachTrigger
 public:
 	OnEachTriggerResourceTest(Listener * listener_p) : OnEachTrigger(listener_p) {}
 
-	virtual void trigger(State const &, Step &step_p, unsigned long, TriggerData const &) const override
+	virtual void trigger(State const &state_p, Step &step_p, unsigned long, TriggerData const &) const override
 	{
 		std::map<std::string, Fixed> map_l;
 		map_l["bloc"] = -10.;
-		step_p.addSteppable(new PlayerSpendResourceStep(0, map_l));
+		step_p.addSteppable(state_p, new PlayerSpendResourceStep(0, map_l));
 	}
 };
 
@@ -298,9 +298,9 @@ TEST(handleUsageTest, trigger_unit_died)
 	Controller controller_l({
 		new PlayerSpawnStep(0, 0),
 		new EntitySpawnStep(Handle(0), unit_l),
-		new FlyingCommandSpawnStep(new HandleUsageTestCommand({new EntityHitPointChangeStep(Handle(0, 0), -10, 10, 10)}, Handle(0), 2)),
+		new FlyingCommandSpawnStep(new HandleUsageTestCommand({new EntityHitPointChangeStep(Handle(0, 0), -10)}, Handle(0), 2)),
 		new FlyingCommandSpawnStep(new HandleUsageTestCommand({new EntitySpawnStep(Handle(0,1), Entity { { 11, 3. }, false, entityModel_l})}, Handle(1), 4)),
-		new FlyingCommandSpawnStep(new HandleUsageTestCommand({new EntityHitPointChangeStep(Handle(0, 1), -10, 10, 10)}, Handle(2), 6)),
+		new FlyingCommandSpawnStep(new HandleUsageTestCommand({new EntityHitPointChangeStep(Handle(0, 1), -10)}, Handle(2), 6)),
 	}, 1., {}, 1, 50, 1);
 
 	controller_l.commitTrigger(new OnEachTriggerResourceTest(new ListenerEntityDied({Handle(0)})));

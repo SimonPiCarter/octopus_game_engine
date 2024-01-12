@@ -26,6 +26,8 @@ public:
 
 	std::vector<Vector> const &getMove() const { return _move; }
 	std::vector<bool> const &getOver() const { return _over; }
+
+	void merge(ProjectileMoveStep &&other_p);
 private:
 	std::vector<Vector> _move;
 	std::vector<bool> _over;

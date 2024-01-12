@@ -54,13 +54,13 @@ bool Trigger::isComplete(TriggerData const &data_p) const
 	return true;
 }
 
-void Trigger::reset(Step &step_p, TriggerData const &data_p) const
+void Trigger::reset(State const &state_p, Step &step_p, TriggerData const &data_p) const
 {
 	Handle listenerHandle_l;
 	for(Listener const * listener_l : _listeners)
 	{
 		ListenerData const * listData_l = data_p._listenerData[listenerHandle_l.index];
-		listener_l->reset(step_p, *listData_l);
+		listener_l->reset(state_p, step_p, *listData_l);
 		++listenerHandle_l.index;
 	}
 }

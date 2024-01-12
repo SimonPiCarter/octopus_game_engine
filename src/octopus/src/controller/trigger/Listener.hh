@@ -12,6 +12,7 @@ namespace octopus
 class EventCollection;
 struct EntityModel;
 class Entity;
+class State;
 class Step;
 
 struct ListenerData
@@ -58,7 +59,7 @@ public:
 	virtual void compile(EventCollection const &controller_p, Step &step_p, bool count_p, ListenerData const &data_p) const = 0;
 
 	/// @brief reset the data to initial state
-	virtual void reset(Step &step_p, ListenerData const &data_p) const;
+	virtual void reset(State const &state_p, Step &step_p, ListenerData const &data_p) const;
 
 	virtual ListenerData * newData(Handle const triggerHandle_p, Handle const listenerHandle_p) const
 		{ return new ListenerData(triggerHandle_p, listenerHandle_p); }
@@ -75,7 +76,7 @@ public:
 	virtual void compile(EventCollection const &controller_p, Step &step_p, bool count_p, ListenerData const &data_p) const override;
 
 	/// @brief reset the data to initial state
-	virtual void reset(Step &step_p, ListenerData const &data_p) const override;
+	virtual void reset(State const &state_p, Step &step_p, ListenerData const &data_p) const override;
 
 	virtual ListenerData * newData(Handle const triggerHandle_p, Handle const listenerHandle_p) const override
 		{ return new ListenerStepCountData(triggerHandle_p, listenerHandle_p); }
@@ -88,7 +89,7 @@ class ListenerEntity : public Listener
 {
 public:
 	/// @brief reset the data to initial state
-	virtual void reset(Step &step_p, ListenerData const &data_p) const override;
+	virtual void reset(State const &state_p, Step &step_p, ListenerData const &data_p) const override;
 
 	virtual ListenerData * newData(Handle const triggerHandle_p, Handle const listenerHandle_p) const override
 		{ return new ListenerEntityData(triggerHandle_p, listenerHandle_p); }
@@ -150,7 +151,7 @@ public:
 	virtual void compile(EventCollection const &controller_p, Step &step_p, bool count_p, ListenerData const &data_p) const override;
 
 	/// @brief reset the data to initial state
-	virtual void reset(Step &step_p, ListenerData const &data_p) const override;
+	virtual void reset(State const &state_p, Step &step_p, ListenerData const &data_p) const override;
 
 	/// @brief the handles that triggers when they are all dead
 	std::unordered_set<Handle> const _handles;

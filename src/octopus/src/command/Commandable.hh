@@ -34,7 +34,7 @@ public:
 	virtual bool isActive() const;
 
 	/// @brief run the commands in queue and pop them if terminated
-	virtual void runCommands(Step & step_p, State const &state_p, PathManager &pathManager_p);
+	virtual void runCommands(StepShallow & step_p, State const &state_p, PathManager &pathManager_p);
 
 	CommandBundle & getFrontQueue();
 	CommandBundle const & getFrontQueue() const;

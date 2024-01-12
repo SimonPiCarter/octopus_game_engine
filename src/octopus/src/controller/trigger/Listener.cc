@@ -23,45 +23,45 @@ unsigned long ListenerData::getCount() const
 	return _count;
 }
 
-void Listener::reset(Step &step_p, ListenerData const &data_p) const
+void Listener::reset(State const &state_p, Step &step_p, ListenerData const &data_p) const
 {
-	step_p.addSteppable(new TriggerCountChange(data_p._triggerHandle, data_p._listenerHandle, data_p._count, 0));
+	step_p.addSteppable(state_p, new TriggerCountChange(data_p._triggerHandle, data_p._listenerHandle, data_p._count, 0));
 }
 
-void ListenerStepCount::compile(EventCollection const &, Step &step_p, bool count_p, ListenerData const &data_p) const
+void ListenerStepCount::compile(EventCollection const &collection_p, Step &step_p, bool count_p, ListenerData const &data_p) const
 {
 	unsigned long steps_l = static_cast<ListenerStepCountData const &>(data_p)._elapsedStep;
 
-	step_p.addSteppable(new TriggerStepCountChange(data_p._triggerHandle, data_p._listenerHandle, steps_l, steps_l+1));
+	step_p.addSteppable(collection_p.getState(), new TriggerStepCountChange(data_p._triggerHandle, data_p._listenerHandle, steps_l, steps_l+1));
 	if(steps_l + 1 >= _stepCount)
 	{
-		step_p.addSteppable(new TriggerCountChange(data_p._triggerHandle, data_p._listenerHandle, data_p._count, data_p._count+1));
+		step_p.addSteppable(collection_p.getState(), new TriggerCountChange(data_p._triggerHandle, data_p._listenerHandle, data_p._count, data_p._count+1));
 	}
 }
 
-void ListenerStepCount::reset(Step &step_p, ListenerData const &data_p) const
+void ListenerStepCount::reset(State const &state_p, Step &step_p, ListenerData const &data_p) const
 {
-	Listener::reset(step_p, data_p);
+	Listener::reset(state_p, step_p, data_p);
 	unsigned long steps_l = static_cast<ListenerStepCountData const &>(data_p)._elapsedStep;
-	step_p.addSteppable(new TriggerStepCountChange(data_p._triggerHandle, data_p._listenerHandle, steps_l, 0));
+	step_p.addSteppable(state_p, new TriggerStepCountChange(data_p._triggerHandle, data_p._listenerHandle, steps_l, 0));
 }
 
-void ListenerEntity::reset(Step &step_p, ListenerData const &data_p) const
+void ListenerEntity::reset(State const &state_p, Step &step_p, ListenerData const &data_p) const
 {
-	Listener::reset(step_p, data_p);
+	Listener::reset(state_p, step_p, data_p);
 	std::vector<Entity const *> const &list_l = static_cast<ListenerEntityData const &>(data_p)._entities;
-	step_p.addSteppable(new TriggerEntityResetStep(data_p._triggerHandle, data_p._listenerHandle, list_l));
+	step_p.addSteppable(state_p, new TriggerEntityResetStep(data_p._triggerHandle, data_p._listenerHandle, list_l));
 }
 
-void ListenerEntityModelDied::compile(EventCollection const &controller_p, Step &step_p, bool count_p, ListenerData const &data_p) const
+void ListenerEntityModelDied::compile(EventCollection const &collection_p, Step &step_p, bool count_p, ListenerData const &data_p) const
 {
 	unsigned long count_l = 0;
-	for(EventEntityModelDied const *event_l : controller_p._listEventEntityModelDied)
+	for(EventEntityModelDied const *event_l : collection_p._listEventEntityModelDied)
 	{
 		// pointer comparison
 		if((_model == nullptr || &event_l->_model == _model) && event_l->_player == _player)
 		{
-			step_p.addSteppable(new TriggerEntityAddStep(data_p._triggerHandle, data_p._listenerHandle, &event_l->_entity));
+			step_p.addSteppable(collection_p.getState(), new TriggerEntityAddStep(data_p._triggerHandle, data_p._listenerHandle, &event_l->_entity));
 			++count_l;
 			if(!count_p)
 			{
@@ -69,37 +69,37 @@ void ListenerEntityModelDied::compile(EventCollection const &controller_p, Step 
 			}
 		}
 	}
-	step_p.addSteppable(new TriggerCountChange(data_p._triggerHandle, data_p._listenerHandle, data_p._count, data_p._count+count_l));
+	step_p.addSteppable(collection_p.getState(), new TriggerCountChange(data_p._triggerHandle, data_p._listenerHandle, data_p._count, data_p._count+count_l));
 }
 
-void ListenerEntityDied::compile(EventCollection const &controller_p, Step &step_p, bool count_p, ListenerData const &data_p) const
+void ListenerEntityDied::compile(EventCollection const &collection_p, Step &step_p, bool count_p, ListenerData const &data_p) const
 {
 	ListenerEntityData const &entData_l = static_cast<ListenerEntityData const &>(data_p);
 	unsigned long count_l = 0;
-	for(EventEntityModelDied const *event_l : controller_p._listEventEntityModelDied)
+	for(EventEntityModelDied const *event_l : collection_p._listEventEntityModelDied)
 	{
 		// handle comparison
 		if(_handles.find(event_l->_entity._handle) != _handles.end())
 		{
-			step_p.addSteppable(new TriggerEntityAddStep(data_p._triggerHandle, data_p._listenerHandle, &event_l->_entity));
+			step_p.addSteppable(collection_p.getState(), new TriggerEntityAddStep(data_p._triggerHandle, data_p._listenerHandle, &event_l->_entity));
 			++count_l;
 		}
 	}
 	if(entData_l._entities.size() + count_l == _handles.size() )
 	{
-		step_p.addSteppable(new TriggerCountChange(data_p._triggerHandle, data_p._listenerHandle, data_p._count, data_p._count+1));
+		step_p.addSteppable(collection_p.getState(), new TriggerCountChange(data_p._triggerHandle, data_p._listenerHandle, data_p._count, data_p._count+1));
 	}
 }
 
-void ListenerEntityModelFinished::compile(EventCollection const &controller_p, Step &step_p, bool count_p, ListenerData const &data_p) const
+void ListenerEntityModelFinished::compile(EventCollection const &collection_p, Step &step_p, bool count_p, ListenerData const &data_p) const
 {
 	unsigned long count_l = 0;
-	for(EventEntityModelFinished const *event_l : controller_p._listEventEntityModelFinished)
+	for(EventEntityModelFinished const *event_l : collection_p._listEventEntityModelFinished)
 	{
 		// pointer comparison
 		if(&event_l->_model == _model && event_l->_player == _player)
 		{
-			step_p.addSteppable(new TriggerEntityAddStep(data_p._triggerHandle, data_p._listenerHandle, &event_l->_entity));
+			step_p.addSteppable(collection_p.getState(), new TriggerEntityAddStep(data_p._triggerHandle, data_p._listenerHandle, &event_l->_entity));
 			++count_l;
 			if(!count_p)
 			{
@@ -107,13 +107,13 @@ void ListenerEntityModelFinished::compile(EventCollection const &controller_p, S
 			}
 		}
 	}
-	step_p.addSteppable(new TriggerCountChange(data_p._triggerHandle, data_p._listenerHandle, data_p._count, data_p._count+count_l));
+	step_p.addSteppable(collection_p.getState(), new TriggerCountChange(data_p._triggerHandle, data_p._listenerHandle, data_p._count, data_p._count+count_l));
 }
 
-void ListenerEntityInBox::compile(EventCollection const &controller_p, Step &step_p, bool count_p, ListenerData const &data_p) const
+void ListenerEntityInBox::compile(EventCollection const &collection_p, Step &step_p, bool count_p, ListenerData const &data_p) const
 {
 	unsigned long count_l = 0;
-	State const & state_l = controller_p.getState();
+	State const & state_l = collection_p.getState();
 
 	for(Handle const handle_l : _handles)
 	{
@@ -133,43 +133,43 @@ void ListenerEntityInBox::compile(EventCollection const &controller_p, Step &ste
 	if(count_l > 0)
 	{
 		// always increment by just one!
-		step_p.addSteppable(new TriggerCountChange(data_p._triggerHandle, data_p._listenerHandle, data_p._count, data_p._count+1));
+		step_p.addSteppable(collection_p.getState(), new TriggerCountChange(data_p._triggerHandle, data_p._listenerHandle, data_p._count, data_p._count+1));
 	}
 }
 
-void ListenerEntityInBox::reset(Step &step_p, ListenerData const &data_p) const
+void ListenerEntityInBox::reset(State const &state_p, Step &step_p, ListenerData const &data_p) const
 {
-	Listener::reset(step_p, data_p);
+	Listener::reset(state_p, step_p, data_p);
 }
 
 template<>
-void ListenerResource<true>::compile(EventCollection const &controller_p, Step &step_p, bool, ListenerData const &data_p) const
+void ListenerResource<true>::compile(EventCollection const &collection_p, Step &step_p, bool, ListenerData const &data_p) const
 {
-	State const &state_l = controller_p.getState();
+	State const &state_l = collection_p.getState();
 
 	Fixed res_l = getResource(*state_l.getPlayer(_player), _resource);
 	if(res_l >= _qty)
-		step_p.addSteppable(new TriggerCountChange(data_p._triggerHandle, data_p._listenerHandle, data_p._count, data_p._count+1));
+		step_p.addSteppable(state_l, new TriggerCountChange(data_p._triggerHandle, data_p._listenerHandle, data_p._count, data_p._count+1));
 }
 
 template<>
-void ListenerResource<false>::compile(EventCollection const &controller_p, Step &step_p, bool, ListenerData const &data_p) const
+void ListenerResource<false>::compile(EventCollection const &collection_p, Step &step_p, bool, ListenerData const &data_p) const
 {
-	State const &state_l = controller_p.getState();
+	State const &state_l = collection_p.getState();
 
 	Fixed res_l = getResource(*state_l.getPlayer(_player), _resource);
 	if(res_l <= _qty)
-		step_p.addSteppable(new TriggerCountChange(data_p._triggerHandle, data_p._listenerHandle, data_p._count, data_p._count+1));
+		step_p.addSteppable(state_l, new TriggerCountChange(data_p._triggerHandle, data_p._listenerHandle, data_p._count, data_p._count+1));
 }
 
-void ListenerUpgrade::compile(EventCollection const &controller_p, Step &step_p, bool, ListenerData const &data_p) const
+void ListenerUpgrade::compile(EventCollection const &collection_p, Step &step_p, bool, ListenerData const &data_p) const
 {
-	State const &state_l = controller_p.getState();
+	State const &state_l = collection_p.getState();
 	Player const *player_l = state_l.getPlayer(_player);
 
 	unsigned long lvl_p = getUpgradeLvl(*player_l, _upgrade);
 	if(lvl_p >= _level)
-		step_p.addSteppable(new TriggerCountChange(data_p._triggerHandle, data_p._listenerHandle, data_p._count, data_p._count+1));
+		step_p.addSteppable(state_l, new TriggerCountChange(data_p._triggerHandle, data_p._listenerHandle, data_p._count, data_p._count+1));
 }
 
 ListenerZone *ListenerZone::newListenerZonePlayer(unsigned long player_p, Box<long> const &zone_p)
@@ -236,7 +236,7 @@ void ListenerZone::compile(EventCollection const &collection_p, Step &step_p, bo
 
 	if(found_l)
 	{
-		step_p.addSteppable(new TriggerCountChange(data_p._triggerHandle, data_p._listenerHandle, data_p._count, data_p._count+1));
+		step_p.addSteppable(collection_p.getState(), new TriggerCountChange(data_p._triggerHandle, data_p._listenerHandle, data_p._count, data_p._count+1));
 	}
 }
 

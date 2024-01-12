@@ -146,6 +146,7 @@ TEST(PlayerBuffAllStepStepTest, spawn)
 	EXPECT_NEAR(20., to_double(state_l.getEntity(Handle(0))->getHpMax()), 1e-5);
 
 	EntitySpawnStep spawnStep_l(Handle(1), *state_l.getEntity(Handle(0)));
+	spawnStep_l.consolidate(state_l, Step(nullptr));
 
 	spawnStep_l.apply(state_l);
 

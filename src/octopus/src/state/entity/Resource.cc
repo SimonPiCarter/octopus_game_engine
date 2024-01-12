@@ -30,7 +30,7 @@ bool isHarvestPointFree(HarvestPoint const &point_p, State const &state_p)
 	return point_p.free || !state_p.isEntityAlive(point_p.harvester);
 }
 
-int getBestHarvestPoint(State const &state_p, Step const &step_p, Entity const &harvester_p, Resource const &resource_p)
+int getBestHarvestPoint(State const &state_p, Entity const &harvester_p, Resource const &resource_p)
 {
 	int result_l = -1;
 	Fixed best_l;
@@ -40,7 +40,7 @@ int getBestHarvestPoint(State const &state_p, Step const &step_p, Entity const &
 		HarvestPoint const &point_l = resource_p._harvestPoints[i];
 
 		// skip non free points
-		if(!isHarvestPointFree(point_l, state_p) || step_p.isSlotTaken(resource_p._handle, i))
+		if(!isHarvestPointFree(point_l, state_p))
 		{
 			continue;
 		}

@@ -2,6 +2,7 @@
 #include "AreaSpawnerCommand.hh"
 
 #include "logger/Logger.hh"
+#include "utils/Vector.hh"
 #include "step/Step.hh"
 #include "state/State.hh"
 #include "step/command/CommandQueueStep.hh"
@@ -40,7 +41,7 @@ void spawn(State const &state_p, Step & step_p, Entity const *model_p, Option co
 		Unit unit_l(*dynamic_cast<Unit const *>(model_p));
 		unit_l._pos = pos_l;
 
-		step_p.addSteppable(new UnitSpawnStep(getNextHandle(step_p, state_p), unit_l));
+		step_p.addSteppable(state_p, new UnitSpawnStep(getNextHandle(step_p, state_p), unit_l));
 	}
 	else if(model_p->_model._isBuilding)
 	{
@@ -48,13 +49,13 @@ void spawn(State const &state_p, Step & step_p, Entity const *model_p, Option co
 		Building building_l(*dynamic_cast<Building const *>(model_p));
 		building_l._pos = pos_l;
 
-		step_p.addSteppable(new BuildingSpawnStep(getNextHandle(step_p, state_p), building_l, true));
+		step_p.addSteppable(state_p, new BuildingSpawnStep(getNextHandle(step_p, state_p), building_l, true));
 
 		// special case for abandonned temple
 		if(model_p->_model._isAbandonedTemple)
 		{
 			Logger::getDebug()<<"AreaSpawnerCommand :: spawn abandonned temple at " << pos_l<<std::endl;
-			step_p.addSteppable(new StateTemplePositionAddStep(pos_l));
+			step_p.addSteppable(state_p, new StateTemplePositionAddStep(pos_l));
 		}
 	}
 	else if(model_p->_model._isResource)
@@ -63,14 +64,14 @@ void spawn(State const &state_p, Step & step_p, Entity const *model_p, Option co
 		Resource res_l(*dynamic_cast<Resource const *>(model_p));
 		res_l._pos = pos_l;
 
-		step_p.addSteppable(new ResourceSpawnStep(getNextHandle(step_p, state_p), res_l));
+		step_p.addSteppable(state_p, new ResourceSpawnStep(getNextHandle(step_p, state_p), res_l));
 	}
 	else
 	{
 		Logger::getDebug()<<"AreaSpawnerCommand :: spawn entity at " << pos_l<<std::endl;
 		Entity entity_l(*model_p);
 		entity_l._pos = pos_l;
-		step_p.addSteppable(new EntitySpawnStep(getNextHandle(step_p, state_p), entity_l));
+		step_p.addSteppable(state_p, new EntitySpawnStep(getNextHandle(step_p, state_p), entity_l));
 	}
 }
 
@@ -188,10 +189,10 @@ void AreaSpawnerCommand::registerCommand(Step & step_p, State const &state_p)
 		}
 	}
 
-	step_p.addSteppable(new CommandStorageStep(this));
+	step_p.addSteppable(state_p, new CommandStorageStep(this));
 }
 
-bool AreaSpawnerCommand::applyCommand(Step &, State const &, CommandData const *, PathManager &) const
+bool AreaSpawnerCommand::applyCommand(StepShallow &, State const &, CommandData const *, PathManager &) const
 {
 	// NA
 	return true;

@@ -64,7 +64,7 @@ Command * commandFromIdle(Entity const &ent_p, State const &state_p, unsigned lo
 	return nullptr;
 }
 
-void unitIdleFunction(Entity const &ent_p, Step & step_p, State const &state_p)
+void unitIdleFunction(Entity const &ent_p, StepShallow & step_p, State const &state_p)
 {
 	static unsigned long const waitTime_l = 50;
 	// check for attack every 50 steps

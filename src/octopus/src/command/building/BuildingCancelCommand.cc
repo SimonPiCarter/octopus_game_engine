@@ -24,8 +24,7 @@ void BuildingCancelCommand::registerCommand(Step & step_p, State const &state_p)
 	&& !step_p.isCanceled(_handleCommand))
 	{
 		Logger::getDebug() << "BuildingCancelCommand:: canceling "<<_handleCommand<<std::endl;
-		step_p.addSteppable(new BuildingCancelStep(_handleCommand, building_l->_canceled, true));
-		step_p.addSteppable(new PlayerSpendResourceStep(building_l->_player, getReverseCostMap(building_l->_model._cost)));
+		step_p.addSteppable(state_p, new BuildingCancelStep(_handleCommand, true, building_l->_model._cost));
 	}
 }
 

@@ -93,8 +93,10 @@ class CommandHarvestPointChangeStep : public Steppable
 {
 public:
 	/// @brief update the harvest point
-	CommandHarvestPointChangeStep(Handle const &handle_p, int old_p, int new_p)
-		: _handle(handle_p), _old(old_p), _new(new_p) {}
+	CommandHarvestPointChangeStep(Handle const &handle_p, Handle const &res_p, int old_p, int new_p)
+		: _handle(handle_p), _res(res_p), _old(old_p), _new(new_p) {}
+
+	virtual void consolidate(State const &state_p, Step const &step_p) override;
 
 	virtual void apply(State &state_p) const override;
 	virtual void revert(State &state_p, SteppableData const *) const override;
@@ -106,8 +108,10 @@ public:
 	}
 
 	Handle const _handle {0};
+	Handle const _res {0};
 	int const _old {0};
-	int const _new {0};
+	// non const because it can be changed in consolidate to -1 if slot is already taken
+	int _new {0};
 };
 
 } // namespace octopus

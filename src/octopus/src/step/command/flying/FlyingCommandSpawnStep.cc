@@ -4,9 +4,16 @@
 
 #include "command/Command.hh"
 #include "state/State.hh"
+#include "step/Step.hh"
 
 namespace octopus
 {
+
+void FlyingCommandSpawnStep::consolidate(State const &state_p, Step const &step_p)
+{
+    Handle idx_l = state_p.getFlyingCommandHandle(step_p.getFlyingCommandSpawned());
+	_cmd->setHandle(idx_l);
+}
 
 void FlyingCommandSpawnStep::apply(State &state_p) const
 {

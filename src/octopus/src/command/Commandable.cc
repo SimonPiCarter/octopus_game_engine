@@ -29,7 +29,7 @@ bool Commandable::isActive() const
 	return true;
 }
 
-void Commandable::runCommands(Step & step_p, State const &state_p, PathManager &pathManager_p)
+void Commandable::runCommands(StepShallow & step_p, State const &state_p, PathManager &pathManager_p)
 {
 	if(!_queue.hasCommand())
 	{

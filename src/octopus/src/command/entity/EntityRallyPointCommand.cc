@@ -15,7 +15,7 @@ EntityRallyPointCommand::EntityRallyPointCommand(Handle const &source_p, Handle 
 	, _targetNotSet(targetNotSet_p)
 {}
 
-bool EntityRallyPointCommand::applyCommand(Step & step_p, State const &state_p, CommandData const *, PathManager &) const
+bool EntityRallyPointCommand::applyCommand(StepShallow & step_p, State const &state_p, CommandData const *, PathManager &) const
 {
 	Command *cmd_l = newTargetCommand(state_p, _handleCommand, _target, _pos, _targetNotSet);
 	if(cmd_l)

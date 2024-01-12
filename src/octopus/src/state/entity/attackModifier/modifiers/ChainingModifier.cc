@@ -31,7 +31,7 @@ public:
         , _oldTargets(oldTargets_p)
     {}
 
-	virtual void applyEffect(Step & step_p, State const &state_p, CommandData const * , PathManager &) const override;
+	virtual void applyEffect(StepShallow & step_p, State const &state_p, CommandData const * , PathManager &) const override;
 protected:
     /// @brief damage per tick
     Fixed const _dmg;
@@ -46,7 +46,7 @@ protected:
     std::list<Handle> _oldTargets;
 };
 
-void ChainingOverTime::applyEffect(Step & step_p, State const &state_p, CommandData const *, PathManager &) const
+void ChainingOverTime::applyEffect(StepShallow & step_p, State const &state_p, CommandData const *, PathManager &) const
 {
     // find new target
     Entity const *target_l = nullptr;
@@ -73,27 +73,23 @@ void ChainingOverTime::applyEffect(Step & step_p, State const &state_p, CommandD
         return;
     }
 
-    Fixed maxHp_l = target_l->getHpMax();
-    Fixed curHp_l = target_l->_hp + step_p.getHpChange(_ent);
-    step_p.addSteppable(new EntityHitPointChangeStep(target_l->_handle, -_dmg, curHp_l, maxHp_l));
+    step_p.addSteppable(new EntityHitPointChangeStep(target_l->_handle, -_dmg));
 
     if(_nbOfOccurence > 1)
     {
         std::list<Handle> oldTargets_l = _oldTargets;
         oldTargets_l.push_back(target_l->_handle);
-        Handle idx_l = state_p.getFlyingCommandHandle(step_p.getFlyingCommandSpawned());
         step_p.addSteppable(new FlyingCommandSpawnStep(
-            new ChainingOverTime(idx_l, _tickRate, _dmg*_ratio, target_l->_handle, _nbOfOccurence-1, _ratio, _range, _team, oldTargets_l)));
+            new ChainingOverTime(Handle(0), _tickRate, _dmg*_ratio, target_l->_handle, _nbOfOccurence-1, _ratio, _range, _team, oldTargets_l)));
     }
 }
 
-void ChainingModifier::newAttackSteppable(Step &step_p, AttackModifierData const &data_p, State const &state_p, bool disableMainAttack_p) const
+void ChainingModifier::newAttackSteppable(StepShallow &step_p, AttackModifierData const &data_p, State const &state_p, bool disableMainAttack_p) const
 {
     unsigned long team_l = data_p.team;
 
-    Handle idx_l = state_p.getFlyingCommandHandle(step_p.getFlyingCommandSpawned());
     step_p.addSteppable(new FlyingCommandSpawnStep(
-        new ChainingOverTime(idx_l, _delay, data_p.baseDamage*_ratio, data_p.target, _nbOfTicks, _ratio, _range, team_l, {data_p.target})));
+        new ChainingOverTime(Handle(0), _delay, data_p.baseDamage*_ratio, data_p.target, _nbOfTicks, _ratio, _range, team_l, {data_p.target})));
 
     if(!disableMainAttack_p)
     {

@@ -5,6 +5,7 @@ namespace octopus
 {
 	class State;
 	class SteppableVisitor;
+	class Step;
 
 	/// @brief empty class to define a steppable data
 	struct SteppableData {
@@ -23,6 +24,12 @@ namespace octopus
 	{
 		public:
 			virtual ~Steppable() {}
+			/// @brief consolidate this Steppable
+			/// this is called in the apply order for every step.
+			/// It is required because the steppables may be created in random orders but may require
+			/// knowledge from previous actions
+			/// @fixme redondance avec newData mais data inaccessible dans le apply
+			virtual void consolidate(State const &state_p, Step const &step_p) {}
 			/// @brief apply this Steppable to the given state
 			virtual void apply(State &state_p) const = 0;
 			/// @brief revert this Steppable to the given state

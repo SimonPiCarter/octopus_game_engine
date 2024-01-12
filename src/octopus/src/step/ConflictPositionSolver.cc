@@ -95,7 +95,7 @@ bool updateStepFromConflictPosition(Step &step_p, State const &state_p)
 		{
 			Logger::getDebug() << " conflict solver :: add entity move step because none "<<ent_l->_handle<<std::endl;
 			EntityMoveStep *step_l = new EntityMoveStep(ent_l->_handle, {0, 0});
-			step_p.addEntityMoveStep(step_l);
+			step_p.addEntityMoveStep(state_p, step_l);
 			mapMoveStep_l[ent_l->_handle.index] = step_l;
 			newPos_l[ent_l->_handle.index] = ent_l->_pos;
 		}

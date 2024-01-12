@@ -36,11 +36,11 @@ void UnitHarvestCommand::registerCommand(Step &step_p, State const &state_p)
 	// check that unit can harvest this resource type
 	if(unit_l->_unitModel._maxQuantity.find(res_l->getType()) != unit_l->_unitModel._maxQuantity.end())
 	{
-		step_p.addSteppable(new CommandSpawnStep(this));
+		step_p.addSteppable(state_p, new CommandSpawnStep(this));
 	}
 	else
 	{
-		step_p.addSteppable(new CommandStorageStep(this));
+		step_p.addSteppable(state_p, new CommandStorageStep(this));
 	}
 }
 
@@ -89,9 +89,9 @@ bool inRange(Unit const &unit_p, Resource const &res_p, int slot_p)
 	return length(point_l - unit_p._pos) < Fixed(0.1);
 }
 
-bool isHarvestPointFree(Resource const &res_p, int idx_p, Step const & step_p)
+bool isHarvestPointFree(Resource const &res_p, int idx_p)
 {
-	return res_p._harvestPoints.at(idx_p).free && !step_p.isSlotTaken(res_p._handle, idx_p);
+	return res_p._harvestPoints.at(idx_p).free;
 }
 
 bool isLockedAlready(Unit const &unit_p, Resource const &res_p, int idx_p)
@@ -99,7 +99,7 @@ bool isLockedAlready(Unit const &unit_p, Resource const &res_p, int idx_p)
 	return !res_p._harvestPoints.at(idx_p).free && res_p._harvestPoints.at(idx_p).harvester == unit_p._handle;
 }
 
-bool UnitHarvestCommand::applyCommand(Step & step_p, State const &state_p, CommandData const *data_p, PathManager &pathManager_p) const
+bool UnitHarvestCommand::applyCommand(StepShallow & step_p, State const &state_p, CommandData const *data_p, PathManager &pathManager_p) const
 {
 	Logger::getDebug() << "UnitHarvestCommand:: apply Command "<<_source <<std::endl;
 	HarvestMoveData const &data_l = *static_cast<HarvestMoveData const *>(data_p);
@@ -142,10 +142,10 @@ bool UnitHarvestCommand::applyCommand(Step & step_p, State const &state_p, Comma
 		if(hasHarvestPoint(*res_l) && data_l._idxSlot < 0)
 		{
 			// use first point if non available
-			int harvestPoint_l = std::max(0, getBestHarvestPoint(state_p, step_p, *unit_l, *res_l));
+			int harvestPoint_l = std::max(0, getBestHarvestPoint(state_p, *unit_l, *res_l));
 			if(harvestPoint_l >= 0)
 			{
-				step_p.addSteppable(new CommandHarvestPointChangeStep(_handleCommand, data_l._idxSlot, harvestPoint_l));
+				step_p.addSteppable(new CommandHarvestPointChangeStep(_handleCommand, data_l._resource, data_l._idxSlot, harvestPoint_l));
 
 				Vector target_l = res_l->getHarvestPoint(harvestPoint_l);
 				// update move to resource
@@ -157,7 +157,7 @@ bool UnitHarvestCommand::applyCommand(Step & step_p, State const &state_p, Comma
 		// check if the harvest point is free or locked by this entity
 		if(inRangePoint_l)
 		{
-			bool isHarvestPointFree_l = isHarvestPointFree(*res_l, data_l._idxSlot, step_p);
+			bool isHarvestPointFree_l = isHarvestPointFree(*res_l, data_l._idxSlot);
 			// true if the resource point is locked by this unit already
 			bool lockedByThisAlready_l = isLockedAlready(*unit_l, *res_l, data_l._idxSlot);
 
@@ -165,10 +165,10 @@ bool UnitHarvestCommand::applyCommand(Step & step_p, State const &state_p, Comma
 			// if not free change harvest point
 			if(!isHarvestPointFreeOrLocked_l)
 			{
-				int harvestPoint_l = getBestHarvestPoint(state_p, step_p, *unit_l, *res_l);
+				int harvestPoint_l = getBestHarvestPoint(state_p, *unit_l, *res_l);
 				if(harvestPoint_l >= 0)
 				{
-					step_p.addSteppable(new CommandHarvestPointChangeStep(_handleCommand, data_l._idxSlot, harvestPoint_l));
+					step_p.addSteppable(new CommandHarvestPointChangeStep(_handleCommand, data_l._resource, data_l._idxSlot, harvestPoint_l));
 
 					Vector target_l = res_l->getHarvestPoint(harvestPoint_l);
 					// update move to resource
@@ -253,11 +253,11 @@ bool UnitHarvestCommand::applyCommand(Step & step_p, State const &state_p, Comma
 			step_p.addSteppable(new CommandHarvestingChangeStep(_handleCommand, data_l._harvesting, true));
 
 			Vector target_l = res_l->_pos;
-			int harvestPoint_l = std::max(0, getBestHarvestPoint(state_p, step_p, *unit_l, *res_l));
+			int harvestPoint_l = std::max(0, getBestHarvestPoint(state_p, *unit_l, *res_l));
 			if(harvestPoint_l >= 0 && hasHarvestPoint(*res_l))
 			{
 				target_l = res_l->getHarvestPoint(harvestPoint_l);
-				step_p.addSteppable(new CommandHarvestPointChangeStep(_handleCommand, data_l._idxSlot, harvestPoint_l));
+				step_p.addSteppable(new CommandHarvestPointChangeStep(_handleCommand, data_l._resource, data_l._idxSlot, harvestPoint_l));
 			}
 
 			// update move back to resource
@@ -275,7 +275,7 @@ bool UnitHarvestCommand::applyCommand(Step & step_p, State const &state_p, Comma
 	return false;
 }
 
-void UnitHarvestCommand::cleanUp(Step & step_p, State const &state_p, CommandData const *data_p) const
+void UnitHarvestCommand::cleanUp(StepShallow & step_p, State const &state_p, CommandData const *data_p) const
 {
 	_subMoveCommand.cleanUp(step_p, state_p, data_p);
 

@@ -61,7 +61,7 @@ void registerCommand(CommandVar const &var_p, Step & step_p, State const &state_
 
 /// @brief compile command or info into the step
 /// @return true if command is over
-bool applyCommand(CommandVar const &var_p, Step & step_p, State const &state_p, CommandData const * data_p, PathManager &pathManager_p);
+bool applyCommand(CommandVar const &var_p, StepShallow & step_p, State const &state_p, CommandData const * data_p, PathManager &pathManager_p);
 
 /// @brief create data supporting the command actions
 CommandData * newData(CommandVar const &var_p);
@@ -78,7 +78,7 @@ CommandData * getData(CommandVar &var_p);
 /// @param state_p the state to use to get information
 /// @param data_p date of the command
 /// @note this will only be used on started commands when going to next command
-void cleanUp(CommandVar const &var_p, Step & step_p, State const &state_p, CommandData const * data_p);
+void cleanUp(CommandVar const &var_p, StepShallow & step_p, State const &state_p, CommandData const * data_p);
 
 /// @brief Check if command is valid for given player
 /// @param state_p the state in case we need to get some info

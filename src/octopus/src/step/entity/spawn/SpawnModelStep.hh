@@ -1,11 +1,13 @@
 #ifndef __SPAWN_MODEL_STEP__
 #define __SPAWN_MODEL_STEP__
 
+#include "logger/Logger.hh"
 #include "state/entity/buff/Buff.hh"
 #include "state/entity/Entity.hh"
 #include "state/State.hh"
 #include "state/player/Player.hh"
 #include "state/Handle.hh"
+#include "step/Step.hh"
 #include "step/Steppable.hh"
 #include "step/entity/buff/EntityBuffStep.hh"
 #include "utils/Vector.hh"
@@ -26,9 +28,14 @@ template<typename class_t>
 class SpawnModelStep : public AbstractSpawnModelStep
 {
 public:
-	SpawnModelStep(Handle const &handle_p, class_t const &model_p, bool forceAlive_p=false) : _handle(handle_p), _model(model_p), _forceAlive(forceAlive_p)
+	SpawnModelStep(class_t const &model_p, bool forceAlive_p=false) : _model(model_p), _forceAlive(forceAlive_p)
 	{
 		_template = &_model;
+	}
+
+	virtual void consolidate(State const &state_p, Step const &step_p) override
+	{
+		_handle = getNextHandle(step_p, state_p);
 	}
 
 	virtual void apply(State &state_p) const override
@@ -40,6 +47,10 @@ public:
 			{
 				throw std::logic_error("Spawn Step did not have the same handle across multiple states");
 			}
+		}
+		else if(state_p.isEntityAlive(_handle))
+		{
+			throw std::logic_error("Spawn Step is overriding an entity that is alive");
 		}
 
 		Entity * ent_l = state_p.getEntity(this->_handle);
@@ -105,7 +116,7 @@ public:
 	class_t const &getModel() const { return _model; }
 	bool isForceAlive() const { return _forceAlive; }
 protected:
-	Handle const _handle {0};
+	Handle _handle {0};
 	bool const _forceAlive;
 
 	class_t _model;

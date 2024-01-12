@@ -20,7 +20,7 @@ public:
 	virtual void registerCommand(Step & step_p, State const &state_p) override;
 
 	/// @brief
-	virtual bool applyCommand(Step & step_p, State const &state_p, CommandData const *data_p, PathManager &pathManager_p) const override;
+	virtual bool applyCommand(StepShallow & step_p, State const &state_p, CommandData const *data_p, PathManager &pathManager_p) const override;
 
 	virtual bool checkPlayer(State const &, unsigned long player_p) const override { return _player == player_p; }
 

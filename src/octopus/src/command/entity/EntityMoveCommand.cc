@@ -119,7 +119,7 @@ bool losCheck(Grid const &grid_p, Vector const &pos1_p, Vector const &pos2_p)
 	return true;
 }
 
-bool EntityMoveCommand::applyCommand(Step & step_p, State const &state_p, CommandData const *data_p, PathManager &pathManager_p) const
+bool EntityMoveCommand::applyCommand(StepShallow & step_p, State const &state_p, CommandData const *data_p, PathManager &pathManager_p) const
 {
 	MoveData const *data_l = dynamic_cast<MoveData const *>(data_p);
 	std::list<Vector> const &waypoints_l =  data_l->_waypoints;

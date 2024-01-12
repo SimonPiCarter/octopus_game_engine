@@ -107,14 +107,13 @@ LifestealDivinityParams createDefaultParams()
 
 namespace stimpack
 {
-	void runnable(TimedBuff buff_p, Fixed hpCost_p, Step &step_p, State const &state_p, Handle const &source_p, Handle const &, Vector const &)
+	void runnable(TimedBuff buff_p, Fixed hpCost_p, StepShallow &step_p, State const &state_p, Handle const &source_p, Handle const &, Vector const &)
 	{
 		step_p.addSteppable(new EntityBuffStep(source_p, buff_p));
 
 		Entity const *ent_l = state_p.getEntity(source_p);
-		Fixed curHp_l = ent_l->_hp + step_p.getHpChange(source_p);
-		Fixed maxHp_l = ent_l->getHpMax();
-		step_p.addSteppable(new EntityHitPointChangeStep(source_p, std::max(Fixed(-1) * hpCost_p, 1-curHp_l), curHp_l, maxHp_l));
+		Fixed curHp_l = ent_l->_hp;
+		step_p.addSteppable(new EntityHitPointChangeStep(source_p, std::max(Fixed(-1) * hpCost_p, 1-curHp_l)));
 	}
 
 } // namespace stimpack

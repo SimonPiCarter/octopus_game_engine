@@ -8,6 +8,7 @@ namespace octopus
 {
 class PathManager;
 class Step;
+class StepShallow;
 class State;
 
 /// @brief represent a command that can be registered in a step and
@@ -27,7 +28,7 @@ public:
 
 	/// @brief compile command or info into the step
 	/// @return true if command is over
-	virtual bool applyCommand(Step & step_p, State const &state_p, CommandData const * data_p, PathManager &pathManager_p) const = 0;
+	virtual bool applyCommand(StepShallow & step_p, State const &state_p, CommandData const * data_p, PathManager &pathManager_p) const = 0;
 
 	/// @brief create data supporting the command actions
 	virtual CommandData * newData() const { return nullptr; }
@@ -57,7 +58,7 @@ public:
 	/// @param state_p the state to use to get information
 	/// @param data_p date of the command
 	/// @note this will only be used on started commands when going to next command
-	virtual void cleanUp(Step & step_p, State const &state_p, CommandData const * data_p) const;
+	virtual void cleanUp(StepShallow & step_p, State const &state_p, CommandData const * data_p) const;
 
 	/// @brief Check if command is valid for given player
 	/// @param state_p the state in case we need to get some info
@@ -101,9 +102,10 @@ public:
 
 	virtual void registerCommand(Step & step_p, State const &state_p);
 
+	void setHandle(Handle const &handle_p) { _handle == handle_p; }
 	Handle const &getHandle() const { return _handle; }
 private:
-	Handle const _handle;
+	Handle _handle;
 };
 
 } // namespace octopus

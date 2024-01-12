@@ -10,7 +10,7 @@ namespace octopus
 {
 class Entity;
 class State;
-class Step;
+class StepShallow;
 class Steppable;
 
 /// @brief this class is aimed at lifestealing
@@ -20,7 +20,7 @@ public:
     LifeStealModifier(Fixed ratio_p) : _ratio(ratio_p) {}
 
 	/// @brief create a new attack steppable
-	void newAttackSteppable(Step &step_p, AttackModifierData const &data_p, State const &state_p, bool disableMainAttack_p=false) const;
+	void newAttackSteppable(StepShallow &step_p, AttackModifierData const &data_p, State const &state_p, bool disableMainAttack_p=false) const;
 
     Fixed _ratio;
 };

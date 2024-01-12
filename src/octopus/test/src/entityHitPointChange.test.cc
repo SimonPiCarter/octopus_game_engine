@@ -2,6 +2,7 @@
 
 #include "step/entity/EntityHitPointChangeStep.hh"
 #include "state/State.hh"
+#include "step/Step.hh"
 #include "state/player/Player.hh"
 
 ///
@@ -21,7 +22,8 @@ TEST(entityHitPointChangeTest, simple_overheal)
 	octopus::EntityModel unitModel_l { false, 1., 1., 10. };
 	state_l.addEntity(new Entity { { 3, 3. }, false, unitModel_l});
 
-	EntityHitPointChangeStep step_l(Handle(0), 10., 10., 10.);
+	EntityHitPointChangeStep step_l(Handle(0), 10.);
+	step_l.consolidate(state_l, Step(nullptr));
 
 	EXPECT_NEAR(10., to_double(state_l.getEntity(Handle(0))->_hp), 1e-5);
 
@@ -42,7 +44,8 @@ TEST(entityHitPointChangeTest, simple_overkill)
 	octopus::EntityModel unitModel_l { false, 1., 1., 10. };
 	state_l.addEntity(new Entity { { 3, 3. }, false, unitModel_l});
 
-	EntityHitPointChangeStep step_l(Handle(0), -100., 10., 10.);
+	EntityHitPointChangeStep step_l(Handle(0), -100.);
+	step_l.consolidate(state_l, Step(nullptr));
 
 	EXPECT_NEAR(10., to_double(state_l.getEntity(Handle(0))->_hp), 1e-5);
 
@@ -64,7 +67,8 @@ TEST(entityHitPointChangeTest, simple_buff_heal)
 	state_l.addEntity(new Entity { { 3, 3. }, false, unitModel_l});
 
 
-	EntityHitPointChangeStep step_l(Handle(0), 5, 10., 10.);
+	EntityHitPointChangeStep step_l(Handle(0), 5);
+	step_l.consolidate(state_l, Step(nullptr));
 
 	EXPECT_NEAR(10., to_double(state_l.getEntity(Handle(0))->_hp), 1e-5);
 

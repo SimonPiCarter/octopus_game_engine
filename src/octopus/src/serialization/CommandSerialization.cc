@@ -29,7 +29,6 @@
 
 namespace octopus
 {
-
 template<typename T>
 void write(std::ofstream &file_p, T const &data_p)
 {
@@ -47,6 +46,17 @@ void write(std::ofstream &file_p, Handle const &data_p)
     write(file_p, data_p.index);
     write(file_p, data_p.revision);
 }
+template<>
+void write(std::ofstream &file_p, Fixed const &data_p)
+{
+    write(file_p, data_p.data());
+}
+template<>
+void write(std::ofstream &file_p, Vector const &data_p)
+{
+    write(file_p, data_p.x);
+    write(file_p, data_p.y);
+}
 
 struct BinaryWriter
 {
@@ -56,12 +66,6 @@ struct BinaryWriter
         write(file_p, data_p);
     }
 };
-
-template<>
-void BinaryWriter::operator()(std::ofstream &file_p, size_t const &data_p)
-{
-    file_p<<uint32_t(data_p)<<std::endl;
-}
 
 struct TextWriter
 {
@@ -97,6 +101,17 @@ void read(std::ifstream &file_p, Handle *data_p)
     read(file_p, &data_p->index);
     read(file_p, &data_p->revision);
 }
+template<>
+void read(std::ifstream &file_p, Fixed *data_p)
+{
+    read(file_p, &data_p->data());
+}
+template<>
+void read(std::ifstream &file_p, Vector *data_p)
+{
+    read(file_p, &data_p->x);
+    read(file_p, &data_p->y);
+}
 
 /// @brief write a command to the file based on the command id
 template<typename Writer_t>
@@ -112,7 +127,7 @@ void writeCommands(std::ofstream &file_p, Controller const &controller_p)
     uint32_t steps_l = std::min<uint32_t>(commandsPerLevel_l.size()-1, controller_p.getFrontState()->getStepApplied());
     // write the number of step
     write(file_p, steps_l);
-    Logger::getDebug() << ">>nbSteps " << steps_l << std::endl;
+
 
     uint32_t step_l = 0;
     for(std::list<Command *> const * list_l : commandsPerLevel_l)
@@ -142,7 +157,7 @@ void writeDebugCommands(std::ofstream &file_p, Controller const &controller_p)
 
     // write the number of step
     file_p<<steps_l<<std::endl;
-    Logger::getDebug() << ">>nbSteps " << steps_l << std::endl;
+
 
     uint32_t step_l = 0;
     for(std::list<Command *> const * list_l : commandsPerLevel_l)
@@ -169,10 +184,10 @@ void writeListOfCommand(std::ofstream &file_p, std::list<Command *> const * list
 {
     // write the step id
     write(file_p, step_p);
-    Logger::getDebug() << ">>step " << step_p << std::endl;
+
     // write the number of commands for this step
     write(file_p, uint32_t(list_p->size()));
-    Logger::getDebug() << ">>nbCommands " << list_p->size() << std::endl;
+
 
     for(Command const * cmd_l : *list_p)
     {
@@ -203,26 +218,27 @@ void readCommands(std::ifstream &file_p, Controller &controller_p, Library const
     uint32_t nbSteps_l;
     file_p.read((char*) &nbSteps_l, sizeof(nbSteps_l));
 
-    Logger::getDebug() << "<<nbSteps_l " << nbSteps_l << std::endl;
+
 
     int cur_l = file_p.tellg();
     file_p.seekg (0, file_p.end);
     int length_l = file_p.tellg();
     file_p.seekg (cur_l, file_p.beg);
 
+
     uint32_t step_l = 0;
-    while(file_p.tellg() < length_l)
+    while(file_p.tellg() < length_l && file_p.tellg() > 0)
     {
         // read the id of this step
         read(file_p, &step_l);
 
-        Logger::getDebug() << "<<step_l "<< step_l << std::endl;
+
 
         // read the number of commands for this step
         uint32_t nbCommands_l;
         read(file_p, &nbCommands_l);
 
-        Logger::getDebug() << "<<nbCommands_l "<< nbCommands_l << std::endl;
+
 
         // update controller
         controller_p.setOngoingStep(step_l);
@@ -724,7 +740,7 @@ Command * readCommand(std::ifstream &file_p, Library const &lib_p)
     }
     if(!cmd_l)
     {
-        throw std::logic_error("unserializable command got from file");
+        throw std::logic_error("unserializable command got from file : "+std::to_string(cmdId_p));
     }
     cmd_l->setQueued(queued_l);
     return cmd_l;

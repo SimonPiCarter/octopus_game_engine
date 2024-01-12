@@ -70,5 +70,42 @@ void ProjectileMoveStep::setMove(uint32_t idx_p, Vector &&vec_p)
 	_move[idx_p] = vec_p;
 }
 
+void ProjectileMoveStep::merge(ProjectileMoveStep &&other_p)
+{
+	if(_move.empty())
+	{
+		_move = std::move(other_p._move);
+	}
+	// merge by suming all moves
+	else
+	{
+		if(other_p._move.size() > _move.size())
+		{
+			_move.resize(other_p._move.size());
+		}
+		for(size_t i = 0 ; i < other_p._move.size() ; ++ i)
+		{
+			_move[i] += other_p._move[i];
+		}
+	}
+	if(_over.empty())
+	{
+		_over = std::move(other_p._over);
+	}
+	// merge by ORing all over boolean
+	else
+	{
+		if(other_p._over.size() > _over.size())
+		{
+			_over.resize(other_p._over.size(), false);
+		}
+		for(size_t i = 0 ; i < other_p._over.size() ; ++ i)
+		{
+			_over[i] = _over[i] || other_p._over[i];
+		}
+	}
+
+}
+
 } // namespace octopus
 

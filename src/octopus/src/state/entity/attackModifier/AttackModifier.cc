@@ -9,12 +9,12 @@
 namespace octopus
 {
 
-void NoModifier::newAttackSteppable(Step &step_p, AttackModifierData const &data_p, State const &state_p, bool) const
+void NoModifier::newAttackSteppable(StepShallow &step_p, AttackModifierData const &data_p, State const &state_p, bool) const
 {
 	applyMainAttack(step_p, data_p, state_p);
 }
 
-void CompositeModifier::newAttackSteppable(Step &step_p, AttackModifierData const &data_p, State const &state_p) const
+void CompositeModifier::newAttackSteppable(StepShallow &step_p, AttackModifierData const &data_p, State const &state_p) const
 {
 	for(CompositableModifier const &mod_l : _modifiers)
 	{
@@ -26,7 +26,7 @@ void CompositeModifier::newAttackSteppable(Step &step_p, AttackModifierData cons
 	}
 }
 
-void newAttackSteppable(AttackModifier const &attackMod_p, Step &step_p, AttackModifierData const &data_p, State const &state_p)
+void newAttackSteppable(AttackModifier const &attackMod_p, StepShallow &step_p, AttackModifierData const &data_p, State const &state_p)
 {
 	// visit modifier
 	std::visit([&](auto&& arg)

@@ -39,7 +39,7 @@ public:
 		// add resource for the player
 		std::map<std::string, Fixed> map_l;
 		map_l[_res] = -_qty;
-		step_p.addSteppable(new PlayerSpendResourceStep(_player, map_l));
+		step_p.addSteppable(state_p, new PlayerSpendResourceStep(_player, map_l));
 	}
 
 private:
@@ -63,7 +63,7 @@ public:
 		Entity const * ent_l = entData_l->_entities[count_p];
 		Unit unit_l = {ent_l->_pos, false, _modelRespawn};
 		unit_l._player = ent_l->_player;
-		step_p.addSteppable(new UnitSpawnStep(getNextHandle(step_p, state_p), unit_l));
+		step_p.addSteppable(state_p, new UnitSpawnStep(getNextHandle(step_p, state_p), unit_l));
 	}
 
 private:

@@ -70,7 +70,7 @@ std::list<Steppable *> Mission2Steps(Library &lib_p, RandomGenerator &rand_p, un
 					buff2_l._offset = 20;
 					step_p.addSteppable(new EntityBuffStep(handle_l, buff2_l));
 
-					step_p.addSteppable(makeNewEntityHitPointChangeStep(*ent_l, step_p, ent_l->getHpMax()));
+					step_p.addSteppable(new EntityHitPointChangeStep(ent_l->_handle, ent_l->getHpMax()));
 
 					step_p.addSteppable(new RuneWellPopStep(runeWellIdx_l, player_l));
 				});

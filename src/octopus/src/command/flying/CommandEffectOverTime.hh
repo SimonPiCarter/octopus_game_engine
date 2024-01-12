@@ -7,6 +7,8 @@
 namespace octopus
 {
 
+class StepShallow;
+
 /// @brief this FlyingCommand is to be used to add periodic effects
 /// to the controller
 /// - applyEffect should be overriden to apply the desirted effects (damage, healing, resources gain)
@@ -19,14 +21,14 @@ public:
 
 	/// @brief compile command or info into the step
 	/// @return true if command is over
-	virtual bool applyCommand(Step & step_p, State const &state_p, CommandData const * data_p, PathManager &pathManager_p) const;
+	virtual bool applyCommand(StepShallow & step_p, State const &state_p, CommandData const * data_p, PathManager &pathManager_p) const;
 
 	/// @brief create data supporting the command actions
 	virtual CommandData * newData() const { return new TimerData(); }
 
 	/// @brief virtual pure method to apply the effect
 	/// @note add steppables here
-	virtual void applyEffect(Step & step_p, State const &state_p, CommandData const * data_p, PathManager &pathManager_p) const = 0;
+	virtual void applyEffect(StepShallow & step_p, State const &state_p, CommandData const * data_p, PathManager &pathManager_p) const = 0;
 
 protected:
 	/// @brief number of step required for effect to occur

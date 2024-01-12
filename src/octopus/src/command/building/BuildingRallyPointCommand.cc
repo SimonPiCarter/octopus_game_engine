@@ -35,13 +35,13 @@ void BuildingRallyPointCommand::registerCommand(Step & step_p, State const &stat
 
 	if(_reset)
 	{
-		step_p.addSteppable(new BuildingRemoveRallyPointStep(_handleCommand));
+		step_p.addSteppable(state_p, new BuildingRemoveRallyPointStep(_handleCommand));
 	}
 	else
 	{
-		step_p.addSteppable(new BuildingSetRallyPointStep(_handleCommand, _rallyPoint, _rallyPointEntityActive, _rallyPointEntity));
+		step_p.addSteppable(state_p, new BuildingSetRallyPointStep(_handleCommand, _rallyPoint, _rallyPointEntityActive, _rallyPointEntity));
 	}
-	step_p.addSteppable(new CommandStorageStep(this));
+	step_p.addSteppable(state_p, new CommandStorageStep(this));
 }
 
 } // namespace octopus

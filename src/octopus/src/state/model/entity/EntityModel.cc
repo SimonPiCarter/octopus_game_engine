@@ -3,7 +3,7 @@
 namespace octopus
 {
 
-void idleFunctioNoOp(Entity const &, Step &, State const &) {}
+void idleFunctioNoOp(Entity const &, StepShallow &, State const &) {}
 
 bool alwaysOkChecker(Step const &, State const &, Handle const &, Handle const &, Vector const &) { return true; }
 
@@ -27,7 +27,7 @@ Fixed getBonus(std::string const &id_p, EntityModel const &model_p)
 	return 0.;
 }
 
-void abilityNoOp(Step &, State const &, Handle const &, Handle const &, Vector const &) {}
+void abilityNoOp(StepShallow &, State const &, Handle const &, Handle const &, Vector const &) {}
 
 Ability const & getAbility(EntityModel const &model_p, std::string const &id_p)
 {

@@ -28,7 +28,7 @@ public:
 	virtual void registerCommand(Step & step_p, State const &state_p) override;
 
 	/// @brief
-	virtual bool applyCommand(Step & step_p, State const &state_p, CommandData const *data_p, PathManager &pathManager_p) const override;
+	virtual bool applyCommand(StepShallow & step_p, State const &state_p, CommandData const *data_p, PathManager &pathManager_p) const override;
 
 	/// @brief for testing purpose mainly spawner can be set up to be non random
 	/// @note in that case the first option (first left, top) will be taken

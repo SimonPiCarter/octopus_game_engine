@@ -11,7 +11,7 @@ LoseTrigger::LoseTrigger(octopus::Listener * listener_p) : octopus::OneShotTrigg
 
 void LoseTrigger::trigger(octopus::State const &state_p, octopus::Step &step_p, unsigned long, octopus::TriggerData const &) const
 {
-	step_p.addSteppable(new octopus::StateWinStep(state_p.isOver(), state_p.hasWinningTeam(), state_p.getWinningTeam(), 1));
+	step_p.addSteppable(state_p, new octopus::StateWinStep(state_p.isOver(), state_p.hasWinningTeam(), state_p.getWinningTeam(), 1));
 }
 
 } // godot

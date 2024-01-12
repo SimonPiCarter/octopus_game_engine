@@ -27,12 +27,12 @@ public:
 	void setFlockInformation(std::array<FlockInformation, 3> * flockInfo_p);
 
 	/// @brief
-	virtual bool applyCommand(Step & step_p, State const &state_p, CommandData const *data_p, PathManager &pathManager_p) const override;
+	virtual bool applyCommand(StepShallow & step_p, State const &state_p, CommandData const *data_p, PathManager &pathManager_p) const override;
 
 	virtual CommandData * getData() override { return &_data; }
 	virtual CommandData const * getData() const override { return &_data; }
 
-	virtual void cleanUp(Step & step_p, State const &state_p, CommandData const *data_p) const override;
+	virtual void cleanUp(StepShallow & step_p, State const &state_p, CommandData const *data_p) const override;
 
 	EntityMoveCommand const &getSubMoveCommand() const { return _subMoveCommand; }
 	EntityMoveCommand &getSubMoveCommand() { return _subMoveCommand; }

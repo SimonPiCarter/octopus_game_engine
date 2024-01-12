@@ -34,11 +34,11 @@ public:
 		std::map<std::string, Fixed> map_l;
 		map_l["bloc"] = -10.;
 
-		step_p.addSteppable(new PlayerSpendResourceStep(0, map_l));
+		step_p.addSteppable(state_p, new PlayerSpendResourceStep(0, map_l));
 
 		Unit unit_l({ 5, 5. }, false, _model);
 		unit_l._player = 0;
-		step_p.addSteppable(new UnitSpawnStep(getNextHandle(step_p, state_p), unit_l));
+		step_p.addSteppable(state_p, new UnitSpawnStep(getNextHandle(step_p, state_p), unit_l));
 	}
 private:
 	UnitModel const &_model;
@@ -49,12 +49,12 @@ class TestTriggerTimeSpawnTrigger : public OneShotTrigger
 public:
 	TestTriggerTimeSpawnTrigger(std::list<Listener *> const &listeners_p) : OneShotTrigger(listeners_p) {}
 
-	virtual void trigger(State const &, Step &step_p, unsigned long, TriggerData const &) const override
+	virtual void trigger(State const & state_p, Step &step_p, unsigned long, TriggerData const &) const override
 	{
 		std::map<std::string, Fixed> map_l;
 		map_l["bloc"] = -10.;
 
-		step_p.addSteppable(new PlayerSpendResourceStep(0, map_l));
+		step_p.addSteppable(state_p, new PlayerSpendResourceStep(0, map_l));
 	}
 };
 

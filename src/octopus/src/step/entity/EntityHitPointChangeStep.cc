@@ -45,9 +45,17 @@ void updateFromHp(State &state_p, Entity *ent_p)
 	}
 }
 
-EntityHitPointChangeStep::EntityHitPointChangeStep(Handle const &handle_p, Fixed delta_p, Fixed anticipatedHp_p, Fixed hpMax_p)
-	: _handle(handle_p), _delta(getDelta(anticipatedHp_p, delta_p, hpMax_p))
+EntityHitPointChangeStep::EntityHitPointChangeStep(Handle const &handle_p, Fixed delta_p)
+	: _handle(handle_p), _delta(delta_p)
 {}
+
+void EntityHitPointChangeStep::consolidate(State const &state_p, Step const & step_p)
+{
+	Entity const * entTarget_l = state_p.getEntity(_handle);
+	Fixed curHp_l = entTarget_l->_hp + step_p.getHpChange(_handle);
+	Fixed maxHp_l = entTarget_l->getHpMax();
+	_delta = getDelta(curHp_l, _delta, maxHp_l);
+}
 
 void EntityHitPointChangeStep::apply(State &state_p) const
 {
@@ -75,9 +83,7 @@ bool EntityHitPointChangeStep::isNoOp() const
 
 EntityHitPointChangeStep * makeNewEntityHitPointChangeStep(Entity const &entity_p, Step const &step_p, Fixed const &change_p)
 {
-	Fixed curHp_l = entity_p._hp + step_p.getHpChange(entity_p._handle);
-	Fixed maxHp_l = entity_p.getHpMax();
-	return new EntityHitPointChangeStep(entity_p._handle, change_p, curHp_l, maxHp_l);
+	return new EntityHitPointChangeStep(entity_p._handle, change_p);
 }
 
 } // namespace octopus

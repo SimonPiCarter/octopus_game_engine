@@ -48,27 +48,27 @@ void BuildingUnitProductionCommand::registerCommand(Step & step_p, State const &
 	&& building_l->_buildingModel.canProduce(_model)
 	&& req_l)
 	{
-		step_p.addSteppable(new PlayerSpendResourceStep(building_l->_player, cost_l));
-		step_p.addSteppable(new CommandSpawnStep(this));
+		step_p.addSteppable(state_p, new PlayerSpendResourceStep(building_l->_player, cost_l));
+		step_p.addSteppable(state_p, new CommandSpawnStep(this));
 	}
 	// else add informative step for failure
 	else if(missingRes_l != "")
 	{
-		step_p.addSteppable(new MissingResourceStep(building_l->_player, missingRes_l));
-		step_p.addSteppable(new CommandStorageStep(this));
+		step_p.addSteppable(state_p, new MissingResourceStep(building_l->_player, missingRes_l));
+		step_p.addSteppable(state_p, new CommandStorageStep(this));
 	}
 	else if(!req_l)
 	{
-		step_p.addSteppable(new MissingResourceStep(building_l->_player, MissingResourceStep::MissingRequirement));
-		step_p.addSteppable(new CommandStorageStep(this));
+		step_p.addSteppable(state_p, new MissingResourceStep(building_l->_player, MissingResourceStep::MissingRequirement));
+		step_p.addSteppable(state_p, new CommandStorageStep(this));
 	}
 	else
 	{
-		step_p.addSteppable(new CommandStorageStep(this));
+		step_p.addSteppable(state_p, new CommandStorageStep(this));
 	}
 }
 
-bool BuildingUnitProductionCommand::applyCommand(Step & step_p, State const &state_p, CommandData const *, PathManager &) const
+bool BuildingUnitProductionCommand::applyCommand(StepShallow & step_p, State const &state_p, CommandData const *, PathManager &) const
 {
 	Logger::getDebug() << "BuildingUnitProductionCommand:: apply Command "<<_source <<std::endl;
 	Building const * building_l = dynamic_cast<Building const *>(state_p.getEntity(_source));
@@ -91,12 +91,12 @@ bool BuildingUnitProductionCommand::applyCommand(Step & step_p, State const &sta
 
 		Unit unit_l(building_l->_pos + building_l->_buildingModel._productionOutput, false, *_data._model);
 		unit_l._player = player_l._id;
-		Handle handle_l = getNextHandle(step_p, state_p);
-		step_p.addSteppable(new UnitSpawnStep(handle_l, unit_l));
+		step_p.addSteppable(new UnitSpawnStep(Handle(0), unit_l));
 
 		if(building_l->_rallyPointActive)
 		{
-			step_p.addSteppable(new CommandSpawnStep(new EntityRallyPointCommand(handle_l, building_l->_rallyPointEntity, building_l->_rallyPoint, !building_l->_rallyPointEntityActive)));
+			/// @fixme need to allow spawn step to spawn commands
+			step_p.addSteppable(new CommandSpawnStep(new EntityRallyPointCommand(Handle(0), building_l->_rallyPointEntity, building_l->_rallyPoint, !building_l->_rallyPointEntityActive)));
 		}
 
 		return true;
