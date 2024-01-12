@@ -5,6 +5,7 @@
 #include <set>
 #include <vector>
 #include <map>
+#include <mutex>
 #include <thread>
 
 #include "graph/CanonicalDijkstra.hh"
@@ -81,6 +82,8 @@ protected:
 	std::map<std::pair<long, long>, FlowFieldResult> _completed;
 
 	OrcaManager const * _orcaManager = nullptr;
+
+	std::mutex _mut;
 };
 } // namespace octopus
 

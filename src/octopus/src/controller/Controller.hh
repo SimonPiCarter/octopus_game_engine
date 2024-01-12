@@ -10,6 +10,7 @@
 #include "trigger/Trigger.hh"
 #include "step/Step.hh"
 #include "graph/PathManager.hh"
+#include "utils/ThreadPool.hh"
 
 namespace octopus
 {
@@ -229,6 +230,8 @@ private:
 	/// @brief the size of the queue in states for reusable handles
 	/// (this means a free handle wont be reusable before _reusablehandleQueueSize steps have been applied)
 	uint32_t const _reusableHandleQueueSize;
+
+	ThreadPool _pool;
 };
 
 } // namespace octopus

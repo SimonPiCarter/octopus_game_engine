@@ -74,6 +74,7 @@ void PathManager::compute(long long iter_p)
 /// @brief query a flow field computation
 void PathManager::queryFlowField(long x, long y)
 {
+	std::lock_guard<std::mutex> lock_l(_mut);
 	if(_internalGrid.empty())
 	{
 		return;

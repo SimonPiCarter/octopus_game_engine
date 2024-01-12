@@ -59,6 +59,7 @@ Controller::Controller(
 	: _timePerStep(timePerStep_p)
 	, _initialStep(nullptr)
 	, _reusableHandleQueueSize(reusableHandleQueueSize_p)
+	, _pool(12)
 {
 	std::lock_guard<std::mutex> lock_l(_mutex);
 
@@ -197,15 +198,47 @@ bool Controller::loop_body()
 			//
 			//
 
-			StepShallow stepShallow_l(step_l.getId());
+			int total_l = 0;
+			int finished_l = 0;
+			std::mutex terminationMutex_l;
+			std::condition_variable termination_l;
+			std::unique_lock<std::mutex> lock_l(terminationMutex_l);
+
+			std::vector<StepShallow> shallows_l;
+			shallows_l.resize(12, StepShallow(step_l.getId()));
+			unsigned long partEnt_l = state_l->getEntities().size() / 12;
 			// apply all commands
-			for(Commandable * cmdable_l : state_l->getEntities())
+			for(unsigned long i = 0 ; i < 12 ; ++ i)
 			{
-				if(cmdable_l->isActive())
+				++total_l;
+				_pool.queueJob([this, i, &partEnt_l, &shallows_l,&state_l, &finished_l, &termination_l, &terminationMutex_l]()
 				{
-					cmdable_l->runCommands(stepShallow_l, *state_l, _pathManager);
-				}
+					for(unsigned long idx_l = i*partEnt_l; idx_l < (i+1)*partEnt_l ; ++ idx_l )
+					{
+						Commandable * cmdable_l = state_l->getEntities()[idx_l];
+						if(cmdable_l->isActive())
+						{
+								cmdable_l->runCommands(shallows_l[i], *state_l, _pathManager);
+						}
+					}
+					std::unique_lock<std::mutex> lock_l(terminationMutex_l);
+					finished_l++;
+					termination_l.notify_all();
+				});
 			}
+
+			if(finished_l < total_l)
+			{
+				termination_l.wait(lock_l, [&]{ return finished_l >= total_l ; });
+			}
+
+			// merge and consolidate results
+			for(unsigned long i = 0 ; i < 12 ; ++ i)
+			{
+				consolidate(*state_l, step_l, shallows_l[i]);
+			}
+
+			StepShallow stepShallow_l(step_l.getId());
 
 			for(auto &&pair_l : state_l->getFlyingCommands())
 			{
