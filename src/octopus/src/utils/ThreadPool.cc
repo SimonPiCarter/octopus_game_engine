@@ -3,10 +3,14 @@
 
 ThreadPool::ThreadPool(uint32_t num_threads) {
     //const uint32_t num_threads = std::thread::hardware_concurrency(); // Max # of threads the system supports
-    threads.resize(num_threads);
     for (uint32_t i = 0; i < num_threads; i++) {
-        threads.at(i) = std::thread([this] () { ThreadLoop(); });
+        threads.push_back(std::thread([this] () { ThreadLoop(); }));
     }
+}
+
+ThreadPool::~ThreadPool()
+{
+    stop();
 }
 
 void ThreadPool::ThreadLoop() {

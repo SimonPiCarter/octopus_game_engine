@@ -205,20 +205,25 @@ bool Controller::loop_body()
 			std::unique_lock<std::mutex> lock_l(terminationMutex_l);
 
 			std::vector<StepShallow> shallows_l;
-			shallows_l.resize(12, StepShallow(step_l.getId()));
-			unsigned long partEnt_l = state_l->getEntities().size() / 12;
+			shallows_l.resize(_pool.size(), StepShallow(step_l.getId()));
+			unsigned long partEnt_l = state_l->getEntities().size() / _pool.size();
 			// apply all commands
-			for(unsigned long i = 0 ; i < 12 ; ++ i)
+			for(unsigned long i = 0 ; i < _pool.size() ; ++ i)
 			{
+				StepShallow &shallow_l = shallows_l[i];
+				unsigned long start = i*partEnt_l;
+				unsigned long end = (i+1)*partEnt_l;
+				if(i == _pool.size()-1) { end = state_l->getEntities().size(); }
+
 				++total_l;
-				_pool.queueJob([this, i, &partEnt_l, &shallows_l,&state_l, &finished_l, &termination_l, &terminationMutex_l]()
+				_pool.queueJob([this, start, end, &shallow_l,&state_l, &finished_l, &termination_l, &terminationMutex_l]()
 				{
-					for(unsigned long idx_l = i*partEnt_l; idx_l < (i+1)*partEnt_l ; ++ idx_l )
+					for(unsigned long idx_l = start; idx_l < end ; ++ idx_l )
 					{
 						Commandable * cmdable_l = state_l->getEntities()[idx_l];
 						if(cmdable_l->isActive())
 						{
-								cmdable_l->runCommands(shallows_l[i], *state_l, _pathManager);
+							cmdable_l->runCommands(shallow_l, *state_l, _pathManager);
 						}
 					}
 					std::unique_lock<std::mutex> lock_l(terminationMutex_l);
@@ -233,7 +238,7 @@ bool Controller::loop_body()
 			}
 
 			// merge and consolidate results
-			for(unsigned long i = 0 ; i < 12 ; ++ i)
+			for(unsigned long i = 0 ; i < _pool.size() ; ++ i)
 			{
 				consolidate(*state_l, step_l, shallows_l[i]);
 			}
