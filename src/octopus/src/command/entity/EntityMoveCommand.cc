@@ -154,8 +154,8 @@ bool EntityMoveCommand::applyCommand(Step & step_p, State const &state_p, Comman
 
 	// unlock routine ?
 	bool unlock_l = data_l->_unlockRoutine._enabled;
-
-	if(unlock_l && pathManager_p.getOrcaManager())
+	bool runUnlock_l = unlock_l && pathManager_p.getOrcaManager();
+	if(runUnlock_l)
 	{
 		OrcaManager const * orcaManager_l = pathManager_p.getOrcaManager();
 
@@ -166,6 +166,10 @@ bool EntityMoveCommand::applyCommand(Step & step_p, State const &state_p, Comman
 			UnlockRoutine newRoutine_l = data_l->_unlockRoutine;
 			newRoutine_l._enabled = false;
 			step_p.addSteppable(new CommandMoveUnlockRoutineStep(_handleCommand, data_l->_unlockRoutine, newRoutine_l));
+			// reset no progress data
+			step_p.addSteppable(new CommandUpdateLastPosStep(_handleCommand, _source, data_l->_lastPos));
+			// reset no progress count
+			step_p.addSteppable(new CommandIncrementNoProgressStep(_handleCommand, data_l->_countSinceProgress, 0));
 		}
 		else
 		{
@@ -174,11 +178,18 @@ bool EntityMoveCommand::applyCommand(Step & step_p, State const &state_p, Comman
 			{
 				UnlockRoutine newRoutine_l = data_l->_unlockRoutine;
 
+				int countFrozen_l = 0;
+
 				Vector to_target_point_l = data_l->_finalPoint - ent_l->_pos;
 				Vector repulsion_l;
 				for(auto && pair_l : neighbours_l)
 				{
-					Vector other_pos_l = pair_l.second->getEnt()->_pos;
+					Entity const *neighbour_l = pair_l.second->getEnt();
+					if (neighbour_l->_frozen)
+					{
+						++countFrozen_l;
+					}
+					Vector other_pos_l = neighbour_l->_pos;
 					Vector diff_l = ent_l->_pos - other_pos_l;
 					Fixed dot_prod_l = dot_product(diff_l, to_target_point_l);
 					if(dot_prod_l > 0)
@@ -236,6 +247,13 @@ bool EntityMoveCommand::applyCommand(Step & step_p, State const &state_p, Comman
 						// stop routine
 						newRoutine_l._enabled = false;
 					}
+
+
+					// if not frozen around we do not want to unlock
+					if(countFrozen_l == 0)
+					{
+						newRoutine_l._enabled = false;
+					}
 					step_p.addSteppable(new CommandMoveUnlockRoutineStep(_handleCommand, data_l->_unlockRoutine, newRoutine_l));
 				}
 				else
@@ -287,7 +305,7 @@ bool EntityMoveCommand::applyCommand(Step & step_p, State const &state_p, Comman
 	}
 
 	// skip this if we never want to stop
-	if(!_neverStop)
+	if(!_neverStop && !runUnlock_l)
 	{
 		// add step to increment count since progress
 		step_p.addSteppable(new CommandIncrementNoProgressStep(_handleCommand, data_l->_countSinceProgress, data_l->_countSinceProgress+1));
