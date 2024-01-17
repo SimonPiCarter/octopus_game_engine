@@ -35,10 +35,9 @@ EntityMoveCommand::EntityMoveCommand(Handle const &commandHandle_p, Handle const
 	, _source(source_p)
 	, _finalPoint(finalPoint_p)
 	, _gridStatus(gridStatus_p)
-	, _waypoints(waypoints_p)
 	, _init(init_p)
 	, _neverStop(neverStop_p)
-	, _data(_finalPoint, _gridStatus, _waypoints)
+	, _data(_finalPoint, _gridStatus, waypoints_p)
 {}
 
 void EntityMoveCommand::setFlockInformation(std::array<FlockInformation, 3> * flockInfo_p)

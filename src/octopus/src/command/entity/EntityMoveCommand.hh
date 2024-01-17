@@ -35,7 +35,7 @@ public:
 
 	Vector const &getFinalPoint() const { return _finalPoint; }
 	unsigned long const &getGridStatus() const { return _gridStatus; }
-	std::list<Vector> const &getWaypoints() const { return _waypoints; }
+	std::list<Vector> const &getWaypoints() const { return _data._waypoints; }
 	bool isInit() const { return _init; }
 	bool isNeverStop() const { return _neverStop; }
 
@@ -51,7 +51,6 @@ private:
 	Handle _source {0};
 	Vector _finalPoint {1,1};
 	unsigned long _gridStatus {0};
-	std::list<Vector> _waypoints;
 	bool _init {false};
 	/// @brief if set to true the command will never stop when not making progress
 	bool _neverStop {false};

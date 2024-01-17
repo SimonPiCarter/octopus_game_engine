@@ -489,6 +489,12 @@ Entity const * lookUpNewTarget(State const &state_p, Handle const &sourceHandle_
 	// grid for fast access
 	std::vector<std::vector<AbstractBitset *> > const & grid_l = state_p.getGrid();
 
+	std::vector<unsigned long> teams_l;
+	for(Player const *player_l : state_p.getPlayers())
+	{
+		teams_l.push_back(player_l->_team);
+	}
+
 	for(long x = box_l._lowerX ; x <= box_l._upperX; ++x)
 	{
 	for(long y = box_l._lowerY ; y <= box_l._upperY; ++y)
@@ -502,8 +508,9 @@ Entity const * lookUpNewTarget(State const &state_p, Handle const &sourceHandle_
 		}
 		bitset_l[handle_p] = true;
 		Entity const * ent_l = state_p.getLoseEntity(handle_p);
-		bool teamCheck_l = (healing_p && team_l == state_p.getPlayer(ent_l->_player)->_team)
-						|| (!healing_p && team_l != state_p.getPlayer(ent_l->_player)->_team);
+		unsigned long const teamEnt_l = teams_l[ent_l->_player];
+		bool teamCheck_l = (healing_p && team_l == teamEnt_l)
+						|| (!healing_p && team_l != teamEnt_l);
 		if(ent_l == source_l
 		|| !ent_l->_alive
 		|| ent_l->_model._invulnerable
