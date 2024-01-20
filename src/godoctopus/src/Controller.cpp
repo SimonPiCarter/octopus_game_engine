@@ -45,8 +45,10 @@
 #include "levels/LevelTestModelLoader.h"
 #include "levels/missions/mission1/Mission1.h"
 #include "levels/missions/mission2/Mission2.h"
+#include "levels/missions/mission3/Mission3.h"
 #include "levels/demo/DemoLevel.h"
 #include "levels/model/utils/EntitySpawner.h"
+#include "library/FirstRunicBoss.h"
 
 namespace godot {
 
@@ -252,10 +254,36 @@ void Controller::load_mission_2(int seed_p, godot::LevelModel *level_model_p, in
 	init(commands_l, spawners_l, false, 50, _autoSaveFile);
 }
 
+void Controller::load_mission_3(int seed_p, godot::LevelModel *level_model_p, int player_count_p)
+{
+	delete _rand;
+	_rand = new octopus::RandomGenerator(seed_p);
+
+	assert(level_model_p);
+	std::vector<GodotEntityInfo> info_l = getEntityInfo(level_model_p->getEntities(), player_count_p);
+
+	std::list<octopus::Steppable *> spawners_l = {};
+	std::list<octopus::Steppable *> levelsteps_l = mission::Mission3Steps(_lib, *_rand, player_count_p, info_l);
+	spawners_l = level_model_p->generateLevelSteps(_lib, player_count_p);
+	spawners_l.splice(spawners_l.end(), levelsteps_l);
+
+	std::list<octopus::Command *> commands_l = mission::Mission3Commands(_lib, *_rand, player_count_p);
+
+	// enable auto save
+	newAutoSaveFile();
+	writeLevelId(*_autoSaveFile, LEVEL_ID_MISSION_3, 50);
+	_currentLevel = LEVEL_ID_MISSION_3;
+	_headerWriter = std::bind(mission::writeMission3Header, std::placeholders::_1, mission::Mission3Header {seed_p, (unsigned long)player_count_p});
+	_headerWriter(*_autoSaveFile);
+
+	init(commands_l, spawners_l, false, 50, _autoSaveFile);
+}
+
 void Controller::load_minimal_model()
 {
 	loadMinimalModels(_lib);
 	fas::loadLibrary(_lib);
+	addFirstRunicBossToLibrary(_lib);
 }
 
 void Controller::load_hero_siege_level(int seed_p, int player_count_p)
@@ -550,6 +578,12 @@ void Controller::replay_level(String const &filename_p, bool replay_mode_p, godo
 		mission::Mission2Header header_l;
 		levelInfo_l = mission::readMission2Header(_lib, file_l,_rand, header_l);
 		_headerWriter = std::bind(mission::writeMission2Header, std::placeholders::_1, header_l);
+	}
+	else if(levelId_l == LEVEL_ID_MISSION_3)
+	{
+		mission::Mission3Header header_l;
+		levelInfo_l = mission::readMission3Header(_lib, file_l,_rand, header_l);
+		_headerWriter = std::bind(mission::writeMission3Header, std::placeholders::_1, header_l);
 	}
 	else
 	{
@@ -1549,6 +1583,7 @@ void Controller::_bind_methods()
 	ClassDB::bind_method(D_METHOD("load_lifesteal_level", "size"), &Controller::load_lifesteal_level);
 	ClassDB::bind_method(D_METHOD("load_mission_1", "seed", "player_count"), &Controller::load_mission_1);
 	ClassDB::bind_method(D_METHOD("load_mission_2", "seed", "level_model", "player_count"), &Controller::load_mission_2);
+	ClassDB::bind_method(D_METHOD("load_mission_3", "seed", "level_model", "player_count"), &Controller::load_mission_3);
 	ClassDB::bind_method(D_METHOD("load_minimal_model"), &Controller::load_minimal_model);
 	ClassDB::bind_method(D_METHOD("load_hero_siege_level", "seed", "nb_players"), &Controller::load_hero_siege_level);
 	ClassDB::bind_method(D_METHOD("load_demo_level", "seed", "wave_pattern", "level_model", "player_count", "difficulty"), &Controller::load_demo_level);
@@ -1679,6 +1714,11 @@ void Controller::_bind_methods()
 	ADD_SIGNAL(MethodInfo("decrement_objective", PropertyInfo(Variant::STRING, "key_objective")));
 	ADD_SIGNAL(MethodInfo("remove_objective", PropertyInfo(Variant::STRING, "key_objective")));
 	ADD_SIGNAL(MethodInfo("missing_resource", PropertyInfo(Variant::INT, "player"), PropertyInfo(Variant::STRING, "resource")));
+
+	// SPECIAL FROM MISSIONS
+	ADD_SIGNAL(MethodInfo("first_runic_boss_trigger_aoe", PropertyInfo(Variant::INT, "idx")));
+	ADD_SIGNAL(MethodInfo("first_runic_boss_spawn_aoe", PropertyInfo(Variant::INT, "idx"),
+		PropertyInfo(Variant::FLOAT, "x"), PropertyInfo(Variant::FLOAT, "y"), PropertyInfo(Variant::FLOAT, "range")));
 
 
 	/// blockers

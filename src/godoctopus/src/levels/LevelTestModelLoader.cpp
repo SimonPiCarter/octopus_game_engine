@@ -41,6 +41,7 @@
 #include "controller/step/CameraStep.h"
 #include "controller/step/DialogStep.h"
 #include "file/FileHeader.h"
+#include "library/FirstRunicBoss.h"
 
 using namespace octopus;
 
@@ -56,6 +57,7 @@ std::list<Steppable *> LevelSteps(Library &lib_p, RandomGenerator &rand_p, bool 
 
 	// load divinity library
 	fas::loadLibrary(lib_p);
+	addFirstRunicBossToLibrary(lib_p);
 
 	std::list<Steppable *> spawners_l = {};
 
