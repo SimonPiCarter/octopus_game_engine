@@ -116,6 +116,7 @@ public:
 	virtual void visit(octopus::TriggerStepCountChange const *) override {}
 	virtual void visit(octopus::UnitHarvestDropStep const *) override {}
 	virtual void visit(octopus::UnitHarvestQuantityStep const *) override {}
+	virtual void visit(octopus::UnitDataStep const *) override {}
 	virtual void visit(octopus::UnitHarvestTypeStep const *) override {}
 	virtual void visit(octopus::UnitSpawnStep const *) override {}
 	virtual void visit(octopus::VisionChangeStep const *) override {}

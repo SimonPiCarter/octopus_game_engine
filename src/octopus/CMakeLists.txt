@@ -151,6 +151,7 @@ add_library(octopus
 	${CMAKE_CURRENT_SOURCE_DIR}/src/step/trigger/TriggerEntityResetStep.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/step/trigger/TriggerSpawn.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/step/trigger/TriggerStepCountChange.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/src/step/unit/UnitDataStep.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/step/unit/UnitHarvestStep.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/step/vision/VisionChangeStep.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/graph/CanonicalDijkstra.cc

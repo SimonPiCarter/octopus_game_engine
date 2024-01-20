@@ -100,6 +100,7 @@ public:
 	virtual void visit(TriggerStepCountChange const *) {}
 	virtual void visit(UnitHarvestDropStep const *) {}
 	virtual void visit(UnitHarvestQuantityStep const *) {}
+	virtual void visit(UnitDataStep const *) {}
 	virtual void visit(UnitHarvestTypeStep const *) {}
 	virtual void visit(UnitSpawnStep const *);
 	virtual void visit(VisionChangeStep const *) {}
