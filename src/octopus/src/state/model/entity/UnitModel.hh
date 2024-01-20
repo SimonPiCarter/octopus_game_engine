@@ -3,6 +3,7 @@
 
 #include "EntityModel.hh"
 #include "state/entity/buff/Buffer.hh"
+#include "utils/ClonableWrapper.hh"
 
 namespace octopus
 {
@@ -12,6 +13,23 @@ namespace octopus
 	Command * commandFromIdle(Entity const &ent_p, State const &state_p, unsigned long waitingTimeForAttackScan_p);
 
 	void unitIdleFunction(Entity const &ent_p, Step & step_p, State const &state_p);
+
+
+	/// @brief can be extended but must be clonable and copyable
+	struct UnitData
+	{
+		/// @brief Create a new UnitData that is a copy of this one
+		/// @note a new allocation must be performed
+		virtual UnitData* clone() const = 0;
+		/// @brief copy everything from another UnitData
+		virtual void copyFrom(UnitData const *other_p) = 0;
+	};
+	/// @brief can be extended
+	struct StaticUnitData {
+		/// @brief Create a new StaticUnitData that is a copy of this one
+		/// @note a new allocation must be performed
+		virtual StaticUnitData* clone() const = 0;
+	};
 
 	struct UnitModel : public EntityModel
 	{
@@ -27,6 +45,13 @@ namespace octopus
 
 		/// @brief the buffer info of this unit
 		Buffer _buffer;
+
+		/// @brief used to store specific unit data that might be modified
+		/// a copy will be used as a model for every unit
+		ClonableWrapper<UnitData> _unitData;
+		/// @brief used to store specific unit data that will be static
+		/// The same pointer will be used for all units
+		ClonableWrapper<StaticUnitData> _staticUnitData;
 	};
 } // namespace octopus
 

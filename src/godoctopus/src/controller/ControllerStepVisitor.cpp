@@ -5,6 +5,7 @@
 #include "step/DialogStep.h"
 #include "step/WaveStep.h"
 #include "step/ObjectiveStep.h"
+#include "step/library/FirstRunicBossStep.h"
 
 // octopus
 #include "command/data/AttackMoveData.hh"
@@ -257,6 +258,7 @@ void ControllerStepVisitor::visit(octopus::CustomStep const *steppable_p)
 	WaveStep const *wave_l = dynamic_cast<WaveStep const *>(steppable_p);
 	WaveSpawPointStep const *waveSpawnPoint_l = dynamic_cast<WaveSpawPointStep const *>(steppable_p);
 	RuneWellPopStep const *runeWellPopStep_l = dynamic_cast<RuneWellPopStep const *>(steppable_p);
+	FirstRunicBossStep const *firstRunicBossStep_l = dynamic_cast<FirstRunicBossStep const *>(steppable_p);
 
 	// objective handling
 	AbstractObjectiveStep const * objectiveStep_l = dynamic_cast<AbstractObjectiveStep const *>(steppable_p);
@@ -295,6 +297,19 @@ void ControllerStepVisitor::visit(octopus::CustomStep const *steppable_p)
 	else if(objectiveStep_l)
 	{
 		objectiveStep_l->add_signals(_controller);
+	}
+	else if(firstRunicBossStep_l)
+	{
+		if(firstRunicBossStep_l->_trigger)
+		{
+			_controller.emit_signal("first_runic_boss_trigger_aoe", firstRunicBossStep_l->_id);
+		}
+		else
+		{
+			_controller.emit_signal("first_runic_boss_spawn_aoe",
+				firstRunicBossStep_l->_id, firstRunicBossStep_l->_x,
+				firstRunicBossStep_l->_y, firstRunicBossStep_l->_range);
+		}
 	}
 }
 

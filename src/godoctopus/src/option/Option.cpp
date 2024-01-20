@@ -26,30 +26,56 @@ namespace godot {
 Option::~Option()
 {}
 
+std::string desc_buff(octopus::TimedBuff const &buff_p)
+{
+	switch(buff_p._type)
+	{
+		case octopus::TyppedBuff::Type::Speed:
+			return "speed";
+		case octopus::TyppedBuff::Type::FullReload:
+			return "reload time";
+		case octopus::TyppedBuff::Type::Damage:
+			return "damage";
+		case octopus::TyppedBuff::Type::Heal:
+			return "heal";
+		case octopus::TyppedBuff::Type::Armor:
+			return "armor";
+		case octopus::TyppedBuff::Type::HpMax:
+			return "max hp";
+		case octopus::TyppedBuff::Type::HpRegeneration:
+			return "hp regeneration";
+		case octopus::TyppedBuff::Type::Production:
+			return "production";
+		case octopus::TyppedBuff::Type::Harvest:
+			return "harvest quantity";
+	}
+	throw std::logic_error("missing desc_buff implem");
+}
+
 void Option::pushOption(octopus::TimedBuff const &buff_p)
 {
     std::stringstream ss_l;
     if(buff_p._offset > 0)
     {
-        ss_l << "+{1}\n";
+        ss_l << "Increase "<<desc_buff(buff_p)<<" by [color=green]{1}[/color].\n";
     }
     if(buff_p._offset < 0)
     {
-        ss_l << "{1}\n";
+        ss_l << "Decrease "<<desc_buff(buff_p)<<" by [color=red]{1}[/color].\n";
     }
     if(buff_p._coef > 0)
     {
-        ss_l << "+{2}%\n";
+        ss_l << "Increase "<<desc_buff(buff_p)<<" by [color=green]{2}[/color]%.\n";
     }
     if(buff_p._coef < 0)
     {
-        ss_l << "{2}%\n";
+        ss_l << "Decrease "<<desc_buff(buff_p)<<" by [color=red]{2}[/color]%.\n";
     }
 
     _params.push_back(TypedArray<String>());
     _params.back().append(octopus::to_string(buff_p._type).c_str());
-    _params.back().append(std::to_string(octopus::to_int(buff_p._offset)).c_str());
-    _params.back().append(std::to_string(octopus::to_int(buff_p._coef*100.)).c_str());
+    _params.back().append(std::to_string(std::abs(octopus::to_int(buff_p._offset))).c_str());
+    _params.back().append(std::to_string(std::abs(octopus::to_int(buff_p._coef*100.))).c_str());
 
     _stats_name.push_back(octopus::to_string(buff_p._type).c_str());
     _desc.push_back(ss_l.str().c_str());

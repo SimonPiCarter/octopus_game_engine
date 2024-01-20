@@ -73,6 +73,7 @@ target_sources (unit_tests
 	src/triggerUnitDied.test.cc
 	src/triggerUnitSpawn.test.cc
 	src/triggerZone.test.cc
+	src/unitDataStep.test.cc
 	src/unitProductionBonus.test.cc
 	src/unitProductionCommand.test.cc
 	src/upgradeProductionCommand.test.cc
