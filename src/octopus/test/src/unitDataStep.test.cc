@@ -45,19 +45,19 @@ TEST(unitDataTest, simple)
 
 	SteppableData * memento_l = step_l.newData(state_l);
 
-	UnitDataTest * unitData_l = dynamic_cast<UnitDataTest *>(unit_l->_unitData);
+	UnitDataTest * unitData_l = dynamic_cast<UnitDataTest *>(unit_l->_unitData.get());
 	EXPECT_NE(nullptr, unitData_l);
 	EXPECT_EQ(12, unitData_l->value);
 
 	step_l.apply(state_l);
 
-	unitData_l = dynamic_cast<UnitDataTest *>(unit_l->_unitData);
+	unitData_l = dynamic_cast<UnitDataTest *>(unit_l->_unitData.get());
 	EXPECT_NE(nullptr, unitData_l);
 	EXPECT_EQ(25, unitData_l->value);
 
 	step_l.revert(state_l, memento_l);
 
-	unitData_l = dynamic_cast<UnitDataTest *>(unit_l->_unitData);
+	unitData_l = dynamic_cast<UnitDataTest *>(unit_l->_unitData.get());
 	EXPECT_NE(nullptr, unitData_l);
 	EXPECT_EQ(12, unitData_l->value);
 
@@ -81,13 +81,13 @@ TEST(unitDataTest, double)
 
 	// step 1
 	{
-		UnitDataTest * unitData_l = dynamic_cast<UnitDataTest *>(unit_l->_unitData);
+		UnitDataTest * unitData_l = dynamic_cast<UnitDataTest *>(unit_l->_unitData.get());
 		EXPECT_NE(nullptr, unitData_l);
 		EXPECT_EQ(12, unitData_l->value);
 
 		step1_l.apply(state_l);
 
-		unitData_l = dynamic_cast<UnitDataTest *>(unit_l->_unitData);
+		unitData_l = dynamic_cast<UnitDataTest *>(unit_l->_unitData.get());
 		EXPECT_NE(nullptr, unitData_l);
 		EXPECT_EQ(25, unitData_l->value);
 
@@ -99,13 +99,13 @@ TEST(unitDataTest, double)
 
 			step2_l.apply(state_l);
 
-			unitData_l = dynamic_cast<UnitDataTest *>(unit_l->_unitData);
+			unitData_l = dynamic_cast<UnitDataTest *>(unit_l->_unitData.get());
 			EXPECT_NE(nullptr, unitData_l);
 			EXPECT_EQ(37, unitData_l->value);
 
 			step2_l.revert(state_l, memento2_l);
 
-			unitData_l = dynamic_cast<UnitDataTest *>(unit_l->_unitData);
+			unitData_l = dynamic_cast<UnitDataTest *>(unit_l->_unitData.get());
 			EXPECT_NE(nullptr, unitData_l);
 			EXPECT_EQ(25, unitData_l->value);
 
@@ -114,7 +114,7 @@ TEST(unitDataTest, double)
 
 		step1_l.revert(state_l, memento1_l);
 
-		unitData_l = dynamic_cast<UnitDataTest *>(unit_l->_unitData);
+		unitData_l = dynamic_cast<UnitDataTest *>(unit_l->_unitData.get());
 		EXPECT_NE(nullptr, unitData_l);
 		EXPECT_EQ(12, unitData_l->value);
 

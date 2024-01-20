@@ -11,7 +11,6 @@ class Unit : public Entity
 {
 	public:
 		Unit(Vector const &pos_p, bool frozen_p, UnitModel const &model_p);
-		~Unit() { delete _unitData; }
 
 		/// used when harvesting
 		std::string _typeOfResource { "bloc" };
@@ -20,9 +19,9 @@ class Unit : public Entity
 		UnitModel const &_unitModel;
 
 		/// @brief used to store specific unit data that might be modified
-		UnitData * _unitData = nullptr;
+		ClonableWrapper<UnitData> _unitData;
 		/// @brief used to store specific unit data that will be static
-		StaticUnitData * _staticUnitData = nullptr;
+		StaticUnitData const * _staticUnitData;
 };
 
 }

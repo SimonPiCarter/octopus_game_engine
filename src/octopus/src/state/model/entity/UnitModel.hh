@@ -3,6 +3,7 @@
 
 #include "EntityModel.hh"
 #include "state/entity/buff/Buffer.hh"
+#include "utils/ClonableWrapper.hh"
 
 namespace octopus
 {
@@ -24,12 +25,15 @@ namespace octopus
 		virtual void copyFrom(UnitData const *other_p) = 0;
 	};
 	/// @brief can be extended
-	struct StaticUnitData {};
+	struct StaticUnitData {
+		/// @brief Create a new StaticUnitData that is a copy of this one
+		/// @note a new allocation must be performed
+		virtual StaticUnitData* clone() const = 0;
+	};
 
 	struct UnitModel : public EntityModel
 	{
 		UnitModel(bool isStatic_p, Fixed ray_p, Fixed stepSpeed_p, Fixed hpMax_p);
-		~UnitModel() { delete _unitData; delete _staticUnitData; }
 
 		std::map<std::string, Fixed> _maxQuantity;
 
@@ -44,10 +48,10 @@ namespace octopus
 
 		/// @brief used to store specific unit data that might be modified
 		/// a copy will be used as a model for every unit
-		UnitData * _unitData = nullptr;
+		ClonableWrapper<UnitData> _unitData;
 		/// @brief used to store specific unit data that will be static
 		/// The same pointer will be used for all units
-		StaticUnitData * _staticUnitData = nullptr;
+		ClonableWrapper<StaticUnitData> _staticUnitData;
 	};
 } // namespace octopus
 

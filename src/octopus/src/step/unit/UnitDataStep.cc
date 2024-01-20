@@ -11,9 +11,9 @@ namespace octopus
 
 void UnitDataStep::apply(State &state_p) const
 {
-	Logger::getNormal() << "UnitDataStep :: apply " << this->_handle <<std::endl;
+	Logger::getDebug() << "UnitDataStep :: apply " << this->_handle <<std::endl;
 	Unit * unit_l = dynamic_cast<Unit *>(state_p.getEntity(this->_handle));
-	unit_l->_unitData->copyFrom(_data);
+	unit_l->_unitData = _data;
 }
 
 void UnitDataStep::revert(State &state_p, SteppableData const *data_p) const
@@ -21,7 +21,7 @@ void UnitDataStep::revert(State &state_p, SteppableData const *data_p) const
 	Logger::getDebug() << "UnitDataStep :: revert " << this->_handle <<std::endl;
 	Unit * unit_l = dynamic_cast<Unit *>(state_p.getEntity(this->_handle));
 	UnitDataStepData const *data_l = static_cast<UnitDataStepData const *>(data_p);
-	unit_l->_unitData->copyFrom(data_l->_data);
+	unit_l->_unitData = data_l->_data;
 }
 
 bool UnitDataStep::isNoOp() const
