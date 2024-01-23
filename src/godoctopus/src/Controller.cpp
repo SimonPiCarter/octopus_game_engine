@@ -1536,6 +1536,7 @@ void Controller::set_step_control(int prequeued_p)
 	{
 		_controller->addQueuedLayer();
 	}
+	_stepDone = prequeued_p;
 }
 
 void Controller::next_step()
