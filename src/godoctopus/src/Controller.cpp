@@ -1277,6 +1277,13 @@ bool Controller::is_unit_visible(EntityHandle const * handle_p, int player_p) co
 
 bool Controller::is_explored(int x, int y, int player_p) const
 {
+	if(x < 0
+	|| x >= _state->getVisionHandler().getSize()
+	|| y < 0
+	|| y >= _state->getVisionHandler().getSize())
+	{
+		return false;
+	}
 	octopus::Player const *player_l = _state->getPlayer(player_p);
 	return _state->getVisionHandler().isExplored(player_l->_team, x, y);
 }
