@@ -37,6 +37,10 @@ struct FirstRunicBossStaticData : public octopus::StaticUnitData
 	octopus::Fixed aoe_aggro_range = 8;
 	octopus::Fixed aoe_range = 2;
 	octopus::Fixed aoe_damage = 75;
+	// phase 2
+	unsigned long long aoe_reload_spawn_p2 = 750;
+	unsigned long long aoe_count_p2 = 3;
+	octopus::Fixed aoe_damage_p2 = 150;
 
 	// adds params
 	unsigned long long nb_adds = 10;
@@ -104,6 +108,9 @@ void firstRunicBossRoutine(octopus::Entity const &ent_p, octopus::Step & step_p,
 	FirstRunicBossData * new_data_l = static_cast<FirstRunicBossData *>(data_l->clone());
 	bool change_done_l = false;
 
+	bool phase1_l = unit_l._hp * 2 > unit_l.getHpMax();
+	bool phase2_l = !phase1_l;
+
 	// random generator used locally
 	octopus::RandomGenerator rand_l(sData_l->seed + step_p.getId());
 
@@ -149,14 +156,17 @@ void firstRunicBossRoutine(octopus::Entity const &ent_p, octopus::Step & step_p,
 
 	if(data_l->enabled)
 	{
+		bool aoe_spawn_reload = (data_l->last_aoe + sData_l->aoe_reload_spawn <= step_p.getId() && phase1_l)
+							||  (data_l->last_aoe + sData_l->aoe_reload_spawn_p2 <= step_p.getId() && phase2_l);
 		// check if we spawn aoe info
 		if(data_l->aoe_info.empty()
-		&& (data_l->last_aoe + sData_l->aoe_reload_spawn <= step_p.getId() || data_l->last_aoe == 0)
+		&& (aoe_spawn_reload || data_l->last_aoe == 0)
 		&& data_l->enable_time + sData_l->aoe_first_spawn <= step_p.getId())
 		{
 			octopus::TargetPanel panel_l = octopus::lookUpNewTargets(state_p, unit_l._handle, sData_l->aoe_aggro_range, true);
 			std::list<octopus::Entity const *> &units_l = panel_l.units;
-			for(unsigned int c = 0 ; c < sData_l->aoe_count && !units_l.empty(); ++ c)
+			unsigned long long aoe_count = phase1_l ? sData_l->aoe_count : sData_l->aoe_count_p2;
+			for(unsigned int c = 0 ; c < aoe_count && !units_l.empty(); ++ c)
 			{
 				int index_l = rand_l.roll(0, units_l.size()-1);
 				auto it_l = std::next(units_l.begin(), index_l);
@@ -195,12 +205,13 @@ void firstRunicBossRoutine(octopus::Entity const &ent_p, octopus::Step & step_p,
 					octopus::Logger::getDebug()<<"firstRunicBossRoutine :: damaging aoe"<<std::endl;
 					// trigger aoe
 					octopus::TargetPanel panel_l = octopus::lookUpNewTargets(state_p, unit_l._handle.index, info_l.pos, team_l, sData_l->aoe_range, true);
+					octopus::Fixed dmg_l = phase1_l ? sData_l->aoe_damage : sData_l->aoe_damage_p2;
 					for(octopus::Entity const *ent_l : panel_l.units)
 					{
-						octopus::Logger::getDebug()<<"firstRunicBossRoutine :: \t"<<ent_l->_handle.index<<" dmg = "<<sData_l->aoe_damage.to_double()<<std::endl;
+						octopus::Logger::getDebug()<<"firstRunicBossRoutine :: \t"<<ent_l->_handle.index<<" dmg = "<<dmg_l.to_double()<<std::endl;
 						octopus::Fixed curHp_l = ent_l->_hp + step_p.getHpChange(ent_l->_handle);
 						octopus::Fixed maxHp_l = ent_l->getHpMax();
-						step_p.addSteppable(new octopus::EntityHitPointChangeStep(ent_l->_handle, -sData_l->aoe_damage, curHp_l, maxHp_l));
+						step_p.addSteppable(new octopus::EntityHitPointChangeStep(ent_l->_handle, -dmg_l, curHp_l, maxHp_l));
 					}
 
 					step_p.addSteppable(new FirstRunicBossStep(info_l.idx, true, info_l.pos.x.to_double(), info_l.pos.y.to_double(), sData_l->aoe_range.to_double()));
@@ -256,7 +267,7 @@ void firstRunicBossRoutine(octopus::Entity const &ent_p, octopus::Step & step_p,
 				entTarget_l->_handle,
 				entTarget_l->_pos,
 				playerSource_l->_team,
-				unit_l.getDamageNoBonus(),
+				unit_l.getDamageNoBonus() * (phase1_l?1:2),
 				unit_l.getDamage(entTarget_l->_model)
 			};
 			if(unit_l._model._projectile)
@@ -269,7 +280,7 @@ void firstRunicBossRoutine(octopus::Entity const &ent_p, octopus::Step & step_p,
 				projectile_l._sourceModel = &unit_l._model;
 				projectile_l._sourceTeam = playerSource_l->_team;
 				projectile_l._speed = 0.1;
-				projectile_l._baseDamage = unit_l.getDamageNoBonus();
+				projectile_l._baseDamage = unit_l.getDamageNoBonus() * (phase1_l?1:2);
 				projectile_l._bonusDamage = unit_l.getDamage(entTarget_l->_model);
 				projectile_l._generator = unit_l._attackMod;
 				step_p.getProjectileSpawnStep().addProjectile(state_p.getProjectileContainer(), std::move(projectile_l));
