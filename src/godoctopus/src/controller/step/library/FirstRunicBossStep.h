@@ -5,7 +5,8 @@
 
 namespace godot
 {
-/// @brief this step allow to move camera
+
+/// @brief this step trigger aoe info for first runic boss
 class FirstRunicBossStep : public octopus::CustomStep
 {
 public:
@@ -21,6 +22,19 @@ public:
     double const _x;
     double const _y;
 	double const _range;
+};
+
+class FirstRunicBossPillar : public octopus::CustomStep
+{
+public:
+	FirstRunicBossPillar(int id_p, bool spawn_p, bool firstSpawn_p) : _id(id_p), _spawn(spawn_p), _firstSpawn(firstSpawn_p) {}
+    virtual void apply(octopus::State &) const {}
+    virtual void revert(octopus::State &, octopus::SteppableData const *) const {}
+    virtual bool isNoOp() const { return false; }
+
+	int const _id;
+	bool const _spawn;
+	bool const _firstSpawn;
 };
 
 }

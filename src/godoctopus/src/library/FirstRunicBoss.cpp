@@ -38,7 +38,7 @@ struct FirstRunicBossStaticData : public octopus::StaticUnitData
 	octopus::Fixed aoe_range = 2;
 	octopus::Fixed aoe_damage = 75;
 	// phase 2
-	unsigned long long aoe_reload_spawn_p2 = 750;
+	unsigned long long aoe_reload_spawn_p2 = 1500;
 	unsigned long long aoe_count_p2 = 3;
 	octopus::Fixed aoe_damage_p2 = 150;
 
@@ -47,6 +47,12 @@ struct FirstRunicBossStaticData : public octopus::StaticUnitData
 	unsigned long long adds_reload_time = 6000;
 	unsigned long long adds_first_time = 200;
 	octopus::UnitModel const *add_model = nullptr;
+
+	// pilar params
+	unsigned long long nb_pillars = 2;
+	unsigned long long pillars_reload_time = 1500;
+	unsigned long long pillars_expiration_time = 1000;
+	octopus::UnitModel const *pillar_model = nullptr;
 
 	unsigned long seed = 42;
 };
@@ -91,7 +97,7 @@ struct FirstRunicBossData : public octopus::UnitData
 	std::vector<AoEInfo> aoe_info;
 
 	unsigned long long last_adds = 0;
-
+	unsigned long long last_pillars = 0;
 };
 
 bool shouldEnable(octopus::Unit const &unit_p, octopus::State const &state_p)
@@ -135,7 +141,8 @@ void firstRunicBossRoutine(octopus::Entity const &ent_p, octopus::Step & step_p,
 			for(octopus::Entity const *ent_l : state_p.getEntities())
 			{
 				if(&ent_l->_model == sData_l->add_model
-				&& ent_l->_player == unit_l._player)
+				&& ent_l->_player == unit_l._player
+				&& ent_l->_alive)
 				{
 					octopus::Fixed curHp_l = ent_l->_hp + step_p.getHpChange(ent_l->_handle);
 					octopus::Fixed maxHp_l = ent_l->getHpMax();
@@ -226,7 +233,7 @@ void firstRunicBossRoutine(octopus::Entity const &ent_p, octopus::Step & step_p,
 			// if all aoe are triggered
 			if(!non_triggered_aoe)
 			{
-				octopus::Logger::getDebug()<<"firstRunicBossRoutine :: reseting aoe"<<std::endl;
+				octopus::Logger::getDebug()<<"firstRunicBossRoutine :: resetting aoe"<<std::endl;
 				// empty aoe info
 				new_data_l->aoe_info = {};
 				change_done_l = true;
@@ -252,6 +259,58 @@ void firstRunicBossRoutine(octopus::Entity const &ent_p, octopus::Step & step_p,
 
 			new_data_l->last_adds = step_p.getId();
 			change_done_l = true;
+		}
+
+		// check if spawn pillars
+		if(phase2_l
+		&& sData_l->pillar_model
+		&& (data_l->last_pillars + sData_l->pillars_reload_time <= step_p.getId() || data_l->last_pillars == 0))
+		{
+			for(unsigned int c = 0 ; c < sData_l->nb_pillars; ++ c)
+			{
+				int x = rand_l.roll(1, 5);
+				int y = rand_l.roll(1, 5);
+				if(rand_l.roll(0, 1) > 0) { x = -x; }
+				if(rand_l.roll(0, 1) > 0) { y = -y; }
+				octopus::Unit model_l(unit_l._pos + octopus::Vector(x, y), false, *sData_l->pillar_model);
+				model_l._player = unit_l._player;
+				step_p.addSteppable(new octopus::UnitSpawnStep(getNextHandle(step_p, state_p), model_l));
+			}
+			step_p.addSteppable(new FirstRunicBossPillar(ent_p._handle.index, true, data_l->last_pillars == 0));
+			new_data_l->last_pillars = step_p.getId();
+			change_done_l = true;
+		}
+
+		// check if we trigger pillar explosion
+		if(phase2_l
+		&& sData_l->pillar_model
+		&& (data_l->last_pillars + sData_l->pillars_expiration_time == step_p.getId()))
+		{
+			bool any_pillar_alive_l = false;
+			// if any pillar is still alive
+			for(octopus::Entity const *ent_l : state_p.getEntities())
+			{
+				if(&ent_l->_model == sData_l->pillar_model
+				&& ent_l->_player == unit_l._player
+				&& ent_l->_alive)
+				{
+					octopus::Fixed curHp_l = ent_l->_hp + step_p.getHpChange(ent_l->_handle);
+					octopus::Fixed maxHp_l = ent_l->getHpMax();
+					step_p.addSteppable(new octopus::EntityHitPointChangeStep(ent_l->_handle, -maxHp_l * 10, curHp_l, maxHp_l));
+					any_pillar_alive_l = true;
+				}
+			}
+			if(any_pillar_alive_l)
+			{
+				octopus::TargetPanel panel_l = octopus::lookUpNewTargets(state_p, ent_p._handle, 10, true);
+				for(octopus::Entity const *ent_l : panel_l.units)
+				{
+					octopus::Fixed curHp_l = ent_l->_hp + step_p.getHpChange(ent_l->_handle);
+					octopus::Fixed maxHp_l = ent_l->getHpMax();
+					step_p.addSteppable(new octopus::EntityHitPointChangeStep(ent_l->_handle, -maxHp_l * 0.9, curHp_l, maxHp_l));
+				}
+				step_p.addSteppable(new FirstRunicBossPillar(ent_p._handle.index, false, false));
+			}
 		}
 	}
 
@@ -319,6 +378,18 @@ void addFirstRunicBossToLibrary(octopus::Library &lib_p)
 
     lib_p.registerUnitModel("firstRunicBoss_add", unitModel_l);
 
+    octopus::UnitModel pillarModel_l { true, 0.5, 0.05, 150. };
+    pillarModel_l._isUnit = true;
+	pillarModel_l._projectile = true;
+    pillarModel_l._damage = 2;
+    pillarModel_l._armor = 3;
+    pillarModel_l._range = 4;
+    pillarModel_l._lineOfSight = 5;
+    pillarModel_l._fullReload = 300;
+    pillarModel_l._windup = 20;
+
+    lib_p.registerUnitModel("firstRunicBoss_pillar", pillarModel_l);
+
 	octopus::UnitModel firstRunicBossModel_l { true, 1.9, 0., 7500 };
 	firstRunicBossModel_l._projectile = true;
 	firstRunicBossModel_l._isUnit = true;
@@ -332,6 +403,7 @@ void addFirstRunicBossToLibrary(octopus::Library &lib_p)
 	firstRunicBossModel_l._unitData = new FirstRunicBossData();
 	FirstRunicBossStaticData *sData_l = new FirstRunicBossStaticData();
 	sData_l->add_model = &lib_p.getUnitModel("firstRunicBoss_add");
+	sData_l->pillar_model = &lib_p.getUnitModel("firstRunicBoss_pillar");
 	firstRunicBossModel_l._staticUnitData = sData_l;
 
 	lib_p.registerUnitModel("firstRunicBoss", firstRunicBossModel_l);
