@@ -268,8 +268,8 @@ void firstRunicBossRoutine(octopus::Entity const &ent_p, octopus::Step & step_p,
 		{
 			for(unsigned int c = 0 ; c < sData_l->nb_pillars; ++ c)
 			{
-				int x = rand_l.roll(1, 5);
-				int y = rand_l.roll(1, 5);
+				int x = rand_l.roll(2, 5);
+				int y = rand_l.roll(2, 5);
 				if(rand_l.roll(0, 1) > 0) { x = -x; }
 				if(rand_l.roll(0, 1) > 0) { y = -y; }
 				octopus::Unit model_l(unit_l._pos + octopus::Vector(x, y), false, *sData_l->pillar_model);
