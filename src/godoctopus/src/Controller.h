@@ -202,6 +202,8 @@ public:
 	void next_step();
 	/// @brief get the size of the queued layers
 	int get_queued_size() const;
+	/// @brief get the size of prepared layer for a peer (the one not sent to the engine controller yet)
+	int get_queued_size_from_peer(int peer_p) const;
 
 	// handling of peer information
 	/// @brief add peer info on player

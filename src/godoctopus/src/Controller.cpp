@@ -1562,6 +1562,11 @@ int Controller::get_queued_size() const
 	return _controller->getQueuedSize();
 }
 
+int Controller::get_queued_size_from_peer(int peer_p) const
+{
+	return _queuedCommandsPerPeer.at(peer_p).size();
+}
+
 void Controller::add_peer_info(int peer_p, int player_p)
 {
 	if(player_p>=0)
@@ -1681,6 +1686,7 @@ void Controller::_bind_methods()
 	ClassDB::bind_method(D_METHOD("set_step_control", "prequeued_p"), &Controller::set_step_control);
 	ClassDB::bind_method(D_METHOD("next_step"), &Controller::next_step);
 	ClassDB::bind_method(D_METHOD("get_queued_size"), &Controller::get_queued_size);
+	ClassDB::bind_method(D_METHOD("get_queued_size_from_peer", "peer"), &Controller::get_queued_size_from_peer);
 	ClassDB::bind_method(D_METHOD("add_peer_info", "peer_p", "player_p"), &Controller::add_peer_info);
 	ClassDB::bind_method(D_METHOD("step_done_for_peer", "peer_p"), &Controller::step_done_for_peer);
 
