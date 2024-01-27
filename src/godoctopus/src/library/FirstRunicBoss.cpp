@@ -29,6 +29,7 @@ struct FirstRunicBossStaticData : public octopus::StaticUnitData
 	}
 
 	// aoe params
+	bool aoe_enabled = true;
 	unsigned long long aoe_first_spawn = 500;
 	unsigned long long aoe_reload_spawn = 1500;
 	unsigned long long aoe_spawn_time = 250;
@@ -43,12 +44,14 @@ struct FirstRunicBossStaticData : public octopus::StaticUnitData
 	octopus::Fixed aoe_damage_p2 = 150;
 
 	// adds params
+	bool adds_enabled = true;
 	unsigned long long nb_adds = 10;
 	unsigned long long adds_reload_time = 6000;
 	unsigned long long adds_first_time = 200;
 	octopus::UnitModel const *add_model = nullptr;
 
 	// pilar params
+	bool pillars_enabled = true;
 	unsigned long long nb_pillars = 2;
 	unsigned long long pillars_reload_time = 1500;
 	unsigned long long pillars_expiration_time = 1000;
@@ -166,7 +169,8 @@ void firstRunicBossRoutine(octopus::Entity const &ent_p, octopus::Step & step_p,
 		bool aoe_spawn_reload = (data_l->last_aoe + sData_l->aoe_reload_spawn <= step_p.getId() && phase1_l)
 							||  (data_l->last_aoe + sData_l->aoe_reload_spawn_p2 <= step_p.getId() && phase2_l);
 		// check if we spawn aoe info
-		if(data_l->aoe_info.empty()
+		if(sData_l->aoe_enabled
+		&& data_l->aoe_info.empty()
 		&& (aoe_spawn_reload || data_l->last_aoe == 0)
 		&& data_l->enable_time + sData_l->aoe_first_spawn <= step_p.getId())
 		{
@@ -242,7 +246,8 @@ void firstRunicBossRoutine(octopus::Entity const &ent_p, octopus::Step & step_p,
 
 
 		// check if spawn adds
-		if(sData_l->add_model
+		if(sData_l->adds_enabled
+		&& sData_l->add_model
 		&& (data_l->last_adds + sData_l->adds_reload_time <= step_p.getId() || data_l->last_adds == 0)
 		&& data_l->enable_time + sData_l->adds_first_time <= step_p.getId())
 		{
@@ -262,7 +267,8 @@ void firstRunicBossRoutine(octopus::Entity const &ent_p, octopus::Step & step_p,
 		}
 
 		// check if spawn pillars
-		if(phase2_l
+		if(sData_l->pillars_enabled
+		&& phase2_l
 		&& sData_l->pillar_model
 		&& (data_l->last_pillars + sData_l->pillars_reload_time <= step_p.getId() || data_l->last_pillars == 0))
 		{
@@ -282,7 +288,8 @@ void firstRunicBossRoutine(octopus::Entity const &ent_p, octopus::Step & step_p,
 		}
 
 		// check if we trigger pillar explosion
-		if(phase2_l
+		if(sData_l->pillars_enabled
+		&& phase2_l
 		&& sData_l->pillar_model
 		&& (data_l->last_pillars + sData_l->pillars_expiration_time == step_p.getId()))
 		{
@@ -407,6 +414,26 @@ void addFirstRunicBossToLibrary(octopus::Library &lib_p)
 	firstRunicBossModel_l._staticUnitData = sData_l;
 
 	lib_p.registerUnitModel("firstRunicBoss", firstRunicBossModel_l);
+
+	octopus::UnitModel firstRunicAnomaly { true, 1.9, 0., 2000 };
+	firstRunicAnomaly._projectile = true;
+	firstRunicAnomaly._isUnit = true;
+	firstRunicAnomaly._damage = 10;
+	firstRunicAnomaly._armor = 2;
+	firstRunicAnomaly._range = 10.;
+	firstRunicAnomaly._lineOfSight = 50;
+	firstRunicAnomaly._fullReload = 80;
+	firstRunicAnomaly._windup = 20;
+	firstRunicAnomaly._idleFunc = firstRunicBossRoutine;
+	firstRunicAnomaly._unitData = new FirstRunicBossData();
+	sData_l = new FirstRunicBossStaticData();
+	sData_l->add_model = &lib_p.getUnitModel("firstRunicBoss_add");
+	sData_l->pillar_model = &lib_p.getUnitModel("firstRunicBoss_pillar");
+	sData_l->adds_enabled = false;
+	sData_l->pillars_enabled = false;
+	firstRunicAnomaly._staticUnitData = sData_l;
+
+	lib_p.registerUnitModel("firstRunicAnomaly", firstRunicAnomaly);
 }
 
 } // namespace godot
