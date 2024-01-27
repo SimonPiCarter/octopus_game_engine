@@ -203,7 +203,7 @@ void firstRunicBossRoutine(octopus::Entity const &ent_p, octopus::Step & step_p,
 				if(step_p.getId() == info_l.spawn_time)
 				{
 					octopus::Logger::getDebug()<<"firstRunicBossRoutine :: spawning aoe for real"<<std::endl;
-					step_p.addSteppable(new FirstRunicBossStep(info_l.idx, false, info_l.pos.x.to_double(), info_l.pos.y.to_double(), sData_l->aoe_range.to_double()));
+					step_p.addSteppable(new FirstRunicBossStep(ent_p._handle.index, info_l.idx, false, info_l.pos.x.to_double(), info_l.pos.y.to_double(), sData_l->aoe_range.to_double()));
 				}
 
 				// trigger aoe
@@ -221,7 +221,7 @@ void firstRunicBossRoutine(octopus::Entity const &ent_p, octopus::Step & step_p,
 						step_p.addSteppable(new octopus::EntityHitPointChangeStep(ent_l->_handle, -dmg_l, curHp_l, maxHp_l));
 					}
 
-					step_p.addSteppable(new FirstRunicBossStep(info_l.idx, true, info_l.pos.x.to_double(), info_l.pos.y.to_double(), sData_l->aoe_range.to_double()));
+					step_p.addSteppable(new FirstRunicBossStep(ent_p._handle.index, info_l.idx, true, info_l.pos.x.to_double(), info_l.pos.y.to_double(), sData_l->aoe_range.to_double()));
 
 					// update triggered and changed done
 					info_l.triggered = true;

@@ -303,13 +303,13 @@ void ControllerStepVisitor::visit(octopus::CustomStep const *steppable_p)
 	{
 		if(firstRunicBossStep_l->_trigger)
 		{
-			_controller.emit_signal("first_runic_boss_trigger_aoe", firstRunicBossStep_l->_id);
+			_controller.emit_signal("first_runic_boss_trigger_aoe", firstRunicBossStep_l->_id, firstRunicBossStep_l->_idAoe);
 		}
 		else
 		{
 			_controller.emit_signal("first_runic_boss_spawn_aoe",
-				firstRunicBossStep_l->_id, firstRunicBossStep_l->_x,
-				firstRunicBossStep_l->_y, firstRunicBossStep_l->_range);
+				firstRunicBossStep_l->_id, firstRunicBossStep_l->_idAoe,
+				firstRunicBossStep_l->_x, firstRunicBossStep_l->_y, firstRunicBossStep_l->_range);
 		}
 	}
 	else if(firstRunicBossPillar_l)
