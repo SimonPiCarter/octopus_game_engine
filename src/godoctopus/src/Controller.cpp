@@ -121,8 +121,7 @@ void Controller::_process(double delta)
 
 		if(_state && _state->getStepApplied() % 128 == 0)
 		{
-			String str_l = hashState(*_state).c_str();
-			emit_signal("state_dump", _controller->getMetrics()._nbStepsCompiled, str_l);
+			emit_signal("state_dump", _controller->getMetrics()._nbStepsCompiled, hashState(*_state));
 		}
 	}
 }
@@ -1761,7 +1760,7 @@ void Controller::_bind_methods()
 	ADD_SIGNAL(MethodInfo("loading_state", PropertyInfo(Variant::FLOAT, "loading")));
 	ADD_SIGNAL(MethodInfo("loading_done"));
 
-	ADD_SIGNAL(MethodInfo("state_dump", PropertyInfo(Variant::INT, "step"), PropertyInfo(Variant::STRING, "step")));
+	ADD_SIGNAL(MethodInfo("state_dump", PropertyInfo(Variant::INT, "step"), PropertyInfo(Variant::INT, "step")));
 }
 
 std::map<unsigned long, AbstractOptionManager *> &Controller::getOptionManagers()
