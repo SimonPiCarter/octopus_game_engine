@@ -816,8 +816,16 @@ void Controller::loop()
 			lockStep_l = !_stepControl || _controller->getMetrics()._nbStepsCompiled < _stepDone;
 			if(!_paused && lockStep_l)
 			{
-				// update controller
-				_controller->update(std::min(0.01, elapsed_l));
+				// if step control we accept to run faster than time
+				if(_stepControl)
+				{
+					_controller->update(0.01);
+				}
+				else
+				{
+					// update controller
+					_controller->update(std::min(0.01, elapsed_l));
+				}
 			}
 			while(!_controller->loop_body()) {}
 
