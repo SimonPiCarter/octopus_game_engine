@@ -52,7 +52,7 @@
 #endif
 
 #include <inttypes.h>
-
+#include <cstddef>
 
 // ================= DEFINES ===================
 #if defined(KINETISK)
