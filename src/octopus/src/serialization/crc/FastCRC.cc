@@ -42,20 +42,21 @@
 
 #endif
 
-template<typename T>
-const unsigned short pgm_read_word(T addr)
-{
-	return *(const unsigned short *)(addr);
-}
-template<typename T>
-const unsigned long pgm_read_dword(T addr)
-{
-	return *(const unsigned long *)(addr);
-}
-
-
 #include "FastCRC.hh"
 #include "FastCRC_tables.hh"
+
+template<typename T>
+const uint16_t pgm_read_word(T addr)
+{
+	return *(const uint16_t *)(addr);
+}
+template<typename T>
+const uint32_t pgm_read_dword(T addr)
+{
+	return *(const uint32_t *)(addr);
+}
+
+
 
 
 static inline
