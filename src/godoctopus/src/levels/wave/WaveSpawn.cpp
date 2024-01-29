@@ -15,6 +15,8 @@
 #include "controller/step/WaveStep.h"
 #include "controller/step/DialogStep.h"
 
+#include <godot_cpp/variant/utility_functions.hpp>
+
 using namespace octopus;
 
 namespace godot
@@ -52,6 +54,7 @@ void WaveSpawn::trigger(State const &state_p, Step &step_p, unsigned long, octop
 			for(int i = 0 ; i < unitCount_l.count ; ++ i)
 			{
 				Unit unit_l({ spawnPoint_l.x+_rand.roll(-5,5), spawnPoint_l.y-_rand.roll(-5,5) }, false, _lib.getUnitModel(modelName_l));
+				UtilityFunctions::print("spawning ", int(unit_l._handle.index)," at ",unit_l._pos.x.data(), ", ", unit_l._pos.y.data());
 				unit_l._player = _player;
 				Handle handle_l = getNextHandle(step_p, state_p);
 				step_p.addSteppable(new UnitSpawnStep(handle_l, unit_l));
