@@ -34,13 +34,11 @@ void streamStateAsSimpleText(std::ostream &os_p, State const &state_p)
     }
 }
 
-template<typename T>
-uint32_t setup(T const &data_p, FastCRC32 &encoder_p)
+uint32_t setup(int64_t const &data_p, FastCRC32 &encoder_p)
 {
     return encoder_p.crc32((const uint8_t *)&data_p, sizeof(data_p));
 }
-template<typename T>
-uint32_t encode(T const &data_p, FastCRC32 &encoder_p)
+uint32_t encode(int64_t const &data_p, FastCRC32 &encoder_p)
 {
     return encoder_p.crc32_upd((const uint8_t *)&data_p, sizeof(data_p));
 }
