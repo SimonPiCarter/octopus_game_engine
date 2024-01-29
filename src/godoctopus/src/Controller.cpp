@@ -128,7 +128,9 @@ void Controller::_process(double delta)
 		if(_state && _state->getStepApplied() % 128 == 0)
 		{
 			emit_signal("state_dump", (int64_t)_state->getStepApplied(), hashState(*_state));
-			UtilityFunctions::print((int64_t)_state->getStepApplied(), " ",stringState(*_state).c_str());
+			std::string tmp_l = stringState(*_state);
+			std::ofstream file_l("log_"+std::to_string(_state->getStepApplied())+".log");
+			file_l << tmp_l;
 		}
 	}
 }
