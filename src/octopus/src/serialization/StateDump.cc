@@ -32,5 +32,32 @@ void streamStateAsSimpleText(std::ostream &os_p, State const &state_p)
     }
 }
 
+std::string hashState(State const &state_p)
+{
+	std::stringstream ss_l;
+	long long data = 0;
+    ss_l<<state_p.getStepApplied();
+    for(Player const *player_l : state_p.getPlayers())
+    {
+        for(auto &&pair_l : player_l->_resources)
+        {
+            ss_l<<pair_l.first<<pair_l.second.data();
+        }
+        for(auto &&pair_l : player_l->_upgradeLvl)
+        {
+            ss_l<<pair_l.first<<pair_l.second;
+        }
+    }
+    for(Entity const * ent_l : state_p.getEntities())
+    {
+        ss_l<<ent_l->_handle.index<<(int)ent_l->_handle.revision;
+        ss_l<<(ent_l->_alive?"1":"0");
+        ss_l<<ent_l->_hp;
+        ss_l<<ent_l->_pos.x.data()<<ent_l->_pos.y.data();
+    }
+
+	return ss_l.str();
+}
+
 } // namespace octopus
 

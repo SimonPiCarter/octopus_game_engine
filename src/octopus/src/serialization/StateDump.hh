@@ -19,6 +19,8 @@ class State;
 ///   - Alive (1/0)
 void streamStateAsSimpleText(std::ostream &os_p, State const &state_p);
 
+std::string hashState(State const &state_p);
+
 } // namespace octopus
 
 
