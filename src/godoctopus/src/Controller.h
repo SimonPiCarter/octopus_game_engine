@@ -290,6 +290,7 @@ private:
 	std::map<int, unsigned long> _playerPerPeer;
 
 	bool _catchedException = false;
+	bool _readyToLoopSent = false;
 	std::string _exception;
 
 };

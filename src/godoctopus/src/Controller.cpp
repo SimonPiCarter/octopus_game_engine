@@ -91,6 +91,12 @@ void Controller::_process(double delta)
 {
 	Node::_process(delta);
 
+	if(_initDone && !_readyToLoopSent)
+	{
+		emit_signal("ready_to_loop");
+		_readyToLoopSent = true;
+	}
+
 	if(_controller && _initDone)
 	{
 		octopus::StateAndSteps stateAndSteps_l = _controller->queryStateAndSteps();
@@ -1761,6 +1767,7 @@ void Controller::_bind_methods()
 	ADD_SIGNAL(MethodInfo("loading_done"));
 
 	ADD_SIGNAL(MethodInfo("state_dump", PropertyInfo(Variant::INT, "step"), PropertyInfo(Variant::INT, "step")));
+	ADD_SIGNAL(MethodInfo("ready_to_loop"));
 }
 
 std::map<unsigned long, AbstractOptionManager *> &Controller::getOptionManagers()
