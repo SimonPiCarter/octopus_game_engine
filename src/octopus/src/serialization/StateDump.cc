@@ -93,12 +93,14 @@ std::string stringState(State const &state_p)
     }
     for(Entity const * ent_l : state_p.getEntities())
     {
-        ss_l << (int)ent_l->_handle.revision << std::endl;
+        ss_l << (int)ent_l->_handle.index<< " "<<(int)ent_l->_handle.revision << std::endl;
         ss_l << (ent_l->_alive?1:0) << std::endl;
         ss_l << ent_l->_hp.data() << std::endl;
         ss_l << ent_l->_pos.x.data() << std::endl;
         ss_l << ent_l->_pos.y.data() << std::endl;
     }
+
+	ss_l << "end dump"<<std::endl;
 
     return ss_l.str();
 }
