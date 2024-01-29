@@ -57,6 +57,7 @@ void WaveSpawn::trigger(State const &state_p, Step &step_p, unsigned long, octop
 				unit_l._player = _player;
 				Handle handle_l = getNextHandle(step_p, state_p);
 				UtilityFunctions::print("spawning ", int64_t(handle_l.index)," at ",int64_t(unit_l._pos.x.data()), ", ", int64_t(unit_l._pos.y.data()));
+				UtilityFunctions::print("\tfrom point : ", int64_t(spawnPoint_l.x.data()), ", ", int64_t(spawnPoint_l.y.data()));
 				step_p.addSteppable(new UnitSpawnStep(handle_l, unit_l));
 				step_p.addSteppable(new CommandSpawnStep(new EntityAttackMoveCommand(handle_l, handle_l, currentParams_l.targetPoint, 0, {currentParams_l.targetPoint}, true, true )));
 				handles_l.insert(handle_l);
@@ -94,6 +95,7 @@ void WaveSpawn::trigger(State const &state_p, Step &step_p, unsigned long, octop
 			WaveParam const &param_l = nextParams_l.front();
 			WaveInfo nextWave_l = rollWave(_rand, param_l.wavePool);
 			std::vector<octopus::Vector> rolledSpawns_l = rollSpawnPoints(param_l.spawnPoints, param_l.nSpawnPoints, _rand);
+
 
 			step_p.addSteppable(new TriggerSpawn(new WaveSpawn(new ListenerStepCount(nextWave_l.earlyWave.steps), nextWave_l, rolledSpawns_l, true,
 				_lib, _rand, nextParams_l, _player, _waveStepGenerator)));

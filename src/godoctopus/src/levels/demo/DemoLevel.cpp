@@ -44,6 +44,8 @@
 #include "levels/wave/WaveSpawn.h"
 #include "levels/model/utils/EntitySpawner.h"
 
+#include <godot_cpp/variant/utility_functions.hpp>
+
 using namespace octopus;
 using namespace fas;
 
@@ -128,6 +130,16 @@ std::list<Steppable *> DemoLevelSteps(
 	WaveParam const &paramFirst_l = *params_l.begin();
 	WaveInfo firstWave_l = rollWave(rand_p, paramFirst_l.wavePool);
 	std::vector<octopus::Vector> rolledSpawns_l = rollSpawnPoints(paramFirst_l.spawnPoints, paramFirst_l.nSpawnPoints, rand_p);
+
+	UtilityFunctions::print("N spawns : ", int64_t(paramFirst_l.nSpawnPoints));
+	for(auto &&spawnPoint_l : paramFirst_l.spawnPoints)
+	{
+		UtilityFunctions::print("\tavailable spawn : ", int64_t(spawnPoint_l.x.data()), ", ", int64_t(spawnPoint_l.y.data()));
+	}
+	for(auto &&spawnPoint_l : rolledSpawns_l)
+	{
+		UtilityFunctions::print("\trolled spawn : ", int64_t(spawnPoint_l.x.data()), ", ", int64_t(spawnPoint_l.y.data()));
+	}
 
 	Trigger * triggerWave_l = new WaveSpawn(new ListenerStepCount(firstWave_l.earlyWave.steps), firstWave_l, rolledSpawns_l, true,
 			lib_p, rand_p, params_l, player_p, demoGenerator);
