@@ -4,6 +4,8 @@
 #include "state/entity/Entity.hh"
 #include "state/player/Player.hh"
 
+#include "crc/FastCRC.hh"
+
 namespace octopus
 {
 void streamStateAsSimpleText(std::ostream &os_p, State const &state_p)
@@ -32,31 +34,46 @@ void streamStateAsSimpleText(std::ostream &os_p, State const &state_p)
     }
 }
 
-std::string hashState(State const &state_p)
+template<typename T>
+uint32_t setup(T const &data_p, FastCRC32 &encoder_p)
 {
-	std::stringstream ss_l;
-	long long data = 0;
-    ss_l<<state_p.getStepApplied();
+    return encoder_p.crc32((const uint8_t *)&data_p, sizeof(data_p));
+}
+template<typename T>
+uint32_t encode(T const &data_p, FastCRC32 &encoder_p)
+{
+    return encoder_p.crc32_upd((const uint8_t *)&data_p, sizeof(data_p));
+}
+
+uint32_t hashState(State const &state_p)
+{
+    uint32_t checksum_l = 0;
+
+    FastCRC32 encoder_l;
+
+    checksum_l = setup(state_p.getStepApplied(), encoder_l);
     for(Player const *player_l : state_p.getPlayers())
     {
+        checksum_l = encode(player_l->_id, encoder_l);
         for(auto &&pair_l : player_l->_resources)
         {
-            ss_l<<pair_l.first<<pair_l.second.data();
+            checksum_l = encode(pair_l.second.data(), encoder_l);
         }
         for(auto &&pair_l : player_l->_upgradeLvl)
         {
-            ss_l<<pair_l.first<<pair_l.second;
+            checksum_l = encode(pair_l.second, encoder_l);
         }
     }
     for(Entity const * ent_l : state_p.getEntities())
     {
-        ss_l<<ent_l->_handle.index<<(int)ent_l->_handle.revision;
-        ss_l<<(ent_l->_alive?"1":"0");
-        ss_l<<ent_l->_hp;
-        ss_l<<ent_l->_pos.x.data()<<ent_l->_pos.y.data();
+        checksum_l = encode(ent_l->_handle.revision, encoder_l);
+        checksum_l = encode((ent_l->_alive?1:0), encoder_l);
+        checksum_l = encode(ent_l->_hp.data(), encoder_l);
+        checksum_l = encode(ent_l->_pos.x.data(), encoder_l);
+        checksum_l = encode(ent_l->_pos.y.data(), encoder_l);
     }
 
-	return ss_l.str();
+    return checksum_l;
 }
 
 } // namespace octopus
