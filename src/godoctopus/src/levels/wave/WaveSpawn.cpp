@@ -53,7 +53,9 @@ void WaveSpawn::trigger(State const &state_p, Step &step_p, unsigned long, octop
 			// spawn the given unit count
 			for(int i = 0 ; i < unitCount_l.count ; ++ i)
 			{
-				Unit unit_l({ spawnPoint_l.x+_rand.roll(-5,5), spawnPoint_l.y-_rand.roll(-5,5) }, false, _lib.getUnitModel(modelName_l));
+				Unit unit_l(spawnPoint_l, false, _lib.getUnitModel(modelName_l));
+				unit_l._pos.x += _rand.roll(-5,5);
+				unit_l._pos.y += _rand.roll(-5,5);
 				unit_l._player = _player;
 				Handle handle_l = getNextHandle(step_p, state_p);
 				UtilityFunctions::print("spawning ", int64_t(handle_l.index)," at ",int64_t(unit_l._pos.x.data()), ", ", int64_t(unit_l._pos.y.data()));

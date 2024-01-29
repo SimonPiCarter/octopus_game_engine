@@ -183,7 +183,9 @@ void WaveSpawn::trigger(State const &state_p, Step &step_p, unsigned long, octop
 	for(unsigned long i = 0 ; i < _wave * 10 ; ++ i)
 	{
 		std::string modelName_l = genModelName(_rand);
-		Unit unit_l({ _worldSize-_rand.roll(10,20), _worldSize-_rand.roll(10,20) }, false, _lib.getUnitModel(modelName_l));
+		Unit unit_l({ _worldSize, _worldSize }, false, _lib.getUnitModel(modelName_l));
+		unit_l._pos.x -= _rand.roll(10,20);
+		unit_l._pos.y -= _rand.roll(10,20);
 		unit_l._player = _player;
 		Handle handle_l = getNextHandle(step_p, state_p);
 		step_p.addSteppable(new UnitSpawnStep(handle_l, unit_l));
