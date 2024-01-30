@@ -63,14 +63,17 @@ void WaveSpawn::trigger(State const &state_p, Step &step_p, unsigned long, octop
 		}
 	}
 
-	step_p.addSteppable(new WaveSpawPointStep(_currentSpawnPoints));
 
 	if(!_earlyWave)
 	{
 		step_p.addSteppable(new StateRemoveConstraintPositionStep(0, currentParams_l.limitX, currentParams_l.limitYStart, currentParams_l.limitYEnd, true, true));
 	}
 
-	step_p.addSteppable(new godot::DialogStep(_earlyWave?"early_wave":(_params.size()==1?"last_wave":"big_wave")));
+	if(!_endless)
+	{
+		step_p.addSteppable(new WaveSpawPointStep(_currentSpawnPoints));
+		step_p.addSteppable(new godot::DialogStep(_earlyWave?"early_wave":(_params.size()==1?"last_wave":"big_wave")));
+	}
 
 	std::vector<octopus::Steppable *> stepsGenerated_l = _waveStepGenerator();
 	for(octopus::Steppable *step_l : stepsGenerated_l)
@@ -82,7 +85,11 @@ void WaveSpawn::trigger(State const &state_p, Step &step_p, unsigned long, octop
 	{
 		// prepare next wave
 		std::list<WaveParam> nextParams_l = _params;
-		nextParams_l.pop_front();
+		// if size > 1 or not endless we pop an element
+		if(nextParams_l.size() > 1 || !_endless)
+		{
+			nextParams_l.pop_front();
+		}
 
 		if(nextParams_l.empty())
 		{
@@ -94,15 +101,19 @@ void WaveSpawn::trigger(State const &state_p, Step &step_p, unsigned long, octop
 			WaveInfo nextWave_l = rollWave(_rand, param_l.wavePool);
 			std::vector<octopus::Vector> rolledSpawns_l = rollSpawnPoints(param_l.spawnPoints, param_l.nSpawnPoints, _rand);
 
-			step_p.addSteppable(new TriggerSpawn(new WaveSpawn(new ListenerStepCount(nextWave_l.earlyWave.steps), nextWave_l, rolledSpawns_l, true,
-				_lib, _rand, nextParams_l, _player, _waveStepGenerator)));
+			WaveSpawn *spawn_l = new WaveSpawn(new ListenerStepCount(nextWave_l.earlyWave.steps), nextWave_l, rolledSpawns_l, true,
+				_lib, _rand, nextParams_l, _player, _waveStepGenerator);
+			spawn_l->setEndless(_endless);
+			step_p.addSteppable(new TriggerSpawn(spawn_l));
 		}
 	}
 	else
 	{
 		// prepare main wave
-		step_p.addSteppable(new TriggerSpawn(new WaveSpawn(new ListenerStepCount(_currentWave.mainWave.steps), _currentWave, _currentSpawnPoints, false,
-			_lib, _rand, _params, _player, _waveStepGenerator)));
+		WaveSpawn *spawn_l = new WaveSpawn(new ListenerStepCount(_currentWave.mainWave.steps), _currentWave, _currentSpawnPoints, false,
+			_lib, _rand, _params, _player, _waveStepGenerator);
+		spawn_l->setEndless(_endless);
+		step_p.addSteppable(new TriggerSpawn(spawn_l));
 	}
 }
 

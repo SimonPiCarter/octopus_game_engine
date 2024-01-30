@@ -49,6 +49,8 @@ public:
 
 	virtual void trigger(octopus::State const &state_p, octopus::Step &step_p, unsigned long, octopus::TriggerData const &) const override;
 
+	void setEndless(bool endless_p) { _endless = endless_p; }
+
 private:
 	/// @brief required because wave has already been picked from the current pool
 	WaveInfo const _currentWave;
@@ -61,6 +63,9 @@ private:
 
 	std::list<WaveParam> _params;
 	unsigned long _player;
+
+	/// @brief last wave will repeat endlessly
+	bool _endless = false;
 
 	std::function<std::vector<octopus::Steppable *>(void)> _waveStepGenerator;
 };
