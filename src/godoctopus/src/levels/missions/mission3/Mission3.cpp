@@ -153,6 +153,7 @@ void writeMission3Header(std::ofstream &file_p, Mission3Header const &header_p)
 
 /// @brief read header for classic arena level and return a pair of steppable and command
 std::pair<std::list<octopus::Steppable *>, std::list<octopus::Command *> > readMission3Header(octopus::Library &lib_p, std::ifstream &file_p,
+	std::vector<GodotEntityInfo> const &entityInfo_p,
 	octopus::RandomGenerator * &rand_p, Mission3Header &header_r)
 {
     file_p.read((char*)&header_r.seed, sizeof(header_r.seed));
@@ -162,7 +163,7 @@ std::pair<std::list<octopus::Steppable *>, std::list<octopus::Command *> > readM
 	rand_p = new octopus::RandomGenerator(header_r.seed);
 
 	std::pair<std::list<octopus::Steppable *>, std::list<octopus::Command *> > pair_l;
-	pair_l.first = Mission3Steps(lib_p, *rand_p, header_r.nb_players, {});
+	pair_l.first = Mission3Steps(lib_p, *rand_p, header_r.nb_players, entityInfo_p);
 	pair_l.second = Mission3Commands(lib_p, *rand_p, header_r.nb_players);
 	return pair_l;
 }

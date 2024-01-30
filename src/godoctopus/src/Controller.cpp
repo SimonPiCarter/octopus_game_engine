@@ -586,14 +586,18 @@ void Controller::replay_level(String const &filename_p, bool replay_mode_p, godo
 	}
 	else if(levelId_l == LEVEL_ID_MISSION_2)
 	{
+		std::vector<GodotEntityInfo> info_l = getEntityInfo(level_model_p->getEntities(), _fileHeader->get_num_players());
+
 		mission::Mission2Header header_l;
-		levelInfo_l = mission::readMission2Header(_lib, file_l,_rand, header_l);
+		levelInfo_l = mission::readMission2Header(_lib, file_l, info_l, _rand, header_l);
 		_headerWriter = std::bind(mission::writeMission2Header, std::placeholders::_1, header_l);
 	}
 	else if(levelId_l == LEVEL_ID_MISSION_3)
 	{
+		std::vector<GodotEntityInfo> info_l = getEntityInfo(level_model_p->getEntities(), _fileHeader->get_num_players());
+
 		mission::Mission3Header header_l;
-		levelInfo_l = mission::readMission3Header(_lib, file_l,_rand, header_l);
+		levelInfo_l = mission::readMission3Header(_lib, file_l, info_l, _rand, header_l);
 		_headerWriter = std::bind(mission::writeMission3Header, std::placeholders::_1, header_l);
 	}
 	else

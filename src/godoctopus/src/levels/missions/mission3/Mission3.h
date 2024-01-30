@@ -39,6 +39,7 @@ struct Mission3Header
 void writeMission3Header(std::ofstream &file_p, Mission3Header const &header_p);
 /// @brief read header for classic mission 2 level and return a pair of steppable and command (warning delete and reset rand_p using the written seed)
 std::pair<std::list<octopus::Steppable *>, std::list<octopus::Command *> > readMission3Header(octopus::Library &lib_p, std::ifstream &file_p,
+	std::vector<GodotEntityInfo> const &entityInfo_p,
 	octopus::RandomGenerator * &rand_p, Mission3Header &header_r);
 
 } // namespace mission
