@@ -74,5 +74,36 @@ uint32_t hashState(State const &state_p)
     return checksum_l;
 }
 
+std::string stringState(State const &state_p)
+{
+    std::stringstream ss_l;
+
+    ss_l << state_p.getStepApplied() << std::endl;
+    for(Player const *player_l : state_p.getPlayers())
+    {
+        ss_l << player_l->_id << std::endl;
+        for(auto &&pair_l : player_l->_resources)
+        {
+            ss_l << pair_l.second.data() << std::endl;
+        }
+        for(auto &&pair_l : player_l->_upgradeLvl)
+        {
+            ss_l << pair_l.second << std::endl;
+        }
+    }
+    for(Entity const * ent_l : state_p.getEntities())
+    {
+        ss_l << (int)ent_l->_handle.index<< " "<<(int)ent_l->_handle.revision << std::endl;
+        ss_l << (ent_l->_alive?1:0) << std::endl;
+        ss_l << ent_l->_hp.data() << std::endl;
+        ss_l << ent_l->_pos.x.data() << std::endl;
+        ss_l << ent_l->_pos.y.data() << std::endl;
+    }
+
+	ss_l << "end dump"<<std::endl;
+
+    return ss_l.str();
+}
+
 } // namespace octopus
 
