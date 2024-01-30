@@ -35,11 +35,15 @@ void EntityFlockMoveCommand::registerCommand(Step &step_p, State const &state_p)
 	// just store this command
 	step_p.addSteppable(new CommandStorageStep(this));
 
-	unsigned long player_l = state_p.getEntity(_handleCommand)->_player;
+	unsigned long player_l = state_p.getPlayers().size();
 
 	// create all move step command and add them
 	for(Handle const handle_l : _handles)
 	{
+		if(!state_p.isEntityAlive(handle_l))
+		{
+			continue;
+		}
         const octopus::Entity * cur_l = state_p.getEntity(handle_l);
 		bool isStatic_l = cur_l->_model._isStatic;
 
@@ -47,7 +51,10 @@ void EntityFlockMoveCommand::registerCommand(Step &step_p, State const &state_p)
         {
             continue;
         }
-
+		if(player_l == state_p.getPlayers().size())
+		{
+			player_l = cur_l->_player;
+		}
 		// skip entity if not same player than first one
 		if(player_l != cur_l->_player)
 		{
