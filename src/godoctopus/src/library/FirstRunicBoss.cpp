@@ -143,7 +143,7 @@ void firstRunicBossRoutine(octopus::Entity const &ent_p, octopus::Step & step_p,
 			// destroy every adds
 			for(octopus::Entity const *ent_l : state_p.getEntities())
 			{
-				if(&ent_l->_model == sData_l->add_model
+				if((&ent_l->_model == sData_l->add_model || &ent_l->_model == sData_l->pillar_model)
 				&& ent_l->_player == unit_l._player
 				&& ent_l->_alive)
 				{
@@ -384,6 +384,7 @@ void addFirstRunicBossToLibrary(octopus::Library &lib_p)
     unitModel_l._windup = 20;
 
     lib_p.registerUnitModel("firstRunicBoss_add", unitModel_l);
+    lib_p.registerUnitModel("firstRunicBoss_wave", unitModel_l);
 
     octopus::UnitModel pillarModel_l { true, 0.5, 0.05, 150. };
     pillarModel_l._isUnit = true;
