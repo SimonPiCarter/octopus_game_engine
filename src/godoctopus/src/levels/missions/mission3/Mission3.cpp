@@ -93,11 +93,6 @@ std::list<Steppable *> Mission3Steps(Library &lib_p, RandomGenerator &rand_p, un
 	std::vector<WavePoolInfo> waves_l;
 	WavePoolInfo pool_l;
 	WaveInfo info_l;
-	info_l.mainWave.steps = 5*100;
-	info_l.mainWave.units = {{"square", 3}};
-	pool_l.infos = {info_l};
-	waves_l.push_back(pool_l);
-
 	info_l.mainWave.steps = 2*60*100;
 	info_l.mainWave.units = {{"firstRunicBoss_wave", 7}};
 	pool_l.infos = {info_l};
@@ -115,7 +110,7 @@ std::list<Steppable *> Mission3Steps(Library &lib_p, RandomGenerator &rand_p, un
 	for(uint32_t i = 0 ; i < waves_l.size() ; ++ i)
 	{
 		params_l.push_back({
-			{octopus::Vector(90,105), octopus::Vector(134,143)},
+			{octopus::Vector(136,128), octopus::Vector(108,102)},
 			waveTarget_l,					// target
 			0, 0, 0,						// position constraint to remove (none here)
 			waves_l[i],						// wave options to be spawned

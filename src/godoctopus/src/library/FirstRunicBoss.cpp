@@ -143,7 +143,17 @@ void firstRunicBossRoutine(octopus::Entity const &ent_p, octopus::Step & step_p,
 			// destroy every adds
 			for(octopus::Entity const *ent_l : state_p.getEntities())
 			{
-				if((&ent_l->_model == sData_l->add_model || &ent_l->_model == sData_l->pillar_model)
+				if(sData_l->adds_enabled
+				&& &ent_l->_model == sData_l->add_model
+				&& ent_l->_player == unit_l._player
+				&& ent_l->_alive)
+				{
+					octopus::Fixed curHp_l = ent_l->_hp + step_p.getHpChange(ent_l->_handle);
+					octopus::Fixed maxHp_l = ent_l->getHpMax();
+					step_p.addSteppable(new octopus::EntityHitPointChangeStep(ent_l->_handle, -maxHp_l * 0.2, curHp_l, maxHp_l));
+				}
+				if(sData_l->pillars_enabled
+				&& &ent_l->_model == sData_l->pillar_model
 				&& ent_l->_player == unit_l._player
 				&& ent_l->_alive)
 				{
