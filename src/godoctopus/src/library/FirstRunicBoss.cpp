@@ -329,6 +329,44 @@ void firstRunicBossRoutine(octopus::Entity const &ent_p, octopus::Step & step_p,
 				step_p.addSteppable(new FirstRunicBossPillar(ent_p._handle.index, false, false));
 			}
 		}
+
+		// check for updating pillar explosion
+		if(sData_l->pillars_enabled
+		&& phase2_l
+		&& sData_l->pillar_model)
+		{
+			bool step1_l = data_l->last_pillars + 1*sData_l->pillars_expiration_time/4 == step_p.getId();
+			bool step2_l = data_l->last_pillars + 2*sData_l->pillars_expiration_time/4 == step_p.getId();
+			bool step3_l = data_l->last_pillars + 3*sData_l->pillars_expiration_time/4 == step_p.getId();
+
+			// only if one step need to be updated
+			if(step1_l
+			|| step2_l
+			|| step3_l)
+			{
+				int step_l = 1;
+				if(step2_l)
+				{
+					step_l = 2;
+				}
+				else if(step3_l)
+				{
+					step_l = 3;
+				}
+				// if any pillar is still alive
+				for(octopus::Entity const *ent_l : state_p.getEntities())
+				{
+					if(&ent_l->_model == sData_l->pillar_model
+					&& ent_l->_player == unit_l._player
+					&& ent_l->_alive)
+					{
+						octopus::Fixed curHp_l = ent_l->_hp + step_p.getHpChange(ent_l->_handle);
+						octopus::Fixed maxHp_l = ent_l->getHpMax();
+						step_p.addSteppable(new FirstRunicBossPillarUp(ent_p._handle.index, ent_l->_handle.index, step_l));
+					}
+				}
+			}
+		}
 	}
 
 	// auto attack
@@ -396,11 +434,11 @@ void addFirstRunicBossToLibrary(octopus::Library &lib_p)
     lib_p.registerUnitModel("firstRunicBoss_add", unitModel_l);
     lib_p.registerUnitModel("firstRunicBoss_wave", unitModel_l);
 
-    octopus::UnitModel pillarModel_l { true, 0.5, 0.05, 150. };
+    octopus::UnitModel pillarModel_l { false, 0.5, 0, 150. };
     pillarModel_l._isUnit = true;
 	pillarModel_l._projectile = true;
     pillarModel_l._damage = 2;
-    pillarModel_l._armor = 3;
+    pillarModel_l._armor = 2;
     pillarModel_l._range = 4;
     pillarModel_l._lineOfSight = 5;
     pillarModel_l._fullReload = 300;
@@ -408,7 +446,7 @@ void addFirstRunicBossToLibrary(octopus::Library &lib_p)
 
     lib_p.registerUnitModel("firstRunicBoss_pillar", pillarModel_l);
 
-	octopus::UnitModel firstRunicBossModel_l { true, 1.9, 0., 7500 };
+	octopus::UnitModel firstRunicBossModel_l { false, 1.9, 0, 7500 };
 	firstRunicBossModel_l._projectile = true;
 	firstRunicBossModel_l._isUnit = true;
 	firstRunicBossModel_l._damage = 10;
@@ -426,7 +464,7 @@ void addFirstRunicBossToLibrary(octopus::Library &lib_p)
 
 	lib_p.registerUnitModel("firstRunicBoss", firstRunicBossModel_l);
 
-	octopus::UnitModel firstRunicAnomaly { true, 1.9, 0., 2000 };
+	octopus::UnitModel firstRunicAnomaly { false, 1.9, 0, 2000 };
 	firstRunicAnomaly._projectile = true;
 	firstRunicAnomaly._isUnit = true;
 	firstRunicAnomaly._damage = 10;

@@ -260,6 +260,8 @@ void ControllerStepVisitor::visit(octopus::CustomStep const *steppable_p)
 	RuneWellPopStep const *runeWellPopStep_l = dynamic_cast<RuneWellPopStep const *>(steppable_p);
 	FirstRunicBossStep const *firstRunicBossStep_l = dynamic_cast<FirstRunicBossStep const *>(steppable_p);
 	FirstRunicBossPillar const *firstRunicBossPillar_l = dynamic_cast<FirstRunicBossPillar const *>(steppable_p);
+	FirstRunicBossPillarUp const *firstRunicBossPillarUp_l = dynamic_cast<FirstRunicBossPillarUp const *>(steppable_p);
+
 
 	// objective handling
 	AbstractObjectiveStep const * objectiveStep_l = dynamic_cast<AbstractObjectiveStep const *>(steppable_p);
@@ -316,6 +318,11 @@ void ControllerStepVisitor::visit(octopus::CustomStep const *steppable_p)
 	{
 		_controller.emit_signal("first_runic_boss_pillar",
 				firstRunicBossPillar_l->_id, firstRunicBossPillar_l->_spawn, firstRunicBossPillar_l->_firstSpawn);
+	}
+	else if(firstRunicBossPillarUp_l)
+	{
+		_controller.emit_signal("first_runic_boss_pillar_up",
+				firstRunicBossPillarUp_l->_id, firstRunicBossPillarUp_l->_idPillar, firstRunicBossPillarUp_l->_step);
 	}
 }
 

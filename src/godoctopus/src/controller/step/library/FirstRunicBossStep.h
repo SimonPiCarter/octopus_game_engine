@@ -38,6 +38,19 @@ public:
 	bool const _firstSpawn;
 };
 
+class FirstRunicBossPillarUp : public octopus::CustomStep
+{
+public:
+	FirstRunicBossPillarUp(int id_p, int idPillar_p, int step_p) : _id(id_p), _idPillar(idPillar_p), _step(step_p) {}
+    virtual void apply(octopus::State &) const {}
+    virtual void revert(octopus::State &, octopus::SteppableData const *) const {}
+    virtual bool isNoOp() const { return false; }
+
+	int const _id;
+	int const _idPillar;
+	int const _step;
+};
+
 }
 
 #endif

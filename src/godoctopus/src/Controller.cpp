@@ -1764,6 +1764,7 @@ void Controller::_bind_methods()
 	ADD_SIGNAL(MethodInfo("first_runic_boss_spawn_aoe", PropertyInfo(Variant::INT, "idx"), PropertyInfo(Variant::INT, "idxAoe"),
 		PropertyInfo(Variant::FLOAT, "x"), PropertyInfo(Variant::FLOAT, "y"), PropertyInfo(Variant::FLOAT, "range")));
 	ADD_SIGNAL(MethodInfo("first_runic_boss_pillar", PropertyInfo(Variant::INT, "idx"), PropertyInfo(Variant::BOOL, "spawn"), PropertyInfo(Variant::BOOL, "first")));
+	ADD_SIGNAL(MethodInfo("first_runic_boss_pillar_up", PropertyInfo(Variant::INT, "idx"), PropertyInfo(Variant::INT, "idx_pillar"), PropertyInfo(Variant::INT, "step")));
 
 
 	/// blockers
