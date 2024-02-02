@@ -133,7 +133,6 @@ std::vector<DivinityType> allDivinities()
 std::vector<DivinityType> notDemoDivinities()
 {
     return {
-        DivinityType::Economic,
         DivinityType::Lifesteal
     };
 }
