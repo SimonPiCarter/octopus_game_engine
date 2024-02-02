@@ -94,7 +94,7 @@ std::list<Steppable *> Mission3Steps(Library &lib_p, RandomGenerator &rand_p, un
 	WavePoolInfo pool_l;
 	WaveInfo info_l;
 	info_l.mainWave.steps = 2*60*100;
-	info_l.mainWave.units = {{"firstRunicBoss_wave", 7}};
+	info_l.mainWave.units = {{"firstRunicBoss_wave", 5}};
 	pool_l.infos = {info_l};
 	waves_l.push_back(pool_l);
 
