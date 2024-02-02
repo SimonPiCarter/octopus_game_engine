@@ -11,6 +11,7 @@
 #include "step/custom/implem/ImpactStep.hh"
 
 #include "controller/step/library/FirstRunicBossStep.h"
+#include "controller/step/DialogStep.h"
 
 #include "logger/Logger.hh"
 
@@ -293,6 +294,10 @@ void firstRunicBossRoutine(octopus::Entity const &ent_p, octopus::Step & step_p,
 				step_p.addSteppable(new octopus::UnitSpawnStep(getNextHandle(step_p, state_p), model_l));
 			}
 			step_p.addSteppable(new FirstRunicBossPillar(ent_p._handle.index, true, data_l->last_pillars == 0));
+			if(data_l->last_pillars == 0)
+			{
+				step_p.addSteppable(new DialogStep("first_runic_boss_first_pillar"));
+			}
 			new_data_l->last_pillars = step_p.getId();
 			change_done_l = true;
 		}
