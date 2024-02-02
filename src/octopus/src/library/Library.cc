@@ -71,6 +71,11 @@ UnitModel const & Library::getUnitModel(std::string const &id_p) const
 	return *_mapUnitModel.at(id_p);
 }
 
+UnitModel & Library::getUnitModel(std::string const &id_p)
+{
+	return *_mapUnitModel.at(id_p);
+}
+
 bool Library::hasUnitModel(std::string const &id_p) const
 {
 	return _mapUnitModel.find(id_p) != _mapUnitModel.end();

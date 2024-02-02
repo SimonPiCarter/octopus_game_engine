@@ -32,6 +32,7 @@ public:
 
 	void registerUnitModel(std::string const &id_p, UnitModel const &model_p);
 	UnitModel const & getUnitModel(std::string const &id_p) const;
+	UnitModel & getUnitModel(std::string const &id_p);
 	bool hasUnitModel(std::string const &id_p) const;
 
 	void registerResourceModel(std::string const &id_p, ResourceModel const &model_p);
