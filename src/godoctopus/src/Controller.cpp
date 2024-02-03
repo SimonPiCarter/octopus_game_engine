@@ -1565,7 +1565,7 @@ void Controller::set_step_control(int prequeued_p)
 	{
 		_controller->addQueuedLayer();
 	}
-	_stepDone = 0;
+	_stepDone = _controller->getMetrics()._nbStepsCompiled;
 }
 
 void Controller::next_step()
