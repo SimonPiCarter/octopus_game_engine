@@ -265,7 +265,7 @@ void Controller::load_mission_2(int seed_p, godot::LevelModel *level_model_p, in
 	init(commands_l, spawners_l, false, 50, _autoSaveFile);
 }
 
-void Controller::load_mission_3(int seed_p, godot::LevelModel *level_model_p, int player_count_p)
+void Controller::load_mission_3(int seed_p, godot::LevelModel *level_model_p, int player_count_p, int difficulty_p)
 {
 	delete _rand;
 	_rand = new octopus::RandomGenerator(seed_p);
@@ -274,7 +274,7 @@ void Controller::load_mission_3(int seed_p, godot::LevelModel *level_model_p, in
 	std::vector<GodotEntityInfo> info_l = getEntityInfo(level_model_p->getEntities(), player_count_p);
 
 	std::list<octopus::Steppable *> spawners_l = {};
-	std::list<octopus::Steppable *> levelsteps_l = mission::Mission3Steps(_lib, *_rand, player_count_p, info_l);
+	std::list<octopus::Steppable *> levelsteps_l = mission::Mission3Steps(_lib, *_rand, player_count_p, difficulty_p, info_l);
 	spawners_l = level_model_p->generateLevelSteps(_lib, player_count_p);
 	spawners_l.splice(spawners_l.end(), levelsteps_l);
 
@@ -284,7 +284,7 @@ void Controller::load_mission_3(int seed_p, godot::LevelModel *level_model_p, in
 	newAutoSaveFile();
 	writeLevelId(*_autoSaveFile, LEVEL_ID_MISSION_3, 50);
 	_currentLevel = LEVEL_ID_MISSION_3;
-	_headerWriter = std::bind(mission::writeMission3Header, std::placeholders::_1, mission::Mission3Header {seed_p, (unsigned long)player_count_p});
+	_headerWriter = std::bind(mission::writeMission3Header, std::placeholders::_1, mission::Mission3Header {(int32_t)seed_p, (int32_t)player_count_p, (int32_t)difficulty_p});
 	_headerWriter(*_autoSaveFile);
 
 	init(commands_l, spawners_l, false, 50, _autoSaveFile);
@@ -1625,7 +1625,7 @@ void Controller::_bind_methods()
 	ClassDB::bind_method(D_METHOD("load_lifesteal_level", "size"), &Controller::load_lifesteal_level);
 	ClassDB::bind_method(D_METHOD("load_mission_1", "seed", "player_count"), &Controller::load_mission_1);
 	ClassDB::bind_method(D_METHOD("load_mission_2", "seed", "level_model", "player_count"), &Controller::load_mission_2);
-	ClassDB::bind_method(D_METHOD("load_mission_3", "seed", "level_model", "player_count"), &Controller::load_mission_3);
+	ClassDB::bind_method(D_METHOD("load_mission_3", "seed", "level_model", "player_count", "difficulty"), &Controller::load_mission_3);
 	ClassDB::bind_method(D_METHOD("load_minimal_model"), &Controller::load_minimal_model);
 	ClassDB::bind_method(D_METHOD("load_hero_siege_level", "seed", "nb_players"), &Controller::load_hero_siege_level);
 	ClassDB::bind_method(D_METHOD("load_demo_level", "seed", "wave_pattern", "level_model", "player_count", "difficulty"), &Controller::load_demo_level);

@@ -39,10 +39,26 @@ std::vector<octopus::Steppable*> mission3Generator()
 	};
 }
 
-std::list<Steppable *> Mission3Steps(Library &lib_p, RandomGenerator &rand_p, unsigned long nbPlayers_p, std::vector<GodotEntityInfo> const &entityInfo_p)
+std::list<Steppable *> Mission3Steps(Library &lib_p, RandomGenerator &rand_p, int32_t nbPlayers_p, int32_t difficulty_p,
+	std::vector<GodotEntityInfo> const &entityInfo_p)
 {
 	loadMinimalModels(lib_p);
 	addFirstRunicBossToLibrary(lib_p);
+	// if hard mode
+	if(2 <= difficulty_p)
+	{
+		// increase pillar model hp
+		octopus::UnitModel & pillarModel_l = lib_p.getUnitModel("firstRunicBoss_pillar");
+		pillarModel_l._hpMax = pillarModel_l._hpMax * 1.5;
+
+		// increase boss hp
+		octopus::UnitModel & firstRunicBossModel_l = lib_p.getUnitModel("firstRunicBoss");
+		firstRunicBossModel_l._hpMax = firstRunicBossModel_l._hpMax * 2.;
+
+		// increase mini boss hp
+		octopus::UnitModel & firstRunicAnomaly_l = lib_p.getUnitModel("firstRunicAnomaly");
+		firstRunicAnomaly_l._hpMax = firstRunicAnomaly_l._hpMax * 2.;
+	}
 
 	std::list<Steppable *> spawners_l;
 
@@ -94,7 +110,7 @@ std::list<Steppable *> Mission3Steps(Library &lib_p, RandomGenerator &rand_p, un
 	WavePoolInfo pool_l;
 	WaveInfo info_l;
 	info_l.mainWave.steps = 2*60*100;
-	info_l.mainWave.units = {{"firstRunicBoss_wave", 5}};
+	info_l.mainWave.units = {{"firstRunicBoss_wave", (difficulty_p<2?5:10)}};
 	pool_l.infos = {info_l};
 	waves_l.push_back(pool_l);
 
@@ -131,7 +147,7 @@ std::list<Steppable *> Mission3Steps(Library &lib_p, RandomGenerator &rand_p, un
 	return spawners_l;
 }
 
-std::list<Command *> Mission3Commands(Library &lib_p, RandomGenerator &rand_p, unsigned long nbPlayers_p)
+std::list<Command *> Mission3Commands(Library &lib_p, RandomGenerator &rand_p, int32_t nbPlayers_p)
 {
 	std::list<Command *> commands_l {
 	};
@@ -144,6 +160,7 @@ void writeMission3Header(std::ofstream &file_p, Mission3Header const &header_p)
 {
     file_p.write((char*)&header_p.seed, sizeof(header_p.seed));
     file_p.write((char*)&header_p.nb_players, sizeof(header_p.nb_players));
+    file_p.write((char*)&header_p.difficulty, sizeof(header_p.difficulty));
 }
 
 /// @brief read header for classic arena level and return a pair of steppable and command
@@ -153,12 +170,13 @@ std::pair<std::list<octopus::Steppable *>, std::list<octopus::Command *> > readM
 {
     file_p.read((char*)&header_r.seed, sizeof(header_r.seed));
     file_p.read((char*)&header_r.nb_players, sizeof(header_r.nb_players));
+    file_p.read((char*)&header_r.difficulty, sizeof(header_r.difficulty));
 
 	delete rand_p;
 	rand_p = new octopus::RandomGenerator(header_r.seed);
 
 	std::pair<std::list<octopus::Steppable *>, std::list<octopus::Command *> > pair_l;
-	pair_l.first = Mission3Steps(lib_p, *rand_p, header_r.nb_players, entityInfo_p);
+	pair_l.first = Mission3Steps(lib_p, *rand_p, header_r.nb_players, header_r.difficulty, entityInfo_p);
 	pair_l.second = Mission3Commands(lib_p, *rand_p, header_r.nb_players);
 	return pair_l;
 }

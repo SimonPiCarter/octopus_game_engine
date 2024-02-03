@@ -469,25 +469,25 @@ void addFirstRunicBossToLibrary(octopus::Library &lib_p)
 
 	lib_p.registerUnitModel("firstRunicBoss", firstRunicBossModel_l);
 
-	octopus::UnitModel firstRunicAnomaly { false, 1.9, 0, 2000 };
-	firstRunicAnomaly._projectile = true;
-	firstRunicAnomaly._isUnit = true;
-	firstRunicAnomaly._damage = 10;
-	firstRunicAnomaly._armor = 2;
-	firstRunicAnomaly._range = 10.;
-	firstRunicAnomaly._lineOfSight = 50;
-	firstRunicAnomaly._fullReload = 80;
-	firstRunicAnomaly._windup = 20;
-	firstRunicAnomaly._idleFunc = firstRunicBossRoutine;
-	firstRunicAnomaly._unitData = new FirstRunicBossData();
+	octopus::UnitModel firstRunicAnomaly_l { false, 1.9, 0, 2000 };
+	firstRunicAnomaly_l._projectile = true;
+	firstRunicAnomaly_l._isUnit = true;
+	firstRunicAnomaly_l._damage = 10;
+	firstRunicAnomaly_l._armor = 2;
+	firstRunicAnomaly_l._range = 10.;
+	firstRunicAnomaly_l._lineOfSight = 50;
+	firstRunicAnomaly_l._fullReload = 80;
+	firstRunicAnomaly_l._windup = 20;
+	firstRunicAnomaly_l._idleFunc = firstRunicBossRoutine;
+	firstRunicAnomaly_l._unitData = new FirstRunicBossData();
 	sData_l = new FirstRunicBossStaticData();
 	sData_l->add_model = &lib_p.getUnitModel("firstRunicBoss_add");
 	sData_l->pillar_model = &lib_p.getUnitModel("firstRunicBoss_pillar");
 	sData_l->adds_enabled = false;
 	sData_l->pillars_enabled = false;
-	firstRunicAnomaly._staticUnitData = sData_l;
+	firstRunicAnomaly_l._staticUnitData = sData_l;
 
-	lib_p.registerUnitModel("firstRunicAnomaly", firstRunicAnomaly);
+	lib_p.registerUnitModel("firstRunicAnomaly", firstRunicAnomaly_l);
 }
 
 } // namespace godot

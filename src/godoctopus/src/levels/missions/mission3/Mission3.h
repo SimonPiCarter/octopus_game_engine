@@ -26,13 +26,15 @@ namespace godot
 namespace mission
 {
 
-std::list<octopus::Steppable *> Mission3Steps(octopus::Library &lib_p, octopus::RandomGenerator &rand_p, unsigned long nbPlayers_p, std::vector<GodotEntityInfo> const &entityInfo_p);
-std::list<octopus::Command *> Mission3Commands(octopus::Library &lib_p, octopus::RandomGenerator &rand_p, unsigned long nbPlayers_p);
+std::list<octopus::Steppable *> Mission3Steps(octopus::Library &lib_p, octopus::RandomGenerator &rand_p, int32_t nbPlayers_p, int32_t difficulty_p,
+	std::vector<GodotEntityInfo> const &entityInfo_p);
+std::list<octopus::Command *> Mission3Commands(octopus::Library &lib_p, octopus::RandomGenerator &rand_p, int32_t nbPlayers_p);
 
 struct Mission3Header
 {
-	int seed;
-	unsigned long nb_players;
+	int32_t seed = 0;
+	int32_t nb_players = 0;
+	int32_t difficulty = 0;
 };
 
 /// @brief write header for classic mission 2

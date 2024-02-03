@@ -56,7 +56,7 @@ public:
 	// missions
 	void load_mission_1(int seed_p, int player_count_p);
 	void load_mission_2(int seed_p, godot::LevelModel *level_model_p, int player_count_p);
-	void load_mission_3(int seed_p, godot::LevelModel *level_model_p, int player_count_p);
+	void load_mission_3(int seed_p, godot::LevelModel *level_model_p, int player_count_p, int difficulty_p);
 
 	// required for editor
 	void load_minimal_model();
