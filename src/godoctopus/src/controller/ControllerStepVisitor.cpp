@@ -193,7 +193,8 @@ void ControllerStepVisitor::visit(octopus::ProjectileSpawnStep const *steppable_
 		{
 			_controller.emit_signal("spawn_projectile", int(proj_l._index), String(proj_l._sourceModel->_id.c_str()),
 				Vector2(octopus::to_double(proj_l._pos.x), octopus::to_double(proj_l._pos.y)),
-				Vector2(octopus::to_double(proj_l._posTarget.x), octopus::to_double(proj_l._posTarget.y)));
+				Vector2(octopus::to_double(proj_l._posTarget.x), octopus::to_double(proj_l._posTarget.y)),
+				int(proj_l._target.index));
 		}
 	}
 }
