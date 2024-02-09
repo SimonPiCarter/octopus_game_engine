@@ -141,7 +141,7 @@ bool EntityAttackCommand::applyCommand(Step & step_p, State const &state_p, Comm
 	{
 		if(windup_l == 1)
 		{
-			step_p.addSteppable(new WindUpStartStep(_handleCommand));
+			step_p.addSteppable(new WindUpStartStep(_handleCommand, curTarget_l));
 		}
 		step_p.addSteppable(new CommandWindUpDiffStep(_handleCommand, 1));
 		Logger::getDebug() << "\tEntityAttackCommand:: in range (winding up)"<<std::endl;
