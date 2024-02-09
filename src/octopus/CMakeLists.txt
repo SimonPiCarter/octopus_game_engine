@@ -203,7 +203,7 @@ endif ()
 install (TARGETS octopus EXPORT octopus-export)
 
 install(DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/src/" # source directory
-        DESTINATION "include/octopus/" # target directory
+        DESTINATION "include/" # target directory
         FILES_MATCHING # install only matched files
         PATTERN "*.hh" # select header files
 		PATTERN "*Graph.hh" EXCLUDE # exclude this deprecated file (exposing boost headers)
