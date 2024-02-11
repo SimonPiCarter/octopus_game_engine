@@ -51,3 +51,29 @@ void ThreadPool::stop() {
     }
     threads.clear();
 }
+
+void enqueue_and_wait(ThreadPool &pool_p, std::vector<std::function<void()>> const &jobs_p)
+{
+	int finished_l = 0;
+	std::mutex terminationMutex_l;
+	std::condition_variable termination_l;
+	std::unique_lock<std::mutex> lock_l(terminationMutex_l);
+	int nbJobs_l = jobs_p.size();
+
+	for(int n = 0 ; n < nbJobs_l ; ++ n)
+	{
+		pool_p.queueJob([&finished_l, &termination_l, &terminationMutex_l, &jobs_p, n]()
+		{
+			jobs_p[n]();
+			std::unique_lock<std::mutex> lock_l(terminationMutex_l);
+			finished_l++;
+			termination_l.notify_all();
+		}
+		);
+	}
+
+	if(finished_l < nbJobs_l)
+	{
+		termination_l.wait(lock_l, [&]{ return finished_l >= nbJobs_l ; });
+	}
+}
