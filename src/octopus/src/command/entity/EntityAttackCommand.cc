@@ -169,6 +169,14 @@ bool EntityAttackCommand::applyCommand(Step & step_p, State const &state_p, Comm
 					entSource_l->getDamageNoBonus(),
 					entSource_l->getDamage(entTarget_l->_model)
 				};
+				if(entTarget_l->getDamageReturn() > Fixed::Zero())
+				{
+					step_p.addSteppable(new ImpactStep(entTarget_l->_model._id, entSource_l->_pos));
+					Fixed curHp_l = entSource_l->_hp + step_p.getHpChange(_handleCommand);
+					Fixed maxHp_l = entSource_l->getHpMax();
+					Fixed dmg_l = - entTarget_l->getDamageReturn() * attackModData_l.bonusDamage;
+					step_p.addSteppable(new EntityHitPointChangeStep(_handleCommand, dmg_l, curHp_l, maxHp_l));
+				}
 				if(entSource_l->_model._projectile)
 				{
 					Projectile projectile_l;
@@ -179,8 +187,8 @@ bool EntityAttackCommand::applyCommand(Step & step_p, State const &state_p, Comm
 					projectile_l._sourceModel = &entSource_l->_model;
 					projectile_l._sourceTeam = playerSource_l->_team;
 					projectile_l._speed = 0.1;
-					projectile_l._baseDamage = entSource_l->getDamageNoBonus();
-					projectile_l._bonusDamage = entSource_l->getDamage(entTarget_l->_model);
+					projectile_l._baseDamage = attackModData_l.baseDamage;
+					projectile_l._bonusDamage = attackModData_l.bonusDamage;
 					projectile_l._generator = entSource_l->_attackMod;
 					step_p.getProjectileSpawnStep().addProjectile(state_p.getProjectileContainer(), std::move(projectile_l));
 				}
