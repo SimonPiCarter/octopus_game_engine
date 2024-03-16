@@ -31,6 +31,8 @@ std::string to_string(TyppedBuff::Type type_p)
 			return "Production";
 		case TyppedBuff::Type::Harvest:
 			return "Harvest";
+		case TyppedBuff::Type::DamageReturn:
+			return "DamageReturn";
 	}
 	throw std::logic_error("missing to string implem");
 }

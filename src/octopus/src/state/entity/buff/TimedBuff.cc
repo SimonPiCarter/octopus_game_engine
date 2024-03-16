@@ -21,7 +21,8 @@ bool TimedBuff::isApplying(State const &state_p, Entity const &ent_p) const
 	|| _type == Type::Heal
 	|| _type == Type::Armor
 	|| _type == Type::HpMax
-	|| _type == Type::HpRegeneration)
+	|| _type == Type::HpRegeneration
+	|| _type == Type::DamageReturn)
 	{
 		return ent_p._model._isUnit;
 	}
@@ -103,6 +104,10 @@ void TimedBuff::apply(Entity &ent_p) const
 			ent_p._buffHarvest._offset += _offset;
 			ent_p._buffHarvest._coef += _coef;
 			break;
+		case Type::DamageReturn:
+			ent_p._buffDamageReturn._offset += _offset;
+			ent_p._buffDamageReturn._coef += _coef;
+			break;
 	}
 }
 
@@ -155,6 +160,10 @@ void TimedBuff::revert(Entity &ent_p) const
 		case Type::Harvest:
 			ent_p._buffHarvest._offset -= _offset;
 			ent_p._buffHarvest._coef -= _coef;
+			break;
+		case Type::DamageReturn:
+			ent_p._buffDamageReturn._offset -= _offset;
+			ent_p._buffDamageReturn._coef -= _coef;
 			break;
 	}
 }

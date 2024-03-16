@@ -100,6 +100,9 @@ void EntityConditionalBuffStep::apply(State &state_p) const
 		case TyppedBuff::Type::Harvest:
 			ent_l->_condBuffHarvest.push_back(_buff);
 			break;
+		case TyppedBuff::Type::DamageReturn:
+			ent_l->_condBuffDamageReturn.push_back(_buff);
+			break;
 	}
 }
 
@@ -130,6 +133,9 @@ void EntityConditionalBuffStep::revert(State &state_p, SteppableData const *) co
 			break;
 		case TyppedBuff::Type::Harvest:
 			ent_l->_condBuffHarvest.pop_back();
+			break;
+		case TyppedBuff::Type::DamageReturn:
+			ent_l->_condBuffDamageReturn.pop_back();
 			break;
 	}
 }

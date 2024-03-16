@@ -94,6 +94,11 @@ Fixed Entity::getHarvest() const
 	return applyBuff( *this, Fixed::One(), _buffHarvest, _condBuffHarvest);
 }
 
+Fixed Entity::getDamageReturn() const
+{
+	return std::max(Fixed(0), applyBuff( *this, _model._damageReturn, _buffDamageReturn, _condBuffDamageReturn));
+}
+
 bool Entity::isFrozen() const
 {
 	return _frozen || _model._isStatic;

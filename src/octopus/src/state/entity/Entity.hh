@@ -69,6 +69,7 @@ namespace octopus
 			Buff _buffHpRegeneration;
 			Buff _buffProduction;
 			Buff _buffHarvest;
+			Buff _buffDamageReturn;
 
 			///
 			/// Conditinal buff properties
@@ -82,6 +83,7 @@ namespace octopus
 			std::vector<ConditionalBuff> _condBuffHpRegeneration;
 			std::vector<ConditionalBuff> _condBuffProduction;
 			std::vector<ConditionalBuff> _condBuffHarvest;
+			std::vector<ConditionalBuff> _condBuffDamageReturn;
 
 			/// @brief map of registered buff currently applied
 			std::unordered_map<std::string, TimedBuff> _registeredBuff;
@@ -114,6 +116,9 @@ namespace octopus
 			Fixed getProduction() const;
 			/// @brief get harvest updated using buffing info
 			Fixed getHarvest() const;
+
+			/// @brief get damage return based using buffing info
+			Fixed getDamageReturn() const;
 
 			/// @brief if frozen ou static
 			bool isFrozen() const;

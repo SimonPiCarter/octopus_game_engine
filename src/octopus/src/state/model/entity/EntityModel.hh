@@ -59,6 +59,7 @@ namespace octopus
 		Fixed _hpRegeneration { 0. };
 		/// @brief reload time in steps
 		unsigned long _fullReload { 10 };
+		Fixed _damageReturn { 0. };
 
 		std::unordered_map<std::string, Fixed> _bonusDamage;
 

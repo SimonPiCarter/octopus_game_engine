@@ -27,7 +27,8 @@ struct TyppedBuff : public Buff
 		HpMax,
 		HpRegeneration,
 		Production,
-		Harvest
+		Harvest,
+		DamageReturn,
 	};
 
 	Type _type {Type::Speed};

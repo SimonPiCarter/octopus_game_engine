@@ -48,6 +48,8 @@ std::string desc_buff(octopus::TimedBuff const &buff_p)
 			return "production";
 		case octopus::TyppedBuff::Type::Harvest:
 			return "harvest quantity";
+		case octopus::TyppedBuff::Type::DamageReturn:
+			return "damage return";
 	}
 	throw std::logic_error("missing desc_buff implem");
 }
