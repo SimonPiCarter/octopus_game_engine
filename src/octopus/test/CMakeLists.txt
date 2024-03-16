@@ -46,6 +46,7 @@ target_sources (unit_tests
 	src/controller.test.cc
 	src/crc.test.cc
 	src/customIdleEntity.test.cc
+	src/damageReturn.test.cc
 	src/entityFlockCommand.test.cc
 	src/entityHitPointChange.test.cc
 	src/entityMoveStep.test.cc
