@@ -16,6 +16,8 @@ void PlayerAddOptionStep::apply(State &state_p) const
         throw std::logic_error("Error while applying option : an option with the given key already exists "+_key);
     }
     player_l->_options[_key] = _generator->newCopy();
+	// gen options
+	player_l->_options[_key]->genOptions(state_p);
 }
 
 void PlayerAddOptionStep::revert(State &state_p, SteppableData const *) const

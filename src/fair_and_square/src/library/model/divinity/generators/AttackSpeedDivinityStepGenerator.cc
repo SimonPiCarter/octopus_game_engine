@@ -128,8 +128,9 @@ void fillLibrary(AttackSpeedDivinityParams const &params_p, octopus::Library &li
 	tieroneunitmodel_l._armor = 0;
 	tieroneunitmodel_l._range = 4;
 	tieroneunitmodel_l._lineOfSight = 10;
-	tieroneunitmodel_l._fullReload = 30;
-	tieroneunitmodel_l._windup = 20;
+	tieroneunitmodel_l._fullReload = 5;
+	tieroneunitmodel_l._windup = 5;
+	tieroneunitmodel_l._damageReturn = 0.5;
 	tieroneunitmodel_l._requirements._upgradeLvl[models::AttackSpeedDivId+models::tierOneSuffix] = 1;
 
 	lib_p.registerUnitModel(params_p._tierOneUnitModelId, tieroneunitmodel_l);

@@ -25,10 +25,12 @@ public:
 		return new TestGenerator();
 	}
 
+	void genOptions(State const &) override {}
+
     /// @brief get internal steppable for the given option
     /// @param options_p the option index
     /// @return a vector of steppables (owner is this generator)
-    virtual std::vector<Steppable *> getSteppables(unsigned long options_p) const override
+    virtual std::vector<Steppable *> genSteppables(State const &state_p, unsigned long options_p) const override
 	{
 		std::vector<Steppable *> steps_l;
 

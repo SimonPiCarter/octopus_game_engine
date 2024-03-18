@@ -1,6 +1,7 @@
 #ifndef __BuffGenerators__
 #define __BuffGenerators__
 
+#include <functional>
 #include <variant>
 #include <vector>
 
@@ -58,15 +59,18 @@ struct Option
 class BuffGenerator : public octopus::StepOptionsGenerator
 {
 public:
-    BuffGenerator(std::vector<Option> const &options_p, octopus::Library const &lib_p) : _options(options_p), _lib(lib_p) {}
+    BuffGenerator(std::function<std::vector<Option>(octopus::State const &)> const &options_p, octopus::Library const &lib_p) : _optionsGenerator(options_p), _lib(lib_p) {}
 
-    virtual StepOptionsGenerator* newCopy() const override { return new BuffGenerator(_options, _lib); }
+	void genOptions(octopus::State const &state_p) override { _options = _optionsGenerator(state_p); }
 
-    virtual std::vector<octopus::Steppable *> getSteppables(unsigned long options_p) const override;
+    virtual StepOptionsGenerator* newCopy() const override { return new BuffGenerator(_optionsGenerator, _lib); }
+
+    virtual std::vector<octopus::Steppable *> genSteppables(octopus::State const &state_p, unsigned long options_p) const override;
 
     virtual unsigned long getNumOptions() const override { return _options.size(); }
 
-    std::vector<Option> const _options;
+    std::vector<Option> _options;
+	std::function<std::vector<Option>(octopus::State const &)> _optionsGenerator;
 
 private:
     octopus::Library const &_lib;

@@ -39,7 +39,7 @@ void genStep(Library const &lib_p, std::vector<Steppable *> &steppables_p, ::Div
     steppables_p.push_back(new PlayerLevelUpUpgradeStep(option_p._player, fas::divinityUpgradeName(option_p._div)));
 }
 
-std::vector<Steppable *> BuffGenerator::getSteppables(unsigned long options_p) const
+std::vector<Steppable *> BuffGenerator::genSteppables(octopus::State const &state_p, unsigned long options_p) const
 {
     std::vector<Steppable *> steps_l;
     std::visit([this, &steps_l](auto &&arg) { genStep(_lib, steps_l, arg); }, _options.at(options_p)._playerOption);
