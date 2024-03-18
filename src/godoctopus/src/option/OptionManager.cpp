@@ -17,7 +17,7 @@ std::string const &AbstractOptionManager::getKey() const
 {
     return _queuedKeys.front();
 }
-void AbstractOptionManager::addOptionLayer(octopus::PlayerAddOptionStep const *options_p)
+void AbstractOptionManager::addOptionLayer(octopus::State const &state_p, octopus::PlayerAddOptionStep const *options_p)
 {
 	// skip if other player
 	if(options_p->_player != _player)
@@ -25,7 +25,7 @@ void AbstractOptionManager::addOptionLayer(octopus::PlayerAddOptionStep const *o
 		return;
 	}
 
-	registerOption(options_p);
+	registerOption(state_p, options_p);
 	_queuedKeys.push_back(options_p->_key);
 }
 
@@ -43,10 +43,10 @@ void AbstractOptionManager::popOptionLayer(octopus::PlayerPopOptionStep const *o
 
 OptionManager::OptionManager(unsigned long player_p) : AbstractOptionManager(player_p) {}
 
-void OptionManager::registerOption(octopus::PlayerAddOptionStep const *options_p)
+void OptionManager::registerOption(octopus::State const &state_p, octopus::PlayerAddOptionStep const *options_p)
 {
 	BuffGenerator const *gen_l = dynamic_cast<BuffGenerator const *>(options_p->_generator);
-	_queuedOptions.push_back(gen_l->_options);
+	_queuedOptions.push_back(gen_l->_optionsGenerator(state_p));
 }
 
 void OptionManager::unregisterOption(octopus::PlayerPopOptionStep const *options_p)
@@ -102,10 +102,10 @@ uint32_t OptionManager::getCurrentOptionSize() const
 
 DivinityOptionManager::DivinityOptionManager(unsigned long player_p) : AbstractOptionManager(player_p) {}
 
-void DivinityOptionManager::registerOption(octopus::PlayerAddOptionStep const *options_p)
+void DivinityOptionManager::registerOption(octopus::State const &state_p, octopus::PlayerAddOptionStep const *options_p)
 {
 	DivinityGenerator const *gen_l = dynamic_cast<DivinityGenerator const *>(options_p->_generator);
-	_queuedOptions.push_back(gen_l->_options);
+	_queuedOptions.push_back(gen_l->_optionsGenerator(state_p));
 }
 
 void DivinityOptionManager::unregisterOption(octopus::PlayerPopOptionStep const *options_p)

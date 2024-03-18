@@ -221,7 +221,7 @@ void ControllerStepVisitor::visit(octopus::BuildingStep const *steppable_p)
 
 void ControllerStepVisitor::visit(octopus::PlayerAddOptionStep const *steppable_p)
 {
-	_controller.getOptionManagers().at(steppable_p->_player)->addOptionLayer(steppable_p);
+	_controller.getOptionManagers().at(steppable_p->_player)->addOptionLayer(*_state, steppable_p);
 	_controller.emit_signal("option_update");
 }
 

@@ -23,7 +23,7 @@ public:
     AbstractOptionManager(unsigned long player_p);
 
 	/// @brief method to add option from a PlayerAddOptionStep
-	void addOptionLayer(octopus::PlayerAddOptionStep const *);
+	void addOptionLayer(octopus::State const &state_p, octopus::PlayerAddOptionStep const *);
 
 	/// @brief method to pop option from a PlayerPopOptionStep
 	void popOptionLayer(octopus::PlayerPopOptionStep const *);
@@ -37,7 +37,7 @@ public:
     // To override
 
 	/// @brief method to add option from a PlayerAddOptionStep
-    virtual void registerOption(octopus::PlayerAddOptionStep const *) = 0;
+    virtual void registerOption(octopus::State const &state_p, octopus::PlayerAddOptionStep const *) = 0;
 	/// @brief method to pop option from a PlayerPopOptionStep
     virtual void unregisterOption(octopus::PlayerPopOptionStep const *) = 0;
 
@@ -71,7 +71,7 @@ public:
     OptionManager(unsigned long player_p);
 
 	/// @brief method to add option from a PlayerAddOptionStep
-	virtual void registerOption(octopus::PlayerAddOptionStep const *) override;
+	virtual void registerOption(octopus::State const &state_p, octopus::PlayerAddOptionStep const *) override;
 
 	/// @brief method to pop option from a PlayerPopOptionStep
 	virtual void unregisterOption(octopus::PlayerPopOptionStep const *) override;
@@ -106,7 +106,7 @@ public:
     DivinityOptionManager(unsigned long player_p);
 
 	/// @brief method to add option from a PlayerAddOptionStep
-	virtual void registerOption(octopus::PlayerAddOptionStep const *) override;
+	virtual void registerOption(octopus::State const &state_p, octopus::PlayerAddOptionStep const *) override;
 
 	/// @brief method to pop option from a PlayerPopOptionStep
 	virtual void unregisterOption(octopus::PlayerPopOptionStep const *) override;
