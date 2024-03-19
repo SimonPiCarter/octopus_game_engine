@@ -4,6 +4,7 @@
 #include <godot_cpp/classes/input.hpp>
 
 #include "library/model/ModelLoader.hh"
+#include "library/model/survival/SurvivalModelLoader.hh"
 #include "library/levels/ArenaLevel.hh"
 #include "library/levels/LevelId.hh"
 #include "library/levels/MazeLevel.hh"
@@ -293,6 +294,7 @@ void Controller::load_mission_3(int seed_p, godot::LevelModel *level_model_p, in
 void Controller::load_minimal_model()
 {
 	loadMinimalModels(_lib);
+	loadSurvivalModels(_lib);
 	fas::loadLibrary(_lib);
 	addFirstRunicBossToLibrary(_lib);
 }
