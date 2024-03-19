@@ -16,11 +16,12 @@ class DivinityGenerator : public octopus::StepOptionsGenerator
 {
 public:
     DivinityGenerator(
+		std::string const &key_p,
 		unsigned long player_p,
 		std::function<std::vector<fas::DivinityType>(octopus::State const &)> const &options_p
-	) : _player(player_p), _optionsGenerator(options_p) {}
+	) : octopus::StepOptionsGenerator(key_p), _player(player_p), _optionsGenerator(options_p) {}
 
-    virtual StepOptionsGenerator* newCopy() const override { return new DivinityGenerator(_player, _optionsGenerator); }
+    virtual StepOptionsGenerator* newCopy() const override { return new DivinityGenerator(_key, _player, _optionsGenerator); }
 
 	void genOptions(octopus::State const &state_p) override;
 

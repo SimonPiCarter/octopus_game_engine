@@ -20,6 +20,7 @@ using namespace octopus;
 class TestGenerator : public StepOptionsGenerator
 {
 public:
+	TestGenerator() : StepOptionsGenerator("") {}
     virtual StepOptionsGenerator* newCopy() const override
 	{
 		return new TestGenerator();

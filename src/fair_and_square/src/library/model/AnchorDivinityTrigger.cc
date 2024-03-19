@@ -53,5 +53,5 @@ void AnchorDivinityTrigger::trigger(octopus::State const &state_p, octopus::Step
     step_p.addSteppable(new octopus::StateTemplePositionRemoveStep(listenerData_l->_entities.at(idx_p)->_pos));
 
     std::string id_l = std::to_string(_count++);
-    step_p.addSteppable(new octopus::PlayerAddOptionStep(_player, id_l, new DivinityGenerator(_player, optionGenerator_l)));
+    step_p.addSteppable(new octopus::PlayerAddOptionStep(_player, id_l, new DivinityGenerator(id_l, _player, optionGenerator_l)));
 }

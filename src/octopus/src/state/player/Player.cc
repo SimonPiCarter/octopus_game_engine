@@ -9,9 +9,9 @@ namespace octopus
 
 Player::~Player()
 {
-	for(auto &&pair_l : _options)
+	for(StepOptionsGenerator * option_l : _options)
 	{
-		delete pair_l.second;
+		delete option_l;
 	}
 }
 

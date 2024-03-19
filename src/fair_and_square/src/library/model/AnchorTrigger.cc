@@ -80,5 +80,5 @@ void AnchorTrigger::trigger(octopus::State const &state_p, octopus::Step &step_p
 	octopus::ListenerEntityData const * listenerData_l = dynamic_cast<octopus::ListenerEntityData const *>(data_p._listenerData[0]);
     step_p.addSteppable(new octopus::StateTemplePositionRemoveStep(listenerData_l->_entities.at(idx_p)->_pos));
 
-    step_p.addSteppable(new octopus::PlayerAddOptionStep(_player, id_l, new BuffGenerator(optionsGenerator_l, _lib)));
+    step_p.addSteppable(new octopus::PlayerAddOptionStep(_player, id_l, new BuffGenerator(id_l, optionsGenerator_l, _lib)));
 }

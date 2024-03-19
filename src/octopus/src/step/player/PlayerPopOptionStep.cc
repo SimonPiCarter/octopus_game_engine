@@ -25,12 +25,16 @@ void PlayerPopOptionStep::apply(State &state_p) const
 	Logger::getDebug() << "PlayerPopOptionStep :: apply " << this->_player<<std::endl;
 	Player *player_l = state_p.getPlayer(_player);
 
-    StepOptionsGenerator * generator_l = player_l->_options[_key];
-
-    if(generator_l == nullptr)
+    if(player_l->_options.empty())
     {
         throw std::logic_error("Error while poping option : no option with the given key "+_key);
     }
+    if(player_l->_options.front()->_key != _key)
+    {
+        throw std::logic_error("Error while poping option : the front option has different key : "+_key);
+    }
+
+    StepOptionsGenerator * generator_l = player_l->_options.front();
 
     std::vector<Steppable *> subSteps_l = generator_l->genSteppables(state_p, _choice);
 
@@ -42,8 +46,14 @@ void PlayerPopOptionStep::apply(State &state_p) const
     }
 
     // pop option from state
-    delete player_l->_options[_key];
-    player_l->_options[_key] = nullptr;
+    delete player_l->_options.front();
+    player_l->_options.pop_front();
+
+	// generate steps for next option
+	if(!player_l->_options.empty())
+	{
+		player_l->_options.front()->genOptions(state_p);
+	}
 }
 
 void PlayerPopOptionStep::revert(State &state_p, SteppableData const *data_p) const
@@ -53,19 +63,14 @@ void PlayerPopOptionStep::revert(State &state_p, SteppableData const *data_p) co
 
     PlayerPopOptionStepData const * data_l = dynamic_cast<PlayerPopOptionStepData const *>(data_p);
 
-    if(player_l->_options[_key] != nullptr)
-    {
-        throw std::logic_error("Error while poping option : an option is present with the key "+_key);
-    }
     if(data_l->_generator == nullptr)
     {
         throw std::logic_error("Error while poping option : no option generator present for state.");
     }
 
     // restore generator in state
-    player_l->_options[_key] = data_l->_generator->newCopy();
-
-    StepOptionsGenerator * generator_l = player_l->_options[_key];
+    StepOptionsGenerator * generator_l = data_l->_generator->newCopy();
+    player_l->_options.push_front(generator_l);
 
     std::vector<Steppable *> subSteps_l = data_l->_subSteps;
 
@@ -78,7 +83,7 @@ void PlayerPopOptionStep::revert(State &state_p, SteppableData const *data_p) co
     }
 
 	// gen options after restoring state
-	player_l->_options[_key]->genOptions(state_p);
+	player_l->_options.front()->genOptions(state_p);
 }
 
 SteppableData * PlayerPopOptionStep::newData(State const &state_p) const
@@ -86,10 +91,10 @@ SteppableData * PlayerPopOptionStep::newData(State const &state_p) const
     PlayerPopOptionStepData * data_l = new PlayerPopOptionStepData();
     Player const *player_l = state_p.getPlayer(_player);
 
-    data_l->_generator = player_l->_options.at(_key)->newCopy();
+    data_l->_generator = player_l->_options.front()->newCopy();
 
 	// do not use new copy here as its options wont be generated
-    data_l->_subSteps = player_l->_options.at(_key)->genSteppables(state_p, _choice);
+    data_l->_subSteps = player_l->_options.front()->genSteppables(state_p, _choice);
 
     data_l->_data.reserve(data_l->_subSteps.size());
     for(Steppable * step_l : data_l->_subSteps)

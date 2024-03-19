@@ -2,6 +2,7 @@
 #define __StepOptionsGenerator__
 
 #include <vector>
+#include <string>
 
 namespace octopus
 {
@@ -14,6 +15,7 @@ class State;
 class StepOptionsGenerator
 {
 public:
+    StepOptionsGenerator(std::string const &key_p) : _key(key_p) {}
     virtual ~StepOptionsGenerator() {}
 
     /// @brief Create a new copy of this generator
@@ -31,6 +33,8 @@ public:
     virtual std::vector<Steppable *> genSteppables(State const &state_p, unsigned long options_p) const = 0;
     /// @brief Return the number of available options for this generator
     virtual unsigned long getNumOptions() const = 0;
+
+	std::string const _key;
 };
 
 } // namespace octopus
