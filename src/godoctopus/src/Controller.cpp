@@ -1345,22 +1345,22 @@ PackedByteArray Controller::getVisibility(int player_p) const
 
 int Controller::get_nb_queued_options(int player_p) const
 {
-	auto it_l = _optionManagers.find(player_p);
-	if(it_l != _optionManagers.end())
+	// return the number of queued option generator
+	if(_state && _state->getPlayer(player_p))
 	{
-		return it_l->second->getQueuedOptionsSize();
+		return _state->getPlayer(player_p)->_options.size();
 	}
 	return 0;
 }
 
 int Controller::get_nb_options_available(int player_p) const
 {
-	auto it_l = _optionManagers.find(player_p);
-	if(it_l == _optionManagers.end() || it_l->second->getQueuedOptionsSize() == 0)
+	// return the number of different options available with the option in front
+	if(_state && _state->getPlayer(player_p) && !_state->getPlayer(player_p)->_options.empty())
 	{
-		return 0;
+		return _state->getPlayer(player_p)->_options.front()->getNumOptions();
 	}
-	return it_l->second->getCurrentOptionSize();
+	return 0;
 }
 
 int Controller::get_nb_options_chosen(int player_p) const

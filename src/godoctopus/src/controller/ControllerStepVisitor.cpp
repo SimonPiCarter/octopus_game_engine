@@ -245,7 +245,7 @@ void ControllerStepVisitor::visit(octopus::PlayerBuffAllStep const *steppable_p)
 
 void ControllerStepVisitor::visit(octopus::PlayerPopOptionStep const *steppable_p)
 {
-	_controller.getOptionManagers().at(steppable_p->_player)->popOptionLayer(steppable_p);
+	_controller.getOptionManagers().at(steppable_p->_player)->popOptionLayer(*_state, steppable_p);
 	_controller.emit_signal("option_update");
 	_controller.emit_signal("pop_option");
 }
