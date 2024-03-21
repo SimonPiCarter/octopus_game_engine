@@ -83,6 +83,9 @@ void Option::pushOption(octopus::TimedBuff const &buff_p)
     _desc.push_back(ss_l.str().c_str());
 }
 
+void Option::update(NoOption const &)
+{}
+
 void Option::update(BuffOption const &option_p)
 {
     _model_name = option_p._model.c_str();

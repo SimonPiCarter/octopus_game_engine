@@ -61,7 +61,7 @@ godot::Option *OptionManager::getSecondaryOption(uint32_t idx_p) const
 {
     godot::Option * opt_l = memnew(Option());
     opt_l->set_option(_queuedOptions.at(idx_p)._enemyOption);
-    return opt_l;
+    return nullptr;
 }
 
 godot::Option *OptionManager::getChosenPrimaryOption(uint32_t idx_p) const
@@ -75,7 +75,7 @@ godot::Option *OptionManager::getChosenSecondaryOption(uint32_t idx_p) const
 {
     godot::Option * opt_l = memnew(Option());
     opt_l->set_option(_chosenOptions.at(idx_p)._enemyOption);
-    return opt_l;
+    return nullptr;
 }
 
 /////////////////////////////

@@ -9,6 +9,8 @@
 
 using namespace octopus;
 
+void genStep(Library const &, std::vector<Steppable *> &, NoOption const &) {}
+
 void genStep(Library const &lib_p, std::vector<Steppable *> &steppables_p, BuffOption const &option_p)
 {
     steppables_p.push_back(new PlayerBuffAllStep(option_p._player, option_p._buff, option_p._model));

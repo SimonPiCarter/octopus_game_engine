@@ -1,10 +1,13 @@
 #ifndef __AnchorTrigger__
 #define __AnchorTrigger__
 
+#include <vector>
+
 #include "controller/trigger/Trigger.hh"
 #include "controller/trigger/Listener.hh"
 #include "utils/RandomGenerator.hh"
 
+#include "library/model/bonus/BuffGenerators.hh"
 #include "library/model/divinity/DivinityModelLoader.hh"
 
 namespace octopus
@@ -34,5 +37,19 @@ private:
 	/// need to be mutable to be incremented when triggering
 	mutable uint32_t _count {0};
 };
+
+std::vector<Option> generateOpeningOptions(
+	std::string const &id_p,
+	unsigned long seed_p,
+	std::vector<fas::DivinityType> const &forbidden_p,
+	unsigned long playerIdx_p,
+	octopus::State const &state_p);
+
+std::vector<Option> generateOptions(
+	std::string const &id_p,
+	unsigned long seed_p,
+	std::vector<fas::DivinityType> const &forbidden_p,
+	unsigned long playerIdx_p,
+	octopus::State const &state_p);
 
 #endif

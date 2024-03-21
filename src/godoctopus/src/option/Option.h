@@ -21,6 +21,7 @@ public:
 
     void pushOption(octopus::TimedBuff const &buff_p);
 
+    void update(NoOption const &option_p);
     void update(BuffOption const &option_p);
     void update(DoubleBuffOption const &option_p);
     void update(ModifierOption const &option_p);

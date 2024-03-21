@@ -27,6 +27,7 @@
 #include "step/command/flying/FlyingCommandSpawnStep.hh"
 #include "step/custom/CustomStep.hh"
 #include "step/player/PlayerAddBuildingModel.hh"
+#include "step/player/PlayerAddOptionStep.hh"
 #include "step/player/PlayerSpawnStep.hh"
 #include "step/player/PlayerSpendResourceStep.hh"
 #include "step/state/StateTemplePositionAddStep.hh"
@@ -161,6 +162,17 @@ std::list<Steppable *> DemoLevelSteps(
 			forbidden_l = notDemoDivinities();
 		}
 		spawners_l.push_back(new TriggerSpawn(new AnchorTrigger(lib_p, rand_p, 150, playerIdx_l, forbidden_l)));
+		unsigned long seed_l = rand_p.roll(0,std::numeric_limits<int>::max());
+		auto optionsGenerator_l = [seed_l, forbidden_l, playerIdx_l](const octopus::State &state_p) {
+			return generateOpeningOptions(
+						std::string("0"),
+						seed_l,
+						forbidden_l,
+						playerIdx_l,
+						state_p);
+		};
+
+    	spawners_l.push_back(new PlayerAddOptionStep(playerIdx_l, "0", new BuffGenerator("0", optionsGenerator_l, lib_p)));
 	}
 
 	spawners_l.push_back(new godot::AddObjectiveStep("survival_survive", "survival_survive", -1, true));

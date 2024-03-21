@@ -18,6 +18,7 @@ namespace octopus
     class Library;
 } // namespace octopus
 
+struct NoOption {};
 
 struct BuffOption
 {
@@ -48,12 +49,12 @@ struct DivinityOption
     fas::DivinityType _div;
 };
 
-using SingleOption = std::variant<BuffOption, ModifierOption, DoubleBuffOption, DivinityOption>;
+using SingleOption = std::variant<NoOption, BuffOption, ModifierOption, DoubleBuffOption, DivinityOption>;
 
 struct Option
 {
-    SingleOption _playerOption;
-    SingleOption _enemyOption;
+    SingleOption _playerOption = NoOption();
+    SingleOption _enemyOption = NoOption();
 };
 
 class BuffGenerator : public octopus::StepOptionsGenerator
