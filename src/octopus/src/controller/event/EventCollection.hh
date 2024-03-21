@@ -37,6 +37,7 @@ public:
 
 	/// NA
 	virtual void visit(AttackModifierStep const *) {}
+	virtual void visit(BuildingAutoBuildStep const *) override {}
 	virtual void visit(BuildingCancelStep const *) {}
 	virtual void visit(BuildingRemoveRallyPointStep const *) {}
 	virtual void visit(BuildingSetRallyPointStep const *) {}

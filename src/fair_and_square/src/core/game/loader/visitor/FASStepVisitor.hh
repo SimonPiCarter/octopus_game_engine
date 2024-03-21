@@ -36,6 +36,7 @@ public:
 	FASStepVisitor(cuttlefish::Window &window_p, cuttlefish::World &world_p) : _window(window_p), _world(world_p) {}
 
 	virtual void visit(octopus::AttackModifierStep const *) override {}
+	virtual void visit(octopus::BuildingAutoBuildStep const *) override {}
 	virtual void visit(octopus::BuildingCancelStep const *) override {}
 	virtual void visit(octopus::BuildingRemoveRallyPointStep const *) override {}
 	virtual void visit(octopus::BuildingSetRallyPointStep const *) override {}

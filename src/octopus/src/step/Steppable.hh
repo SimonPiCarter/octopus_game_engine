@@ -40,6 +40,7 @@ namespace octopus
 	};
 
 	class AttackModifierStep;
+	class BuildingAutoBuildStep;
 	class BuildingCancelStep;
 	class BuildingRemoveRallyPointStep;
 	class BuildingSetRallyPointStep;
@@ -140,6 +141,7 @@ namespace octopus
 			}
 
 			virtual void visit(AttackModifierStep const *) = 0;
+			virtual void visit(BuildingAutoBuildStep const *) = 0;
 			virtual void visit(BuildingCancelStep const *) = 0;
 			virtual void visit(BuildingRemoveRallyPointStep const *) = 0;
 			virtual void visit(BuildingSetRallyPointStep const *) = 0;

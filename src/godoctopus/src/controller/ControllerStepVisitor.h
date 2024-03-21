@@ -27,6 +27,7 @@ public:
 		: _controller(controller_p), _state(state_p), _skipMoveSteps(skipMoveSteps_p) {}
 
 	virtual void visit(octopus::AttackModifierStep const *) override {}
+	virtual void visit(octopus::BuildingAutoBuildStep const *) override {}
 	virtual void visit(octopus::BuildingCancelStep const *) override;
 	virtual void visit(octopus::BuildingRemoveRallyPointStep const *) override;
 	virtual void visit(octopus::BuildingSetRallyPointStep const *) override;

@@ -106,6 +106,7 @@ add_library(octopus
 	${CMAKE_CURRENT_SOURCE_DIR}/src/step/command/flying/FlyingCommandPopStep.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/step/command/flying/FlyingCommandSpawnStep.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/step/command/harvest/CommandHarvestStep.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/src/step/building/BuildingAutoBuildStep.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/step/building/BuildingCancelStep.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/step/building/BuildingRemoveRallyPointStep.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/step/building/BuildingSetRallyPointStep.cc
