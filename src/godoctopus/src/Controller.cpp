@@ -1512,6 +1512,14 @@ void Controller::add_stop_commands(int peer_p, PackedInt32Array const &handles_p
 	}
 }
 
+void Controller::add_unit_auto_build_command(int peer_p, PackedInt32Array const &handles_p, String const &model_p, int player_p)
+{
+	if(!_paused)
+	{
+		godot::add_unit_auto_build_command(_queuedCommandsPerPeer.at(peer_p).back(), *_state, _lib, handles_p, model_p, player_p);
+	}
+}
+
 void Controller::add_unit_build_command(int peer_p, PackedInt32Array const &handles_p, String const &model_p, int player_p)
 {
 	if(!_paused)
@@ -1708,6 +1716,7 @@ void Controller::_bind_methods()
 	ClassDB::bind_method(D_METHOD("add_move_target_commands", "peer", "handles", "target", "handle_target", "player", "queued"), &Controller::add_move_target_commands);
 	ClassDB::bind_method(D_METHOD("add_attack_move_commands", "peer", "handles", "target", "player", "queued"), &Controller::add_attack_move_commands);
 	ClassDB::bind_method(D_METHOD("add_stop_commands", "peer", "handles", "player", "queued"), &Controller::add_stop_commands);
+	ClassDB::bind_method(D_METHOD("add_unit_auto_build_command", "peer", "handle", "model", "player"), &Controller::add_unit_auto_build_command);
 	ClassDB::bind_method(D_METHOD("add_unit_build_command", "peer", "handle", "model", "player"), &Controller::add_unit_build_command);
 	ClassDB::bind_method(D_METHOD("add_unit_build_cancel_command", "peer", "handle", "index", "player"), &Controller::add_unit_build_cancel_command);
 	ClassDB::bind_method(D_METHOD("add_blueprint_command", "peer", "target", "model", "player", "builders", "queued"), &Controller::add_blueprint_command);

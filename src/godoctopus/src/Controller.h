@@ -185,6 +185,7 @@ public:
 	void add_attack_move_commands(int peer, PackedInt32Array const &handles_p, Vector2 const &target_p, int player_p, bool queued_p);
 	void add_stop_commands(int peer, PackedInt32Array const &handles_p, int player_p, bool queued_p);
 	// production
+	void add_unit_auto_build_command(int peer, PackedInt32Array const &handles_p, String const &model_p, int player_p);
 	void add_unit_build_command(int peer, PackedInt32Array const &handles_p, String const &model_p, int player_p);
 	void add_unit_build_cancel_command(int peer, PackedInt32Array const & handle_p, int index_p, int player_p);
 	// building

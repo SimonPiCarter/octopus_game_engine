@@ -5,6 +5,7 @@
 // octopus
 #include "command/CommandHelpers.hh"
 #include "command/CommandQueue.hh"
+#include "command/building/BuildingAutoBuildCommand.hh"
 #include "command/building/BuildingBlueprintCommand.hh"
 #include "command/building/BuildingUnitProductionCommand.hh"
 #include "command/building/BuildingUnitCancelCommand.hh"
@@ -192,6 +193,22 @@ octopus::Handle getBestProductionBuilding(PackedInt32Array const &handles_p, oct
     }
 
     return best_l;
+}
+
+void add_unit_auto_build_command(std::list<octopus::Command*> &list_r, octopus::State const &state_p, octopus::Library const &lib_p, PackedInt32Array const &handles_p, String const &model_p, int)
+{
+	std::string modelId_l(model_p.utf8().get_data());
+
+    if(lib_p.hasUnitModel(modelId_l))
+    {
+        octopus::UnitModel const &unit_l = lib_p.getUnitModel(modelId_l);
+		for(uint32_t i = 0 ; i < handles_p.size()/2 ; ++ i)
+		{
+			octopus::Handle idx_l = castHandle(handles_p[i*2],handles_p[i*2+1]);
+            octopus::BuildingAutoBuildCommand *cmd_l = new octopus::BuildingAutoBuildCommand(idx_l, unit_l);
+            list_r.push_back(cmd_l);
+		}
+    }
 }
 
 void add_unit_build_command(std::list<octopus::Command*> &list_r, octopus::State const &state_p, octopus::Library const &lib_p, PackedInt32Array const &handles_p, String const &model_p, int)
