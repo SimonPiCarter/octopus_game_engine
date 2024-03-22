@@ -15,10 +15,10 @@
 namespace octopus
 {
 
-BuildingAutoBuildCommand::BuildingAutoBuildCommand(Handle const &source_p, UnitModel const &model_p)
+BuildingAutoBuildCommand::BuildingAutoBuildCommand(Handle const &source_p, UnitModel const *model_p)
 	: Command(source_p)
 	, _source(source_p)
-	, _model(&model_p)
+	, _model(model_p)
 {}
 
 void BuildingAutoBuildCommand::registerCommand(Step & step_p, State const &state_p)
@@ -28,12 +28,10 @@ void BuildingAutoBuildCommand::registerCommand(Step & step_p, State const &state
 	Player const & player_l = *state_p.getPlayer(building_l->_player);
 
 	// if building is not build we skip everything
-	if(!building_l->isBuilt())
+	if(!building_l->isBuilt() || !_model)
 	{
 		return;
 	}
-
-	std::map<std::string, Fixed> cost_l = getCost(*_model, player_l);
 
 	bool req_l = meetRequirements(_model->_requirements, *state_p.getPlayer(building_l->_player));
 	// check if we can pay for it and if building can produce it
@@ -49,6 +47,11 @@ bool BuildingAutoBuildCommand::applyCommand(Step & step_p, State const &state_p,
 {
 	// NA
 	return true;
+}
+
+std::string BuildingAutoBuildCommand::getModelId() const
+{
+	return _model? _model->_id : "";
 }
 
 } // namespace octopus

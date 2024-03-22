@@ -15,7 +15,7 @@ class BuildingAutoBuildCommand : public Command
 {
 public:
 	BuildingAutoBuildCommand() {}
-	BuildingAutoBuildCommand(Handle const &source_p, UnitModel const &model_p);
+	BuildingAutoBuildCommand(Handle const &source_p, UnitModel const *model_p);
 
 	/// @brief register the command into the step
 	/// This method is responsible to
@@ -25,6 +25,7 @@ public:
 	/// @brief
 	bool applyCommand(Step & step_p, State const &state_p, CommandData const *data_p, PathManager &pathManager_p) const override;
 
+	std::string getModelId() const;
 private:
 	Handle _source {0};
 

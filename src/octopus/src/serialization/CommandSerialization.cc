@@ -2,6 +2,7 @@
 
 #include "controller/Controller.hh"
 #include "command/Command.hh"
+#include "command/building/BuildingAutoBuildCommand.hh"
 #include "command/building/BuildingBlueprintCommand.hh"
 #include "command/building/BuildingCancelCommand.hh"
 #include "command/building/BuildingUnitCancelCommand.hh"
@@ -417,6 +418,13 @@ void writeCommand(std::ofstream &file_p, Command const *cmd_p, Writer_t writer_p
         writer_p(file_p, typped_l->_pointTarget);
         writer_p(file_p, typped_l->_id);
     }
+    else if(dynamic_cast<BuildingAutoBuildCommand const *>(cmd_p))
+    {
+        writer_p(file_p, uint32_t(17));
+        BuildingAutoBuildCommand const *typped_l = dynamic_cast<BuildingAutoBuildCommand const *>(cmd_p);
+        writer_p(file_p, typped_l->getHandleCommand());
+        writer_p(file_p, typped_l->getModelId());
+    }
     else if(dynamic_cast<DebugCommand const *>(cmd_p))
     {
         // NA
@@ -722,6 +730,20 @@ Command * readCommand(std::ifstream &file_p, Library const &lib_p)
 
         cmd_l = new EntityAbilityCommand(handle_l, target_l, pointTarget_l, id_l);
     }
+	else if(cmdId_p == 17)
+	{
+        Handle source_l;
+        std::string id_l;
+
+        read(file_p, &source_l);
+        read(file_p, &id_l);
+		UnitModel const * model_l = nullptr;
+		if(lib_p.hasUnitModel(id_l))
+		{
+			model_l = &lib_p.getUnitModel(id_l);
+		}
+        cmd_l = new BuildingAutoBuildCommand(source_l, model_l);
+	}
     if(!cmd_l)
     {
         throw std::logic_error("unserializable command got from file");
