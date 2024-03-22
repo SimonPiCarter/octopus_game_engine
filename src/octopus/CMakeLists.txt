@@ -10,6 +10,7 @@ cmake_minimum_required (VERSION 3.14.0)
 
 
 add_library(octopus
+	${CMAKE_CURRENT_SOURCE_DIR}/src/command/building/BuildingAutoBuildCommand.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/command/building/BuildingBlueprintCommand.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/command/building/BuildingCancelCommand.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/command/building/BuildingRallyPointCommand.cc
