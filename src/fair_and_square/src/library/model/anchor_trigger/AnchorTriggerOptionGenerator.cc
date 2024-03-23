@@ -2,17 +2,19 @@
 
 Option no_op(octopus::State const &, unsigned long, octopus::RandomGenerator &) { return Option(); }
 
+Option no_op(octopus::State const &, unsigned long, octopus::RandomGenerator &, std::string const &) { return Option(); }
+
 struct SquareGen 	{ constexpr static char const* gen() { return "square"; } };
 struct CircleGen 	{ constexpr static char const* gen() { return "circle"; } };
 struct TriangleGen 	{ constexpr static char const* gen() { return "triangle"; } };
 
 template < class type_name_gen, octopus::TyppedBuff::Type type_t, int min_value, int max_value >
-Option flat_basic(octopus::State const &, unsigned long player_p, octopus::RandomGenerator &rand_p)
+Option flat_basic(octopus::State const &, unsigned long player_p, octopus::RandomGenerator &rand_p, std::string const &id_p)
 {
 	Option opt_l;
 
 	octopus::TimedBuff tBuff_l;
-	tBuff_l._id = "flat_basic";
+	tBuff_l._id = "flat_basic."+id_p;
 	tBuff_l._type = type_t;
 	tBuff_l._offset = rand_p.roll(min_value, max_value);
 

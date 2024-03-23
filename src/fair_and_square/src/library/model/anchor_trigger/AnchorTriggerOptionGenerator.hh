@@ -13,12 +13,12 @@ namespace octopus
 } // namespace octopus
 
 
-Option no_op(octopus::State const &, unsigned long, octopus::RandomGenerator &);
+Option no_op(octopus::State const &, unsigned long, octopus::RandomGenerator &, std::string const &);
 
 struct AnchorOptionGenerator
 {
 	unsigned long proba_coef = 10;
-	std::function<Option(octopus::State const &, unsigned long, octopus::RandomGenerator &)> generator = no_op;
+	std::function<Option(octopus::State const &, unsigned long, octopus::RandomGenerator &, std::string const &)> generator = no_op;
 	bool allow_multiple = false;
 };
 

@@ -100,7 +100,7 @@ std::vector<Option> generateOptions(
 			if(rolled_number_l <= threshold_l)
 			{
 				// generate option
-				options_l.push_back(generator_l.generator(state_p, playerIdx_p, rand_l));
+				options_l.push_back(generator_l.generator(state_p, playerIdx_p, rand_l, id_p));
 				// if current option does not allow multiple
 				if(!generator_l.allow_multiple)
 				{
