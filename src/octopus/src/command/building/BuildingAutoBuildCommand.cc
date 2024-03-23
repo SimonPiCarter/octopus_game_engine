@@ -28,18 +28,26 @@ void BuildingAutoBuildCommand::registerCommand(Step & step_p, State const &state
 	Player const & player_l = *state_p.getPlayer(building_l->_player);
 
 	// if building is not build we skip everything
-	if(!building_l->isBuilt() || !_model)
+	if(!building_l->isBuilt())
 	{
 		return;
 	}
 
-	bool req_l = meetRequirements(_model->_requirements, *state_p.getPlayer(building_l->_player));
-	// check if we can pay for it and if building can produce it
-	if(building_l->_buildingModel.canProduce(_model)
-	&& req_l)
+	if(_model)
+	{
+		bool req_l = meetRequirements(_model->_requirements, *state_p.getPlayer(building_l->_player));
+		// check if building can produce it
+		if(building_l->_buildingModel.canProduce(_model)
+		&& req_l)
+		{
+			step_p.addSteppable(new BuildingAutoBuildStep(_source, building_l->_autoBuild, _model));
+		}
+	}
+	else
 	{
 		step_p.addSteppable(new BuildingAutoBuildStep(_source, building_l->_autoBuild, _model));
 	}
+
 	step_p.addSteppable(new CommandStorageStep(this));
 }
 
