@@ -80,13 +80,13 @@ void buildingIdleFunction(Entity const &ent_p, Step & step_p, State const &state
 	if(building_l._autoBuild)
 	{
 		cmd_l = new BuildingUnitProductionCommand(building_l._handle, building_l._handle, *building_l._autoBuild);
+		cmd_l->registerCommand(step_p, state_p);
 	}
 
 	if(cmd_l)
 	{
 		// reset waiting time
 		step_p.addSteppable(new EntityUpdateWaitingStep(ent_p._handle, ent_p._waiting, 0));
-		step_p.addSteppable(new CommandSpawnStep(cmd_l));
 	}
 	else if(ent_p._waiting >= waitTime_l)
 	{
