@@ -101,6 +101,7 @@ public:
     // building getter
     bool has_rally_point(Controller const *controller_p) const;
     Vector2 get_rally_point(Controller const *controller_p) const;
+    String get_auto_build_model(Controller const *controller_p) const;
 
     // resource getter
     String get_resource_type(Controller const *controller_p) const;

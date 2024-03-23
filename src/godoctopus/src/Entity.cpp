@@ -232,6 +232,22 @@ Vector2 Entity::get_rally_point(Controller const *controller_p) const
     return Vector2(octopus::to_double(building_l->_rallyPoint.x), octopus::to_double(building_l->_rallyPoint.y));
 }
 
+String Entity::get_auto_build_model(Controller const *controller_p) const
+{
+    octopus::Entity const *ent_l = controller_p->getEntity(octopus::Handle(_index, _revision));
+    if(!ent_l->_model._isBuilding)
+    {
+        return "";
+    }
+
+    octopus::Building const *building_l = static_cast<octopus::Building const *>(ent_l);
+    if(!building_l->_autoBuild)
+    {
+        return "";
+    }
+    return building_l->_autoBuild->_id.c_str();
+}
+
 String Entity::get_resource_type(Controller const *controller_p) const
 {
     octopus::Entity const *ent_l = controller_p->getEntity(octopus::Handle(_index, _revision));
@@ -341,6 +357,7 @@ void Entity::_bind_methods()
     ClassDB::bind_method(D_METHOD("get_los", "controller"), &Entity::get_los);
     ClassDB::bind_method(D_METHOD("has_rally_point", "controller"), &Entity::has_rally_point);
     ClassDB::bind_method(D_METHOD("get_rally_point", "controller"), &Entity::get_rally_point);
+    ClassDB::bind_method(D_METHOD("get_auto_build_model", "controller"), &Entity::get_auto_build_model);
     ClassDB::bind_method(D_METHOD("get_resource_type", "controller"), &Entity::get_resource_type);
     ClassDB::bind_method(D_METHOD("get_resource_quantity", "controller"), &Entity::get_resource_quantity);
     ClassDB::bind_method(D_METHOD("get_buffs", "controller"), &Entity::get_buffs);
