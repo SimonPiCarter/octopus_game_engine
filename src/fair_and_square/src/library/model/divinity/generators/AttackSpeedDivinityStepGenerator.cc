@@ -31,7 +31,7 @@ public:
 		return new AttackSpeedUpgrade(_models, _offset);
 	}
 
-	virtual std::vector<Steppable *> getSteppables(unsigned long player_p) const
+	virtual std::vector<Steppable *> getSteppables(unsigned long player_p, unsigned long) const
 	{
 		std::vector<Steppable *> steps_l;
 

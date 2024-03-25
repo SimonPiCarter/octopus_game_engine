@@ -113,7 +113,7 @@ public:
 		return new RecycleHarvestUpgrade(_buff);
 	}
 
-	virtual std::vector<Steppable *> getSteppables(unsigned long player_p) const
+	virtual std::vector<Steppable *> getSteppables(unsigned long player_p, unsigned long) const
 	{
 		std::vector<Steppable *> steps_l;
 
@@ -135,7 +135,7 @@ public:
 		return new RecycleDeathResUpgrade(_mapRes);
 	}
 
-	virtual std::vector<Steppable *> getSteppables(unsigned long player_p) const
+	virtual std::vector<Steppable *> getSteppables(unsigned long player_p, unsigned long) const
 	{
 		std::vector<Steppable *> steps_l;
 

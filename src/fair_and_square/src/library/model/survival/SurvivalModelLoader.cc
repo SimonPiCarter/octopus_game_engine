@@ -124,13 +124,15 @@ public:
     /// @brief get internal steppable for the given option
     /// @param options_p the option index
     /// @return a vector of steppables (owner is given away)
-    virtual std::vector<Steppable *> getSteppables(unsigned long player_p) const
+    virtual std::vector<Steppable *> getSteppables(unsigned long player_p, unsigned long level_p) const
 	{
 		std::vector<Steppable *> steps_l;
 		TimedBuff buff_l;
 		buff_l._type = type;
 		buff_l._offset = offset;
-		buff_l._id = _name;
+		std::stringstream name_l;
+		name_l<<_name<<"."<<level_p;
+		buff_l._id = name_l.str();
 		for(std::string const &model_l : allSurivvalModels())
 		{
     		steps_l.push_back(new PlayerBuffAllStep(player_p, buff_l, model_l));
@@ -143,49 +145,34 @@ void createUpgrades(Library &lib_p)
 {
 	Upgrade *damage_l = new Upgrade(
 		"survival_damage_upgrade.1",
-		new UpgradeBasic<1, TyppedBuff::Type::Damage>("survival_damage_upgrade.1")
+		new UpgradeBasic<1, TyppedBuff::Type::Damage>("survival_damage_upgrade")
 	);
 	damage_l->_cost["bloc"] = 150;
 	damage_l->_cost["ether"] = 150;
-	damage_l->_productionTime = 6000;
+	damage_l->_productionTime = 100;
+	damage_l->_costAdvanced.push_back({});
+	damage_l->_costAdvanced[0]["bloc"] = 150;
+	damage_l->_costAdvanced[0]["ether"] = 300;
+
 	Upgrade *armor_l = new Upgrade(
 		"survival_armor_upgrade.1",
-		new UpgradeBasic<1, TyppedBuff::Type::Armor>("survival_armor_upgrade.1")
+		new UpgradeBasic<1, TyppedBuff::Type::Armor>("survival_armor_upgrade")
 	);
 	armor_l->_cost["bloc"] = 150;
 	armor_l->_cost["ether"] = 150;
 	armor_l->_productionTime = 6000;
-	Upgrade *damage_2_l = new Upgrade(
-		"survival_damage_upgrade.2",
-		new UpgradeBasic<1, TyppedBuff::Type::Damage>("survival_damage_upgrade.2")
-	);
-	damage_2_l->_cost["bloc"] = 150;
-	damage_2_l->_cost["ether"] = 300;
-	damage_2_l->_productionTime = 6000;
-	damage_2_l->_requirements._upgradeLvl["survival_damage_upgrade.1"] = 1;
-	Upgrade *armor_2_l = new Upgrade(
-		"survival_armor_upgrade.2",
-		new UpgradeBasic<1, TyppedBuff::Type::Armor>("survival_armor_upgrade.2")
-	);
-	armor_2_l->_cost["bloc"] = 150;
-	armor_2_l->_cost["ether"] = 300;
-	armor_2_l->_productionTime = 6000;
-	armor_2_l->_requirements._upgradeLvl["survival_armor_upgrade.1"] = 1;
+	armor_l->_costAdvanced.push_back({});
+	armor_l->_costAdvanced[0]["bloc"] = 150;
+	armor_l->_costAdvanced[0]["ether"] = 300;
 
 	lib_p.registerUpgrade(damage_l->_id, damage_l);
 	lib_p.registerUpgrade(armor_l->_id, armor_l);
-	lib_p.registerUpgrade(damage_2_l->_id, damage_2_l);
-	lib_p.registerUpgrade(armor_2_l->_id, armor_2_l);
 
 	lib_p.getBuildingModel("gate")._upgrades.push_back(damage_l);
 	lib_p.getBuildingModel("gate")._upgrades.push_back(armor_l);
-	lib_p.getBuildingModel("gate")._upgrades.push_back(damage_2_l);
-	lib_p.getBuildingModel("gate")._upgrades.push_back(armor_2_l);
 
 	lib_p.getBuildingModel("command_center")._upgrades.push_back(damage_l);
 	lib_p.getBuildingModel("command_center")._upgrades.push_back(armor_l);
-	lib_p.getBuildingModel("command_center")._upgrades.push_back(damage_2_l);
-	lib_p.getBuildingModel("command_center")._upgrades.push_back(armor_2_l);
 }
 
 void loadSurvivalModels(Library &lib_p)

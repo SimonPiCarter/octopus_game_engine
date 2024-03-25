@@ -1082,7 +1082,7 @@ TypedArray<String> Controller::get_abilities(EntityHandle const * handle_p, int 
 bool Controller::is_done_and_non_repeatable(String const &upgrade_p, int player_p) const
 {
 	std::string const &upgradeId_l(upgrade_p.utf8().get_data());
-	return getUpgradeLvl(*getPlayer(player_p), upgradeId_l) && !_lib.getUpgrade(upgradeId_l)._repeatable;
+	return getUpgradeLvl(*getPlayer(player_p), upgradeId_l) >= getMaxLevel(_lib.getUpgrade(upgradeId_l));
 }
 
 int Controller::get_level(String const &upgrade_p, int player_p) const

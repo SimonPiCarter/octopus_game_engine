@@ -116,7 +116,7 @@ public:
 		return new ProductionBuffUpgrade(_models, _ratioReduction);
 	}
 
-	virtual std::vector<Steppable *> getSteppables(unsigned long player_p) const
+	virtual std::vector<Steppable *> getSteppables(unsigned long player_p, unsigned long) const
 	{
 		std::vector<Steppable *> steps_l;
 
@@ -145,7 +145,7 @@ public:
 		return new ProductionResourceBuffUpgrade(_model, _prodTierOneUnitCostReductionCoef);
 	}
 
-	virtual std::vector<Steppable *> getSteppables(unsigned long player_p) const
+	virtual std::vector<Steppable *> getSteppables(unsigned long player_p, unsigned long) const
 	{
 		std::vector<Steppable *> steps_l;
 
@@ -171,7 +171,7 @@ public:
 		return new ProductionMoreBufferUpgrade(_res, _increase);
 	}
 
-	virtual std::vector<Steppable *> getSteppables(unsigned long player_p) const
+	virtual std::vector<Steppable *> getSteppables(unsigned long player_p, unsigned long) const
 	{
 		std::vector<Steppable *> steps_l;
 

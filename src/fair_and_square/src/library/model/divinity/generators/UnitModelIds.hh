@@ -90,7 +90,7 @@ namespace models
             return new TierUpgrade(_param, _fn);
         }
 
-        virtual std::vector<octopus::Steppable *> getSteppables(unsigned long player_p) const
+        virtual std::vector<octopus::Steppable *> getSteppables(unsigned long player_p, unsigned long) const
         {
             return _fn(_param, player_p);
         }

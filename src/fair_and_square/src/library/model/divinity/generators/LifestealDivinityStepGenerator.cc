@@ -37,7 +37,7 @@ public:
 		return new LifestealUpgrade(_models, _ratio);
 	}
 
-	virtual std::vector<Steppable *> getSteppables(unsigned long player_p) const
+	virtual std::vector<Steppable *> getSteppables(unsigned long player_p, unsigned long) const
 	{
 		std::vector<Steppable *> steps_l;
 		for(std::string const &model_l : _models)
@@ -63,7 +63,7 @@ std::vector<Steppable *> lifestealTierOneGenertor(LifestealDivinityParams const 
 std::vector<Steppable *> lifestealTierTwoGenertor(LifestealDivinityParams const &param_p, Library const &lib_p, unsigned long player_p)
 {
 	LifestealUpgrade up_l(param_p._modelsGeneralLifeSteal, param_p._lifeStealTierTwo);
-	return up_l.getSteppables(player_p);
+	return up_l.getSteppables(player_p, 0);
 }
 
 std::vector<Steppable *> lifestealTierThreeGenertor(LifestealDivinityParams const &param_p, Library const &lib_p, unsigned long player_p)
