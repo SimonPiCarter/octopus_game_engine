@@ -122,11 +122,11 @@ void fillLibrary(EconomicDivinityParams const &params_p, octopus::Library &lib_p
 	resBuffTierThree_l._id = "EconomicDivinity_BuffResProdTierThree";
 
 	Upgrade * resUpTierThree_l = new Upgrade("EconomicUpgrade_BuffResProdTierThree", new StepUpgradeTyppedBuffGenerator(resBuffTierThree_l, {params_p._tierTwoBuildingModelId}));
-	resUpTierThree_l->_cost["bloc"] = 250;
-	resUpTierThree_l->_cost["ether"] = 450;
-	resUpTierThree_l->_cost["irium"] = 450;
-	resUpTierThree_l->_productionTime = 12000;
-	resUpTierThree_l->_requirements._upgradeLvl[models::EconomicDivId+models::tierThreeSuffix] = 1;
+	resUpTierThree_l->_cost[0]["bloc"] = 250;
+	resUpTierThree_l->_cost[0]["ether"] = 450;
+	resUpTierThree_l->_cost[0]["irium"] = 450;
+	resUpTierThree_l->_productionTime[0] = 12000;
+	resUpTierThree_l->_requirements[0]._upgradeLvl[models::EconomicDivId+models::tierThreeSuffix] = 1;
 
 	lib_p.registerUpgrade(resUpTierThree_l->_id, resUpTierThree_l);
 

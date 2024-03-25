@@ -204,21 +204,21 @@ void fillLibrary(RecycleDivinityParams const &params_p, octopus::Library &lib_p)
 	// T2 cost reduction for unit 1
 	Upgrade * upHarvest_l = new Upgrade("RecycleUpgrade_BuffHarvest",
 		new RecycleHarvestUpgrade(params_p._resourceHarvestUpgrade));
-	upHarvest_l->_cost["bloc"] = 150;
-	upHarvest_l->_cost["ether"] = 150;
-	upHarvest_l->_productionTime = 4500;
-	upHarvest_l->_requirements._upgradeLvl[models::RecycleDivId+models::tierTwoSuffix] = 1;
+	upHarvest_l->_cost[0]["bloc"] = 150;
+	upHarvest_l->_cost[0]["ether"] = 150;
+	upHarvest_l->_productionTime[0] = 4500;
+	upHarvest_l->_requirements[0]._upgradeLvl[models::RecycleDivId+models::tierTwoSuffix] = 1;
 	lib_p.registerUpgrade(upHarvest_l->_id, upHarvest_l);
 
 
 	// T3 increase buffer count
 	Upgrade * upBuffDeathRes_l = new Upgrade("RecycleUpgrade_BuffResOnDeath",
 		new RecycleDeathResUpgrade(params_p._resourceReturnedTierThree));
-	upBuffDeathRes_l->_cost["bloc"] = 150;
-	upBuffDeathRes_l->_cost["ether"] = 450;
-	upBuffDeathRes_l->_cost["irium"] = 450;
-	upBuffDeathRes_l->_productionTime = 12000;
-	upBuffDeathRes_l->_requirements._upgradeLvl[models::RecycleDivId+models::tierThreeSuffix] = 1;
+	upBuffDeathRes_l->_cost[0]["bloc"] = 150;
+	upBuffDeathRes_l->_cost[0]["ether"] = 450;
+	upBuffDeathRes_l->_cost[0]["irium"] = 450;
+	upBuffDeathRes_l->_productionTime[0] = 12000;
+	upBuffDeathRes_l->_requirements[0]._upgradeLvl[models::RecycleDivId+models::tierThreeSuffix] = 1;
 	lib_p.registerUpgrade(upBuffDeathRes_l->_id, upBuffDeathRes_l);
 
 	/// @brief temple

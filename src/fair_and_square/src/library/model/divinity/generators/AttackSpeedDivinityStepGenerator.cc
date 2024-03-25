@@ -139,11 +139,11 @@ void fillLibrary(AttackSpeedDivinityParams const &params_p, octopus::Library &li
 
 	// T3 attackspeed buff
 	Upgrade * attackspeedBuffTierThree_l = new Upgrade("AttackspeedUpgrade_BuffTierThreeConditional", new AttackSpeedUpgrade({params_p._tierOneUnitModelId}, params_p._damageUpgradeForTierOneUnit));
-	attackspeedBuffTierThree_l->_cost["bloc"] = 250;
-	attackspeedBuffTierThree_l->_cost["ether"] = 350;
-	attackspeedBuffTierThree_l->_cost["irium"] = 450;
-	attackspeedBuffTierThree_l->_productionTime = 12000;
-	attackspeedBuffTierThree_l->_requirements._upgradeLvl[models::AttackSpeedDivId+models::tierThreeSuffix] = 1;
+	attackspeedBuffTierThree_l->_cost[0]["bloc"] = 250;
+	attackspeedBuffTierThree_l->_cost[0]["ether"] = 350;
+	attackspeedBuffTierThree_l->_cost[0]["irium"] = 450;
+	attackspeedBuffTierThree_l->_productionTime[0] = 12000;
+	attackspeedBuffTierThree_l->_requirements[0]._upgradeLvl[models::AttackSpeedDivId+models::tierThreeSuffix] = 1;
 	lib_p.registerUpgrade(attackspeedBuffTierThree_l->_id, attackspeedBuffTierThree_l);
 
 	/// @brief temple

@@ -147,23 +147,25 @@ void createUpgrades(Library &lib_p)
 		"survival_damage_upgrade.1",
 		new UpgradeBasic<1, TyppedBuff::Type::Damage>("survival_damage_upgrade")
 	);
-	damage_l->_cost["bloc"] = 150;
-	damage_l->_cost["ether"] = 150;
-	damage_l->_productionTime = 100;
-	damage_l->_costAdvanced.push_back({});
-	damage_l->_costAdvanced[0]["bloc"] = 150;
-	damage_l->_costAdvanced[0]["ether"] = 300;
+	damage_l->_cost[0]["bloc"] = 150;
+	damage_l->_cost[0]["ether"] = 150;
+	damage_l->_productionTime[0] = 100;
+	damage_l->addLevel();
+	damage_l->_cost[1]["bloc"] = 150;
+	damage_l->_cost[1]["ether"] = 300;
+	damage_l->_productionTime[1] = 300;
 
 	Upgrade *armor_l = new Upgrade(
 		"survival_armor_upgrade.1",
 		new UpgradeBasic<1, TyppedBuff::Type::Armor>("survival_armor_upgrade")
 	);
-	armor_l->_cost["bloc"] = 150;
-	armor_l->_cost["ether"] = 150;
-	armor_l->_productionTime = 6000;
-	armor_l->_costAdvanced.push_back({});
-	armor_l->_costAdvanced[0]["bloc"] = 150;
-	armor_l->_costAdvanced[0]["ether"] = 300;
+	armor_l->_cost[0]["bloc"] = 150;
+	armor_l->_cost[0]["ether"] = 150;
+	armor_l->_productionTime[0] = 4500;
+	armor_l->addLevel();
+	armor_l->_cost[1]["bloc"] = 150;
+	armor_l->_cost[1]["ether"] = 300;
+	armor_l->_productionTime[1] = 6000;
 
 	lib_p.registerUpgrade(damage_l->_id, damage_l);
 	lib_p.registerUpgrade(armor_l->_id, armor_l);

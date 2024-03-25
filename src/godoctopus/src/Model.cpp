@@ -343,9 +343,11 @@ void ModelView::init(Controller const *controller_p, EntityHandle const * produc
     }
     else if(controller_p->getLib().hasUpgrade(name_l))
     {
-        _requirements = controller_p->getLib().getUpgrade(name_l)._requirements;
-        _cost = controller_p->getLib().getUpgrade(name_l)._cost;
-        productionTime_l = controller_p->getLib().getUpgrade(name_l)._productionTime;
+        unsigned long upgradeLvl_l = getUpgradeLvl(player_l, name_l);
+        octopus::Upgrade const &upgrade_l = controller_p->getLib().getUpgrade(name_l);
+        _requirements = octopus::getRequirements(upgrade_l, upgradeLvl_l);
+        _cost = octopus::getCost(upgrade_l, upgradeLvl_l);
+        productionTime_l = octopus::getProductionTime(upgrade_l, upgradeLvl_l);
     }
     _productionTime = productionTime_l / productionSpeed_l;
     // initialize tool tip parameters

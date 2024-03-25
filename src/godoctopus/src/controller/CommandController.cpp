@@ -136,7 +136,7 @@ void add_stop_commands(std::list<octopus::Command*> &list_r, octopus::State cons
     }
 }
 
-unsigned long remainingQueueTime(octopus::Building const &building_p)
+unsigned long remainingQueueTime(octopus::Building const &building_p, octopus::State const &state_p)
 {
 	// remaining queue time
 	unsigned long time_l = 0;
@@ -146,9 +146,17 @@ unsigned long remainingQueueTime(octopus::Building const &building_p)
 	    for(octopus::CommandBundle const &bundle_l : building_p.getQueue().getList())
 		{
 			octopus::ProductionData const *data_l = dynamic_cast<octopus::ProductionData const *>(getData(bundle_l._var));
-			if(data_l && data_l->_completeTime > data_l->_progression)
+            if(!data_l)
+            {
+                continue;
+            }
+
+            octopus::Player const &player_l = *state_p.getPlayer(building_p._player);
+            octopus::Fixed completeTime_l = data_l->getCompleteTime(player_l);
+
+			if(completeTime_l > data_l->_progression)
 			{
-				time_l += octopus::to_double(data_l->_completeTime - data_l->_progression);
+				time_l += octopus::to_double(completeTime_l - data_l->_progression);
 			}
 		}
 	}
@@ -182,7 +190,7 @@ octopus::Handle getBestProductionBuilding(PackedInt32Array const &handles_p, oct
         }
 
         // get production time queued up
-        unsigned long queueTime_l = remainingQueueTime(*building_l);
+        unsigned long queueTime_l = remainingQueueTime(*building_l, state_p);
 
         if(!found_l || queueTime_l < lowestQueue_l)
         {

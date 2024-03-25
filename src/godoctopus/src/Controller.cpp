@@ -1410,9 +1410,12 @@ void Controller::get_productions(TypedArray<EntityHandle> const &handles_p, int 
 {
 	std::vector<CommandInfo> vecCommands_l;
 
+	unsigned long playerIdx_l = 0;
+
 	for(uint32_t i = 0 ; i < handles_p.size() ; ++ i)
 	{
 		octopus::Entity const * ent_l = _state->getEntity(castHandle(handles_p[i]));
+		playerIdx_l = ent_l->_player;
 		uint32_t posInQueue_l = 0;
 		for(octopus::CommandBundle const &bundle_l : ent_l->getQueue().getList())
 		{
@@ -1428,11 +1431,13 @@ void Controller::get_productions(TypedArray<EntityHandle> const &handles_p, int 
 
 	std::sort(vecCommands_l.begin(), vecCommands_l.end(), CommandSorter());
 
+	octopus::Player const &player_l = *_state->getPlayer(playerIdx_l);
+
 	for(uint32_t i = 0 ; i < std::min<uint32_t>(vecCommands_l.size(), max_p) ; ++i)
 	{
 		CommandInfo const &info_l = vecCommands_l[i];
 		String model_l(info_l.data->getIdModel().c_str());
-		float progress_l = octopus::to_double(info_l.data->_progression/info_l.data->_completeTime*100.);
+		float progress_l = octopus::to_double(info_l.data->_progression/info_l.data->getCompleteTime(player_l)*100.);
 		emit_signal("production_command", int(info_l.handle.index), int(info_l.handle.revision), int(info_l.idx), model_l, progress_l);
 	}
 }
