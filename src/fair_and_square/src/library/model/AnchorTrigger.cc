@@ -13,7 +13,7 @@
 #include "anchor_trigger/AnchorTriggerOptionGenerator.hh"
 
 AnchorTrigger::AnchorTrigger(octopus::Library const &lib_p, octopus::RandomGenerator &rand_p, double bonus_p,
-    unsigned long player_p, std::vector<fas::DivinityType> const &forbidden_p) :
+    unsigned long player_p, std::vector<fas::SurvivalSpecialType> const &forbidden_p) :
     octopus::OnEachTrigger(new octopus::ListenerEntityModelFinished(&lib_p.getBuildingModel("anchor"), player_p)),
     _player(player_p),
     _lib(lib_p),
@@ -25,7 +25,7 @@ AnchorTrigger::AnchorTrigger(octopus::Library const &lib_p, octopus::RandomGener
 std::vector<Option> generateOpeningOptions(
 	std::string const &id_p,
 	unsigned long seed_p,
-	std::vector<fas::DivinityType> const &forbidden_p,
+	std::vector<fas::SurvivalSpecialType> const &forbidden_p,
 	unsigned long playerIdx_p,
 	octopus::State const &state_p)
 {
@@ -34,29 +34,29 @@ std::vector<Option> generateOpeningOptions(
 	Option divOption_l;
 
 	octopus::Player const &player_l = *state_p.getPlayer(playerIdx_p);
-	std::vector<fas::DivinityType> exceptions_l = fas::getMaxedOutDivinities(player_l);
+	std::vector<fas::SurvivalSpecialType> exceptions_l = fas::getMaxedOutSurvivalSpecialTypes(player_l);
 	exceptions_l.insert(exceptions_l.end(), forbidden_p.begin(), forbidden_p.end());
 
-	fas::DivinityType firstType_l = fas::rollOneRandomDivinity(rand_l, exceptions_l);
-	if(firstType_l != fas::DivinityType::None)
+	fas::SurvivalSpecialType firstType_l = fas::rollOneRandomSurvivalSpecialType(rand_l, exceptions_l);
+	if(firstType_l != fas::SurvivalSpecialType::None)
 	{
-		divOption_l._playerOption = DivinityOption {playerIdx_p, firstType_l};
+		divOption_l._playerOption = SurvivalOption {playerIdx_p, firstType_l};
 		options_l.push_back(divOption_l);
 		exceptions_l.push_back(firstType_l);
 	}
 
-	fas::DivinityType secondType_l = fas::rollOneRandomDivinity(rand_l, exceptions_l);
-	if(secondType_l != fas::DivinityType::None)
+	fas::SurvivalSpecialType secondType_l = fas::rollOneRandomSurvivalSpecialType(rand_l, exceptions_l);
+	if(secondType_l != fas::SurvivalSpecialType::None)
 	{
-		divOption_l._playerOption = DivinityOption {playerIdx_p, secondType_l};
+		divOption_l._playerOption = SurvivalOption {playerIdx_p, secondType_l};
 		options_l.push_back(divOption_l);
 		exceptions_l.push_back(secondType_l);
 	}
 
-	fas::DivinityType thirdType_l = fas::rollOneRandomDivinity(rand_l, exceptions_l);
-	if(thirdType_l != fas::DivinityType::None)
+	fas::SurvivalSpecialType thirdType_l = fas::rollOneRandomSurvivalSpecialType(rand_l, exceptions_l);
+	if(thirdType_l != fas::SurvivalSpecialType::None)
 	{
-		divOption_l._playerOption = DivinityOption {playerIdx_p, thirdType_l};
+		divOption_l._playerOption = SurvivalOption {playerIdx_p, thirdType_l};
 		options_l.push_back(divOption_l);
 		exceptions_l.push_back(thirdType_l);
 	}
@@ -67,7 +67,7 @@ std::vector<Option> generateOpeningOptions(
 std::vector<Option> generateOptions(
 	std::string const &id_p,
 	unsigned long seed_p,
-	std::vector<fas::DivinityType> const &forbidden_p,
+	std::vector<fas::SurvivalSpecialType> const &forbidden_p,
 	unsigned long playerIdx_p,
 	octopus::State const &state_p)
 {

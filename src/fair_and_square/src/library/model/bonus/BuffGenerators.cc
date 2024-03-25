@@ -41,6 +41,16 @@ void genStep(Library const &lib_p, std::vector<Steppable *> &steppables_p, ::Div
     steppables_p.push_back(new PlayerLevelUpUpgradeStep(option_p._player, fas::divinityUpgradeName(option_p._div)));
 }
 
+void genStep(Library const &lib_p, std::vector<Steppable *> &steppables_p, SurvivalOption const &option_p)
+{
+    std::vector<Steppable *> playerBuilding_l = newPlayerBuilding(option_p._player, option_p._type, lib_p);
+    for(Steppable * steppable_l : playerBuilding_l)
+    {
+        steppables_p.push_back(steppable_l);
+    }
+    steppables_p.push_back(new PlayerLevelUpUpgradeStep(option_p._player, fas::survivalSpecialTypeName(option_p._type)));
+}
+
 std::vector<Steppable *> BuffGenerator::genSteppables(octopus::State const &state_p, unsigned long options_p) const
 {
     std::vector<Steppable *> steps_l;

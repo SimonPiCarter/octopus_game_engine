@@ -119,6 +119,20 @@ void Option::update(DivinityOption const &option_p)
 	set_option(option_p._player, option_p._div);
 }
 
+void Option::update(SurvivalOption const &option_p)
+{
+    _params.clear();
+    _desc.clear();
+    _stats_name.clear();
+
+    _modifier_name = "";
+    _model_name = fas::survivalSpecialTypeName(option_p._type).c_str();
+    _player = option_p._player;
+    _stats_name.push_back("");
+    _params.push_back(TypedArray<String>());
+	_desc.push_back((fas::survivalSpecialTypeName(option_p._type)+"_tooltip").c_str());
+}
+
 void Option::updateFromModifier(octopus::NoModifier const &mod_p)
 {
     _modifier_name = "NoModifier";

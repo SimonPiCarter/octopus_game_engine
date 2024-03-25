@@ -55,7 +55,7 @@ std::vector<octopus::Steppable*> defaultGenerator() { return {new WaveStep()}; }
 std::string genModelName(RandomGenerator &gen_p)
 {
 	std::string model_l = "square";
-	int random_l = gen_p.roll(0, 2);
+	int random_l = gen_p.roll(1, 2);
 	if(random_l==1)
 	{
 		model_l = "triangle";

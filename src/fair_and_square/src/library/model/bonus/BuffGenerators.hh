@@ -11,6 +11,7 @@
 #include "utils/RandomGenerator.hh"
 
 #include "library/model/divinity/DivinityModelLoader.hh"
+#include "library/model/survival/SurvivalModelLoader.hh"
 
 namespace octopus
 {
@@ -49,7 +50,13 @@ struct DivinityOption
     fas::DivinityType _div;
 };
 
-using SingleOption = std::variant<NoOption, BuffOption, ModifierOption, DoubleBuffOption, DivinityOption>;
+struct SurvivalOption
+{
+    unsigned long _player;
+    fas::SurvivalSpecialType _type;
+};
+
+using SingleOption = std::variant<NoOption, BuffOption, ModifierOption, DoubleBuffOption, DivinityOption, SurvivalOption>;
 
 struct Option
 {

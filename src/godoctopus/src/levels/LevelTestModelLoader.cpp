@@ -55,7 +55,7 @@ std::list<Steppable *> LevelSteps(Library &lib_p, RandomGenerator &rand_p, bool 
 	unsigned long idx_first_player_p, unsigned long nb_players_p)
 {
 	loadMinimalModels(lib_p);
-	loadSurvivalModels(lib_p);
+	fas::loadSurvivalModels(lib_p);
 
 	// load divinity library
 	fas::loadLibrary(lib_p);

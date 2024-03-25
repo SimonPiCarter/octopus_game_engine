@@ -10,6 +10,7 @@
 #include "library/model/ModelLoader.hh"
 #include "library/model/TimerDamage.hh"
 #include "library/model/divinity/DivinityModelLoader.hh"
+#include "library/model/survival/SurvivalModelLoader.hh"
 
 // octopus
 #include "controller/trigger/Listener.hh"
@@ -86,6 +87,7 @@ std::list<Steppable *> DemoLevelSteps(
 
 	// load divinity library
 	fas::loadLibrary(lib_p);
+	fas::loadSurvivalModels(lib_p);
 
 	std::list<Steppable *> spawners_l = {};
 
@@ -139,7 +141,7 @@ std::list<Steppable *> DemoLevelSteps(
 	{
 		unsigned long playerIdx_l = 2+i;
 
-		fas::addBuildingPlayer(spawners_l, playerIdx_l, {}, lib_p);
+		fas::addSurvivalBuildingPlayer(spawners_l, playerIdx_l, lib_p);
 		// lose trigger
 		spawners_l.push_back(new TriggerSpawn(new OnEachFunctionTrigger(
 			new ListenerEntityModelDied(&lib_p.getBuildingModel("gate"), playerIdx_l),
@@ -156,10 +158,10 @@ std::list<Steppable *> DemoLevelSteps(
 		{
 			spawners_l.push_back(new FlyingCommandSpawnStep(new TimerDamage(flyingCommandHandle_l++, anchorTickRate_l, 0, playerIdx_l, "Anchor", Handle(gateHandle_l))));
 		}
-		std::vector<fas::DivinityType> forbidden_l;
+		std::vector<fas::SurvivalSpecialType> forbidden_l;
 		if(demo_p)
 		{
-			forbidden_l = notDemoDivinities();
+			forbidden_l = fas::notDemoSurvivalSpecialTypes();
 		}
 		spawners_l.push_back(new TriggerSpawn(new AnchorTrigger(lib_p, rand_p, 150, playerIdx_l, forbidden_l)));
 		unsigned long seed_l = rand_p.roll(0,std::numeric_limits<int>::max());

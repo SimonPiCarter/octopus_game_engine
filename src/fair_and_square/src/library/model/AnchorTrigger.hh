@@ -8,7 +8,7 @@
 #include "utils/RandomGenerator.hh"
 
 #include "library/model/bonus/BuffGenerators.hh"
-#include "library/model/divinity/DivinityModelLoader.hh"
+#include "library/model/survival/SurvivalModelLoader.hh"
 
 namespace octopus
 {
@@ -20,7 +20,7 @@ class AnchorTrigger : public octopus::OnEachTrigger
 {
 public:
 	AnchorTrigger(octopus::Library const &lib_p, octopus::RandomGenerator &rand_p, double bonus_p,
-		unsigned long player_p=0, std::vector<fas::DivinityType> const &forbidden_p={});
+		unsigned long player_p=0, std::vector<fas::SurvivalSpecialType> const &forbidden_p={});
 	virtual void trigger(octopus::State const &, octopus::Step &step_p, unsigned long, octopus::TriggerData const &) const override;
 
 private:
@@ -31,7 +31,7 @@ private:
 
 	double const _bonus;
 
-	std::vector<fas::DivinityType> const _forbidden;
+	std::vector<fas::SurvivalSpecialType> const _forbidden;
 
 	/// @brief count of trigger during the game to generate buff id
 	/// need to be mutable to be incremented when triggering
@@ -41,14 +41,14 @@ private:
 std::vector<Option> generateOpeningOptions(
 	std::string const &id_p,
 	unsigned long seed_p,
-	std::vector<fas::DivinityType> const &forbidden_p,
+	std::vector<fas::SurvivalSpecialType> const &forbidden_p,
 	unsigned long playerIdx_p,
 	octopus::State const &state_p);
 
 std::vector<Option> generateOptions(
 	std::string const &id_p,
 	unsigned long seed_p,
-	std::vector<fas::DivinityType> const &forbidden_p,
+	std::vector<fas::SurvivalSpecialType> const &forbidden_p,
 	unsigned long playerIdx_p,
 	octopus::State const &state_p);
 
