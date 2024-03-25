@@ -1,6 +1,7 @@
 #ifndef __Upgrade__
 #define __Upgrade__
 
+#include <map>
 #include <string>
 #include <vector>
 
@@ -23,8 +24,11 @@ struct Upgrade
     /// @brief requirements
     Requirements _requirements;
 
-    /// @brief cost
+    /// @brief cost for level 0
     std::map<std::string, Fixed> _cost;
+
+    /// @brief cost for level > 0 (first element is the cost for level = 1)
+    std::vector< std::map<std::string, Fixed> > _costAdvanced;
 
     /// @brief time required to produce the upgrade
     int _productionTime = 100;
@@ -36,6 +40,14 @@ struct Upgrade
 
     bool _repeatable { false };
 };
+
+/// @brief Helper to get the upgrade cost based on its level
+/// @param upgrade_p upgrade
+/// @param level_p level
+/// @return a cost map
+std::map<std::string, Fixed> const &getCost(Upgrade const &upgrade_p, unsigned long level_p);
+
+unsigned long getMaxLevel(Upgrade const &upgrade_p);
 
 } // namespace octopus
 

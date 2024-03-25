@@ -40,7 +40,8 @@ void BuildingUpgradeProductionCommand::registerCommand(Step & step_p, State cons
 	}
 
 	Player const &player_l = *state_p.getPlayer(building_l->_player);
-	std::string missingRes_l = checkResource(state_p, building_l->_player, _upgrade->_cost, step_p.getResourceSpent(building_l->_player));
+	std::map<std::string, Fixed> const &cost_l = getCost(*_upgrade, getUpgradeLvl(player_l, _upgrade->_id));
+	std::string missingRes_l = checkResource(state_p, building_l->_player, cost_l, step_p.getResourceSpent(building_l->_player));
 	bool canProduce_l = building_l->_buildingModel.canProduce(_upgrade);
 	bool inStep = step_p.isUpgradeProduced(building_l->_player, _upgrade->_id);
 	bool req_l = checkUpgradeRequirements(player_l, *_upgrade);
@@ -50,7 +51,7 @@ void BuildingUpgradeProductionCommand::registerCommand(Step & step_p, State cons
 	&& req_l
 	&& (_upgrade->_repeatable || !inStep))
 	{
-		step_p.addSteppable(new PlayerSpendResourceStep(building_l->_player, _upgrade->_cost));
+		step_p.addSteppable(new PlayerSpendResourceStep(building_l->_player, cost_l));
 		step_p.addSteppable(new CommandSpawnStep(this));
 		step_p.addSteppable(new PlayerProducedUpgradeStep(building_l->_player, _upgrade->_id, true));
 	}
@@ -96,8 +97,10 @@ bool BuildingUpgradeProductionCommand::applyCommand(Step & step_p, State const &
 		step_p.addSteppable(new PlayerProducedUpgradeStep(building_l->_player, _upgrade->_id, false));
 		if(_upgrade->_generator)
 		{
+			Player const &player_l = *state_p.getPlayer(building_l->_player);
+			unsigned long upgrade_lvl = getUpgradeLvl(player_l, _upgrade->_id);
 			// set all steppable unlocked by the upgrade
-			for(Steppable *steppable_l : _upgrade->_generator->getSteppables(building_l->_player))
+			for(Steppable *steppable_l : _upgrade->_generator->getSteppables(building_l->_player, upgrade_lvl))
 			{
 				step_p.addSteppable(steppable_l);
 			}

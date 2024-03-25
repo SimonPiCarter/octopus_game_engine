@@ -19,7 +19,7 @@ StepUpgradeGenerator* StepUpgradeTyppedBuffGenerator::newCopy() const
     return new StepUpgradeTyppedBuffGenerator(_buffs, _models);
 }
 
-std::vector<Steppable *> StepUpgradeTyppedBuffGenerator::getSteppables(unsigned long player_p) const
+std::vector<Steppable *> StepUpgradeTyppedBuffGenerator::getSteppables(unsigned long player_p, unsigned long) const
 {
     std::vector<Steppable *> vect_l;
 

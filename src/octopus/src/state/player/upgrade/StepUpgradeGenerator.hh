@@ -20,10 +20,11 @@ public:
     /// @return a newly created copy of this genertor
     virtual StepUpgradeGenerator* newCopy() const = 0;
 
-    /// @brief get internal steppable for the given option
-    /// @param options_p the option index
+    /// @brief get internal steppable for the given upgrade
+    /// @param player_p the player index
+    /// @param level_p the level being upgraded
     /// @return a vector of steppables (owner is given away)
-    virtual std::vector<Steppable *> getSteppables(unsigned long player_p) const = 0;
+    virtual std::vector<Steppable *> getSteppables(unsigned long player_p, unsigned long level_p) const = 0;
 };
 
 } // namespace octopus
