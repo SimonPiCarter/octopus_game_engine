@@ -149,11 +149,11 @@ void createUpgrades(Library &lib_p)
 	);
 	damage_l->_cost[0]["bloc"] = 150;
 	damage_l->_cost[0]["ether"] = 150;
-	damage_l->_productionTime[0] = 100;
+	damage_l->_productionTime[0] = 4500;
 	damage_l->addLevel();
 	damage_l->_cost[1]["bloc"] = 150;
 	damage_l->_cost[1]["ether"] = 300;
-	damage_l->_productionTime[1] = 300;
+	damage_l->_productionTime[1] = 6000;
 
 	Upgrade *armor_l = new Upgrade(
 		"survival_armor_upgrade.1",
