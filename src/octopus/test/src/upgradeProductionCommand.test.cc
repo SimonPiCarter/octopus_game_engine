@@ -40,7 +40,7 @@ TEST(upgradeProductionCommandTest, simple)
 	buff_l._type = TyppedBuff::Type::Production;
 	buff_l._coef = 0.1;
 	Upgrade up_l("upgrade", new StepUpgradeTyppedBuffGenerator(buff_l, {"prod"}));
-	up_l._productionTime = 5;
+	up_l._productionTime[0] = 5;
 
 	// up production
 	BuildingUpgradeProductionCommand * command_l = new BuildingUpgradeProductionCommand(Handle(0),Handle(0), up_l);
@@ -101,8 +101,8 @@ TEST(upgradeProductionCommandTest, simple_non_repeatable)
 	buff_l._type = TyppedBuff::Type::Production;
 	buff_l._coef = 0.1;
 	Upgrade up_l("upgrade", new StepUpgradeTyppedBuffGenerator(buff_l, {"prod"}));
-	up_l._cost["bloc"] = 10;
-	up_l._productionTime = 5;
+	up_l._cost[0]["bloc"] = 10;
+	up_l._productionTime[0] = 5;
 
 	// up production
 	BuildingUpgradeProductionCommand * command_l = new BuildingUpgradeProductionCommand(Handle(0),Handle(0), up_l);

@@ -40,7 +40,13 @@ void BuildingUpgradeProductionCommand::registerCommand(Step & step_p, State cons
 	}
 
 	Player const &player_l = *state_p.getPlayer(building_l->_player);
-	std::map<std::string, Fixed> const &cost_l = getCost(*_upgrade, getUpgradeLvl(player_l, _upgrade->_id));
+	unsigned long upgradeLvl_l = getUpgradeLvl(player_l, _upgrade->_id);
+
+	// update data
+	_data._level = upgradeLvl_l;
+
+
+	std::map<std::string, Fixed> const &cost_l = getCost(*_upgrade, upgradeLvl_l);
 	std::string missingRes_l = checkResource(state_p, building_l->_player, cost_l, step_p.getResourceSpent(building_l->_player));
 	bool canProduce_l = building_l->_buildingModel.canProduce(_upgrade);
 	bool inStep = step_p.isUpgradeProduced(building_l->_player, _upgrade->_id);
@@ -49,7 +55,7 @@ void BuildingUpgradeProductionCommand::registerCommand(Step & step_p, State cons
 	if(missingRes_l == ""
 	&& canProduce_l
 	&& req_l
-	&& (_upgrade->_repeatable || !inStep))
+	&& !inStep)
 	{
 		step_p.addSteppable(new PlayerSpendResourceStep(building_l->_player, cost_l));
 		step_p.addSteppable(new CommandSpawnStep(this));
@@ -76,6 +82,8 @@ bool BuildingUpgradeProductionCommand::applyCommand(Step & step_p, State const &
 {
 	Logger::getDebug() << "BuildingUpgradeProductionCommand:: apply Command "<<_source <<std::endl;
 	Building const * building_l = dynamic_cast<Building const *>(state_p.getEntity(_source));
+	Player const &player_l = *state_p.getPlayer(building_l->_player);
+	unsigned long upgradeLvl_l = getUpgradeLvl(player_l, _upgrade->_id);
 
 	if(_data._canceled)
 	{
@@ -83,7 +91,7 @@ bool BuildingUpgradeProductionCommand::applyCommand(Step & step_p, State const &
 		return true;
 	}
 
-	if(_data._progression < _data._upgrade->_productionTime)
+	if(_data._progression < getProductionTime(*_data._upgrade, upgradeLvl_l))
 	{
 		Logger::getDebug() << "BuildingUpgradeProductionCommand :: adding production progression step " <<std::endl;
 		step_p.addSteppable(new ProductionProgressionStep(_handleCommand, building_l->getProduction()));

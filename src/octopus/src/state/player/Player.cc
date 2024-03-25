@@ -116,9 +116,10 @@ std::list<UnitModel const *> getAvailableUnitModels(BuildingModel const &buildin
 
 bool checkUpgradeRequirements(Player const &player_p, Upgrade const &upgrade_p)
 {
-	bool metRequirement_l = meetRequirements(upgrade_p._requirements, player_p);
+	unsigned long upgradeLvl_l = getUpgradeLvl(player_p, upgrade_p._id);
+	bool metRequirement_l = meetRequirements(getRequirements(upgrade_p, upgradeLvl_l), player_p);
 	bool beingProduced_l = player_p._producedUpgrade.find(upgrade_p._id) != player_p._producedUpgrade.end();
-	bool canBeProducedOnceMore_l = getUpgradeLvl(player_p, upgrade_p._id) < getMaxLevel(upgrade_p) || upgrade_p._repeatable;
+	bool canBeProducedOnceMore_l = getUpgradeLvl(player_p, upgrade_p._id) < getMaxLevel(upgrade_p);
 	return metRequirement_l && canBeProducedOnceMore_l && !beingProduced_l;
 }
 
