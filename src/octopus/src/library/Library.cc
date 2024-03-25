@@ -54,6 +54,11 @@ BuildingModel const & Library::getBuildingModel(std::string const &id_p) const
 	return *_mapBuildingModel.at(id_p);
 }
 
+BuildingModel & Library::getBuildingModel(std::string const &id_p)
+{
+	return *_mapBuildingModel.at(id_p);
+}
+
 bool Library::hasBuildingModel(std::string const &id_p) const
 {
 	return _mapBuildingModel.find(id_p) != _mapBuildingModel.end();
