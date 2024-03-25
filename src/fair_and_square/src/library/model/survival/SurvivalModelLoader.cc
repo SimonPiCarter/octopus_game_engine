@@ -141,10 +141,64 @@ public:
 	}
 };
 
+class UpgradeHarvest : public StepUpgradeGenerator
+{
+public:
+	UpgradeHarvest(std::string const &name_p) : _name(name_p) {}
+	std::string const _name;
+    /// @brief Create a new copy of this generator
+    /// this is required to ease up memory handling between steps and states for options handling
+    /// @return a newly created copy of this genertor
+    virtual StepUpgradeGenerator* newCopy() const
+	{
+		return new UpgradeHarvest(_name);
+	}
+
+    /// @brief get internal steppable for the given option
+    /// @param options_p the option index
+    /// @return a vector of steppables (owner is given away)
+    virtual std::vector<Steppable *> getSteppables(unsigned long player_p, unsigned long level_p) const
+	{
+		std::vector<Steppable *> steps_l;
+		TimedBuff buff_l;
+		buff_l._type = TyppedBuff::Type::Harvest;
+		buff_l._coef = 0.1;
+		std::stringstream name_l;
+		name_l<<_name<<"."<<level_p;
+		buff_l._id = name_l.str();
+		for(std::string const &model_l : {"gate", "command_center", "deposit"})
+		{
+    		steps_l.push_back(new PlayerBuffAllStep(player_p, buff_l, model_l));
+		}
+		return steps_l;
+	}
+};
+
 void createUpgrades(Library &lib_p)
 {
+	Upgrade *harvest_l = new Upgrade(
+		"survival_harvest_upgrade",
+		new UpgradeHarvest("survival_harvest_upgrade")
+	);
+	harvest_l->_cost[0]["bloc"] = 150;
+	harvest_l->_cost[0]["ether"] = 150;
+	harvest_l->_productionTime[0] = 4500;
+	harvest_l->addLevel();
+	harvest_l->_cost[1]["bloc"] = 150;
+	harvest_l->_cost[1]["ether"] = 300;
+	harvest_l->_productionTime[1] = 6000;
+	harvest_l->addLevel();
+	harvest_l->_cost[2]["bloc"] = 150;
+	harvest_l->_cost[2]["ether"] = 300;
+	harvest_l->_cost[2]["irium"] = 300;
+	harvest_l->_productionTime[2] = 9000;
+
+	lib_p.registerUpgrade(harvest_l->_id, harvest_l);
+	lib_p.getBuildingModel("gate")._upgrades.push_back(harvest_l);
+	lib_p.getBuildingModel("command_center")._upgrades.push_back(harvest_l);
+
 	Upgrade *damage_l = new Upgrade(
-		"survival_damage_upgrade.1",
+		"survival_damage_upgrade",
 		new UpgradeBasic<1, TyppedBuff::Type::Damage>("survival_damage_upgrade")
 	);
 	damage_l->_cost[0]["bloc"] = 150;
@@ -156,7 +210,7 @@ void createUpgrades(Library &lib_p)
 	damage_l->_productionTime[1] = 6000;
 
 	Upgrade *armor_l = new Upgrade(
-		"survival_armor_upgrade.1",
+		"survival_armor_upgrade",
 		new UpgradeBasic<1, TyppedBuff::Type::Armor>("survival_armor_upgrade")
 	);
 	armor_l->_cost[0]["bloc"] = 150;
