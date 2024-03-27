@@ -139,7 +139,7 @@ std::list<Steppable *> Mission3Steps(Library &lib_p, RandomGenerator &rand_p, in
 	std::vector<octopus::Vector> rolledSpawns_l = rollSpawnPoints(paramFirst_l.spawnPoints, paramFirst_l.nSpawnPoints, rand_p);
 
 	WaveSpawn * triggerWave_l = new WaveSpawn(new ListenerStepCount(firstWave_l.earlyWave.steps), firstWave_l, rolledSpawns_l, true,
-			lib_p, rand_p, params_l, 1, mission3Generator);
+			lib_p, rand_p, params_l, 1, {}, mission3Generator, {});
 	triggerWave_l->setEndless(true);
 
 	spawners_l.push_back(new TriggerSpawn(triggerWave_l));

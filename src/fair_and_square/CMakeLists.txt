@@ -24,6 +24,7 @@ add_library(fair_and_square_lib
 	${CMAKE_CURRENT_SOURCE_DIR}/src/library/model/divinity/generators/ProductionDivinityStepGenerator.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/library/model/divinity/generators/RecycleDivinityStepGenerator.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/library/model/survival/SurvivalModelLoader.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/src/library/model/wave_buff/WaveBuffGenerator.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/library/levels/ArenaLevel.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/library/levels/LevelId.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/library/levels/MazeLevel.cc

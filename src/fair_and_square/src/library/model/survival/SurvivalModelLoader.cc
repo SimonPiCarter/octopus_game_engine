@@ -64,7 +64,7 @@ void createSurvivalAttackSpeed(Library &lib_p)
 
 	lib_p.registerUnitModel("survival_attackspeed", unitModel_l);
 
-	createSpecialBuilding("survival_attackspeed", "survival_Survival_building", lib_p);
+	createSpecialBuilding("survival_attackspeed", "survival_AttackSpeed_building", lib_p);
 }
 
 void createSurvivalTank(Library &lib_p)
@@ -89,7 +89,7 @@ void createSurvivalTank(Library &lib_p)
 
 void createSurvivalAoe(Library &lib_p)
 {
-	UnitModel unitModel_l { false, 0.5, 0.025, 75 };
+	UnitModel unitModel_l { false, 0.5, 0.04, 75 };
 	unitModel_l._isUnit = true;
 	unitModel_l._productionTime = 4000;
 	unitModel_l._cost["bloc"] = 50;

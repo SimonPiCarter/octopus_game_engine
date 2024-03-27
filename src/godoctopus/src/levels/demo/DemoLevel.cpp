@@ -132,8 +132,18 @@ std::list<Steppable *> DemoLevelSteps(
 	WaveInfo firstWave_l = rollWave(rand_p, paramFirst_l.wavePool);
 	std::vector<octopus::Vector> rolledSpawns_l = rollSpawnPoints(paramFirst_l.spawnPoints, paramFirst_l.nSpawnPoints, rand_p);
 
+	std::vector<fas::SurvivalSpecialType> forbidden_l;
+	if(demo_p)
+	{
+		forbidden_l = fas::notDemoSurvivalSpecialTypes();
+	}
+	std::vector<unsigned long> playersIdx_l;
+	for(unsigned long i = 0 ; i < playerCount_p ; ++ i)
+	{
+		playersIdx_l.push_back(2+i);
+	}
 	Trigger * triggerWave_l = new WaveSpawn(new ListenerStepCount(firstWave_l.earlyWave.steps), firstWave_l, rolledSpawns_l, true,
-			lib_p, rand_p, params_l, player_p, demoGenerator);
+			lib_p, rand_p, params_l, player_p, playersIdx_l, demoGenerator, forbidden_l);
 
 	spawners_l.push_back(new TriggerSpawn(triggerWave_l));
 	Handle flyingCommandHandle_l(0);
@@ -157,11 +167,6 @@ std::list<Steppable *> DemoLevelSteps(
 		for(unsigned long gateHandle_l : handles_l)
 		{
 			spawners_l.push_back(new FlyingCommandSpawnStep(new TimerDamage(flyingCommandHandle_l++, anchorTickRate_l, 0, playerIdx_l, "Anchor", Handle(gateHandle_l))));
-		}
-		std::vector<fas::SurvivalSpecialType> forbidden_l;
-		if(demo_p)
-		{
-			forbidden_l = fas::notDemoSurvivalSpecialTypes();
 		}
 		spawners_l.push_back(new TriggerSpawn(new AnchorTrigger(lib_p, rand_p, 150, playerIdx_l, forbidden_l)));
 		unsigned long seed_l = rand_p.roll(0,std::numeric_limits<int>::max());
