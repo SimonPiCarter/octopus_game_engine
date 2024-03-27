@@ -175,9 +175,12 @@ void WaveClearTrigger::trigger(octopus::State const &state_p, octopus::Step &ste
 	}
 
 	std::vector<WaveBuffGenerator> buffs_l = getWaveBuffGenerator(_rand, generateWaveBuffGenerators(_count), 1);
-	std::string model_l = buffs_l[0].model;
-	octopus::TimedBuff buff_l = buffs_l[0].buff;
-	step_p.addSteppable(new PlayerBuffAllStep(_playerSpawn, buff_l, model_l));
+	for(WaveBuffGenerator const &buffGen_l : buffs_l)
+	{
+		std::string model_l = buffGen_l.model;
+		octopus::TimedBuff buff_l = buffGen_l.buff;
+		step_p.addSteppable(new PlayerBuffAllStep(_playerSpawn, buff_l, model_l));
+	}
 }
 
 std::vector<octopus::Vector> rollSpawnPoints(std::vector<octopus::Vector> const &candidates_p, unsigned long number_p, octopus::RandomGenerator &rand_p)
