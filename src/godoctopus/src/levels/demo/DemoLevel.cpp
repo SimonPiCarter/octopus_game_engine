@@ -83,7 +83,14 @@ std::list<Steppable *> DemoLevelSteps(
 		nSpawnPoints_l = 3;
 	}
 
+	std::vector<fas::SurvivalSpecialType> forbidden_l;
+	if(demo_p)
+	{
+		forbidden_l = fas::notDemoSurvivalSpecialTypes();
+	}
+
 	loadMinimalModels(lib_p);
+	createOptionUpgrades(lib_p, rand_p, forbidden_l);
 
 	// load divinity library
 	fas::loadLibrary(lib_p);
@@ -132,11 +139,6 @@ std::list<Steppable *> DemoLevelSteps(
 	WaveInfo firstWave_l = rollWave(rand_p, paramFirst_l.wavePool);
 	std::vector<octopus::Vector> rolledSpawns_l = rollSpawnPoints(paramFirst_l.spawnPoints, paramFirst_l.nSpawnPoints, rand_p);
 
-	std::vector<fas::SurvivalSpecialType> forbidden_l;
-	if(demo_p)
-	{
-		forbidden_l = fas::notDemoSurvivalSpecialTypes();
-	}
 	std::vector<unsigned long> playersIdx_l;
 	for(unsigned long i = 0 ; i < playerCount_p ; ++ i)
 	{

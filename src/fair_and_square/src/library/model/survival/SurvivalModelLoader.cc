@@ -1,13 +1,21 @@
 #include "SurvivalModelLoader.hh"
 
+#include <vector>
+
+// octopus
 #include "library/Library.hh"
 #include "state/model/entity/UnitModel.hh"
 #include "state/model/entity/BuildingModel.hh"
 #include "state/model/entity/ResourceModel.hh"
 #include "state/player/upgrade/Upgrade.hh"
 #include "step/player/PlayerAddBuildingModel.hh"
+#include "step/player/PlayerAddOptionStep.hh"
 #include "step/player/PlayerBuffAllStep.hh"
 #include "step/player/PlayerSpawnStep.hh"
+#include "utils/RandomGenerator.hh"
+
+// fas
+#include "library/model/AnchorTrigger.hh"
 
 using namespace octopus;
 
@@ -174,24 +182,88 @@ public:
 	}
 };
 
+class UpgradeOption : public StepUpgradeGenerator
+{
+public:
+	UpgradeOption(
+		std::string const &name_p,
+		octopus::RandomGenerator &rand_p,
+		std::vector<fas::SurvivalSpecialType> const &forbidden_p,
+		Library &lib_p
+	) : _name(name_p),
+		_rand(rand_p),
+		_forbidden(forbidden_p),
+		_lib(lib_p)
+	 {}
+	std::string const _name;
+	octopus::RandomGenerator &_rand;
+	std::vector<fas::SurvivalSpecialType> const _forbidden;
+	Library &_lib;
+
+    /// @brief Create a new copy of this generator
+    /// this is required to ease up memory handling between steps and states for options handling
+    /// @return a newly created copy of this genertor
+    virtual StepUpgradeGenerator* newCopy() const
+	{
+		return new UpgradeOption(_name, _rand, _forbidden, _lib);
+	}
+
+    /// @brief get internal steppable for the given option
+    /// @param options_p the option index
+    /// @return a vector of steppables (owner is given away)
+    virtual std::vector<Steppable *> getSteppables(unsigned long player_p, unsigned long level_p) const
+	{
+		std::stringstream name_l;
+		name_l<<_name<<"."<<level_p;
+		std::string nameStr_l = name_l.str();
+		unsigned long seed_l = _rand.roll(0,std::numeric_limits<int>::max());
+		auto optionsGenerator_l = [seed_l, forbidden_l = _forbidden, player_p, nameStr_l](const octopus::State &state_p) {
+			return generateOptions(
+						nameStr_l,
+						seed_l,
+						forbidden_l,
+						player_p,
+						state_p);
+		};
+
+		return {new PlayerAddOptionStep(player_p, "0", new BuffGenerator("0", optionsGenerator_l, _lib))};
+	}
+};
+
+void setUpUpgradeCost(Upgrade *up_p)
+{
+	const std::vector<std::map<std::string, long> > mapCosts_l {
+		{{"bloc", 150},		{"ether", 150},		{"irium", 0}		},
+		{{"bloc", 150},		{"ether", 300},		{"irium", 0}		},
+		{{"bloc", 150},		{"ether", 300},		{"irium", 300}		},
+		{{"bloc", 300},		{"ether", 450},		{"irium", 300}		},
+		{{"bloc", 450},		{"ether", 450},		{"irium", 450}		},
+		{{"bloc", 450},		{"ether", 900},		{"irium", 900}		},
+		{{"bloc", 450},		{"ether", 1800},	{"irium", 1800}		},
+		{{"bloc", 450},		{"ether", 3600},	{"irium", 3600}		},
+		{{"bloc", 450},		{"ether", 7200},	{"irium", 7200}		},
+		{{"bloc", 450},		{"ether", 14400},	{"irium", 14400}	},
+	};
+	for(size_t i = 0 ; i < mapCosts_l.size() ; ++ i)
+	{
+		if(i > 0)
+		{
+			up_p->addLevel();
+		}
+		up_p->_cost[i]["bloc"] = mapCosts_l[i].at("bloc");
+		up_p->_cost[i]["ether"] = mapCosts_l[i].at("ether");
+		up_p->_cost[i]["irium"] = mapCosts_l[i].at("irium");
+		up_p->_productionTime[i] = 6000;
+	}
+}
+
 void createUpgrades(Library &lib_p)
 {
 	Upgrade *harvest_l = new Upgrade(
 		"survival_harvest_upgrade",
 		new UpgradeHarvest("survival_harvest_upgrade")
 	);
-	harvest_l->_cost[0]["bloc"] = 150;
-	harvest_l->_cost[0]["ether"] = 150;
-	harvest_l->_productionTime[0] = 4500;
-	harvest_l->addLevel();
-	harvest_l->_cost[1]["bloc"] = 150;
-	harvest_l->_cost[1]["ether"] = 300;
-	harvest_l->_productionTime[1] = 6000;
-	harvest_l->addLevel();
-	harvest_l->_cost[2]["bloc"] = 150;
-	harvest_l->_cost[2]["ether"] = 300;
-	harvest_l->_cost[2]["irium"] = 300;
-	harvest_l->_productionTime[2] = 9000;
+	setUpUpgradeCost(harvest_l);
 
 	lib_p.registerUpgrade(harvest_l->_id, harvest_l);
 	lib_p.getBuildingModel("gate")._upgrades.push_back(harvest_l);
@@ -201,35 +273,13 @@ void createUpgrades(Library &lib_p)
 		"survival_damage_upgrade",
 		new UpgradeBasic<1, TyppedBuff::Type::Damage>("survival_damage_upgrade")
 	);
-	damage_l->_cost[0]["bloc"] = 150;
-	damage_l->_cost[0]["ether"] = 150;
-	damage_l->_productionTime[0] = 4500;
-	damage_l->addLevel();
-	damage_l->_cost[1]["bloc"] = 150;
-	damage_l->_cost[1]["ether"] = 300;
-	damage_l->_productionTime[1] = 6000;
-	damage_l->addLevel();
-	damage_l->_cost[2]["bloc"] = 150;
-	damage_l->_cost[2]["ether"] = 300;
-	damage_l->_cost[2]["irium"] = 300;
-	damage_l->_productionTime[2] = 9000;
+	setUpUpgradeCost(damage_l);
 
 	Upgrade *armor_l = new Upgrade(
 		"survival_armor_upgrade",
 		new UpgradeBasic<1, TyppedBuff::Type::Armor>("survival_armor_upgrade")
 	);
-	armor_l->_cost[0]["bloc"] = 150;
-	armor_l->_cost[0]["ether"] = 150;
-	armor_l->_productionTime[0] = 4500;
-	armor_l->addLevel();
-	armor_l->_cost[1]["bloc"] = 150;
-	armor_l->_cost[1]["ether"] = 300;
-	armor_l->_productionTime[1] = 6000;
-	armor_l->addLevel();
-	armor_l->_cost[2]["bloc"] = 150;
-	armor_l->_cost[2]["ether"] = 300;
-	armor_l->_cost[2]["irium"] = 300;
-	armor_l->_productionTime[2] = 9000;
+	setUpUpgradeCost(armor_l);
 
 	lib_p.registerUpgrade(damage_l->_id, damage_l);
 	lib_p.registerUpgrade(armor_l->_id, armor_l);
@@ -241,9 +291,16 @@ void createUpgrades(Library &lib_p)
 	lib_p.getBuildingModel("command_center")._upgrades.push_back(armor_l);
 }
 
-void createOptionUpgrades(Library &lib_p)
+void createOptionUpgrades(Library &lib_p, octopus::RandomGenerator &rand_p, std::vector<fas::SurvivalSpecialType> const &forbidden_p)
 {
-
+	Upgrade *option_l = new Upgrade(
+		"survival_option_upgrade",
+		new UpgradeOption("survival_option_upgrade", rand_p, forbidden_p, lib_p)
+	);
+	setUpUpgradeCost(option_l);
+	lib_p.registerUpgrade(option_l->_id, option_l);
+	lib_p.getBuildingModel("gate")._upgrades.push_back(option_l);
+	lib_p.getBuildingModel("command_center")._upgrades.push_back(option_l);
 }
 
 void loadSurvivalModels(Library &lib_p)

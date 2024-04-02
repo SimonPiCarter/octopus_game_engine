@@ -30,6 +30,7 @@ enum class SurvivalSpecialType
 	None
 };
 
+void createOptionUpgrades(octopus::Library &lib_p, octopus::RandomGenerator &rand_p, std::vector<fas::SurvivalSpecialType> const &forbidden_p);
 void loadSurvivalModels(octopus::Library &lib_p);
 
 std::vector<octopus::Steppable *> newPlayerBuilding(unsigned long player_p, SurvivalSpecialType type_p, octopus::Library const &lib_p);
