@@ -208,6 +208,11 @@ void createUpgrades(Library &lib_p)
 	damage_l->_cost[1]["bloc"] = 150;
 	damage_l->_cost[1]["ether"] = 300;
 	damage_l->_productionTime[1] = 6000;
+	damage_l->addLevel();
+	damage_l->_cost[2]["bloc"] = 150;
+	damage_l->_cost[2]["ether"] = 300;
+	damage_l->_cost[2]["irium"] = 300;
+	damage_l->_productionTime[2] = 9000;
 
 	Upgrade *armor_l = new Upgrade(
 		"survival_armor_upgrade",
@@ -220,6 +225,11 @@ void createUpgrades(Library &lib_p)
 	armor_l->_cost[1]["bloc"] = 150;
 	armor_l->_cost[1]["ether"] = 300;
 	armor_l->_productionTime[1] = 6000;
+	armor_l->addLevel();
+	armor_l->_cost[2]["bloc"] = 150;
+	armor_l->_cost[2]["ether"] = 300;
+	armor_l->_cost[2]["irium"] = 300;
+	armor_l->_productionTime[2] = 9000;
 
 	lib_p.registerUpgrade(damage_l->_id, damage_l);
 	lib_p.registerUpgrade(armor_l->_id, armor_l);
@@ -229,6 +239,11 @@ void createUpgrades(Library &lib_p)
 
 	lib_p.getBuildingModel("command_center")._upgrades.push_back(damage_l);
 	lib_p.getBuildingModel("command_center")._upgrades.push_back(armor_l);
+}
+
+void createOptionUpgrades(Library &lib_p)
+{
+
 }
 
 void loadSurvivalModels(Library &lib_p)
