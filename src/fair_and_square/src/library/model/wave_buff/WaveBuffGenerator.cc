@@ -26,6 +26,13 @@ std::list<WaveBuffGenerator> generateWaveBuffGenerators(unsigned long waveCount_
 			{ 10, flat_basic<octopus::TyppedBuff::Type::Damage, 2>(waveCount_p), TriangleGen::gen(), false },
 			{ 10, flat_basic<octopus::TyppedBuff::Type::HpMax, 10>(waveCount_p), CircleGen::gen(), false },
 			{ 10, flat_basic<octopus::TyppedBuff::Type::HpMax, 10>(waveCount_p), TriangleGen::gen(), false },
+		// Special
+			{ 10, flat_basic<octopus::TyppedBuff::Type::Damage, 2>(waveCount_p), USquareGen::gen(), false },
+			{ 10, flat_basic<octopus::TyppedBuff::Type::Damage, 2>(waveCount_p), QuadSquareGen::gen(), false },
+			{ 10, flat_basic<octopus::TyppedBuff::Type::Damage, 2>(waveCount_p), DoubleSquareGen::gen(), false },
+			{ 10, flat_basic<octopus::TyppedBuff::Type::HpMax, 10>(waveCount_p), USquareGen::gen(), false },
+			{ 10, flat_basic<octopus::TyppedBuff::Type::HpMax, 10>(waveCount_p), QuadSquareGen::gen(), false },
+			{ 10, flat_basic<octopus::TyppedBuff::Type::HpMax, 10>(waveCount_p), DoubleSquareGen::gen(), false },
 	};
 
 	return generators_l;

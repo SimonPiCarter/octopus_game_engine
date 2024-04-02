@@ -3,6 +3,9 @@
 
 struct CircleGen 	{ constexpr static char const* gen() { return "circle"; } };
 struct TriangleGen 	{ constexpr static char const* gen() { return "triangle"; } };
+struct USquareGen 	{ constexpr static char const* gen() { return "U_square_survival"; } };
+struct QuadSquareGen 	{ constexpr static char const* gen() { return "quad_square_survival"; } };
+struct DoubleSquareGen 	{ constexpr static char const* gen() { return "double_square_survival"; } };
 struct AttackSpeedDivGen 	{ static char const* gen() { return "survival_attackspeed"; } };
 struct HealDivGen 	{ static char const* gen() { return "survival_heal"; } };
 struct LifestealDivGen 	{ static char const* gen() { return "survival_aoe"; } };
