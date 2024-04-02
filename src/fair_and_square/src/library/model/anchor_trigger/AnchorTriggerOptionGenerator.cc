@@ -5,6 +5,7 @@
 #include "library/model/survival/SurvivalNameGenerator.hh"
 #include "state/State.hh"
 #include "state/player/Player.hh"
+#include "utils/Fixed.hh"
 
 
 Option no_op(octopus::State const &, unsigned long, octopus::RandomGenerator &, std::string const &) { return Option(); }
@@ -18,7 +19,28 @@ Option flat_basic(octopus::State const &, unsigned long player_p, octopus::Rando
 	octopus::TimedBuff tBuff_l;
 	tBuff_l._id = "flat_basic."+id_p;
 	tBuff_l._type = type_t;
-	tBuff_l._offset = rand_p.roll(min_value, max_value);
+	tBuff_l._offset = octopus::Fixed(rand_p.roll(min_value, max_value)) / octopus::Fixed(100);
+
+	BuffOption buff_l {
+		player_p,
+		tBuff_l,
+		type_name_gen::gen()
+	};
+
+	opt_l._playerOption = buff_l;
+
+	return opt_l;
+}
+
+template < class type_name_gen, octopus::TyppedBuff::Type type_t, int min_value, int max_value >
+Option coef_basic(octopus::State const &, unsigned long player_p, octopus::RandomGenerator &rand_p, std::string const &id_p)
+{
+	Option opt_l;
+
+	octopus::TimedBuff tBuff_l;
+	tBuff_l._id = "coef_basic."+id_p;
+	tBuff_l._type = type_t;
+	tBuff_l._coef = - octopus::Fixed(rand_p.roll(min_value, max_value)) / octopus::Fixed(100);
 
 	BuffOption buff_l {
 		player_p,
@@ -47,28 +69,16 @@ std::list<AnchorOptionGenerator> generateOptionGenerators(octopus::State const &
 	std::list<AnchorOptionGenerator> generators_l {
 		// Common
 			// Flat basic
-			{ 10, flat_basic<CircleGen, octopus::TyppedBuff::Type::Damage, 2, 2>, false },
-			{ 10, flat_basic<TriangleGen, octopus::TyppedBuff::Type::Damage, 2, 2>, false },
-			// { 10, flat_basic<CircleGen, octopus::TyppedBuff::Type::Armor, 1, 1>, false },
-			// { 10, flat_basic<TriangleGen, octopus::TyppedBuff::Type::Armor, 1, 1>, false },
-			{ 10, flat_basic<CircleGen, octopus::TyppedBuff::Type::HpMax, 10, 10>, false },
-			{ 10, flat_basic<TriangleGen, octopus::TyppedBuff::Type::HpMax, 10, 10>, false },
+			{ 10, flat_basic<CircleGen, octopus::TyppedBuff::Type::Damage, 20, 20>, false },
+			{ 10, flat_basic<TriangleGen, octopus::TyppedBuff::Type::Damage, 20, 20>, false },
+			{ 10, flat_basic<CircleGen, octopus::TyppedBuff::Type::HpMax, 100, 100>, false },
+			{ 10, flat_basic<TriangleGen, octopus::TyppedBuff::Type::HpMax, 100, 100>, false },
 		// Uncommon
 			// Flat basic
-			{ 5, flat_basic<CircleGen, octopus::TyppedBuff::Type::Damage, 5, 5>, false },
-			{ 5, flat_basic<TriangleGen, octopus::TyppedBuff::Type::Damage, 5, 5>, false },
-			// { 5, flat_basic<CircleGen, octopus::TyppedBuff::Type::Armor, 2, 2>, false },
-			// { 5, flat_basic<TriangleGen, octopus::TyppedBuff::Type::Armor, 2, 2>, false },
-			{ 5, flat_basic<CircleGen, octopus::TyppedBuff::Type::HpMax, 40, 40>, false },
-			{ 5, flat_basic<TriangleGen, octopus::TyppedBuff::Type::HpMax, 40, 40>, false },
-		// Rare
-			// Flat basic
-			{ 1, flat_basic<CircleGen, octopus::TyppedBuff::Type::Damage, 15, 15>, false },
-			{ 1, flat_basic<TriangleGen, octopus::TyppedBuff::Type::Damage, 15, 15>, false },
-			// { 1, flat_basic<CircleGen, octopus::TyppedBuff::Type::Armor, 4, 4>, false },
-			// { 1, flat_basic<TriangleGen, octopus::TyppedBuff::Type::Armor, 4, 4>, false },
-			{ 1, flat_basic<CircleGen, octopus::TyppedBuff::Type::HpMax, 100, 100>, false },
-			{ 1, flat_basic<TriangleGen, octopus::TyppedBuff::Type::HpMax, 100, 100>, false },
+			{ 5, flat_basic<CircleGen, octopus::TyppedBuff::Type::Damage, 50, 50>, false },
+			{ 5, flat_basic<TriangleGen, octopus::TyppedBuff::Type::Damage, 50, 50>, false },
+			{ 5, flat_basic<CircleGen, octopus::TyppedBuff::Type::HpMax, 400, 400>, false },
+			{ 5, flat_basic<TriangleGen, octopus::TyppedBuff::Type::HpMax, 400, 400>, false },
 	};
 
 	octopus::Player const &player_l = *state_p.getPlayer(player_p);
@@ -76,17 +86,11 @@ std::list<AnchorOptionGenerator> generateOptionGenerators(octopus::State const &
 	if(octopus::getUpgradeLvl(player_l, fas::survivalSpecialTypeName(fas::SurvivalSpecialType::AttackSpeed)) > 0)
 	{
 		// Damage buffs
-		generators_l.push_back({ 10, flat_basic<AttackSpeedDivGen, octopus::TyppedBuff::Type::Damage, 2, 2>, false });
-		generators_l.push_back({ 5, flat_basic<AttackSpeedDivGen, octopus::TyppedBuff::Type::Damage, 5, 5>, false });
-		generators_l.push_back({ 1, flat_basic<AttackSpeedDivGen, octopus::TyppedBuff::Type::Damage, 15, 15>, false });
-		// Armor buffs
-		// generators_l.push_back({ 10, flat_basic<AttackSpeedDivGen, octopus::TyppedBuff::Type::Armor, 1, 1>, false });
-		// generators_l.push_back({ 5, flat_basic<AttackSpeedDivGen, octopus::TyppedBuff::Type::Armor, 2, 2>, false });
-		// generators_l.push_back({ 1, flat_basic<AttackSpeedDivGen, octopus::TyppedBuff::Type::Armor, 4, 4>, false });
-		// Hp buffs
-		generators_l.push_back({ 10, flat_basic<AttackSpeedDivGen, octopus::TyppedBuff::Type::HpMax, 10, 10>, false });
-		generators_l.push_back({ 5, flat_basic<AttackSpeedDivGen, octopus::TyppedBuff::Type::HpMax, 40, 40>, false });
-		generators_l.push_back({ 1, flat_basic<AttackSpeedDivGen, octopus::TyppedBuff::Type::HpMax, 100, 100>, false });
+		generators_l.push_back({ 10, flat_basic<AttackSpeedDivGen, octopus::TyppedBuff::Type::Damage, 20, 20>, false });
+		generators_l.push_back({ 5, flat_basic<AttackSpeedDivGen, octopus::TyppedBuff::Type::Damage, 50, 50>, false });
+		// Full Reload
+		generators_l.push_back({ 10, coef_basic<AttackSpeedDivGen, octopus::TyppedBuff::Type::FullReload, 5, 5>, false });
+		generators_l.push_back({ 5, coef_basic<AttackSpeedDivGen, octopus::TyppedBuff::Type::FullReload, 10, 10>, false });
 	}
 	else
 	{
@@ -96,17 +100,11 @@ std::list<AnchorOptionGenerator> generateOptionGenerators(octopus::State const &
 	if(octopus::getUpgradeLvl(player_l, fas::survivalSpecialTypeName(fas::SurvivalSpecialType::Heal)) > 0)
 	{
 		// Heal buffs
-		generators_l.push_back({ 10, flat_basic<HealDivGen, octopus::TyppedBuff::Type::Heal, 2, 2>, false });
-		generators_l.push_back({ 5, flat_basic<HealDivGen, octopus::TyppedBuff::Type::Heal, 5, 5>, false });
-		generators_l.push_back({ 1, flat_basic<HealDivGen, octopus::TyppedBuff::Type::Heal, 15, 15>, false });
-		// Armor buffs
-		// generators_l.push_back({ 10, flat_basic<HealDivGen, octopus::TyppedBuff::Type::Armor, 1, 1>, false });
-		// generators_l.push_back({ 5, flat_basic<HealDivGen, octopus::TyppedBuff::Type::Armor, 2, 2>, false });
-		// generators_l.push_back({ 1, flat_basic<HealDivGen, octopus::TyppedBuff::Type::Armor, 4, 4>, false });
-		// Hp buffs
-		generators_l.push_back({ 10, flat_basic<HealDivGen, octopus::TyppedBuff::Type::HpMax, 10, 10>, false });
-		generators_l.push_back({ 5, flat_basic<HealDivGen, octopus::TyppedBuff::Type::HpMax, 40, 40>, false });
-		generators_l.push_back({ 1, flat_basic<HealDivGen, octopus::TyppedBuff::Type::HpMax, 100, 100>, false });
+		generators_l.push_back({ 10, flat_basic<HealDivGen, octopus::TyppedBuff::Type::Heal, 20, 20>, false });
+		generators_l.push_back({ 5, flat_basic<HealDivGen, octopus::TyppedBuff::Type::Heal, 40, 40>, false });
+		// Full Reload
+		generators_l.push_back({ 10, coef_basic<HealDivGen, octopus::TyppedBuff::Type::FullReload, 5, 5>, false });
+		generators_l.push_back({ 5, coef_basic<HealDivGen, octopus::TyppedBuff::Type::FullReload, 10, 10>, false });
 	}
 	else
 	{
@@ -116,17 +114,10 @@ std::list<AnchorOptionGenerator> generateOptionGenerators(octopus::State const &
 	if(octopus::getUpgradeLvl(player_l, fas::survivalSpecialTypeName(fas::SurvivalSpecialType::AreaOfDamage)) > 0)
 	{
 		// Damage buffs
-		generators_l.push_back({ 10, flat_basic<LifestealDivGen, octopus::TyppedBuff::Type::Damage, 2, 2>, false });
-		generators_l.push_back({ 5, flat_basic<LifestealDivGen, octopus::TyppedBuff::Type::Damage, 5, 5>, false });
-		generators_l.push_back({ 1, flat_basic<LifestealDivGen, octopus::TyppedBuff::Type::Damage, 15, 15>, false });
-		// Armor buffs
-		// generators_l.push_back({ 10, flat_basic<LifestealDivGen, octopus::TyppedBuff::Type::Armor, 1, 1>, false });
-		// generators_l.push_back({ 5, flat_basic<LifestealDivGen, octopus::TyppedBuff::Type::Armor, 2, 2>, false });
-		// generators_l.push_back({ 1, flat_basic<LifestealDivGen, octopus::TyppedBuff::Type::Armor, 4, 4>, false });
-		// Hp buffs
-		generators_l.push_back({ 10, flat_basic<LifestealDivGen, octopus::TyppedBuff::Type::HpMax, 10, 10>, false });
-		generators_l.push_back({ 5, flat_basic<LifestealDivGen, octopus::TyppedBuff::Type::HpMax, 40, 40>, false });
-		generators_l.push_back({ 1, flat_basic<LifestealDivGen, octopus::TyppedBuff::Type::HpMax, 100, 100>, false });
+		generators_l.push_back({ 10, flat_basic<LifestealDivGen, octopus::TyppedBuff::Type::Damage, 50, 50>, false });
+		generators_l.push_back({ 5, flat_basic<LifestealDivGen, octopus::TyppedBuff::Type::Damage, 100, 100>, false });
+		// Aoe Radius
+		// TODO
 	}
 	else
 	{
@@ -136,17 +127,11 @@ std::list<AnchorOptionGenerator> generateOptionGenerators(octopus::State const &
 	if(octopus::getUpgradeLvl(player_l, fas::survivalSpecialTypeName(fas::SurvivalSpecialType::Rebound)) > 0)
 	{
 		// Damage buffs
-		generators_l.push_back({ 10, flat_basic<RecycleDivGen, octopus::TyppedBuff::Type::Damage, 2, 2>, false });
-		generators_l.push_back({ 5, flat_basic<RecycleDivGen, octopus::TyppedBuff::Type::Damage, 5, 5>, false });
-		generators_l.push_back({ 1, flat_basic<RecycleDivGen, octopus::TyppedBuff::Type::Damage, 15, 15>, false });
-		// Armor buffs
-		// generators_l.push_back({ 10, flat_basic<RecycleDivGen, octopus::TyppedBuff::Type::Armor, 1, 1>, false });
-		// generators_l.push_back({ 5, flat_basic<RecycleDivGen, octopus::TyppedBuff::Type::Armor, 2, 2>, false });
-		// generators_l.push_back({ 1, flat_basic<RecycleDivGen, octopus::TyppedBuff::Type::Armor, 4, 4>, false });
+		generators_l.push_back({ 10, flat_basic<RecycleDivGen, octopus::TyppedBuff::Type::DamageReturn, 5, 5>, false });
+		generators_l.push_back({ 5, flat_basic<RecycleDivGen, octopus::TyppedBuff::Type::DamageReturn, 10, 10>, false });
 		// Hp buffs
-		generators_l.push_back({ 10, flat_basic<RecycleDivGen, octopus::TyppedBuff::Type::HpMax, 10, 10>, false });
-		generators_l.push_back({ 5, flat_basic<RecycleDivGen, octopus::TyppedBuff::Type::HpMax, 40, 40>, false });
-		generators_l.push_back({ 1, flat_basic<RecycleDivGen, octopus::TyppedBuff::Type::HpMax, 100, 100>, false });
+		generators_l.push_back({ 10, flat_basic<RecycleDivGen, octopus::TyppedBuff::Type::HpMax, 100, 100>, false });
+		generators_l.push_back({ 5, flat_basic<RecycleDivGen, octopus::TyppedBuff::Type::HpMax, 400, 400>, false });
 	}
 	else
 	{
