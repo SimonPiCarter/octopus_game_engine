@@ -54,33 +54,66 @@ std::string desc_buff(octopus::TimedBuff const &buff_p)
 	throw std::logic_error("missing desc_buff implem");
 }
 
-void Option::pushOption(octopus::TimedBuff const &buff_p)
+void Option::pushOption(octopus::AnyBuff const &buff_p)
 {
-    std::stringstream ss_l;
-    if(buff_p._offset > 0)
+    if(std::holds_alternative<octopus::TimedBuff>(buff_p))
     {
-        ss_l << "Increase "<<desc_buff(buff_p)<<" by [color=green]{1}[/color].\n";
-    }
-    if(buff_p._offset < 0)
-    {
-        ss_l << "Decrease "<<desc_buff(buff_p)<<" by [color=red]{1}[/color].\n";
-    }
-    if(buff_p._coef > 0)
-    {
-        ss_l << "Increase "<<desc_buff(buff_p)<<" by [color=green]{2}[/color]%.\n";
-    }
-    if(buff_p._coef < 0)
-    {
-        ss_l << "Decrease "<<desc_buff(buff_p)<<" by [color=red]{2}[/color]%.\n";
-    }
+        octopus::TimedBuff const &tBuff_l = std::get<octopus::TimedBuff>(buff_p);
+        std::stringstream ss_l;
+        if(tBuff_l._offset > 0)
+        {
+            ss_l << "Increase "<<desc_buff(tBuff_l)<<" by [color=green]{1}[/color].\n";
+        }
+        if(tBuff_l._offset < 0)
+        {
+            ss_l << "Decrease "<<desc_buff(tBuff_l)<<" by [color=red]{1}[/color].\n";
+        }
+        if(tBuff_l._coef > 0)
+        {
+            ss_l << "Increase "<<desc_buff(tBuff_l)<<" by [color=green]{2}[/color]%.\n";
+        }
+        if(tBuff_l._coef < 0)
+        {
+            ss_l << "Decrease "<<desc_buff(tBuff_l)<<" by [color=red]{2}[/color]%.\n";
+        }
 
-    _params.push_back(TypedArray<String>());
-    _params.back().append(octopus::to_string(buff_p._type).c_str());
-    _params.back().append(std::to_string(std::abs(octopus::to_int(buff_p._offset))).c_str());
-    _params.back().append(std::to_string(std::abs(octopus::to_int(buff_p._coef*100.))).c_str());
+        _params.push_back(TypedArray<String>());
+        _params.back().append(octopus::to_string(tBuff_l._type).c_str());
+        _params.back().append(std::to_string(std::abs(octopus::to_int(tBuff_l._offset))).c_str());
+        _params.back().append(std::to_string(std::abs(octopus::to_int(tBuff_l._coef*100.))).c_str());
 
-    _stats_name.push_back(octopus::to_string(buff_p._type).c_str());
-    _desc.push_back(ss_l.str().c_str());
+        _stats_name.push_back(octopus::to_string(tBuff_l._type).c_str());
+        _desc.push_back(ss_l.str().c_str());
+    }
+    else if(std::holds_alternative<octopus::ModifierAoEBuff>(buff_p))
+    {
+        octopus::ModifierAoEBuff const &aoeBuff_l = std::get<octopus::ModifierAoEBuff>(buff_p);
+        std::stringstream ss_l;
+        if(aoeBuff_l._deltaRatio > 0)
+        {
+            ss_l << "Increase damage ratio by [color=green]{1}[/color]%.\n";
+        }
+        if(aoeBuff_l._deltaRatio < 0)
+        {
+            ss_l << "Decrease damage ratio by [color=red]{1}[/color]%.\n";
+        }
+        if(aoeBuff_l._deltaRange > 0)
+        {
+            ss_l << "Increase damage range by [color=green]{2}[/color]%.\n";
+        }
+        if(aoeBuff_l._deltaRange < 0)
+        {
+            ss_l << "Decrease damage range by [color=red]{2}[/color]%.\n";
+        }
+
+        _params.push_back(TypedArray<String>());
+        _params.back().append("ModifierAoEBuff");
+        _params.back().append(std::to_string(std::abs(octopus::to_int(aoeBuff_l._deltaRatio*100))).c_str());
+        _params.back().append(std::to_string(std::abs(octopus::to_int(aoeBuff_l._deltaRange))).c_str());
+
+        _stats_name.push_back("ModifierAoEBuff");
+        _desc.push_back(ss_l.str().c_str());
+    }
 }
 
 void Option::update(NoOption const &)
