@@ -27,6 +27,7 @@ public:
     void update(ModifierOption const &option_p);
     void update(DivinityOption const &option_p);
     void update(SurvivalOption const &option_p);
+    void update(UpgradeOption const &option_p);
     void updateFromModifier(octopus::NoModifier const &mod_p);
     void updateFromModifier(octopus::AoEModifier const &mod_p);
     void updateFromModifier(octopus::ChainingModifier const &mod_p);

@@ -93,6 +93,37 @@ Option aoe_buff_type(octopus::State const &, unsigned long player_p, octopus::Ra
 	return opt_l;
 }
 
+template< class upgrade_t, class unit_t >
+Option upgrade_option(octopus::State const &, unsigned long player_p, octopus::RandomGenerator &, std::string const &)
+{
+	Option opt_l;
+
+	opt_l._playerOption = UpgradeOption { player_p, UpgradeUnitGenerator<upgrade_t, unit_t>::gen() };
+
+	return opt_l;
+}
+
+template< class upgrade_t, class unit_t >
+void add_upgrade(octopus::Player const &player_p, std::list<AnchorOptionGenerator> &generators_p)
+{
+	if(octopus::getUpgradeLvl(player_p, UpgradeUnitGenerator<upgrade_t, unit_t>::gen()) > 0)
+	{
+		generators_p.push_back({ 1, upgrade_option<upgrade_t, unit_t>, false });
+	}
+}
+
+template< class unit_t >
+void add_upgrades_ability(octopus::Player const &player_p, std::list<AnchorOptionGenerator> &generators_p)
+{
+	add_upgrade<AttackSpeedAbility, unit_t>(player_p, generators_p);
+	add_upgrade<AttackSpeedAbilityHp, unit_t>(player_p, generators_p);
+	add_upgrade<ArmorAbility, unit_t>(player_p, generators_p);
+	add_upgrade<ArmorAbilityHp, unit_t>(player_p, generators_p);
+	add_upgrade<ArmorHpLowDamage, unit_t>(player_p, generators_p);
+	add_upgrade<AegenBurst, unit_t>(player_p, generators_p);
+	add_upgrade<AoubleDamage, unit_t>(player_p, generators_p);
+}
+
 std::list<AnchorOptionGenerator> generateOptionGenerators(octopus::State const &state_p, unsigned long player_p)
 {
 	std::list<AnchorOptionGenerator> generators_l {
@@ -120,6 +151,8 @@ std::list<AnchorOptionGenerator> generateOptionGenerators(octopus::State const &
 		// Full Reload
 		generators_l.push_back({ 10, coef_basic<AttackSpeedDivGen, octopus::TyppedBuff::Type::FullReload, 5, 5>, false });
 		generators_l.push_back({ 5, coef_basic<AttackSpeedDivGen, octopus::TyppedBuff::Type::FullReload, 10, 10>, false });
+		// abilities
+		add_upgrades_ability<AttackSpeedDivGen>(player_l, generators_l);
 	}
 	else
 	{
@@ -134,6 +167,8 @@ std::list<AnchorOptionGenerator> generateOptionGenerators(octopus::State const &
 		// Full Reload
 		generators_l.push_back({ 10, coef_basic<HealDivGen, octopus::TyppedBuff::Type::FullReload, 5, 5>, false });
 		generators_l.push_back({ 5, coef_basic<HealDivGen, octopus::TyppedBuff::Type::FullReload, 10, 10>, false });
+		// abilities
+		add_upgrades_ability<HealDivGen>(player_l, generators_l);
 	}
 	else
 	{
@@ -148,6 +183,8 @@ std::list<AnchorOptionGenerator> generateOptionGenerators(octopus::State const &
 		generators_l.push_back({ 10, aoe_buff_type<LifestealDivGen, 100, 100, true>, false });
 		generators_l.push_back({ 5, aoe_buff_type<LifestealDivGen, 200, 200, true>, false });
 		generators_l.push_back({ 5, aoe_buff_type<LifestealDivGen, 10, 10, false>, false });
+		// abilities
+		add_upgrades_ability<LifestealDivGen>(player_l, generators_l);
 	}
 	else
 	{
@@ -162,6 +199,8 @@ std::list<AnchorOptionGenerator> generateOptionGenerators(octopus::State const &
 		// Hp buffs
 		generators_l.push_back({ 10, flat_basic<RecycleDivGen, octopus::TyppedBuff::Type::HpMax, 100, 100>, false });
 		generators_l.push_back({ 5, flat_basic<RecycleDivGen, octopus::TyppedBuff::Type::HpMax, 400, 400>, false });
+		// abilities
+		add_upgrades_ability<RecycleDivGen>(player_l, generators_l);
 	}
 	else
 	{

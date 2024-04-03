@@ -56,7 +56,13 @@ struct SurvivalOption
     fas::SurvivalSpecialType _type;
 };
 
-using SingleOption = std::variant<NoOption, BuffOption, ModifierOption, DoubleBuffOption, DivinityOption, SurvivalOption>;
+struct UpgradeOption
+{
+    unsigned long _player;
+    std::string _upgrade;
+};
+
+using SingleOption = std::variant<NoOption, BuffOption, ModifierOption, DoubleBuffOption, DivinityOption, SurvivalOption, UpgradeOption>;
 
 struct Option
 {
