@@ -54,27 +54,38 @@ std::string desc_buff(octopus::TimedBuff const &buff_p)
 	throw std::logic_error("missing desc_buff implem");
 }
 
+bool isBuff(octopus::Fixed const &delta_p, octopus::TyppedBuff::Type type_p)
+{
+    if(type_p == octopus::TyppedBuff::Type::FullReload)
+    {
+        return delta_p < 0;
+    }
+    return delta_p > 0;
+}
+
 void Option::pushOption(octopus::AnyBuff const &buff_p)
 {
     if(std::holds_alternative<octopus::TimedBuff>(buff_p))
     {
         octopus::TimedBuff const &tBuff_l = std::get<octopus::TimedBuff>(buff_p);
         std::stringstream ss_l;
+        std::string color_l = isBuff(tBuff_l._offset, tBuff_l._type) ? "green" : "red";
         if(tBuff_l._offset > 0)
         {
-            ss_l << "Increase "<<desc_buff(tBuff_l)<<" by [color=green]{1}[/color].\n";
+            ss_l << "Increase "<<desc_buff(tBuff_l)<<" by [color="<<color_l<<"]{1}[/color].\n";
         }
         if(tBuff_l._offset < 0)
         {
-            ss_l << "Decrease "<<desc_buff(tBuff_l)<<" by [color=red]{1}[/color].\n";
+            ss_l << "Decrease "<<desc_buff(tBuff_l)<<" by [color="<<color_l<<"]{1}[/color].\n";
         }
+        color_l = isBuff(tBuff_l._coef, tBuff_l._type) ? "green" : "red";
         if(tBuff_l._coef > 0)
         {
-            ss_l << "Increase "<<desc_buff(tBuff_l)<<" by [color=green]{2}[/color]%.\n";
+            ss_l << "Increase "<<desc_buff(tBuff_l)<<" by [color="<<color_l<<"]{2}[/color]%.\n";
         }
         if(tBuff_l._coef < 0)
         {
-            ss_l << "Decrease "<<desc_buff(tBuff_l)<<" by [color=red]{2}[/color]%.\n";
+            ss_l << "Decrease "<<desc_buff(tBuff_l)<<" by [color="<<color_l<<"]{2}[/color]%.\n";
         }
 
         _params.push_back(TypedArray<String>());
