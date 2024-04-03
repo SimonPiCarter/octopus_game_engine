@@ -79,7 +79,7 @@ Option aoe_buff_type(octopus::State const &, unsigned long player_p, octopus::Ra
 	}
 	else
 	{
-		tBuff_l._deltaRange = octopus::Fixed(rand_p.roll(min_value, max_value)) / octopus::Fixed(100);
+		tBuff_l._deltaRatio = octopus::Fixed(rand_p.roll(min_value, max_value)) / octopus::Fixed(100);
 	}
 
 	BuffOption buff_l {
