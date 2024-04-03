@@ -83,7 +83,7 @@ std::list<Steppable *> Mission3Steps(Library &lib_p, RandomGenerator &rand_p, in
 				{
 					Entity const *ent_l = state_p.getEntity(handle_l);
 
-					TimedBuff buff_l;
+					ModifierBuff buff_l;
 					buff_l._id = "Mission_AncientRune_AoE_buff";
 					buff_l._duration = 3000;
 					buff_l._attackMod = AoEModifier(0.5, 5);

@@ -44,6 +44,8 @@
 #include "controller/step/RuneWellPopStep.h"
 
 using octopus::to_double;
+using octopus::get_duration;
+using octopus::get_id;
 
 namespace godot
 {
@@ -240,7 +242,7 @@ void ControllerStepVisitor::visit(octopus::MissingResourceStep const *steppable_
 
 void ControllerStepVisitor::visit(octopus::PlayerBuffAllStep const *steppable_p)
 {
-	_controller.emit_signal("buff_all", int(steppable_p->_player), String(steppable_p->_buff._id.c_str()), String(steppable_p->_model.c_str()));
+	_controller.emit_signal("buff_all", int(steppable_p->_player), String(get_id(steppable_p->_buff).c_str()), String(steppable_p->_model.c_str()));
 }
 
 void ControllerStepVisitor::visit(octopus::PlayerPopOptionStep const *steppable_p)
@@ -329,7 +331,7 @@ void ControllerStepVisitor::visit(octopus::CustomStep const *steppable_p)
 
 void ControllerStepVisitor::visit(octopus::EntityBuffStep const *steppable_p)
 {
-		_controller.emit_signal("buff", int(steppable_p->_target.index), String(steppable_p->_buff._id.c_str()), int(steppable_p->_buff._duration));
+		_controller.emit_signal("buff", int(steppable_p->_target.index), String(get_id(steppable_p->_buff).c_str()), int(get_duration(steppable_p->_buff)));
 }
 
 void applyControllerStepVisitor(Controller &controller_p, octopus::State const &state_p, octopus::Step const &step_p)

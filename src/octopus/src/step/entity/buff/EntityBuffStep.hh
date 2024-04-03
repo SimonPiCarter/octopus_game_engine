@@ -4,8 +4,8 @@
 #include <stdexcept>
 
 #include "state/entity/Entity.hh"
+#include "state/entity/buff/AnyBuff.hh"
 #include "state/entity/buff/ConditionalBuff.hh"
-#include "state/entity/buff/TimedBuff.hh"
 #include "state/Handle.hh"
 #include "step/Steppable.hh"
 
@@ -29,7 +29,7 @@ struct EntityBuffStepData : public SteppableData {
 class EntityBuffStep : public Steppable
 {
 public:
-	EntityBuffStep(Handle const &target_p, TimedBuff const &buff_p)
+	EntityBuffStep(Handle const &target_p, AnyBuff const &buff_p)
 	: _target(target_p)
 	, _buff(buff_p)
 	{}
@@ -51,7 +51,7 @@ public:
 	Handle const _target;
 
 	/// @brief buff to be applied
-	TimedBuff const _buff;
+	AnyBuff const _buff;
 };
 
 /// @brief class handles applying a conditional buff to an entity

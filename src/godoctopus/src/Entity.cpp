@@ -276,14 +276,16 @@ TypedArray<godot::Buff> Entity::get_buffs(Controller const *controller_p) const
     octopus::Entity const *ent_l = controller_p->getEntity(octopus::Handle(_index, _revision));
     for(auto &&pair_l : ent_l->_registeredBuff)
     {
+        octopus::AnyBuff const &buff_l = pair_l.second;
+        unsigned long duration_l = octopus::get_duration(buff_l);
         std::string const &name_l = pair_l.first;
-        if(ent_l->_timeSinceBuff.at(name_l) < ent_l->_registeredBuff.at(name_l)._duration
-        || ent_l->_registeredBuff.at(name_l)._duration == 0)
+        if(ent_l->_timeSinceBuff.at(name_l) < duration_l
+        || duration_l == 0)
         {
             godot::Buff * buff_l = memnew(godot::Buff());
             buff_l->setName(name_l.c_str());
             buff_l->setTimeElapsed(ent_l->_timeSinceBuff.at(name_l));
-            buff_l->setDuration(ent_l->_registeredBuff.at(name_l)._duration);
+            buff_l->setDuration(duration_l);
 
             buffs_l.push_back(buff_l);
         }

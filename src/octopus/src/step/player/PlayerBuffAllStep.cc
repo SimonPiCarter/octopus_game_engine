@@ -46,7 +46,7 @@ void PlayerBuffAllStep::revert(State &state_p, SteppableData const *data_p) cons
 	Player *player_l = state_p.getPlayer(_player);
     PlayerBuffAllStepData const * data_l = dynamic_cast<PlayerBuffAllStepData const *>(data_p);
 
-    if(player_l->_mapBuffs[_model].back()._id != _buff._id)
+    if(get_id(player_l->_mapBuffs[_model].back()) != get_id(_buff))
     {
         throw std::logic_error("PlayerBuffAllStep was revert in wrong order");
     }

@@ -35,16 +35,17 @@ void TickingStep::apply(State &state_p) const
 		{
 			std::string const &id_l = pair_l.first;
 			unsigned long &time_l = pair_l.second;
-			TimedBuff const &buff_l = ent_l->_registeredBuff[id_l];
+			AnyBuff const &buff_l = ent_l->_registeredBuff[id_l];
+			unsigned long const duration_l = get_duration(buff_l);
 			// need to apply buff
 			if(time_l == 0)
 			{
-				buff_l.apply(*ent_l);
+				apply_buff(buff_l, *ent_l);
 			}
 			// need to revert buff (only when we go the exact duration to avoid reverting multiple times)
-			if(time_l+1 == buff_l._duration+1 && buff_l._duration != 0)
+			if(time_l+1 == duration_l+1 && duration_l != 0)
 			{
-				buff_l.revert(*ent_l);
+				revert_buff(buff_l, *ent_l);
 			}
 			// increment time
 			++ time_l;
@@ -94,17 +95,17 @@ void TickingStep::revert(State &state_p, SteppableData const *data_p) const
 		{
 			std::string const &id_l = pair_l.first;
 			unsigned long &time_l = pair_l.second;
-			TimedBuff const &buff_l = ent_l->_registeredBuff[id_l];
-
+			AnyBuff const &buff_l = ent_l->_registeredBuff[id_l];
+			unsigned long const duration_l = get_duration(buff_l);
 			// need to revert buff
 			if(time_l == 1)
 			{
-				buff_l.revert(*ent_l);
+				revert_buff(buff_l, *ent_l);
 			}
 			// need to apply back buff (only when we go the exact duration to avoid reverting multiple times)
-			if(time_l == buff_l._duration+1 && buff_l._duration != 0)
+			if(time_l == duration_l+1 && duration_l != 0)
 			{
-				buff_l.apply(*ent_l);
+				apply_buff(buff_l, *ent_l);
 			}
 
 			if(time_l > 0)

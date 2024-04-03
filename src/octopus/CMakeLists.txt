@@ -55,9 +55,12 @@ add_library(octopus
 	${CMAKE_CURRENT_SOURCE_DIR}/src/controller/event/EventCollection.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/controller/trigger/Listener.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/controller/trigger/Trigger.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/src/state/entity/buff/AnyBuff.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/state/entity/buff/Buff.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/state/entity/buff/Buffer.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/state/entity/buff/ConditionalBuff.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/src/state/entity/buff/ModifierAoEBuff.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/src/state/entity/buff/ModifierBuff.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/state/entity/buff/TimedBuff.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/state/entity/Building.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/state/entity/Entity.cc
