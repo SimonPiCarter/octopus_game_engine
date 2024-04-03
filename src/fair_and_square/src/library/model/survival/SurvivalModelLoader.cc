@@ -88,27 +88,27 @@ void add_ability(UnitModel &model_p, TimedBuff const &buff_p, Fixed const hp_cos
 void add_abilities(UnitModel &model_p, std::string const &model_name_p)
 {
 	TimedBuff buff_l;
-	buff_l._coef = -0.10;
+	buff_l._coef = -0.20;
 	buff_l._type = TyppedBuff::Type::FullReload;
 	buff_l._duration = 1000;
 	buff_l._id = "survival_attack_speed_ability";
 
 	add_ability(model_p, buff_l, 0, "survival_attack_speed_ability", model_name_p);
 
-	buff_l._coef = -0.20;
+	buff_l._coef = -0.40;
 	buff_l._duration = 1500;
 	buff_l._id = "survival_attack_speed_ability.hp";
 
 	add_ability(model_p, buff_l, 10, "survival_attack_speed_ability.hp", model_name_p);
 
-	buff_l._coef = 0.25;
+	buff_l._coef = 0.5;
 	buff_l._type = TyppedBuff::Type::Armor;
 	buff_l._duration = 1000;
 	buff_l._id = "survival_armor_ability";
 
 	add_ability(model_p, buff_l, 0, "survival_armor_ability", model_name_p);
 
-	buff_l._coef = 0.50;
+	buff_l._coef = 1;
 	buff_l._duration = 1500;
 	buff_l._id = "survival_armor_ability.hp";
 
