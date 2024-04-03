@@ -110,11 +110,11 @@ void Option::pushOption(octopus::AnyBuff const &buff_p)
         }
         if(aoeBuff_l._deltaRange > 0)
         {
-            ss_l << "Increase damage range by [color=green]{2}[/color]%.\n";
+            ss_l << "Increase damage range by [color=green]{2}[/color].\n";
         }
         if(aoeBuff_l._deltaRange < 0)
         {
-            ss_l << "Decrease damage range by [color=red]{2}[/color]%.\n";
+            ss_l << "Decrease damage range by [color=red]{2}[/color].\n";
         }
 
         _params.push_back(TypedArray<String>());
