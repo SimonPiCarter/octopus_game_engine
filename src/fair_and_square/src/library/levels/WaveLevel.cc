@@ -91,7 +91,7 @@ std::list<Steppable *> WaveLevelSteps(Library &lib_p, RandomGenerator &rand_p, u
 		new TriggerSpawn(triggerWave_l),
 		new TriggerSpawn(triggerLose_l),
 		new TriggerSpawn(new AnchorTrigger(lib_p, rand_p, 120)),
-		new FlyingCommandSpawnStep(new TimerDamage(Handle(0), 100, 0, 0, "Anchor", Handle(0))),
+		new FlyingCommandSpawnStep(new TimerDamage(100, 0, 0, "Anchor", Handle(0))),
 	};
 
 	return spawners_l;

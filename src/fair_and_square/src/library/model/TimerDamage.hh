@@ -9,9 +9,9 @@
 class TimerDamage : public octopus::CommandEffectOverTime
 {
 public:
-    TimerDamage(octopus::Handle handle_p, unsigned long tickRate_p, unsigned long nbOfTicks_p,
+    TimerDamage(unsigned long tickRate_p, unsigned long nbOfTicks_p,
         unsigned long player_p, std::string res_p, octopus::Handle ent_p)
-        : CommandEffectOverTime(handle_p, tickRate_p, nbOfTicks_p), _player(player_p), _res(res_p) , _ent(ent_p) {}
+        : CommandEffectOverTime(tickRate_p, nbOfTicks_p), _player(player_p), _res(res_p) , _ent(ent_p) {}
 
 	/// @brief virtual pure method to apply the effect
 	/// @note add steppables here

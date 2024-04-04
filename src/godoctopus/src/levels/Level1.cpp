@@ -149,7 +149,7 @@ std::list<Steppable *> WaveLevelSteps(Library &lib_p, RandomGenerator &rand_p, u
 		new TriggerSpawn(triggerLose_l),
 		new TriggerSpawn(new AnchorTrigger(lib_p, rand_p, 60)),
 		new TriggerSpawn(new VisionTrigger(pattern_l)),
-		new FlyingCommandSpawnStep(new TimerDamage(Handle(0), 100, 0, 0, "Anchor", Handle(0))),
+		new FlyingCommandSpawnStep(new TimerDamage(100, 0, 0, "Anchor", Handle(0))),
 		new godot::CameraStep(15, 20, 0),
 		new godot::DialogStep("leve1_intro"),
 	};

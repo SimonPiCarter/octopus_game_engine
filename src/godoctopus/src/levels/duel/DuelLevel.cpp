@@ -125,8 +125,8 @@ std::list<Steppable *> LevelSteps(Library &lib_p, RandomGenerator &rand_p, int s
 		new TriggerSpawn(triggerLoseP0_l),
 		new TriggerSpawn(new AnchorDivinityTrigger(lib_p, rand_p, 0, divinitiesPlayer1_p, 180)),
 		new TriggerSpawn(new AnchorDivinityTrigger(lib_p, rand_p, 1, divinitiesPlayer2_p, 180)),
-		new FlyingCommandSpawnStep(new TimerDamage(Handle(0), 100, 0, 0, "Anchor", Handle(0))),
-		new FlyingCommandSpawnStep(new TimerDamage(Handle(1), 100, 0, 1, "Anchor", Handle(1))),
+		new FlyingCommandSpawnStep(new TimerDamage(100, 0, 0, "Anchor", Handle(0))),
+		new FlyingCommandSpawnStep(new TimerDamage(100, 0, 1, "Anchor", Handle(1))),
 		new godot::CameraStep(to_int(buildingP0_l._pos.x), to_int(buildingP0_l._pos.y), 0),
 		new godot::CameraStep(to_int(buildingP1_l._pos.x), to_int(buildingP1_l._pos.y), 1),
 	};

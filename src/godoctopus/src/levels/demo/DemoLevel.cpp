@@ -168,7 +168,7 @@ std::list<Steppable *> DemoLevelSteps(
 		std::vector<unsigned long> handles_l = getHandlesAnyPlayer(entityInfo_p, "gate");
 		for(unsigned long gateHandle_l : handles_l)
 		{
-			spawners_l.push_back(new FlyingCommandSpawnStep(new TimerDamage(flyingCommandHandle_l++, anchorTickRate_l, 0, playerIdx_l, "Anchor", Handle(gateHandle_l))));
+			spawners_l.push_back(new FlyingCommandSpawnStep(new TimerDamage(anchorTickRate_l, 0, playerIdx_l, "Anchor", Handle(gateHandle_l))));
 		}
 		spawners_l.push_back(new TriggerSpawn(new AnchorTrigger(lib_p, rand_p, 150, playerIdx_l, forbidden_l)));
 		unsigned long seed_l = rand_p.roll(0,std::numeric_limits<int>::max());
