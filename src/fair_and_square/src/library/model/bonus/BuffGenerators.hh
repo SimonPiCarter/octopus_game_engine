@@ -9,6 +9,7 @@
 #include "state/entity/buff/AnyBuff.hh"
 #include "state/entity/attackModifier/AttackModifier.hh"
 #include "utils/RandomGenerator.hh"
+#include "utils/Vector.hh"
 
 #include "library/model/divinity/DivinityModelLoader.hh"
 #include "library/model/survival/SurvivalModelLoader.hh"
@@ -62,7 +63,23 @@ struct UpgradeOption
     std::string _upgrade;
 };
 
-using SingleOption = std::variant<NoOption, BuffOption, ModifierOption, DoubleBuffOption, DivinityOption, SurvivalOption, UpgradeOption>;
+struct SpawnUnitOption
+{
+    unsigned long _player;
+    std::string _model;
+    octopus::Vector _pos;
+};
+
+using SingleOption = std::variant<
+    NoOption,
+    BuffOption,
+    ModifierOption,
+    DoubleBuffOption,
+    DivinityOption,
+    SurvivalOption,
+    UpgradeOption,
+    SpawnUnitOption
+>;
 
 struct Option
 {

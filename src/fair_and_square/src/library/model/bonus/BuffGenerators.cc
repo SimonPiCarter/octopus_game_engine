@@ -1,11 +1,15 @@
 #include "BuffGenerators.hh"
 
+#include "command/flying/CommandSpawnUnit.hh"
+#include "library/Library.hh"
 #include "state/State.hh"
-#include "state/player/Player.hh"
+#include "state/entity/Unit.hh"
 #include "state/entity/attackModifier/AttackModifier.hh"
+#include "state/player/Player.hh"
 #include "step/player/PlayerBuffAllStep.hh"
 #include "step/player/PlayerAttackModAllStep.hh"
 #include "step/player/PlayerLevelUpUpgradeStep.hh"
+#include "step/command/flying/FlyingCommandSpawnStep.hh"
 
 using namespace octopus;
 
@@ -54,6 +58,13 @@ void genStep(Library const &lib_p, std::vector<Steppable *> &steppables_p, Survi
 void genStep(Library const &lib_p, std::vector<Steppable *> &steppables_p, UpgradeOption const &option_p)
 {
     steppables_p.push_back(new PlayerLevelUpUpgradeStep(option_p._player, option_p._upgrade));
+}
+
+void genStep(Library const &lib_p, std::vector<Steppable *> &steppables_p, SpawnUnitOption const &option_p)
+{
+    Unit unit_l(option_p._pos, false, lib_p.getUnitModel(option_p._model));
+    unit_l._player = option_p._player;
+    steppables_p.push_back(new FlyingCommandSpawnStep(new CommandSpawnUnit(unit_l)));
 }
 
 std::vector<Steppable *> BuffGenerator::genSteppables(octopus::State const &state_p, unsigned long options_p) const

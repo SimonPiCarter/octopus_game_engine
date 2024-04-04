@@ -202,6 +202,20 @@ void Option::update(UpgradeOption const &option_p)
 	_desc.push_back((option_p._upgrade+"_tooltip").c_str());
 }
 
+void Option::update(SpawnUnitOption const &option_p)
+{
+    _params.clear();
+    _desc.clear();
+    _stats_name.clear();
+
+    _modifier_name = "";
+    _model_name = option_p._model.c_str();
+    _player = option_p._player;
+    _stats_name.push_back("");
+    _params.push_back(TypedArray<String>());
+	_desc.push_back((option_p._model+"_tooltip").c_str());
+}
+
 void Option::updateFromModifier(octopus::NoModifier const &mod_p)
 {
     _modifier_name = "NoModifier";
