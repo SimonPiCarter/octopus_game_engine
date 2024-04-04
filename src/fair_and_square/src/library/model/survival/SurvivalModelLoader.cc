@@ -20,6 +20,8 @@
 // fas
 #include "library/model/AnchorTrigger.hh"
 
+#include "SurvivalNameGenerator.hh"
+
 using namespace octopus;
 
 namespace fas
@@ -293,6 +295,148 @@ void createSurvivalAoe(Library &lib_p)
 	createSpecialBuilding("survival_aoe", "survival_AreaOfDamage_building", lib_p);
 }
 
+/// specials
+// buffers
+
+void createSurvivalBufferAttackspeed(Library &lib_p)
+{
+	UnitModel unitModel_l { false, 0.5, 0.04, 250 };
+	unitModel_l._isUnit = true;
+	unitModel_l._productionTime = 4000;
+	unitModel_l._cost["bloc"] = 50;
+	unitModel_l._damage = 2;
+	unitModel_l._armor = 0;
+	unitModel_l._range = 7;
+	unitModel_l._lineOfSight = 10;
+	unitModel_l._fullReload = 200;
+	unitModel_l._windup = 20;
+
+	// buff on atack speed
+	unitModel_l._buffer._buff._id = BufferAttackSpeedGen::gen();
+	unitModel_l._buffer._buff._type = TyppedBuff::Type::FullReload;
+	unitModel_l._buffer._buff._duration = 3000;
+	unitModel_l._buffer._buff._offset = 0;
+	unitModel_l._buffer._buff._coef = -0.40;
+	unitModel_l._buffer._range = 5.;
+	unitModel_l._buffer._reload = 300;
+	unitModel_l._buffer._active = true;
+
+	lib_p.registerUnitModel(BufferAttackSpeedGen::gen(), unitModel_l);
+}
+
+void createSurvivalBufferArmor(Library &lib_p)
+{
+	UnitModel unitModel_l { false, 0.5, 0.04, 250 };
+	unitModel_l._isUnit = true;
+	unitModel_l._productionTime = 4000;
+	unitModel_l._cost["bloc"] = 50;
+	unitModel_l._damage = 2;
+	unitModel_l._armor = 0;
+	unitModel_l._range = 7;
+	unitModel_l._lineOfSight = 10;
+	unitModel_l._fullReload = 200;
+	unitModel_l._windup = 20;
+
+	// buff on armor
+	unitModel_l._buffer._buff._id = BufferArmorGen::gen();
+	unitModel_l._buffer._buff._type = TyppedBuff::Type::Armor;
+	unitModel_l._buffer._buff._duration = 3000;
+	unitModel_l._buffer._buff._offset = 2;
+	unitModel_l._buffer._buff._coef = 1;
+	unitModel_l._buffer._range = 5.;
+	unitModel_l._buffer._reload = 300;
+	unitModel_l._buffer._active = true;
+
+	lib_p.registerUnitModel(BufferArmorGen::gen(), unitModel_l);
+}
+
+void createSurvivalBufferDamage(Library &lib_p)
+{
+	UnitModel unitModel_l { false, 0.5, 0.04, 250 };
+	unitModel_l._isUnit = true;
+	unitModel_l._productionTime = 4000;
+	unitModel_l._cost["bloc"] = 50;
+	unitModel_l._damage = 2;
+	unitModel_l._armor = 0;
+	unitModel_l._range = 7;
+	unitModel_l._lineOfSight = 10;
+	unitModel_l._fullReload = 200;
+	unitModel_l._windup = 20;
+
+	// buff on armor
+	unitModel_l._buffer._buff._id = BufferDamageGen::gen();
+	unitModel_l._buffer._buff._type = TyppedBuff::Type::Damage;
+	unitModel_l._buffer._buff._duration = 3000;
+	unitModel_l._buffer._buff._offset = 0;
+	unitModel_l._buffer._buff._coef = 0.5;
+	unitModel_l._buffer._range = 5.;
+	unitModel_l._buffer._reload = 300;
+	unitModel_l._buffer._active = true;
+
+	lib_p.registerUnitModel(BufferDamageGen::gen(), unitModel_l);
+}
+
+/// specials
+// supers
+
+void createSurvivalSuperAoe(Library &lib_p)
+{
+	UnitModel unitModel_l { false, 0.5, 0.04, 250 };
+	unitModel_l._isUnit = true;
+	unitModel_l._productionTime = 4000;
+	unitModel_l._cost["bloc"] = 50;
+	unitModel_l._damage = 100;
+	unitModel_l._armor = 0;
+	unitModel_l._range = 6;
+	unitModel_l._lineOfSight = 10;
+	unitModel_l._fullReload = 150;
+	unitModel_l._windup = 20;
+	unitModel_l._defaultAttackMod = AoEModifier(0.75, 4., false);
+
+	lib_p.registerUnitModel(SuperAoeGen::gen(), unitModel_l);
+}
+
+void createSurvivalSuperChaining(Library &lib_p)
+{
+	UnitModel unitModel_l { false, 0.5, 0.04, 250 };
+	unitModel_l._isUnit = true;
+	unitModel_l._productionTime = 4000;
+	unitModel_l._cost["bloc"] = 50;
+	unitModel_l._damage = 100;
+	unitModel_l._armor = 0;
+	unitModel_l._range = 6;
+	unitModel_l._lineOfSight = 10;
+	unitModel_l._fullReload = 150;
+	unitModel_l._windup = 20;
+	unitModel_l._defaultAttackMod = ChainingModifier(1, 4, 0.8, 4);
+
+	lib_p.registerUnitModel(SuperChainingGen::gen(), unitModel_l);
+}
+
+void createSurvivalSuperSniper(Library &lib_p)
+{
+	UnitModel unitModel_l { false, 0.5, 0.04, 150 };
+	unitModel_l._isUnit = true;
+	unitModel_l._productionTime = 4000;
+	unitModel_l._cost["bloc"] = 50;
+	unitModel_l._damage = 250;
+	unitModel_l._armor = 0;
+	unitModel_l._range = 10;
+	unitModel_l._lineOfSight = 12;
+	unitModel_l._fullReload = 200;
+	unitModel_l._windup = 20;
+
+	lib_p.registerUnitModel(SuperSniperGen::gen(), unitModel_l);
+}
+
+////////////////////////////////
+///							 ///
+///							 ///
+/// 		Ugrades			 ///
+/// 						 ///
+/// 						 ///
+////////////////////////////////
+
 template<int offset, TyppedBuff::Type type>
 class UpgradeBasic : public StepUpgradeGenerator
 {
@@ -488,6 +632,12 @@ void loadSurvivalModels(Library &lib_p)
 	createSurvivalTank(lib_p);
 	createSurvivalAoe(lib_p);
 	createUpgrades(lib_p);
+	createSurvivalBufferAttackspeed(lib_p);
+	createSurvivalBufferArmor(lib_p);
+	createSurvivalBufferDamage(lib_p);
+	createSurvivalSuperAoe(lib_p);
+	createSurvivalSuperChaining(lib_p);
+	createSurvivalSuperSniper(lib_p);
 }
 
 

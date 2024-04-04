@@ -103,6 +103,16 @@ Option upgrade_option(octopus::State const &, unsigned long player_p, octopus::R
 	return opt_l;
 }
 
+template< class unit_t >
+Option spawn_option(octopus::State const &, unsigned long player_p, octopus::RandomGenerator &, std::string const &)
+{
+	Option opt_l;
+
+	opt_l._playerOption = SpawnUnitOption { player_p, unit_t::gen(), octopus::Vector(120, 120) };
+
+	return opt_l;
+}
+
 template< class upgrade_t, class unit_t >
 void add_upgrade(octopus::Player const &player_p, std::list<AnchorOptionGenerator> &generators_p)
 {
@@ -139,6 +149,13 @@ std::list<AnchorOptionGenerator> generateOptionGenerators(octopus::State const &
 			{ 5, flat_basic<TriangleGen, octopus::TyppedBuff::Type::Damage, 500, 500>, false },
 			{ 5, flat_basic<CircleGen, octopus::TyppedBuff::Type::HpMax, 4000, 4000>, false },
 			{ 5, flat_basic<TriangleGen, octopus::TyppedBuff::Type::HpMax, 4000, 4000>, false },
+		// Spawn supers
+			{ 3, spawn_option<BufferAttackSpeedGen>, false},
+			{ 3, spawn_option<BufferArmorGen>, false},
+			{ 3, spawn_option<BufferDamageGen>, false},
+			{ 3, spawn_option<SuperAoeGen>, false},
+			{ 3, spawn_option<SuperChainingGen>, false},
+			{ 3, spawn_option<SuperSniperGen>, false},
 	};
 
 	octopus::Player const &player_l = *state_p.getPlayer(player_p);
@@ -149,8 +166,8 @@ std::list<AnchorOptionGenerator> generateOptionGenerators(octopus::State const &
 		generators_l.push_back({ 10, flat_basic<AttackSpeedDivGen, octopus::TyppedBuff::Type::Damage, 200, 200>, false });
 		generators_l.push_back({ 5, flat_basic<AttackSpeedDivGen, octopus::TyppedBuff::Type::Damage, 500, 500>, false });
 		// Full Reload
-		generators_l.push_back({ 10, coef_basic<AttackSpeedDivGen, octopus::TyppedBuff::Type::FullReload, 5, 5>, false });
-		generators_l.push_back({ 5, coef_basic<AttackSpeedDivGen, octopus::TyppedBuff::Type::FullReload, 10, 10>, false });
+		generators_l.push_back({ 10, coef_basic<AttackSpeedDivGen, octopus::TyppedBuff::Type::FullReload, -5, -5>, false });
+		generators_l.push_back({ 5, coef_basic<AttackSpeedDivGen, octopus::TyppedBuff::Type::FullReload, -10, -10>, false });
 		// abilities
 		add_upgrades_ability<AttackSpeedDivGen>(player_l, generators_l);
 	}
