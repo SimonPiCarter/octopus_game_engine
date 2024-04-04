@@ -35,6 +35,7 @@ add_library(octopus
 	${CMAKE_CURRENT_SOURCE_DIR}/src/command/entity/EntityWaitCommand.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/command/flying/eot/DamageOverTime.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/command/flying/CommandEffectOverTime.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/src/command/flying/CommandSpawnUnit.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/command/player/PlayerChoseOptionCommand.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/command/spawner/AreaSpawnerCommand.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/command/spawner/ProceduralTerrain.cc
