@@ -26,8 +26,8 @@ using namespace octopus;
 class TestResourceOverTime : public CommandEffectOverTime
 {
 public:
-	TestResourceOverTime(Handle handle_p, unsigned long tickRate_p, unsigned long nbOfTicks_p)
-		: CommandEffectOverTime(handle_p, tickRate_p, nbOfTicks_p) {}
+	TestResourceOverTime(unsigned long tickRate_p, unsigned long nbOfTicks_p)
+		: CommandEffectOverTime(tickRate_p, nbOfTicks_p) {}
 
 
 	virtual void applyEffect(Step & step_p, State const &, CommandData const *, PathManager &) const
@@ -47,7 +47,7 @@ TEST(flyingCommantTest, simple)
 {
 	Controller controller_l({
 		new PlayerSpawnStep(0, 0),
-		new FlyingCommandSpawnStep(new TestResourceOverTime(Handle(0), 10, 2)),
+		new FlyingCommandSpawnStep(new TestResourceOverTime(10, 2)),
 	}, 1.);
 
 

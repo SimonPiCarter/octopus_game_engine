@@ -18,10 +18,10 @@ namespace octopus
 class ChainingOverTime : public CommandEffectOverTime
 {
 public:
-    ChainingOverTime(Handle handle_p, unsigned long tickRate_p, Fixed dmg_p,
+    ChainingOverTime(unsigned long tickRate_p, Fixed dmg_p,
                     Handle ent_p, unsigned long nbOfOccurence_p, Fixed ratio_p,
                     Fixed range_p, unsigned long team_p, std::list<Handle> const &oldTargets_p = {})
-        : CommandEffectOverTime(handle_p, tickRate_p, 1)
+        : CommandEffectOverTime(tickRate_p, 1)
         , _dmg(dmg_p)
         , _ent(ent_p)
         , _nbOfOccurence(nbOfOccurence_p)
@@ -81,9 +81,8 @@ void ChainingOverTime::applyEffect(Step & step_p, State const &state_p, CommandD
     {
         std::list<Handle> oldTargets_l = _oldTargets;
         oldTargets_l.push_back(target_l->_handle);
-        Handle idx_l = state_p.getFlyingCommandHandle(step_p.getFlyingCommandSpawned());
         step_p.addSteppable(new FlyingCommandSpawnStep(
-            new ChainingOverTime(idx_l, _tickRate, _dmg*_ratio, target_l->_handle, _nbOfOccurence-1, _ratio, _range, _team, oldTargets_l)));
+            new ChainingOverTime(_tickRate, _dmg*_ratio, target_l->_handle, _nbOfOccurence-1, _ratio, _range, _team, oldTargets_l)));
     }
 }
 
@@ -91,9 +90,8 @@ void ChainingModifier::newAttackSteppable(Step &step_p, AttackModifierData const
 {
     unsigned long team_l = data_p.team;
 
-    Handle idx_l = state_p.getFlyingCommandHandle(step_p.getFlyingCommandSpawned());
     step_p.addSteppable(new FlyingCommandSpawnStep(
-        new ChainingOverTime(idx_l, _delay, data_p.baseDamage*_ratio, data_p.target, _nbOfTicks, _ratio, _range, team_l, {data_p.target})));
+        new ChainingOverTime(_delay, data_p.baseDamage*_ratio, data_p.target, _nbOfTicks, _ratio, _range, team_l, {data_p.target})));
 
     if(!disableMainAttack_p)
     {

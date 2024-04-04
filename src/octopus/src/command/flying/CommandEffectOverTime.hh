@@ -13,8 +13,8 @@ namespace octopus
 class CommandEffectOverTime : public FlyingCommand
 {
 public:
-	CommandEffectOverTime(Handle handle_p, unsigned long tickRate_p, unsigned long nbOfTicks_p, bool applyOnStart_p=false)
-		: FlyingCommand(handle_p), _tickRate(tickRate_p), _nbOfTicks(nbOfTicks_p), _applyOnStart(applyOnStart_p)
+	CommandEffectOverTime(unsigned long tickRate_p, unsigned long nbOfTicks_p, bool applyOnStart_p=false)
+		: FlyingCommand(), _tickRate(tickRate_p), _nbOfTicks(nbOfTicks_p), _applyOnStart(applyOnStart_p)
 	{}
 
 	/// @brief compile command or info into the step
