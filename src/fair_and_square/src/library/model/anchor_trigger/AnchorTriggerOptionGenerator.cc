@@ -106,7 +106,7 @@ Option upgrade_option(octopus::State const &, unsigned long player_p, octopus::R
 template< class upgrade_t, class unit_t >
 void add_upgrade(octopus::Player const &player_p, std::list<AnchorOptionGenerator> &generators_p)
 {
-	if(octopus::getUpgradeLvl(player_p, UpgradeUnitGenerator<upgrade_t, unit_t>::gen()) > 0)
+	if(octopus::getUpgradeLvl(player_p, UpgradeUnitGenerator<upgrade_t, unit_t>::gen()) == 0)
 	{
 		generators_p.push_back({ 1, upgrade_option<upgrade_t, unit_t>, false });
 	}
