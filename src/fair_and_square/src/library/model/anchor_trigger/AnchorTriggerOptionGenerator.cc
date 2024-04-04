@@ -197,8 +197,8 @@ std::list<AnchorOptionGenerator> generateOptionGenerators(octopus::State const &
 		generators_l.push_back({ 10, flat_basic<RecycleDivGen, octopus::TyppedBuff::Type::DamageReturn, 5, 5>, false });
 		generators_l.push_back({ 5, flat_basic<RecycleDivGen, octopus::TyppedBuff::Type::DamageReturn, 10, 10>, false });
 		// Hp buffs
-		generators_l.push_back({ 10, flat_basic<RecycleDivGen, octopus::TyppedBuff::Type::HpMax, 100, 100>, false });
-		generators_l.push_back({ 5, flat_basic<RecycleDivGen, octopus::TyppedBuff::Type::HpMax, 400, 400>, false });
+		generators_l.push_back({ 10, flat_basic<RecycleDivGen, octopus::TyppedBuff::Type::HpMax, 1000, 1000>, false });
+		generators_l.push_back({ 5, flat_basic<RecycleDivGen, octopus::TyppedBuff::Type::HpMax, 4000, 4000>, false });
 		// abilities
 		add_upgrades_ability<RecycleDivGen>(player_l, generators_l);
 	}
