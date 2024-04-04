@@ -4,6 +4,7 @@
 
 // octopus
 #include "library/Library.hh"
+#include "state/entity/buff/AnyBuff.hh"
 #include "state/model/entity/UnitModel.hh"
 #include "state/model/entity/BuildingModel.hh"
 #include "state/model/entity/ResourceModel.hh"
@@ -61,7 +62,7 @@ void createSpecialBuilding(std::string const &name_unit, std::string const &name
 /// @param source_p
 /// @param
 /// @param
-void buff_with_hp_cost(TimedBuff buff_p, Fixed hpCost_p, Step &step_p, State const &state_p, Handle const &source_p, Handle const &, Vector const &)
+void buff_with_hp_cost(AnyBuff buff_p, Fixed hpCost_p, Step &step_p, State const &state_p, Handle const &source_p, Handle const &, Vector const &)
 {
 	step_p.addSteppable(new EntityBuffStep(source_p, buff_p));
 	if(! is_zero(hpCost_p))
@@ -73,7 +74,7 @@ void buff_with_hp_cost(TimedBuff buff_p, Fixed hpCost_p, Step &step_p, State con
 	}
 }
 
-void add_ability(UnitModel &model_p, TimedBuff const &buff_p, Fixed const hp_cost_p, std::string const &ability_name_p, std::string const &model_name_p)
+void add_ability(UnitModel &model_p, AnyBuff const &buff_p, Fixed const hp_cost_p, std::string const &ability_name_p, std::string const &model_name_p)
 {
 	using namespace std::placeholders;
 
@@ -82,7 +83,7 @@ void add_ability(UnitModel &model_p, TimedBuff const &buff_p, Fixed const hp_cos
 	model_p._abilities[ability_name_p]._runnable = std::bind(
 													buff_with_hp_cost, buff_p, hp_cost_p, _1, _2, _3, _4, _5);
 	model_p._abilities[ability_name_p]._requirements._upgradeLvl[ability_name_p+"."+model_name_p] = 1;
-	model_p._abilityReloadTime[ability_name_p] = buff_p._duration;
+	model_p._abilityReloadTime[ability_name_p] = get_duration(buff_p);
 }
 
 void add_abilities(UnitModel &model_p, std::string const &model_name_p)
@@ -119,29 +120,29 @@ void add_abilities(UnitModel &model_p, std::string const &model_name_p)
 		TimedBuff buff_1_l;
 		buff_1_l._coef = -0.8;
 		buff_1_l._type = TyppedBuff::Type::Damage;
-		buff_1_l._duration = 1500;
 		buff_1_l._id = "survival_armor_hp_low_damage.1";
 
 		TimedBuff buff_2_l;
 		buff_2_l._offset = 100;
 		buff_2_l._type = TyppedBuff::Type::HpMax;
-		buff_2_l._duration = 1500;
 		buff_2_l._id = "survival_armor_hp_low_damage.2";
 
 		TimedBuff buff_3_l;
 		buff_3_l._offset = 20;
 		buff_3_l._type = TyppedBuff::Type::Armor;
-		buff_3_l._duration = 1500;
 		buff_3_l._id = "survival_armor_hp_low_damage.3";
+
+		CompositeBuff buff_main_l;
+		buff_main_l._buffs = { buff_1_l, buff_2_l, buff_3_l };
+		buff_main_l._id = "survival_armor_hp_low_damage";
+		buff_main_l._duration = 1500;
 
 		model_p._abilities["survival_armor_hp_low_damage"]._id = "survival_armor_hp_low_damage";
 		model_p._abilities["survival_armor_hp_low_damage"]._reloadKey = "survival_armor_hp_low_damage";
 		model_p._abilities["survival_armor_hp_low_damage"]._runnable =
-			[buff_1_l, buff_2_l, buff_3_l](Step &step_p, State const &, Handle const &source_p, Handle const &, Vector const &)
+			[buff_main_l](Step &step_p, State const &, Handle const &source_p, Handle const &, Vector const &)
 			{
-				step_p.addSteppable(new EntityBuffStep(source_p, buff_1_l));
-				step_p.addSteppable(new EntityBuffStep(source_p, buff_2_l));
-				step_p.addSteppable(new EntityBuffStep(source_p, buff_3_l));
+				step_p.addSteppable(new EntityBuffStep(source_p, buff_main_l));
 			};
 		model_p._abilities["survival_armor_hp_low_damage"]._requirements._upgradeLvl["survival_armor_hp_low_damage."+model_name_p] = 1;
 		model_p._abilityReloadTime["survival_armor_hp_low_damage"] = 60000;
@@ -171,22 +172,24 @@ void add_abilities(UnitModel &model_p, std::string const &model_name_p)
 		TimedBuff buff_1_l;
 		buff_1_l._coef = 1;
 		buff_1_l._type = TyppedBuff::Type::FullReload;
-		buff_1_l._duration = 1500;
 		buff_1_l._id = "survival_double_damage.1";
 
 		TimedBuff buff_2_l;
 		buff_2_l._coef = 1;
 		buff_2_l._type = TyppedBuff::Type::Damage;
-		buff_2_l._duration = 1500;
 		buff_2_l._id = "survival_double_damage.2";
+
+		CompositeBuff buff_main_l;
+		buff_main_l._buffs = { buff_1_l, buff_2_l };
+		buff_main_l._id = "survival_double_damage";
+		buff_main_l._duration = 1500;
 
 		model_p._abilities["survival_double_damage"]._id = "survival_double_damage";
 		model_p._abilities["survival_double_damage"]._reloadKey = "survival_double_damage";
 		model_p._abilities["survival_double_damage"]._runnable =
-			[buff_1_l, buff_2_l](Step &step_p, State const &, Handle const &source_p, Handle const &, Vector const &)
+			[buff_main_l](Step &step_p, State const &, Handle const &source_p, Handle const &, Vector const &)
 			{
-				step_p.addSteppable(new EntityBuffStep(source_p, buff_1_l));
-				step_p.addSteppable(new EntityBuffStep(source_p, buff_2_l));
+				step_p.addSteppable(new EntityBuffStep(source_p, buff_main_l));
 			};
 		model_p._abilities["survival_double_damage"]._requirements._upgradeLvl["survival_double_damage."+model_name_p] = 1;
 		model_p._abilityReloadTime["survival_double_damage"] = 6000;
