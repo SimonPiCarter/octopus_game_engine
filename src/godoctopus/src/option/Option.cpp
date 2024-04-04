@@ -63,6 +63,15 @@ bool isBuff(octopus::Fixed const &delta_p, octopus::TyppedBuff::Type type_p)
     return delta_p > 0;
 }
 
+bool isOffsetPercent(octopus::TyppedBuff::Type type_p)
+{
+    if(type_p == octopus::TyppedBuff::Type::DamageReturn)
+    {
+        return true;
+    }
+    return false;
+}
+
 void Option::pushOption(octopus::AnyBuff const &buff_p)
 {
     if(std::holds_alternative<octopus::TimedBuff>(buff_p))
@@ -70,13 +79,15 @@ void Option::pushOption(octopus::AnyBuff const &buff_p)
         octopus::TimedBuff const &tBuff_l = std::get<octopus::TimedBuff>(buff_p);
         std::stringstream ss_l;
         std::string color_l = isBuff(tBuff_l._offset, tBuff_l._type) ? "green" : "red";
-        if(tBuff_l._offset > 0)
+        octopus::Fixed offset_l = isOffsetPercent(tBuff_l._type) ? tBuff_l._offset*100 : tBuff_l._offset;
+        std::string percent_l = isOffsetPercent(tBuff_l._type) ? "%" : "";
+        if(offset_l > 0)
         {
-            ss_l << "Increase "<<desc_buff(tBuff_l)<<" by [color="<<color_l<<"]{1}[/color].\n";
+            ss_l << "Increase "<<desc_buff(tBuff_l)<<" by [color="<<color_l<<"]{1}[/color]"<<percent_l<<".\n";
         }
-        if(tBuff_l._offset < 0)
+        if(offset_l < 0)
         {
-            ss_l << "Decrease "<<desc_buff(tBuff_l)<<" by [color="<<color_l<<"]{1}[/color].\n";
+            ss_l << "Decrease "<<desc_buff(tBuff_l)<<" by [color="<<color_l<<"]{1}[/color]"<<percent_l<<".\n";
         }
         color_l = isBuff(tBuff_l._coef, tBuff_l._type) ? "green" : "red";
         if(tBuff_l._coef > 0)
@@ -90,7 +101,7 @@ void Option::pushOption(octopus::AnyBuff const &buff_p)
 
         _params.push_back(TypedArray<String>());
         _params.back().append(octopus::to_string(tBuff_l._type).c_str());
-        _params.back().append(std::to_string(std::abs(octopus::to_int(tBuff_l._offset))).c_str());
+        _params.back().append(std::to_string(std::abs(octopus::to_int(offset_l))).c_str());
         _params.back().append(std::to_string(std::abs(octopus::to_int(tBuff_l._coef*100.))).c_str());
 
         _stats_name.push_back(octopus::to_string(tBuff_l._type).c_str());
