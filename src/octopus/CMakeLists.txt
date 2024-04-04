@@ -58,6 +58,7 @@ add_library(octopus
 	${CMAKE_CURRENT_SOURCE_DIR}/src/state/entity/buff/AnyBuff.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/state/entity/buff/Buff.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/state/entity/buff/Buffer.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/src/state/entity/buff/CompositeBuff.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/state/entity/buff/ConditionalBuff.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/state/entity/buff/ModifierAoEBuff.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/state/entity/buff/ModifierBuff.cc

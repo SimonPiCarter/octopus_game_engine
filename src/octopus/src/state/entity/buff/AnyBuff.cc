@@ -42,6 +42,16 @@ bool is_no_op_decoy(ModifierAoEBuff const &buff_p)
 	return ::is_zero(buff_p._deltaRatio) && ::is_zero(buff_p._deltaRange);
 }
 
+bool is_no_op_decoy(CompositeBuff const &buff_p)
+{
+	bool no_op_l = true;
+	for(CompositableBuff const &buff_l : buff_p._buffs)
+	{
+		std::visit([&](auto && arg) { no_op_l &= is_no_op_decoy(arg); }, buff_l);
+	}
+	return no_op_l;
+}
+
 bool is_no_op(AnyBuff const &buff_p)
 {
 	bool no_op_l = false;
