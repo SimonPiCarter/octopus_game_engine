@@ -26,7 +26,7 @@ std::string to_string(TyppedBuff::Type type_p)
 		case TyppedBuff::Type::HpMax:
 			return "HpMax";
 		case TyppedBuff::Type::HpRegeneration:
-			return "HpMax";
+			return "HpRegeneration";
 		case TyppedBuff::Type::Production:
 			return "Production";
 		case TyppedBuff::Type::Harvest:
