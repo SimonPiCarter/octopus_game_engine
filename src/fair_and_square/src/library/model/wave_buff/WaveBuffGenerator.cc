@@ -10,7 +10,7 @@ template < octopus::TyppedBuff::Type type_t, int base >
 octopus::TimedBuff flat_basic(unsigned long waveCount_p)
 {
 	octopus::TimedBuff tBuff_l;
-	tBuff_l._id = "flat_basic."+std::to_string(waveCount_p);
+	tBuff_l._id = "wave_buff.flat_basic."+std::to_string(waveCount_p);
 	tBuff_l._type = type_t;
 	tBuff_l._offset = base * waveCount_p;
 

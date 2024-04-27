@@ -276,8 +276,8 @@ TypedArray<godot::Buff> Entity::get_buffs(Controller const *controller_p) const
     octopus::Entity const *ent_l = controller_p->getEntity(octopus::Handle(_index, _revision));
     for(auto &&pair_l : ent_l->_registeredBuff)
     {
-        octopus::AnyBuff const &buff_l = pair_l.second;
-        unsigned long duration_l = octopus::get_duration(buff_l);
+        octopus::AnyBuff const &anyBuff_l = pair_l.second;
+        unsigned long duration_l = octopus::get_duration(anyBuff_l);
         std::string const &name_l = pair_l.first;
         if(ent_l->_timeSinceBuff.at(name_l) < duration_l
         || duration_l == 0)
@@ -286,6 +286,44 @@ TypedArray<godot::Buff> Entity::get_buffs(Controller const *controller_p) const
             buff_l->setName(name_l.c_str());
             buff_l->setTimeElapsed(ent_l->_timeSinceBuff.at(name_l));
             buff_l->setDuration(duration_l);
+
+            // fill desc and params
+            if(std::holds_alternative<octopus::TimedBuff>(anyBuff_l))
+            {
+                octopus::TimedBuff const &tBuff_l = std::get<octopus::TimedBuff>(anyBuff_l);
+                std::stringstream ss_l;
+                ss_l<<"timed_buff";
+                using octopus::Fixed;
+                if(tBuff_l._offset != Fixed::Zero())
+                {
+                    if(tBuff_l._offset > Fixed::Zero())
+                    {
+                        ss_l<<"_p_offset";
+                        buff_l->addParam(std::to_string(tBuff_l._offset.data()/(Fixed::OneAsLong())).c_str());
+                    }
+                    else
+                    {
+                        ss_l<<"_n_offset";
+                        buff_l->addParam(std::to_string(-tBuff_l._offset.data()/(Fixed::OneAsLong())).c_str());
+                    }
+                }
+                if(tBuff_l._coef != Fixed::Zero())
+                {
+                    if(tBuff_l._coef > Fixed::Zero())
+                    {
+                        ss_l<<"_p_coef";
+                        buff_l->addParam(std::to_string(tBuff_l._coef.data()/(Fixed::OneAsLong()/100)).c_str());
+                    }
+                    else
+                    {
+                        ss_l<<"_n_coef";
+                        buff_l->addParam(std::to_string(-tBuff_l._coef.data()/(Fixed::OneAsLong()/100)).c_str());
+                    }
+                }
+                buff_l->setDesc(ss_l.str().c_str());
+                buff_l->addParam(octopus::to_string(tBuff_l._type).c_str());
+            }
+
 
             buffs_l.push_back(buff_l);
         }
@@ -321,10 +359,17 @@ void Buff::_bind_methods()
     ClassDB::bind_method(D_METHOD("setName", "name"), &Buff::setName);
     ClassDB::bind_method(D_METHOD("getName"), &Buff::getName);
 
+    ClassDB::bind_method(D_METHOD("setDesc", "desc"), &Buff::setDesc);
+    ClassDB::bind_method(D_METHOD("getDesc"), &Buff::getDesc);
+
+    ClassDB::bind_method(D_METHOD("addParam", "params"), &Buff::addParam);
+    ClassDB::bind_method(D_METHOD("getParams"), &Buff::getParams);
+
     ADD_GROUP("Buff", "Buff_");
     ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "time_elapsed"), "setTimeElapsed", "getTimeElapsed");
     ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "duration"), "setDuration", "getDuration");
     ADD_PROPERTY(PropertyInfo(Variant::STRING, "name"), "setName", "getName");
+    ADD_PROPERTY(PropertyInfo(Variant::STRING, "desc"), "setDesc", "getDesc");
 }
 
 void Entity::_bind_methods()

@@ -49,12 +49,20 @@ public:
     float getDuration() const { return _duration; }
 
     void setName(String const &name_p) { _name = name_p; }
-    String getName() const { return _name; }
+    String const &getName() const { return _name; }
+
+    void setDesc(String const &desc_p) { _desc = desc_p; }
+    String const &getDesc() const { return _desc; }
+
+    void addParam(String const &param_p) { _params.append(param_p); }
+    TypedArray<String> getParams() const { return _params; }
 
 private:
     float _timeElapsed = 0;
     float _duration = 0;
     String _name;
+    String _desc;
+    TypedArray<String> _params;
 };
 
 class Entity : public Node {
