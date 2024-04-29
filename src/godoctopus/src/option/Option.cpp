@@ -188,14 +188,54 @@ void Option::update(SurvivalOption const &option_p)
 	_desc.push_back((fas::survivalSpecialTypeName(option_p._type)+"_tooltip").c_str());
 }
 
+
+// Create custom split() function.
+std::vector<std::string> customSplit(std::string str, char separator)
+{
+	std::vector<std::string> strings;
+	using namespace std;
+    int startIndex = 0, endIndex = 0;
+    for (int i = 0; i <= str.size(); i++) {
+
+        // If we reached the end of the word or the end of the input.
+        if (str[i] == separator || i == str.size()) {
+            endIndex = i;
+            string temp;
+            temp.append(str, startIndex, endIndex - startIndex);
+            strings.push_back(temp);
+            startIndex = endIndex + 1;
+        }
+    }
+	return strings;
+}
+
+
 void Option::update(UpgradeOption const &option_p)
 {
     _params.clear();
     _desc.clear();
     _stats_name.clear();
 
-    _modifier_name = "";
-    _model_name = option_p._upgrade.c_str();
+	if (option_p._upgrade.find("upgrade_unit") != std::string::npos)
+	{
+		std::vector<std::string> strings_l = customSplit(option_p._upgrade, '.');
+		if(strings_l.size() > 2)
+		{
+			_modifier_name = strings_l[1].c_str();
+			_model_name = strings_l[2].c_str();
+		}
+		else
+		{
+			_modifier_name = "";
+			_model_name = option_p._upgrade.c_str();
+		}
+	}
+	else
+	{
+		_modifier_name = "";
+		_model_name = option_p._upgrade.c_str();
+	}
+
     _player = option_p._player;
     _stats_name.push_back("");
     _params.push_back(TypedArray<String>());

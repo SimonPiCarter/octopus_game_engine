@@ -29,9 +29,9 @@ struct SuperSniperGen 	{ constexpr static char const* gen() { return "survival_s
 ///
 
 struct AttackSpeedAbility { constexpr static char const * gen() { return "survival_attack_speed_ability"; } };
-struct AttackSpeedAbilityHp { constexpr static char const * gen() { return "survival_attack_speed_ability.hp"; } };
+struct AttackSpeedAbilityHp { constexpr static char const * gen() { return "survival_attack_speed_ability_hp"; } };
 struct ArmorAbility { constexpr static char const * gen() { return "survival_armor_ability"; } };
-struct ArmorAbilityHp { constexpr static char const * gen() { return "survival_armor_ability.hp"; } };
+struct ArmorAbilityHp { constexpr static char const * gen() { return "survival_armor_ability_hp"; } };
 struct ArmorHpLowDamage { constexpr static char const * gen() { return "survival_armor_hp_low_damage"; } };
 struct AegenBurst { constexpr static char const * gen() { return "survival_regen_burst"; } };
 struct AoubleDamage { constexpr static char const * gen() { return "survival_double_damage"; } };
@@ -39,6 +39,6 @@ struct AoubleDamage { constexpr static char const * gen() { return "survival_dou
 /// joined naming generator for upgrades and unit
 
 template< typename upgrade_t, typename unit_t >
-struct UpgradeUnitGenerator { static std::string gen() { return std::string(upgrade_t::gen()) + "." + std::string(unit_t::gen()); } };
+struct UpgradeUnitGenerator { static std::string gen() { return std::string("upgrade_unit.")+std::string(upgrade_t::gen()) + "." + std::string(unit_t::gen()); } };
 
 #endif
