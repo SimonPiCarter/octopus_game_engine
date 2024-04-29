@@ -147,7 +147,7 @@ void add_abilities(UnitModel &model_p, std::string const &model_name_p)
 				step_p.addSteppable(new EntityBuffStep(source_p, buff_main_l));
 			};
 		model_p._abilities["survival_armor_hp_low_damage"]._requirements._upgradeLvl["survival_armor_hp_low_damage."+model_name_p] = 1;
-		model_p._abilityReloadTime["survival_armor_hp_low_damage"] = 60000;
+		model_p._abilityReloadTime["survival_armor_hp_low_damage"] = 6000;
 	}
 
 	/// - survival_regen_burst
@@ -166,7 +166,7 @@ void add_abilities(UnitModel &model_p, std::string const &model_name_p)
 				step_p.addSteppable(new EntityBuffStep(source_p, buff_1_l));
 			};
 		model_p._abilities["survival_regen_burst"]._requirements._upgradeLvl["survival_regen_burst."+model_name_p] = 1;
-		model_p._abilityReloadTime["survival_regen_burst"] = 60000;
+		model_p._abilityReloadTime["survival_regen_burst"] = 6000;
 	}
 
 	/// - survival_double_damage
