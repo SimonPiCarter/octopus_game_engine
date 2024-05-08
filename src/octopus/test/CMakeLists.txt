@@ -29,6 +29,7 @@ target_sources (unit_tests
 	src/attackMoveBuffCommand.test.cc
 	src/attackMoveCommand.test.cc
 	src/attackMoveHealCommand.test.cc
+	src/autoAttackChainingCommand.test
 	src/autoAttackCommand.test.cc
 	src/autoBuffCommand.test.cc
 	src/autoHealCommand.test.cc
