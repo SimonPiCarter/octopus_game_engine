@@ -54,13 +54,15 @@ godot::Option *OptionManager::getPrimaryOption(uint32_t idx_p) const
 {
     godot::Option * opt_l = memnew(Option());
     opt_l->set_option(_queuedOptions.at(idx_p)._playerOption);
+	opt_l->set_rarity(_queuedOptions.at(idx_p)._rarity);
     return opt_l;
 }
 
-godot::Option *OptionManager::getSecondaryOption(uint32_t idx_p) const
+godot::Option *OptionManager::getSecondaryOption(uint32_t /*idx_p*/) const
 {
-    godot::Option * opt_l = memnew(Option());
-    opt_l->set_option(_queuedOptions.at(idx_p)._enemyOption);
+    // godot::Option * opt_l = memnew(Option());
+    // opt_l->set_option(_queuedOptions.at(idx_p)._enemyOption);
+	// opt_l->set_rarity(_queuedOptions.at(idx_p)._rarity);
     return nullptr;
 }
 

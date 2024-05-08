@@ -369,6 +369,11 @@ int Option::get_player() const
     return _player;
 }
 
+int Option::get_rarity() const
+{
+    return _rarity;
+}
+
 void Option::_bind_methods()
 {
     UtilityFunctions::print("Binding Option methods");
@@ -380,6 +385,7 @@ void Option::_bind_methods()
     ClassDB::bind_method(D_METHOD("get_model_name"), &Option::get_model_name);
     ClassDB::bind_method(D_METHOD("get_modifier_name"), &Option::get_modifier_name);
     ClassDB::bind_method(D_METHOD("get_player"), &Option::get_player);
+    ClassDB::bind_method(D_METHOD("get_rarity"), &Option::get_rarity);
 
     ADD_GROUP("Option", "Option_");
 }

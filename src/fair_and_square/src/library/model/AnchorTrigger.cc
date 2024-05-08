@@ -101,6 +101,18 @@ std::vector<Option> generateOptions(
 			{
 				// generate option
 				options_l.push_back(generator_l.generator(state_p, playerIdx_p, rand_l, id_p));
+				if(generator_l.proba_coef < 3)
+				{
+					options_l.back()._rarity = 3;
+				}
+				else if(generator_l.proba_coef < 5)
+				{
+					options_l.back()._rarity = 2;
+				}
+				else if(generator_l.proba_coef < 10)
+				{
+					options_l.back()._rarity = 1;
+				}
 				// if current option does not allow multiple
 				if(!generator_l.allow_multiple)
 				{

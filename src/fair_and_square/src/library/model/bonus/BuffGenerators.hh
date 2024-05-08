@@ -85,6 +85,7 @@ struct Option
 {
     SingleOption _playerOption = NoOption();
     SingleOption _enemyOption = NoOption();
+	int _rarity = 0;
 };
 
 class BuffGenerator : public octopus::StepOptionsGenerator

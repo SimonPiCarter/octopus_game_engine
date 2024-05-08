@@ -40,6 +40,8 @@ public:
     void set_option(SingleOption const &option_p);
     void set_option(unsigned long player_p, fas::DivinityType const &option_p);
 
+	void set_rarity(int rarity_p) { _rarity = rarity_p; }
+
     // Will be called by Godot when the class is registered
     // Use this to add properties to your class
     static void _bind_methods();
@@ -51,6 +53,7 @@ public:
     String get_modifier_name() const;
     String get_model_name() const;
     int get_player() const;
+	int get_rarity() const;
 
 private:
     std::vector<TypedArray<String>> _params;
@@ -59,6 +62,7 @@ private:
     String _modifier_name = "modifier_name";
     String _model_name = "model_name";
     int _player = 0;
+	int _rarity = 0;
 };
 
 }
