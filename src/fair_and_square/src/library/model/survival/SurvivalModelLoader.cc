@@ -242,7 +242,6 @@ void createSurvivalAttackSpeed(Library &lib_p)
 	unitModel_l._lineOfSight = 10;
 	unitModel_l._fullReload = 45;
 	unitModel_l._windup = 5;
-	unitModel_l._damageReturn = 0.5;
 
 	add_abilities(unitModel_l, "survival_attackspeed");
 
