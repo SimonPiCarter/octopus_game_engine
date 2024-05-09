@@ -50,6 +50,7 @@
 #include "levels/demo/DemoLevel.h"
 #include "levels/model/utils/EntitySpawner.h"
 #include "library/FirstRunicBoss.h"
+#include "DemoConstants.h"
 
 namespace godot {
 
@@ -343,7 +344,7 @@ void Controller::load_demo_level(int seed_p, WavePattern const * wavePattern_p, 
 		false,				// bosses
 		difficulty_p > 1,	// fast anchor
 		1,					// up per wave
-		true				// demo
+		IS_DEMO				// demo
 	);
 	spawners_l = level_model_p->generateLevelSteps(_lib, player_count_p);
 	spawners_l.splice(spawners_l.end(), levelsteps_l);
@@ -403,7 +404,7 @@ void Controller::load_survival_level(int seed_p, WavePattern const * wavePattern
 		bosses_p,				// bosses
 		fast_anchor_decay_p,	// fast anchor
 		buff_per_wave_p,		// up per wave
-		true					// demo
+		IS_DEMO					// demo
 	);
 	spawners_l = level_model_p->generateLevelSteps(_lib, player_count_p);
 	spawners_l.splice(spawners_l.end(), levelsteps_l);

@@ -9,6 +9,8 @@
 #include "state/player/Player.hh"
 #include "utils/Fixed.hh"
 
+#include "DemoConstants.h"
+
 
 Option no_op(octopus::State const &, unsigned long, octopus::RandomGenerator &, std::string const &) { return Option(); }
 
@@ -151,12 +153,15 @@ std::list<AnchorOptionGenerator> generateOptionGenerators(octopus::State const &
 			{ 5, flat_basic<TriangleGen, octopus::TyppedBuff::Type::HpMax, 4000, 4000>, false },
 		// Spawn supers
 			{ 3, spawn_option<BufferAttackSpeedGen>, false},
-			{ 3, spawn_option<BufferArmorGen>, false},
-			{ 3, spawn_option<BufferDamageGen>, false},
 			{ 3, spawn_option<SuperAoeGen>, false},
-			{ 3, spawn_option<SuperChainingGen>, false},
-			{ 3, spawn_option<SuperSniperGen>, false},
 	};
+	if(IS_DEMO)
+	{
+		generators_l.push_back({ 3, spawn_option<BufferArmorGen>, false});
+		generators_l.push_back({ 3, spawn_option<BufferDamageGen>, false});
+		generators_l.push_back({ 3, spawn_option<SuperChainingGen>, false});
+		generators_l.push_back({ 3, spawn_option<SuperSniperGen>, false});
+	}
 
 	octopus::Player const &player_l = *state_p.getPlayer(player_p);
 
@@ -171,7 +176,7 @@ std::list<AnchorOptionGenerator> generateOptionGenerators(octopus::State const &
 		// abilities
 		add_upgrades_ability<AttackSpeedDivGen>(player_l, generators_l);
 	}
-	else
+	else if(!IS_DEMO)
 	{
 		generators_l.push_back({ 1, special_type<fas::SurvivalSpecialType::AttackSpeed>, false });
 	}
@@ -203,7 +208,7 @@ std::list<AnchorOptionGenerator> generateOptionGenerators(octopus::State const &
 		// abilities
 		add_upgrades_ability<LifestealDivGen>(player_l, generators_l);
 	}
-	else
+	else if(!IS_DEMO)
 	{
 		generators_l.push_back({ 1, special_type<fas::SurvivalSpecialType::AreaOfDamage>, false });
 	}
