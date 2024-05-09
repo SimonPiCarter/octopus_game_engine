@@ -39,7 +39,11 @@ namespace demo
 /// @return
 std::list<octopus::Steppable *> DemoLevelSteps(octopus::Library &lib_p, octopus::RandomGenerator &rand_p,
 	std::vector<WavePoolInfo> const &waveInfo_p, unsigned long player_p, unsigned long playerCount_p,
-	std::vector<GodotEntityInfo> const &entityInfo_p, int difficulty_p,
+	std::vector<GodotEntityInfo> const &entityInfo_p,
+	bool two_direction_wave_p,
+	bool bosses_p,
+	bool fast_anchor_decay_p,
+	int buff_per_wave_p,
 	bool demo_p);
 
 /// @brief
@@ -48,7 +52,10 @@ std::list<octopus::Steppable *> DemoLevelSteps(octopus::Library &lib_p, octopus:
 /// @param playerCount_p
 /// @param difficulty_p Easiest is 1, Hardest is 3
 /// @return
-std::list<octopus::Command *> DemoLevelCommands(octopus::Library &lib_p, octopus::RandomGenerator &rand_p, unsigned long playerCount_p, int difficulty_p);
+std::list<octopus::Command *> DemoLevelCommands(octopus::Library &lib_p, octopus::RandomGenerator &rand_p, unsigned long playerCount_p,
+	bool less_resources_p,
+	bool more_enemies_map_p,
+	bool bosses_p);
 
 struct DemoLevelHeader
 {
@@ -58,11 +65,23 @@ struct DemoLevelHeader
 	/// @brief player to spawn waves
 	unsigned long player;
 
-	/// @brief difficulty
-	int difficulty;
+	// difficulty parameters
+
+	/// @brief less resources on the map
+	bool less_resources;
+	/// @brief more enemies on the map
+	bool more_enemies_map;
+	/// @brief two direction wave
+	bool two_direction_wave;
+	/// @brief spawn bosses on the map
+	bool bosses;
+	/// @brief fast anchor devay
+	bool fast_anchor_decay;
+	/// @brief number of buff per wave
+	uint32_t buff_per_wave;
 
 	/// @brief player_count
-	int player_count;
+	uint32_t player_count;
 
 	/// @brief store every tier wave info
 	std::vector<WavePoolInfo> tierWaveInfo;

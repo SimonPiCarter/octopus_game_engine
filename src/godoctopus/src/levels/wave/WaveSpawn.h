@@ -48,7 +48,7 @@ public:
 	WaveSpawn(octopus::Listener * listener_p, WaveInfo const &currentWave_p, std::vector<octopus::Vector> const &currentSpawnPoint_p, bool earlyWave_p,
 		octopus::Library const &lib_p, octopus::RandomGenerator &rand_p, std::list<WaveParam> const &param_p, unsigned long playerSpawn_p,
 		std::vector<unsigned long> players_p, std::function<std::vector<octopus::Steppable *>(void)> waveStepGenerator_p,
-		std::vector<fas::SurvivalSpecialType> const &forbidden_p, unsigned long count_p = 0);
+		std::vector<fas::SurvivalSpecialType> const &forbidden_p, unsigned long count_p = 0, unsigned long nb_upgrades_p = 1);
 
 	virtual void trigger(octopus::State const &state_p, octopus::Step &step_p, unsigned long, octopus::TriggerData const &) const override;
 
@@ -72,6 +72,8 @@ private:
 	bool _endless = false;
 	// the wave index
 	unsigned long _count = 0;
+	// number of upgrade to spawn
+	unsigned long _nb_upgrades = 1;
 
 	std::function<std::vector<octopus::Steppable *>(void)> _waveStepGenerator;
 
@@ -101,7 +103,8 @@ public:
 		std::unordered_set<octopus::Handle> const &handles_p,
 		octopus::Library const &lib_p,
 		octopus::RandomGenerator &rand_p,
-		unsigned long count_p
+		unsigned long count_p,
+		unsigned long nb_upgrades_p
 	);
 
 	void trigger(octopus::State const &state_p, octopus::Step &step_p, unsigned long, octopus::TriggerData const &) const override;
@@ -114,6 +117,8 @@ private:
 	octopus::RandomGenerator &_rand;
 	// the wave index
 	unsigned long _count = 0;
+	// number of upgrade to spawn
+	unsigned long _nb_upgrades = 1;
 };
 
 /// @brief Roll N spawn points from the candidates

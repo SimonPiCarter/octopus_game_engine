@@ -7,32 +7,32 @@
 #include "state/player/Player.hh"
 
 template < octopus::TyppedBuff::Type type_t, int base >
-octopus::TimedBuff flat_basic(unsigned long waveCount_p)
+octopus::TimedBuff flat_basic(unsigned long waveCount_p, unsigned long upIdx_p)
 {
 	octopus::TimedBuff tBuff_l;
-	tBuff_l._id = "wave_buff.flat_basic."+std::to_string(waveCount_p);
+	tBuff_l._id = "wave_buff.flat_basic."+std::to_string(waveCount_p)+(upIdx_p > 0? std::to_string(upIdx_p) : "" );
 	tBuff_l._type = type_t;
 	tBuff_l._offset = base * waveCount_p;
 
 	return tBuff_l;
 }
 
-std::list<WaveBuffGenerator> generateWaveBuffGenerators(unsigned long waveCount_p)
+std::list<WaveBuffGenerator> generateWaveBuffGenerators(unsigned long waveCount_p, unsigned long upIdx_p)
 {
 	std::list<WaveBuffGenerator> generators_l {
 		// Common
 			// Flat basic
-			{ 10, flat_basic<octopus::TyppedBuff::Type::Damage, 2>(waveCount_p), CircleGen::gen(), false },
-			{ 10, flat_basic<octopus::TyppedBuff::Type::Damage, 2>(waveCount_p), TriangleGen::gen(), false },
-			{ 10, flat_basic<octopus::TyppedBuff::Type::HpMax, 10>(waveCount_p), CircleGen::gen(), false },
-			{ 10, flat_basic<octopus::TyppedBuff::Type::HpMax, 10>(waveCount_p), TriangleGen::gen(), false },
+			{ 10, flat_basic<octopus::TyppedBuff::Type::Damage, 2>(waveCount_p, upIdx_p), CircleGen::gen(), false },
+			{ 10, flat_basic<octopus::TyppedBuff::Type::Damage, 2>(waveCount_p, upIdx_p), TriangleGen::gen(), false },
+			{ 10, flat_basic<octopus::TyppedBuff::Type::HpMax, 10>(waveCount_p, upIdx_p), CircleGen::gen(), false },
+			{ 10, flat_basic<octopus::TyppedBuff::Type::HpMax, 10>(waveCount_p, upIdx_p), TriangleGen::gen(), false },
 		// Special
-			{ 10, flat_basic<octopus::TyppedBuff::Type::Damage, 2>(waveCount_p), USquareGen::gen(), false },
-			{ 10, flat_basic<octopus::TyppedBuff::Type::Damage, 2>(waveCount_p), QuadSquareGen::gen(), false },
-			{ 10, flat_basic<octopus::TyppedBuff::Type::Damage, 2>(waveCount_p), DoubleSquareGen::gen(), false },
-			{ 10, flat_basic<octopus::TyppedBuff::Type::HpMax, 10>(waveCount_p), USquareGen::gen(), false },
-			{ 10, flat_basic<octopus::TyppedBuff::Type::HpMax, 10>(waveCount_p), QuadSquareGen::gen(), false },
-			{ 10, flat_basic<octopus::TyppedBuff::Type::HpMax, 10>(waveCount_p), DoubleSquareGen::gen(), false },
+			{ 10, flat_basic<octopus::TyppedBuff::Type::Damage, 2>(waveCount_p, upIdx_p), USquareGen::gen(), false },
+			{ 10, flat_basic<octopus::TyppedBuff::Type::Damage, 2>(waveCount_p, upIdx_p), QuadSquareGen::gen(), false },
+			{ 10, flat_basic<octopus::TyppedBuff::Type::Damage, 2>(waveCount_p, upIdx_p), DoubleSquareGen::gen(), false },
+			{ 10, flat_basic<octopus::TyppedBuff::Type::HpMax, 10>(waveCount_p, upIdx_p), USquareGen::gen(), false },
+			{ 10, flat_basic<octopus::TyppedBuff::Type::HpMax, 10>(waveCount_p, upIdx_p), QuadSquareGen::gen(), false },
+			{ 10, flat_basic<octopus::TyppedBuff::Type::HpMax, 10>(waveCount_p, upIdx_p), DoubleSquareGen::gen(), false },
 	};
 
 	return generators_l;

@@ -21,7 +21,7 @@ struct WaveBuffGenerator
 	bool allow_multiple = false;
 };
 
-std::list<WaveBuffGenerator> generateWaveBuffGenerators(unsigned long waveCount_p);
+std::list<WaveBuffGenerator> generateWaveBuffGenerators(unsigned long waveCount_p, unsigned long upIdx_p);
 
 unsigned long getSumOfProba(std::list<WaveBuffGenerator> const &generators_p);
 

@@ -31,7 +31,7 @@ std::vector<octopus::Steppable*> defaultGenerator() { return {new WaveStep()}; }
 WaveSpawn::WaveSpawn(Listener * listener_p, WaveInfo const &currentWave_p, std::vector<octopus::Vector> const &currentSpawnPoint_p, bool earlyWave_p,
 	Library const &lib_p, RandomGenerator &rand_p, std::list<WaveParam> const &param_p, unsigned long player_p,
     std::vector<unsigned long> players_p, std::function<std::vector<octopus::Steppable *>(void)> waveStepGenerator_p,
-	std::vector<fas::SurvivalSpecialType> const &forbidden_p, unsigned long count_p) :
+	std::vector<fas::SurvivalSpecialType> const &forbidden_p, unsigned long count_p, unsigned long nb_upgrades_p) :
 		OneShotTrigger({listener_p}),
 		_currentWave(currentWave_p),
 		_currentSpawnPoints(currentSpawnPoint_p),
@@ -43,7 +43,8 @@ WaveSpawn::WaveSpawn(Listener * listener_p, WaveInfo const &currentWave_p, std::
 		_players(players_p),
 		_waveStepGenerator(waveStepGenerator_p),
 		_forbidden(forbidden_p),
-		_count(count_p)
+		_count(count_p),
+		_nb_upgrades(nb_upgrades_p)
 {}
 
 void WaveSpawn::trigger(State const &state_p, Step &step_p, unsigned long, octopus::TriggerData const &) const
@@ -126,7 +127,7 @@ void WaveSpawn::trigger(State const &state_p, Step &step_p, unsigned long, octop
 		step_p.addSteppable(new TriggerSpawn(spawn_l));
 	}
 	// option generator
-	step_p.addSteppable(new TriggerSpawn(new WaveClearTrigger(_playerSpawn, _players, _forbidden, handles_l, _lib, _rand, _count)));
+	step_p.addSteppable(new TriggerSpawn(new WaveClearTrigger(_playerSpawn, _players, _forbidden, handles_l, _lib, _rand, _count, _nb_upgrades)));
 }
 
 WinTrigger::WinTrigger(unsigned long winner_p, std::unordered_set<octopus::Handle> const &handles_p)
@@ -146,7 +147,8 @@ WaveClearTrigger::WaveClearTrigger(
 	std::unordered_set<octopus::Handle> const &handles_p,
 	octopus::Library const &lib_p,
 	octopus::RandomGenerator &rand_p,
-	unsigned long count_p
+	unsigned long count_p,
+	unsigned long nb_upgrades_p
 )
 	: octopus::OneShotTrigger({new octopus::ListenerEntityDied(handles_p)})
 	, _playerSpawn(playerSpawn_p)
@@ -155,6 +157,7 @@ WaveClearTrigger::WaveClearTrigger(
 	, _lib(lib_p)
 	, _rand(rand_p)
 	, _count(count_p)
+	, _nb_upgrades(nb_upgrades_p)
 {}
 
 void WaveClearTrigger::trigger(octopus::State const &state_p, octopus::Step &step_p, unsigned long, octopus::TriggerData const &) const
@@ -174,13 +177,16 @@ void WaveClearTrigger::trigger(octopus::State const &state_p, octopus::Step &ste
 		step_p.addSteppable(new PlayerAddOptionStep(player_l, "0", new BuffGenerator("0", optionsGenerator_l, _lib)));
 	}
 
-	std::list<WaveBuffGenerator> waveBuffs_l = generateWaveBuffGenerators(_count+1);
-	std::vector<WaveBuffGenerator> buffs_l = getWaveBuffGenerator(_rand, waveBuffs_l, waveBuffs_l.size());
-	for(WaveBuffGenerator const &buffGen_l : buffs_l)
+	for(unsigned long up_l = 0 ; up_l < _nb_upgrades ; ++ up_l)
 	{
-		std::string model_l = buffGen_l.model;
-		octopus::TimedBuff buff_l = buffGen_l.buff;
-		step_p.addSteppable(new PlayerBuffAllStep(_playerSpawn, buff_l, model_l));
+		std::list<WaveBuffGenerator> waveBuffs_l = generateWaveBuffGenerators(_count+1, up_l);
+		std::vector<WaveBuffGenerator> buffs_l = getWaveBuffGenerator(_rand, waveBuffs_l, waveBuffs_l.size());
+		for(WaveBuffGenerator const &buffGen_l : buffs_l)
+		{
+			std::string model_l = buffGen_l.model;
+			octopus::TimedBuff buff_l = buffGen_l.buff;
+			step_p.addSteppable(new PlayerBuffAllStep(_playerSpawn, buff_l, model_l));
+		}
 	}
 }
 

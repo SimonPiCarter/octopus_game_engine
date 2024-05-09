@@ -69,19 +69,18 @@ std::list<Steppable *> DemoLevelSteps(
 	unsigned long player_p,
 	unsigned long playerCount_p,
 	std::vector<GodotEntityInfo> const &entityInfo_p,
-	int difficulty_p,
-	bool demo_p)
+	bool two_direction_wave_p,
+	bool /*bosses_p*/,
+	bool fast_anchor_decay_p,
+	int buff_per_wave_p,
+	bool demo_p
+)
 {
-	// Tick rate for anchor decay : easy => 1 every 2sec
-	// >= medium : 1 every sec
-	uint32_t anchorTickRate_l = difficulty_p < 2 ? 200 : 100;
+	// Tick rate for anchor decay
+	uint32_t anchorTickRate_l = fast_anchor_decay_p ? 100 : 200;
 
 	// number of spawn points
-	unsigned long nSpawnPoints_l = difficulty_p < 2 ? 1 : 2;
-	if (difficulty_p == 4)
-	{
-		nSpawnPoints_l = 3;
-	}
+	unsigned long nSpawnPoints_l = two_direction_wave_p ? 2 : 1;
 
 	std::vector<fas::SurvivalSpecialType> forbidden_l;
 	if(demo_p)
@@ -145,7 +144,7 @@ std::list<Steppable *> DemoLevelSteps(
 		playersIdx_l.push_back(2+i);
 	}
 	Trigger * triggerWave_l = new WaveSpawn(new ListenerStepCount(firstWave_l.earlyWave.steps), firstWave_l, rolledSpawns_l, true,
-			lib_p, rand_p, params_l, player_p, playersIdx_l, demoGenerator, forbidden_l);
+			lib_p, rand_p, params_l, player_p, playersIdx_l, demoGenerator, forbidden_l, 0, buff_per_wave_p);
 
 	spawners_l.push_back(new TriggerSpawn(triggerWave_l));
 	Handle flyingCommandHandle_l(0);
@@ -191,7 +190,9 @@ std::list<Steppable *> DemoLevelSteps(
 }
 
 AreaSpawnerCommand * createResourceNodeSpawnCommmand(Library &lib_p, RandomGenerator &rand_p, unsigned long x, unsigned long y, unsigned long size,
-	uint32_t nbRes_p, uint32_t nbAnchorSpot_p, uint32_t nbUnits_p, uint32_t qtyRes_p, uint32_t qtyIrium_p, uint32_t nbDoubleSquares_p, uint32_t nbQuadSquares_p, uint32_t nbUSquares_p)
+	uint32_t nbRes_p, uint32_t nbAnchorSpot_p, uint32_t nbUnits_p, uint32_t qtyRes_p, uint32_t qtyIrium_p,
+	uint32_t nbDoubleSquares_p, uint32_t nbQuadSquares_p, uint32_t nbUSquares_p,
+	uint32_t coefUnit_p)
 {
 	std::list<AreaSpawn> spawners_l;
 
@@ -242,25 +243,25 @@ AreaSpawnerCommand * createResourceNodeSpawnCommmand(Library &lib_p, RandomGener
 		area_l.height = size-10;
 		area_l.x = x+5;
 		area_l.y = y+5;
-		for(unsigned long c = 0 ; c < nbUnits_p ; ++ c)
+		for(unsigned long c = 0 ; c < nbUnits_p * coefUnit_p ; ++ c)
 		{
 			Unit *unit_l = new Unit({0, 0}, false, lib_p.getUnitModel(genModelName(rand_p)));
 			unit_l->_player = 1;
 			area_l.entities.emplace_back(unit_l, 1);
 		}
-		for(unsigned long c = 0 ; c < nbDoubleSquares_p ; ++ c)
+		for(unsigned long c = 0 ; c < nbDoubleSquares_p * coefUnit_p ; ++ c)
 		{
 			Unit *unit_l = new Unit({0, 0}, false, lib_p.getUnitModel("double_square_survival"));
 			unit_l->_player = 1;
 			area_l.entities.emplace_back(unit_l, 1);
 		}
-		for(unsigned long c = 0 ; c < nbQuadSquares_p ; ++ c)
+		for(unsigned long c = 0 ; c < nbQuadSquares_p * coefUnit_p ; ++ c)
 		{
 			Unit *unit_l = new Unit({0, 0}, false, lib_p.getUnitModel("quad_square_survival"));
 			unit_l->_player = 1;
 			area_l.entities.emplace_back(unit_l, 1);
 		}
-		for(unsigned long c = 0 ; c < nbUSquares_p ; ++ c)
+		for(unsigned long c = 0 ; c < nbUSquares_p * coefUnit_p ; ++ c)
 		{
 			Unit *unit_l = new Unit({0, 0}, false, lib_p.getUnitModel("U_square_survival"));
 			unit_l->_player = 1;
@@ -272,34 +273,38 @@ AreaSpawnerCommand * createResourceNodeSpawnCommmand(Library &lib_p, RandomGener
 	return new AreaSpawnerCommand(rand_p, spawners_l);
 }
 
-std::list<Command *> DemoLevelCommands(Library &lib_p, RandomGenerator &rand_p, unsigned long playerCount_p, int difficulty_p)
+std::list<Command *> DemoLevelCommands(Library &lib_p, RandomGenerator &rand_p, unsigned long playerCount_p,
+	bool less_resources_p,
+	bool more_enemies_map_p,
+	bool /*bosses_p*/)
 {
 	// resource on basic resources node based on difficulty
-	uint32_t basicRes_l = difficulty_p < 3 ? 4000 : 2000;
-	uint32_t advancedRes_l = difficulty_p < 3 ? 1000 : 500;
+	uint32_t basicRes_l = less_resources_p ? 2000 : 4000;
+	uint32_t advancedRes_l = less_resources_p ? 500 : 1000;
+	uint32_t coef_enemies_l = (more_enemies_map_p ? 2 : 1) * playerCount_p;
 
 	// createResourceNodeSpawnCommmand(lib, rand, x, y, size, nb res, nb anchor, nb units, qty irium)
 	std::list<Command *> commands_l {
 		// cirle 1
-		createResourceNodeSpawnCommmand(lib_p, rand_p, 154, 91, 18, 1*playerCount_p, 1*playerCount_p, 10, basicRes_l, advancedRes_l, 0, 0, 0),
-		createResourceNodeSpawnCommmand(lib_p, rand_p, 108, 64, 19, 1*playerCount_p, 1*playerCount_p, 10, basicRes_l, advancedRes_l, 0, 0, 0),
-		createResourceNodeSpawnCommmand(lib_p, rand_p, 71, 104, 14, 1*playerCount_p, 1*playerCount_p, 10, basicRes_l, advancedRes_l, 0, 0, 0),
-		createResourceNodeSpawnCommmand(lib_p, rand_p, 108, 144, 18, 1*playerCount_p, 1*playerCount_p, 10, basicRes_l, advancedRes_l, 0, 0, 0),
+		createResourceNodeSpawnCommmand(lib_p, rand_p, 154, 91, 18, 1*playerCount_p, 1*playerCount_p, 10, basicRes_l, advancedRes_l, 0, 0, 0, coef_enemies_l),
+		createResourceNodeSpawnCommmand(lib_p, rand_p, 108, 64, 19, 1*playerCount_p, 1*playerCount_p, 10, basicRes_l, advancedRes_l, 0, 0, 0, coef_enemies_l),
+		createResourceNodeSpawnCommmand(lib_p, rand_p, 71, 104, 14, 1*playerCount_p, 1*playerCount_p, 10, basicRes_l, advancedRes_l, 0, 0, 0, coef_enemies_l),
+		createResourceNodeSpawnCommmand(lib_p, rand_p, 108, 144, 18, 1*playerCount_p, 1*playerCount_p, 10, basicRes_l, advancedRes_l, 0, 0, 0, coef_enemies_l),
 		// cirle 2
-		createResourceNodeSpawnCommmand(lib_p, rand_p, 44, 147, 22, 1*playerCount_p, 1*playerCount_p, 20, basicRes_l, 2*advancedRes_l, 0, 5, 0),
-		createResourceNodeSpawnCommmand(lib_p, rand_p, 155, 170, 22, 1*playerCount_p, 1*playerCount_p, 20, basicRes_l, 2*advancedRes_l, 0, 5, 0),
-		createResourceNodeSpawnCommmand(lib_p, rand_p, 162, 50, 21, 1*playerCount_p, 1*playerCount_p, 20, basicRes_l, 2*advancedRes_l, 0, 5, 0),
-		createResourceNodeSpawnCommmand(lib_p, rand_p, 56, 60, 23, 1*playerCount_p, 1*playerCount_p, 20, basicRes_l, 2*advancedRes_l, 0, 5, 0),
+		createResourceNodeSpawnCommmand(lib_p, rand_p, 44, 147, 22, 1*playerCount_p, 1*playerCount_p, 20, basicRes_l, 2*advancedRes_l, 0, 5, 0, coef_enemies_l),
+		createResourceNodeSpawnCommmand(lib_p, rand_p, 155, 170, 22, 1*playerCount_p, 1*playerCount_p, 20, basicRes_l, 2*advancedRes_l, 0, 5, 0, coef_enemies_l),
+		createResourceNodeSpawnCommmand(lib_p, rand_p, 162, 50, 21, 1*playerCount_p, 1*playerCount_p, 20, basicRes_l, 2*advancedRes_l, 0, 5, 0, coef_enemies_l),
+		createResourceNodeSpawnCommmand(lib_p, rand_p, 56, 60, 23, 1*playerCount_p, 1*playerCount_p, 20, basicRes_l, 2*advancedRes_l, 0, 5, 0, coef_enemies_l),
 		// cirle 3
-		createResourceNodeSpawnCommmand(lib_p, rand_p, 102, 205, 27, 1*playerCount_p, 1*playerCount_p, 20, basicRes_l, 2*advancedRes_l, 5, 10, 0),
-		createResourceNodeSpawnCommmand(lib_p, rand_p, 9, 101, 22, 1*playerCount_p, 1*playerCount_p, 20, basicRes_l, 2*advancedRes_l, 5, 10, 0),
-		createResourceNodeSpawnCommmand(lib_p, rand_p, 106, 3, 28, 1*playerCount_p, 1*playerCount_p, 20, basicRes_l, 2*advancedRes_l, 5, 10, 0),
-		createResourceNodeSpawnCommmand(lib_p, rand_p, 206, 115, 32, 1*playerCount_p, 1*playerCount_p, 20, basicRes_l, 2*advancedRes_l, 5, 10, 0),
+		createResourceNodeSpawnCommmand(lib_p, rand_p, 102, 205, 27, 1*playerCount_p, 1*playerCount_p, 20, basicRes_l, 2*advancedRes_l, 5, 10, 0, coef_enemies_l),
+		createResourceNodeSpawnCommmand(lib_p, rand_p, 9, 101, 22, 1*playerCount_p, 1*playerCount_p, 20, basicRes_l, 2*advancedRes_l, 5, 10, 0, coef_enemies_l),
+		createResourceNodeSpawnCommmand(lib_p, rand_p, 106, 3, 28, 1*playerCount_p, 1*playerCount_p, 20, basicRes_l, 2*advancedRes_l, 5, 10, 0, coef_enemies_l),
+		createResourceNodeSpawnCommmand(lib_p, rand_p, 206, 115, 32, 1*playerCount_p, 1*playerCount_p, 20, basicRes_l, 2*advancedRes_l, 5, 10, 0, coef_enemies_l),
 		// cirle 4
-		createResourceNodeSpawnCommmand(lib_p, rand_p, 207, 211, 26, 2*playerCount_p, 1*playerCount_p, 30, basicRes_l, 4*advancedRes_l, 5, 10, 3),
-		createResourceNodeSpawnCommmand(lib_p, rand_p, 16, 207, 34, 2*playerCount_p, 1*playerCount_p, 30, basicRes_l, 4*advancedRes_l, 5, 10, 3),
-		createResourceNodeSpawnCommmand(lib_p, rand_p, 6, 4, 25, 2*playerCount_p, 1*playerCount_p, 30, basicRes_l, 4*advancedRes_l, 5, 10, 3),
-		createResourceNodeSpawnCommmand(lib_p, rand_p, 209, 12, 31, 2*playerCount_p, 1*playerCount_p, 30, basicRes_l, 4*advancedRes_l, 5, 10, 3),
+		createResourceNodeSpawnCommmand(lib_p, rand_p, 207, 211, 26, 2*playerCount_p, 1*playerCount_p, 30, basicRes_l, 4*advancedRes_l, 5, 10, 3, coef_enemies_l),
+		createResourceNodeSpawnCommmand(lib_p, rand_p, 16, 207, 34, 2*playerCount_p, 1*playerCount_p, 30, basicRes_l, 4*advancedRes_l, 5, 10, 3, coef_enemies_l),
+		createResourceNodeSpawnCommmand(lib_p, rand_p, 6, 4, 25, 2*playerCount_p, 1*playerCount_p, 30, basicRes_l, 4*advancedRes_l, 5, 10, 3, coef_enemies_l),
+		createResourceNodeSpawnCommmand(lib_p, rand_p, 209, 12, 31, 2*playerCount_p, 1*playerCount_p, 30, basicRes_l, 4*advancedRes_l, 5, 10, 3, coef_enemies_l),
 	};
 
 	return commands_l;
@@ -388,7 +393,14 @@ void writeDemoLevelHeader(std::ofstream &file_p, DemoLevelHeader const &header_p
 {
 	file_p.write((char*)&header_p.seed, sizeof(header_p.seed));
 	file_p.write((char*)&header_p.player, sizeof(header_p.player));
-	file_p.write((char*)&header_p.difficulty, sizeof(header_p.difficulty));
+
+	file_p.write((char*)&header_p.less_resources, sizeof(header_p.less_resources));
+	file_p.write((char*)&header_p.more_enemies_map, sizeof(header_p.more_enemies_map));
+	file_p.write((char*)&header_p.two_direction_wave, sizeof(header_p.two_direction_wave));
+	file_p.write((char*)&header_p.bosses, sizeof(header_p.bosses));
+	file_p.write((char*)&header_p.fast_anchor_decay, sizeof(header_p.fast_anchor_decay));
+	file_p.write((char*)&header_p.buff_per_wave, sizeof(header_p.buff_per_wave));
+
 	file_p.write((char*)&header_p.player_count, sizeof(header_p.player_count));
 
 	uint32_t size_l = header_p.tierWaveInfo.size();
@@ -404,7 +416,14 @@ void readDemoLevelHeader(std::ifstream &file_p, DemoLevelHeader &header_r)
 {
 	file_p.read((char*)&header_r.seed, sizeof(header_r.seed));
 	file_p.read((char*)&header_r.player, sizeof(header_r.player));
-	file_p.read((char*)&header_r.difficulty, sizeof(header_r.difficulty));
+
+	file_p.read((char*)&header_r.less_resources, sizeof(header_r.less_resources));
+	file_p.read((char*)&header_r.more_enemies_map, sizeof(header_r.more_enemies_map));
+	file_p.read((char*)&header_r.two_direction_wave, sizeof(header_r.two_direction_wave));
+	file_p.read((char*)&header_r.bosses, sizeof(header_r.bosses));
+	file_p.read((char*)&header_r.fast_anchor_decay, sizeof(header_r.fast_anchor_decay));
+	file_p.read((char*)&header_r.buff_per_wave, sizeof(header_r.buff_per_wave));
+
 	file_p.read((char*)&header_r.player_count, sizeof(header_r.player_count));
 
 	uint32_t size_l = 0;
@@ -428,8 +447,10 @@ std::pair<std::list<octopus::Steppable *>, std::list<octopus::Command *> > readD
 	rand_p = new octopus::RandomGenerator(header_r.seed);
 
 	std::pair<std::list<octopus::Steppable *>, std::list<octopus::Command *> > pair_l;
-	pair_l.first = DemoLevelSteps(lib_p, *rand_p, header_r.tierWaveInfo, header_r.player, header_r.player_count, entityInfo_p, header_r.difficulty, true);
-	pair_l.second = DemoLevelCommands(lib_p, *rand_p, header_r.player_count, header_r.difficulty);
+	pair_l.first = DemoLevelSteps(lib_p, *rand_p, header_r.tierWaveInfo, header_r.player, header_r.player_count, entityInfo_p,
+		header_r.two_direction_wave, header_r.bosses, header_r.fast_anchor_decay, header_r.buff_per_wave, true);
+	pair_l.second = DemoLevelCommands(lib_p, *rand_p, header_r.player_count,
+		header_r.less_resources, header_r.more_enemies_map, header_r.bosses);
 	return pair_l;
 }
 
