@@ -290,6 +290,7 @@ TypedArray<godot::Buff> Entity::get_buffs(Controller const *controller_p) const
             // fill desc and params
             if(std::holds_alternative<octopus::TimedBuff>(anyBuff_l))
             {
+				buff_l->setName("null");
                 octopus::TimedBuff const &tBuff_l = std::get<octopus::TimedBuff>(anyBuff_l);
                 std::stringstream ss_l;
                 ss_l<<"timed_buff";
@@ -323,6 +324,41 @@ TypedArray<godot::Buff> Entity::get_buffs(Controller const *controller_p) const
                 buff_l->setDesc(ss_l.str().c_str());
                 buff_l->addParam(octopus::to_string(tBuff_l._type).c_str());
             }
+			else if(std::holds_alternative<octopus::ModifierAoEBuff>(anyBuff_l))
+            {
+				buff_l->setName("null");
+                octopus::ModifierAoEBuff const &modBuff_l = std::get<octopus::ModifierAoEBuff>(anyBuff_l);
+				std::stringstream ss_l;
+                ss_l<<"aoe_buff";
+                using octopus::Fixed;
+                if(modBuff_l._deltaRatio != Fixed::Zero())
+                {
+                    if(modBuff_l._deltaRatio > Fixed::Zero())
+                    {
+                        ss_l<<"_p_ratio";
+                        buff_l->addParam(std::to_string(modBuff_l._deltaRatio.data()/(Fixed::OneAsLong()/100)).c_str());
+                    }
+                    else
+                    {
+                        ss_l<<"_n_ratio";
+                        buff_l->addParam(std::to_string(-modBuff_l._deltaRatio.data()/(Fixed::OneAsLong()/100)).c_str());
+                    }
+                }
+                if(modBuff_l._deltaRange != Fixed::Zero())
+                {
+                    if(modBuff_l._deltaRange > Fixed::Zero())
+                    {
+                        ss_l<<"_p_range";
+                        buff_l->addParam(std::to_string(modBuff_l._deltaRange.data()/(Fixed::OneAsLong())).c_str());
+                    }
+                    else
+                    {
+                        ss_l<<"_n_range";
+                        buff_l->addParam(std::to_string(-modBuff_l._deltaRange.data()/(Fixed::OneAsLong())).c_str());
+                    }
+                }
+                buff_l->setDesc(ss_l.str().c_str());
+			}
 
 
             buffs_l.push_back(buff_l);
