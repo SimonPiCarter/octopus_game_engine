@@ -14,6 +14,8 @@
 #include "utils/EntitySpawner.h"
 #include "utils/TriggerModel.h"
 
+#include "specifics/LevelModelSpecifics.h"
+
 namespace godot {
 
 LevelModel::~LevelModel()
@@ -204,6 +206,11 @@ void LevelModel::add_zone(String const &name_p, int x, int y, int size_x, int si
 	_zones.push_back(GodotZone {name_l, octopus::Box<long>{x, x+size_x, y, y+size_y} } );
 }
 
+void LevelModel::set_specific(String const &specific_p)
+{
+	_specific = specific_p.utf8().get_data();
+}
+
 void LevelModel::_bind_methods()
 {
 	UtilityFunctions::print("Binding LevelModel methods");
@@ -237,6 +244,8 @@ void LevelModel::_bind_methods()
 	ClassDB::bind_method(D_METHOD("action_spawn_add_attack_move", "trigger_idx", "action_idx", "x", "y"), &LevelModel::action_spawn_add_attack_move);
 
 	ClassDB::bind_method(D_METHOD("add_zone", "name", "x", "y", "size_x", "size_y"), &LevelModel::add_zone);
+
+	ClassDB::bind_method(D_METHOD("set_specific", "specific"), &LevelModel::set_specific);
 
 	ADD_GROUP("LevelModel", "LevelModel_");
 }
@@ -279,6 +288,8 @@ std::list<octopus::Steppable *> LevelModel::generateLevelSteps(octopus::Library 
 			steps_l.push_back(new octopus::TriggerSpawn(model_l));
 		}
 	}
+
+	add_specifics(_specific, steps_l, lib_p, playerCount_p, getEntityInfo(getEntities(), playerCount_p));
 
 	return steps_l;
 }

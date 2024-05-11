@@ -52,7 +52,7 @@ namespace level_test_model
 {
 
 std::list<Steppable *> LevelSteps(Library &lib_p, RandomGenerator &rand_p, bool buffProd_p, bool upgrades_rune_p,
-	unsigned long idx_first_player_p, unsigned long nb_players_p)
+	unsigned long idx_first_player_p, unsigned long nb_players_p, bool use_div_option_p)
 {
 	loadMinimalModels(lib_p);
 	fas::loadSurvivalModels(lib_p);
@@ -100,12 +100,15 @@ std::list<Steppable *> LevelSteps(Library &lib_p, RandomGenerator &rand_p, bool 
 		}
 	}
 
-	for(unsigned long player_l = 0 ; player_l < nb_players_p+idx_first_player_p ; ++player_l )
+	if (use_div_option_p)
 	{
-		spawners_l.push_back(
-			new TriggerSpawn(new AnchorDivinityTrigger(lib_p, rand_p, player_l, fas::demoDivinities(), 180))
-		);
-		fas::addDivinityBuildingPlayer(spawners_l, player_l, fas::demoDivinities(), lib_p);
+		for(unsigned long player_l = 0 ; player_l < nb_players_p+idx_first_player_p ; ++player_l )
+		{
+			spawners_l.push_back(
+				new TriggerSpawn(new AnchorDivinityTrigger(lib_p, rand_p, player_l, fas::demoDivinities(), 180))
+			);
+			fas::addDivinityBuildingPlayer(spawners_l, player_l, fas::demoDivinities(), lib_p);
+		}
 	}
 
 	return spawners_l;
@@ -125,6 +128,7 @@ void writeLevelHeader(std::ofstream &file_p, ModelLoaderHeader const &header_p)
     file_p.write((char*)&header_p.seed, sizeof(header_p.seed));
     file_p.write((char*)&header_p.buff_prod, sizeof(header_p.buff_prod));
     file_p.write((char*)&header_p.upgrade_rune, sizeof(header_p.upgrade_rune));
+    file_p.write((char*)&header_p.use_div_option, sizeof(header_p.use_div_option));
 }
 
 /// @brief read header for classic arena level and return a pair of steppable and command
@@ -134,12 +138,13 @@ std::pair<std::list<octopus::Steppable *>, std::list<octopus::Command *> > readL
     file_p.read((char*)&header_r.seed, sizeof(header_r.seed));
     file_p.read((char*)&header_r.buff_prod, sizeof(header_r.buff_prod));
     file_p.read((char*)&header_r.upgrade_rune, sizeof(header_r.upgrade_rune));
+    file_p.read((char*)&header_r.use_div_option, sizeof(header_r.use_div_option));
 
 	delete rand_p;
 	rand_p = new octopus::RandomGenerator(header_r.seed);
 
 	std::pair<std::list<octopus::Steppable *>, std::list<octopus::Command *> > pair_l;
-	pair_l.first = LevelSteps(lib_p, *rand_p, header_r.buff_prod, header_r.upgrade_rune, _fileHeader.get_idx_first_player(), _fileHeader.get_num_players());
+	pair_l.first = LevelSteps(lib_p, *rand_p, header_r.buff_prod, header_r.upgrade_rune, _fileHeader.get_idx_first_player(), _fileHeader.get_num_players(), header_r.use_div_option);
 	pair_l.second = LevelCommands(lib_p, *rand_p);
 	return pair_l;
 }

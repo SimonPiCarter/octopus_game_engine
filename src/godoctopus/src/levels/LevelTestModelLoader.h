@@ -27,7 +27,7 @@ namespace level_test_model
 {
 
 std::list<octopus::Steppable *> LevelSteps(octopus::Library &lib_p, octopus::RandomGenerator &rand_p, bool buffProd_p,
-	bool upgrades_rune_p, unsigned long idx_first_player_p, unsigned long nb_players_p);
+	bool upgrades_rune_p, unsigned long idx_first_player_p, unsigned long nb_players_p, bool use_div_option_p);
 std::list<octopus::Command *> LevelCommands(octopus::Library &lib_p, octopus::RandomGenerator &rand_p);
 
 struct ModelLoaderHeader
@@ -35,6 +35,7 @@ struct ModelLoaderHeader
 	int seed {0};
 	bool buff_prod {false};
 	bool upgrade_rune {false};
+	bool use_div_option {false};
 };
 
 /// @brief write header for classic arena level
