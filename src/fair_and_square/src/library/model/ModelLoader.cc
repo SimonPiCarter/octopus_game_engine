@@ -307,6 +307,7 @@ void createResourceIrium(Library &lib_p)
 void createWater(Library &lib_p)
 {
 	BuildingModel buildingModel_l { true, 1., 500. };
+	buildingModel_l._lineOfSight = 10;
 	buildingModel_l._isBuilding = true;
 	buildingModel_l._invulnerable = true;
 	lib_p.registerBuildingModel("water_h", buildingModel_l);
