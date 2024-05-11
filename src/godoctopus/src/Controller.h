@@ -119,6 +119,8 @@ public:
 	void set_fast_forward(bool fast_forward_p);
 	// getters
 	bool get_pause() const;
+	bool get_init_done() const;
+	bool get_first_step_done() const;
 	// commands available getters
 	TypedArray<String> get_models(EntityHandle const * handle_p, int player_p, bool checkRequirements_p) const;
 	TypedArray<String> get_abilities(EntityHandle const * handle_p, int player_p, bool checkRequirements_p) const;

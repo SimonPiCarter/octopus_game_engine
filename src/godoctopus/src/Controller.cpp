@@ -1013,6 +1013,16 @@ bool Controller::get_pause() const
 	return _paused;
 }
 
+bool Controller::get_init_done() const
+{
+	return _initDone;
+}
+
+bool Controller::get_first_step_done() const
+{
+	return _controller->getMetrics()._nbStepsCompiled > 10;
+}
+
 void Controller::save_to_file(String const &path_p)
 {
 	if(has_state())
@@ -1744,6 +1754,8 @@ void Controller::_bind_methods()
 	ClassDB::bind_method(D_METHOD("set_over", "over"), &Controller::set_over);
 	ClassDB::bind_method(D_METHOD("set_fast_forward", "fast_forward"), &Controller::set_fast_forward);
 	ClassDB::bind_method(D_METHOD("get_pause"), &Controller::get_pause);
+	ClassDB::bind_method(D_METHOD("get_init_done"), &Controller::get_init_done);
+	ClassDB::bind_method(D_METHOD("get_first_step_done"), &Controller::get_first_step_done);
 	ClassDB::bind_method(D_METHOD("save_to_file", "path"), &Controller::save_to_file);
 	ClassDB::bind_method(D_METHOD("set_auto_file_path", "path"), &Controller::set_auto_file_path);
 	ClassDB::bind_method(D_METHOD("set_auto_file_debug", "debug"), &Controller::set_auto_file_debug);
