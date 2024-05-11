@@ -11,7 +11,7 @@
 namespace octopus
 {
 
-VisionPattern const &PatternHandler::getPattern(long lineOfSight_p)
+VisionPattern const &PatternHandler::getPattern(long lineOfSight_p) const
 {
 	// check cache
 	auto && it_l = _patterns.find(lineOfSight_p);
@@ -45,7 +45,7 @@ VisionPattern const &PatternHandler::getPattern(long lineOfSight_p)
 	return pattern_l;
 }
 
-VisionPattern const &PatternHandler::getMovementPattern(long lineOfSight_p, long dx, long dy)
+VisionPattern const &PatternHandler::getMovementPattern(long lineOfSight_p, long dx, long dy) const
 {
 	// check cache
 	if((dx == 0 && dy == 0)
