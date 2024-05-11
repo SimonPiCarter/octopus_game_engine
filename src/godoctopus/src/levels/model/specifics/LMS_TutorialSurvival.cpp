@@ -36,7 +36,7 @@ void specific_tutorial_survival(std::list<octopus::Steppable *> &steps_r, octopu
 	std::map<std::string, Fixed> mapRes_l;
 	mapRes_l["bloc"] = -400;
 	mapRes_l["ether"] = -400;
-	mapRes_l["Anchor"] = -120;
+	mapRes_l["Anchor"] = -240;
 	steps_r.push_back(new PlayerSpendResourceStep(2, mapRes_l));
 
 	// add anchor consumption
