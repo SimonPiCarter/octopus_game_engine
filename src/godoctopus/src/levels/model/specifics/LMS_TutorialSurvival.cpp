@@ -3,6 +3,7 @@
 // godoctopus
 #include "levels/model/utils/EntitySpawner.h"
 #include "controller/step/DialogStep.h"
+#include "controller/step/ObjectiveStep.h"
 
 // fas
 #include "library/model/TimerDamage.hh"
@@ -80,6 +81,8 @@ void specific_tutorial_survival(std::list<octopus::Steppable *> &steps_r, octopu
 						};
 
 						step_p.addSteppable(new PlayerAddOptionStep(2, "0", new BuffGenerator("0", optionsGenerator_l, lib_p)));
+						step_p.addSteppable(new CompleteObjectiveStep("tuto_survival_obj_defend_wave", true));
+						step_p.addSteppable(new AddObjectiveStep("tuto_survival_obj_explore", "tuto_survival_obj_explore", 0, true));
 					}
 				)));
 			}
