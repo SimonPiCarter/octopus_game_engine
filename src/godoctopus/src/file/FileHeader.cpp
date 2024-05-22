@@ -136,6 +136,8 @@ void loadFromStream(FileHeader &file_header_p, std::istream &file_p)
 	int env_id_l = 0;           file_p.read((char*)&env_id_l, sizeof(env_id_l));
 	int num_players_l = 0;      file_p.read((char*)&num_players_l, sizeof(num_players_l));
 	int idx_first_player_l = 0;      file_p.read((char*)&idx_first_player_l, sizeof(idx_first_player_l));
+	bool auto_build_disabled_l = 0;      file_p.read((char*)&auto_build_disabled_l, sizeof(auto_build_disabled_l));
+	int difficulty_level_l = 0;      file_p.read((char*)&difficulty_level_l, sizeof(difficulty_level_l));
 
     file_header_p.set_version(version_l);
     file_header_p.set_model_filename(model_name_l.c_str());
@@ -144,6 +146,8 @@ void loadFromStream(FileHeader &file_header_p, std::istream &file_p)
     file_header_p.set_environment_id(env_id_l);
     file_header_p.set_num_players(num_players_l);
     file_header_p.set_idx_first_player(idx_first_player_l);
+    file_header_p.set_auto_build_disabled(auto_build_disabled_l);
+    file_header_p.set_difficulty_level(difficulty_level_l);
 }
 
 void saveToStream(FileHeader const &file_header_p, std::ostream &file_p)
@@ -155,6 +159,8 @@ void saveToStream(FileHeader const &file_header_p, std::ostream &file_p)
 	int env_id_l = file_header_p.get_environment_id();
 	int num_players_l = file_header_p.get_num_players();
 	int idx_first_player_l = file_header_p.get_idx_first_player();
+	bool auto_build_disabled_l = file_header_p.get_auto_build_disabled();
+	int difficulty_level_l = file_header_p.get_difficulty_level();
 
     file_p.write((char*)&version_l, sizeof(version_l));
     octopus::writeString(file_p, model_name_l);
@@ -163,6 +169,8 @@ void saveToStream(FileHeader const &file_header_p, std::ostream &file_p)
     file_p.write((char*)&env_id_l, sizeof(env_id_l));
     file_p.write((char*)&num_players_l, sizeof(num_players_l));
     file_p.write((char*)&idx_first_player_l, sizeof(idx_first_player_l));
+    file_p.write((char*)&auto_build_disabled_l, sizeof(auto_build_disabled_l));
+    file_p.write((char*)&difficulty_level_l, sizeof(difficulty_level_l));
 }
 
 void saveDebugToStream(FileHeader const &file_header_p, std::ostream &file_p)
