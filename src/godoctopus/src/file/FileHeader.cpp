@@ -83,6 +83,24 @@ int FileHeader::get_idx_first_player() const
     return _idx_first_player;
 }
 
+void FileHeader::set_auto_build_disabled(bool auto_build_disabled_p)
+{
+	_auto_build_disabled = auto_build_disabled_p;
+}
+bool FileHeader::get_auto_build_disabled() const
+{
+	return _auto_build_disabled;
+}
+
+void FileHeader::set_difficulty_level(int difficulty_level_p)
+{
+	_difficulty_level = difficulty_level_p;
+}
+int FileHeader::get_difficulty_level() const
+{
+	return _difficulty_level;
+}
+
 void FileHeader::_bind_methods()
 {
     UtilityFunctions::print("Binding FileHeader methods");
@@ -101,6 +119,10 @@ void FileHeader::_bind_methods()
     ClassDB::bind_method(D_METHOD("get_num_players"), &FileHeader::get_num_players);
     ClassDB::bind_method(D_METHOD("set_idx_first_player", "idx_first_player"), &FileHeader::set_idx_first_player);
     ClassDB::bind_method(D_METHOD("get_idx_first_player"), &FileHeader::get_idx_first_player);
+    ClassDB::bind_method(D_METHOD("set_auto_build_disabled", "auto_build_disabled"), &FileHeader::set_auto_build_disabled);
+    ClassDB::bind_method(D_METHOD("get_auto_build_disabled"), &FileHeader::get_auto_build_disabled);
+    ClassDB::bind_method(D_METHOD("set_difficulty_level", "difficulty_level"), &FileHeader::set_difficulty_level);
+    ClassDB::bind_method(D_METHOD("get_difficulty_level"), &FileHeader::get_difficulty_level);
 
     ADD_GROUP("FileHeader", "FileHeader_");
 }

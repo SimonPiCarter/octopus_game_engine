@@ -38,6 +38,12 @@ public:
     void set_idx_first_player(int idx_first_player_p);
     int get_idx_first_player() const;
 
+    void set_auto_build_disabled(bool auto_build_disabled_p);
+    bool get_auto_build_disabled() const;
+
+    void set_difficulty_level(int difficulty_level_p);
+    int get_difficulty_level() const;
+
     // Will be called by Godot when the class is registered
     // Use this to add properties to your class
     static void _bind_methods();
@@ -57,6 +63,10 @@ private:
     int _num_players = 1;
     /// @brief index of the first playable slot
     int _idx_first_player = 0;
+	/// @brief auto_build_disabled
+	bool _auto_build_disabled = false;
+	/// @brief difficulty level
+	int _difficulty_level = 0;
 };
 
 void loadFromStream(FileHeader &file_header_p, std::istream &file_p);
