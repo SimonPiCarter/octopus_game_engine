@@ -42,6 +42,7 @@
 #include "controller/step/DialogStep.h"
 #include "controller/step/WaveStep.h"
 #include "controller/step/ObjectiveStep.h"
+#include "library/FirstRunicBoss.h"
 
 #include "levels/wave/WaveSpawn.h"
 #include "levels/model/utils/EntitySpawner.h"
@@ -89,6 +90,7 @@ std::list<Steppable *> DemoLevelSteps(
 	}
 
 	loadMinimalModels(lib_p);
+	addFirstRunicBossToLibrary(lib_p);
 	createOptionUpgrades(lib_p, rand_p, forbidden_l);
 
 	// load divinity library
@@ -192,7 +194,7 @@ std::list<Steppable *> DemoLevelSteps(
 AreaSpawnerCommand * createResourceNodeSpawnCommmand(Library &lib_p, RandomGenerator &rand_p, unsigned long x, unsigned long y, unsigned long size,
 	uint32_t nbRes_p, uint32_t nbAnchorSpot_p, uint32_t nbUnits_p, uint32_t qtyRes_p, uint32_t qtyIrium_p,
 	uint32_t nbDoubleSquares_p, uint32_t nbQuadSquares_p, uint32_t nbUSquares_p,
-	uint32_t coefUnit_p)
+	uint32_t coefUnit_p, bool boss_p, bool big_boss_p)
 {
 	std::list<AreaSpawn> spawners_l;
 
@@ -267,6 +269,18 @@ AreaSpawnerCommand * createResourceNodeSpawnCommmand(Library &lib_p, RandomGener
 			unit_l->_player = 1;
 			area_l.entities.emplace_back(unit_l, 1);
 		}
+		if(boss_p)
+		{
+			Unit *unit_l = new Unit({0, 0}, false, lib_p.getUnitModel("firstRunicAnomaly"));
+			unit_l->_player = 1;
+			area_l.entities.emplace_back(unit_l, 1);
+		}
+		if(big_boss_p)
+		{
+			Unit *unit_l = new Unit({0, 0}, false, lib_p.getUnitModel("firstRunicBoss"));
+			unit_l->_player = 1;
+			area_l.entities.emplace_back(unit_l, 1);
+		}
 		spawners_l.push_back(area_l);
 	}
 
@@ -276,7 +290,7 @@ AreaSpawnerCommand * createResourceNodeSpawnCommmand(Library &lib_p, RandomGener
 std::list<Command *> DemoLevelCommands(Library &lib_p, RandomGenerator &rand_p, unsigned long playerCount_p,
 	bool less_resources_p,
 	bool more_enemies_map_p,
-	bool /*bosses_p*/)
+	bool bosses_p)
 {
 	// resource on basic resources node based on difficulty
 	uint32_t basicRes_l = less_resources_p ? 2000 : 4000;
@@ -286,25 +300,25 @@ std::list<Command *> DemoLevelCommands(Library &lib_p, RandomGenerator &rand_p, 
 	// createResourceNodeSpawnCommmand(lib, rand, x, y, size, nb res, nb anchor, nb units, qty irium)
 	std::list<Command *> commands_l {
 		// cirle 1
-		createResourceNodeSpawnCommmand(lib_p, rand_p, 154, 91, 18, 1*playerCount_p, 1*playerCount_p, 10, basicRes_l, advancedRes_l, 0, 0, 0, coef_enemies_l),
-		createResourceNodeSpawnCommmand(lib_p, rand_p, 108, 64, 19, 1*playerCount_p, 1*playerCount_p, 10, basicRes_l, advancedRes_l, 0, 0, 0, coef_enemies_l),
-		createResourceNodeSpawnCommmand(lib_p, rand_p, 71, 104, 14, 1*playerCount_p, 1*playerCount_p, 10, basicRes_l, advancedRes_l, 0, 0, 0, coef_enemies_l),
-		createResourceNodeSpawnCommmand(lib_p, rand_p, 108, 144, 18, 1*playerCount_p, 1*playerCount_p, 10, basicRes_l, advancedRes_l, 0, 0, 0, coef_enemies_l),
+		createResourceNodeSpawnCommmand(lib_p, rand_p, 154, 91, 18, 1*playerCount_p, 1*playerCount_p, 10, basicRes_l, advancedRes_l, 0, 0, 0, coef_enemies_l, false, false),
+		createResourceNodeSpawnCommmand(lib_p, rand_p, 108, 64, 19, 1*playerCount_p, 1*playerCount_p, 10, basicRes_l, advancedRes_l, 0, 0, 0, coef_enemies_l, false, false),
+		createResourceNodeSpawnCommmand(lib_p, rand_p, 71, 104, 14, 1*playerCount_p, 1*playerCount_p, 10, basicRes_l, advancedRes_l, 0, 0, 0, coef_enemies_l, false, false),
+		createResourceNodeSpawnCommmand(lib_p, rand_p, 108, 144, 18, 1*playerCount_p, 1*playerCount_p, 10, basicRes_l, advancedRes_l, 0, 0, 0, coef_enemies_l, false, false),
 		// cirle 2
-		createResourceNodeSpawnCommmand(lib_p, rand_p, 44, 147, 22, 1*playerCount_p, 1*playerCount_p, 20, basicRes_l, 2*advancedRes_l, 0, 5, 0, coef_enemies_l),
-		createResourceNodeSpawnCommmand(lib_p, rand_p, 155, 170, 22, 1*playerCount_p, 1*playerCount_p, 20, basicRes_l, 2*advancedRes_l, 0, 5, 0, coef_enemies_l),
-		createResourceNodeSpawnCommmand(lib_p, rand_p, 162, 50, 21, 1*playerCount_p, 1*playerCount_p, 20, basicRes_l, 2*advancedRes_l, 0, 5, 0, coef_enemies_l),
-		createResourceNodeSpawnCommmand(lib_p, rand_p, 56, 60, 23, 1*playerCount_p, 1*playerCount_p, 20, basicRes_l, 2*advancedRes_l, 0, 5, 0, coef_enemies_l),
+		createResourceNodeSpawnCommmand(lib_p, rand_p, 44, 147, 22, 1*playerCount_p, 1*playerCount_p, 20, basicRes_l, 2*advancedRes_l, 0, 5, 0, coef_enemies_l, bosses_p, false),
+		createResourceNodeSpawnCommmand(lib_p, rand_p, 155, 170, 22, 1*playerCount_p, 1*playerCount_p, 20, basicRes_l, 2*advancedRes_l, 0, 5, 0, coef_enemies_l, bosses_p, false),
+		createResourceNodeSpawnCommmand(lib_p, rand_p, 162, 50, 21, 1*playerCount_p, 1*playerCount_p, 20, basicRes_l, 2*advancedRes_l, 0, 5, 0, coef_enemies_l, bosses_p, false),
+		createResourceNodeSpawnCommmand(lib_p, rand_p, 56, 60, 23, 1*playerCount_p, 1*playerCount_p, 20, basicRes_l, 2*advancedRes_l, 0, 5, 0, coef_enemies_l, bosses_p, false),
 		// cirle 3
-		createResourceNodeSpawnCommmand(lib_p, rand_p, 102, 205, 27, 1*playerCount_p, 1*playerCount_p, 20, basicRes_l, 2*advancedRes_l, 5, 10, 0, coef_enemies_l),
-		createResourceNodeSpawnCommmand(lib_p, rand_p, 9, 101, 22, 1*playerCount_p, 1*playerCount_p, 20, basicRes_l, 2*advancedRes_l, 5, 10, 0, coef_enemies_l),
-		createResourceNodeSpawnCommmand(lib_p, rand_p, 106, 3, 28, 1*playerCount_p, 1*playerCount_p, 20, basicRes_l, 2*advancedRes_l, 5, 10, 0, coef_enemies_l),
-		createResourceNodeSpawnCommmand(lib_p, rand_p, 206, 115, 32, 1*playerCount_p, 1*playerCount_p, 20, basicRes_l, 2*advancedRes_l, 5, 10, 0, coef_enemies_l),
+		createResourceNodeSpawnCommmand(lib_p, rand_p, 102, 205, 27, 1*playerCount_p, 1*playerCount_p, 20, basicRes_l, 2*advancedRes_l, 5, 10, 0, coef_enemies_l, bosses_p, false),
+		createResourceNodeSpawnCommmand(lib_p, rand_p, 9, 101, 22, 1*playerCount_p, 1*playerCount_p, 20, basicRes_l, 2*advancedRes_l, 5, 10, 0, coef_enemies_l, bosses_p, false),
+		createResourceNodeSpawnCommmand(lib_p, rand_p, 106, 3, 28, 1*playerCount_p, 1*playerCount_p, 20, basicRes_l, 2*advancedRes_l, 5, 10, 0, coef_enemies_l, bosses_p, false),
+		createResourceNodeSpawnCommmand(lib_p, rand_p, 206, 115, 32, 1*playerCount_p, 1*playerCount_p, 20, basicRes_l, 2*advancedRes_l, 5, 10, 0, coef_enemies_l, bosses_p, false),
 		// cirle 4
-		createResourceNodeSpawnCommmand(lib_p, rand_p, 207, 211, 26, 2*playerCount_p, 1*playerCount_p, 30, basicRes_l, 4*advancedRes_l, 5, 10, 3, coef_enemies_l),
-		createResourceNodeSpawnCommmand(lib_p, rand_p, 16, 207, 34, 2*playerCount_p, 1*playerCount_p, 30, basicRes_l, 4*advancedRes_l, 5, 10, 3, coef_enemies_l),
-		createResourceNodeSpawnCommmand(lib_p, rand_p, 6, 4, 25, 2*playerCount_p, 1*playerCount_p, 30, basicRes_l, 4*advancedRes_l, 5, 10, 3, coef_enemies_l),
-		createResourceNodeSpawnCommmand(lib_p, rand_p, 209, 12, 31, 2*playerCount_p, 1*playerCount_p, 30, basicRes_l, 4*advancedRes_l, 5, 10, 3, coef_enemies_l),
+		createResourceNodeSpawnCommmand(lib_p, rand_p, 207, 211, 26, 2*playerCount_p, 1*playerCount_p, 30, basicRes_l, 4*advancedRes_l, 5, 10, 3, coef_enemies_l, false, bosses_p),
+		createResourceNodeSpawnCommmand(lib_p, rand_p, 16, 207, 34, 2*playerCount_p, 1*playerCount_p, 30, basicRes_l, 4*advancedRes_l, 5, 10, 3, coef_enemies_l, false, bosses_p),
+		createResourceNodeSpawnCommmand(lib_p, rand_p, 6, 4, 25, 2*playerCount_p, 1*playerCount_p, 30, basicRes_l, 4*advancedRes_l, 5, 10, 3, coef_enemies_l, false, bosses_p),
+		createResourceNodeSpawnCommmand(lib_p, rand_p, 209, 12, 31, 2*playerCount_p, 1*playerCount_p, 30, basicRes_l, 4*advancedRes_l, 5, 10, 3, coef_enemies_l, false, bosses_p),
 	};
 
 	return commands_l;
