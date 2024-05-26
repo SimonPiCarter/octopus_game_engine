@@ -1222,6 +1222,17 @@ double Controller::get_current_reload_time(EntityHandle const * handle_p, String
 	return reload_l;
 }
 
+double Controller::get_reload_ratio(EntityHandle const * handle_p, String const &ability_p) const
+{
+	double full_reload = get_reload_time(handle_p, ability_p);
+	double current_reload = get_current_reload_time(handle_p, ability_p);
+	if(full_reload < 0.01)
+	{
+		return 0.;
+	}
+	return std::max(0., 1. - (current_reload / full_reload));
+}
+
 bool Controller::hasNonStaticBehind(EntityHandle const * handle_p, int height_p, int width_p) const
 {
 	if(!_state)
@@ -1777,6 +1788,7 @@ void Controller::_bind_methods()
 
 	ClassDB::bind_method(D_METHOD("get_reload_time", "handle", "ability"), &Controller::get_reload_time);
 	ClassDB::bind_method(D_METHOD("get_current_reload_time", "handle", "ability"), &Controller::get_current_reload_time);
+	ClassDB::bind_method(D_METHOD("get_reload_ratio", "handle", "ability"), &Controller::get_reload_ratio);
 	ClassDB::bind_method(D_METHOD("hasNonStaticBehind", "handle", "height" "width"), &Controller::hasNonStaticBehind);
 	ClassDB::bind_method(D_METHOD("get_model_ray", "model"), &Controller::get_model_ray);
 	ClassDB::bind_method(D_METHOD("is_grid_free", "model", "x", "y", "player"), &Controller::is_grid_free);

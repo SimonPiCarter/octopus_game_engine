@@ -134,8 +134,10 @@ public:
 	// ability getters
 	// get necessary reload time
 	double get_reload_time(EntityHandle const * handle_p, String const &ability_p) const;
-	// get current reload time
+	// get current reload time (time since last usage of the ability)
 	double get_current_reload_time(EntityHandle const * handle_p, String const &ability_p) const;
+	// get reload ratio for the ability (0 means reloaded, 1 means not reloaded at all)
+	double get_reload_ratio(EntityHandle const * handle_p, String const &ability_p) const;
 	// check if there is non static entity behind this one
 	bool hasNonStaticBehind(EntityHandle const * handle_p, int height_p, int width_p) const;
 	bool hasNonStaticBehindFromPos(Vector2 const &pos_p, int height_p, int width_p) const;
