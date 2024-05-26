@@ -221,7 +221,7 @@ void Option::update(UpgradeOption const &option_p)
 		std::vector<std::string> strings_l = customSplit(option_p._upgrade, '.');
 		if(strings_l.size() > 2)
 		{
-			_modifier_name = "";
+			_modifier_name = strings_l[1].c_str();
 			_model_name = strings_l[2].c_str();
             // add params
             _params.push_back(TypedArray<String>());
