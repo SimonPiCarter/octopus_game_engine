@@ -221,25 +221,32 @@ void Option::update(UpgradeOption const &option_p)
 		std::vector<std::string> strings_l = customSplit(option_p._upgrade, '.');
 		if(strings_l.size() > 2)
 		{
-			_modifier_name = strings_l[1].c_str();
+			_modifier_name = "";
 			_model_name = strings_l[2].c_str();
+            // add params
+            _params.push_back(TypedArray<String>());
+            // description
+            _desc.push_back(("upgrade_unit."+strings_l[1]+"_tooltip").c_str());
+            _params.back().push_back(strings_l[2].c_str());
 		}
 		else
 		{
 			_modifier_name = "";
 			_model_name = option_p._upgrade.c_str();
+            _params.push_back(TypedArray<String>());
+            _desc.push_back((option_p._upgrade+"_tooltip").c_str());
 		}
 	}
 	else
 	{
 		_modifier_name = "";
 		_model_name = option_p._upgrade.c_str();
+        _params.push_back(TypedArray<String>());
+        _desc.push_back((option_p._upgrade+"_tooltip").c_str());
 	}
 
     _player = option_p._player;
     _stats_name.push_back("");
-    _params.push_back(TypedArray<String>());
-	_desc.push_back((option_p._upgrade+"_tooltip").c_str());
 }
 
 void Option::update(SpawnUnitOption const &option_p)
