@@ -208,7 +208,7 @@ void add_abilities(UnitModel &model_p, std::string const &model_name_p)
 
 void createSurvivalHealer(Library &lib_p)
 {
-	UnitModel unitModel_l { false, 0.5, 0.04, 90 };
+	UnitModel unitModel_l { false, 0.5, 0.032, 90 };
 	unitModel_l._isUnit = true;
 	unitModel_l._productionTime = 4500;
 	unitModel_l._cost["bloc"] = 100;
@@ -230,7 +230,7 @@ void createSurvivalHealer(Library &lib_p)
 
 void createSurvivalAttackSpeed(Library &lib_p)
 {
-	UnitModel unitModel_l { false, 0.5, 0.05, 50 };
+	UnitModel unitModel_l { false, 0.5, 0.035, 50 };
 	unitModel_l._projectile = true;
 	unitModel_l._isUnit = true;
 	unitModel_l._productionTime = 3000;
@@ -274,7 +274,7 @@ void createSurvivalTank(Library &lib_p)
 
 void createSurvivalAoe(Library &lib_p)
 {
-	UnitModel unitModel_l { false, 0.5, 0.04, 75 };
+	UnitModel unitModel_l { false, 0.5, 0.038, 75 };
 	unitModel_l._isUnit = true;
 	unitModel_l._productionTime = 4000;
 	unitModel_l._cost["bloc"] = 50;
