@@ -70,6 +70,7 @@ godot::Option *OptionManager::getChosenPrimaryOption(uint32_t idx_p) const
 {
     godot::Option * opt_l = memnew(Option());
     opt_l->set_option(_chosenOptions.at(idx_p)._playerOption);
+	opt_l->set_rarity(_chosenOptions.at(idx_p)._rarity);
     return opt_l;
 }
 

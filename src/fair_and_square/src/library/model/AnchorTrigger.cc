@@ -105,11 +105,11 @@ std::vector<Option> generateOptions(
 				{
 					options_l.back()._rarity = 3;
 				}
-				else if(generator_l.proba_coef < 5)
+				else if(generator_l.proba_coef < 10)
 				{
 					options_l.back()._rarity = 2;
 				}
-				else if(generator_l.proba_coef < 10)
+				else if(generator_l.proba_coef < 20)
 				{
 					options_l.back()._rarity = 1;
 				}
