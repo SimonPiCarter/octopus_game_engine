@@ -18,6 +18,7 @@
 #include "command/building/BuildingUnitProductionCommand.hh"
 #include "command/building/BuildingCancelCommand.hh"
 #include "controller/Controller.hh"
+#include "controller/score/ScoreTracker.hh"
 #include "logger/Logger.hh"
 #include "serialization/CommandSerialization.hh"
 #include "serialization/StateDump.hh"
@@ -1023,6 +1024,95 @@ bool Controller::get_first_step_done() const
 	return _controller->getMetrics()._nbStepsCompiled > 10;
 }
 
+bool Controller::has_won(int player_p) const
+{
+	if(!_state) { return false; }
+	if(_state->getPlayers().size() <= player_p) { return false; }
+	return _state->hasWinningTeam()
+		&& _state->getWinningTeam() == _state->getPlayer(player_p)->_team;
+}
+
+int Controller::get_score(int player_p) const
+{
+	int score_l = 0
+		+ get_units_produced(player_p) * 20
+		- get_units_lost(player_p) * 10
+		+ get_units_killed(player_p) * 10
+		+ get_harvested_resources(player_p);
+	return score_l;
+}
+
+int Controller::get_units_produced(int player_p) const
+{
+	if(!_controller)
+	{
+		return 0;
+	}
+	octopus::ScoreTracker const &tracker_l = _controller->getScoreTracker();
+	std::vector<unsigned long long> const & units_produced_l = tracker_l.get_units_produced();
+
+	if(units_produced_l.size() > player_p)
+	{
+		return units_produced_l[player_p];
+	}
+	return 0;
+}
+
+int Controller::get_units_lost(int player_p) const
+{
+	if(!_controller)
+	{
+		return 0;
+	}
+	octopus::ScoreTracker const &tracker_l = _controller->getScoreTracker();
+	std::vector<unsigned long long> const & units_lost_l = tracker_l.get_units_lost();
+
+	if(units_lost_l.size() > player_p)
+	{
+		return units_lost_l[player_p];
+	}
+	return 0;
+}
+int Controller::get_units_killed(int player_p) const
+{
+	if(!_controller || !_state)
+	{
+		return 0;
+	}
+	octopus::Player const *player_l = _state->getPlayer(player_p);
+
+	octopus::ScoreTracker const &tracker_l = _controller->getScoreTracker();
+	std::vector<unsigned long long> const & unit_losts_l = tracker_l.get_units_lost();
+
+	int units_killed_l = 0;
+
+	for(unsigned long i = 0; i < unit_losts_l.size() && i < _state->getPlayers().size() ; ++ i)
+	{
+		octopus::Player const *other_player_l = _state->getPlayer(i);
+		if(player_l->_team != other_player_l->_team)
+		{
+			units_killed_l += unit_losts_l[i];
+		}
+	}
+
+	return units_killed_l;
+}
+int Controller::get_harvested_resources(int player_p) const
+{
+	if(!_controller)
+	{
+		return 0;
+	}
+	octopus::ScoreTracker const &tracker_l = _controller->getScoreTracker();
+	std::vector<unsigned long long> const & resources_l = tracker_l.get_harvested_resources();
+
+	if(resources_l.size() > player_p)
+	{
+		return resources_l[player_p];
+	}
+	return 0;
+}
+
 void Controller::save_to_file(String const &path_p)
 {
 	if(has_state())
@@ -1767,6 +1857,12 @@ void Controller::_bind_methods()
 	ClassDB::bind_method(D_METHOD("get_pause"), &Controller::get_pause);
 	ClassDB::bind_method(D_METHOD("get_init_done"), &Controller::get_init_done);
 	ClassDB::bind_method(D_METHOD("get_first_step_done"), &Controller::get_first_step_done);
+	ClassDB::bind_method(D_METHOD("has_won", "player"), &Controller::has_won);
+	ClassDB::bind_method(D_METHOD("get_score", "player"), &Controller::get_score);
+	ClassDB::bind_method(D_METHOD("get_units_produced", "player"), &Controller::get_units_produced);
+	ClassDB::bind_method(D_METHOD("get_units_lost", "player"), &Controller::get_units_lost);
+	ClassDB::bind_method(D_METHOD("get_units_killed", "player"), &Controller::get_units_killed);
+	ClassDB::bind_method(D_METHOD("get_harvested_resources", "player"), &Controller::get_harvested_resources);
 	ClassDB::bind_method(D_METHOD("save_to_file", "path"), &Controller::save_to_file);
 	ClassDB::bind_method(D_METHOD("set_auto_file_path", "path"), &Controller::set_auto_file_path);
 	ClassDB::bind_method(D_METHOD("set_auto_file_debug", "debug"), &Controller::set_auto_file_debug);

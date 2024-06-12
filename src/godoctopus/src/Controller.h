@@ -121,6 +121,12 @@ public:
 	bool get_pause() const;
 	bool get_init_done() const;
 	bool get_first_step_done() const;
+	bool has_won(int player_p) const;
+	int get_score(int player_p) const;
+	int get_units_produced(int player_p) const;
+	int get_units_lost(int player_p) const;
+	int get_units_killed(int player_p) const;
+	int get_harvested_resources(int player_p) const;
 	// commands available getters
 	TypedArray<String> get_models(EntityHandle const * handle_p, int player_p, bool checkRequirements_p) const;
 	TypedArray<String> get_abilities(EntityHandle const * handle_p, int player_p, bool checkRequirements_p) const;

@@ -71,9 +71,12 @@ void EventCollection::visit(EntitySpawnStep const *step_p)
 
 void EventCollection::visit(UnitSpawnStep const *step_p)
 {
+	Entity const * ent_l = _state.getEntity(step_p->getHandle());
 	Logger::getDebug() << "EventCollection :: visit UnitSpawnStep " << step_p->getHandle() <<std::endl;
 	Logger::getDebug() << "\ttrigger"<<std::endl;
 	_listEventEntityModelFinished.push_back(new EventEntityModelFinished(*_state.getEntity(step_p->getHandle()), step_p->getModel()._model, step_p->getModel()._player));
+	// update score
+	_scoreTracker.add_unit_produced(ent_l->_player);
 }
 
 void EventCollection::visit(EntityHitPointChangeStep const *step_p)
