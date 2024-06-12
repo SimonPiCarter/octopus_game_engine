@@ -639,7 +639,7 @@ void Controller::handleTriggers(State const &state_p, Step &step_p, Step const &
 {
 	Logger::getDebug() << "handleTriggers :: start "<<std::endl;
 	// compute event and triggers (visit last step)
-	EventCollection visitor_l(state_p);
+	EventCollection visitor_l(state_p, _scoreTracker);
 	visitAll(prevStep_p, visitor_l);
 
 	// handle update for every player of building counts using a map of delta (+1 means a new building)

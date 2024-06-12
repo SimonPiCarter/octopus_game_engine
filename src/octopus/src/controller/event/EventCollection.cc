@@ -10,11 +10,12 @@
 #include "step/entity/spawn/EntitySpawnStep.hh"
 #include "step/entity/spawn/UnitSpawnStep.hh"
 #include "step/entity/EntityHitPointChangeStep.hh"
+#include "step/unit/UnitHarvestStep.hh"
 
 namespace octopus
 {
 
-EventCollection::EventCollection(State const &state_p) : _state(state_p)
+EventCollection::EventCollection(State const &state_p, ScoreTracker &scoreTracker_p) : _state(state_p), _scoreTracker(scoreTracker_p)
 {}
 
 EventCollection::~EventCollection()
@@ -95,7 +96,17 @@ void EventCollection::visit(EntityHitPointChangeStep const *step_p)
 		Logger::getDebug() << "\ttrigger"<<std::endl;
 		_diedHandles.insert(step_p->_handle);
 		_listEventEntityModelDied.push_back(new EventEntityModelDied(*ent_l, ent_l->_model, ent_l->_player));
+		// update score
+		_scoreTracker.add_unit_lost(ent_l->_player);
 	}
 }
+
+void EventCollection::visit(UnitHarvestDropStep const *step_p)
+{
+	Entity const * ent_l = _state.getEntity(step_p->_handle);
+	Fixed const & qty_l = step_p->_qty;
+	_scoreTracker.add_harvested_resource(ent_l->_player, qty_l.to_int());
+}
+
 
 }

@@ -10,6 +10,7 @@
 #include "trigger/Trigger.hh"
 #include "step/Step.hh"
 #include "graph/PathManager.hh"
+#include "controller/score/ScoreTracker.hh"
 
 namespace octopus
 {
@@ -159,6 +160,7 @@ public:
 	/// -1 to not use (default value)
 	void setExternalMin(long long externalMinStep_p) { _externalMinStep = externalMinStep_p; }
 
+	ScoreTracker const &getScoreTracker() const { return _scoreTracker; }
 private:
 	/// @brief set to true to enable orca Collision
 	/// way better performance but less predictible (should not be used in tests)
@@ -229,6 +231,9 @@ private:
 	/// @brief the size of the queue in states for reusable handles
 	/// (this means a free handle wont be reusable before _reusablehandleQueueSize steps have been applied)
 	uint32_t const _reusableHandleQueueSize;
+
+	// score tracker
+	ScoreTracker _scoreTracker;
 };
 
 } // namespace octopus

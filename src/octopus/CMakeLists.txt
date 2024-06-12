@@ -54,6 +54,7 @@ add_library(octopus
 	${CMAKE_CURRENT_SOURCE_DIR}/src/controller/Controller.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/controller/Metrics.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/controller/event/EventCollection.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/src/controller/score/ScoreTracker.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/controller/trigger/Listener.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/controller/trigger/Trigger.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/state/entity/buff/AnyBuff.cc
