@@ -56,6 +56,7 @@ public:
 	// missions
 	void load_mission_1(int seed_p, int player_count_p);
 	void load_mission_2(int seed_p, godot::LevelModel *level_model_p, int player_count_p);
+	void load_mission_3(int seed_p, godot::LevelModel *level_model_p, int player_count_p, int difficulty_p);
 
 	// required for editor
 	void load_minimal_model();
@@ -63,12 +64,20 @@ public:
 	// levels (modes)
 	void load_hero_siege_level(int seed_p, int player_count_p);
 	void load_demo_level(int seed_p, WavePattern const * wavePattern_p, godot::LevelModel *level_model_p, int player_count_p, int difficulty_p);
+	void load_survival_level(int seed_p, WavePattern const * wavePattern_p, godot::LevelModel *level_model_p, int player_count_p,
+		bool less_resources_p,
+		bool more_enemies_map_p,
+		bool two_direction_wave_p,
+		bool bosses_p,
+		bool fast_anchor_decay_p,
+		int buff_per_wave_p
+	);
 
 	// levels (fas)
 	void load_level1(int seed_p, int nb_wave_p);
 	void load_level2(int seed_p, WavePattern const * wavePattern_p, int nb_players_p);
 	void load_level_test_anchor(int seed_p);
-	void load_level_test_model_reading(int seed_p, godot::LevelModel *level_model_p, bool buff_prod_p, bool upgrades_rune_p, int idx_first_player_p, int nb_players_p);
+	void load_level_test_model_reading(int seed_p, godot::LevelModel *level_model_p, bool buff_prod_p, bool upgrades_rune_p, int idx_first_player_p, int nb_players_p, bool use_div_option_p);
 	void load_duel_level(int seed_p, TypedArray<int> const &div_player_1_p, TypedArray<int> const &div_player_2_p);
 	void load_multi_test_level(int seed_p, int step_cout_p, bool buff_prod_p);
 
@@ -109,6 +118,15 @@ public:
 	void set_over(bool over_p);
 	void set_fast_forward(bool fast_forward_p);
 	// getters
+	bool get_pause() const;
+	bool get_init_done() const;
+	bool get_first_step_done() const;
+	bool has_won(int player_p) const;
+	int get_score(int player_p) const;
+	int get_units_produced(int player_p) const;
+	int get_units_lost(int player_p) const;
+	int get_units_killed(int player_p) const;
+	int get_harvested_resources(int player_p) const;
 	// commands available getters
 	TypedArray<String> get_models(EntityHandle const * handle_p, int player_p, bool checkRequirements_p) const;
 	TypedArray<String> get_abilities(EntityHandle const * handle_p, int player_p, bool checkRequirements_p) const;
@@ -122,8 +140,10 @@ public:
 	// ability getters
 	// get necessary reload time
 	double get_reload_time(EntityHandle const * handle_p, String const &ability_p) const;
-	// get current reload time
+	// get current reload time (time since last usage of the ability)
 	double get_current_reload_time(EntityHandle const * handle_p, String const &ability_p) const;
+	// get reload ratio for the ability (0 means reloaded, 1 means not reloaded at all)
+	double get_reload_ratio(EntityHandle const * handle_p, String const &ability_p) const;
 	// check if there is non static entity behind this one
 	bool hasNonStaticBehind(EntityHandle const * handle_p, int height_p, int width_p) const;
 	bool hasNonStaticBehindFromPos(Vector2 const &pos_p, int height_p, int width_p) const;
@@ -183,6 +203,7 @@ public:
 	void add_attack_move_commands(int peer, PackedInt32Array const &handles_p, Vector2 const &target_p, int player_p, bool queued_p);
 	void add_stop_commands(int peer, PackedInt32Array const &handles_p, int player_p, bool queued_p);
 	// production
+	void add_unit_auto_build_command(int peer, PackedInt32Array const &handles_p, String const &model_p, int player_p);
 	void add_unit_build_command(int peer, PackedInt32Array const &handles_p, String const &model_p, int player_p);
 	void add_unit_build_cancel_command(int peer, PackedInt32Array const & handle_p, int index_p, int player_p);
 	// building
@@ -201,6 +222,8 @@ public:
 	void next_step();
 	/// @brief get the size of the queued layers
 	int get_queued_size() const;
+	/// @brief get the size of prepared layer for a peer (the one not sent to the engine controller yet)
+	int get_queued_size_from_peer(int peer_p) const;
 
 	// handling of peer information
 	/// @brief add peer info on player
@@ -287,6 +310,7 @@ private:
 	std::map<int, unsigned long> _playerPerPeer;
 
 	bool _catchedException = false;
+	bool _readyToLoopSent = false;
 	std::string _exception;
 
 };

@@ -5,6 +5,7 @@
 #include "step/DialogStep.h"
 #include "step/WaveStep.h"
 #include "step/ObjectiveStep.h"
+#include "step/library/FirstRunicBossStep.h"
 
 // octopus
 #include "command/data/AttackMoveData.hh"
@@ -43,6 +44,8 @@
 #include "controller/step/RuneWellPopStep.h"
 
 using octopus::to_double;
+using octopus::get_duration;
+using octopus::get_id;
 
 namespace godot
 {
@@ -192,7 +195,8 @@ void ControllerStepVisitor::visit(octopus::ProjectileSpawnStep const *steppable_
 		{
 			_controller.emit_signal("spawn_projectile", int(proj_l._index), String(proj_l._sourceModel->_id.c_str()),
 				Vector2(octopus::to_double(proj_l._pos.x), octopus::to_double(proj_l._pos.y)),
-				Vector2(octopus::to_double(proj_l._posTarget.x), octopus::to_double(proj_l._posTarget.y)));
+				Vector2(octopus::to_double(proj_l._posTarget.x), octopus::to_double(proj_l._posTarget.y)),
+				int(proj_l._target.index));
 		}
 	}
 }
@@ -219,7 +223,7 @@ void ControllerStepVisitor::visit(octopus::BuildingStep const *steppable_p)
 
 void ControllerStepVisitor::visit(octopus::PlayerAddOptionStep const *steppable_p)
 {
-	_controller.getOptionManagers().at(steppable_p->_player)->addOptionLayer(steppable_p);
+	_controller.getOptionManagers().at(steppable_p->_player)->addOptionLayer(*_state, steppable_p);
 	_controller.emit_signal("option_update");
 }
 
@@ -238,12 +242,12 @@ void ControllerStepVisitor::visit(octopus::MissingResourceStep const *steppable_
 
 void ControllerStepVisitor::visit(octopus::PlayerBuffAllStep const *steppable_p)
 {
-	_controller.emit_signal("buff_all", int(steppable_p->_player), String(steppable_p->_buff._id.c_str()), String(steppable_p->_model.c_str()));
+	_controller.emit_signal("buff_all", int(steppable_p->_player), String(get_id(steppable_p->_buff).c_str()), String(steppable_p->_model.c_str()));
 }
 
 void ControllerStepVisitor::visit(octopus::PlayerPopOptionStep const *steppable_p)
 {
-	_controller.getOptionManagers().at(steppable_p->_player)->popOptionLayer(steppable_p);
+	_controller.getOptionManagers().at(steppable_p->_player)->popOptionLayer(*_state, steppable_p);
 	_controller.emit_signal("option_update");
 	_controller.emit_signal("pop_option");
 }
@@ -257,6 +261,10 @@ void ControllerStepVisitor::visit(octopus::CustomStep const *steppable_p)
 	WaveStep const *wave_l = dynamic_cast<WaveStep const *>(steppable_p);
 	WaveSpawPointStep const *waveSpawnPoint_l = dynamic_cast<WaveSpawPointStep const *>(steppable_p);
 	RuneWellPopStep const *runeWellPopStep_l = dynamic_cast<RuneWellPopStep const *>(steppable_p);
+	FirstRunicBossStep const *firstRunicBossStep_l = dynamic_cast<FirstRunicBossStep const *>(steppable_p);
+	FirstRunicBossPillar const *firstRunicBossPillar_l = dynamic_cast<FirstRunicBossPillar const *>(steppable_p);
+	FirstRunicBossPillarUp const *firstRunicBossPillarUp_l = dynamic_cast<FirstRunicBossPillarUp const *>(steppable_p);
+
 
 	// objective handling
 	AbstractObjectiveStep const * objectiveStep_l = dynamic_cast<AbstractObjectiveStep const *>(steppable_p);
@@ -296,11 +304,34 @@ void ControllerStepVisitor::visit(octopus::CustomStep const *steppable_p)
 	{
 		objectiveStep_l->add_signals(_controller);
 	}
+	else if(firstRunicBossStep_l)
+	{
+		if(firstRunicBossStep_l->_trigger)
+		{
+			_controller.emit_signal("first_runic_boss_trigger_aoe", firstRunicBossStep_l->_id, firstRunicBossStep_l->_idAoe);
+		}
+		else
+		{
+			_controller.emit_signal("first_runic_boss_spawn_aoe",
+				firstRunicBossStep_l->_id, firstRunicBossStep_l->_idAoe,
+				firstRunicBossStep_l->_x, firstRunicBossStep_l->_y, firstRunicBossStep_l->_range);
+		}
+	}
+	else if(firstRunicBossPillar_l)
+	{
+		_controller.emit_signal("first_runic_boss_pillar",
+				firstRunicBossPillar_l->_id, firstRunicBossPillar_l->_spawn, firstRunicBossPillar_l->_firstSpawn);
+	}
+	else if(firstRunicBossPillarUp_l)
+	{
+		_controller.emit_signal("first_runic_boss_pillar_up",
+				firstRunicBossPillarUp_l->_id, firstRunicBossPillarUp_l->_idPillar, firstRunicBossPillarUp_l->_step);
+	}
 }
 
 void ControllerStepVisitor::visit(octopus::EntityBuffStep const *steppable_p)
 {
-		_controller.emit_signal("buff", int(steppable_p->_target.index), String(steppable_p->_buff._id.c_str()), int(steppable_p->_buff._duration));
+		_controller.emit_signal("buff", int(steppable_p->_target.index), String(get_id(steppable_p->_buff).c_str()), int(get_duration(steppable_p->_buff)));
 }
 
 void applyControllerStepVisitor(Controller &controller_p, octopus::State const &state_p, octopus::Step const &step_p)

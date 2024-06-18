@@ -10,6 +10,7 @@ cmake_minimum_required (VERSION 3.14.0)
 
 
 add_library(octopus
+	${CMAKE_CURRENT_SOURCE_DIR}/src/command/building/BuildingAutoBuildCommand.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/command/building/BuildingBlueprintCommand.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/command/building/BuildingCancelCommand.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/command/building/BuildingRallyPointCommand.cc
@@ -34,6 +35,7 @@ add_library(octopus
 	${CMAKE_CURRENT_SOURCE_DIR}/src/command/entity/EntityWaitCommand.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/command/flying/eot/DamageOverTime.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/command/flying/CommandEffectOverTime.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/src/command/flying/CommandSpawnUnit.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/command/player/PlayerChoseOptionCommand.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/command/spawner/AreaSpawnerCommand.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/command/spawner/ProceduralTerrain.cc
@@ -47,15 +49,21 @@ add_library(octopus
 	${CMAKE_CURRENT_SOURCE_DIR}/src/orca/rvo/Obstacle.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/orca/rvo/RVOSimulator.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/serialization/CommandSerialization.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/src/serialization/crc/FastCRC.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/serialization/StateDump.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/controller/Controller.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/controller/Metrics.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/controller/event/EventCollection.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/src/controller/score/ScoreTracker.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/controller/trigger/Listener.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/controller/trigger/Trigger.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/src/state/entity/buff/AnyBuff.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/state/entity/buff/Buff.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/state/entity/buff/Buffer.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/src/state/entity/buff/CompositeBuff.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/state/entity/buff/ConditionalBuff.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/src/state/entity/buff/ModifierAoEBuff.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/src/state/entity/buff/ModifierBuff.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/state/entity/buff/TimedBuff.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/state/entity/Building.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/state/entity/Entity.cc
@@ -105,6 +113,7 @@ add_library(octopus
 	${CMAKE_CURRENT_SOURCE_DIR}/src/step/command/flying/FlyingCommandPopStep.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/step/command/flying/FlyingCommandSpawnStep.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/step/command/harvest/CommandHarvestStep.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/src/step/building/BuildingAutoBuildStep.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/step/building/BuildingCancelStep.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/step/building/BuildingRemoveRallyPointStep.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/step/building/BuildingSetRallyPointStep.cc
@@ -151,6 +160,7 @@ add_library(octopus
 	${CMAKE_CURRENT_SOURCE_DIR}/src/step/trigger/TriggerEntityResetStep.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/step/trigger/TriggerSpawn.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/step/trigger/TriggerStepCountChange.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/src/step/unit/UnitDataStep.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/step/unit/UnitHarvestStep.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/step/vision/VisionChangeStep.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/graph/CanonicalDijkstra.cc
@@ -201,7 +211,7 @@ endif ()
 install (TARGETS octopus EXPORT octopus-export)
 
 install(DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/src/" # source directory
-        DESTINATION "include/octopus/" # target directory
+        DESTINATION "include/" # target directory
         FILES_MATCHING # install only matched files
         PATTERN "*.hh" # select header files
 		PATTERN "*Graph.hh" EXCLUDE # exclude this deprecated file (exposing boost headers)

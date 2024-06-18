@@ -20,7 +20,7 @@ public:
     /// @brief get internal steppable for the given option
     /// @param player_p the player for the steps to be applied
     /// @return a vector of steppables (owner is given away)
-    virtual std::vector<Steppable *> getSteppables(unsigned long player_p) const override;
+    virtual std::vector<Steppable *> getSteppables(unsigned long player_p, unsigned long) const override;
 };
 
 } // namespace octopus

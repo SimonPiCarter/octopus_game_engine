@@ -90,7 +90,7 @@ namespace models
             return new TierUpgrade(_param, _fn);
         }
 
-        virtual std::vector<octopus::Steppable *> getSteppables(unsigned long player_p) const
+        virtual std::vector<octopus::Steppable *> getSteppables(unsigned long player_p, unsigned long) const
         {
             return _fn(_param, player_p);
         }
@@ -107,26 +107,26 @@ namespace models
         octopus::BuildingModel &model_p)
     {
         octopus::Upgrade * upT1_l = new octopus::Upgrade(id_p+models::tierOneSuffix, new models::TierUpgrade<param_t>(params_p, t1_p));
-        upT1_l->_cost["ether"] = 200;
-        upT1_l->_cost["bloc"] = 100;
-        upT1_l->_productionTime = 1500;
-        upT1_l->_requirements._upgradeLvl[id_p] = 1;
+        upT1_l->_cost[0]["ether"] = 200;
+        upT1_l->_cost[0]["bloc"] = 100;
+        upT1_l->_productionTime[0] = 1500;
+        upT1_l->_requirements[0]._upgradeLvl[id_p] = 1;
         lib_p.registerUpgrade(upT1_l->_id, upT1_l);
 
         octopus::Upgrade * upT2_l = new octopus::Upgrade(id_p+models::tierTwoSuffix, new models::TierUpgrade<param_t>(params_p, t2_p));
-        upT2_l->_cost["ether"] = 600;
-        upT2_l->_cost["irium"] = 300;
-        upT2_l->_productionTime = 3000;
-        upT2_l->_requirements._upgradeLvl[id_p] = 2;
-        upT2_l->_requirements._upgradeLvl[upT1_l->_id] = 1;
+        upT2_l->_cost[0]["ether"] = 600;
+        upT2_l->_cost[0]["irium"] = 300;
+        upT2_l->_productionTime[0] = 3000;
+        upT2_l->_requirements[0]._upgradeLvl[id_p] = 2;
+        upT2_l->_requirements[0]._upgradeLvl[upT1_l->_id] = 1;
         lib_p.registerUpgrade(upT2_l->_id, upT2_l);
 
         octopus::Upgrade * upT3_l = new octopus::Upgrade(id_p+models::tierThreeSuffix, new models::TierUpgrade<param_t>(params_p, t3_p));
-        upT3_l->_cost["bloc"] = 1200;
-        upT3_l->_cost["irium"] = 600;
-        upT3_l->_productionTime = 6000;
-        upT3_l->_requirements._upgradeLvl[id_p] = 3;
-        upT3_l->_requirements._upgradeLvl[upT2_l->_id] = 1;
+        upT3_l->_cost[0]["bloc"] = 1200;
+        upT3_l->_cost[0]["irium"] = 600;
+        upT3_l->_productionTime[0] = 6000;
+        upT3_l->_requirements[0]._upgradeLvl[id_p] = 3;
+        upT3_l->_requirements[0]._upgradeLvl[upT2_l->_id] = 1;
         lib_p.registerUpgrade(upT3_l->_id, upT3_l);
 
         model_p._upgrades.push_back(upT1_l);

@@ -77,6 +77,11 @@ public:
 	void add_zone(String const &name_p, int x, int y, int size_x, int size_y);
 
     ////////////////
+    /// specific
+    ////////////////
+	void set_specific(String const &specific_p);
+
+    ////////////////
     /// generator (steps)
     ////////////////
     std::list<octopus::Steppable *> generateLevelSteps(octopus::Library const &lib_p, unsigned long playerCount_p);
@@ -91,6 +96,9 @@ private:
     std::vector<GodotTrigger> _triggers;
 
 	std::vector<GodotZone> _zones;
+
+	/// @brief hold the specific c++ step generation (none if empty)
+	std::string _specific;
 };
 
 }

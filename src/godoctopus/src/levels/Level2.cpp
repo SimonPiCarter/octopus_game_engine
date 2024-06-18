@@ -141,10 +141,9 @@ std::list<Steppable *> WaveLevelSteps(Library &lib_p, RandomGenerator &rand_p, s
 	WaveInfo firstWave_l = rollWave(rand_p, waves_l[0]);
 
 	Trigger * triggerWave_l = new WaveSpawn(new ListenerStepCount(firstWave_l.earlyWave.steps), firstWave_l, {octopus::Vector(60,ySpawnWave_l)}, true,
-			lib_p, rand_p, params_l, player_p, defaultGenerator);
+			lib_p, rand_p, params_l, player_p, {}, defaultGenerator, {});
 
 	Handle handle_l(0);
-	Handle flyingCommandHandle_l(0);
 	std::list<Steppable *> spawners_l =
 	{
 		new PlayerSpawnStep(0, 0),	// main player
@@ -170,7 +169,7 @@ std::list<Steppable *> WaveLevelSteps(Library &lib_p, RandomGenerator &rand_p, s
 		new TriggerSpawn(triggerWave_l),
 		new TriggerSpawn(new LoseTrigger(new ListenerEntityModelDied(&lib_p.getBuildingModel("command_center"), 0))),
 		new TriggerSpawn(new AnchorTrigger(lib_p, rand_p, 150)),
-		new FlyingCommandSpawnStep(new TimerDamage(flyingCommandHandle_l++, 100, 0, 0, "Anchor", Handle(0))),
+		new FlyingCommandSpawnStep(new TimerDamage(100, 0, 0, "Anchor", Handle(0))),
 		new godot::CameraStep(to_int(building_l._pos.x), to_int(building_l._pos.y), 0),
 		new godot::DialogStep("leve1_intro"),
 	};
@@ -203,7 +202,7 @@ std::list<Steppable *> WaveLevelSteps(Library &lib_p, RandomGenerator &rand_p, s
 			spawners_l.push_back(new UnitSpawnStep(handle_l++, unit_l));
 		}
 		spawners_l.push_back(new TriggerSpawn(new LoseTrigger(new ListenerEntityModelDied(&lib_p.getBuildingModel("command_center"), player_l))));
-		spawners_l.push_back(new FlyingCommandSpawnStep(new TimerDamage(flyingCommandHandle_l++, 100, 0, 0, "Anchor", ccHandle_l)));
+		spawners_l.push_back(new FlyingCommandSpawnStep(new TimerDamage(100, 0, 0, "Anchor", ccHandle_l)));
 
 		spawners_l.push_back(new godot::CameraStep(to_int(building_l._pos.x), to_int(building_l._pos.y), player_l));
 	}

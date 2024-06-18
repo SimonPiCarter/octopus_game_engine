@@ -27,6 +27,7 @@ public:
 		: _controller(controller_p), _state(state_p), _skipMoveSteps(skipMoveSteps_p) {}
 
 	virtual void visit(octopus::AttackModifierStep const *) override {}
+	virtual void visit(octopus::BuildingAutoBuildStep const *) override {}
 	virtual void visit(octopus::BuildingCancelStep const *) override;
 	virtual void visit(octopus::BuildingRemoveRallyPointStep const *) override;
 	virtual void visit(octopus::BuildingSetRallyPointStep const *) override;
@@ -107,6 +108,7 @@ public:
 	virtual void visit(octopus::TriggerStepCountChange const *) override {}
 	virtual void visit(octopus::UnitHarvestDropStep const *) override;
 	virtual void visit(octopus::UnitHarvestQuantityStep const *step_p) override;
+	virtual void visit(octopus::UnitDataStep const *) override {}
 	virtual void visit(octopus::UnitHarvestTypeStep const *) override {}
 	virtual void visit(octopus::UnitSpawnStep const *step_p) override;
 	virtual void visit(octopus::VisionChangeStep const *) override {}

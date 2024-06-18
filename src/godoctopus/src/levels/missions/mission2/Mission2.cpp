@@ -57,7 +57,7 @@ std::list<Steppable *> Mission2Steps(Library &lib_p, RandomGenerator &rand_p, un
 				{
 					Entity const *ent_l = state_p.getEntity(handle_l);
 
-					TimedBuff buff_l;
+					ModifierBuff buff_l;
 					buff_l._id = "Mission_AncientRune_AoE_buff";
 					buff_l._duration = 3000;
 					buff_l._attackMod = AoEModifier(0.5, 5);
@@ -100,6 +100,7 @@ void writeMission2Header(std::ofstream &file_p, Mission2Header const &header_p)
 
 /// @brief read header for classic arena level and return a pair of steppable and command
 std::pair<std::list<octopus::Steppable *>, std::list<octopus::Command *> > readMission2Header(octopus::Library &lib_p, std::ifstream &file_p,
+	std::vector<GodotEntityInfo> const &entityInfo_p,
 	octopus::RandomGenerator * &rand_p, Mission2Header &header_r)
 {
     file_p.read((char*)&header_r.seed, sizeof(header_r.seed));
@@ -109,7 +110,7 @@ std::pair<std::list<octopus::Steppable *>, std::list<octopus::Command *> > readM
 	rand_p = new octopus::RandomGenerator(header_r.seed);
 
 	std::pair<std::list<octopus::Steppable *>, std::list<octopus::Command *> > pair_l;
-	pair_l.first = Mission2Steps(lib_p, *rand_p, header_r.nb_players, {});
+	pair_l.first = Mission2Steps(lib_p, *rand_p, header_r.nb_players, entityInfo_p);
 	pair_l.second = Mission2Commands(lib_p, *rand_p, header_r.nb_players);
 	return pair_l;
 }

@@ -99,4 +99,9 @@ PatternHandler &VisionHandler::getPatternHandler()
 	return _patternHandler;
 }
 
+PatternHandler const &VisionHandler::getPatternHandler() const
+{
+	return _patternHandler;
+}
+
 } // octopus

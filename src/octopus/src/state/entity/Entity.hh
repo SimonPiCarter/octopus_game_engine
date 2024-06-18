@@ -5,8 +5,7 @@
 #include <vector>
 #include <unordered_map>
 
-#include "buff/TimedBuff.hh"
-#include "buff/ConditionalBuff.hh"
+#include "buff/AnyBuff.hh"
 #include "command/Commandable.hh"
 #include "utils/Vector.hh"
 #include "state/Handle.hh"
@@ -69,6 +68,7 @@ namespace octopus
 			Buff _buffHpRegeneration;
 			Buff _buffProduction;
 			Buff _buffHarvest;
+			Buff _buffDamageReturn;
 
 			///
 			/// Conditinal buff properties
@@ -82,9 +82,10 @@ namespace octopus
 			std::vector<ConditionalBuff> _condBuffHpRegeneration;
 			std::vector<ConditionalBuff> _condBuffProduction;
 			std::vector<ConditionalBuff> _condBuffHarvest;
+			std::vector<ConditionalBuff> _condBuffDamageReturn;
 
 			/// @brief map of registered buff currently applied
-			std::unordered_map<std::string, TimedBuff> _registeredBuff;
+			std::unordered_map<std::string, AnyBuff> _registeredBuff;
 			/// @brief map of time since the buff has been applied
 			std::unordered_map<std::string, unsigned long> _timeSinceBuff;
 
@@ -114,6 +115,9 @@ namespace octopus
 			Fixed getProduction() const;
 			/// @brief get harvest updated using buffing info
 			Fixed getHarvest() const;
+
+			/// @brief get damage return based using buffing info
+			Fixed getDamageReturn() const;
 
 			/// @brief if frozen ou static
 			bool isFrozen() const;

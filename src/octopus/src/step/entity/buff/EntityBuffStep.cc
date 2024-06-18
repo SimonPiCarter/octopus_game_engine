@@ -10,56 +10,58 @@ namespace octopus
 void EntityBuffStep::apply(State &state_p) const
 {
 	Entity * ent_l = state_p.getEntity(this->_target);
-	Logger::getDebug() << "EntityBuffStep :: apply " << this->_target <<" ("<<_buff._id<<")"<<std::endl;
+	std::string const &id_l = get_id(_buff);
+	Logger::getDebug() << "EntityBuffStep :: apply " << this->_target <<" ("<<id_l<<")"<<std::endl;
 
 	// If buff already existed we just reset it to one (and not to 0)
 	// 0 should only be set when first registering the buff
 	// we keep the min in case the buff was applied twice in a step
-	if(ent_l->_timeSinceBuff.find(_buff._id) != ent_l->_timeSinceBuff.end())
+	if(ent_l->_timeSinceBuff.find(id_l) != ent_l->_timeSinceBuff.end())
 	{
 		Logger::getDebug() << "EntityBuffStep :: update time since buff"<<std::endl;
-		if(ent_l->_timeSinceBuff[_buff._id] > _buff._duration)
+		if(ent_l->_timeSinceBuff[id_l] > get_duration(_buff))
 		{
-			ent_l->_timeSinceBuff[_buff._id] = 0;
+			ent_l->_timeSinceBuff[id_l] = 0;
 		}
 		else
 		{
-			ent_l->_timeSinceBuff[_buff._id] = std::min(ent_l->_timeSinceBuff[_buff._id], 1ul);
+			ent_l->_timeSinceBuff[id_l] = std::min(ent_l->_timeSinceBuff[id_l], 1ul);
 		}
 	}
 	else
 	{
 		Logger::getDebug() << "EntityBuffStep :: add buff"<<std::endl;
-		ent_l->_timeSinceBuff[_buff._id] = 0;
-		ent_l->_registeredBuff[_buff._id] = _buff;
+		ent_l->_timeSinceBuff[id_l] = 0;
+		ent_l->_registeredBuff[id_l] = _buff;
 	}
 }
 
 void EntityBuffStep::revert(State &state_p, SteppableData const *data_p) const
 {
 	Entity * ent_l = state_p.getEntity(this->_target);
+	std::string const &id_l = get_id(_buff);
 	Logger::getDebug() << "EntityBuffStep :: revert " << this->_target<<std::endl;
 	EntityBuffStepData const * data_l = dynamic_cast<EntityBuffStepData const *>(data_p);
 
 	if(data_l->_new)
 	{
-		ent_l->_timeSinceBuff.erase(_buff._id);
+		ent_l->_timeSinceBuff.erase(id_l);
 	}
 	else
 	{
-		ent_l->_timeSinceBuff[_buff._id] = data_l->_oldTime;
+		ent_l->_timeSinceBuff[id_l] = data_l->_oldTime;
 	}
 }
 
 bool EntityBuffStep::isNoOp() const
 {
-	return ::is_zero(_buff._offset) && ::is_zero(_buff._coef) && !_buff._attackMod;
+	return is_no_op(_buff);
 }
 
 SteppableData * EntityBuffStep::newData(State const &state_p) const
 {
 	Entity const * ent_l = state_p.getEntity(_target);
-	auto &&it_l = ent_l->_timeSinceBuff.find(_buff._id);
+	auto &&it_l = ent_l->_timeSinceBuff.find(get_id(_buff));
 	bool new_l = it_l == ent_l->_timeSinceBuff.cend();
 	unsigned long time_l = 0;
 	if(!new_l)
@@ -100,6 +102,9 @@ void EntityConditionalBuffStep::apply(State &state_p) const
 		case TyppedBuff::Type::Harvest:
 			ent_l->_condBuffHarvest.push_back(_buff);
 			break;
+		case TyppedBuff::Type::DamageReturn:
+			ent_l->_condBuffDamageReturn.push_back(_buff);
+			break;
 	}
 }
 
@@ -130,6 +135,9 @@ void EntityConditionalBuffStep::revert(State &state_p, SteppableData const *) co
 			break;
 		case TyppedBuff::Type::Harvest:
 			ent_l->_condBuffHarvest.pop_back();
+			break;
+		case TyppedBuff::Type::DamageReturn:
+			ent_l->_condBuffDamageReturn.pop_back();
 			break;
 	}
 }

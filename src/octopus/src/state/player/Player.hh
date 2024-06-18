@@ -6,7 +6,7 @@
 #include <list>
 #include <map>
 #include <unordered_set>
-#include "state/entity/buff/TimedBuff.hh"
+#include "state/entity/buff/AnyBuff.hh"
 #include "state/entity/buff/ConditionalBuff.hh"
 #include "state/entity/attackModifier/AttackModifier.hh"
 
@@ -33,12 +33,12 @@ namespace octopus
 			/// @brief Available building models
 			std::list<BuildingModel const *> _buildingModels;
 
-			/// @brief the map of options available to the player
+			/// @brief the list of options available to the player
 			/// @note Player is owner of the generator here
-			std::map<std::string, StepOptionsGenerator*> _options;
+			std::list<StepOptionsGenerator*> _options;
 
 			/// @brief the list of all buffs that should be applied on every entity per model
-			std::map<std::string, std::vector<TimedBuff> > _mapBuffs;
+			std::map<std::string, std::vector<AnyBuff> > _mapBuffs;
 
 			/// @brief the list of all conditional buffs that should be applied on every entity per model
 			std::map<std::string, std::vector<ConditionalBuff> > _mapConditionalBuffs;

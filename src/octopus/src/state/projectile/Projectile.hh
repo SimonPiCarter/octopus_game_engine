@@ -11,7 +11,7 @@
 namespace octopus
 {
 
-class EntityModel;
+struct EntityModel;
 class State;
 class Step;
 

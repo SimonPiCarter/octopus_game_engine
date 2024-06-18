@@ -13,6 +13,8 @@ namespace octopus
 	struct UnitModel;
 	struct Upgrade;
 
+	void buildingIdleFunction(Entity const &ent_p, Step & step_p, State const &state_p);
+
 	struct BuildingModel : public EntityModel
 	{
 		BuildingModel(bool isStatic_p, Fixed ray_p, Fixed hpMax_p);

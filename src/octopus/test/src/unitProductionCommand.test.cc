@@ -295,7 +295,7 @@ TEST(unitProductionCommandTest, destroy_building_one_step_before_production)
 	BuildingUnitProductionCommand * command_l = new BuildingUnitProductionCommand(Handle(0), Handle(0), unitModel_l);
 	CommandSpawnStep * commandSpawn_l = new CommandSpawnStep(command_l);
 
-	FlyingCommandSpawnStep * flySpawn_l = new FlyingCommandSpawnStep(new DamageOverTime(Handle(0), 4, 1, 10., Handle(0)));
+	FlyingCommandSpawnStep * flySpawn_l = new FlyingCommandSpawnStep(new DamageOverTime(4, 1, 10., Handle(0)));
 
 	// no need for initial spawn of resource since build production is queued up directly through initial step
 	Controller controller_l({
@@ -359,7 +359,7 @@ TEST(unitProductionCommandTest, destroy_building_when_production_is_over)
 	BuildingUnitProductionCommand * command_l = new BuildingUnitProductionCommand(Handle(0), Handle(0), unitModel_l);
 	CommandSpawnStep * commandSpawn_l = new CommandSpawnStep(command_l);
 
-	FlyingCommandSpawnStep * flySpawn_l = new FlyingCommandSpawnStep(new DamageOverTime(Handle(0), 5, 1, 10., Handle(0)));
+	FlyingCommandSpawnStep * flySpawn_l = new FlyingCommandSpawnStep(new DamageOverTime(5, 1, 10., Handle(0)));
 
 	// no need for initial spawn of resource since build production is queued up directly through initial step
 	Controller controller_l({

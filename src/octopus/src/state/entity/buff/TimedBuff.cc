@@ -9,19 +9,26 @@
 namespace octopus
 {
 
+TimedBuff::TimedBuff(Fixed const &offset_p, Fixed const &coef_p, Type type_p, unsigned long duration_p, bool debuff_p, std::string const &id_p)
+{
+	_offset = offset_p;
+	_coef = coef_p;
+	_type = type_p;
+	_duration = duration_p;
+	_debuff = debuff_p;
+	_id = id_p;
+}
+
 bool TimedBuff::isApplying(State const &state_p, Entity const &ent_p) const
 {
-	if(_attackMod)
-	{
-		return ent_p._model._isUnit && std::holds_alternative<NoModifier>(ent_p._attackMod);
-	}
 	if(_type == Type::Speed
 	|| _type == Type::FullReload
 	|| _type == Type::Damage
 	|| _type == Type::Heal
 	|| _type == Type::Armor
 	|| _type == Type::HpMax
-	|| _type == Type::HpRegeneration)
+	|| _type == Type::HpRegeneration
+	|| _type == Type::DamageReturn)
 	{
 		return ent_p._model._isUnit;
 	}
@@ -55,11 +62,6 @@ bool TimedBuff::isApplying(State const &state_p, Entity const &source_p, Entity 
 
 void TimedBuff::apply(Entity &ent_p) const
 {
-	if(_attackMod && std::holds_alternative<NoModifier>(ent_p._attackMod))
-	{
-		ent_p._attackMod = *_attackMod;
-		return;
-	}
 	switch(_type)
 	{
 		case Type::Speed:
@@ -103,16 +105,15 @@ void TimedBuff::apply(Entity &ent_p) const
 			ent_p._buffHarvest._offset += _offset;
 			ent_p._buffHarvest._coef += _coef;
 			break;
+		case Type::DamageReturn:
+			ent_p._buffDamageReturn._offset += _offset;
+			ent_p._buffDamageReturn._coef += _coef;
+			break;
 	}
 }
 
 void TimedBuff::revert(Entity &ent_p) const
 {
-	if(_attackMod)
-	{
-		ent_p._attackMod = NoModifier();
-		return;
-	}
 	switch(_type)
 	{
 		case Type::Speed:
@@ -155,6 +156,10 @@ void TimedBuff::revert(Entity &ent_p) const
 		case Type::Harvest:
 			ent_p._buffHarvest._offset -= _offset;
 			ent_p._buffHarvest._coef -= _coef;
+			break;
+		case Type::DamageReturn:
+			ent_p._buffDamageReturn._offset -= _offset;
+			ent_p._buffDamageReturn._coef -= _coef;
 			break;
 	}
 }

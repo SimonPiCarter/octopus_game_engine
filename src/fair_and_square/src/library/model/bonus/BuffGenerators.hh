@@ -1,15 +1,18 @@
 #ifndef __BuffGenerators__
 #define __BuffGenerators__
 
+#include <functional>
 #include <variant>
 #include <vector>
 
 #include "state/player/StepOptionsGenerator.hh"
-#include "state/entity/buff/TimedBuff.hh"
+#include "state/entity/buff/AnyBuff.hh"
 #include "state/entity/attackModifier/AttackModifier.hh"
 #include "utils/RandomGenerator.hh"
+#include "utils/Vector.hh"
 
 #include "library/model/divinity/DivinityModelLoader.hh"
+#include "library/model/survival/SurvivalModelLoader.hh"
 
 namespace octopus
 {
@@ -17,11 +20,12 @@ namespace octopus
     class Library;
 } // namespace octopus
 
+struct NoOption {};
 
 struct BuffOption
 {
     unsigned long _player;
-    octopus::TimedBuff _buff;
+    octopus::AnyBuff _buff;
     std::string _model;
     std::string _div {""};
 };
@@ -29,8 +33,8 @@ struct BuffOption
 struct DoubleBuffOption
 {
     unsigned long _player;
-    octopus::TimedBuff _buff1;
-    octopus::TimedBuff _buff2;
+    octopus::AnyBuff _buff1;
+    octopus::AnyBuff _buff2;
     std::string _model;
 };
 
@@ -47,26 +51,65 @@ struct DivinityOption
     fas::DivinityType _div;
 };
 
-using SingleOption = std::variant<BuffOption, ModifierOption, DoubleBuffOption, DivinityOption>;
+struct SurvivalOption
+{
+    unsigned long _player;
+    fas::SurvivalSpecialType _type;
+};
+
+struct UpgradeOption
+{
+    unsigned long _player;
+    std::string _upgrade;
+};
+
+struct SpawnUnitOption
+{
+    unsigned long _player;
+    std::string _model;
+    octopus::Vector _pos;
+};
+
+using SingleOption = std::variant<
+    NoOption,
+    BuffOption,
+    ModifierOption,
+    DoubleBuffOption,
+    DivinityOption,
+    SurvivalOption,
+    UpgradeOption,
+    SpawnUnitOption
+>;
 
 struct Option
 {
-    SingleOption _playerOption;
-    SingleOption _enemyOption;
+    SingleOption _playerOption = NoOption();
+    SingleOption _enemyOption = NoOption();
+	int _rarity = 0;
 };
 
 class BuffGenerator : public octopus::StepOptionsGenerator
 {
 public:
-    BuffGenerator(std::vector<Option> const &options_p, octopus::Library const &lib_p) : _options(options_p), _lib(lib_p) {}
+    BuffGenerator(
+		std::string const &key_p,
+		std::function<std::vector<Option>(octopus::State const &)> const &options_p,
+		octopus::Library const &lib_p) :
+			octopus::StepOptionsGenerator(key_p),
+			_optionsGenerator(options_p),
+			_lib(lib_p)
+		{}
 
-    virtual StepOptionsGenerator* newCopy() const override { return new BuffGenerator(_options, _lib); }
+	void genOptions(octopus::State const &state_p) override { _options = _optionsGenerator(state_p); }
 
-    virtual std::vector<octopus::Steppable *> getSteppables(unsigned long options_p) const override;
+    virtual StepOptionsGenerator* newCopy() const override { return new BuffGenerator(_key, _optionsGenerator, _lib); }
+
+    virtual std::vector<octopus::Steppable *> genSteppables(octopus::State const &state_p, unsigned long options_p) const override;
 
     virtual unsigned long getNumOptions() const override { return _options.size(); }
 
-    std::vector<Option> const _options;
+    std::vector<Option> _options;
+	std::function<std::vector<Option>(octopus::State const &)> _optionsGenerator;
 
 private:
     octopus::Library const &_lib;

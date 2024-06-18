@@ -17,6 +17,7 @@ public:
 
 	StepOptionsGenerator * _generator;
 	std::vector<SteppableData *> _data;
+	std::vector<Steppable *> _subSteps;
 };
 
 /// @brief add options for the given divinity types for the player

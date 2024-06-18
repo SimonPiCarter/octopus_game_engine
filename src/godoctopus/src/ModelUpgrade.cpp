@@ -20,7 +20,7 @@ void ModelUpgrade::init(String const &id_p, float time_p)
     delete _upgrade;
     std::string typeId_l(id_p.utf8().get_data());
     _upgrade = new octopus::Upgrade(typeId_l, nullptr);
-    _upgrade->_productionTime = time_p;
+    _upgrade->_productionTime[0] = time_p;
 }
 
 void ModelUpgrade::saveUpgrade(Controller *controller_p, String const &name_p)
@@ -43,7 +43,7 @@ void ModelUpgrade::add_cost(String const &res_p, int qty_p)
     if(_upgrade)
     {
         std::string resType_l(res_p.utf8().get_data());
-        _upgrade->_cost[resType_l] = qty_p;
+        _upgrade->_cost[0][resType_l] = qty_p;
     }
 }
 
@@ -51,7 +51,7 @@ void ModelUpgrade::add_no_building_requirements(String const &name_p)
 {
     if(_upgrade)
     {
-        _upgrade->_requirements._noBuildings.insert(name_p.utf8().get_data());
+        _upgrade->_requirements[0]._noBuildings.insert(name_p.utf8().get_data());
     }
 }
 
@@ -59,7 +59,7 @@ void ModelUpgrade::add_building_requirements(String const &name_p)
 {
     if(_upgrade)
     {
-        _upgrade->_requirements._buildings.insert(name_p.utf8().get_data());
+        _upgrade->_requirements[0]._buildings.insert(name_p.utf8().get_data());
     }
 }
 
@@ -67,7 +67,7 @@ void ModelUpgrade::add_upgrade_lvl_requirements_min(String const &name_p, int le
 {
     if(_upgrade)
     {
-        _upgrade->_requirements._upgradeLvl[name_p.utf8().get_data()] = level_p;
+        _upgrade->_requirements[0]._upgradeLvl[name_p.utf8().get_data()] = level_p;
     }
 }
 
@@ -75,7 +75,7 @@ void ModelUpgrade::add_upgrade_lvl_requirements_max(String const &name_p, int le
 {
     if(_upgrade)
     {
-        _upgrade->_requirements._upgradeLvlMax[name_p.utf8().get_data()] = level_p;
+        _upgrade->_requirements[0]._upgradeLvlMax[name_p.utf8().get_data()] = level_p;
     }
 }
 

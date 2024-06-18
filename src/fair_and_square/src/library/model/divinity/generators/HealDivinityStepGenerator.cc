@@ -150,10 +150,10 @@ void fillLibrary(HealDivinityParams const &params_p, octopus::Library &lib_p)
 	hpBuffTierOne_l._id = "HealDivinity_HpBuffTierOne";
 
 	Upgrade * healUpHpTierOne_l = new Upgrade("HealUpgrade_BuffTierOneHp", new StepUpgradeTyppedBuffGenerator(hpBuffTierOne_l, {params_p._tierOneUnitModelId}));
-	healUpHpTierOne_l->_cost["bloc"] = 125;
-	healUpHpTierOne_l->_cost["ether"] = 175;
-	healUpHpTierOne_l->_productionTime = 4500;
-	healUpHpTierOne_l->_requirements._upgradeLvl[models::HealDivId+models::tierOneSuffix] = 1;
+	healUpHpTierOne_l->_cost[0]["bloc"] = 125;
+	healUpHpTierOne_l->_cost[0]["ether"] = 175;
+	healUpHpTierOne_l->_productionTime[0] = 4500;
+	healUpHpTierOne_l->_requirements[0]._upgradeLvl[models::HealDivId+models::tierOneSuffix] = 1;
 	lib_p.registerUpgrade(healUpHpTierOne_l->_id, healUpHpTierOne_l);
 
 	// T2 heal buff
@@ -163,11 +163,11 @@ void fillLibrary(HealDivinityParams const &params_p, octopus::Library &lib_p)
 	healBuffTierTwo_l._id = "HealDivinity_HealBuffTierTwo";
 
 	Upgrade * healUpHealTierTwo_l = new Upgrade("HealUpgrade_BuffTierTwoHeal", new StepUpgradeTyppedBuffGenerator(healBuffTierTwo_l, {params_p._tierOneUnitModelId}));
-	healUpHealTierTwo_l->_cost["bloc"] = 250;
-	healUpHealTierTwo_l->_cost["ether"] = 250;
-	healUpHealTierTwo_l->_cost["irium"] = 100;
-	healUpHealTierTwo_l->_productionTime = 6000;
-	healUpHealTierTwo_l->_requirements._upgradeLvl[models::HealDivId+models::tierTwoSuffix] = 1;
+	healUpHealTierTwo_l->_cost[0]["bloc"] = 250;
+	healUpHealTierTwo_l->_cost[0]["ether"] = 250;
+	healUpHealTierTwo_l->_cost[0]["irium"] = 100;
+	healUpHealTierTwo_l->_productionTime[0] = 6000;
+	healUpHealTierTwo_l->_requirements[0]._upgradeLvl[models::HealDivId+models::tierTwoSuffix] = 1;
 	lib_p.registerUpgrade(healUpHealTierTwo_l->_id, healUpHealTierTwo_l);
 
 	// T3 heal/hp buff
@@ -181,11 +181,11 @@ void fillLibrary(HealDivinityParams const &params_p, octopus::Library &lib_p)
 	healBuffTierThree_l._id = "HealDivinity_HealBuffTierThree";
 
 	Upgrade * healUpHealHpTierThree_l = new Upgrade("HealUpgrade_BuffTierThreeHeal", new StepUpgradeTyppedBuffGenerator({hpBuffTierThree_l, healBuffTierThree_l}, {params_p._tierOneUnitModelId}));
-	healUpHealHpTierThree_l->_cost["bloc"] = 250;
-	healUpHealHpTierThree_l->_cost["ether"] = 350;
-	healUpHealHpTierThree_l->_cost["irium"] = 450;
-	healUpHealHpTierThree_l->_productionTime = 12000;
-	healUpHealHpTierThree_l->_requirements._upgradeLvl[models::HealDivId+models::tierThreeSuffix] = 1;
+	healUpHealHpTierThree_l->_cost[0]["bloc"] = 250;
+	healUpHealHpTierThree_l->_cost[0]["ether"] = 350;
+	healUpHealHpTierThree_l->_cost[0]["irium"] = 450;
+	healUpHealHpTierThree_l->_productionTime[0] = 12000;
+	healUpHealHpTierThree_l->_requirements[0]._upgradeLvl[models::HealDivId+models::tierThreeSuffix] = 1;
 	lib_p.registerUpgrade(healUpHealHpTierThree_l->_id, healUpHealHpTierThree_l);
 
 	/// @brief temple

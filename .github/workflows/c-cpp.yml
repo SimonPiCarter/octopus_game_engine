@@ -2,9 +2,9 @@ name: C/C++ CI
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "main", "dev" ]
   pull_request:
-    branches: [ "main" ]
+    branches: [ "main", "dev" ]
 
 jobs:
   build:
@@ -31,3 +31,7 @@ jobs:
       with:
         name: libgodoctopus.so
         path: builds/Release/lib/libgodoctopus.so
+    - uses: actions/upload-artifact@v3
+      with:
+        name: unit_tests
+        path: builds/Release/bin/unit_tests

@@ -23,6 +23,7 @@ public:
 	virtual void visit(AttackModifierStep const *) {}
 	virtual void visit(BuildingSpawnStep const *);
 	virtual void visit(BuildingStep const *) {}
+	virtual void visit(BuildingAutoBuildStep const *) override {}
 	virtual void visit(BuildingCancelStep const *);
 	virtual void visit(BuildingRemoveRallyPointStep const *) {}
 	virtual void visit(BuildingSetRallyPointStep const *) {}
@@ -100,6 +101,7 @@ public:
 	virtual void visit(TriggerStepCountChange const *) {}
 	virtual void visit(UnitHarvestDropStep const *) {}
 	virtual void visit(UnitHarvestQuantityStep const *) {}
+	virtual void visit(UnitDataStep const *) {}
 	virtual void visit(UnitHarvestTypeStep const *) {}
 	virtual void visit(UnitSpawnStep const *);
 	virtual void visit(VisionChangeStep const *) {}

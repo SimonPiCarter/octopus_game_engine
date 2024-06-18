@@ -51,8 +51,8 @@ TEST(triggerUnitDiedTest, one_unit)
 		new PlayerSpawnStep(0, 0),
 		new UnitSpawnStep(Handle(0), unit_l),
 		new UnitSpawnStep(Handle(1), unit_l),
-		new FlyingCommandSpawnStep(new DamageOverTime(Handle(0), 5, 2, 5, Handle(0))),
-		new FlyingCommandSpawnStep(new DamageOverTime(Handle(1), 10, 2, 5, Handle(1))),
+		new FlyingCommandSpawnStep(new DamageOverTime(5, 2, 5, Handle(0))),
+		new FlyingCommandSpawnStep(new DamageOverTime(10, 2, 5, Handle(1))),
 	}, 1.);
 
 	controller_l.commitTrigger(new OneShotTriggerResourceTest(new ListenerEntityDied({Handle(0)})));
@@ -117,8 +117,8 @@ TEST(triggerUnitDiedTest, two_units)
 		new PlayerSpawnStep(0, 0),
 		new UnitSpawnStep(Handle(0), unit_l),
 		new UnitSpawnStep(Handle(1), unit_l),
-		new FlyingCommandSpawnStep(new DamageOverTime(Handle(0), 5, 2, 5, Handle(0))),
-		new FlyingCommandSpawnStep(new DamageOverTime(Handle(1), 10, 2, 5, Handle(1))),
+		new FlyingCommandSpawnStep(new DamageOverTime(5, 2, 5, Handle(0))),
+		new FlyingCommandSpawnStep(new DamageOverTime(10, 2, 5, Handle(1))),
 	}, 1.);
 
 	controller_l.commitTrigger(new OneShotTriggerResourceTest(new ListenerEntityDied({Handle(0),Handle(1)})));

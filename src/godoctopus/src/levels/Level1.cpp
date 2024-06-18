@@ -55,7 +55,7 @@ std::vector<octopus::Steppable*> defaultGenerator() { return {new WaveStep()}; }
 std::string genModelName(RandomGenerator &gen_p)
 {
 	std::string model_l = "square";
-	int random_l = gen_p.roll(0, 2);
+	int random_l = gen_p.roll(1, 2);
 	if(random_l==1)
 	{
 		model_l = "triangle";
@@ -149,7 +149,7 @@ std::list<Steppable *> WaveLevelSteps(Library &lib_p, RandomGenerator &rand_p, u
 		new TriggerSpawn(triggerLose_l),
 		new TriggerSpawn(new AnchorTrigger(lib_p, rand_p, 60)),
 		new TriggerSpawn(new VisionTrigger(pattern_l)),
-		new FlyingCommandSpawnStep(new TimerDamage(Handle(0), 100, 0, 0, "Anchor", Handle(0))),
+		new FlyingCommandSpawnStep(new TimerDamage(100, 0, 0, "Anchor", Handle(0))),
 		new godot::CameraStep(15, 20, 0),
 		new godot::DialogStep("leve1_intro"),
 	};
@@ -279,7 +279,9 @@ void WaveSpawn::trigger(State const &state_p, Step &step_p, unsigned long, octop
 	for(unsigned long i = 0 ; i < _wave * 10 ; ++ i)
 	{
 		std::string modelName_l = genModelName(_rand);
-		Unit unit_l({ _worldSize-_rand.roll(10,20), _worldSize-_rand.roll(10,20) }, false, _lib.getUnitModel(modelName_l));
+		Unit unit_l({ _worldSize, _worldSize }, false, _lib.getUnitModel(modelName_l));
+		unit_l._pos.x -= _rand.roll(10,20);
+		unit_l._pos.y -= _rand.roll(10,20);
 		unit_l._player = 1;
 		Handle handle_l = getNextHandle(step_p, state_p);
 		step_p.addSteppable(new UnitSpawnStep(handle_l, unit_l));

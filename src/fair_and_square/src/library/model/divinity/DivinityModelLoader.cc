@@ -134,7 +134,7 @@ std::vector<DivinityType> notDemoDivinities()
 {
     return {
         DivinityType::Economic,
-        DivinityType::Lifesteal
+        DivinityType::Production
     };
 }
 
@@ -143,7 +143,7 @@ std::vector<DivinityType> demoDivinities()
     return {
         DivinityType::AttackSpeed,
         DivinityType::Heal,
-        DivinityType::Production,
+        DivinityType::Lifesteal,
         DivinityType::Recycle
     };
 }

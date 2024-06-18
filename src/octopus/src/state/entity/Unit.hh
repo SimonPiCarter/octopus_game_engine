@@ -17,6 +17,11 @@ class Unit : public Entity
 		Fixed _quantityOfResource { 0. };
 
 		UnitModel const &_unitModel;
+
+		/// @brief used to store specific unit data that might be modified
+		ClonableWrapper<UnitData> _unitData;
+		/// @brief used to store specific unit data that will be static
+		StaticUnitData const * _staticUnitData;
 };
 
 }

@@ -58,6 +58,9 @@ public:
 
 	/// @brief return pattern handler
 	PatternHandler &getPatternHandler();
+	PatternHandler const &getPatternHandler() const;
+
+	unsigned long const &getSize() const { return _size; }
 protected:
 	unsigned long const _size;
 	/// @brief vision grid for every team

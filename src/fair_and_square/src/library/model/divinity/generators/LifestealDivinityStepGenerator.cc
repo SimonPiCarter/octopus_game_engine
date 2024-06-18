@@ -37,7 +37,7 @@ public:
 		return new LifestealUpgrade(_models, _ratio);
 	}
 
-	virtual std::vector<Steppable *> getSteppables(unsigned long player_p) const
+	virtual std::vector<Steppable *> getSteppables(unsigned long player_p, unsigned long) const
 	{
 		std::vector<Steppable *> steps_l;
 		for(std::string const &model_l : _models)
@@ -63,7 +63,7 @@ std::vector<Steppable *> lifestealTierOneGenertor(LifestealDivinityParams const 
 std::vector<Steppable *> lifestealTierTwoGenertor(LifestealDivinityParams const &param_p, Library const &lib_p, unsigned long player_p)
 {
 	LifestealUpgrade up_l(param_p._modelsGeneralLifeSteal, param_p._lifeStealTierTwo);
-	return up_l.getSteppables(player_p);
+	return up_l.getSteppables(player_p, 0);
 }
 
 std::vector<Steppable *> lifestealTierThreeGenertor(LifestealDivinityParams const &param_p, Library const &lib_p, unsigned long player_p)
@@ -149,20 +149,20 @@ void fillLibrary(LifestealDivinityParams const &params_p, octopus::Library &lib_
 
 	// T1 lifesteal buff
 	Upgrade * lifestealBuffTierOne_l = new Upgrade("LifestealUpgrade_BuffTierOneLifesteal", new LifestealUpgrade({params_p._tierOneUnitModelId}, params_p._improvedLifeStealTierOne));
-	lifestealBuffTierOne_l->_cost["bloc"] = 125;
-	lifestealBuffTierOne_l->_cost["ether"] = 125;
-	lifestealBuffTierOne_l->_cost["irium"] = 125;
-	lifestealBuffTierOne_l->_productionTime = 6000;
-	lifestealBuffTierOne_l->_requirements._upgradeLvl[models::LifestealDivId+models::tierOneSuffix] = 1;
+	lifestealBuffTierOne_l->_cost[0]["bloc"] = 125;
+	lifestealBuffTierOne_l->_cost[0]["ether"] = 125;
+	lifestealBuffTierOne_l->_cost[0]["irium"] = 125;
+	lifestealBuffTierOne_l->_productionTime[0] = 6000;
+	lifestealBuffTierOne_l->_requirements[0]._upgradeLvl[models::LifestealDivId+models::tierOneSuffix] = 1;
 	lib_p.registerUpgrade(lifestealBuffTierOne_l->_id, lifestealBuffTierOne_l);
 
 	// T3 lifesteal buff
 	Upgrade * lifestealBuffTierThree_l = new Upgrade("LifestealUpgrade_BuffTierThreeLifesteal", new LifestealUpgrade(params_p._modelsGeneralLifeSteal, params_p._lifeStealTierThree));
-	lifestealBuffTierThree_l->_cost["bloc"] = 250;
-	lifestealBuffTierThree_l->_cost["ether"] = 250;
-	lifestealBuffTierThree_l->_cost["irium"] = 450;
-	lifestealBuffTierThree_l->_productionTime = 12000;
-	lifestealBuffTierThree_l->_requirements._upgradeLvl[models::LifestealDivId+models::tierThreeSuffix] = 1;
+	lifestealBuffTierThree_l->_cost[0]["bloc"] = 250;
+	lifestealBuffTierThree_l->_cost[0]["ether"] = 250;
+	lifestealBuffTierThree_l->_cost[0]["irium"] = 450;
+	lifestealBuffTierThree_l->_productionTime[0] = 12000;
+	lifestealBuffTierThree_l->_requirements[0]._upgradeLvl[models::LifestealDivId+models::tierThreeSuffix] = 1;
 	lib_p.registerUpgrade(lifestealBuffTierThree_l->_id, lifestealBuffTierThree_l);
 
 	/// @brief temple

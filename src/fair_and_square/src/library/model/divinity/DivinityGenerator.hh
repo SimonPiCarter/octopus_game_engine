@@ -1,6 +1,7 @@
 #ifndef __DivinityGenerator__
 #define __DivinityGenerator__
 
+#include <functional>
 #include <vector>
 
 #include "state/player/StepOptionsGenerator.hh"
@@ -14,16 +15,23 @@ namespace octopus
 class DivinityGenerator : public octopus::StepOptionsGenerator
 {
 public:
-    DivinityGenerator(unsigned long player_p, std::vector<fas::DivinityType> const &options_p) : _player(player_p), _options(options_p) {}
+    DivinityGenerator(
+		std::string const &key_p,
+		unsigned long player_p,
+		std::function<std::vector<fas::DivinityType>(octopus::State const &)> const &options_p
+	) : octopus::StepOptionsGenerator(key_p), _player(player_p), _optionsGenerator(options_p) {}
 
-    virtual StepOptionsGenerator* newCopy() const override { return new DivinityGenerator(_player, _options); }
+    virtual StepOptionsGenerator* newCopy() const override { return new DivinityGenerator(_key, _player, _optionsGenerator); }
 
-    virtual std::vector<octopus::Steppable *> getSteppables(unsigned long options_p) const override;
+	void genOptions(octopus::State const &state_p) override;
+
+    virtual std::vector<octopus::Steppable *> genSteppables(octopus::State const &state_p, unsigned long options_p) const override;
 
     virtual unsigned long getNumOptions() const override { return _options.size(); }
 
     unsigned long const _player;
-    std::vector<fas::DivinityType> const _options;
+    std::vector<fas::DivinityType> _options;
+	std::function<std::vector<fas::DivinityType>(octopus::State const &)> _optionsGenerator;
 };
 
 #endif

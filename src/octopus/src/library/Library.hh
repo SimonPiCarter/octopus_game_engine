@@ -28,10 +28,12 @@ public:
 	void registerBuildingModel(std::string const &id_p, BuildingModel const &model_p);
 	void registerTempleModel(std::string const &id_p, TempleModel const &model_p);
 	BuildingModel const & getBuildingModel(std::string const &id_p) const;
+	BuildingModel & getBuildingModel(std::string const &id_p);
 	bool hasBuildingModel(std::string const &id_p) const;
 
 	void registerUnitModel(std::string const &id_p, UnitModel const &model_p);
 	UnitModel const & getUnitModel(std::string const &id_p) const;
+	UnitModel & getUnitModel(std::string const &id_p);
 	bool hasUnitModel(std::string const &id_p) const;
 
 	void registerResourceModel(std::string const &id_p, ResourceModel const &model_p);

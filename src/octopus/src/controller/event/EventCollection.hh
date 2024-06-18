@@ -5,6 +5,7 @@
 #include <unordered_set>
 #include <unordered_map>
 
+#include "controller/score/ScoreTracker.hh"
 #include "state/Handle.hh"
 #include "step/Steppable.hh"
 #include "utils/Fixed.hh"
@@ -22,7 +23,7 @@ class State;
 class EventCollection : public SteppableVisitor
 {
 public:
-	EventCollection(State const &state_p);
+	EventCollection(State const &state_p, ScoreTracker &scoreTracker_p);
 	~EventCollection();
 
 	std::list<EventEntityModelDied *> _listEventEntityModelDied;
@@ -34,9 +35,11 @@ public:
 	virtual void visit(BuildingSpawnStep const *);
 	virtual void visit(EntitySpawnStep const *);
 	virtual void visit(UnitSpawnStep const *);
+	virtual void visit(UnitHarvestDropStep const *);
 
 	/// NA
 	virtual void visit(AttackModifierStep const *) {}
+	virtual void visit(BuildingAutoBuildStep const *) override {}
 	virtual void visit(BuildingCancelStep const *) {}
 	virtual void visit(BuildingRemoveRallyPointStep const *) {}
 	virtual void visit(BuildingSetRallyPointStep const *) {}
@@ -110,14 +113,15 @@ public:
 	virtual void visit(TriggerEntityResetStep const *) {}
 	virtual void visit(TriggerSpawn const *) {}
 	virtual void visit(TriggerStepCountChange const *) {}
-	virtual void visit(UnitHarvestDropStep const *) {}
 	virtual void visit(UnitHarvestQuantityStep const *) {}
+	virtual void visit(UnitDataStep const *) {}
 	virtual void visit(UnitHarvestTypeStep const *) {}
 	virtual void visit(VisionChangeStep const *) {}
 
 	State const &getState() const { return _state; }
 private:
 	State const &_state;
+	ScoreTracker &_scoreTracker;
 	/// statefull data
 	std::unordered_set<Handle> _finishedHandles;
 	std::unordered_map<Handle, Fixed> _buildingProgress;

@@ -7,6 +7,7 @@
 #include <mutex>
 #include <queue>
 #include <thread>
+#include <vector>
 
 class ThreadPool {
 public:
@@ -26,5 +27,7 @@ private:
 
 	std::atomic_int working = 0;
 };
+
+void enqueue_and_wait(ThreadPool &pool_p, std::vector<std::function<void()>> const &jobs_p);
 
 #endif

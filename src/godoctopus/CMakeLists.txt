@@ -29,3 +29,5 @@ add_subdirectory(test)
 # Add a dynamic library called godoctopus - this builds godoctopus.dll
 add_library(godoctopus SHARED ${SOURCES})
 target_link_libraries(godoctopus PUBLIC godoctopus_static)
+
+install (TARGETS godoctopus EXPORT octopus-export)

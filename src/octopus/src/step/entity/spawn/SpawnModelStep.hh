@@ -61,15 +61,15 @@ public:
 
 		Player *player_l = state_p.getPlayer(ent_l->_player);
 		// enable player buffs to the spawned entity
-		for(TimedBuff const &buff_l : player_l->_mapBuffs[ent_l->_model._id])
+		for(AnyBuff const &buff_l : player_l->_mapBuffs[ent_l->_model._id])
 		{
-			ent_l->_timeSinceBuff[buff_l._id] = 0;
-			ent_l->_registeredBuff[buff_l._id] = buff_l;
+			ent_l->_timeSinceBuff[get_id(buff_l)] = 0;
+			ent_l->_registeredBuff[get_id(buff_l)] = buff_l;
 		}
-		for(TimedBuff const &buff_l : player_l->_mapBuffs[""])
+		for(AnyBuff const &buff_l : player_l->_mapBuffs[""])
 		{
-			ent_l->_timeSinceBuff[buff_l._id] = 0;
-			ent_l->_registeredBuff[buff_l._id] = buff_l;
+			ent_l->_timeSinceBuff[get_id(buff_l)] = 0;
+			ent_l->_registeredBuff[get_id(buff_l)] = buff_l;
 		}
 		for(ConditionalBuff const &buff_l : player_l->_mapConditionalBuffs[ent_l->_model._id])
 		{

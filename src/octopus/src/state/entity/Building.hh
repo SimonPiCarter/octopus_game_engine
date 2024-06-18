@@ -36,6 +36,9 @@ class Building : public Entity
 		/// @brief entity pointed by the rally point
 		Handle _rallyPointEntity {0};
 
+		/// @brief auto build model
+		UnitModel const *_autoBuild {nullptr};
+
 		/// @brief return true if building is done building
 		bool isBuilt() const;
 		/// @brief return true if building is still a blueprint

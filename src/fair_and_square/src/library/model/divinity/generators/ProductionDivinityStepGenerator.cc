@@ -116,7 +116,7 @@ public:
 		return new ProductionBuffUpgrade(_models, _ratioReduction);
 	}
 
-	virtual std::vector<Steppable *> getSteppables(unsigned long player_p) const
+	virtual std::vector<Steppable *> getSteppables(unsigned long player_p, unsigned long) const
 	{
 		std::vector<Steppable *> steps_l;
 
@@ -145,7 +145,7 @@ public:
 		return new ProductionResourceBuffUpgrade(_model, _prodTierOneUnitCostReductionCoef);
 	}
 
-	virtual std::vector<Steppable *> getSteppables(unsigned long player_p) const
+	virtual std::vector<Steppable *> getSteppables(unsigned long player_p, unsigned long) const
 	{
 		std::vector<Steppable *> steps_l;
 
@@ -171,7 +171,7 @@ public:
 		return new ProductionMoreBufferUpgrade(_res, _increase);
 	}
 
-	virtual std::vector<Steppable *> getSteppables(unsigned long player_p) const
+	virtual std::vector<Steppable *> getSteppables(unsigned long player_p, unsigned long) const
 	{
 		std::vector<Steppable *> steps_l;
 
@@ -258,10 +258,10 @@ void fillLibrary(ProductionDivinityParams const &params_p, octopus::Library &lib
 
 	// T1 production buff
 	Upgrade * upProductionTime_l = new Upgrade("ProductionUpgrade_BuffProduction", new ProductionBuffUpgrade(models::BasicUnitModels, params_p._productionTimeUpgradeCoef));
-	upProductionTime_l->_cost["bloc"] = 125;
-	upProductionTime_l->_cost["ether"] = 75;
-	upProductionTime_l->_productionTime = 4500;
-	upProductionTime_l->_requirements._upgradeLvl[models::ProductionDivId+models::tierOneSuffix] = 1;
+	upProductionTime_l->_cost[0]["bloc"] = 125;
+	upProductionTime_l->_cost[0]["ether"] = 75;
+	upProductionTime_l->_productionTime[0] = 4500;
+	upProductionTime_l->_requirements[0]._upgradeLvl[models::ProductionDivId+models::tierOneSuffix] = 1;
 	lib_p.registerUpgrade(upProductionTime_l->_id, upProductionTime_l);
 
 	std::map<std::string, octopus::Fixed> reduction_l;
@@ -270,21 +270,21 @@ void fillLibrary(ProductionDivinityParams const &params_p, octopus::Library &lib
 	// T2 cost reduction for unit 1
 	Upgrade * upProductionCost_l = new Upgrade("ProductionUpgrade_BuffResourceProduction",
 		new ProductionResourceBuffUpgrade(params_p._tierOneUnitModelId, reduction_l));
-	upProductionCost_l->_cost["bloc"] = 100;
-	upProductionCost_l->_cost["ether"] = 200;
-	upProductionCost_l->_cost["irium"] = 200;
-	upProductionCost_l->_productionTime = 6000;
-	upProductionCost_l->_requirements._upgradeLvl[models::ProductionDivId+models::tierTwoSuffix] = 1;
+	upProductionCost_l->_cost[0]["bloc"] = 100;
+	upProductionCost_l->_cost[0]["ether"] = 200;
+	upProductionCost_l->_cost[0]["irium"] = 200;
+	upProductionCost_l->_productionTime[0] = 6000;
+	upProductionCost_l->_requirements[0]._upgradeLvl[models::ProductionDivId+models::tierTwoSuffix] = 1;
 	lib_p.registerUpgrade(upProductionCost_l->_id, upProductionCost_l);
 
 	// T3 increase buffer count
 	Upgrade * upProductionIncreaseBufferCount_l = new Upgrade("ProductionUpgrade_BuffNumberBuffer",
 		new ProductionMoreBufferUpgrade(models::ProductionBufferResourceId, params_p._increaseOfProductionBufferTierTwo));
-	upProductionIncreaseBufferCount_l->_cost["bloc"] = 125;
-	upProductionIncreaseBufferCount_l->_cost["ether"] = 250;
-	upProductionIncreaseBufferCount_l->_cost["irium"] = 350;
-	upProductionIncreaseBufferCount_l->_productionTime = 12000;
-	upProductionIncreaseBufferCount_l->_requirements._upgradeLvl[models::ProductionDivId+models::tierThreeSuffix] = 1;
+	upProductionIncreaseBufferCount_l->_cost[0]["bloc"] = 125;
+	upProductionIncreaseBufferCount_l->_cost[0]["ether"] = 250;
+	upProductionIncreaseBufferCount_l->_cost[0]["irium"] = 350;
+	upProductionIncreaseBufferCount_l->_productionTime[0] = 12000;
+	upProductionIncreaseBufferCount_l->_requirements[0]._upgradeLvl[models::ProductionDivId+models::tierThreeSuffix] = 1;
 	lib_p.registerUpgrade(upProductionIncreaseBufferCount_l->_id, upProductionIncreaseBufferCount_l);
 
 	/// @brief temple

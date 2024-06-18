@@ -31,7 +31,7 @@ public:
 		return new AttackSpeedUpgrade(_models, _offset);
 	}
 
-	virtual std::vector<Steppable *> getSteppables(unsigned long player_p) const
+	virtual std::vector<Steppable *> getSteppables(unsigned long player_p, unsigned long) const
 	{
 		std::vector<Steppable *> steps_l;
 
@@ -130,6 +130,7 @@ void fillLibrary(AttackSpeedDivinityParams const &params_p, octopus::Library &li
 	tieroneunitmodel_l._lineOfSight = 10;
 	tieroneunitmodel_l._fullReload = 30;
 	tieroneunitmodel_l._windup = 20;
+	tieroneunitmodel_l._damageReturn = 0.5;
 	tieroneunitmodel_l._requirements._upgradeLvl[models::AttackSpeedDivId+models::tierOneSuffix] = 1;
 
 	lib_p.registerUnitModel(params_p._tierOneUnitModelId, tieroneunitmodel_l);
@@ -138,11 +139,11 @@ void fillLibrary(AttackSpeedDivinityParams const &params_p, octopus::Library &li
 
 	// T3 attackspeed buff
 	Upgrade * attackspeedBuffTierThree_l = new Upgrade("AttackspeedUpgrade_BuffTierThreeConditional", new AttackSpeedUpgrade({params_p._tierOneUnitModelId}, params_p._damageUpgradeForTierOneUnit));
-	attackspeedBuffTierThree_l->_cost["bloc"] = 250;
-	attackspeedBuffTierThree_l->_cost["ether"] = 350;
-	attackspeedBuffTierThree_l->_cost["irium"] = 450;
-	attackspeedBuffTierThree_l->_productionTime = 12000;
-	attackspeedBuffTierThree_l->_requirements._upgradeLvl[models::AttackSpeedDivId+models::tierThreeSuffix] = 1;
+	attackspeedBuffTierThree_l->_cost[0]["bloc"] = 250;
+	attackspeedBuffTierThree_l->_cost[0]["ether"] = 350;
+	attackspeedBuffTierThree_l->_cost[0]["irium"] = 450;
+	attackspeedBuffTierThree_l->_productionTime[0] = 12000;
+	attackspeedBuffTierThree_l->_requirements[0]._upgradeLvl[models::AttackSpeedDivId+models::tierThreeSuffix] = 1;
 	lib_p.registerUpgrade(attackspeedBuffTierThree_l->_id, attackspeedBuffTierThree_l);
 
 	/// @brief temple

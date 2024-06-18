@@ -4,7 +4,7 @@
 #include <vector>
 #include <string>
 
-#include "state/entity/buff/Buff.hh"
+#include "state/entity/buff/AnyBuff.hh"
 #include "step/Steppable.hh"
 #include "step/entity/buff/EntityBuffStep.hh"
 
@@ -21,7 +21,7 @@ struct PlayerBuffAllStepData : public SteppableData
 class PlayerBuffAllStep : public Steppable
 {
 public:
-	PlayerBuffAllStep(unsigned long player_p, TimedBuff const &buff_p, std::string const &model_p)
+	PlayerBuffAllStep(unsigned long player_p, AnyBuff const &buff_p, std::string const &model_p)
 		: _player(player_p), _buff(buff_p), _model(model_p) {}
 
 	virtual void apply(State &state_p) const override;
@@ -36,7 +36,7 @@ public:
     virtual SteppableData * newData(State const &state_p) const;
 
 	unsigned long const _player;
-	TimedBuff const _buff;
+	AnyBuff const _buff;
     std::string const _model;
 };
 

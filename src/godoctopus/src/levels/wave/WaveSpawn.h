@@ -9,6 +9,8 @@
 #include "utils/RandomGenerator.hh"
 #include "utils/Vector.hh"
 
+#include "library/model/bonus/BuffGenerators.hh"
+
 #include "WaveUnitCount.h"
 
 namespace octopus
@@ -44,10 +46,13 @@ class WaveSpawn : public octopus::OneShotTrigger
 {
 public:
 	WaveSpawn(octopus::Listener * listener_p, WaveInfo const &currentWave_p, std::vector<octopus::Vector> const &currentSpawnPoint_p, bool earlyWave_p,
-		octopus::Library const &lib_p, octopus::RandomGenerator &rand_p, std::list<WaveParam> const &param_p, unsigned long player_p,
-		std::function<std::vector<octopus::Steppable *>(void)> waveStepGenerator_p);
+		octopus::Library const &lib_p, octopus::RandomGenerator &rand_p, std::list<WaveParam> const &param_p, unsigned long playerSpawn_p,
+		std::vector<unsigned long> players_p, std::function<std::vector<octopus::Steppable *>(void)> waveStepGenerator_p,
+		std::vector<fas::SurvivalSpecialType> const &forbidden_p, unsigned long count_p = 0, unsigned long nb_upgrades_p = 1);
 
 	virtual void trigger(octopus::State const &state_p, octopus::Step &step_p, unsigned long, octopus::TriggerData const &) const override;
+
+	void setEndless(bool endless_p) { _endless = endless_p; }
 
 private:
 	/// @brief required because wave has already been picked from the current pool
@@ -60,9 +65,19 @@ private:
 	octopus::RandomGenerator &_rand;
 
 	std::list<WaveParam> _params;
-	unsigned long _player;
+	unsigned long _playerSpawn;
+	std::vector<unsigned long> _players;
+
+	/// @brief last wave will repeat endlessly
+	bool _endless = false;
+	// the wave index
+	unsigned long _count = 0;
+	// number of upgrade to spawn
+	unsigned long _nb_upgrades = 1;
 
 	std::function<std::vector<octopus::Steppable *>(void)> _waveStepGenerator;
+
+	std::vector<fas::SurvivalSpecialType> _forbidden;
 };
 
 /// @brief trigger win for the given player when all given entities are dead
@@ -71,10 +86,39 @@ class WinTrigger : public octopus::OneShotTrigger
 public:
 	WinTrigger(unsigned long winner_p, std::unordered_set<octopus::Handle> const &handles_p);
 
-	virtual void trigger(octopus::State const &state_p, octopus::Step &step_p, unsigned long, octopus::TriggerData const &) const override;
+	void trigger(octopus::State const &state_p, octopus::Step &step_p, unsigned long, octopus::TriggerData const &) const override;
 
 private:
 	unsigned long _winner;
+};
+
+/// @brief trigger for option generator when wave is cleared
+class WaveClearTrigger : public octopus::OneShotTrigger
+{
+public:
+	WaveClearTrigger(
+		unsigned long playerSpawn_p,
+		std::vector<unsigned long> const & players_p,
+		std::vector<fas::SurvivalSpecialType> const &forbidden_p,
+		std::unordered_set<octopus::Handle> const &handles_p,
+		octopus::Library const &lib_p,
+		octopus::RandomGenerator &rand_p,
+		unsigned long count_p,
+		unsigned long nb_upgrades_p
+	);
+
+	void trigger(octopus::State const &state_p, octopus::Step &step_p, unsigned long, octopus::TriggerData const &) const override;
+
+private:
+	unsigned long _playerSpawn;
+	std::vector<unsigned long> _players;
+	std::vector<fas::SurvivalSpecialType> _forbidden;
+	octopus::Library const &_lib;
+	octopus::RandomGenerator &_rand;
+	// the wave index
+	unsigned long _count = 0;
+	// number of upgrade to spawn
+	unsigned long _nb_upgrades = 1;
 };
 
 /// @brief Roll N spawn points from the candidates

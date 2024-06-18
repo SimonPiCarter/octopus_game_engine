@@ -4,6 +4,8 @@
 #include "state/entity/Entity.hh"
 #include "state/player/Player.hh"
 
+#include "crc/FastCRC.hh"
+
 namespace octopus
 {
 void streamStateAsSimpleText(std::ostream &os_p, State const &state_p)
@@ -30,6 +32,77 @@ void streamStateAsSimpleText(std::ostream &os_p, State const &state_p)
         os_p<<"\thp "<<ent_l->_hp<<std::endl;
         os_p<<"\tpos "<<ent_l->_pos.x.data()<<","<<ent_l->_pos.y.data()<<std::endl;
     }
+}
+
+uint32_t setup(int64_t const &data_p, FastCRC32 &encoder_p)
+{
+    return encoder_p.crc32((const uint8_t *)&data_p, sizeof(data_p));
+}
+uint32_t encode(int64_t const &data_p, FastCRC32 &encoder_p)
+{
+    return encoder_p.crc32_upd((const uint8_t *)&data_p, sizeof(data_p));
+}
+
+uint32_t hashState(State const &state_p)
+{
+    uint32_t checksum_l = 0;
+
+    FastCRC32 encoder_l;
+
+    checksum_l = setup(state_p.getStepApplied(), encoder_l);
+    for(Player const *player_l : state_p.getPlayers())
+    {
+        checksum_l = encode(player_l->_id, encoder_l);
+        for(auto &&pair_l : player_l->_resources)
+        {
+            checksum_l = encode(pair_l.second.data(), encoder_l);
+        }
+        for(auto &&pair_l : player_l->_upgradeLvl)
+        {
+            checksum_l = encode(pair_l.second, encoder_l);
+        }
+    }
+    for(Entity const * ent_l : state_p.getEntities())
+    {
+        checksum_l = encode(ent_l->_handle.revision, encoder_l);
+        checksum_l = encode((ent_l->_alive?1:0), encoder_l);
+        checksum_l = encode(ent_l->_hp.data(), encoder_l);
+        checksum_l = encode(ent_l->_pos.x.data(), encoder_l);
+        checksum_l = encode(ent_l->_pos.y.data(), encoder_l);
+    }
+
+    return checksum_l;
+}
+
+std::string stringState(State const &state_p)
+{
+    std::stringstream ss_l;
+
+    ss_l << state_p.getStepApplied() << std::endl;
+    for(Player const *player_l : state_p.getPlayers())
+    {
+        ss_l << player_l->_id << std::endl;
+        for(auto &&pair_l : player_l->_resources)
+        {
+            ss_l << pair_l.second.data() << std::endl;
+        }
+        for(auto &&pair_l : player_l->_upgradeLvl)
+        {
+            ss_l << pair_l.second << std::endl;
+        }
+    }
+    for(Entity const * ent_l : state_p.getEntities())
+    {
+        ss_l << (int)ent_l->_handle.index<< " "<<(int)ent_l->_handle.revision << std::endl;
+        ss_l << (ent_l->_alive?1:0) << std::endl;
+        ss_l << ent_l->_hp.data() << std::endl;
+        ss_l << ent_l->_pos.x.data() << std::endl;
+        ss_l << ent_l->_pos.y.data() << std::endl;
+    }
+
+	ss_l << "end dump"<<std::endl;
+
+    return ss_l.str();
 }
 
 } // namespace octopus

@@ -4,6 +4,7 @@
 #include <godot_cpp/classes/input.hpp>
 
 #include "library/model/ModelLoader.hh"
+#include "library/model/survival/SurvivalModelLoader.hh"
 #include "library/levels/ArenaLevel.hh"
 #include "library/levels/LevelId.hh"
 #include "library/levels/MazeLevel.hh"
@@ -17,6 +18,7 @@
 #include "command/building/BuildingUnitProductionCommand.hh"
 #include "command/building/BuildingCancelCommand.hh"
 #include "controller/Controller.hh"
+#include "controller/score/ScoreTracker.hh"
 #include "logger/Logger.hh"
 #include "serialization/CommandSerialization.hh"
 #include "serialization/StateDump.hh"
@@ -45,8 +47,11 @@
 #include "levels/LevelTestModelLoader.h"
 #include "levels/missions/mission1/Mission1.h"
 #include "levels/missions/mission2/Mission2.h"
+#include "levels/missions/mission3/Mission3.h"
 #include "levels/demo/DemoLevel.h"
 #include "levels/model/utils/EntitySpawner.h"
+#include "library/FirstRunicBoss.h"
+#include "DemoConstants.h"
 
 namespace godot {
 
@@ -89,6 +94,12 @@ void Controller::_process(double delta)
 {
 	Node::_process(delta);
 
+	if(_initDone && !_readyToLoopSent)
+	{
+		emit_signal("ready_to_loop");
+		_readyToLoopSent = true;
+	}
+
 	if(_controller && _initDone)
 	{
 		octopus::StateAndSteps stateAndSteps_l = _controller->queryStateAndSteps();
@@ -115,6 +126,11 @@ void Controller::_process(double delta)
 				}
 			}
 			_forceAllMoveUpdate = false;
+		}
+
+		if(_state && _state->getStepApplied() % 128 == 0)
+		{
+			emit_signal("state_dump", (int64_t)_state->getStepApplied(), hashState(*_state));
 		}
 	}
 }
@@ -252,10 +268,37 @@ void Controller::load_mission_2(int seed_p, godot::LevelModel *level_model_p, in
 	init(commands_l, spawners_l, false, 50, _autoSaveFile);
 }
 
+void Controller::load_mission_3(int seed_p, godot::LevelModel *level_model_p, int player_count_p, int difficulty_p)
+{
+	delete _rand;
+	_rand = new octopus::RandomGenerator(seed_p);
+
+	assert(level_model_p);
+	std::vector<GodotEntityInfo> info_l = getEntityInfo(level_model_p->getEntities(), player_count_p);
+
+	std::list<octopus::Steppable *> spawners_l = {};
+	std::list<octopus::Steppable *> levelsteps_l = mission::Mission3Steps(_lib, *_rand, player_count_p, difficulty_p, info_l);
+	spawners_l = level_model_p->generateLevelSteps(_lib, player_count_p);
+	spawners_l.splice(spawners_l.end(), levelsteps_l);
+
+	std::list<octopus::Command *> commands_l = mission::Mission3Commands(_lib, *_rand, player_count_p);
+
+	// enable auto save
+	newAutoSaveFile();
+	writeLevelId(*_autoSaveFile, LEVEL_ID_MISSION_3, 50);
+	_currentLevel = LEVEL_ID_MISSION_3;
+	_headerWriter = std::bind(mission::writeMission3Header, std::placeholders::_1, mission::Mission3Header {(int32_t)seed_p, (int32_t)player_count_p, (int32_t)difficulty_p});
+	_headerWriter(*_autoSaveFile);
+
+	init(commands_l, spawners_l, false, 50, _autoSaveFile);
+}
+
 void Controller::load_minimal_model()
 {
 	loadMinimalModels(_lib);
+	fas::loadSurvivalModels(_lib);
 	fas::loadLibrary(_lib);
+	addFirstRunicBossToLibrary(_lib);
 }
 
 void Controller::load_hero_siege_level(int seed_p, int player_count_p)
@@ -297,16 +340,93 @@ void Controller::load_demo_level(int seed_p, WavePattern const * wavePattern_p, 
 	unsigned long player_l = wavePattern_p->getPlayer();
 
 	std::list<octopus::Steppable *> spawners_l = {};
-	std::list<octopus::Steppable *> levelsteps_l = demo::DemoLevelSteps(_lib, *_rand, wavesInfo_l, player_l, player_count_p, info_l, difficulty_p, true);
+	std::list<octopus::Steppable *> levelsteps_l = demo::DemoLevelSteps(_lib, *_rand, wavesInfo_l, player_l, player_count_p, info_l,
+		difficulty_p > 2,	// two coming waves
+		false,				// bosses
+		difficulty_p > 1,	// fast anchor
+		1,					// up per wave
+		IS_DEMO				// demo
+	);
 	spawners_l = level_model_p->generateLevelSteps(_lib, player_count_p);
 	spawners_l.splice(spawners_l.end(), levelsteps_l);
 
-	std::list<octopus::Command *> commands_l = demo::DemoLevelCommands(_lib, *_rand, player_count_p, difficulty_p);
+	std::list<octopus::Command *> commands_l = demo::DemoLevelCommands(_lib, *_rand, player_count_p, difficulty_p > 1, difficulty_p > 2, false);
 	// enable auto save
 	newAutoSaveFile();
 	writeLevelId(*_autoSaveFile, LEVEL_ID_LEVEL_DEMO, 50);
 	_currentLevel = LEVEL_ID_LEVEL_DEMO;
-	_headerWriter = std::bind(demo::writeDemoLevelHeader, std::placeholders::_1, demo::DemoLevelHeader{seed_p, player_l, difficulty_p, player_count_p, wavesInfo_l});
+
+	_headerWriter = std::bind(demo::writeDemoLevelHeader, std::placeholders::_1, demo::DemoLevelHeader{
+		seed_p,
+		player_l,
+		difficulty_p > 1,
+		difficulty_p > 2,
+		difficulty_p > 3,
+		false,
+		difficulty_p > 2,
+		1,
+		(uint32_t)player_count_p,
+		wavesInfo_l});
+	_headerWriter(*_autoSaveFile);
+	init(commands_l, spawners_l, false, 50, _autoSaveFile);
+}
+
+void Controller::load_survival_level(int seed_p, WavePattern const * wavePattern_p, godot::LevelModel *level_model_p, int player_count_p,
+	bool less_resources_p,
+	bool more_enemies_map_p,
+	bool two_direction_wave_p,
+	bool bosses_p,
+	bool fast_anchor_decay_p,
+	int buff_per_wave_p
+)
+{
+	assert(level_model_p);
+	std::vector<GodotEntityInfo> info_l = getEntityInfo(level_model_p->getEntities(), player_count_p);
+
+	delete _rand;
+	_rand = new octopus::RandomGenerator(seed_p);
+	std::vector<WavePoolInfo> wavesInfo_l;
+	// add all patterns
+	for(WavePool const * pool_l : wavePattern_p->getWavePools())
+	{
+		wavesInfo_l.push_back(convertToInfo(pool_l));
+	}
+
+	if(wavePattern_p->getPlayer() < 0)
+	{
+		UtilityFunctions::push_error("Cannot load demo level because player index < 0");
+		return;
+	}
+	unsigned long player_l = wavePattern_p->getPlayer();
+
+	std::list<octopus::Steppable *> spawners_l = {};
+	std::list<octopus::Steppable *> levelsteps_l = demo::DemoLevelSteps(_lib, *_rand, wavesInfo_l, player_l, player_count_p, info_l,
+		two_direction_wave_p,	// two coming waves
+		bosses_p,				// bosses
+		fast_anchor_decay_p,	// fast anchor
+		buff_per_wave_p,		// up per wave
+		IS_DEMO					// demo
+	);
+	spawners_l = level_model_p->generateLevelSteps(_lib, player_count_p);
+	spawners_l.splice(spawners_l.end(), levelsteps_l);
+
+	std::list<octopus::Command *> commands_l = demo::DemoLevelCommands(_lib, *_rand, player_count_p, less_resources_p, more_enemies_map_p, bosses_p);
+	// enable auto save
+	newAutoSaveFile();
+	writeLevelId(*_autoSaveFile, LEVEL_ID_LEVEL_DEMO, 50);
+	_currentLevel = LEVEL_ID_LEVEL_DEMO;
+	_headerWriter = std::bind(demo::writeDemoLevelHeader, std::placeholders::_1, demo::DemoLevelHeader{
+		seed_p,
+		player_l,
+		less_resources_p,
+		more_enemies_map_p,
+		two_direction_wave_p,
+		bosses_p,
+		fast_anchor_decay_p,
+		(uint32_t)buff_per_wave_p,
+		(uint32_t)player_count_p,
+		wavesInfo_l});
+
 	_headerWriter(*_autoSaveFile);
 	init(commands_l, spawners_l, false, 50, _autoSaveFile);
 }
@@ -371,12 +491,12 @@ void Controller::load_level_test_anchor(int seed_p)
 }
 
 void Controller::load_level_test_model_reading(int seed_p, godot::LevelModel *level_model_p, bool buff_prod_p,
-	bool upgrades_rune_p, int idx_first_player_p, int nb_players_p)
+	bool upgrades_rune_p, int idx_first_player_p, int nb_players_p, bool use_div_option_p)
 {
 	delete _rand;
 	_rand = new octopus::RandomGenerator(seed_p);
 	std::list<octopus::Steppable *> spawners_l = {};
-	std::list<octopus::Steppable *> levelsteps_l = level_test_model::LevelSteps(_lib, *_rand, buff_prod_p, upgrades_rune_p, idx_first_player_p, nb_players_p);
+	std::list<octopus::Steppable *> levelsteps_l = level_test_model::LevelSteps(_lib, *_rand, buff_prod_p, upgrades_rune_p, idx_first_player_p, nb_players_p, use_div_option_p);
 	if(level_model_p)
 	{
 		spawners_l = level_model_p->generateLevelSteps(_lib, nb_players_p);
@@ -390,7 +510,7 @@ void Controller::load_level_test_model_reading(int seed_p, godot::LevelModel *le
 	_currentLevel = LEVEL_ID_LEVEL_TEST_MODEL;
 	_headerWriter = std::bind(level_test_model::writeLevelHeader, std::placeholders::_1, level_test_model::ModelLoaderHeader {seed_p, buff_prod_p});
 	_headerWriter(*_autoSaveFile);
-	init(commands_l, spawners_l, true, 50, _autoSaveFile);
+	init(commands_l, spawners_l, use_div_option_p, 50, _autoSaveFile);
 }
 
 void Controller::load_duel_level(int seed_p, TypedArray<int> const &div_player_1_p, TypedArray<int> const &div_player_2_p)
@@ -547,9 +667,19 @@ void Controller::replay_level(String const &filename_p, bool replay_mode_p, godo
 	}
 	else if(levelId_l == LEVEL_ID_MISSION_2)
 	{
+		std::vector<GodotEntityInfo> info_l = getEntityInfo(level_model_p->getEntities(), _fileHeader->get_num_players());
+
 		mission::Mission2Header header_l;
-		levelInfo_l = mission::readMission2Header(_lib, file_l,_rand, header_l);
+		levelInfo_l = mission::readMission2Header(_lib, file_l, info_l, _rand, header_l);
 		_headerWriter = std::bind(mission::writeMission2Header, std::placeholders::_1, header_l);
+	}
+	else if(levelId_l == LEVEL_ID_MISSION_3)
+	{
+		std::vector<GodotEntityInfo> info_l = getEntityInfo(level_model_p->getEntities(), _fileHeader->get_num_players());
+
+		mission::Mission3Header header_l;
+		levelInfo_l = mission::readMission3Header(_lib, file_l, info_l, _rand, header_l);
+		_headerWriter = std::bind(mission::writeMission3Header, std::placeholders::_1, header_l);
 	}
 	else
 	{
@@ -769,10 +899,19 @@ void Controller::loop()
 		while(!_over)
 		{
 			lockStep_l = !_stepControl || _controller->getMetrics()._nbStepsCompiled < _stepDone;
+			// UtilityFunctions::print("looping ...", int64_t(_controller->getMetrics()._nbStepsCompiled), "/", int64_t(_stepDone));
 			if(!_paused && lockStep_l)
 			{
-				// update controller
-				_controller->update(std::min(0.01, elapsed_l));
+				// if step control we accept to run faster than time
+				if(_stepControl)
+				{
+					_controller->update(0.01);
+				}
+				else
+				{
+					// update controller
+					_controller->update(std::min(0.01, elapsed_l));
+				}
 			}
 			while(!_controller->loop_body()) {}
 
@@ -868,6 +1007,110 @@ void Controller::set_fast_forward(bool fast_forward_p)
 	{
 		_controller->setTimePerStep(fast_forward_p?0.001:0.01);
 	}
+}
+
+bool Controller::get_pause() const
+{
+	return _paused;
+}
+
+bool Controller::get_init_done() const
+{
+	return _initDone;
+}
+
+bool Controller::get_first_step_done() const
+{
+	return _controller->getMetrics()._nbStepsCompiled > 10;
+}
+
+bool Controller::has_won(int player_p) const
+{
+	if(!_state) { return false; }
+	if(_state->getPlayers().size() <= player_p) { return false; }
+	return _state->hasWinningTeam()
+		&& _state->getWinningTeam() == _state->getPlayer(player_p)->_team;
+}
+
+int Controller::get_score(int player_p) const
+{
+	int score_l = 0
+		+ get_units_produced(player_p) * 20
+		- get_units_lost(player_p) * 10
+		+ get_units_killed(player_p) * 10
+		+ get_harvested_resources(player_p);
+	return score_l;
+}
+
+int Controller::get_units_produced(int player_p) const
+{
+	if(!_controller)
+	{
+		return 0;
+	}
+	octopus::ScoreTracker const &tracker_l = _controller->getScoreTracker();
+	std::vector<unsigned long long> const & units_produced_l = tracker_l.get_units_produced();
+
+	if(units_produced_l.size() > player_p)
+	{
+		return units_produced_l[player_p];
+	}
+	return 0;
+}
+
+int Controller::get_units_lost(int player_p) const
+{
+	if(!_controller)
+	{
+		return 0;
+	}
+	octopus::ScoreTracker const &tracker_l = _controller->getScoreTracker();
+	std::vector<unsigned long long> const & units_lost_l = tracker_l.get_units_lost();
+
+	if(units_lost_l.size() > player_p)
+	{
+		return units_lost_l[player_p];
+	}
+	return 0;
+}
+int Controller::get_units_killed(int player_p) const
+{
+	if(!_controller || !_state)
+	{
+		return 0;
+	}
+	octopus::Player const *player_l = _state->getPlayer(player_p);
+
+	octopus::ScoreTracker const &tracker_l = _controller->getScoreTracker();
+	std::vector<unsigned long long> const & unit_losts_l = tracker_l.get_units_lost();
+
+	int units_killed_l = 0;
+
+	for(unsigned long i = 0; i < unit_losts_l.size() && i < _state->getPlayers().size() ; ++ i)
+	{
+		octopus::Player const *other_player_l = _state->getPlayer(i);
+		if(player_l->_team != other_player_l->_team)
+		{
+			units_killed_l += unit_losts_l[i];
+		}
+	}
+
+	return units_killed_l;
+}
+int Controller::get_harvested_resources(int player_p) const
+{
+	if(!_controller)
+	{
+		return 0;
+	}
+	octopus::ScoreTracker const &tracker_l = _controller->getScoreTracker();
+	std::vector<unsigned long long> const & resources_l = tracker_l.get_harvested_resources();
+
+	if(resources_l.size() > player_p)
+	{
+		return resources_l[player_p];
+	}
+	return 0;
 }
 
 void Controller::save_to_file(String const &path_p)
@@ -980,17 +1223,17 @@ TypedArray<String> Controller::get_models(EntityHandle const * handle_p, int pla
 		}
 	} else if(ent_l->_model._isBuilding)
 	{
-		std::list<octopus::Upgrade const *> updates_l = octopus::getAvailableUpgrades(
-			static_cast<octopus::BuildingModel const &>(ent_l->_model), *_state->getPlayer(player_p), checkRequirements_p);
-		for(octopus::Upgrade const * update_l : updates_l)
-		{
-			models_l.push_back(update_l->_id.c_str());
-		}
 		std::list<octopus::UnitModel const *> unitGrid_l = octopus::getAvailableUnitModels(
 			static_cast<octopus::BuildingModel const &>(ent_l->_model), *_state->getPlayer(player_p), checkRequirements_p);
 		for(octopus::UnitModel const * model_l : unitGrid_l)
 		{
 			models_l.push_back(model_l->_id.c_str());
+		}
+		std::list<octopus::Upgrade const *> updates_l = octopus::getAvailableUpgrades(
+			static_cast<octopus::BuildingModel const &>(ent_l->_model), *_state->getPlayer(player_p), checkRequirements_p);
+		for(octopus::Upgrade const * update_l : updates_l)
+		{
+			models_l.push_back(update_l->_id.c_str());
 		}
 	}
 	return models_l;
@@ -1017,7 +1260,7 @@ TypedArray<String> Controller::get_abilities(EntityHandle const * handle_p, int 
 bool Controller::is_done_and_non_repeatable(String const &upgrade_p, int player_p) const
 {
 	std::string const &upgradeId_l(upgrade_p.utf8().get_data());
-	return getUpgradeLvl(*getPlayer(player_p), upgradeId_l) && !_lib.getUpgrade(upgradeId_l)._repeatable;
+	return getUpgradeLvl(*getPlayer(player_p), upgradeId_l) >= getMaxLevel(_lib.getUpgrade(upgradeId_l));
 }
 
 int Controller::get_level(String const &upgrade_p, int player_p) const
@@ -1067,6 +1310,17 @@ double Controller::get_current_reload_time(EntityHandle const * handle_p, String
 	unsigned long reload_l = octopus::getReloadAbilityTime(*ent_l, ability_l._reloadKey, octopus::getMinReloadTime(ent_l->_model, ability_l._reloadKey));
 
 	return reload_l;
+}
+
+double Controller::get_reload_ratio(EntityHandle const * handle_p, String const &ability_p) const
+{
+	double full_reload = get_reload_time(handle_p, ability_p);
+	double current_reload = get_current_reload_time(handle_p, ability_p);
+	if(full_reload < 0.01)
+	{
+		return 0.;
+	}
+	return std::max(0., 1. - (current_reload / full_reload));
 }
 
 bool Controller::hasNonStaticBehind(EntityHandle const * handle_p, int height_p, int width_p) const
@@ -1243,6 +1497,13 @@ bool Controller::is_unit_visible(EntityHandle const * handle_p, int player_p) co
 
 bool Controller::is_explored(int x, int y, int player_p) const
 {
+	if(x < 0
+	|| x >= _state->getVisionHandler().getSize()
+	|| y < 0
+	|| y >= _state->getVisionHandler().getSize())
+	{
+		return false;
+	}
 	octopus::Player const *player_l = _state->getPlayer(player_p);
 	return _state->getVisionHandler().isExplored(player_l->_team, x, y);
 }
@@ -1275,22 +1536,22 @@ PackedByteArray Controller::getVisibility(int player_p) const
 
 int Controller::get_nb_queued_options(int player_p) const
 {
-	auto it_l = _optionManagers.find(player_p);
-	if(it_l != _optionManagers.end())
+	// return the number of queued option generator
+	if(_state && _state->getPlayer(player_p))
 	{
-		return it_l->second->getQueuedOptionsSize();
+		return _state->getPlayer(player_p)->_options.size();
 	}
 	return 0;
 }
 
 int Controller::get_nb_options_available(int player_p) const
 {
-	auto it_l = _optionManagers.find(player_p);
-	if(it_l == _optionManagers.end() || it_l->second->getQueuedOptionsSize() == 0)
+	// return the number of different options available with the option in front
+	if(_state && _state->getPlayer(player_p) && !_state->getPlayer(player_p)->_options.empty())
 	{
-		return 0;
+		return _state->getPlayer(player_p)->_options.front()->getNumOptions();
 	}
-	return it_l->second->getCurrentOptionSize();
+	return 0;
 }
 
 int Controller::get_nb_options_chosen(int player_p) const
@@ -1338,9 +1599,12 @@ void Controller::get_productions(TypedArray<EntityHandle> const &handles_p, int 
 {
 	std::vector<CommandInfo> vecCommands_l;
 
+	unsigned long playerIdx_l = 0;
+
 	for(uint32_t i = 0 ; i < handles_p.size() ; ++ i)
 	{
 		octopus::Entity const * ent_l = _state->getEntity(castHandle(handles_p[i]));
+		playerIdx_l = ent_l->_player;
 		uint32_t posInQueue_l = 0;
 		for(octopus::CommandBundle const &bundle_l : ent_l->getQueue().getList())
 		{
@@ -1356,11 +1620,13 @@ void Controller::get_productions(TypedArray<EntityHandle> const &handles_p, int 
 
 	std::sort(vecCommands_l.begin(), vecCommands_l.end(), CommandSorter());
 
+	octopus::Player const &player_l = *_state->getPlayer(playerIdx_l);
+
 	for(uint32_t i = 0 ; i < std::min<uint32_t>(vecCommands_l.size(), max_p) ; ++i)
 	{
 		CommandInfo const &info_l = vecCommands_l[i];
 		String model_l(info_l.data->getIdModel().c_str());
-		float progress_l = octopus::to_double(info_l.data->_progression/info_l.data->_completeTime*100.);
+		float progress_l = octopus::to_double(info_l.data->_progression/info_l.data->getCompleteTime(player_l)*100.);
 		emit_signal("production_command", int(info_l.handle.index), int(info_l.handle.revision), int(info_l.idx), model_l, progress_l);
 	}
 }
@@ -1440,6 +1706,14 @@ void Controller::add_stop_commands(int peer_p, PackedInt32Array const &handles_p
 	}
 }
 
+void Controller::add_unit_auto_build_command(int peer_p, PackedInt32Array const &handles_p, String const &model_p, int player_p)
+{
+	if(!_paused)
+	{
+		godot::add_unit_auto_build_command(_queuedCommandsPerPeer.at(peer_p).back(), *_state, _lib, handles_p, model_p, player_p);
+	}
+}
+
 void Controller::add_unit_build_command(int peer_p, PackedInt32Array const &handles_p, String const &model_p, int player_p)
 {
 	if(!_paused)
@@ -1495,6 +1769,7 @@ void Controller::set_step_control(int prequeued_p)
 	{
 		_controller->addQueuedLayer();
 	}
+	_stepDone = _controller->getMetrics()._nbStepsCompiled;
 }
 
 void Controller::next_step()
@@ -1518,6 +1793,11 @@ void Controller::next_step()
 int Controller::get_queued_size() const
 {
 	return _controller->getQueuedSize();
+}
+
+int Controller::get_queued_size_from_peer(int peer_p) const
+{
+	return _queuedCommandsPerPeer.at(peer_p).size();
 }
 
 void Controller::add_peer_info(int peer_p, int player_p)
@@ -1549,13 +1829,16 @@ void Controller::_bind_methods()
 	ClassDB::bind_method(D_METHOD("load_lifesteal_level", "size"), &Controller::load_lifesteal_level);
 	ClassDB::bind_method(D_METHOD("load_mission_1", "seed", "player_count"), &Controller::load_mission_1);
 	ClassDB::bind_method(D_METHOD("load_mission_2", "seed", "level_model", "player_count"), &Controller::load_mission_2);
+	ClassDB::bind_method(D_METHOD("load_mission_3", "seed", "level_model", "player_count", "difficulty"), &Controller::load_mission_3);
 	ClassDB::bind_method(D_METHOD("load_minimal_model"), &Controller::load_minimal_model);
 	ClassDB::bind_method(D_METHOD("load_hero_siege_level", "seed", "nb_players"), &Controller::load_hero_siege_level);
 	ClassDB::bind_method(D_METHOD("load_demo_level", "seed", "wave_pattern", "level_model", "player_count", "difficulty"), &Controller::load_demo_level);
+	ClassDB::bind_method(D_METHOD("load_survival_level", "seed", "wave_pattern", "level_model", "player_count"
+		"less_resources","more_enemies_map", "two_direction_wave", "bosses", "fast_anchor_decay", "buff_per_wave"), &Controller::load_survival_level);
 	ClassDB::bind_method(D_METHOD("load_level1", "seed", "nb_wave"), &Controller::load_level1);
 	ClassDB::bind_method(D_METHOD("load_level2", "seed", "wave_pattern", "nb_players"), &Controller::load_level2);
 	ClassDB::bind_method(D_METHOD("load_level_test_anchor", "seed"), &Controller::load_level_test_anchor);
-	ClassDB::bind_method(D_METHOD("load_level_test_model_reading", "seed", "level_model", "buff_prod", "upgrade_rune", "idx_first_player", "player_count"), &Controller::load_level_test_model_reading);
+	ClassDB::bind_method(D_METHOD("load_level_test_model_reading", "seed", "level_model", "buff_prod", "upgrade_rune", "idx_first_player", "player_count", "use_div_option"), &Controller::load_level_test_model_reading);
 	ClassDB::bind_method(D_METHOD("load_duel_level", "seed", "div_player_1_p", "div_player_2_p"), &Controller::load_duel_level);
 	ClassDB::bind_method(D_METHOD("load_multi_test_level", "seed", "step_count", "buff_prod"), &Controller::load_multi_test_level);
 
@@ -1571,6 +1854,15 @@ void Controller::_bind_methods()
 	ClassDB::bind_method(D_METHOD("set_pause", "pause"), &Controller::set_pause);
 	ClassDB::bind_method(D_METHOD("set_over", "over"), &Controller::set_over);
 	ClassDB::bind_method(D_METHOD("set_fast_forward", "fast_forward"), &Controller::set_fast_forward);
+	ClassDB::bind_method(D_METHOD("get_pause"), &Controller::get_pause);
+	ClassDB::bind_method(D_METHOD("get_init_done"), &Controller::get_init_done);
+	ClassDB::bind_method(D_METHOD("get_first_step_done"), &Controller::get_first_step_done);
+	ClassDB::bind_method(D_METHOD("has_won", "player"), &Controller::has_won);
+	ClassDB::bind_method(D_METHOD("get_score", "player"), &Controller::get_score);
+	ClassDB::bind_method(D_METHOD("get_units_produced", "player"), &Controller::get_units_produced);
+	ClassDB::bind_method(D_METHOD("get_units_lost", "player"), &Controller::get_units_lost);
+	ClassDB::bind_method(D_METHOD("get_units_killed", "player"), &Controller::get_units_killed);
+	ClassDB::bind_method(D_METHOD("get_harvested_resources", "player"), &Controller::get_harvested_resources);
 	ClassDB::bind_method(D_METHOD("save_to_file", "path"), &Controller::save_to_file);
 	ClassDB::bind_method(D_METHOD("set_auto_file_path", "path"), &Controller::set_auto_file_path);
 	ClassDB::bind_method(D_METHOD("set_auto_file_debug", "debug"), &Controller::set_auto_file_debug);
@@ -1592,6 +1884,7 @@ void Controller::_bind_methods()
 
 	ClassDB::bind_method(D_METHOD("get_reload_time", "handle", "ability"), &Controller::get_reload_time);
 	ClassDB::bind_method(D_METHOD("get_current_reload_time", "handle", "ability"), &Controller::get_current_reload_time);
+	ClassDB::bind_method(D_METHOD("get_reload_ratio", "handle", "ability"), &Controller::get_reload_ratio);
 	ClassDB::bind_method(D_METHOD("hasNonStaticBehind", "handle", "height" "width"), &Controller::hasNonStaticBehind);
 	ClassDB::bind_method(D_METHOD("get_model_ray", "model"), &Controller::get_model_ray);
 	ClassDB::bind_method(D_METHOD("is_grid_free", "model", "x", "y", "player"), &Controller::is_grid_free);
@@ -1628,6 +1921,7 @@ void Controller::_bind_methods()
 	ClassDB::bind_method(D_METHOD("add_move_target_commands", "peer", "handles", "target", "handle_target", "player", "queued"), &Controller::add_move_target_commands);
 	ClassDB::bind_method(D_METHOD("add_attack_move_commands", "peer", "handles", "target", "player", "queued"), &Controller::add_attack_move_commands);
 	ClassDB::bind_method(D_METHOD("add_stop_commands", "peer", "handles", "player", "queued"), &Controller::add_stop_commands);
+	ClassDB::bind_method(D_METHOD("add_unit_auto_build_command", "peer", "handle", "model", "player"), &Controller::add_unit_auto_build_command);
 	ClassDB::bind_method(D_METHOD("add_unit_build_command", "peer", "handle", "model", "player"), &Controller::add_unit_build_command);
 	ClassDB::bind_method(D_METHOD("add_unit_build_cancel_command", "peer", "handle", "index", "player"), &Controller::add_unit_build_cancel_command);
 	ClassDB::bind_method(D_METHOD("add_blueprint_command", "peer", "target", "model", "player", "builders", "queued"), &Controller::add_blueprint_command);
@@ -1638,6 +1932,7 @@ void Controller::_bind_methods()
 	ClassDB::bind_method(D_METHOD("set_step_control", "prequeued_p"), &Controller::set_step_control);
 	ClassDB::bind_method(D_METHOD("next_step"), &Controller::next_step);
 	ClassDB::bind_method(D_METHOD("get_queued_size"), &Controller::get_queued_size);
+	ClassDB::bind_method(D_METHOD("get_queued_size_from_peer", "peer"), &Controller::get_queued_size_from_peer);
 	ClassDB::bind_method(D_METHOD("add_peer_info", "peer_p", "player_p"), &Controller::add_peer_info);
 	ClassDB::bind_method(D_METHOD("step_done_for_peer", "peer_p"), &Controller::step_done_for_peer);
 
@@ -1664,7 +1959,7 @@ void Controller::_bind_methods()
 	ADD_SIGNAL(MethodInfo("buff_all", PropertyInfo(Variant::INT, "player"), PropertyInfo(Variant::STRING, "buff"), PropertyInfo(Variant::STRING, "model")));
 	ADD_SIGNAL(MethodInfo("buff", PropertyInfo(Variant::INT, "handle"), PropertyInfo(Variant::STRING, "buff"), PropertyInfo(Variant::INT, "duration")));
 	ADD_SIGNAL(MethodInfo("spawn_projectile", PropertyInfo(Variant::INT, "index"), PropertyInfo(Variant::STRING, "model"),
-		PropertyInfo(Variant::VECTOR2, "pos"), PropertyInfo(Variant::VECTOR2, "pos_target")));
+		PropertyInfo(Variant::VECTOR2, "pos"), PropertyInfo(Variant::VECTOR2, "pos_target"), PropertyInfo(Variant::INT, "idx_target")));
 	ADD_SIGNAL(MethodInfo("move_projectile", PropertyInfo(Variant::INT, "index"), PropertyInfo(Variant::VECTOR2, "pos")));
 	ADD_SIGNAL(MethodInfo("end_projectile", PropertyInfo(Variant::INT, "index")));
 
@@ -1679,6 +1974,13 @@ void Controller::_bind_methods()
 	ADD_SIGNAL(MethodInfo("decrement_objective", PropertyInfo(Variant::STRING, "key_objective")));
 	ADD_SIGNAL(MethodInfo("remove_objective", PropertyInfo(Variant::STRING, "key_objective")));
 	ADD_SIGNAL(MethodInfo("missing_resource", PropertyInfo(Variant::INT, "player"), PropertyInfo(Variant::STRING, "resource")));
+
+	// SPECIAL FROM MISSIONS
+	ADD_SIGNAL(MethodInfo("first_runic_boss_trigger_aoe", PropertyInfo(Variant::INT, "idx"), PropertyInfo(Variant::INT, "idxAoe")));
+	ADD_SIGNAL(MethodInfo("first_runic_boss_spawn_aoe", PropertyInfo(Variant::INT, "idx"), PropertyInfo(Variant::INT, "idxAoe"),
+		PropertyInfo(Variant::FLOAT, "x"), PropertyInfo(Variant::FLOAT, "y"), PropertyInfo(Variant::FLOAT, "range")));
+	ADD_SIGNAL(MethodInfo("first_runic_boss_pillar", PropertyInfo(Variant::INT, "idx"), PropertyInfo(Variant::BOOL, "spawn"), PropertyInfo(Variant::BOOL, "first")));
+	ADD_SIGNAL(MethodInfo("first_runic_boss_pillar_up", PropertyInfo(Variant::INT, "idx"), PropertyInfo(Variant::INT, "idx_pillar"), PropertyInfo(Variant::INT, "step")));
 
 
 	/// blockers
@@ -1699,6 +2001,9 @@ void Controller::_bind_methods()
 
 	ADD_SIGNAL(MethodInfo("loading_state", PropertyInfo(Variant::FLOAT, "loading")));
 	ADD_SIGNAL(MethodInfo("loading_done"));
+
+	ADD_SIGNAL(MethodInfo("state_dump", PropertyInfo(Variant::INT, "step"), PropertyInfo(Variant::INT, "step")));
+	ADD_SIGNAL(MethodInfo("ready_to_loop"));
 }
 
 std::map<unsigned long, AbstractOptionManager *> &Controller::getOptionManagers()

@@ -13,8 +13,7 @@ namespace octopus
 
 void DotModifier::newAttackSteppable(Step &step_p, AttackModifierData const &data_p, State const &state_p, bool disableMainAttack_p) const
 {
-    Handle idx_l = state_p.getFlyingCommandHandle(step_p.getFlyingCommandSpawned());
-    step_p.addSteppable(new FlyingCommandSpawnStep(new DamageOverTime(idx_l, _tickRate, _nbOfTicks, _dmg, data_p.target)));
+    step_p.addSteppable(new FlyingCommandSpawnStep(new DamageOverTime(_tickRate, _nbOfTicks, _dmg, data_p.target)));
 
     if(!disableMainAttack_p)
     {

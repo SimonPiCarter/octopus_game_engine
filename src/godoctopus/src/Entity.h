@@ -49,12 +49,20 @@ public:
     float getDuration() const { return _duration; }
 
     void setName(String const &name_p) { _name = name_p; }
-    String getName() const { return _name; }
+    String const &getName() const { return _name; }
+
+    void setDesc(String const &desc_p) { _desc = desc_p; }
+    String const &getDesc() const { return _desc; }
+
+    void addParam(String const &param_p) { _params.append(param_p); }
+    TypedArray<String> getParams() const { return _params; }
 
 private:
     float _timeElapsed = 0;
     float _duration = 0;
     String _name;
+    String _desc;
+    TypedArray<String> _params;
 };
 
 class Entity : public Node {
@@ -101,6 +109,7 @@ public:
     // building getter
     bool has_rally_point(Controller const *controller_p) const;
     Vector2 get_rally_point(Controller const *controller_p) const;
+    String get_auto_build_model(Controller const *controller_p) const;
 
     // resource getter
     String get_resource_type(Controller const *controller_p) const;

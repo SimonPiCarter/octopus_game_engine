@@ -26,8 +26,8 @@ void PlayerChoseOptionCommand::registerCommand(Step & step_p, State const &state
 
 	step_p.addSteppable(new CommandStorageStep(this));
 
-	if(player_l._options.find(_key) != player_l._options.end()
-	&& player_l._options.at(_key)->getNumOptions() > _option)
+	if(!player_l._options.empty()
+	&& player_l._options.front()->_key == _key)
 	{
 		step_p.addSteppable(new PlayerPopOptionStep(_player, _key, _option));
 	}

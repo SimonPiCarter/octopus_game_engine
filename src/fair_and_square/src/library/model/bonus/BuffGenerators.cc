@@ -1,13 +1,19 @@
 #include "BuffGenerators.hh"
 
+#include "command/flying/CommandSpawnUnit.hh"
+#include "library/Library.hh"
 #include "state/State.hh"
-#include "state/player/Player.hh"
+#include "state/entity/Unit.hh"
 #include "state/entity/attackModifier/AttackModifier.hh"
+#include "state/player/Player.hh"
 #include "step/player/PlayerBuffAllStep.hh"
 #include "step/player/PlayerAttackModAllStep.hh"
 #include "step/player/PlayerLevelUpUpgradeStep.hh"
+#include "step/command/flying/FlyingCommandSpawnStep.hh"
 
 using namespace octopus;
+
+void genStep(Library const &, std::vector<Steppable *> &, NoOption const &) {}
 
 void genStep(Library const &lib_p, std::vector<Steppable *> &steppables_p, BuffOption const &option_p)
 {
@@ -39,7 +45,29 @@ void genStep(Library const &lib_p, std::vector<Steppable *> &steppables_p, ::Div
     steppables_p.push_back(new PlayerLevelUpUpgradeStep(option_p._player, fas::divinityUpgradeName(option_p._div)));
 }
 
-std::vector<Steppable *> BuffGenerator::getSteppables(unsigned long options_p) const
+void genStep(Library const &lib_p, std::vector<Steppable *> &steppables_p, SurvivalOption const &option_p)
+{
+    std::vector<Steppable *> playerBuilding_l = newPlayerBuilding(option_p._player, option_p._type, lib_p);
+    for(Steppable * steppable_l : playerBuilding_l)
+    {
+        steppables_p.push_back(steppable_l);
+    }
+    steppables_p.push_back(new PlayerLevelUpUpgradeStep(option_p._player, fas::survivalSpecialTypeName(option_p._type)));
+}
+
+void genStep(Library const &lib_p, std::vector<Steppable *> &steppables_p, UpgradeOption const &option_p)
+{
+    steppables_p.push_back(new PlayerLevelUpUpgradeStep(option_p._player, option_p._upgrade));
+}
+
+void genStep(Library const &lib_p, std::vector<Steppable *> &steppables_p, SpawnUnitOption const &option_p)
+{
+    Unit unit_l(option_p._pos, false, lib_p.getUnitModel(option_p._model));
+    unit_l._player = option_p._player;
+    steppables_p.push_back(new FlyingCommandSpawnStep(new CommandSpawnUnit(unit_l)));
+}
+
+std::vector<Steppable *> BuffGenerator::genSteppables(octopus::State const &state_p, unsigned long options_p) const
 {
     std::vector<Steppable *> steps_l;
     std::visit([this, &steps_l](auto &&arg) { genStep(_lib, steps_l, arg); }, _options.at(options_p)._playerOption);
@@ -76,48 +104,51 @@ BuffOption generateRandomBuffOptionForEnemy(unsigned long player_p, RandomGenera
     int min_l = 5;
     int max_l = 15;
 
+    TimedBuff buff_l;
+
     if(type_l == 0)
     {
-        option_l._buff._type = TyppedBuff::Type::Speed;
+        buff_l._type = TyppedBuff::Type::Speed;
     }
     else if(type_l == 1)
     {
-        option_l._buff._type = TyppedBuff::Type::FullReload;
+        buff_l._type = TyppedBuff::Type::FullReload;
     }
     else if(type_l == 2)
     {
-        option_l._buff._type = TyppedBuff::Type::Damage;
+        buff_l._type = TyppedBuff::Type::Damage;
         offset_l = true;
         min_l = 3;
         max_l = 6;
     }
     else if(type_l == 3)
     {
-        option_l._buff._type = TyppedBuff::Type::Armor;
+        buff_l._type = TyppedBuff::Type::Armor;
         offset_l = true;
         min_l = 1;
         max_l = 3;
     }
     else if(type_l == 4)
     {
-        option_l._buff._type = TyppedBuff::Type::HpMax;
+        buff_l._type = TyppedBuff::Type::HpMax;
     }
 
     if(offset_l)
     {
-        option_l._buff._offset = gen_p.roll(min_l, max_l);
+        buff_l._offset = gen_p.roll(min_l, max_l);
     }
     else
     {
-        option_l._buff._coef = gen_p.roll(min_l, max_l)/100.;
+        buff_l._coef = gen_p.roll(min_l, max_l)/100.;
     }
 
-    if(option_l._buff._type == TyppedBuff::Type::FullReload)
+    if(buff_l._type == TyppedBuff::Type::FullReload)
     {
-        option_l._buff._coef = -option_l._buff._coef;
+        buff_l._coef = -buff_l._coef;
     }
 
-    option_l._buff._id = id_p;
+    buff_l._id = id_p;
+    option_l._buff = buff_l;
     option_l._model = generateRandomModel(gen_p);
 
     return option_l;
@@ -134,22 +165,26 @@ std::vector<SingleOption> getClassicOptions(unsigned long player_p, std::string 
     }
     for(std::string const &model_l : models_l)
     {
+        TimedBuff buff_l;
+        buff_l._type = TyppedBuff::Type::Damage;
+        buff_l._offset = rare_p?2:1;
+        buff_l._id = id_p;
         BuffOption option_l;
         option_l._player = player_p;
-        option_l._buff._type = TyppedBuff::Type::Damage;
-        option_l._buff._offset = rare_p?2:1;
-        option_l._buff._id = id_p;
         option_l._model = model_l;
+        option_l._buff = buff_l;
         commons_l.push_back(option_l);
     }
     for(std::string const &model_l : models_l)
     {
+        TimedBuff buff_l;
+        buff_l._type = TyppedBuff::Type::Armor;
+        buff_l._offset = rare_p?2:1;
+        buff_l._id = id_p;
         BuffOption option_l;
         option_l._player = player_p;
-        option_l._buff._type = TyppedBuff::Type::Armor;
-        option_l._buff._offset = rare_p?2:1;
-        option_l._buff._id = id_p;
         option_l._model = model_l;
+        option_l._buff = buff_l;
         commons_l.push_back(option_l);
     }
 
@@ -191,12 +226,14 @@ std::vector<SingleOption> getEpicOptions(octopus::Player const &player_p, std::s
         // not chosen yet
         if(octopus::getUpgradeLvl(player_p, levelName_p) == 0)
         {
+            TimedBuff buff_l;
             BuffOption option_l;
             option_l._player = player_p._id;
-            option_l._buff._type = TyppedBuff::Type::FullReload;
-            option_l._buff._coef = -0.5;
-            option_l._buff._id = id_p;
+            buff_l._type = TyppedBuff::Type::FullReload;
+            buff_l._coef = -0.5;
+            buff_l._id = id_p;
             option_l._model = model_l;
+            option_l._buff = buff_l;
             option_l._div = levelName_p;
             options_l.push_back(option_l);
         }
@@ -210,12 +247,14 @@ std::vector<SingleOption> getEpicOptions(octopus::Player const &player_p, std::s
         // not chosen yet
         if(octopus::getUpgradeLvl(player_p, levelName_p) == 0)
         {
+            TimedBuff buff_l;
             BuffOption option_l;
             option_l._player = player_p._id;
-            option_l._buff._type = TyppedBuff::Type::Damage;
-            option_l._buff._coef = 1;
-            option_l._buff._id = id_p;
+            buff_l._type = TyppedBuff::Type::Damage;
+            buff_l._coef = 1;
+            buff_l._id = id_p;
             option_l._model = model_l;
+            option_l._buff = buff_l;
             option_l._div = levelName_p;
             options_l.push_back(option_l);
         }

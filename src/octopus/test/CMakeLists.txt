@@ -29,6 +29,7 @@ target_sources (unit_tests
 	src/attackMoveBuffCommand.test.cc
 	src/attackMoveCommand.test.cc
 	src/attackMoveHealCommand.test.cc
+	src/autoAttackChainingCommand.test
 	src/autoAttackCommand.test.cc
 	src/autoBuffCommand.test.cc
 	src/autoHealCommand.test.cc
@@ -44,7 +45,9 @@ target_sources (unit_tests
 	src/conflictSolver.test.cc
 	src/constraintPosition.test.cc
 	src/controller.test.cc
+	src/crc.test.cc
 	src/customIdleEntity.test.cc
+	src/damageReturn.test.cc
 	src/entityFlockCommand.test.cc
 	src/entityHitPointChange.test.cc
 	src/entityMoveStep.test.cc
@@ -73,6 +76,7 @@ target_sources (unit_tests
 	src/triggerUnitDied.test.cc
 	src/triggerUnitSpawn.test.cc
 	src/triggerZone.test.cc
+	src/unitDataStep.test.cc
 	src/unitProductionBonus.test.cc
 	src/unitProductionCommand.test.cc
 	src/upgradeProductionCommand.test.cc

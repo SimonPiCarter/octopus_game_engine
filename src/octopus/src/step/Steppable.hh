@@ -40,6 +40,7 @@ namespace octopus
 	};
 
 	class AttackModifierStep;
+	class BuildingAutoBuildStep;
 	class BuildingCancelStep;
 	class BuildingRemoveRallyPointStep;
 	class BuildingSetRallyPointStep;
@@ -120,6 +121,7 @@ namespace octopus
 	class TriggerStepCountChange;
 	class UnitHarvestDropStep;
 	class UnitHarvestQuantityStep;
+	class UnitDataStep;
 	class UnitHarvestTypeStep;
 	class UnitSpawnStep;
 	class VisionChangeStep;
@@ -139,6 +141,7 @@ namespace octopus
 			}
 
 			virtual void visit(AttackModifierStep const *) = 0;
+			virtual void visit(BuildingAutoBuildStep const *) = 0;
 			virtual void visit(BuildingCancelStep const *) = 0;
 			virtual void visit(BuildingRemoveRallyPointStep const *) = 0;
 			virtual void visit(BuildingSetRallyPointStep const *) = 0;
@@ -219,6 +222,7 @@ namespace octopus
 			virtual void visit(TriggerStepCountChange const *) = 0;
 			virtual void visit(UnitHarvestDropStep const *) = 0;
 			virtual void visit(UnitHarvestQuantityStep const *) = 0;
+			virtual void visit(UnitDataStep const *) = 0;
 			virtual void visit(UnitHarvestTypeStep const *) = 0;
 			virtual void visit(UnitSpawnStep const *) = 0;
 			virtual void visit(VisionChangeStep const *) = 0;

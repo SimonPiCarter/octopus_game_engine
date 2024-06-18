@@ -11,7 +11,7 @@ StepUpgradeGenerator* StepUpgradeNoOpGenerator::newCopy() const
     return new StepUpgradeNoOpGenerator();
 }
 
-std::vector<Steppable *> StepUpgradeNoOpGenerator::getSteppables(unsigned long player_p) const
+std::vector<Steppable *> StepUpgradeNoOpGenerator::getSteppables(unsigned long player_p, unsigned long) const
 {
     return {};
 }

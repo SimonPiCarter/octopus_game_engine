@@ -14,8 +14,6 @@ namespace octopus
 class Library;
 } // namespace octopus
 
-std::vector<int> roll_with_no_doublon(octopus::RandomGenerator &rand_p, int min_p, int max_p, int number_p);
-
 class AnchorDivinityTrigger : public octopus::OnEachTrigger
 {
 public:

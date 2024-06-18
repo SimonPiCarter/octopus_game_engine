@@ -89,6 +89,7 @@ protected:
 /// - chaining effects (damage/heal)
 /// - on death effects
 /// - effects over time (damage/heal)
+/// - spawn units (over time or not)
 /// all registered commands execute on every compilation
 /// each state stores a instance of data (should be synced on same step count)
 ///
@@ -97,13 +98,14 @@ protected:
 class FlyingCommand : public AbstractCommand
 {
 public:
-	FlyingCommand(Handle handle_p) : _handle(handle_p) {}
+	FlyingCommand() : _handle(0) {}
 
 	virtual void registerCommand(Step & step_p, State const &state_p);
 
+	void setHandle(Handle const & handle_p) { _handle = handle_p; }
 	Handle const &getHandle() const { return _handle; }
 private:
-	Handle const _handle;
+	Handle _handle;
 };
 
 } // namespace octopus

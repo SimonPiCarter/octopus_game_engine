@@ -11,7 +11,12 @@
 
 using namespace octopus;
 
-std::vector<Steppable *> DivinityGenerator::getSteppables(unsigned long options_p) const
+void DivinityGenerator::genOptions(State const &state_p)
+{
+	_options = _optionsGenerator(state_p);
+}
+
+std::vector<Steppable *> DivinityGenerator::genSteppables(octopus::State const &state_p, unsigned long options_p) const
 {
     std::vector<Steppable *> steps_l;
 
