@@ -1,3 +1,3 @@
 #ifndef IS_DEMO
-#define IS_DEMO true
+#define IS_DEMO false
 #endif
